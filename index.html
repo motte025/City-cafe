@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next-Gen Multi-Zone Signage - Pure Blue Chrome</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght=300;400;600;800;900&family=Unbounded:wght=900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Der echte Bildschirm-Hintergrund fängt Ränder ab */
+        html, body {
+            background-color: #0b0918;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* NEU: Der Wrapper simuliert immer exakt 1080p und wird per JS skaliert */
+        #dashboard-scaler {
+            width: 1920px;
+            height: 1080px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            transform-origin: center center;
+            
+            /* Hier folgen die originalen Design-Vorgaben */
+            font-family: 'Outfit', sans-serif;
+            display: grid;
+            grid-template-rows: 150px 1fr 85px;
+            padding: 40px;
+            gap: 30px;
+        }
+
+        /* Ambient Background Glows */
+        .glow-orb-1 {
+            position: absolute;
+            width: 900px;
+            height: 900px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.3) 0%, rgba(0,0,0,0) 70%);
+            top: -200px;
+            left: -100px;
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(50px);
+        }
+        .glow-orb-2 {
+            position: absolute;
+            width: 1100px;
+            height: 1100px;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.25) 0%, rgba(0,0,0,0) 70%);
+            bottom: -300px;
+            right: -100px;
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(50px);
+        }
+
+        /* Premium Eisglas-Basis */
+        .premium-panel {
+            border-radius: 28px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            box-shadow: 0 25px 60px rgba(0, 242, 254, 0.1), 0 20px 50px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+        }
+
+        /* 1. TOP BAR / HEADER */
+        header {
+            grid-row: 1;
+            display: grid;
+            grid-template-columns: 1400px 1fr; 
+            gap: 30px;
+            width: 1840px;
+        }
+        
+        .header-left {
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(65, 83, 160, 0.95) 0%, rgba(28, 35, 74, 0.85) 100%);
+            position: relative;
+            border: none; 
+        }
+
+        /* 3D-Unterbau des Rahmens */
+        .header-left::before {
+            content: '';
+            position: absolute;
+            top: -3px; left: -3px; right: -3px; bottom: -3px;
+            border-radius: 31px;
+            background: linear-gradient(135deg, #64748b 0%, #1e293b 50%, #94a3b8 100%);
+            z-index: -1;
+            box-shadow: inset 1px 1px 3px rgba(255,255,255,0.5), 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Chrom-Glint Effekt */
+        .header-left::after {
+            content: '';
+            position: absolute;
+            top: -3px; left: -3px; right: -3px; bottom: -3px;
+            border-radius: 31px;
+            background: linear-gradient(100deg, 
+                transparent 0%, 
+                transparent 30%, 
+                rgba(255, 255, 255, 1) 48%, 
+                rgba(165, 243, 252, 1) 50%, 
+                rgba(255, 255, 255, 1) 52%, 
+                transparent 70%,
+                transparent 100%);
+            background-size: 350% 100%;
+            z-index: -1;
+            
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            padding: 3px; 
+            
+            animation: sudden-glint 12s infinite linear;
+        }
+
+        /* Status-Dots */
+        .status-dot {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            width: 16px;
+            height: 16px;
+            background-color: #00f2fe;
+            border-radius: 50%;
+            box-shadow: 0 0 25px #00f2fe;
+            animation: pulse-blue 2s infinite;
+        }
+        .status-dot.left { left: 45px; }
+        .status-dot.right { right: 45px; }
+
+        /* STRAHLENDER HORIZONTALER CHROM-VERLAUF */
+        .header-text {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 3.1rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            
+            background: 
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.18) 0px, rgba(255,255,255,0.18) 1px, transparent 1px, transparent 4px),
+                linear-gradient(90deg, #ffffff 0%, #e0f2fe 25%, #bae6fd 50%, #22d3ee 75%, #00f2fe 100%);
+            background-blend-mode: overlay;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 0px 35px rgba(34, 211, 238, 0.8));
+            z-index: 2;
+        }
+
+        /* MATTE CHROM-STAHL 3D-KANTE */
+        .header-text::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0; top: 0; width: 100%; height: 100%;
+            -webkit-text-fill-color: #153a5b;
+            text-shadow: 
+                1px 1px 0px #cbd5e1,
+                2px 2px 0px #94a3b8,
+                3px 3px 0px #64748b,
+                4px 4px 0px #475569,
+                5px 5px 0px #334155,
+                6px 6px 0px #1e293b,
+                7px 7px 0px #0f172a,
+                8px 8px 15px rgba(0, 0, 0, 0.95);
+            z-index: -1;
+        }
+
+        /* Rechtes Header-Panel */
+        .header-right {
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(0, 180, 216, 0.28) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+        .header-subtext {
+            font-size: 1.5rem;
+            color: #ffffff;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.8);
+        }
+
+        /* MITTLERER BEREICH */
+        .content-wrapper {
+            grid-row: 2;
+            display: grid;
+            grid-template-columns: 1400px 1fr; 
+            gap: 30px;
+            height: 100%;
+            width: 1840px;
+        }
+
+        /* HAUPT-MEDIENBEREICH */
+        .main-media-zone {
+            grid-column: 1;
+            background: rgba(22, 19, 44, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .media-placeholder-frame {
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            padding: 50px 80px;
+            border-radius: 24px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .media-placeholder-frame span {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #b3b0cb;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* SIDEBAR WIDGETS */
+        .sidebar {
+            display: grid;
+            grid-template-rows: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .widget {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; 
+            text-align: center;
+            padding: 0; 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(56, 189, 248, 0.28) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .widget-label {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .time-value {
+            font-size: 5.6rem; 
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 0%, #bae6fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.2));
+        }
+        .weather-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .weather-icon {
+            font-size: 3.6rem;
+            filter: drop-shadow(0 0 20px rgba(255, 184, 0, 0.7));
+        }
+        .weather-value {
+            font-size: 3.3rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .date-value {
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffffff, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 4. FOOTER / NEWSTICKER */
+        footer {
+            grid-row: 3;
+            overflow: hidden;
+            position: relative;
+            padding: 0;
+            background: linear-gradient(90deg, rgba(250, 0, 121, 0.35) 0%, rgba(140, 0, 255, 0.35) 50%, rgba(0, 242, 254, 0.35) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 1840px;
+        }
+        .ticker-badge {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #fa0079 0%, #a800ff 100%);
+            color: white;
+            font-weight: 900;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            padding: 0 35px;
+            z-index: 10;
+            border-radius: 26px 0 0 26px;
+            box-shadow: 15px 0 30px rgba(0,0,0,0.4);
+        }
+        .ticker-container {
+            width: 100%;
+            overflow: hidden;
+            padding-left: 200px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        .ticker-track {
+            display: inline-block;
+            white-space: nowrap;
+            animation: fluid-ticker 30s linear infinite;
+        }
+        .ticker-text {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: #ffffff;
+            margin-right: 120px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+        .ticker-highlight {
+            color: #00f2fe;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+        }
+
+        /* ANIMATIONEN */
+        @keyframes sudden-glint {
+            0%, 20% { background-position: 0% 50%; opacity: 0; }
+            22% { opacity: 1; } 
+            24% { background-position: 50% 50%; opacity: 0; }
+            24.1%, 70% { background-position: 100% 50%; opacity: 0; }
+            72% { opacity: 1; } 
+            74% { background-position: 0% 50%; opacity: 0; }
+            76%, 100% { background-position: 0% 50%; opacity: 0; }
+        }
+        @keyframes fluid-ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+        @keyframes pulse-blue {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 30px #00f2fe; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Das gesamte Dashboard wird in diesem Scaler gerendert -->
+    <div id="dashboard-scaler">
+
+        <!-- Ambient Background Glows -->
+        <div class="glow-orb-1"></div>
+        <div class="glow-orb-2"></div>
+
+        <!-- Symmetrischer Header -->
+        <header>
+            <div class="premium-panel header-left">
+                <div class="status-dot left"></div>
+                <div class="header-text" data-text="Willkommen im City Café">Willkommen im City Café</div>
+                <div class="status-dot right"></div>
+            </div>
+            <div class="premium-panel header-right">
+                <div class="header-subtext">LIVE INFO</div>
+            </div>
+        </header>
+
+        <!-- Content Split -->
+        <div class="content-wrapper">
+            
+            <!-- Playlist-Screen -->
+            <main class="premium-panel main-media-zone">
+                <div class="media-placeholder-frame">
+                    <span>[ Hier die Lumify Medien-Playlist oder Bilder einbetten ]</span>
+                </div>
+            </main>
+
+            <!-- Widgets Sidebar -->
+            <aside class="sidebar">
+                <!-- Zeit -->
+                <div class="premium-panel widget">
+                    <div class="widget-label">Uhrzeit</div>
+                    <div class="time-value">22:38</div>
+                </div>
+                <!-- Wetter -->
+                <div class="premium-panel widget">
+                    <div class="widget-label">Klagenfurt</div>
+                    <div class="weather-container">
+                        <span class="weather-icon">☀️</span>
+                        <span class="weather-value">22°C</span>
+                    </div>
+                </div>
+                <!-- Datum -->
+                <div class="premium-panel widget">
+                    <div class="widget-label">Datum</div>
+                    <div class="date-value">19. JULI</div>
+                </div>
+            </aside>
+
+        </div>
+
+        <!-- Premium Lauftext -->
+        <footer class="premium-panel">
+            <div class="ticker-badge">INFO</div>
+            <div class="ticker-container">
+                <div class="ticker-track">
+                    <span class="ticker-text">+++ <span class="ticker-highlight">AKTION:</span> Heute ab 20:00 Uhr alle Cocktails im Angebot! +++</span>
+                    <span class="ticker-text">Nächster großer <span class="ticker-highlight">Karaoke-Abend</span> am kommenden Wochenende – Der Eintritt ist natürlich frei! +++</span>
+                    <span class="ticker-text">Lust auf Snacks? Frische Toasts und Knoblauchbrot direkt an der Theke bestellen! +++</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Das magische Skript, das Verzerrungen verhindert und alles einpasst -->
+    <script>
+        function adjustDashboardScale() {
+            const scaler = document.getElementById('dashboard-scaler');
+            
+            // Ermittelt die reale Fenstergröße des Lumify Players
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            // Berechnet den benötigten Skalierungsfaktor für 1920x1080
+            const scaleX = windowWidth / 1920;
+            const scaleY = windowHeight / 1080;
+            
+            // Nutzt den kleineren Wert, damit absolut nichts abgeschnitten wird
+            const scaleFactor = Math.min(scaleX, scaleY);
+            
+            // Skaliert das komplette Dashboard sauber wie ein Bild
+            scaler.style.transform = `translate(-50%, -50%) scale(${scaleFactor})`;
+        }
+
+        // Führt die Skalierung beim Laden und bei Größenänderungen aus
+        window.addEventListener('resize', adjustDashboardScale);
+        window.addEventListener('DOMContentLoaded', adjustDashboardScale);
+        adjustDashboardScale();
+    </script>
+
+</body>
+</html>
+
