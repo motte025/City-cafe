@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Wichtig: Erzwingt die korrekte Viewport-Skalierung auf Smart-TVs und Kiosk-Systemen -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>City Cafe Klagenfurt Fischl - GitHub Brick Edition Dashboard</title>
+    <title>City Cafe Klagenfurt Fischl - Ultimate Brick Dashboard</title>
     
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +13,7 @@
     
     <style>
         :root {
+            /* Ticker-Gradient auf RGBA umgestellt für sanfte Transparenz (0.65 Deckkraft) */
             --primary-glow: #00f2fe;
             --secondary-glow: #4facfe;
             --accent-glow: #f355da;
@@ -193,7 +194,7 @@
             gap: 2vh;
         }
 
-        /* WIDGET 1: UHR (Gradients transparenter gemacht) */
+        /* WIDGET 1: UHR */
         .widget-clock {
             flex: 0 0 auto;
             text-align: center;
@@ -222,7 +223,7 @@
             letter-spacing: 2px;
         }
 
-        /* WIDGET 2: WETTER (Wetter-Hintergründe deutlich transparenter eingestellt) */
+        /* WIDGET 2: WETTER */
         .widget-weather {
             flex: 0 0 auto;
             position: relative;
@@ -728,7 +729,8 @@
         let currentGalleryIndex = 0;
         let visitorGalleryData = []; 
 
-        const googleScriptUrl = "HIER_DEINE_KOPIERTE_WEB_APP_URL_EINSETZEN";
+        // DEINE AKTIVE APPS-SCRIPT WEB-APP-URL IST HIER JETZT EINGEBAUT:
+        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxtc5G9_Nr7oqwbMCCcnJt91J83LITN-OFm3gg7n8ASUDxkcJEx6LGWnti8eBeip7CI/exec";
 
         async function loadDriveFolderImages() {
             if(googleScriptUrl.includes("HIER_DEINE_KOPIERTE")) return;
