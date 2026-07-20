@@ -2,7 +2,6 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <!-- Wichtig: Erzwingt die korrekte Viewport-Skalierung auf Smart-TVs und Kiosk-Systemen -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>City Cafe Klagenfurt Fischl - Ultimate Brick Dashboard</title>
     
@@ -16,16 +15,13 @@
             --primary-glow: #00f2fe;
             --secondary-glow: #4facfe;
             --accent-glow: #f355da;
-            /* Deckkraft von 0.82 auf 0.55 reduziert, damit die Wand schön durchscheint */
             --card-bg: rgba(10, 20, 38, 0.55); 
             --card-border: rgba(255, 255, 255, 0.12);
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
-            /* Ticker-Gradient auf RGBA umgestellt für sanfte Transparenz (0.65 Deckkraft) */
             --ticker-gradient: linear-gradient(90deg, rgba(15, 32, 66, 0.65) 0%, rgba(0, 92, 138, 0.65) 50%, rgba(99, 12, 82, 0.65) 100%);
         }
 
-        /* Hardware-Beschleunigung und absoluter Reset gegen Ruckeln */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -42,25 +38,19 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: var(--text-light);
             position: relative;
-            
             background-color: #241914; 
-            
-            /* LÄDT DAS BILD DIREKT VON DEINEM GITHUB-REPOSITORY */
             background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png'); 
-            
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
         }
 
-        /* Ambient-Wandlampen-Effekt (Überlagert deine Wand für edle Tiefenwirkung) */
         .bg-glow-static-1 {
             position: absolute;
             width: 60vw;
             height: 50vw;
             background: radial-gradient(ellipse at top, rgba(255, 150, 50, 0.28) 0%, rgba(0,0,0,0) 70%);
-            top: 0;
-            left: 5vw;
+            top: 0; left: 5vw;
             filter: blur(50px);
             z-index: 0;
             pointer-events: none;
@@ -70,14 +60,12 @@
             width: 60vw;
             height: 50vw;
             background: radial-gradient(ellipse at top, rgba(255, 130, 30, 0.25) 0%, rgba(0,0,0,0) 70%);
-            top: 0;
-            right: 0vw;
+            top: 0; right: 0vw;
             filter: blur(50px);
             z-index: 0;
             pointer-events: none;
         }
 
-        /* Layout-Grid */
         .dashboard-container {
             display: grid;
             grid-template-columns: 1fr 29vw; 
@@ -90,7 +78,6 @@
             z-index: 1;
         }
 
-        /* Premium-Karten mit starkem Tiefenschatten und Glass-Effekt vor den Steinen */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(30px); 
@@ -126,392 +113,148 @@
                 inset 0 0 15px rgba(255, 140, 40, 0.05) !important;
             transform: scale(1.003);
         }
-        .shimmer-active::after {
-            left: 250%;
-            transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+        .shimmer-active::after { left: 250%; transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
 
-        /* PLAKAT ZONE */
         .media-zone {
-            grid-column: 1;
-            grid-row: 1;
-            padding: 0;
-            background: #020617;
-            border: 2px solid rgba(255, 255, 255, 0.12);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            grid-column: 1; grid-row: 1; padding: 0;
+            background: #020617; border: 2px solid rgba(255, 255, 255, 0.12);
+            display: flex; justify-content: center; align-items: center;
         }
 
-        .poster-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            border-radius: 2.3vh;
-            overflow: hidden;
-        }
+        .poster-container { width: 100%; height: 100%; position: relative; border-radius: 2.3vh; overflow: hidden; }
 
         .poster-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain; 
-            display: block;
-            opacity: 0;
-            transition: opacity 3s ease-in-out; 
-            z-index: 1;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: contain; display: block; opacity: 0;
+            transition: opacity 3s ease-in-out; z-index: 1;
             animation: premiumPosterBreathing 24s ease-in-out infinite alternate;
             will-change: transform;
         }
-
-        .poster-image.active {
-            opacity: 1;
-            z-index: 2;
-        }
-
+        .poster-image.active { opacity: 1; z-index: 2; }
         .poster-ambient-glaze {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%);
-            mix-blend-mode: overlay;
-            pointer-events: none;
-            z-index: 3;
+            mix-blend-mode: overlay; pointer-events: none; z-index: 3;
             animation: softLightingPulse 8s ease-in-out infinite alternate;
         }
 
-        /* SIDEBAR */
-        .sidebar {
-            grid-column: 2;
-            grid-row: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 2vh;
-        }
+        .sidebar { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 2vh; }
 
-        /* WIDGET 1: UHR */
         .widget-clock {
-            flex: 0 0 auto;
-            text-align: center;
+            flex: 0 0 auto; text-align: center;
             background: linear-gradient(135deg, rgba(15, 32, 66, 0.45) 0%, rgba(0, 92, 138, 0.3) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 1.2vh 1.2vw;
+            border: 1px solid rgba(255, 255, 255, 0.18); padding: 1.2vh 1.2vw;
         }
-
         .time-display {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 5vh; 
-            font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 5vh; font-weight: 900;
             background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-            margin-bottom: 0.1vh;
-            filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: 2px; margin-bottom: 0.1vh; filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
         }
+        .date-display { font-size: 1.3vh; font-weight: 700; color: rgba(240, 244, 248, 0.85); text-transform: uppercase; letter-spacing: 2px; }
 
-        .date-display {
-            font-size: 1.3vh;
-            font-weight: 700;
-            color: rgba(240, 244, 248, 0.85);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* WIDGET 2: WETTER */
         .widget-weather {
-            flex: 0 0 auto;
-            position: relative;
-            overflow: hidden;
-            padding: 1.8vh 1.5vw;
-            transition: background 1.5s ease-in-out;
-            backdrop-filter: none !important; 
-            -webkit-backdrop-filter: none !important;
-            border: 1px solid var(--card-border);
-            border-radius: 2.5vh;
+            flex: 0 0 auto; position: relative; overflow: hidden; padding: 1.8vh 1.5vw;
+            transition: background 1.5s ease-in-out; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+            border: 1px solid var(--card-border); border-radius: 2.5vh;
         }
-        
         .widget-weather.card::after { display: none !important; }
-        
         .widget-weather.w-sunny { background: linear-gradient(135deg, rgba(15, 32, 66, 0.65) 0%, rgba(0, 92, 138, 0.5) 100%); }
         .widget-weather.w-cloudy { background: linear-gradient(135deg, rgba(30, 41, 59, 0.65) 0%, rgba(15, 23, 42, 0.6) 100%); }
         .widget-weather.w-rainy { background: linear-gradient(135deg, rgba(17, 30, 48, 0.65) 0%, rgba(30, 41, 59, 0.6) 100%); }
         .widget-weather.w-thunder { background: linear-gradient(135deg, rgba(9, 13, 22, 0.7) 0%, rgba(30, 27, 75, 0.65) 100%); }
-
-        .weather-content-wrapper {
-            position: relative;
-            z-index: 10; 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
+        .weather-content-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; width: 100%; }
         .weather-city { font-size: 2.4vh; font-weight: 800; color: var(--text-light); }
         .weather-status { font-size: 1.4vh; color: #00f2fe; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .temp-number { font-size: 5.2vh; font-weight: 800; color: var(--text-light); }
+        .weather-effects-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        .cloud-bg-element { position: absolute; background: rgba(255, 255, 255, 0.08); border-radius: 50%; filter: blur(20px); animation: driftClouds 16s linear infinite alternate; }
 
-        .weather-effects-container {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1; 
-            overflow: hidden;
-        }
+        @keyframes driftClouds { 0% { transform: translateX(-2vw) translateY(0); } 100% { transform: translateX(3vw) translateY(1vh); } }
+        .rain-streak { position: absolute; top: -20%; width: 1.5px; height: 25px; background: linear-gradient(transparent, rgba(0, 242, 254, 0.45)); animation: fallRain 0.7s linear infinite; }
+        @keyframes fallRain { 0% { transform: translateY(0) translateX(0); opacity: 0; } 60% { opacity: 1; } 100% { transform: translateY(14vh) translateX(-1vw); opacity: 0; } }
+        .lightning-bolt-effect { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0); animation: lightningStrike 5s ease-in-out infinite; }
+        @keyframes lightningStrike { 0%, 91%, 93%, 96%, 100% { background: rgba(255, 255, 255, 0); } 92% { background: rgba(255, 255, 255, 0.4); filter: brightness(1.3); } 94% { background: rgba(255, 255, 255, 0.25); } }
 
-        .cloud-bg-element {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 50%;
-            filter: blur(20px);
-            animation: driftClouds 16s linear infinite alternate;
-        }
-
-        @keyframes driftClouds {
-            0% { transform: translateX(-2vw) translateY(0); }
-            100% { transform: translateX(3vw) translateY(1vh); }
-        }
-
-        .rain-streak {
-            position: absolute;
-            top: -20%;
-            width: 1.5px;
-            height: 25px;
-            background: linear-gradient(transparent, rgba(0, 242, 254, 0.45));
-            animation: fallRain 0.7s linear infinite;
-        }
-
-        @keyframes fallRain {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            60% { opacity: 1; }
-            100% { transform: translateY(14vh) translateX(-1vw); opacity: 0; }
-        }
-
-        .lightning-bolt-effect {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0);
-            animation: lightningStrike 5s ease-in-out infinite;
-        }
-
-        @keyframes lightningStrike {
-            0%, 91%, 93%, 96%, 100% { background: rgba(255, 255, 255, 0); }
-            92% { background: rgba(255, 255, 255, 0.4); filter: brightness(1.3); }
-            94% { background: rgba(255, 255, 255, 0.25); }
-        }
-
-        /* WIDGET 3: DART & EVENT */
-        .widget-dart {
-            flex: 1; 
-            padding: 0; 
-            position: relative;
-            overflow: hidden;
-        }
-
+        .widget-dart { flex: 1; padding: 0; position: relative; overflow: hidden; }
         .dart-view {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            padding: 2.2vh 1.4vw; 
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.8s ease-in-out;
-            z-index: 1;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 2.2vh 1.4vw; 
+            display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.8s ease-in-out; z-index: 1;
         }
-
-        .dart-view.active {
-            opacity: 1;
-            pointer-events: auto;
-            z-index: 2;
-        }
-
-        .dart-header {
-            display: flex;
-            align-items: center;
-            gap: 1vw;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 1vh;
-            margin-bottom: 1.5vh;
-        }
-
-        .dart-badge-3d {
-            width: 4.2vh;
-            height: 4.2vh;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            border-radius: 1vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2vh;
-        }
-
+        .dart-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
+        .dart-header { display: flex; align-items: center; gap: 1vw; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1vh; margin-bottom: 1.5vh; }
+        .dart-badge-3d { width: 4.2vh; height: 4.2vh; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); border-radius: 1vh; display: flex; justify-content: center; align-items: center; font-size: 2vh; }
         .dart-title h2 { font-size: 2vh; font-weight: 800; }
         .dart-title p { font-size: 1.2vh; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         .dart-rows-container { display: flex; flex-direction: column; gap: 0.8vh; }
-
-        .dart-rank-pill {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.2vh 1.2vw;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 1.2vh;
-        }
-
-        .team-premium-highlight {
-            background: linear-gradient(90deg, rgba(0, 242, 254, 0.12) 0%, rgba(79, 172, 254, 0.03) 100%);
-            border: 1px solid rgba(0, 242, 254, 0.3);
-        }
-
+        .dart-rank-pill { display: flex; align-items: center; justify-content: space-between; padding: 1.2vh 1.2vw; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.2vh; }
+        .team-premium-highlight { background: linear-gradient(90deg, rgba(0, 242, 254, 0.12) 0%, rgba(79, 172, 254, 0.03) 100%); border: 1px solid rgba(0, 242, 254, 0.3); }
         .rank-number { font-weight: 800; font-size: 1.5vh; color: #00f2fe; width: 2vw; }
         .team-name { font-weight: 600; font-size: 1.5vh; color: #f1f5f9; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .rank-points { font-weight: 800; font-size: 1.4vh; background: rgba(255, 255, 255, 0.08); padding: 0.3vh 0.6vw; border-radius: 0.5vh; }
-
-        .dart-next-match-premium {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.02) 100%);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 1.5vh;
-            padding: 1.4vh 1.2vw;
-            margin-top: auto; 
-        }
-
-        .match-badge {
-            background: #22c55e; color: white; font-size: 1vh; font-weight: 800;
-            padding: 0.2vh 0.6vh; border-radius: 0.5vh; text-transform: uppercase;
-            display: inline-block; margin-bottom: 0.4vh;
-        }
+        .dart-next-match-premium { background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.02) 100%); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 1.5vh; padding: 1.4vh 1.2vw; margin-top: auto; }
+        .match-badge { background: #22c55e; color: white; font-size: 1vh; font-weight: 800; padding: 0.2vh 0.6vh; border-radius: 0.5vh; text-transform: uppercase; display: inline-block; margin-bottom: 0.4vh; }
         .match-date-text { font-size: 1.2vh; color: #4ade80; font-weight: 700; }
         .match-teams-text { font-size: 1.6vh; font-weight: 800; }
 
         /* LIVE GALERIE STYLES */
-        .view-gallery-style {
-            padding: 0; 
-            border-radius: 2.5vh;
-            overflow: hidden;
+        .view-gallery-style { padding: 0; border-radius: 2.5vh; overflow: hidden; }
+        .gallery-image-container { width: 100%; height: 100%; position: relative; background: #020617; }
+        
+        /* ULTRA WEICHE DOPPEL-BILD-BLENDE MIT 3s ZOOM-OUT */
+        .gallery-img { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+            opacity: 0;
+            transform: scale(1.15);
+            transition: opacity 1.5s ease-in-out, transform 3s cubic-bezier(0.1, 0.8, 0.2, 1);
+            z-index: 1;
+        }
+        .gallery-img.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .gallery-img.zoom-trigger {
+            transform: scale(1.00);
         }
 
-        .gallery-image-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            background: #020617;
-        }
-
-        .gallery-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .gallery-text-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(transparent 0%, rgba(6, 11, 20, 0.95) 75%);
-            padding: 3vh 1.5vw 2vh 1.5vw;
-            display: flex;
-            flex-direction: column;
-            gap: 0.3vh;
-        }
-
-        .gallery-event-badge {
-            align-self: flex-start;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            color: #060b14;
-            font-size: 1.1vh;
-            font-weight: 800;
-            padding: 0.3vh 0.8vh;
-            border-radius: 0.5vh;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
+        .gallery-text-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(transparent 0%, rgba(6, 11, 20, 0.95) 75%); padding: 3vh 1.5vw 2vh 1.5vw; display: flex; flex-direction: column; gap: 0.3vh; z-index: 10; }
+        .gallery-event-badge { align-self: flex-start; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #060b14; font-size: 1.1vh; font-weight: 800; padding: 0.3vh 0.8vh; border-radius: 0.5vh; text-transform: uppercase; letter-spacing: 1px; }
         .gallery-event-title { font-size: 2.2vh; font-weight: 800; color: #ffffff; }
         .gallery-event-date { font-size: 1.4vh; font-weight: 600; color: #ffe600; }
 
         /* TICKER ZONE */
         .ticker-zone {
-            grid-column: 1 / span 2;
-            grid-row: 2;
-            padding: 0;
-            height: 100%; 
-            display: flex;
-            align-items: center;
-            background: var(--ticker-gradient);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            border-radius: 1.5vh; 
-            overflow: hidden;
-            position: relative;
+            grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 100%; 
+            display: flex; align-items: center; background: var(--ticker-gradient);
+            border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border-radius: 1.5vh; overflow: hidden; position: relative;
         }
-
         .ticker-label-left {
-            height: 100%;
-            padding: 0 2vw;
-            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
-            display: flex;
-            align-items: center;
-            gap: 0.5vw;
-            color: #ffffff;
-            font-weight: 800;
-            font-size: 1.8vh; 
-            letter-spacing: 1.5px;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-            border-top-left-radius: 1.3vh;
-            border-bottom-left-radius: 1.3vh;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
-            z-index: 5;
+            height: 100%; padding: 0 2vw; background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            display: flex; align-items: center; gap: 0.5vw; color: #ffffff;
+            font-weight: 800; font-size: 2.4vh;
+            letter-spacing: 1.5px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            border-top-left-radius: 1.3vh; border-bottom-left-radius: 1.3vh;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
         }
-
         .ticker-wrap { flex: 1; overflow: hidden; display: flex; align-items: center; }
-
         .ticker-move {
-            display: inline-block;
-            white-space: nowrap;
-            padding-left: 100%; 
-            animation: tickerMove 55s linear infinite; 
-            will-change: transform;
-            font-size: 2.6vh; 
-            font-weight: 700;
-            color: #ffffff;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            display: inline-block; white-space: nowrap; padding-left: 100%; 
+            animation: tickerMove 55s linear infinite; will-change: transform;
+            font-weight: 700; color: #ffffff; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            font-size: 2.6vh;
         }
-
         .ticker-item { display: inline-block; padding: 0 3vw; }
         .ticker-highlight-yellow { color: #ffe600; font-weight: 800; }
         .ticker-separator { color: rgba(0, 242, 254, 0.6); font-weight: 900; margin: 0 1vw; }
 
-        @keyframes tickerMove {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-
-        @keyframes premiumPosterBreathing {
-            0% { transform: scale(1.00) translate(0px, 0px); }
-            50% { transform: scale(1.02) translate(2px, -1px); }
-            100% { transform: scale(1.01) translate(-1px, 1px); }
-        }
-
-        @keyframes softLightingPulse {
-            0% { opacity: 0.3; }
-            100% { opacity: 0.7; }
-        }
+        @keyframes tickerMove { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+        @keyframes premiumPosterBreathing { 0% { transform: scale(1.00) translate(0px, 0px); } 50% { transform: scale(1.02) translate(2px, -1px); } 100% { transform: scale(1.01) translate(-1px, 1px); } }
+        @keyframes softLightingPulse { 0% { opacity: 0.3; } 100% { opacity: 0.7; } }
     </style>
 </head>
 <body>
 
-    <!-- Ambient-Beleuchtung über deiner echten Wand-Textur -->
     <div class="bg-glow-static-1"></div>
     <div class="bg-glow-static-2"></div>
 
@@ -529,16 +272,15 @@
         <!-- RECHTS: Sidebar -->
         <div class="sidebar">
             
-            <!-- WIDGET 1: Uhrzeit & Datum -->
+            <!-- WIDGET 1: Uhrzeit -->
             <div class="card widget-clock" id="card-clock">
                 <div class="time-display" id="live-time">00:00</div>
                 <div class="date-display" id="live-date">Lade Datum...</div>
             </div>
 
-            <!-- WIDGET 2: Wetter Klagenfurt -->
+            <!-- WIDGET 2: Wetter -->
             <div class="card widget-weather w-sunny" id="card-weather">
                 <div class="weather-effects-container" id="weather-effects"></div>
-                
                 <div class="weather-content-wrapper">
                     <div>
                         <div class="weather-city">Klagenfurt</div>
@@ -548,10 +290,10 @@
                 </div>
             </div>
 
-            <!-- WIDGET 3: Dartverein & Live-Gäste-Galerie -->
+            <!-- WIDGET 3: Dart & Galerie Wechsler -->
             <div class="card widget-dart" id="card-dart">
                 
-                <!-- ANSICHT A: Dart Rangliste -->
+                <!-- ANSICHT A: Dart -->
                 <div class="dart-view active" id="view-dart-stats">
                     <div class="dart-header">
                         <div class="dart-badge-3d">🎯</div>
@@ -560,7 +302,6 @@
                             <p>DC City Cafe Fischl</p>
                         </div>
                     </div>
-                    
                     <div class="dart-rows-container">
                         <div class="dart-rank-pill team-premium-highlight">
                             <span class="rank-number">1.</span>
@@ -578,7 +319,6 @@
                             <span class="rank-points">18 Pkt</span>
                         </div>
                     </div>
-
                     <div class="dart-next-match-premium">
                         <span class="match-badge">Next Match</span>
                         <div class="match-date-text">Freitag, 24. Juli • 19:30 Uhr</div>
@@ -586,10 +326,11 @@
                     </div>
                 </div>
 
-                <!-- ANSICHT B: Live Google-Drive Galerie -->
+                <!-- ANSICHT B: Live Drive Galerie (Zwei Ebenen für nahtlose Überblendung) -->
                 <div class="dart-view view-gallery-style" id="view-event-gallery">
                     <div class="gallery-image-container">
-                        <img class="gallery-img" id="gallery-current-img" src="" alt="Gäste Foto">
+                        <img class="gallery-img active" id="gallery-img1" src="" alt="Gäste Foto 1">
+                        <img class="gallery-img" id="gallery-img2" src="" alt="Gäste Foto 2">
                         <div class="gallery-text-overlay">
                             <span class="gallery-event-badge" id="gallery-current-badge">Zu Besuch</span>
                             <h3 class="gallery-event-title" id="gallery-current-title">Lade Bilder...</h3>
@@ -604,10 +345,7 @@
 
         <!-- UNTEN: Info Ticker -->
         <div class="card ticker-zone">
-            <div class="ticker-label-left">
-                <span>ℹ️</span> INFO
-            </div>
-            
+            <div class="ticker-label-left"><span>ℹ️</span> INFO</div>
             <div class="ticker-wrap">
                 <div class="ticker-move">
                     <span class="ticker-item">✨ Willkommen im City Cafe Klagenfurt Fischl!</span>
@@ -628,52 +366,44 @@
     </div>
 
     <script>
-        // 1. ECHTE UHRZEIT
+        // --- GRUNDEINSTELLUNGEN FÜR DEINE DRIVE GALERIE ---
+        const WUNSCH_TEXT_STREIFEN = "Beste Stimmung im Cafe!"; 
+        const BILD_WECHSEL_SEKUNDEN = 10; 
+        // --------------------------------------------------
+
+        // 1. Uhrzeit
         function updateClock() {
             const now = new Date();
             let hours = String(now.getHours()).padStart(2, '0');
             let minutes = String(now.getMinutes()).padStart(2, '0');
             document.getElementById('live-time').textContent = `${hours}:${minutes}`;
-            
             const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             document.getElementById('live-date').textContent = now.toLocaleDateString('de-DE', options);
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+        setInterval(updateClock, 1000); updateClock();
 
-        // 2. DIASHOW LINKS (20 SEKUNDEN SCHLEIFE)
+        // 2. Diashow links
         const posterImages = ['0.png', '1.png', '2.png', '3.png']; 
         let currentPosterIndex = 0;
-        
         const img1 = document.getElementById('poster1');
         const img2 = document.getElementById('poster2');
         let isImg1Active = true;
 
         function changePoster() {
             if (posterImages.length <= 1) return;
-            
             currentPosterIndex = (currentPosterIndex + 1) % posterImages.length;
             const nextSource = posterImages[currentPosterIndex];
-            
             if (isImg1Active) {
                 img2.src = nextSource;
-                img2.onload = () => {
-                    img1.classList.remove('active');
-                    img2.classList.add('active');
-                    isImg1Active = false;
-                };
+                img2.onload = () => { img1.classList.remove('active'); img2.classList.add('active'); isImg1Active = false; };
             } else {
                 img1.src = nextSource;
-                img1.onload = () => {
-                    img2.classList.remove('active');
-                    img1.classList.add('active');
-                    isImg1Active = true;
-                };
+                img1.onload = () => { img2.classList.remove('active'); img1.classList.add('active'); isImg1Active = true; };
             }
         }
         setInterval(changePoster, 20000);
 
-        // 3. LIVE INTERNET-WETTER (Klagenfurt)
+        // 3. Wetter
         async function fetchLiveWeather() {
             try {
                 const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=46.6249&longitude=14.3053&current=temperature_2m,weather_code');
@@ -688,60 +418,74 @@
             const statusEl = document.querySelector('.weather-status');
             const widget = document.getElementById('card-weather');
             const effectsContainer = document.getElementById('weather-effects');
-            
-            tempEl.textContent = `${temp}°C`;
-            effectsContainer.innerHTML = '';
+            tempEl.textContent = `${temp}°C`; effectsContainer.innerHTML = '';
             widget.classList.remove('w-sunny', 'w-cloudy', 'w-rainy', 'w-thunder');
 
-            if (code === 0 || code === 1) { 
-                statusEl.textContent = "Sonnig & Klar";
-                widget.classList.add('w-sunny');
-            } else if (code === 2 || code === 3 || code === 45 || code === 48) { 
-                statusEl.textContent = "Bewölkt";
-                widget.classList.add('w-cloudy');
-                effectsContainer.innerHTML = `
-                    <div class="cloud-bg-element" style="width:18vh; height:10vh; top:-3vh; left:-2vh; animation-duration:14s;"></div>
-                    <div class="cloud-bg-element" style="width:25vh; height:12vh; bottom:-4vh; right:-4vh; animation-duration:22s;"></div>
-                `;
+            if (code === 0 || code === 1) { statusEl.textContent = "Sonnig & Klar"; widget.classList.add('w-sunny'); }
+            else if (code === 2 || code === 3 || code === 45 || code === 48) { 
+                statusEl.textContent = "Bewölkt"; widget.classList.add('w-cloudy');
+                effectsContainer.innerHTML = `<div class="cloud-bg-element" style="width:18vh; height:10vh; top:-3vh; left:-2vh; animation-duration:14s;"></div>`;
             } else if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) { 
-                statusEl.textContent = "Regnerisch";
-                widget.classList.add('w-rainy');
-                for(let i=0; i<6; i++) {
-                    const leftPos = Math.floor(Math.random() * 90) + 5;
-                    const delay = (Math.random() * 0.6).toFixed(2);
-                    effectsContainer.innerHTML += `<div class="rain-streak" style="left:${leftPos}%; animation-delay:${delay}s;"></div>`;
-                }
-            } else if ([95, 96, 99].includes(code)) { 
-                statusEl.textContent = "Gewitter";
-                widget.classList.add('w-thunder');
-                effectsContainer.innerHTML = `<div class="lightning-bolt-effect"></div>`;
-            } else {
-                statusEl.textContent = "Wechselhaft";
-                widget.classList.add('w-cloudy');
-            }
+                statusEl.textContent = "Regnerisch"; widget.classList.add('w-rainy');
+                for(let i=0; i<6; i++) { effectsContainer.innerHTML += `<div class="rain-streak" style="left:${Math.floor(Math.random()*90)+5}%; animation-delay:${(Math.random()*0.6).toFixed(2)}s;"></div>`; }
+            } else if ([95, 96, 99].includes(code)) { statusEl.textContent = "Gewitter"; widget.classList.add('w-thunder'); effectsContainer.innerHTML = `<div class="lightning-bolt-effect"></div>`; }
         }
-        setInterval(fetchLiveWeather, 600000);
-        fetchLiveWeather();
+        setInterval(fetchLiveWeather, 600000); fetchLiveWeather();
 
-        // 4. AUTOMATISCHE GOOGLE DRIVE LIVE-ORDNERABFRAGE
+        // 4. Live Google Drive Verbindung mit Cross-Fade & Zoom-Out
         let activeView = 'stats'; 
-        let currentGalleryIndex = 0;
         let visitorGalleryData = []; 
-
-        // DEINE AKTUALISIERTE APPS-SCRIPT WEB-APP-URL IST JETZT HIER EINGEBAUT:
+        let galleryTimer = null;
+        let isGalleryImg1Active = true;
         const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxhKiWMV_qehIDFDqndaP4VCMG8OAq5kH0s7DBpUXrR8HWmAJOQaP5UfTZIaplXWP1S/exec";
 
         async function loadDriveFolderImages() {
-            if(googleScriptUrl.includes("HIER_DEINE_KOPIERTE")) return;
             try {
                 const response = await fetch(googleScriptUrl);
                 const data = await response.json();
                 if(data && data.length > 0) {
                     visitorGalleryData = data;
-                    document.getElementById('gallery-current-img').src = visitorGalleryData[0].src;
-                    document.getElementById('gallery-current-title').textContent = visitorGalleryData[0].title;
                 }
             } catch (e) { console.log("Drive-Fehler"); }
+        }
+
+        function showRandomImage() {
+            if (visitorGalleryData.length === 0) return;
+            
+            const randomIndex = Math.floor(Math.random() * visitorGalleryData.length);
+            const data = visitorGalleryData[randomIndex];
+            
+            const gImg1 = document.getElementById('gallery-img1');
+            const gImg2 = document.getElementById('gallery-img2');
+            
+            // Textinhalte weich aktualisieren
+            document.getElementById('gallery-current-badge').textContent = data.badge;
+            document.getElementById('gallery-current-date').textContent = data.date;
+            document.getElementById('gallery-current-title').textContent = (WUNSCH_TEXT_STREIFEN !== "") ? WUNSCH_TEXT_STREIFEN : data.title;
+
+            if (isGalleryImg1Active) {
+                // Bild 2 im Hintergrund vorbereiten und zoomen
+                gImg2.classList.remove('zoom-trigger');
+                gImg2.src = data.src;
+                
+                gImg2.onload = () => {
+                    gImg1.classList.remove('active');
+                    gImg2.classList.add('active');
+                    gImg2.classList.add('zoom-trigger'); // Startet 3s Zoom-Out
+                    isGalleryImg1Active = false;
+                };
+            } else {
+                // Bild 1 im Hintergrund vorbereiten und zoomen
+                gImg1.classList.remove('zoom-trigger');
+                gImg1.src = data.src;
+                
+                gImg1.onload = () => {
+                    gImg2.classList.remove('active');
+                    gImg1.classList.add('active');
+                    gImg1.classList.add('zoom-trigger'); // Startet 3s Zoom-Out
+                    isGalleryImg1Active = true;
+                };
+            }
         }
 
         function toggleDartWidgetView() {
@@ -749,55 +493,28 @@
             const galleryView = document.getElementById('view-event-gallery');
 
             if (activeView === 'stats') {
-                if(visitorGalleryData.length > 0) {
-                    currentGalleryIndex = (currentGalleryIndex + 1) % visitorGalleryData.length;
-                    const data = visitorGalleryData[currentGalleryIndex];
-                    
-                    document.getElementById('gallery-current-img').src = data.src;
-                    document.getElementById('gallery-current-badge').textContent = data.badge;
-                    document.getElementById('gallery-current-title').textContent = data.title;
-                    document.getElementById('gallery-current-date').textContent = data.date;
-                } else {
-                    document.getElementById('gallery-current-title').textContent = "Keine Bilder im Ordner";
-                    document.getElementById('gallery-current-date').textContent = "Bitte lade Fotos in Drive hoch";
-                }
-
-                statsView.classList.remove('active');
-                galleryView.classList.add('active');
+                statsView.classList.remove('active'); 
+                galleryView.classList.add('active'); 
                 activeView = 'gallery';
+                
+                showRandomImage();
+                galleryTimer = setInterval(showRandomImage, BILD_WECHSEL_SEKUNDEN * 1000);
             } else {
-                galleryView.classList.remove('active');
-                statsView.classList.add('active');
+                clearInterval(galleryTimer);
+                galleryView.classList.remove('active'); 
+                statsView.classList.add('active'); 
                 activeView = 'stats';
                 loadDriveFolderImages(); 
             }
         }
-        setInterval(toggleDartWidgetView, 60000);
+        
+        setInterval(toggleDartWidgetView, 60000); 
         loadDriveFolderImages();
 
-        // 5. ZUFÄLLIGES RAHMEN-AUFSCHIMMERN
-        const cards = [
-            document.getElementById('card-media'),
-            document.getElementById('card-clock'),
-            document.getElementById('card-weather'),
-            document.getElementById('card-dart')
-        ];
-
-        function triggerPremiumShimmer() {
-            const randomCard = cards[Math.floor(Math.random() * cards.length)];
-            if(randomCard) randomCard.classList.add('shimmer-active');
-            setTimeout(() => {
-                if(randomCard) randomCard.classList.remove('shimmer-active');
-            }, 1200);
-        }
-
-        function loopShimmer() {
-            const randomDelay = Math.floor(Math.random() * 4000) + 4000;
-            setTimeout(() => {
-                triggerPremiumShimmer();
-                loopShimmer();
-            }, randomDelay);
-        }
+        // 5. Shimmer
+        const cards = [document.getElementById('card-media'), document.getElementById('card-clock'), document.getElementById('card-weather'), document.getElementById('card-dart')];
+        function triggerPremiumShimmer() { const rc = cards[Math.floor(Math.random()*cards.length)]; if(rc) rc.classList.add('shimmer-active'); setTimeout(() => { if(rc) rc.classList.remove('shimmer-active'); }, 1200); }
+        function loopShimmer() { setTimeout(() => { triggerPremiumShimmer(); loopShimmer(); }, Math.floor(Math.random()*4000)+4000); }
         loopShimmer();
     </script>
 </body>
