@@ -13,7 +13,6 @@
     
     <style>
         :root {
-            /* Ticker-Gradient auf RGBA umgestellt für sanfte Transparenz (0.65 Deckkraft) */
             --primary-glow: #00f2fe;
             --secondary-glow: #4facfe;
             --accent-glow: #f355da;
@@ -46,7 +45,7 @@
             
             background-color: #241914; 
             
-            /* LÄDT DAS BILD DIREKT VON DEINEM GITHUB-REPOSITORY (BRANCH: MAIN) */
+            /* LÄDT DAS BILD DIREKT VON DEINEM GITHUB-REPOSITORY */
             background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png'); 
             
             background-size: cover;
@@ -483,7 +482,7 @@
             padding-left: 100%; 
             animation: tickerMove 55s linear infinite; 
             will-change: transform;
-            font-size: 2.2vh; 
+            font-size: 2.6vh; 
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -729,8 +728,8 @@
         let currentGalleryIndex = 0;
         let visitorGalleryData = []; 
 
-        // DEINE AKTIVE APPS-SCRIPT WEB-APP-URL IST HIER JETZT EINGEBAUT:
-        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxtc5G9_Nr7oqwbMCCcnJt91J83LITN-OFm3gg7n8ASUDxkcJEx6LGWnti8eBeip7CI/exec";
+        // DEINE AKTUALISIERTE APPS-SCRIPT WEB-APP-URL IST JETZT HIER EINGEBAUT:
+        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxhKiWMV_qehIDFDqndaP4VCMG8OAq5kH0s7DBpUXrR8HWmAJOQaP5UfTZIaplXWP1S/exec";
 
         async function loadDriveFolderImages() {
             if(googleScriptUrl.includes("HIER_DEINE_KOPIERTE")) return;
