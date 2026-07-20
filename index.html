@@ -3,450 +3,583 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>City Café - Premium Bright True Blue Dashboard</title>
+    <title>City Cafe Klagenfurt Fischl - Ultimate Dark TV Dashboard</title>
+    
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Unbounded:wght@700;900&display=swap');
+        /* CSS-Variablen für das edle, dunklere Luxus-Design */
+        :root {
+            --primary-glow: #00f2fe;
+            --secondary-glow: #4facfe;
+            --accent-glow: #f355da;
+            /* Ein tieferes, edles Saphir-/Mitternachtsblau als Basis */
+            --bg-gradient: linear-gradient(135deg, #060b14 0%, #0b1326 40%, #111c36 100%);
+            /* Dunkleres, hochelegantes Premium-Glas-Design */
+            --card-bg: rgba(17, 28, 54, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
 
+        /* Hardcore Reset & GPU-Rendering-Optimierungen für flüssige Performance */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            user-select: none;
+            /* Erzwingt Hardware-Beschleunigung auf allen Elementen */
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
         }
 
-        /* Hellerer, satterer Hintergrund im edlen Deep-Blue-Look */
-        html, body {
-            background-color: #0b0f26;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Der bewährte Scaler-Wrapper für den Lumify Player */
-        #dashboard-scaler {
+        body {
             width: 1920px;
             height: 1080px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            transform-origin: center center;
-            font-family: 'Outfit', sans-serif;
-            display: grid;
-            grid-template-rows: 150px 1fr 85px;
-            padding: 40px;
-            gap: 30px;
-        }
-
-        /* Ambient Background Glows - Extra hell & reinblau aufgefrischt */
-        .glow-orb-1 {
-            position: absolute;
-            width: 1100px;
-            height: 1100px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(0,0,0,0) 70%);
-            top: -250px;
-            left: -100px;
-            z-index: -1;
-            pointer-events: none;
-            filter: blur(60px);
-        }
-        .glow-orb-2 {
-            position: absolute;
-            width: 1300px;
-            height: 1300px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, rgba(0,0,0,0) 70%);
-            bottom: -300px;
-            right: -100px;
-            z-index: -1;
-            pointer-events: none;
-            filter: blur(60px);
-        }
-
-        /* DEUTLICH HELLER: Optimiertes Eisglas mit starker weißer Reflexionsschicht */
-        .premium-panel {
-            border-radius: 20px;
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.12) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), inset 0 1px 3px rgba(255, 255, 255, 0.6);
-            display: flex;
-            align-items: center;
-        }
-
-        /* 1. TOP BAR / HEADER */
-        header {
-            grid-row: 1;
-            display: grid;
-            grid-template-columns: 1400px 1fr; 
-            gap: 30px;
-            width: 1840px;
-        }
-        
-        .header-left {
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(30, 58, 138, 0.85) 0%, rgba(15, 23, 42, 0.8) 100%);
-            position: relative;
-            border: none;
-        }
-
-        /* 3D-Unterbau des Rahmens */
-        .header-left::before {
-            content: '';
-            position: absolute;
-            top: -3px; left: -3px; right: -3px; bottom: -3px;
-            border-radius: 23px;
-            background: linear-gradient(135deg, #475569 0%, #0f172a 50%, #94a3b8 100%);
-            z-index: -1;
-            box-shadow: inset 1px 1px 3px rgba(255,255,255,0.4), 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        /* Kristall-Glint-Effekt (Reines helles Weiß-Blau-Schimmern) */
-        .header-left::after {
-            content: '';
-            position: absolute;
-            top: -3px; left: -3px; right: -3px; bottom: -3px;
-            border-radius: 23px;
-            background: linear-gradient(100deg, 
-                transparent 0%, 
-                transparent 30%, 
-                rgba(255, 255, 255, 1) 48%, 
-                rgba(191, 219, 254, 1) 50%, 
-                rgba(255, 255, 255, 1) 52%, 
-                transparent 70%,
-                transparent 100%);
-            background-size: 350% 100%;
-            z-index: -1;
-            
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            -webkit-mask-composite: xor;
-            padding: 3px; 
-            
-            animation: sudden-glint 12s infinite linear;
-        }
-
-        /* Status-Dots in strahlendem Hellblau */
-        .status-dot {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            margin: auto;
-            width: 14px;
-            height: 14px;
-            background-color: #60a5fa;
-            border-radius: 50%;
-            box-shadow: 0 0 20px #3b82f6;
-            animation: pulse-blue 2s infinite;
-        }
-        .status-dot.left { left: 50px; }
-        .status-dot.right { right: 50px; }
-
-        /* Der originale 3D-Chrom-Verlauf (komplett frei von Grün-Pigmenten) */
-        .header-text {
-            font-family: 'Unbounded', sans-serif;
-            font-size: 3.1rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-align: center;
-            position: relative;
-            display: inline-block;
-            
-            background: 
-                repeating-linear-gradient(90deg, rgba(255,255,255,0.18) 0px, rgba(255,255,255,0.18) 1px, transparent 1px, transparent 4px),
-                linear-gradient(90deg, #ffffff 0%, #f0f6ff 25%, #bfdbfe 50%, #60a5fa 75%, #3b82f6 100%);
-            background-blend-mode: overlay;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0px 0px 35px rgba(59, 130, 246, 0.7));
-            z-index: 2;
-        }
-
-        /* Matte Chrom-Stahl-Kante dahinter */
-        .header-text::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0; top: 0; width: 100%; height: 100%;
-            -webkit-text-fill-color: #0d2254;
-            text-shadow: 
-                1px 1px 0px #cbd5e1,
-                2px 2px 0px #94a3b8,
-                3px 3px 0px #64748b,
-                4px 4px 0px #475569,
-                5px 5px 0px #334155,
-                6px 6px 0px #1e293b,
-                7px 7px 0px #0f172a,
-                8px 8px 15px rgba(0, 0, 0, 0.95);
-            z-index: -1;
-        }
-
-        /* Rechter Header-Panel (LIVE INFO) */
-        .header-right {
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(59, 130, 246, 0.25) 100%);
-        }
-        .header-subtext {
-            font-size: 1.5rem;
-            color: #ffffff;
-            font-weight: 800;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
-        }
-
-        /* MITTLERER BEREICH */
-        .content-wrapper {
-            grid-row: 2;
-            display: grid;
-            grid-template-columns: 1400px 1fr; 
-            gap: 30px;
-            height: 100%;
-            width: 1840px;
-        }
-
-        /* HAUPT-MEDIENBEREICH */
-        .main-media-zone {
-            grid-column: 1;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .media-placeholder-frame {
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            padding: 50px 80px;
-            border-radius: 16px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .media-placeholder-frame span {
-            font-size: 1.9rem;
-            font-weight: 600;
-            color: #ffffff;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        /* SIDEBAR WIDGETS */
-        .sidebar {
-            display: grid;
-            grid-template-rows: repeat(3, 1fr);
-            gap: 30px;
-        }
-        .widget {
-            flex-direction: column;
-            justify-content: center;
-            align-items: center; 
-            text-align: center;
-        }
-        .widget-label {
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #ffffff;
-            opacity: 0.8;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .time-value {
-            font-size: 5.8rem; 
-            font-weight: 900;
-            letter-spacing: -1px;
-            color: #ffffff;
-            line-height: 1;
-            text-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-        }
-        .weather-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-        .weather-icon {
-            font-size: 3.6rem;
-            filter: drop-shadow(0 4px 15px rgba(255, 184, 0, 0.6));
-        }
-        .weather-value {
-            font-size: 3.4rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-        .date-value {
-            font-size: 2.6rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, #ffffff, #93c5fd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* 4. FOOTER / NEWSTICKER - Exakt wie auf dem Foto (Pink -> Violett -> Hellblau) */
-        footer {
-            grid-row: 3;
             overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-light);
             position: relative;
-            padding: 0;
-            /* Der 3-Farbverlauf wie gewünscht */
-            background: linear-gradient(90deg, rgba(255, 0, 128, 0.45) 0%, rgba(139, 92, 246, 0.4) 50%, rgba(37, 99, 235, 0.45) 100%);
-            width: 1840px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
         }
-        .ticker-badge {
+
+        /* Statische Licht-Glows im Hintergrund (KEINE CPU-lastige Animation für 100% flüssigen Lauf) */
+        .bg-glow-static-1 {
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            /* Strahlendes Hot-Pink */
-            background: linear-gradient(135deg, #ff007f 0%, #d9006c 100%);
-            color: white;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -150px;
+            left: -100px;
+            filter: blur(50px);
+            z-index: 0;
+        }
+        .bg-glow-static-2 {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(243, 85, 218, 0.1) 0%, rgba(0,0,0,0) 70%);
+            bottom: -200px;
+            right: -100px;
+            filter: blur(60px);
+            z-index: 0;
+        }
+
+        /* Mathematisch perfekt symmetrisch zentriertes Grid über die exakte Monitorauflösung */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1290px 550px; /* 1290 + 550 + 30px (Gap) + 50px (Padding) = 1920px */
+            grid-template-rows: 880px 110px;    /* 880 + 110 + 30px (Gap) + 60px (Padding) = 1080px */
+            width: 1920px;
+            height: 1080px;
+            padding: 30px 25px 30px 25px; /* Perfekte, gleichmäßige Seitenabstände */
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hochwertige, dunkle Premium-Karten mit 3D-Tiefen-Ebene */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            
+            /* Extrem plastischer 3D-Schatten (Ambient Dark Occlusion) */
+            box-shadow: 
+                0 4px 30px rgba(0, 0, 0, 0.2),
+                0 30px 60px -15px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0px rgba(255, 255, 255, 0.1);
+            
+            padding: 35px;
+            /* Extrem flüssige CSS-Transition dank Hardware-Beschleunigung */
+            transition: border-color 0.6s ease, box-shadow 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Einzigartiger Reflexions-Lichtstreifen für das Aufschimmern */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 80%; height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-30deg);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Absolut ruckelfreier, eleganter Aufschimmer-Effekt (Rahmen + Reflexion) */
+        .shimmer-active {
+            border-color: rgba(0, 242, 254, 0.6) !important;
+            box-shadow: 
+                0 0 40px rgba(0, 242, 254, 0.3), 
+                0 30px 60px -15px rgba(0, 0, 0, 0.5),
+                inset 0 0 15px rgba(0, 242, 254, 0.1) !important;
+            transform: scale(1.005);
+        }
+        /* Aktiviert die flüssige Bewegung des Glanzstreifens über GPU */
+        .shimmer-active::after {
+            left: 250%;
+            transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* LINKER BEREICH: DIE ADVERTISING / PLAKAT ZONE (Perfekt zentriert) */
+        .media-zone {
+            grid-column: 1;
+            grid-row: 1;
+            padding: 0;
+            background: #020617; /* Tiefschwarzer Kinorahmen innen für optimalen Plakat-Kontrast */
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .poster-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        .poster-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* RECHTER BEREICH: SYMMETRISCHE SIDEBAR */
+        .sidebar {
+            grid-column: 2;
+            grid-row: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* WIDGET 1: GLÖHENDER CHRONOGRAPH */
+        .widget-clock {
+            flex: 0 0 auto;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(20, 35, 69, 0.7) 0%, rgba(13, 22, 46, 0.7) 100%);
+        }
+
+        .time-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 74px;
             font-weight: 900;
-            font-size: 1.3rem;
-            letter-spacing: 3px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 2px 10px rgba(0, 242, 254, 0.3));
+        }
+
+        .date-display {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* WIDGET 2: MODERNES WETTER */
+        .widget-weather {
+            flex: 0 0 auto;
             display: flex;
             align-items: center;
-            padding: 0 35px;
-            z-index: 10;
-            border-radius: 18px 0 0 18px;
-            box-shadow: 10px 0 25px rgba(0,0,0,0.3);
+            justify-content: space-between;
         }
-        .ticker-container {
+
+        .weather-city {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-light);
+            letter-spacing: -0.5px;
+        }
+
+        .weather-status {
+            font-size: 15px;
+            color: #00f2fe;
+            font-weight: 700;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .weather-degree {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .temp-number {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+
+        /* Statisches edles Wetter-Icon (Vermeidet Rendering-Ruckler auf TVs) */
+        .weather-icon-3d-static {
+            width: 70px;
+            height: 70px;
+            position: relative;
+        }
+        .sun-layer {
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            background: radial-gradient(circle, #ffdb4d 0%, #f57c00 100%);
+            border-radius: 50%;
+            top: 0; right: 0;
+            box-shadow: 0 0 25px rgba(255, 179, 0, 0.6);
+        }
+        .cloud-layer {
+            position: absolute;
+            width: 55px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            bottom: 0; left: 0;
+            box-shadow: -4px 8px 15px rgba(0, 0, 0, 0.3);
+            transform: translateZ(10px);
+        }
+
+        /* WIDGET 3: DARTVEREIN LOUNGE DESIGN */
+        .widget-dart {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dart-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .dart-badge-3d {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            box-shadow: 0 6px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .dart-title h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+        .dart-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dart-rows-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .dart-rank-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 22px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            box-shadow: inset 0 1px 0px rgba(255,255,255,0.02);
+        }
+
+        /* Tiefblaues Cyber-Highlight für den Heimsieg-Look */
+        .team-premium-highlight {
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.12) 0%, rgba(79, 172, 254, 0.03) 100%);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+        }
+
+        .rank-number {
+            font-weight: 800;
+            font-size: 16px;
+            color: #00f2fe;
+            width: 30px;
+        }
+        .team-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #f1f5f9;
+            flex: 1;
+        }
+        .team-premium-highlight .team-name {
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .rank-points {
+            font-weight: 800;
+            font-size: 15px;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 4px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* MATCH TICKET AM BODEN DER SIDEBAR */
+        .dart-next-match-premium {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.02) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            padding: 22px;
+            margin-top: auto;
+        }
+
+        .match-badge {
+            background: #22c55e;
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+        }
+
+        .match-date-text {
+            font-size: 14px;
+            color: #4ade80;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .match-teams-text {
+            font-size: 17px;
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        /* UNTERER BEREICH: DER INFO TICKER (Exakt am unteren Rand platziert) */
+        .ticker-zone {
+            grid-column: 1 / span 2;
+            grid-row: 2;
+            padding: 0;
+            height: 90px; /* Perfekte Höhe ohne jeglichen vertikalen Versatz */
+            align-self: end; /* Drückt das Element ganz nach unten */
+            display: flex;
+            align-items: center;
+            
+            /* Atemberaubender 3-Farben Premium-Verlauf (Dunkler & satter für den Kontrast) */
+            background: linear-gradient(90deg, #00b4db 0%, #0083b0 45%, #b5179e 100%);
+            border: none;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+        }
+
+        .ticker-wrap {
             width: 100%;
             overflow: hidden;
-            padding-left: 200px;
-            display: flex;
-            align-items: center;
-            height: 100%;
-        }
-        .ticker-track {
-            display: inline-block;
-            white-space: nowrap;
-            animation: fluid-ticker 30s linear infinite;
-        }
-        .ticker-text {
-            font-size: 1.7rem;
-            font-weight: 400;
-            color: #ffffff;
-            margin-right: 120px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-        }
-        .ticker-highlight {
-            /* Kristallklares Hellblau als Highlight (Vermeidet Grünstich komplett) */
-            color: #cbd5e1;
-            font-weight: 800;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
         }
 
-        /* ANIMATIONEN */
-        @keyframes sudden-glint {
-            0%, 20% { background-position: 0% 50%; opacity: 0; }
-            22% { opacity: 1; } 
-            24% { background-position: 50% 50%; opacity: 0; }
-            24.1%, 70% { background-position: 100% 50%; opacity: 0; }
-            72% { opacity: 1; } 
-            74% { background-position: 0% 50%; opacity: 0; }
-            76%, 100% { background-position: 0% 50%; opacity: 0; }
+        /* Flüssige Marquee-Animation über Hardware-beschleunigtes translate3d */
+        .ticker-move {
+            display: inline-block;
+            white-space: nowrap;
+            padding-right: 100%;
+            animation: tickerMove 30s linear infinite;
+            will-change: transform; /* Teilt der GPU mit, dass dieses Element optimiert gerendert werden muss */
+            
+            font-size: 30px;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
-        @keyframes fluid-ticker {
+
+        .ticker-item {
+            display: inline-block;
+            padding: 0 45px;
+        }
+
+        .ticker-highlight-yellow {
+            color: #ffe600;
+            font-weight: 800;
+        }
+
+        .ticker-separator {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 900;
+            margin: 0 15px;
+        }
+
+        /* Ruckelfreie CSS-Transformation */
+        @keyframes tickerMove {
             0% { transform: translate3d(0, 0, 0); }
             100% { transform: translate3d(-100%, 0, 0); }
-        }
-        @keyframes pulse-blue {
-            0% { transform: scale(0.95); opacity: 0.6; }
-            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 25px #3b82f6; }
-            100% { transform: scale(0.95); opacity: 0.6; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Das gesamte Dashboard wird in diesem Scaler gerendert -->
-    <div id="dashboard-scaler">
+    <!-- Statische Ambient-Lights im Hintergrund (Perfekte Performance) -->
+    <div class="bg-glow-static-1"></div>
+    <div class="bg-glow-static-2"></div>
 
-        <!-- Ambient Background Glows -->
-        <div class="glow-orb-1"></div>
-        <div class="glow-orb-2"></div>
-
-        <!-- Symmetrischer Header -->
-        <header>
-            <div class="premium-panel header-left">
-                <div class="status-dot left"></div>
-                <div class="header-text" data-text="Willkommen im City Café">Willkommen im City Café</div>
-                <div class="status-dot right"></div>
+    <div class="dashboard-container">
+        
+        <!-- LINKS: Plakatbereich (Exakt eingemessen und perfekt zentriert) -->
+        <div class="card media-zone" id="card-media">
+            <div class="poster-container">
+                <img class="poster-image" src="1750.png" alt="Veranstaltungsplakat" onerror="this.style.display='none'; document.getElementById('poster-fallback').style.display='block';">
+                
+                <div id="poster-fallback" class="media-placeholder" style="display:none; text-align: center; padding: 40px;">
+                    <h1 style="font-size: 54px; margin-bottom: 20px; color: #00f2fe; font-weight: 800;">City Cafe Klagenfurt Fischl</h1>
+                    <p style="font-size: 26px; color: var(--text-muted);">[ Plakat- & Video-Ebene ]</p>
+                </div>
             </div>
-            <div class="premium-panel header-right">
-                <div class="header-subtext">LIVE INFO</div>
-            </div>
-        </header>
+        </div>
 
-        <!-- Content Split -->
-        <div class="content-wrapper">
+        <!-- RECHTS: Symmetrische Sidebar -->
+        <div class="sidebar">
             
-            <!-- Playlist-Screen -->
-            <main class="premium-panel main-media-zone">
-                <div class="media-placeholder-frame">
-                    <span>[ Hier die Lumify Medien-Playlist oder Bilder einbetten ]</span>
-                </div>
-            </main>
+            <!-- WIDGET 1: Uhrzeit & Datum -->
+            <div class="card widget-clock" id="card-clock">
+                <div class="time-display" id="live-time">00:00:00</div>
+                <div class="date-display" id="live-date">Lade Datum...</div>
+            </div>
 
-            <!-- Widgets Sidebar -->
-            <aside class="sidebar">
-                <!-- Zeit -->
-                <div class="premium-panel widget">
-                    <div class="widget-label">Uhrzeit</div>
-                    <div class="time-value">22:38</div>
+            <!-- WIDGET 2: Wetter Klagenfurt -->
+            <div class="card widget-weather" id="card-weather">
+                <div>
+                    <div class="weather-city">Klagenfurt</div>
+                    <div class="weather-status">Sonnig & Klar</div>
                 </div>
-                <!-- Wetter -->
-                <div class="premium-panel widget">
-                    <div class="widget-label">Klagenfurt</div>
-                    <div class="weather-container">
-                        <span class="weather-icon">☀️</span>
-                        <span class="weather-value">22°C</span>
+                <div class="weather-degree">
+                    <div class="temp-number">26°C</div>
+                    <div class="weather-icon-3d-static">
+                        <div class="sun-layer"></div>
+                        <div class="cloud-layer"></div>
                     </div>
                 </div>
-                <!-- Datum -->
-                <div class="premium-panel widget">
-                    <div class="widget-label">Datum</div>
-                    <div class="date-value">19. JULI</div>
+            </div>
+
+            <!-- WIDGET 3: Dartverein Premium List -->
+            <div class="card widget-dart" id="card-dart">
+                <div class="dart-header">
+                    <div class="dart-badge-3d">🎯</div>
+                    <div class="dart-title">
+                        <h2>Dartverein Info</h2>
+                        <p>DC City Cafe Fischl</p>
+                    </div>
                 </div>
-            </aside>
+                
+                <div class="dart-rows-container">
+                    <div class="dart-rank-pill team-premium-highlight">
+                        <span class="rank-number">1.</span>
+                        <span class="team-name">DC City Cafe Fischl I</span>
+                        <span class="rank-points">24 Pkt</span>
+                    </div>
+                    <div class="dart-rank-pill">
+                        <span class="rank-number">2.</span>
+                        <span class="team-name">Black Jack Dart Klagenfurt</span>
+                        <span class="rank-points">21 Pkt</span>
+                    </div>
+                    <div class="dart-rank-pill">
+                        <span class="rank-number">3.</span>
+                        <span class="team-name">Dart Sharks Ebenthal</span>
+                        <span class="rank-points">18 Pkt</span>
+                    </div>
+                </div>
+
+                <!-- Match-Ticket -->
+                <div class="dart-next-match-premium">
+                    <span class="match-badge">Next Match</span>
+                    <div class="match-date-text">Freitag, 24. Juli • 19:30 Uhr</div>
+                    <div class="match-teams-text">Cafe Fischl I vs. Völkermarkt</div>
+                </div>
+            </div>
 
         </div>
 
-        <!-- Premium Lauftext -->
-        <footer class="premium-panel">
-            <div class="ticker-badge">INFO</div>
-            <div class="ticker-container">
-                <div class="ticker-track">
-                    <span class="ticker-text">+++ <span class="ticker-highlight">AKTION:</span> Heute ab 20:00 Uhr alle Cocktails im Angebot! +++</span>
-                    <span class="ticker-text">Nächster großer <span class="ticker-highlight">Karaoke-Abend</span> am kommenden Wochenende – Der Eintritt ist natürlich frei! +++</span>
-                    <span class="ticker-text">Lust auf Snacks? Frische Toasts und Knoblauchbrot direkt an der Theke bestellen! +++</span>
+        <!-- UNTEN: Absolut fehlerfrei platzierter Info Ticker -->
+        <div class="card ticker-zone">
+            <div class="ticker-wrap">
+                <div class="ticker-move">
+                    <span class="ticker-item">✨ Willkommen im City Cafe Klagenfurt Fischl!</span>
+                    <span class="ticker-separator">•</span>
+                    <span class="ticker-item">🎤 <span class="ticker-highlight-yellow">HIGHLIGHT:</span> RIESIGER KARAOKE-ABEND am Samstag, 31. August 2026 ab 20:00 Uhr! Eintritt frei!</span>
+                    <span class="ticker-separator">•</span>
+                    <span class="ticker-item">🎯 Dartverein News: Glückwunsch an unsere 1. Mannschaft zur Tabellenführung!</span>
+                    <span class="ticker-separator">•</span>
+                    <span class="ticker-item">📱 Reservierungen & Infos online unter: www.citycafe-fischl.at</span>
                 </div>
             </div>
-        </footer>
+        </div>
 
     </div>
 
-    <!-- Skript zur automatischen Einpassung -->
     <script>
-        function adjustDashboardScale() {
-            const scaler = document.getElementById('dashboard-scaler');
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
+        // Realtime Uhrzeit- & Datums-Aktualisierung
+        function updateClock() {
+            const now = new Date();
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+            let seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('live-time').textContent = `${hours}:${minutes}:${seconds}`;
             
-            const scaleX = windowWidth / 1920;
-            const scaleY = windowHeight / 1080;
-            const scaleFactor = Math.min(scaleX, scaleY);
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('live-date').textContent = now.toLocaleDateString('de-DE', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Ruckelfreies Aufschimmern über optimierte CSS-Zuweisung
+        const cards = [
+            document.getElementById('card-media'),
+            document.getElementById('card-clock'),
+            document.getElementById('card-weather'),
+            document.getElementById('card-dart')
+        ];
+
+        function triggerPremiumShimmer() {
+            const randomCard = cards[Math.floor(Math.random() * cards.length)];
+            randomCard.classList.add('shimmer-active');
             
-            scaler.style.transform = `translate(-50%, -50%) scale(${scaleFactor})`;
+            setTimeout(() => {
+                randomCard.classList.remove('shimmer-active');
+            }, 1200);
         }
 
-        window.addEventListener('resize', adjustDashboardScale);
-        window.addEventListener('DOMContentLoaded', adjustDashboardScale);
-        adjustDashboardScale();
+        function loopShimmer() {
+            const randomDelay = Math.floor(Math.random() * 4000) + 4000; // Alle 4-8 Sekunden
+            setTimeout(() => {
+                triggerPremiumShimmer();
+                loopShimmer();
+            }, randomDelay);
+        }
+        loopShimmer();
     </script>
-
 </body>
 </html>
 
