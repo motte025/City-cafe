@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Wichtig: Erzwingt die korrekte Viewport-Skalierung auf Smart-TVs und Kiosk-Systemen -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>City Cafe Klagenfurt Fischl - Ultimate Fluid TV Dashboard</title>
+    <title>City Cafe Klagenfurt Fischl - Gold Standard TV Dashboard</title>
     
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,15 +65,15 @@
             z-index: 0;
         }
 
-        /* Fluides Grid-Layout */
+        /* Grid-Höhen gestaucht (76vh + 8vh) und großes Bottom-Padding, um den Ticker über die Adressleisten-Kante zu heben */
         .dashboard-container {
             display: grid;
             grid-template-columns: 1fr 29vw; 
-            grid-template-rows: 1fr 10vh;    
+            grid-template-rows: 76vh 8vh; 
             width: 100vw;
             height: 100vh;
-            padding: 2.5vh 2vw;
-            gap: 2.5vh 2vw;
+            padding: 2vh 2vw 4vh 2vw; 
+            gap: 2vh 2vw;
             position: relative;
             z-index: 1;
         }
@@ -89,7 +89,7 @@
                 0 4px 30px rgba(0, 0, 0, 0.2),
                 0 30px 60px -15px rgba(0, 0, 0, 0.4),
                 inset 0 1px 0px rgba(255, 255, 255, 0.1);
-            padding: 3vh 2vw;
+            padding: 2.5vh 2vw;
             transition: border-color 0.6s ease, box-shadow 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
@@ -119,7 +119,7 @@
             transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* PLAKAT ZONE (Kino-Hintergrund fängt eventuelle Seitenränder edel auf) */
+        /* PLAKAT ZONE */
         .media-zone {
             grid-column: 1;
             grid-row: 1;
@@ -140,11 +140,21 @@
         }
 
         .poster-image {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            /* FIX: Auf 'contain' geändert, damit das Plakat links/rechts NIEMALS beschnitten wird */
-            object-fit: contain;
+            object-fit: contain; 
             display: block;
+            opacity: 0;
+            transition: opacity 3s ease-in-out; 
+            z-index: 1;
+        }
+
+        .poster-image.active {
+            opacity: 1;
+            z-index: 2;
         }
 
         /* SIDEBAR */
@@ -153,7 +163,7 @@
             grid-row: 1;
             display: flex;
             flex-direction: column;
-            gap: 2.5vh;
+            gap: 2vh;
         }
 
         /* WIDGET 1: UHR */
@@ -161,23 +171,23 @@
             flex: 0 0 auto;
             text-align: center;
             background: linear-gradient(135deg, rgba(20, 35, 69, 0.7) 0%, rgba(13, 22, 46, 0.7) 100%);
-            padding: 2.5vh 1.5vw;
+            padding: 2vh 1.5vw;
         }
 
         .time-display {
             font-family: 'Orbitron', sans-serif;
-            font-size: 6.8vh; 
+            font-size: 6vh; 
             font-weight: 900;
             background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 2px;
-            margin-bottom: 0.5vh;
+            margin-bottom: 0.3vh;
             filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
         }
 
         .date-display {
-            font-size: 1.8vh;
+            font-size: 1.6vh;
             font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -190,20 +200,20 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 2vh 1.5vw;
+            padding: 1.8vh 1.5vw;
         }
 
         .weather-city {
-            font-size: 2.6vh;
+            font-size: 2.4vh;
             font-weight: 800;
             color: var(--text-light);
         }
 
         .weather-status {
-            font-size: 1.5vh;
+            font-size: 1.4vh;
             color: #00f2fe;
             font-weight: 700;
-            margin-top: 0.3vh;
+            margin-top: 0.2vh;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -215,20 +225,20 @@
         }
 
         .temp-number {
-            font-size: 5.8vh;
+            font-size: 5vh;
             font-weight: 800;
             color: var(--text-light);
         }
 
         .weather-icon-3d-static {
-            width: 6.5vh;
-            height: 6.5vh;
+            width: 5.5vh;
+            height: 5.5vh;
             position: relative;
         }
         .sun-layer {
             position: absolute;
-            width: 4.8vh;
-            height: 4.8vh;
+            width: 4vh;
+            height: 4vh;
             background: radial-gradient(circle, #ffdb4d 0%, #f57c00 100%);
             border-radius: 50%;
             top: 0; right: 0;
@@ -236,10 +246,10 @@
         }
         .cloud-layer {
             position: absolute;
-            width: 5vh;
-            height: 3.2vh;
+            width: 4.2vh;
+            height: 2.8vh;
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 1.8vh;
+            border-radius: 1.5vh;
             bottom: 0; left: 0;
             box-shadow: -4px 6px 12px rgba(0, 0, 0, 0.3);
             transform: translateZ(10px);
@@ -250,7 +260,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 2.5vh 1.5vw;
+            padding: 2vh 1.5vw;
         }
 
         .dart-header {
@@ -258,28 +268,28 @@
             align-items: center;
             gap: 1vw;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 1.5vh;
-            margin-bottom: 2vh;
+            padding-bottom: 1vh;
+            margin-bottom: 1.5vh;
         }
 
         .dart-badge-3d {
-            width: 4.5vh;
-            height: 4.5vh;
+            width: 4vh;
+            height: 4vh;
             background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            border-radius: 1.2vh;
+            border-radius: 1vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2.2vh;
+            font-size: 2vh;
             box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
         }
 
         .dart-title h2 {
-            font-size: 2.2vh;
+            font-size: 2vh;
             font-weight: 800;
         }
         .dart-title p {
-            font-size: 1.3vh;
+            font-size: 1.2vh;
             color: var(--text-muted);
             font-weight: 600;
             text-transform: uppercase;
@@ -289,17 +299,17 @@
         .dart-rows-container {
             display: flex;
             flex-direction: column;
-            gap: 1vh;
+            gap: 0.8vh;
         }
 
         .dart-rank-pill {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.3vh 1.5vw;
+            padding: 1.1vh 1.2vw;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 1.5vh;
+            border-radius: 1.2vh;
         }
 
         .team-premium-highlight {
@@ -309,13 +319,13 @@
 
         .rank-number {
             font-weight: 800;
-            font-size: 1.6vh;
+            font-size: 1.5vh;
             color: #00f2fe;
             width: 2.5vw;
         }
         .team-name {
             font-weight: 600;
-            font-size: 1.6vh;
+            font-size: 1.5vh;
             color: #f1f5f9;
             flex: 1;
         }
@@ -324,72 +334,95 @@
         }
         .rank-points {
             font-weight: 800;
-            font-size: 1.5vh;
+            font-size: 1.4vh;
             background: rgba(255, 255, 255, 0.08);
-            padding: 0.3vh 0.8vw;
-            border-radius: 0.8vh;
+            padding: 0.3vh 0.6vw;
+            border-radius: 0.6vh;
         }
 
         /* MATCH TICKET */
         .dart-next-match-premium {
             background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.02) 100%);
             border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 1.8vh;
-            padding: 1.8vh 1.3vw;
+            border-radius: 1.5vh;
+            padding: 1.5vh 1.2vw;
             margin-top: auto; 
         }
 
         .match-badge {
             background: #22c55e;
             color: white;
-            font-size: 1.1vh;
+            font-size: 1vh;
             font-weight: 800;
-            padding: 0.3vh 0.8vh;
-            border-radius: 0.6vh;
+            padding: 0.3vh 0.6vh;
+            border-radius: 0.5vh;
             text-transform: uppercase;
             letter-spacing: 1px;
             display: inline-block;
-            margin-bottom: 0.8vh;
+            margin-bottom: 0.5vh;
         }
 
         .match-date-text {
-            font-size: 1.3vh;
+            font-size: 1.2vh;
             color: #4ade80;
             font-weight: 700;
-            margin-bottom: 0.3vh;
+            margin-bottom: 0.2vh;
         }
         .match-teams-text {
-            font-size: 1.6vh;
+            font-size: 1.4vh;
             font-weight: 800;
         }
 
-        /* TICKER ZONE */
+        /* PASST SICH NUN FARBLICH EDEL AN: Dunkleres Dashboard-Design mit Cyan-Glow-Verlauf */
         .ticker-zone {
             grid-column: 1 / span 2;
             grid-row: 2;
             padding: 0;
-            height: 8.5vh; 
-            align-self: end;
+            height: 100%; 
             display: flex;
             align-items: center;
-            background: linear-gradient(90deg, #00b4db 0%, #0083b0 45%, #b5179e 100%);
-            border: none;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, rgba(14, 26, 54, 0.9) 0%, rgba(8, 15, 36, 0.95) 100%);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
             border-radius: 2vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* GRAFIKBOX LINKS: Fest stehend, farblich akzentuiert */
+        .ticker-label-left {
+            height: 100%;
+            padding: 0 2.5vw;
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            display: flex;
+            align-items: center;
+            gap: 0.6vw;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 2.2vh;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            border-top-left-radius: 1.8vh;
+            border-bottom-left-radius: 1.8vh;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 5;
         }
 
         .ticker-wrap {
-            width: 100%;
+            flex: 1;
             overflow: hidden;
+            display: flex;
+            align-items: center;
         }
 
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
-            padding-right: 100%;
+            /* FIX: 100% Links-Polsterung zwingt den Text, ganz rechts außerhalb zu beginnen */
+            padding-left: 100%; 
             animation: tickerMove 30s linear infinite;
             will-change: transform;
-            font-size: 2.8vh; 
+            font-size: 2.6vh; 
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -406,11 +439,12 @@
         }
 
         .ticker-separator {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(0, 242, 254, 0.4);
             font-weight: 900;
             margin: 0 1vw;
         }
 
+        /* Startet durch das Padding exakt rechts an der Kante und läuft flüssig durch */
         @keyframes tickerMove {
             0% { transform: translate3d(0, 0, 0); }
             100% { transform: translate3d(-100%, 0, 0); }
@@ -424,15 +458,11 @@
 
     <div class="dashboard-container">
         
-        <!-- LINKS: Plakatbereich mit Contain-Fix -->
+        <!-- LINKS: Plakatbereich mit Crossfade-Ebenen -->
         <div class="card media-zone" id="card-media">
             <div class="poster-container">
-                <img class="poster-image" src="1750.png" alt="Veranstaltungsplakat" onerror="this.style.display='none'; document.getElementById('poster-fallback').style.display='block';">
-                
-                <div id="poster-fallback" class="media-placeholder" style="display:none; text-align: center; padding: 4vh 2vw;">
-                    <h1 style="font-size: 5vh; margin-bottom: 2vh; color: #00f2fe; font-weight: 800;">City Cafe Klagenfurt Fischl</h1>
-                    <p style="font-size: 2.4vh; color: var(--text-muted);">[ Plakat- & Video-Ebene ]</p>
-                </div>
+                <img class="poster-image active" id="poster1" src="0.png" alt="Plakat Ebene 1">
+                <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
             </div>
         </div>
 
@@ -497,8 +527,13 @@
 
         </div>
 
-        <!-- UNTEN: Info Ticker -->
+        <!-- UNTEN: Der angepasste Info Ticker mit linker Grafikbox -->
         <div class="card ticker-zone">
+            <!-- Die gewünschte INFO-Grafikbox ganz links -->
+            <div class="ticker-label-left">
+                <span>ℹ️</span> INFO
+            </div>
+            
             <div class="ticker-wrap">
                 <div class="ticker-move">
                     <span class="ticker-item">✨ Willkommen im City Cafe Klagenfurt Fischl!</span>
@@ -515,6 +550,7 @@
     </div>
 
     <script>
+        // 1. ECHTE UHRZEIT
         function updateClock() {
             const now = new Date();
             let hours = String(now.getHours()).padStart(2, '0');
@@ -528,6 +564,39 @@
         setInterval(updateClock, 1000);
         updateClock();
 
+        // 2. DIASHOW (EXAKT 20 SEKUNDEN SCHLEIFE MIT 3s OVERLAP)
+        const posterImages = ['0.png', '1.png', '2.png', '3.png']; 
+        let currentPosterIndex = 0;
+        
+        const img1 = document.getElementById('poster1');
+        const img2 = document.getElementById('poster2');
+        let isImg1Active = true;
+
+        function changePoster() {
+            if (posterImages.length <= 1) return;
+            
+            currentPosterIndex = (currentPosterIndex + 1) % posterImages.length;
+            const nextSource = posterImages[currentPosterIndex];
+            
+            if (isImg1Active) {
+                img2.src = nextSource;
+                img2.onload = () => {
+                    img1.classList.remove('active');
+                    img2.classList.add('active');
+                    isImg1Active = false;
+                };
+            } else {
+                img1.src = nextSource;
+                img1.onload = () => {
+                    img2.classList.remove('active');
+                    img1.classList.add('active');
+                    isImg1Active = true;
+                };
+            }
+        }
+        setInterval(changePoster, 20000);
+
+        // 3. ZUFÄLLIGES RAHMEN-AUFSCHIMMERN
         const cards = [
             document.getElementById('card-media'),
             document.getElementById('card-clock'),
