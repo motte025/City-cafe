@@ -16,12 +16,13 @@
             --primary-glow: #00f2fe;
             --secondary-glow: #4facfe;
             --accent-glow: #f355da;
-            /* Perfekt abgestimmter Kontrast auf deiner GitHub Ziegelwand */
-            --card-bg: rgba(10, 20, 38, 0.82); 
-            --card-border: rgba(255, 255, 255, 0.1);
+            /* Deckkraft von 0.82 auf 0.55 reduziert, damit die Wand schön durchscheint */
+            --card-bg: rgba(10, 20, 38, 0.55); 
+            --card-border: rgba(255, 255, 255, 0.12);
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
-            --ticker-gradient: linear-gradient(90deg, #0f2042 0%, #005c8a 50%, #630c52 100%);
+            /* Ticker-Gradient auf RGBA umgestellt für sanfte Transparenz (0.65 Deckkraft) */
+            --ticker-gradient: linear-gradient(90deg, rgba(15, 32, 66, 0.65) 0%, rgba(0, 92, 138, 0.65) 50%, rgba(99, 12, 82, 0.65) 100%);
         }
 
         /* Hardware-Beschleunigung und absoluter Reset gegen Ruckeln */
@@ -44,7 +45,7 @@
             
             background-color: #241914; 
             
-            /* JETZT MIT DEM KORREKTEN BRANCH 'main' */
+            /* LÄDT DAS BILD DIREKT VON DEINEM GITHUB-REPOSITORY (BRANCH: MAIN) */
             background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png'); 
             
             background-size: cover;
@@ -80,7 +81,7 @@
         .dashboard-container {
             display: grid;
             grid-template-columns: 1fr 29vw; 
-            grid-template-rows: 1fr 6vh; 
+            grid-template-rows: 1fr 8.5vh; 
             width: 100vw;
             height: 100dvh;
             padding: 2.5vh 2vw 1.2vh 2vw; 
@@ -97,9 +98,9 @@
             border: 1px solid var(--card-border);
             border-radius: 2.5vh;
             box-shadow: 
-                0 30px 70px rgba(0, 0, 0, 0.7),
-                0 50px 120px -20px rgba(0, 0, 0, 0.9),
-                inset 0 1px 1px rgba(255, 255, 255, 0.12);
+                0 30px 70px rgba(0, 0, 0, 0.6),
+                0 50px 120px -20px rgba(0, 0, 0, 0.85),
+                inset 0 1px 1px rgba(255, 255, 255, 0.15);
             padding: 2.5vh 2vw;
             transition: border-color 0.6s ease, box-shadow 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
@@ -121,7 +122,7 @@
             border-color: rgba(255, 140, 40, 0.5) !important; 
             box-shadow: 
                 0 0 40px rgba(255, 140, 40, 0.3), 
-                0 50px 120px -20px rgba(0, 0, 0, 0.9),
+                0 50px 120px -20px rgba(0, 0, 0, 0.85),
                 inset 0 0 15px rgba(255, 140, 40, 0.05) !important;
             transform: scale(1.003);
         }
@@ -192,11 +193,11 @@
             gap: 2vh;
         }
 
-        /* WIDGET 1: UHR */
+        /* WIDGET 1: UHR (Gradients transparenter gemacht) */
         .widget-clock {
             flex: 0 0 auto;
             text-align: center;
-            background: linear-gradient(135deg, rgba(15, 32, 66, 0.7) 0%, rgba(0, 92, 138, 0.55) 100%);
+            background: linear-gradient(135deg, rgba(15, 32, 66, 0.45) 0%, rgba(0, 92, 138, 0.3) 100%);
             border: 1px solid rgba(255, 255, 255, 0.18);
             padding: 1.2vh 1.2vw;
         }
@@ -221,7 +222,7 @@
             letter-spacing: 2px;
         }
 
-        /* WIDGET 2: WETTER */
+        /* WIDGET 2: WETTER (Wetter-Hintergründe deutlich transparenter eingestellt) */
         .widget-weather {
             flex: 0 0 auto;
             position: relative;
@@ -236,10 +237,10 @@
         
         .widget-weather.card::after { display: none !important; }
         
-        .widget-weather.w-sunny { background: linear-gradient(135deg, rgba(15, 32, 66, 0.9) 0%, rgba(0, 92, 138, 0.8) 100%); }
-        .widget-weather.w-cloudy { background: linear-gradient(135deg, rgba(30, 41, 59, 0.93) 0%, rgba(15, 23, 42, 0.93) 100%); }
-        .widget-weather.w-rainy { background: linear-gradient(135deg, rgba(17, 30, 48, 0.93) 0%, rgba(30, 41, 59, 0.93) 100%); }
-        .widget-weather.w-thunder { background: linear-gradient(135deg, rgba(9, 13, 22, 0.95) 0%, rgba(30, 27, 75, 0.95) 100%); }
+        .widget-weather.w-sunny { background: linear-gradient(135deg, rgba(15, 32, 66, 0.65) 0%, rgba(0, 92, 138, 0.5) 100%); }
+        .widget-weather.w-cloudy { background: linear-gradient(135deg, rgba(30, 41, 59, 0.65) 0%, rgba(15, 23, 42, 0.6) 100%); }
+        .widget-weather.w-rainy { background: linear-gradient(135deg, rgba(17, 30, 48, 0.65) 0%, rgba(30, 41, 59, 0.6) 100%); }
+        .widget-weather.w-thunder { background: linear-gradient(135deg, rgba(9, 13, 22, 0.7) 0%, rgba(30, 27, 75, 0.65) 100%); }
 
         .weather-content-wrapper {
             position: relative;
@@ -481,7 +482,7 @@
             padding-left: 100%; 
             animation: tickerMove 55s linear infinite; 
             will-change: transform;
-            font-size: 2.1vh; 
+            font-size: 2.2vh; 
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
