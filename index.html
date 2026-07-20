@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Wichtig: Erzwingt die korrekte Viewport-Skalierung auf Smart-TVs und Kiosk-Systemen -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>City Cafe Klagenfurt Fischl - Gold Standard TV Dashboard</title>
+    <title>City Cafe Klagenfurt Fischl - Ultimate Dynamic TV Dashboard</title>
     
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +35,8 @@
 
         body {
             width: 100vw;
-            height: 100vh;
+            /* FIX: Nutzt Dynamic Viewport Height gegen die Adressleiste */
+            height: 100dvh; 
             overflow: hidden;
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: var(--bg-gradient);
@@ -65,15 +66,15 @@
             z-index: 0;
         }
 
-        /* Grid-Höhen gestaucht (76vh + 8vh) und großes Bottom-Padding, um den Ticker über die Adressleisten-Kante zu heben */
+        /* DYNAMIC FIX: Container nutzt dvh und normales, sauberes Padding */
         .dashboard-container {
             display: grid;
             grid-template-columns: 1fr 29vw; 
-            grid-template-rows: 76vh 8vh; 
+            grid-template-rows: 1fr 8.5vh; 
             width: 100vw;
-            height: 100vh;
-            padding: 2vh 2vw 4vh 2vw; 
-            gap: 2vh 2vw;
+            height: 100dvh;
+            padding: 2.5vh 2vw; 
+            gap: 2.5vh 2vw;
             position: relative;
             z-index: 1;
         }
@@ -139,6 +140,7 @@
             overflow: hidden;
         }
 
+        /* Crossfade-Ebenen für die 20-Sekunden-Schleife mit 3s Auflösung */
         .poster-image {
             position: absolute;
             top: 0;
@@ -163,7 +165,7 @@
             grid-row: 1;
             display: flex;
             flex-direction: column;
-            gap: 2vh;
+            gap: 2.5vh;
         }
 
         /* WIDGET 1: UHR */
@@ -171,23 +173,23 @@
             flex: 0 0 auto;
             text-align: center;
             background: linear-gradient(135deg, rgba(20, 35, 69, 0.7) 0%, rgba(13, 22, 46, 0.7) 100%);
-            padding: 2vh 1.5vw;
+            padding: 2.5vh 1.5vw;
         }
 
         .time-display {
             font-family: 'Orbitron', sans-serif;
-            font-size: 6vh; 
+            font-size: 6.8vh; 
             font-weight: 900;
             background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 2px;
-            margin-bottom: 0.3vh;
+            margin-bottom: 0.5vh;
             filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
         }
 
         .date-display {
-            font-size: 1.6vh;
+            font-size: 1.8vh;
             font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -200,20 +202,20 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.8vh 1.5vw;
+            padding: 2vh 1.5vw;
         }
 
         .weather-city {
-            font-size: 2.4vh;
+            font-size: 2.6vh;
             font-weight: 800;
             color: var(--text-light);
         }
 
         .weather-status {
-            font-size: 1.4vh;
+            font-size: 1.5vh;
             color: #00f2fe;
             font-weight: 700;
-            margin-top: 0.2vh;
+            margin-top: 0.3vh;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -225,31 +227,31 @@
         }
 
         .temp-number {
-            font-size: 5vh;
+            font-size: 5.8vh;
             font-weight: 800;
             color: var(--text-light);
         }
 
         .weather-icon-3d-static {
-            width: 5.5vh;
-            height: 5.5vh;
+            width: 6.5vh;
+            height: 6.5vh;
             position: relative;
         }
         .sun-layer {
             position: absolute;
-            width: 4vh;
-            height: 4vh;
-            background: radial-gradient(circle, #ffdb4d 0%, #f57c00 100%);
+            width: 4.8vh;
+            height: 4.8vh;
+            background: radial-gradient(circle, #ffdb4d 0%, #f57000 100%);
             border-radius: 50%;
             top: 0; right: 0;
             box-shadow: 0 0 20px rgba(255, 179, 0, 0.6);
         }
         .cloud-layer {
             position: absolute;
-            width: 4.2vh;
-            height: 2.8vh;
+            width: 5vh;
+            height: 3.2vh;
             background: rgba(255, 255, 255, 0.9);
-            border-radius: 1.5vh;
+            border-radius: 1.8vh;
             bottom: 0; left: 0;
             box-shadow: -4px 6px 12px rgba(0, 0, 0, 0.3);
             transform: translateZ(10px);
@@ -260,7 +262,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 2vh 1.5vw;
+            padding: 2.5vh 1.5vw;
         }
 
         .dart-header {
@@ -268,28 +270,28 @@
             align-items: center;
             gap: 1vw;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 1vh;
-            margin-bottom: 1.5vh;
+            padding-bottom: 1.5vh;
+            margin-bottom: 2vh;
         }
 
         .dart-badge-3d {
-            width: 4vh;
-            height: 4vh;
+            width: 4.5vh;
+            height: 4.5vh;
             background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            border-radius: 1vh;
+            border-radius: 1.2vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2vh;
+            font-size: 2.2vh;
             box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
         }
 
         .dart-title h2 {
-            font-size: 2vh;
+            font-size: 2.2vh;
             font-weight: 800;
         }
         .dart-title p {
-            font-size: 1.2vh;
+            font-size: 1.3vh;
             color: var(--text-muted);
             font-weight: 600;
             text-transform: uppercase;
@@ -299,17 +301,17 @@
         .dart-rows-container {
             display: flex;
             flex-direction: column;
-            gap: 0.8vh;
+            gap: 1vh;
         }
 
         .dart-rank-pill {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.1vh 1.2vw;
+            padding: 1.3vh 1.5vw;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 1.2vh;
+            border-radius: 1.5vh;
         }
 
         .team-premium-highlight {
@@ -319,13 +321,13 @@
 
         .rank-number {
             font-weight: 800;
-            font-size: 1.5vh;
+            font-size: 1.6vh;
             color: #00f2fe;
             width: 2.5vw;
         }
         .team-name {
             font-weight: 600;
-            font-size: 1.5vh;
+            font-size: 1.6vh;
             color: #f1f5f9;
             flex: 1;
         }
@@ -334,46 +336,46 @@
         }
         .rank-points {
             font-weight: 800;
-            font-size: 1.4vh;
+            font-size: 1.5vh;
             background: rgba(255, 255, 255, 0.08);
-            padding: 0.3vh 0.6vw;
-            border-radius: 0.6vh;
+            padding: 0.3vh 0.8vw;
+            border-radius: 0.8vh;
         }
 
         /* MATCH TICKET */
         .dart-next-match-premium {
             background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.02) 100%);
             border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 1.5vh;
-            padding: 1.5vh 1.2vw;
+            border-radius: 1.8vh;
+            padding: 1.8vh 1.3vw;
             margin-top: auto; 
         }
 
         .match-badge {
             background: #22c55e;
             color: white;
-            font-size: 1vh;
+            font-size: 1.1vh;
             font-weight: 800;
-            padding: 0.3vh 0.6vh;
-            border-radius: 0.5vh;
+            padding: 0.3vh 0.8vh;
+            border-radius: 0.6vh;
             text-transform: uppercase;
             letter-spacing: 1px;
             display: inline-block;
-            margin-bottom: 0.5vh;
+            margin-bottom: 0.8vh;
         }
 
         .match-date-text {
-            font-size: 1.2vh;
+            font-size: 1.3vh;
             color: #4ade80;
             font-weight: 700;
-            margin-bottom: 0.2vh;
+            margin-bottom: 0.3vh;
         }
         .match-teams-text {
-            font-size: 1.4vh;
+            font-size: 1.6vh;
             font-weight: 800;
         }
 
-        /* PASST SICH NUN FARBLICH EDEL AN: Dunkleres Dashboard-Design mit Cyan-Glow-Verlauf */
+        /* TICKER ZONE: Farbverlauf reaktiviert (Tiefblau zu Cyan & edlem Magenta) */
         .ticker-zone {
             grid-column: 1 / span 2;
             grid-row: 2;
@@ -381,9 +383,9 @@
             height: 100%; 
             display: flex;
             align-items: center;
-            background: linear-gradient(135deg, rgba(14, 26, 54, 0.9) 0%, rgba(8, 15, 36, 0.95) 100%);
-            border: 1px solid rgba(0, 242, 254, 0.25);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
+            background: linear-gradient(90deg, #0f2042 0%, #005c8a 50%, #630c52 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             border-radius: 2vh;
             overflow: hidden;
             position: relative;
@@ -418,9 +420,9 @@
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
-            /* FIX: 100% Links-Polsterung zwingt den Text, ganz rechts außerhalb zu beginnen */
             padding-left: 100%; 
-            animation: tickerMove 30s linear infinite;
+            /* Ruhiger, gleichmäßiger 45-Sekunden Durchlauf */
+            animation: tickerMove 45s linear infinite; 
             will-change: transform;
             font-size: 2.6vh; 
             font-weight: 700;
@@ -439,12 +441,11 @@
         }
 
         .ticker-separator {
-            color: rgba(0, 242, 254, 0.4);
+            color: rgba(0, 242, 254, 0.6);
             font-weight: 900;
             margin: 0 1vw;
         }
 
-        /* Startet durch das Padding exakt rechts an der Kante und läuft flüssig durch */
         @keyframes tickerMove {
             0% { transform: translate3d(0, 0, 0); }
             100% { transform: translate3d(-100%, 0, 0); }
@@ -527,9 +528,9 @@
 
         </div>
 
-        <!-- UNTEN: Der angepasste Info Ticker mit linker Grafikbox -->
+        <!-- UNTEN: Info Ticker -->
         <div class="card ticker-zone">
-            <!-- Die gewünschte INFO-Grafikbox ganz links -->
+            <!-- Die INFO-Grafikbox ganz links -->
             <div class="ticker-label-left">
                 <span>ℹ️</span> INFO
             </div>
