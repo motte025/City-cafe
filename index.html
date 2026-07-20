@@ -33,8 +33,6 @@
             backface-visibility: hidden;
         }
 
-        /* ÄNDERUNG: Keine fixen Pixel-Werte mehr auf dem Body. 
-           Nutzt 100vw/vh, damit das Layout GEZWUNGEN wird, sich exakt an den TV-Bildschirm anzupassen! */
         body {
             width: 100vw;
             height: 100vh;
@@ -67,12 +65,11 @@
             z-index: 0;
         }
 
-        /* ÄNDERUNG: Komplett fluides Grid-Layout mit relativen Einheiten (vw/vh/fr).
-           Egal wie stark der TV-Browser zoomt, es bleibt immer exakt innerhalb des Sichtfelds. */
+        /* Fluides Grid-Layout */
         .dashboard-container {
             display: grid;
-            grid-template-columns: 1fr 29vw; /* Linke Zone nimmt flexibel den Rest, Sidebar exakt 29% der Breite */
-            grid-template-rows: 1fr 10vh;    /* Obere Zone nimmt den Rest, Ticker exakt 10% der Bildschirmhöhe */
+            grid-template-columns: 1fr 29vw; 
+            grid-template-rows: 1fr 10vh;    
             width: 100vw;
             height: 100vh;
             padding: 2.5vh 2vw;
@@ -122,7 +119,7 @@
             transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* PLAKAT ZONE (Zentriert und dynamisch angepasst) */
+        /* PLAKAT ZONE (Kino-Hintergrund fängt eventuelle Seitenränder edel auf) */
         .media-zone {
             grid-column: 1;
             grid-row: 1;
@@ -145,11 +142,12 @@
         .poster-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            /* FIX: Auf 'contain' geändert, damit das Plakat links/rechts NIEMALS beschnitten wird */
+            object-fit: contain;
             display: block;
         }
 
-        /* SIDEBAR (Symmetrisch skaliert per vh/vw) */
+        /* SIDEBAR */
         .sidebar {
             grid-column: 2;
             grid-row: 1;
@@ -168,7 +166,7 @@
 
         .time-display {
             font-family: 'Orbitron', sans-serif;
-            font-size: 6.8vh; /* Skaliert perfekt mit der TV-Höhe */
+            font-size: 6.8vh; 
             font-weight: 900;
             background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             -webkit-background-clip: text;
@@ -338,7 +336,7 @@
             border: 1px solid rgba(34, 197, 94, 0.3);
             border-radius: 1.8vh;
             padding: 1.8vh 1.3vw;
-            margin-top: auto; /* Schiebt sich dynamisch ans Ende des Containers */
+            margin-top: auto; 
         }
 
         .match-badge {
@@ -365,12 +363,12 @@
             font-weight: 800;
         }
 
-        /* TICKER ZONE (Exakt am unteren Rand, an vh gekoppelt) */
+        /* TICKER ZONE */
         .ticker-zone {
             grid-column: 1 / span 2;
             grid-row: 2;
             padding: 0;
-            height: 8.5vh; /* Skaliert exakt mit der TV-Höhe mit */
+            height: 8.5vh; 
             align-self: end;
             display: flex;
             align-items: center;
@@ -391,7 +389,7 @@
             padding-right: 100%;
             animation: tickerMove 30s linear infinite;
             will-change: transform;
-            font-size: 2.8vh; /* Deutlich lesbar und absolut abgesichert gegen vertikalen Cutoff */
+            font-size: 2.8vh; 
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -426,7 +424,7 @@
 
     <div class="dashboard-container">
         
-        <!-- LINKS: Plakatbereich -->
+        <!-- LINKS: Plakatbereich mit Contain-Fix -->
         <div class="card media-zone" id="card-media">
             <div class="poster-container">
                 <img class="poster-image" src="1750.png" alt="Veranstaltungsplakat" onerror="this.style.display='none'; document.getElementById('poster-fallback').style.display='block';">
