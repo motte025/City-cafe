@@ -21,20 +21,37 @@
             --text-muted: #94a3b8;
 
             /* ==========================================================
-               1. LINKE PLAKAT-ANPASSUNG (Breite, Höhe, Verschiebung)
+               1. OBERES WIDGET (Größe & Position in Prozent steuern)
                ========================================================== */
-            --poster-width: 100%;      /* Breite in Prozent */
-            --poster-height: 83.5%;    /* Höhe in Prozent */
-            --poster-offset-x: 0%;     /* Verschiebung Links/Rechts */
-            --poster-offset-y: 20.3%;  /* Verschiebung Oben/Unten */
+            --top-widget-width: 100%;    /* Breite in Prozent */
+            --top-widget-height: 15%; /* Höhe angepasst an Uhr-Widget */
+            --top-widget-offset-x: 0%;  /* Verschiebung Links/Rechts */
+            --top-widget-offset-y: -5%;  /* Verschiebung Oben/Unten */
 
             /* ==========================================================
-               2. BEGRÜSSUNGS-WIDGET MANUELL ANPASSEN (Oben Links)
+               2. SCHRIFTGRÖSSE FÜR DAS OBERE WIDGET (Hier manuell einstellen)
                ========================================================== */
-            --welcome-width: 100%;     /* Breite in Prozent */
-            --welcome-height: 100%;    /* Höhe in Prozent */
-            --welcome-offset-x: 0%;    /* Verschiebung Links/Rechts */
-            --welcome-offset-y: 23%;   /* Verschiebung Oben/Unten */
+            --top-widget-font-size: 3.8vh; /* Schriftgröße für den Begrüßungstext oben */
+
+            /* ==========================================================
+               3. LINKE WIDGET ANPASSUNG (Hier manuell steuern)
+               ========================================================== */
+            --media-width: 100%;      /* Breite in Prozent */
+            --media-height: 83.5%;    /* Höhe minimal kleiner */
+            --media-offset-x: 0%;     /* Verschiebung Links/Rechts */
+            --media-offset-y: 20.5%;   /* Verschiebung Oben/Unten */
+
+            /* ==========================================================
+               4. SCHRIFTGRÖSSEN FÜR DAS LINKE WIDGET (Hier manuell einstellen)
+               ========================================================== */
+            --schlager-title-size: 2.6vh;     /* Überschrift (z.B. "Deutsche Schlager Top Charts") */
+            --schlager-subtitle-size: 1.25vh; /* Untertitel (z.B. Monat & Charts) */
+            --schlager-badge-size: 1.4vh;     /* Badge (z.B. "Hit 1 von 3") */
+            --schlager-rank-size: 1.3vh;      /* Rang-Tag (z.B. "Platz 1") */
+            --schlager-artist-size: 5.2vh;    /* Künstlername */
+            --schlager-song-size: 2.8vh;      /* Songtitel */
+            --schlager-info-size: 1.5vh;      /* Album- und Trend-Info */
+            --schlager-footer-size: 1.45vh;   /* Footer-Text unten */
         }
 
         * {
@@ -54,11 +71,19 @@
             color: var(--text-light);
             position: relative;
             background-color: #241914; 
-            /* GitHub Integration - Angepasst auf die ursprüngliche Ziegel-Größe */
-            background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png');
-            background-size: 600px auto; 
-            background-position: center;
+        }
+
+        /* FIXER HINTERGRUND-CONTAINER (Feine Ziegeloptik durch feste Pixelgröße erzwingen) */
+        .fixed-bg-bricks {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100dvh;
+            background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png?v=fixedFinal');
+            background-size: 180px 180px; 
             background-repeat: repeat;
+            background-position: top left;
+            z-index: -999;
+            pointer-events: none;
         }
 
         .bg-glow-static-1 {
@@ -84,12 +109,12 @@
 
         .dashboard-container {
             display: grid;
-            grid-template-columns: 1fr 27vw; 
-            grid-template-rows: auto 1fr 8.5vh; 
+            grid-template-columns: 1fr 29vw; 
+            grid-template-rows: 1fr 8.5vh; 
             width: 100vw;
             height: 100dvh;
-            padding: 2.2vh 2vw 1.2vh 2vw; 
-            gap: 2vh 2vw;
+            padding: 2.5vh 2vw 1.2vh 2vw; 
+            gap: 2.5vh 2vw;
             position: relative;
             z-index: 1;
         }
@@ -104,7 +129,7 @@
                 0 30px 70px rgba(0, 0, 0, 0.6),
                 0 50px 120px -20px rgba(0, 0, 0, 0.85),
                 inset 0 1px 1px rgba(255, 255, 255, 0.15);
-            padding: 2.2vh 2vw;
+            padding: 2.5vh 2vw;
             transition: border-color 1s ease, box-shadow 1s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
@@ -139,104 +164,35 @@
         }
         .shimmer-active::after { left: 250%; transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
 
-        /* LINKS: Standard Medienbereich (Plakat) */
-        .media-zone {
-            grid-column: 1; 
-            grid-row: 1 / span 2; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            padding: 0;
-            
-            width: var(--poster-width);
-            height: var(--poster-height);
-            transform: translate(var(--poster-offset-x), var(--poster-offset-y));
-            
-            align-self: start; 
-            background: #020617;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(243, 85, 218, 0.1);
-        }
-
-        .media-inner-view {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-
-        .poster-container { width: 100%; height: 100%; position: relative; border-radius: 2.3vh; overflow: hidden; }
-        .poster-image {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; 
-            object-position: center;
-            display: block; opacity: 1;
-            animation: premiumPosterBreathing 24s ease-in-out infinite alternate;
-            will-change: transform;
-        }
-        .poster-ambient-glaze {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%);
-            mix-blend-mode: overlay; pointer-events: none; z-index: 3;
-            animation: softLightingPulse 8s ease-in-out infinite alternate;
-        }
-
-        /* RECHTS: Sidebar Layout */
-        .sidebar-top {
-            grid-column: 2;
-            grid-row: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 2vh;
-        }
-
-        .sidebar-bottom {
-            grid-column: 2;
-            grid-row: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 2vh;
-            height: 100%;
-        }
-
-        /* OBEN LINKS: Zeile für Begrüßungs-Widget */
-        .top-left-header-row {
-            grid-column: 1;
-            grid-row: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            gap: 2vw;
+        /* OBERES WIDGET: 100% Transparent + Weißer 3D-Effekt + Leichter Schatten */
+        .top-custom-widget {
+            grid-column: 1; grid-row: 1;
+            width: var(--top-widget-width);
+            height: var(--top-widget-height);
+            transform: translate(var(--top-widget-offset-x), var(--top-widget-offset-y));
+            justify-self: start;
             align-self: start;
-            margin-bottom: -1vh;
-        }
-
-        /* BEGRÜSSUNGS-WIDGET */
-        .widget-welcome {
-            flex: 1;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            
             background: transparent !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             border: 1px solid rgba(255, 255, 255, 0.22); 
-            padding: 1.2vh 1.2vw;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+            border-radius: 2.5vh;
+            padding: 1vh 2vw;
             overflow: hidden;
-
-            width: var(--welcome-width);
-            height: var(--welcome-height);
-            transform: translate(var(--welcome-offset-x), var(--welcome-offset-y));
+            position: relative;
         }
-        .widget-welcome.card::after { display: none !important; }
-        
-        .welcome-text {
+        .top-custom-widget::after { display: none !important; }
+
+        .greeting-display-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: 3.4vh; 
+            font-size: var(--top-widget-font-size);
             font-weight: 900;
             color: #ffffff;
             text-shadow: 
@@ -244,26 +200,156 @@
                 0 2px 0 #b3b3b3,
                 0 3px 0 #999999,
                 0 4px 0 #7f7f7f,
-                0 5px 10px rgba(0, 0, 0, 0.9),
+                0 5px 12px rgba(0, 0, 0, 0.9),
                 0 0 25px rgba(255, 255, 255, 0.4);
-            letter-spacing: 1px; 
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            white-space: nowrap; 
             width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
         }
 
-        /* WIDGET 1: Uhrzeit (Weißer 3D-Effekt) */
+        /* LINKS: Großer Medienbereich (Mit Steuerungsvariablen verknüpft) */
+        .media-zone {
+            grid-column: 1; grid-row: 1; padding: 0;
+            background: #020617; border: 2px solid rgba(255, 255, 255, 0.15);
+            display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(243, 85, 218, 0.1);
+            
+            width: var(--media-width);
+            height: var(--media-height);
+            transform: translate(var(--media-offset-x), var(--media-offset-y));
+            justify-self: start;
+            align-self: start;
+        }
+
+        .media-inner-view {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; pointer-events: none; transition: opacity 1.8s ease-in-out; z-index: 1;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .media-inner-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
+
+        .poster-container { width: 100%; height: 100%; position: relative; border-radius: 2.3vh; overflow: hidden; }
+        .poster-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: contain; display: block; opacity: 0;
+            transition: opacity 2s ease-in-out; z-index: 1;
+            animation: premiumPosterBreathing 24s ease-in-out infinite alternate;
+            will-change: transform;
+        }
+        .poster-image.active { opacity: 1; z-index: 2; }
+        .poster-ambient-glaze {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%);
+            mix-blend-mode: overlay; pointer-events: none; z-index: 3;
+            animation: softLightingPulse 8s ease-in-out infinite alternate;
+        }
+
+        /* WIDGET 2: SCHLAGER TOP CHARTS */
+        .schlager-widget-box {
+            width: 100%; height: 100%; position: relative; background: #070b14;
+            display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+            border-radius: 2.3vh;
+        }
+        .schlager-bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;
+            opacity: 0; transform: scale(1.12);
+            transition: opacity 1.5s ease-in-out, transform 15s cubic-bezier(0.1, 0.8, 0.2, 1);
+            z-index: 1;
+        }
+        .schlager-bg-img.active { opacity: 0.85; z-index: 2; }
+        .schlager-bg-img.zoom { transform: scale(1.00); }
+
+        .schlager-gradient-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(7, 11, 20, 0.45) 0%, rgba(7, 11, 20, 0.25) 40%, rgba(7, 11, 20, 0.95) 100%);
+            z-index: 3; pointer-events: none;
+        }
+        .schlager-content-layer {
+            position: relative; z-index: 10; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between; padding: 3.5vh 4vw;
+        }
+        .schlager-top-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 15, 30, 0.35); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5vh; padding: 1.5vh 2.2vw;
+        }
+        .schlager-title-group h2 {
+            font-family: 'Orbitron', sans-serif; 
+            font-size: var(--schlager-title-size); 
+            font-weight: 900;
+            background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; letter-spacing: 1px;
+            filter: drop-shadow(0 2px 10px rgba(243, 85, 218, 0.4));
+        }
+        .schlager-title-group p { 
+            font-size: var(--schlager-subtitle-size); 
+            color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 0.2vh; 
+        }
+        .schlager-chart-badge {
+            background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%);
+            color: #060b14; font-family: 'Orbitron', sans-serif; 
+            font-size: var(--schlager-badge-size); 
+            font-weight: 900;
+            padding: 0.8vh 1.8vw; border-radius: 1vh; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(243, 85, 218, 0.6);
+        }
+        
+        .schlager-artist-card {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin-top: auto; 
+            margin-bottom: 2.5vh; 
+            display: flex; flex-direction: column; gap: 1.2vh;
+            text-align: left;
+        }
+        .schlager-rank-tag {
+            align-self: flex-start; background: #00f2fe; color: #020617; font-family: 'Orbitron', sans-serif;
+            font-size: var(--schlager-rank-size); 
+            font-weight: 900; padding: 0.4vh 1.2vw; border-radius: 0.6vh; text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+        }
+        .schlager-artist-name { 
+            font-size: var(--schlager-artist-size); 
+            font-weight: 900; color: #ffffff; line-height: 1.1; 
+            text-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.85); 
+        }
+        .schlager-song-title { 
+            font-size: var(--schlager-song-size); 
+            font-weight: 800; color: #38bdf8; 
+            text-shadow: 0 3px 15px rgba(0,0,0,0.9); 
+        }
+        .schlager-info-box {
+            display: flex; align-items: center; justify-content: space-between;
+            background: transparent !important; border: none !important; padding: 0 !important;
+            font-size: var(--schlager-info-size); 
+            font-weight: 700; color: #e2e8f0; 
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+        }
+
+        .schlager-bottom-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 15, 30, 0.35); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5vh; padding: 1.4vh 2.2vw;
+            font-size: var(--schlager-footer-size); 
+            font-weight: 800; color: #facc15; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .sidebar { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 2vh; }
+
+        /* UHR WIDGET: Komplett rahmenlos & transparent */
         .widget-clock {
-            flex: 1; 
-            text-align: center;
+            flex: 0 0 auto; text-align: center;
             background: transparent !important;
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
-            border: 1px solid rgba(255, 255, 255, 0.22); 
+            border: none !important; 
+            box-shadow: none !important;
             padding: 1.2vh 1.2vw;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
         }
         .widget-clock.card::after { display: none !important; }
         .time-display {
@@ -290,7 +376,6 @@
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); 
         }
 
-        /* WIDGET 2: Wetter */
         .widget-weather {
             flex: 0 0 auto; position: relative; overflow: hidden; padding: 1.8vh 1.5vw;
             transition: background 1.5s ease-in-out; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
@@ -314,7 +399,7 @@
         .lightning-bolt-effect { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0); animation: lightningStrike 5s ease-in-out infinite; }
         @keyframes lightningStrike { 0%, 91%, 93%, 96%, 100% { background: rgba(255, 255, 255, 0); } 92% { background: rgba(255, 255, 255, 0.4); filter: brightness(1.3); } 94% { background: rgba(255, 255, 255, 0.25); } }
 
-        /* WIDGET 3 WECHSLER (Dart ↔ Live Galerie) */
+        /* WIDGET 3 WECHSLER (Dart ↔ Galerie ↔ Music Charts) */
         .widget-dart { flex: 1; padding: 0; position: relative; overflow: hidden; }
         .dart-view {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 2.2vh 1.4vw; 
@@ -357,9 +442,29 @@
         .gallery-event-title { font-size: 2.2vh; font-weight: 800; color: #ffffff; }
         .gallery-event-date { font-size: 1.4vh; font-weight: 600; color: #ffe600; }
 
-        /* INFO TICKER: 100% Transparent */
+        /* MUSIC CHARTS STYLES */
+        .view-music-style { padding: 0 !important; border-radius: 2.5vh; overflow: hidden; }
+        .music-image-container { width: 100%; height: 100%; position: relative; background: #020617; display: flex; flex-direction: column; justify-content: space-between; padding: 2.2vh 1.4vw; }
+        
+        .music-bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+            opacity: 0;
+            transform: scale(1.12);
+            transition: opacity 1.5s ease-in-out, transform 3s cubic-bezier(0.1, 0.8, 0.2, 1);
+            z-index: 1;
+        }
+        .music-bg-img.active { opacity: 1; z-index: 2; }
+        .music-bg-img.zoom-trigger { transform: scale(1.00); }
+
+        .music-dark-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(6, 11, 20, 0.7) 0%, rgba(6, 11, 20, 0.55) 50%, rgba(6, 11, 20, 0.88) 100%);
+            z-index: 3; pointer-events: none;
+        }
+
+        /* INFO TICKER: 100% Transparent + Langsamer & leichter 3D-Effekt */
         .ticker-zone {
-            grid-column: 1 / span 2; grid-row: 3; padding: 0; height: 100%; 
+            grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 100%; 
             display: flex; align-items: center; 
             background: transparent !important; 
             backdrop-filter: none !important;
@@ -401,37 +506,81 @@
 </head>
 <body>
 
+    <!-- Absoluter, fixer Ziegel-Hintergrund -->
+    <div class="fixed-bg-bricks"></div>
+
     <div class="bg-glow-static-1"></div>
     <div class="bg-glow-static-2"></div>
 
-    <div class="dashboard-container" style="grid-template-columns: 1fr 27vw;">
+    <div class="dashboard-container">
         
-        <!-- OBEN LINKS: Begrüßungs-Widget -->
-        <div class="top-left-header-row">
-            <div class="card widget-welcome" id="card-welcome">
-                <div class="welcome-text" id="welcome-message">Herzlich Willkommen im City Cafe Fischl</div>
-            </div>
+        <!-- OBERES WIDGET: Begrüßungen -->
+        <div class="card top-custom-widget" id="card-top-custom">
+            <div class="greeting-display-title" id="greeting-title">Willkommen im City Cafe Klagenfurt Fischl!</div>
         </div>
 
-        <!-- LINKS: Standard Plakat / Medienbereich -->
+        <!-- LINKS: Großer Medienbereich -->
         <div class="card media-zone" id="card-media">
-            <div class="media-inner-view">
+            
+            <!-- Ansicht 1: Plakat-Diashow -->
+            <div class="media-inner-view active" id="media-view-poster">
                 <div class="poster-container" id="poster-container">
-                    <img class="poster-image" id="poster1" src="0.png" alt="Medienanzeige">
+                    <img class="poster-image active" id="poster1" src="0.png" alt="Plakat Ebene 1">
+                    <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
                     <div class="poster-ambient-glaze"></div>
                 </div>
             </div>
+
+            <!-- Ansicht 2: Deutsche Schlager Top Charts -->
+            <div class="media-inner-view" id="media-view-schlager">
+                <div class="schlager-widget-box">
+                    <img class="schlager-bg-img active" id="schlager-img1" src="" alt="Künstler Hintergrund 1">
+                    <img class="schlager-bg-img" id="schlager-img2" src="" alt="Künstler Hintergrund 2">
+                    <div class="schlager-gradient-overlay"></div>
+
+                    <div class="schlager-content-layer">
+                        <!-- Header -->
+                        <div class="schlager-top-header">
+                            <div class="schlager-title-group">
+                                <h2>Deutsche Schlager Top Charts</h2>
+                                <p>Juli 2026 • Offizielle Schlager-Charts</p>
+                            </div>
+                            <div class="schlager-chart-badge" id="schlager-chart-badge">Hit 1 von 3</div>
+                        </div>
+
+                        <!-- Künstler Info -->
+                        <div class="schlager-artist-card">
+                            <span class="schlager-rank-tag" id="schlager-rank">Platz 1</span>
+                            <div class="schlager-artist-name" id="schlager-artist">Lade Künstler...</div>
+                            <div class="schlager-song-title" id="schlager-song">"Lade Titel..."</div>
+                            
+                            <div class="schlager-info-box">
+                                <span id="schlager-album">Album: Lade Album...</span>
+                                <span id="schlager-trend">🔥 Chart-Trend: Top-Platzierung</span>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="schlager-bottom-footer">
+                            <span>🎵 Jetzt frisch in der Musikbox entdecken & wünschen!</span>
+                            <span>City Cafe Klagenfurt Fischl</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- RECHTS: Sidebar Oben (Uhrzeit ganz oben) -->
-        <div class="sidebar-top">
-            <!-- WIDGET 1: Uhrzeit (Weißer 3D-Effekt) -->
+        <!-- RECHTS: Sidebar -->
+        <div class="sidebar">
+            
+            <!-- WIDGET 1: Uhrzeit (Rahmen und Schatten entfernt) -->
             <div class="card widget-clock" id="card-clock">
                 <div class="time-display" id="live-time">00:00</div>
                 <div class="date-display" id="live-date">Lade Datum...</div>
             </div>
 
-            <!-- WIDGET 2: Wetter (Darunter platziert) -->
+            <!-- WIDGET 2: Wetter -->
             <div class="card widget-weather w-sunny" id="card-weather">
                 <div class="weather-effects-container" id="weather-effects"></div>
                 <div class="weather-content-wrapper">
@@ -442,10 +591,8 @@
                     <div class="temp-number">26°C</div>
                 </div>
             </div>
-        </div>
 
-        <!-- RECHTS: Sidebar Unten (Wechsler für Dart & Galerie) -->
-        <div class="sidebar-bottom">
+            <!-- WIDGET 3: 3-Fach Wechsler (Dart ↔ Galerie ↔ Music Charts Diashow) -->
             <div class="card widget-dart" id="card-dart">
                 
                 <!-- ANSICHT 1: Dart -->
@@ -494,11 +641,40 @@
                     </div>
                 </div>
 
+                <!-- ANSICHT 3: Musik & Austropop Diashow -->
+                <div class="dart-view view-music-style" id="view-music-tips">
+                    <div class="music-image-container">
+                        <img class="music-bg-img active" id="music-bg1" src="" alt="Künstler Bild 1">
+                        <img class="music-bg-img" id="music-bg2" src="" alt="Künstler Bild 2">
+                        <div class="music-dark-overlay"></div>
+
+                        <div class="dart-header">
+                            <div class="dart-badge-3d" style="background: linear-gradient(135deg, #FF0000 0%, #282828 100%);">🎵</div>
+                            <div class="dart-title">
+                                <h2 id="music-artist-title" style="font-size: 2.3vh; font-weight: 900; letter-spacing: 0.5px;">Lade Künstler...</h2>
+                                <p style="font-size: 1.3vh; color: #ff8080; font-weight: 700;">Musikbox & Live-Tipp Kärnten</p>
+                            </div>
+                        </div>
+                        
+                        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; gap: 0.6vh; background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1.5vh; padding: 1.6vh 1.4vw; backdrop-filter: blur(10px);">
+                            <div style="font-size: 1.25vh; color: #ff4d4d; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Top-Titel / Jukebox-Anregung</div>
+                            <div id="music-song-text" style="font-size: 1.9vh; font-weight: 900; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Lade Titel...</div>
+                        </div>
+
+                        <div class="dart-next-match-premium" style="position: relative; z-index: 10; background: linear-gradient(135deg, rgba(255, 0, 0, 0.28) 0%, rgba(40, 40, 40, 0.12) 100%); border: 1px solid rgba(255, 0, 0, 0.45); backdrop-filter: blur(10px);">
+                            <span class="match-badge" style="background: #FF0000; font-size: 1.15vh; padding: 0.3vh 0.8vh;">Live-Event in der Nähe</span>
+                            <div id="music-release-text" style="font-size: 1.35vh; color: #ffb3b3; font-weight: 800; margin-top: 0.2vh;">Veröffentlichung: --</div>
+                            <div id="music-event-text" style="font-size: 1.8vh; font-weight: 900; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Region Kärnten</div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
         </div>
 
-        <!-- UNTEN: Info Ticker (100% Transparent) -->
-        <div class="card ticker-zone" id="card-ticker" style="grid-column: 1 / span 2;">
+        <!-- UNTEN: Info Ticker -->
+        <div class="card ticker-zone" id="card-ticker">
             <div class="ticker-label-left"><span>ℹ️</span> INFO</div>
             <div class="ticker-wrap">
                 <div class="ticker-move">
@@ -523,41 +699,65 @@
         // --- GRUNDEINSTELLUNGEN ---
         const WUNSCH_TEXT_STREIFEN = "Beste Stimmung im Cafe!"; 
         const BILD_WECHSEL_SEKUNDEN = 10; 
+        const MUSIC_WECHSEL_SEKUNDEN = 12; 
         // -------------------------
 
-        // 20 verschiedene Begrüßungs- und Stimmungs-Varianten
-        const welcomeMessages = [
-            "Herzlich Willkommen im City Cafe Fischl",
-            "Schön, dass Sie heute da sind!",
-            "Ihr Treffpunkt für Genuss & Gemütlichkeit",
-            "Genießen Sie unsere Kaffeespezialitäten",
-            "Beste Stimmung & erfrischende Getränke",
-            "Willkommen bei Freunden im Cafe Fischl",
-            "Entspannt verweilen in Klagenfurt Fischl",
-            "Ihr Wohnzimmer für gute Laune",
-            "Einfach abschalten und genießen",
-            "Kaffee, Bar & Geselligkeit pur",
-            "Willkommen zum perfekten Genussmoment",
-            "Schön, Teil unseres Treffpunkts zu sein",
-            "Erfrischende Drinks & tolle Gesellschaft",
-            "Hier fängt der Tag richtig an",
-            "Willkommen in Ihrem Lieblingscafe",
-            "Gemütliche Runden & bester Kaffee",
-            "Klagenfurts gemütlichster Treffpunkt",
-            "Leidenschaft für guten Geschmack",
-            "Willkommen im Herzen von Fischl",
-            "Gemeinsam schöne Stunden erleben"
+        // 30 Begrüßungsüberschriften (Zufallsprinzip)
+        const greetingHeadlines = [
+            "Willkommen im City Cafe Klagenfurt Fischl!",
+            "Schön, dass Sie da sind – Genießen Sie Ihren Aufenthalt!",
+            "Ihr Treffpunkt für gemütliche Stunden und gute Gespräche!",
+            "Herzlich Willkommen in unserem gemütlichen Cafe!",
+            "Einfach zurücklehnen, verweilen und genießen!",
+            "Guten Tag und herzlich Willkommen im Cafe Fischl!",
+            "Schön, Sie bei uns begrüßen zu dürfen!",
+            "Der perfekte Ort für eine genussvolle Auszeit!",
+            "Willkommen bei bester Gesellschaft und feinen Getränken!",
+            "Treten Sie ein und fühlen Sie sich wie zu Hause!",
+            "Genießen Sie die entspannte Atmosphäre im City Cafe!",
+            "Herzlich Willkommen – Schön, dass Sie den Weg zu uns gefunden haben!",
+            "Ihr Wohlfühlort in Klagenfurt Fischl!",
+            "Willkommen zu Kaffeegenuss und bester Stimmung!",
+            "Schön, Sie an Bord zu haben – Guten Appetit und Prost!",
+            "Herzlich Willkommen in unserer gemütlichen Oase!",
+            "Hier fängt der Tag gut an – Willkommen im Cafe!",
+            "Genießen Sie unvergessliche Momente bei uns!",
+            "Willkommen im Herzen von Klagenfurt Fischl!",
+            "Schön, dass Sie Teil unserer Cafe-Gemeinschaft sind!",
+            "Herzlich Willkommen bei Freunden!",
+            "Verweilen, entspannen und genießen – Willkommen!",
+            "Ihr gemütliches Wohnzimmer in Klagenfurt!",
+            "Willkommen zu bester Gastfreundschaft und Lebensfreude!",
+            "Schön, Sie mit Kaffee, Getränken und Musik zu verwöhnen!",
+            "Herzlich Willkommen – Lassen Sie es sich gut gehen!",
+            "Der Treffpunkt für Genießer und Musikfans!",
+            "Willkommen in unserem gemütlichen Cafe-Treff!",
+            "Schön, dass Sie da sind – Auf eine gute Zeit!",
+            "Herzlich Willkommen im City Cafe Klagenfurt Fischl!"
         ];
-        let currentWelcomeIndex = 0;
 
-        function updateWelcomeMessage() {
-            const welcomeEl = document.getElementById('welcome-message');
-            if (welcomeEl) {
-                welcomeEl.textContent = welcomeMessages[currentWelcomeIndex];
-                currentWelcomeIndex = (currentWelcomeIndex + 1) % welcomeMessages.length;
-            }
+        let currentGreetingIndex = 0;
+        const greetingElement = document.getElementById('greeting-title');
+
+        function rotateGreetingsRandom() {
+            greetingElement.style.opacity = '0';
+            greetingElement.style.transform = 'translateY(-10px)';
+            
+            setTimeout(() => {
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * greetingHeadlines.length);
+                } while (newIndex === currentGreetingIndex && greetingHeadlines.length > 1);
+                
+                currentGreetingIndex = newIndex;
+                greetingElement.textContent = greetingHeadlines[currentGreetingIndex];
+                greetingElement.style.opacity = '1';
+                greetingElement.style.transform = 'translateY(0)';
+            }, 600);
         }
-        setInterval(updateWelcomeMessage, 8000);
+
+        // Oberes linkes Widget ändert den Text per Zufallsprinzip exakt alle 7 Minuten (7 * 60 * 1000 ms)
+        setInterval(rotateGreetingsRandom, 7 * 60 * 1000);
 
         // 1. Uhrzeit
         function updateClock() {
@@ -569,6 +769,134 @@
             document.getElementById('live-date').textContent = now.toLocaleDateString('de-DE', options);
         }
         setInterval(updateClock, 1000); updateClock();
+
+        // 2. GROSSER MEDIEN-WECHSLER (Plakate - Alle 2 Minuten wechseln)
+        const posterImages = ['0.png', '1.png', '2.png', '3.png']; 
+        let currentPosterIndex = 0;
+        const img1 = document.getElementById('poster1');
+        const img2 = document.getElementById('poster2');
+        let isImg1Active = true;
+
+        const schlagerChartPool = [
+            { artist: "Helene Fischer", song: "Null auf 100 / Hit-Medley", album: "Album: Rausch (Gold Edition)", rank: "Platz 1", trend: "🔥 Dauerbrenner in den Charts", image: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Maite Kelly", song: "Ein Kuss in Paris", album: "Album: Nur Liebe", rank: "Platz 2", trend: "🔥 Chart-Spitzenreiter", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Melissa Naschenweng", song: "Verliwascht & Bergbauernbuam", album: "Album: Traktor Rockstar", rank: "Platz 3", trend: "⭐ Publikumsliebling", image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Kerstin Ott", song: "1000 x Nein", album: "Album: Best Of & Mehr", rank: "Platz 4", trend: "📈 Steigt rasant auf", image: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Roland Kaiser", song: "Dich zu lieben & Neue Hits", album: "Album: Persoenlich", rank: "Platz 5", trend: "⭐ Kult-Status", image: "https://images.unsplash.com/photo-1469488865564-c2de10f69f96?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Beatrice Egli", song: "Balance & Volles Risiko", album: "Album: Balance", rank: "Platz 6", trend: "🚀 Chart-Aufsteiger", image: "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Joelina Drews", song: "Durch und Durch", album: "Album: Neue Wege", rank: "Platz 7 (Höchster Neueinsteiger)", trend: "⭐ Chart-Neuzugang", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Vincent Gross & Esteriore Brothers", song: "Amore mit Mio", album: "Album: Italiano Loco", rank: "Platz 8", trend: "🔥 Sommer-Hit", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&auto=format&fit=crop&q=80" }
+        ];
+
+        let currentSchlagerSubIndex = 0;
+        let schlagerCycleTimer = null;
+        let mainStateIsPoster = true; 
+        let availableSchlagerBatch = [];
+        let activeSchlagerBatch = [];
+        let isSchlagerBg1Active = true;
+
+        function getNextThreeSchlager() {
+            if (availableSchlagerBatch.length < 3) {
+                availableSchlagerBatch = [...schlagerChartPool].sort(() => 0.5 - Math.random());
+            }
+            return availableSchlagerBatch.splice(0, 3);
+        }
+
+        function renderSchlagerArtist(index) {
+            if (!activeSchlagerBatch[index]) return;
+            const data = activeSchlagerBatch[index];
+
+            const bg1 = document.getElementById('schlager-img1');
+            const bg2 = document.getElementById('schlager-img2');
+
+            bg1.classList.remove('zoom');
+            bg2.classList.remove('zoom');
+
+            if (isSchlagerBg1Active) {
+                bg2.src = data.image;
+                bg1.classList.remove('active');
+                bg2.classList.add('active');
+                setTimeout(() => bg2.classList.add('zoom'), 100);
+                isSchlagerBg1Active = false;
+            } else {
+                bg1.src = data.image;
+                bg2.classList.remove('active');
+                bg1.classList.add('active');
+                setTimeout(() => bg1.classList.add('zoom'), 100);
+                isSchlagerBg1Active = true;
+            }
+
+            document.getElementById('schlager-rank').textContent = data.rank;
+            document.getElementById('schlager-artist').textContent = data.artist;
+            document.getElementById('schlager-song').textContent = `"${data.song}"`;
+            document.getElementById('schlager-album').textContent = data.album;
+            document.getElementById('schlager-trend').textContent = data.trend;
+            document.getElementById('schlager-chart-badge').textContent = `Hit ${index + 1} von 3`;
+        }
+
+        function startSchlagerCycle() {
+            activeSchlagerBatch = getNextThreeSchlager();
+            currentSchlagerSubIndex = 0;
+            renderSchlagerArtist(currentSchlagerSubIndex);
+
+            if (schlagerCycleTimer) clearInterval(schlagerCycleTimer);
+
+            schlagerCycleTimer = setInterval(() => {
+                currentSchlagerSubIndex++;
+                if (currentSchlagerSubIndex < 3) {
+                    renderSchlagerArtist(currentSchlagerSubIndex);
+                } else {
+                    clearInterval(schlagerCycleTimer);
+                    switchToWidget1();
+                }
+            }, 15000);
+        }
+
+        function switchToWidget2() {
+            mainStateIsPoster = false;
+            document.getElementById('media-view-poster').classList.remove('active');
+            document.getElementById('media-view-schlager').classList.add('active');
+            startSchlagerCycle();
+        }
+
+        function switchToWidget1() {
+            mainStateIsPoster = true;
+            if (schlagerCycleTimer) clearInterval(schlagerCycleTimer);
+            document.getElementById('media-view-schlager').classList.remove('active');
+            document.getElementById('media-view-poster').classList.add('active');
+
+            if (posterImages.length > 1) {
+                currentPosterIndex = (currentPosterIndex + 1) % posterImages.length;
+                const nextSource = posterImages[currentPosterIndex];
+                
+                const preloadPoster = new Image();
+                preloadPoster.src = nextSource;
+                preloadPoster.onload = () => {
+                    if (isImg1Active) {
+                        img2.src = nextSource;
+                        img1.classList.remove('active');
+                        img2.classList.add('active');
+                        isImg1Active = false;
+                    } else {
+                        img1.src = nextSource;
+                        img2.classList.remove('active');
+                        img1.classList.add('active');
+                        isImg1Active = true;
+                    }
+                };
+            }
+        }
+
+        function masterMediaDispatcher() {
+            if (mainStateIsPoster) {
+                switchToWidget2();
+            } else {
+                if (!mainStateIsPoster) return; 
+            }
+        }
+
+        // Plakat-Widget wechselt exakt alle 2 Minuten (2 * 60 * 1000 ms)
+        setInterval(masterMediaDispatcher, 2 * 60 * 1000);
 
         // 3. Wetter
         async function fetchLiveWeather() {
@@ -599,7 +927,77 @@
         }
         setInterval(fetchLiveWeather, 600000); fetchLiveWeather();
 
-        // 4. Wechsler für Dart & Live-Galerie rechts unten
+        // 4. Musik & Austropop Diashow
+        const musicTipsData = [
+            {
+                artist: "Maite Kelly",
+                song: "Ein Kuss in Paris / Es ist einfach passiert",
+                release: "Juli 2026",
+                event: "Samstag, 05.09.2026 • Burgarena Finkenstein",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600&auto=format&fit=crop&q=80"
+            },
+            {
+                artist: "Melissa Naschenweng",
+                song: "Bergbauernbuam (Sommer-Mix 2026)",
+                release: "Juli 2026",
+                event: "Freitag, 14.08.2026 • Schlosswiese Moosburg",
+                image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&auto=format&fit=crop&q=80"
+            },
+            {
+                artist: "Nockis",
+                song: "Atemlos durch die Nacht & Kulthits",
+                release: "Juli 2026",
+                event: "Freitag, 24.07.2026 • Faaker See Open Air",
+                image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80"
+            },
+            {
+                artist: "Wolfgang Ambros & Band",
+                song: "Schifoan & Zwickt's mi (Austropop)",
+                release: "Austropop Gold Edition",
+                event: "Samstag, 22.08.2026 • Burgarena Finkenstein",
+                image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1600&auto=format&fit=crop&q=80"
+            }
+        ];
+
+        let musicTimer = null;
+        let isMusicBg1Active = true;
+
+        function showRandomMusicArtist() {
+            if (musicTipsData.length === 0) return;
+            
+            const randomIndex = Math.floor(Math.random() * musicTipsData.length);
+            const data = musicTipsData[randomIndex];
+            
+            const preloadImg = new Image();
+            preloadImg.src = data.image;
+            preloadImg.onload = () => {
+                document.getElementById('music-artist-title').textContent = data.artist;
+                document.getElementById('music-song-text').textContent = data.song;
+                document.getElementById('music-release-text').textContent = "VÖ / Stil: " + data.release;
+                document.getElementById('music-event-text').textContent = data.event;
+
+                const bg1 = document.getElementById('music-bg1');
+                const bg2 = document.getElementById('music-bg2');
+
+                if (isMusicBg1Active) {
+                    bg2.classList.remove('zoom-trigger');
+                    bg2.src = data.image;
+                    bg1.classList.remove('active');
+                    bg2.classList.add('active');
+                    bg2.classList.add('zoom-trigger');
+                    isMusicBg1Active = false;
+                } else {
+                    bg1.classList.remove('zoom-trigger');
+                    bg1.src = data.image;
+                    bg2.classList.remove('active');
+                    bg1.classList.add('active');
+                    bg1.classList.add('zoom-trigger');
+                    isMusicBg1Active = true;
+                }
+            };
+        }
+
+        // 5. 3-Fach Wechsler (Dart ↔ Galerie ↔ Music)
         let activeWidgetIndex = 0; 
         let visitorGalleryData = []; 
         let galleryTimer = null;
@@ -650,13 +1048,16 @@
         function rotateSidebarWidgets() {
             const statsView = document.getElementById('view-dart-stats');
             const galleryView = document.getElementById('view-event-gallery');
+            const musicView = document.getElementById('view-music-tips');
 
             statsView.classList.remove('active');
             galleryView.classList.remove('active');
+            musicView.classList.remove('active');
 
-            activeWidgetIndex = (activeWidgetIndex + 1) % 2;
+            activeWidgetIndex = (activeWidgetIndex + 1) % 3;
 
             if (galleryTimer) clearInterval(galleryTimer);
+            if (musicTimer) clearInterval(musicTimer);
 
             if (activeWidgetIndex === 0) {
                 statsView.classList.add('active');
@@ -666,20 +1067,24 @@
                 galleryView.classList.add('active');
                 showRandomImage();
                 galleryTimer = setInterval(showRandomImage, BILD_WECHSEL_SEKUNDEN * 1000);
+            } 
+            else if (activeWidgetIndex === 2) {
+                musicView.classList.add('active');
+                showRandomMusicArtist(); 
+                musicTimer = setInterval(showRandomMusicArtist, MUSIC_WECHSEL_SEKUNDEN * 1000); 
             }
         }
         
-        setInterval(rotateSidebarWidgets, 30000); 
+        setInterval(rotateSidebarWidgets, 60000); 
         loadDriveFolderImages();
 
-        // 5. Rahmen-Schimmern
+        // 6. Rahmen-Schimmern
         const allCards = [
             document.getElementById('card-media'),
             document.getElementById('card-clock'),
             document.getElementById('card-weather'),
             document.getElementById('card-dart'),
-            document.getElementById('card-ticker'),
-            document.getElementById('card-welcome')
+            document.getElementById('card-ticker')
         ];
 
         function triggerRandomBorderShimmer() {
@@ -709,4 +1114,3 @@
     </script>
 </body>
 </html>
-
