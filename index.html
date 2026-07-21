@@ -44,10 +44,10 @@
             /* ==========================================================
                4. SCHRIFTGRÖSSEN FÜR DAS LINKE WIDGET (Hier manuell einstellen)
                ========================================================== */
-            --schlager-title-size: 2.6vh;     /* Überschrift (z.B. "Deutsche Schlager Top Charts") */
-            --schlager-subtitle-size: 1.25vh; /* Untertitel (z.B. Monat & Charts) */
-            --schlager-badge-size: 1.4vh;     /* Badge (z.B. "Hit 1 von 3") */
-            --schlager-rank-size: 1.3vh;      /* Rang-Tag (z.B. "Platz 1") */
+            --schlager-title-size: 2.6vh;     /* Überschrift */
+            --schlager-subtitle-size: 1.25vh; /* Untertitel */
+            --schlager-badge-size: 1.4vh;     /* Badge */
+            --schlager-rank-size: 1.3vh;      /* Rang-Tag */
             --schlager-artist-size: 5.2vh;    /* Künstlername */
             --schlager-song-size: 2.8vh;      /* Songtitel */
             --schlager-info-size: 1.5vh;      /* Album- und Trend-Info */
@@ -154,17 +154,7 @@
             pointer-events: none;
         }
 
-        .shimmer-active {
-            border-color: rgba(243, 85, 218, 0.6) !important; 
-            box-shadow: 
-                0 0 50px rgba(243, 85, 218, 0.4), 
-                0 50px 120px -20px rgba(0, 0, 0, 0.85),
-                inset 0 0 20px rgba(0, 242, 254, 0.15) !important;
-            transform: scale(1.004) perspective(1000px) rotateX(0.5deg);
-        }
-        .shimmer-active::after { left: 250%; transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
-
-        /* OBERES WIDGET: 100% Transparent + Weißer 3D-Effekt + Leichter Schatten */
+        /* OBERES WIDGET: 100% Transparent + Weißer 3D-Effekt */
         .top-custom-widget {
             grid-column: 1; grid-row: 1;
             width: var(--top-widget-width);
@@ -208,7 +198,7 @@
             transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
         }
 
-        /* LINKS: Großer Medienbereich (Mit Steuerungsvariablen verknüpft) */
+        /* LINKS: Großer Medienbereich */
         .media-zone {
             grid-column: 1; grid-row: 1; padding: 0;
             background: #020617; border: 2px solid rgba(255, 255, 255, 0.15);
@@ -245,7 +235,7 @@
             animation: softLightingPulse 8s ease-in-out infinite alternate;
         }
 
-        /* WIDGET 2: SCHLAGER TOP CHARTS */
+        /* WIDGET 2: MUSIK & CHARTS (Schlager, Rock, 80er, 90er, 2000er) */
         .schlager-widget-box {
             width: 100%; height: 100%; position: relative; background: #070b14;
             display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
@@ -341,7 +331,7 @@
 
         .sidebar { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 2vh; }
 
-        /* UHR WIDGET: Komplett rahmenlos & transparent */
+        /* UHR WIDGET: Transparent */
         .widget-clock {
             flex: 0 0 auto; text-align: center;
             background: transparent !important;
@@ -399,7 +389,7 @@
         .lightning-bolt-effect { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0); animation: lightningStrike 5s ease-in-out infinite; }
         @keyframes lightningStrike { 0%, 91%, 93%, 96%, 100% { background: rgba(255, 255, 255, 0); } 92% { background: rgba(255, 255, 255, 0.4); filter: brightness(1.3); } 94% { background: rgba(255, 255, 255, 0.25); } }
 
-        /* WIDGET 3 WECHSLER (Galerie ↔ Music Charts im Wechsel) */
+        /* WIDGET 3 WECHSLER (Galerie ↔ Musik-Tips) */
         .widget-rotator { flex: 1; padding: 0; position: relative; overflow: hidden; }
         .rotator-view {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 2.2vh 1.4vw; 
@@ -455,7 +445,7 @@
             z-index: 3; pointer-events: none;
         }
 
-        /* INFO TICKER: 100% Transparent + Langsamer & leichter 3D-Effekt */
+        /* INFO TICKER */
         .ticker-zone {
             grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 100%; 
             display: flex; align-items: center; 
@@ -483,9 +473,7 @@
             will-change: transform;
             font-weight: 700; 
             color: #ffffff; 
-            text-shadow: 
-                0 1px 0 rgba(0,0,0,0.8),
-                0 2px 4px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9);
             font-size: 2.4vh; 
         }
         .ticker-item { display: inline-block; padding: 0 3vw; }
@@ -524,7 +512,7 @@
                 </div>
             </div>
 
-            <!-- Ansicht 2: Deutsche Schlager Top Charts -->
+            <!-- Ansicht 2: Abwechslungsreiche Musik & Charts (Schlager, Rock, 80er, 90er, 2000er) -->
             <div class="media-inner-view" id="media-view-schlager">
                 <div class="schlager-widget-box">
                     <img class="schlager-bg-img active" id="schlager-img1" src="" alt="Künstler Hintergrund 1">
@@ -535,27 +523,27 @@
                         <!-- Header -->
                         <div class="schlager-top-header">
                             <div class="schlager-title-group">
-                                <h2>Deutsche Schlager Top Charts</h2>
-                                <p>Juli 2026 • Offizielle Schlager-Charts</p>
+                                <h2 id="media-main-category-title">Jukebox Highlights & Charts</h2>
+                                <p>Rock • Schlager • 80er • 90er • 2000er</p>
                             </div>
                             <div class="schlager-chart-badge" id="schlager-chart-badge">Hit 1 von 3</div>
                         </div>
 
                         <!-- Künstler Info -->
                         <div class="schlager-artist-card">
-                            <span class="schlager-rank-tag" id="schlager-rank">Platz 1</span>
+                            <span class="schlager-rank-tag" id="schlager-rank">Top Titel</span>
                             <div class="schlager-artist-name" id="schlager-artist">Lade Künstler...</div>
                             <div class="schlager-song-title" id="schlager-song">"Lade Titel..."</div>
                             
                             <div class="schlager-info-box">
-                                <span id="schlager-album">Album: Lade Album...</span>
-                                <span id="schlager-trend">🔥 Chart-Trend: Top-Platzierung</span>
+                                <span id="schlager-album">Genre: Lade Stil...</span>
+                                <span id="schlager-trend">🔥 Café-Favorit</span>
                             </div>
                         </div>
 
                         <!-- Footer -->
                         <div class="schlager-bottom-footer">
-                            <span>🎵 Jetzt frisch in der Musikbox entdecken & wünschen!</span>
+                            <span>🎵 Jetzt Lieblingssong in der Jukebox wünschen!</span>
                             <span>City Cafe Klagenfurt Fischl</span>
                         </div>
                     </div>
@@ -585,7 +573,7 @@
                 </div>
             </div>
 
-            <!-- WIDGET 3: 2-Fach Wechsler (Galerie ↔ Music Charts) -->
+            <!-- WIDGET 3: 2-Fach Wechsler (Galerie ↔ Musik-Tips) -->
             <div class="card widget-rotator" id="card-rotator">
                 
                 <!-- ANSICHT 1: Live Drive Galerie -->
@@ -660,7 +648,7 @@
         const MUSIC_WECHSEL_SEKUNDEN = 12; 
         // -------------------------
 
-        // 30 Begrüßungsüberschriften (Zufallsprinzip)
+        // Begrüßungen
         const greetingHeadlines = [
             "Willkommen im City Cafe Klagenfurt Fischl!",
             "Schön, dass Sie da sind – Genießen Sie Ihren Aufenthalt!",
@@ -671,27 +659,7 @@
             "Schön, Sie bei uns begrüßen zu dürfen!",
             "Der perfekte Ort für eine genussvolle Auszeit!",
             "Willkommen bei bester Gesellschaft und feinen Getränken!",
-            "Treten Sie ein und fühlen Sie sich wie zu Hause!",
-            "Genießen Sie die entspannte Atmosphäre im City Cafe!",
-            "Herzlich Willkommen – Schön, dass Sie den Weg zu uns gefunden haben!",
-            "Ihr Wohlfühlort in Klagenfurt Fischl!",
-            "Willkommen zu Kaffeegenuss und bester Stimmung!",
-            "Schön, Sie an Bord zu haben – Guten Appetit und Prost!",
-            "Herzlich Willkommen in unserer gemütlichen Oase!",
-            "Hier fängt der Tag gut an – Willkommen im Cafe!",
-            "Genießen Sie unvergessliche Momente bei uns!",
-            "Willkommen im Herzen von Klagenfurt Fischl!",
-            "Schön, dass Sie Teil unserer Cafe-Gemeinschaft sind!",
-            "Herzlich Willkommen bei Freunden!",
-            "Verweilen, entspannen und genießen – Willkommen!",
-            "Ihr gemütliches Wohnzimmer in Klagenfurt!",
-            "Willkommen zu bester Gastfreundschaft und Lebensfreude!",
-            "Schön, Sie mit Kaffee, Getränken und Musik zu verwöhnen!",
-            "Herzlich Willkommen – Lassen Sie es sich gut gehen!",
-            "Der Treffpunkt für Genießer und Musikfans!",
-            "Willkommen in unserem gemütlichen Cafe-Treff!",
-            "Schön, dass Sie da sind – Auf eine gute Zeit!",
-            "Herzlich Willkommen im City Cafe Klagenfurt Fischl!"
+            "Treten Sie ein und fühlen Sie sich wie zu Hause!"
         ];
 
         let currentGreetingIndex = 0;
@@ -727,7 +695,7 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // 2. GROSSER MEDIEN-WECHSLER (Plakate 0.png bis 3.png direkt von GitHub)
+        // 2. GROSSER MEDIEN-WECHSLER (Plakate 0.png bis 3.png von GitHub)
         const posterImages = [
             'https://raw.githubusercontent.com/motte025/City-cafe/main/0.png',
             'https://raw.githubusercontent.com/motte025/City-cafe/main/1.png',
@@ -739,34 +707,35 @@
         const img2 = document.getElementById('poster2');
         let isImg1Active = true;
 
-        const schlagerChartPool = [
-            { artist: "Helene Fischer", song: "Null auf 100 / Hit-Medley", album: "Album: Rausch (Gold Edition)", rank: "Platz 1", trend: "🔥 Dauerbrenner in den Charts", image: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&auto=format&fit=crop&q=80" },
-            { artist: "Maite Kelly", song: "Ein Kuss in Paris", album: "Album: Nur Liebe", rank: "Platz 2", trend: "🔥 Chart-Spitzenreiter", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1600&auto=format&fit=crop&q=80" },
-            { artist: "Melissa Naschenweng", song: "Verliwascht & Bergbauernbuam", album: "Album: Traktor Rockstar", rank: "Platz 3", trend: "⭐ Publikumsliebling", image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&auto=format&fit=crop&q=80" },
-            { artist: "Kerstin Ott", song: "1000 x Nein", album: "Album: Best Of & Mehr", rank: "Platz 4", trend: "📈 Steigt rasant auf", image: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1600&auto=format&fit=crop&q=80" },
-            { artist: "Roland Kaiser", song: "Dich zu lieben & Neue Hits", album: "Album: Persoenlich", rank: "Platz 5", trend: "⭐ Kult-Status", image: "https://images.unsplash.com/photo-1469488865564-c2de10f69f96?w=1600&auto=format&fit=crop&q=80" },
-            { artist: "Beatrice Egli", song: "Balance & Volles Risiko", album: "Album: Balance", rank: "Platz 6", trend: "🚀 Chart-Aufsteiger", image: "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=1600&auto=format&fit=crop&q=80" },
-            { artist: "Joelina Drews", song: "Durch und Durch", album: "Album: Neue Wege", rank: "Platz 7 (Höchster Neueinsteiger)", trend: "⭐ Chart-Neuzugang", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80" },
-            { artist: "Vincent Gross & Esteriore Brothers", song: "Amore mit Mio", album: "Album: Italiano Loco", rank: "Platz 8", trend: "🔥 Sommer-Hit", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&auto=format&fit=crop&q=80" }
+        // ERWEITERTER MUSIK-POOL (Schlager, Rock, 80er, 90er, 2000er im bunten Mix)
+        const musicUserPool = [
+            { category: "Deutscher Schlager & Party", artist: "Helene Fischer", song: "Null auf 100 / Medley", info: "Album: Rausch (Gold Edition)", rank: "Hit 1", trend: "🔥 Dauerbrenner", image: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&auto=format&fit=crop&q=80" },
+            { category: "Classic Rock & Anthems", artist: "AC/DC", song: "Back In Black / Highway to Hell", info: "Genre: Rock Legend", rank: "Rock-Hit", trend: "🎸 Kult-Klassiker", image: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=1600&auto=format&fit=crop&q=80" },
+            { category: "Die besten 80er Hits", artist: "Queen", song: "Bohemian Rhapsody / I Want To Break Free", info: "Genre: 80s Rock Anthems", rank: "80er-Top", trend: "⚡ Unvergessen", image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600&auto=format&fit=crop&q=80" },
+            { category: "Austropop & Kult", artist: "Wolfgang Ambros", song: "Schifoan & Zwickt's mi", info: "Genre: Austropop Legende", rank: "Österreich", trend: "⭐ Café-Favorit", image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1600&auto=format&fit=crop&q=80" },
+            { category: "Legendäre 90er Hits", artist: "Nirvana", song: "Smells Like Teen Spirit", info: "Genre: 90s Alternative Rock", rank: "90er-Hit", trend: "🎸 Grunge Power", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80" },
+            { category: "Deutscher Schlager", artist: "Melissa Naschenweng", song: "Verliwascht & Bergbauernbuam", info: "Genre: Alpen-Schlager", rank: "Hit 2", trend: "⭐ Publikumsliebling", image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&auto=format&fit=crop&q=80" },
+            { category: "Die Jahrtausendwende 2000er", artist: "Linkin Park", song: "In The End / Numb", info: "Genre: 2000er Rock / Nu Metal", rank: "2000er", trend: "🔥 Millennial Rock", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&auto=format&fit=crop&q=80" },
+            { category: "Rock & Pop Klassiker",", artist: "Bon Jovi", song: "Livin' on a Prayer", info: "Genre: 80s / 90s Rock", rank: "Stadion-Rock", trend: "🎸 Mitsing-Hit", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&auto=format&fit=crop&q=80" }
         ];
 
-        let currentSchlagerSubIndex = 0;
-        let schlagerCycleTimer = null;
+        let currentMusicSubIndex = 0;
+        let musicCycleTimer = null;
         let mainStateIsPoster = true; 
-        let availableSchlagerBatch = [];
-        let activeSchlagerBatch = [];
+        let availableMusicBatch = [];
+        let activeMusicBatch = [];
         let isSchlagerBg1Active = true;
 
-        function getNextThreeSchlager() {
-            if (availableSchlagerBatch.length < 3) {
-                availableSchlagerBatch = [...schlagerChartPool].sort(() => 0.5 - Math.random());
+        function getNextThreeMusicItems() {
+            if (availableMusicBatch.length < 3) {
+                availableMusicBatch = [...musicUserPool].sort(() => 0.5 - Math.random());
             }
-            return availableSchlagerBatch.splice(0, 3);
+            return availableMusicBatch.splice(0, 3);
         }
 
-        function renderSchlagerArtist(index) {
-            if (!activeSchlagerBatch[index]) return;
-            const data = activeSchlagerBatch[index];
+        function renderMusicItem(index) {
+            if (!activeMusicBatch[index]) return;
+            const data = activeMusicBatch[index];
 
             const bg1 = document.getElementById('schlager-img1');
             const bg2 = document.getElementById('schlager-img2');
@@ -788,27 +757,28 @@
                 isSchlagerBg1Active = true;
             }
 
+            document.getElementById('media-main-category-title').textContent = data.category;
             document.getElementById('schlager-rank').textContent = data.rank;
             document.getElementById('schlager-artist').textContent = data.artist;
             document.getElementById('schlager-song').textContent = `"${data.song}"`;
-            document.getElementById('schlager-album').textContent = data.album;
+            document.getElementById('schlager-album').textContent = data.info;
             document.getElementById('schlager-trend').textContent = data.trend;
-            document.getElementById('schlager-chart-badge').textContent = `Hit ${index + 1} von 3`;
+            document.getElementById('schlager-chart-badge').textContent = `Titel ${index + 1} von 3`;
         }
 
-        function startSchlagerCycle() {
-            activeSchlagerBatch = getNextThreeSchlager();
-            currentSchlagerSubIndex = 0;
-            renderSchlagerArtist(currentSchlagerSubIndex);
+        function startMusicCycle() {
+            activeMusicBatch = getNextThreeMusicItems();
+            currentMusicSubIndex = 0;
+            renderMusicItem(currentMusicSubIndex);
 
-            if (schlagerCycleTimer) clearInterval(schlagerCycleTimer);
+            if (musicCycleTimer) clearInterval(musicCycleTimer);
 
-            schlagerCycleTimer = setInterval(() => {
-                currentSchlagerSubIndex++;
-                if (currentSchlagerSubIndex < 3) {
-                    renderSchlagerArtist(currentSchlagerSubIndex);
+            musicCycleTimer = setInterval(() => {
+                currentMusicSubIndex++;
+                if (currentMusicSubIndex < 3) {
+                    renderMusicItem(currentMusicSubIndex);
                 } else {
-                    clearInterval(schlagerCycleTimer);
+                    clearInterval(musicCycleTimer);
                     switchToWidget1();
                 }
             }, 15000);
@@ -818,12 +788,12 @@
             mainStateIsPoster = false;
             document.getElementById('media-view-poster').classList.remove('active');
             document.getElementById('media-view-schlager').classList.add('active');
-            startSchlagerCycle();
+            startMusicCycle();
         }
 
         function switchToWidget1() {
             mainStateIsPoster = true;
-            if (schlagerCycleTimer) clearInterval(schlagerCycleTimer);
+            if (musicCycleTimer) clearInterval(musicCycleTimer);
             document.getElementById('media-view-schlager').classList.remove('active');
             document.getElementById('media-view-poster').classList.add('active');
 
@@ -888,7 +858,7 @@
         }
         setInterval(fetchLiveWeather, 600000); fetchLiveWeather();
 
-        // 4. Musik & Austropop Diashow
+        // 4. Musik & Austropop Diashow (Sidebar)
         const musicTipsData = [
             {
                 artist: "Maite Kelly",
