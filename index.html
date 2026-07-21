@@ -19,7 +19,6 @@
             --card-border: rgba(255, 255, 255, 0.12);
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
-            --ticker-gradient: linear-gradient(90deg, rgba(15, 32, 66, 0.65) 0%, rgba(0, 92, 138, 0.65) 50%, rgba(99, 12, 82, 0.65) 100%);
         }
 
         * {
@@ -39,7 +38,7 @@
             color: var(--text-light);
             position: relative;
             background-color: #241914; 
-            background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png');[span_0](start_span)[span_0](end_span)
+            background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -89,9 +88,18 @@
                 0 50px 120px -20px rgba(0, 0, 0, 0.85),
                 inset 0 1px 1px rgba(255, 255, 255, 0.15);
             padding: 2.5vh 2vw;
-            transition: border-color 0.6s ease, box-shadow 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: border-color 1s ease, box-shadow 1s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
+        }
+
+        /* Sehr minimales, sanftes Rahmen-Schimmern (max 2 gleichzeitig) */
+        .card.border-shimmer-active {
+            border-color: rgba(255, 255, 255, 0.45) !important;
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.15),
+                0 50px 120px -20px rgba(0, 0, 0, 0.85),
+                inset 0 0 10px rgba(255, 255, 255, 0.15) !important;
         }
 
         .card::after {
@@ -99,34 +107,42 @@
             position: absolute;
             top: 0; left: -150%;
             width: 80%; height: 100%;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
             transform: skewX(-30deg);
             z-index: 5;
             pointer-events: none;
         }
 
         .shimmer-active {
-            border-color: rgba(255, 140, 40, 0.5) !important; 
+            border-color: rgba(243, 85, 218, 0.6) !important; 
             box-shadow: 
-                0 0 40px rgba(255, 140, 40, 0.3), 
+                0 0 50px rgba(243, 85, 218, 0.4), 
                 0 50px 120px -20px rgba(0, 0, 0, 0.85),
-                inset 0 0 15px rgba(255, 140, 40, 0.05) !important;
-            transform: scale(1.003);
+                inset 0 0 20px rgba(0, 242, 254, 0.15) !important;
+            transform: scale(1.004) perspective(1000px) rotateX(0.5deg);
         }
         .shimmer-active::after { left: 250%; transition: left 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
 
+        /* LINKS: Großer Medienbereich */
         .media-zone {
             grid-column: 1; grid-row: 1; padding: 0;
-            background: #020617; border: 2px solid rgba(255, 255, 255, 0.12);
-            display: flex; justify-content: center; align-items: center;
+            background: #020617; border: 2px solid rgba(255, 255, 255, 0.15);
+            display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(243, 85, 218, 0.1);
         }
 
-        .poster-container { width: 100%; height: 100%; position: relative; border-radius: 2.3vh; overflow: hidden; }
+        .media-inner-view {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; pointer-events: none; transition: opacity 1.8s ease-in-out; z-index: 1;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .media-inner-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
 
+        .poster-container { width: 100%; height: 100%; position: relative; border-radius: 2.3vh; overflow: hidden; }
         .poster-image {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: contain; display: block; opacity: 0;
-            transition: opacity 3s ease-in-out; z-index: 1;
+            transition: opacity 2s ease-in-out; z-index: 1;
             animation: premiumPosterBreathing 24s ease-in-out infinite alternate;
             will-change: transform;
         }
@@ -138,20 +154,125 @@
             animation: softLightingPulse 8s ease-in-out infinite alternate;
         }
 
+        /* WIDGET 2: SCHLAGER TOP CHARTS */
+        .schlager-widget-box {
+            width: 100%; height: 100%; position: relative; background: #070b14;
+            display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
+            border-radius: 2.3vh;
+        }
+        .schlager-bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;
+            opacity: 0; transform: scale(1.12);
+            transition: opacity 1.5s ease-in-out, transform 15s cubic-bezier(0.1, 0.8, 0.2, 1);
+            z-index: 1;
+        }
+        .schlager-bg-img.active { opacity: 0.85; z-index: 2; }
+        .schlager-bg-img.zoom { transform: scale(1.00); }
+
+        .schlager-gradient-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(7, 11, 20, 0.45) 0%, rgba(7, 11, 20, 0.25) 40%, rgba(7, 11, 20, 0.95) 100%);
+            z-index: 3; pointer-events: none;
+        }
+        .schlager-content-layer {
+            position: relative; z-index: 10; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between; padding: 3.5vh 4vw;
+        }
+        .schlager-top-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 15, 30, 0.35); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5vh; padding: 1.5vh 2.2vw;
+        }
+        .schlager-title-group h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 2.6vh; font-weight: 900;
+            background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; letter-spacing: 1px;
+            filter: drop-shadow(0 2px 10px rgba(243, 85, 218, 0.4));
+        }
+        .schlager-title-group p { font-size: 1.25vh; color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 0.2vh; }
+        .schlager-chart-badge {
+            background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%);
+            color: #060b14; font-family: 'Orbitron', sans-serif; font-size: 1.4vh; font-weight: 900;
+            padding: 0.8vh 1.8vw; border-radius: 1vh; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(243, 85, 218, 0.6);
+        }
+        
+        .schlager-artist-card {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin-top: auto; 
+            margin-bottom: 2.5vh; 
+            display: flex; flex-direction: column; gap: 1.2vh;
+            text-align: left;
+        }
+        .schlager-rank-tag {
+            align-self: flex-start; background: #00f2fe; color: #020617; font-family: 'Orbitron', sans-serif;
+            font-size: 1.3vh; font-weight: 900; padding: 0.4vh 1.2vw; border-radius: 0.6vh; text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
+        }
+        .schlager-artist-name { 
+            font-size: 5.2vh; font-weight: 900; color: #ffffff; line-height: 1.1; 
+            text-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.85); 
+        }
+        .schlager-song-title { 
+            font-size: 2.8vh; font-weight: 800; color: #38bdf8; 
+            text-shadow: 0 3px 15px rgba(0,0,0,0.9); 
+        }
+        .schlager-info-box {
+            display: flex; align-items: center; justify-content: space-between;
+            background: transparent !important; border: none !important; padding: 0 !important;
+            font-size: 1.5vh; font-weight: 700; color: #e2e8f0; 
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+        }
+
+        .schlager-bottom-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 15, 30, 0.35); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5vh; padding: 1.4vh 2.2vw;
+            font-size: 1.45vh; font-weight: 800; color: #facc15; text-transform: uppercase; letter-spacing: 1px;
+        }
+
         .sidebar { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 2vh; }
 
+        /* UHR WIDGET: 100% Transparent + Weißer 3D-Effekt */
         .widget-clock {
             flex: 0 0 auto; text-align: center;
-            background: linear-gradient(135deg, rgba(15, 32, 66, 0.45) 0%, rgba(0, 92, 138, 0.3) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.18); padding: 1.2vh 1.2vw;
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.22); 
+            padding: 1.2vh 1.2vw;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
         }
+        .widget-clock.card::after { display: none !important; }
         .time-display {
-            font-family: 'Orbitron', sans-serif; font-size: 5vh; font-weight: 900;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: 2px; margin-bottom: 0.1vh; filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
+            font-family: 'Orbitron', sans-serif; 
+            font-size: 5.2vh; 
+            font-weight: 900;
+            color: #ffffff;
+            /* Edler weißer 3D-Schrift-Effekt */
+            text-shadow: 
+                0 1px 0 #cccccc,
+                0 2px 0 #b3b3b3,
+                0 3px 0 #999999,
+                0 4px 0 #7f7f7f,
+                0 5px 10px rgba(0, 0, 0, 0.9),
+                0 0 25px rgba(255, 255, 255, 0.4);
+            letter-spacing: 2px; 
+            margin-bottom: 0.1vh;
         }
-        .date-display { font-size: 1.3vh; font-weight: 700; color: rgba(240, 244, 248, 0.85); text-transform: uppercase; letter-spacing: 2px; }
+        .date-display { 
+            font-size: 1.3vh; 
+            font-weight: 700; 
+            color: rgba(255, 255, 255, 0.95); 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); 
+        }
 
         .widget-weather {
             flex: 0 0 auto; position: relative; overflow: hidden; padding: 1.8vh 1.5vw;
@@ -176,7 +297,7 @@
         .lightning-bolt-effect { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0); animation: lightningStrike 5s ease-in-out infinite; }
         @keyframes lightningStrike { 0%, 91%, 93%, 96%, 100% { background: rgba(255, 255, 255, 0); } 92% { background: rgba(255, 255, 255, 0.4); filter: brightness(1.3); } 94% { background: rgba(255, 255, 255, 0.25); } }
 
-        /* WIDGET 3 WECHSLER (Dart / Galerie / Music Charts) */
+        /* WIDGET 3 WECHSLER (Dart ↔ Galerie ↔ Music Charts) */
         .widget-dart { flex: 1; padding: 0; position: relative; overflow: hidden; }
         .dart-view {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 2.2vh 1.4vw; 
@@ -188,7 +309,6 @@
         .dart-title h2 { font-size: 2.1vh; font-weight: 800; }
         .dart-title p { font-size: 1.25vh; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         
-        /* Dart Widget: Deutlich größere Schrift für Teams und Match */
         .dart-rows-container { display: flex; flex-direction: column; gap: 0.8vh; }
         .dart-rank-pill { display: flex; align-items: center; justify-content: space-between; padding: 1.3vh 1.2vw; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 1.2vh; }
         .team-premium-highlight { background: linear-gradient(90deg, rgba(0, 242, 254, 0.12) 0%, rgba(79, 172, 254, 0.03) 100%); border: 1px solid rgba(0, 242, 254, 0.3); }
@@ -240,13 +360,19 @@
             z-index: 3; pointer-events: none;
         }
 
-        /* TICKER ZONE (Font-Size 2.4vh) */
+        /* INFO TICKER: 100% Transparent + Langsamer & leichter 3D-Effekt */
         .ticker-zone {
             grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 100%; 
-            display: flex; align-items: center; background: var(--ticker-gradient);
-            border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; 
+            background: transparent !important; 
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.22); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border-radius: 1.5vh; overflow: hidden; position: relative;
         }
+        .ticker-zone.card::after { display: none !important; }
+        
         .ticker-label-left {
             height: 100%; padding: 0 2vw; background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
             display: flex; align-items: center; gap: 0.5vw; color: #ffffff;
@@ -258,13 +384,20 @@
         .ticker-wrap { flex: 1; overflow: hidden; display: flex; align-items: center; }
         .ticker-move {
             display: inline-block; white-space: nowrap; padding-left: 100%; 
-            animation: tickerMove 55s linear infinite; will-change: transform;
-            font-weight: 700; color: #ffffff; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            font-size: 2.4vh; /* Exakt auf 2.4 eingestellt */
+            /* Etwas langsamer gestellt: 75s statt 55s */
+            animation: tickerMove 75s linear infinite; 
+            will-change: transform;
+            font-weight: 700; 
+            color: #ffffff; 
+            /* Leichter Ticker 3D-Schrift-Effekt */
+            text-shadow: 
+                0 1px 0 rgba(0,0,0,0.8),
+                0 2px 4px rgba(0, 0, 0, 0.9);
+            font-size: 2.4vh; 
         }
         .ticker-item { display: inline-block; padding: 0 3vw; }
-        .ticker-highlight-yellow { color: #ffe600; font-weight: 800; }
-        .ticker-separator { color: rgba(0, 242, 254, 0.6); font-weight: 900; margin: 0 1vw; }
+        .ticker-highlight-yellow { color: #ffe600; font-weight: 800; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
+        .ticker-separator { color: rgba(0, 242, 254, 0.9); font-weight: 900; margin: 0 1vw; }
 
         @keyframes tickerMove { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
         @keyframes premiumPosterBreathing { 0% { transform: scale(1.00) translate(0px, 0px); } 50% { transform: scale(1.02) translate(2px, -1px); } 100% { transform: scale(1.01) translate(-1px, 1px); } }
@@ -278,19 +411,62 @@
 
     <div class="dashboard-container">
         
-        <!-- LINKS: Plakatbereich -->
+        <!-- LINKS: Großer Medienbereich -->
         <div class="card media-zone" id="card-media">
-            <div class="poster-container" id="poster-container">
-                <img class="poster-image active" id="poster1" src="0.png" alt="Plakat Ebene 1">
-                <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
-                <div class="poster-ambient-glaze"></div>
+            
+            <!-- Ansicht 1: Plakat-Diashow -->
+            <div class="media-inner-view active" id="media-view-poster">
+                <div class="poster-container" id="poster-container">
+                    <img class="poster-image active" id="poster1" src="0.png" alt="Plakat Ebene 1">
+                    <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
+                    <div class="poster-ambient-glaze"></div>
+                </div>
             </div>
+
+            <!-- Ansicht 2: Deutsche Schlager Top Charts -->
+            <div class="media-inner-view" id="media-view-schlager">
+                <div class="schlager-widget-box">
+                    <img class="schlager-bg-img active" id="schlager-img1" src="" alt="Künstler Hintergrund 1">
+                    <img class="schlager-bg-img" id="schlager-img2" src="" alt="Künstler Hintergrund 2">
+                    <div class="schlager-gradient-overlay"></div>
+
+                    <div class="schlager-content-layer">
+                        <!-- Header -->
+                        <div class="schlager-top-header">
+                            <div class="schlager-title-group">
+                                <h2>Deutsche Schlager Top Charts</h2>
+                                <p>Juli 2026 • Offizielle Schlager-Charts</p>
+                            </div>
+                            <div class="schlager-chart-badge" id="schlager-chart-badge">Hit 1 von 3</div>
+                        </div>
+
+                        <!-- Künstler Info -->
+                        <div class="schlager-artist-card">
+                            <span class="schlager-rank-tag" id="schlager-rank">Platz 1</span>
+                            <div class="schlager-artist-name" id="schlager-artist">Lade Künstler...</div>
+                            <div class="schlager-song-title" id="schlager-song">"Lade Titel..."</div>
+                            
+                            <div class="schlager-info-box">
+                                <span id="schlager-album">Album: Lade Album...</span>
+                                <span id="schlager-trend">🔥 Chart-Trend: Top-Platzierung</span>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="schlager-bottom-footer">
+                            <span>🎵 Jetzt frisch in der Musikbox entdecken & wünschen!</span>
+                            <span>City Cafe Klagenfurt Fischl</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- RECHTS: Sidebar -->
         <div class="sidebar">
             
-            <!-- WIDGET 1: Uhrzeit -->
+            <!-- WIDGET 1: Uhrzeit (Transparent + Weißer 3D-Effekt) -->
             <div class="card widget-clock" id="card-clock">
                 <div class="time-display" id="live-time">00:00</div>
                 <div class="date-display" id="live-date">Lade Datum...</div>
@@ -311,7 +487,7 @@
             <!-- WIDGET 3: 3-Fach Wechsler (Dart ↔ Galerie ↔ Music Charts Diashow) -->
             <div class="card widget-dart" id="card-dart">
                 
-                <!-- ANSICHT 1: Dart (Aktualisiert & vergrößerte Schrift) -->
+                <!-- ANSICHT 1: Dart -->
                 <div class="dart-view active" id="view-dart-stats">
                     <div class="dart-header">
                         <div class="dart-badge-3d">🎯</div>
@@ -357,7 +533,7 @@
                     </div>
                 </div>
 
-                <!-- ANSICHT 3: Musik & Austropop Diashow (Mit sicherem Preload gegen Bild-Ladefehler) -->
+                <!-- ANSICHT 3: Musik & Austropop Diashow -->
                 <div class="dart-view view-music-style" id="view-music-tips">
                     <div class="music-image-container">
                         <img class="music-bg-img active" id="music-bg1" src="" alt="Künstler Bild 1">
@@ -389,8 +565,8 @@
 
         </div>
 
-        <!-- UNTEN: Info Ticker -->
-        <div class="card ticker-zone">
+        <!-- UNTEN: Info Ticker (100% Transparent + 3D Text + langsamer) -->
+        <div class="card ticker-zone" id="card-ticker">
             <div class="ticker-label-left"><span>ℹ️</span> INFO</div>
             <div class="ticker-wrap">
                 <div class="ticker-move">
@@ -412,11 +588,11 @@
     </div>
 
     <script>
-        // --- GRUNDEINSTELLUNGEN FÜR DEINE DRIVE GALERIE ---
+        // --- GRUNDEINSTELLUNGEN ---
         const WUNSCH_TEXT_STREIFEN = "Beste Stimmung im Cafe!"; 
         const BILD_WECHSEL_SEKUNDEN = 10; 
         const MUSIC_WECHSEL_SEKUNDEN = 12; 
-        // --------------------------------------------------
+        // -------------------------
 
         // 1. Uhrzeit
         function updateClock() {
@@ -429,26 +605,132 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // 2. Diashow links (Plakate)
+        // 2. GROSSER MEDIEN-WECHSLER (Widget 1: Plakat ↔ Widget 2: Schlager Top Charts 3er-Zyklus)
         const posterImages = ['0.png', '1.png', '2.png', '3.png']; 
         let currentPosterIndex = 0;
         const img1 = document.getElementById('poster1');
         const img2 = document.getElementById('poster2');
         let isImg1Active = true;
 
-        function changePoster() {
-            if (posterImages.length <= 1) return;
-            currentPosterIndex = (currentPosterIndex + 1) % posterImages.length;
-            const nextSource = posterImages[currentPosterIndex];
-            if (isImg1Active) {
-                img2.src = nextSource;
-                img2.onload = () => { img1.classList.remove('active'); img2.classList.add('active'); isImg1Active = false; };
+        const schlagerChartPool = [
+            { artist: "Helene Fischer", song: "Null auf 100 / Hit-Medley", album: "Album: Rausch (Gold Edition)", rank: "Platz 1", trend: "🔥 Dauerbrenner in den Charts", image: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Maite Kelly", song: "Ein Kuss in Paris", album: "Album: Nur Liebe", rank: "Platz 2", trend: "🔥 Chart-Spitzenreiter", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Melissa Naschenweng", song: "Verliwascht & Bergbauernbuam", album: "Album: Traktor Rockstar", rank: "Platz 3", trend: "⭐ Publikumsliebling", image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Kerstin Ott", song: "1000 x Nein", album: "Album: Best Of & Mehr", rank: "Platz 4", trend: "📈 Steigt rasant auf", image: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Roland Kaiser", song: "Dich zu lieben & Neue Hits", album: "Album: Persoenlich", rank: "Platz 5", trend: "⭐ Kult-Status", image: "https://images.unsplash.com/photo-1469488865564-c2de10f69f96?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Beatrice Egli", song: "Balance & Volles Risiko", album: "Album: Balance", rank: "Platz 6", trend: "🚀 Chart-Aufsteiger", image: "https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Joelina Drews", song: "Durch und Durch", album: "Album: Neue Wege", rank: "Platz 7 (Höchster Neueinsteiger)", trend: "⭐ Chart-Neuzugang", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80" },
+            { artist: "Vincent Gross & Esteriore Brothers", song: "Amore mit Mio", album: "Album: Italiano Loco", rank: "Platz 8", trend: "🔥 Sommer-Hit", image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&auto=format&fit=crop&q=80" }
+        ];
+
+        let currentSchlagerSubIndex = 0;
+        let schlagerCycleTimer = null;
+        let mainStateIsPoster = true; 
+        let availableSchlagerBatch = [];
+        let activeSchlagerBatch = [];
+        let isSchlagerBg1Active = true;
+
+        function getNextThreeSchlager() {
+            if (availableSchlagerBatch.length < 3) {
+                availableSchlagerBatch = [...schlagerChartPool].sort(() => 0.5 - Math.random());
+            }
+            return availableSchlagerBatch.splice(0, 3);
+        }
+
+        function renderSchlagerArtist(index) {
+            if (!activeSchlagerBatch[index]) return;
+            const data = activeSchlagerBatch[index];
+
+            const bg1 = document.getElementById('schlager-img1');
+            const bg2 = document.getElementById('schlager-img2');
+
+            bg1.classList.remove('zoom');
+            bg2.classList.remove('zoom');
+
+            if (isSchlagerBg1Active) {
+                bg2.src = data.image;
+                bg1.classList.remove('active');
+                bg2.classList.add('active');
+                setTimeout(() => bg2.classList.add('zoom'), 100);
+                isSchlagerBg1Active = false;
             } else {
-                img1.src = nextSource;
-                img1.onload = () => { img2.classList.remove('active'); img1.classList.add('active'); isImg1Active = true; };
+                bg1.src = data.image;
+                bg2.classList.remove('active');
+                bg1.classList.add('active');
+                setTimeout(() => bg1.classList.add('zoom'), 100);
+                isSchlagerBg1Active = true;
+            }
+
+            document.getElementById('schlager-rank').textContent = data.rank;
+            document.getElementById('schlager-artist').textContent = data.artist;
+            document.getElementById('schlager-song').textContent = `"${data.song}"`;
+            document.getElementById('schlager-album').textContent = data.album;
+            document.getElementById('schlager-trend').textContent = data.trend;
+            document.getElementById('schlager-chart-badge').textContent = `Hit ${index + 1} von 3`;
+        }
+
+        function startSchlagerCycle() {
+            activeSchlagerBatch = getNextThreeSchlager();
+            currentSchlagerSubIndex = 0;
+            renderSchlagerArtist(currentSchlagerSubIndex);
+
+            if (schlagerCycleTimer) clearInterval(schlagerCycleTimer);
+
+            schlagerCycleTimer = setInterval(() => {
+                currentSchlagerSubIndex++;
+                if (currentSchlagerSubIndex < 3) {
+                    renderSchlagerArtist(currentSchlagerSubIndex);
+                } else {
+                    clearInterval(schlagerCycleTimer);
+                    switchToWidget1();
+                }
+            }, 15000);
+        }
+
+        function switchToWidget2() {
+            mainStateIsPoster = false;
+            document.getElementById('media-view-poster').classList.remove('active');
+            document.getElementById('media-view-schlager').classList.add('active');
+            startSchlagerCycle();
+        }
+
+        function switchToWidget1() {
+            mainStateIsPoster = true;
+            if (schlagerCycleTimer) clearInterval(schlagerCycleTimer);
+            document.getElementById('media-view-schlager').classList.remove('active');
+            document.getElementById('media-view-poster').classList.add('active');
+
+            if (posterImages.length > 1) {
+                currentPosterIndex = (currentPosterIndex + 1) % posterImages.length;
+                const nextSource = posterImages[currentPosterIndex];
+                
+                const preloadPoster = new Image();
+                preloadPoster.src = nextSource;
+                preloadPoster.onload = () => {
+                    if (isImg1Active) {
+                        img2.src = nextSource;
+                        img1.classList.remove('active');
+                        img2.classList.add('active');
+                        isImg1Active = false;
+                    } else {
+                        img1.src = nextSource;
+                        img2.classList.remove('active');
+                        img1.classList.add('active');
+                        isImg1Active = true;
+                    }
+                };
             }
         }
-        setInterval(changePoster, 20000);
+
+        function masterMediaDispatcher() {
+            if (mainStateIsPoster) {
+                switchToWidget2();
+            } else {
+                if (!mainStateIsPoster) return; 
+            }
+        }
+
+        setInterval(masterMediaDispatcher, 70000);
 
         // 3. Wetter
         async function fetchLiveWeather() {
@@ -479,56 +761,35 @@
         }
         setInterval(fetchLiveWeather, 600000); fetchLiveWeather();
 
-        // 4. Musik & Austropop Diashow (Mit absolut verlässlichem Bild-Preload gegen Ladeprobleme)
+        // 4. Musik & Austropop Diashow
         const musicTipsData = [
             {
                 artist: "Maite Kelly",
                 song: "Ein Kuss in Paris / Es ist einfach passiert",
                 release: "Juli 2026",
                 event: "Samstag, 05.09.2026 • Burgarena Finkenstein",
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Maite_Kelly_2019.jpg/800px-Maite_Kelly_2019.jpg"
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600&auto=format&fit=crop&q=80"
             },
             {
                 artist: "Melissa Naschenweng",
                 song: "Bergbauernbuam (Sommer-Mix 2026)",
                 release: "Juli 2026",
                 event: "Freitag, 14.08.2026 • Schlosswiese Moosburg",
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Melissa_Naschenweng_2019.jpg/800px-Melissa_Naschenweng_2019.jpg"
+                image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&auto=format&fit=crop&q=80"
             },
             {
                 artist: "Nockis",
                 song: "Atemlos durch die Nacht & Kulthits",
                 release: "Juli 2026",
                 event: "Freitag, 24.07.2026 • Faaker See Open Air",
-                image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=60"
+                image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80"
             },
             {
                 artist: "Wolfgang Ambros & Band",
                 song: "Schifoan & Zwickt's mi (Austropop)",
                 release: "Austropop Gold Edition",
                 event: "Samstag, 22.08.2026 • Burgarena Finkenstein",
-                image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=60"
-            },
-            {
-                artist: "Wanda",
-                song: "Bussi Baby & Bologna",
-                release: "Rock / Austropop",
-                event: "Samstag, 29.08.2026 • Stift Ossiach",
-                image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=60"
-            },
-            {
-                artist: "STS / Die Seer Klassiker",
-                song: "Fürstenfeld & Wild's Wasser",
-                release: "Austropop Legenden",
-                event: "Sonntag, 06.09.2026 • Wörthersee Bühne",
-                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=60"
-            },
-            {
-                artist: "Rainhard Fendrich",
-                song: "I am from Austria & Macho Macho",
-                release: "Best of Austropop",
-                event: "Freitag, 11.09.2026 • Congress Center Villach",
-                image: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800&auto=format&fit=crop&q=60"
+                image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1600&auto=format&fit=crop&q=80"
             }
         ];
 
@@ -541,7 +802,6 @@
             const randomIndex = Math.floor(Math.random() * musicTipsData.length);
             const data = musicTipsData[randomIndex];
             
-            // Vorab laden im Speicher, damit das Bild garantiert da ist
             const preloadImg = new Image();
             preloadImg.src = data.image;
             preloadImg.onload = () => {
@@ -652,11 +912,40 @@
         setInterval(rotateSidebarWidgets, 60000); 
         loadDriveFolderImages();
 
-        // 6. Shimmer Effekt
-        const cards = [document.getElementById('card-media'), document.getElementById('card-clock'), document.getElementById('card-weather'), document.getElementById('card-dart')];
-        function triggerPremiumShimmer() { const rc = cards[Math.floor(Math.random()*cards.length)]; if(rc) rc.classList.add('shimmer-active'); setTimeout(() => { if(rc) rc.classList.remove('shimmer-active'); }, 1200); }
-        function loopShimmer() { setTimeout(() => { triggerPremiumShimmer(); loopShimmer(); }, Math.floor(Math.random()*4000)+4000); }
-        loopShimmer();
+        // 6. Sehr seltenes & minimales Rahmen-Schimmern (Maximal 1 bis 2 gleichzeitig)
+        const allCards = [
+            document.getElementById('card-media'),
+            document.getElementById('card-clock'),
+            document.getElementById('card-weather'),
+            document.getElementById('card-dart'),
+            document.getElementById('card-ticker')
+        ];
+
+        function triggerRandomBorderShimmer() {
+            allCards.forEach(c => { if(c) c.classList.remove('border-shimmer-active'); });
+
+            const shuffled = [...allCards].sort(() => 0.5 - Math.random());
+            const countToLight = Math.floor(Math.random() * 2) + 1; // Nur 1 oder 2 gleichzeitig
+
+            for (let i = 0; i < countToLight; i++) {
+                if (shuffled[i]) {
+                    shuffled[i].classList.add('border-shimmer-active');
+                    setTimeout((cardRef) => {
+                        if(cardRef) cardRef.classList.remove('border-shimmer-active');
+                    }, 1000, shuffled[i]);
+                }
+            }
+        }
+
+        function loopBorderShimmer() {
+            // Noch seltener: Alle 6 bis 12 Sekunden
+            const randomInterval = Math.floor(Math.random() * 6000) + 6000;
+            setTimeout(() => {
+                triggerRandomBorderShimmer();
+                loopBorderShimmer();
+            }, randomInterval);
+        }
+        loopBorderShimmer();
     </script>
 </body>
 </html>
