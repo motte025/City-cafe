@@ -73,12 +73,12 @@
             background-color: #241914; 
         }
 
-        /* FIXER HINTERGRUND-CONTAINER (Feine Ziegeloptik durch feste Pixelgröße erzwingen) */
+        /* FIXER HINTERGRUND-CONTAINER (Feine Ziegeloptik direkt von GitHub) */
         .fixed-bg-bricks {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100dvh;
-            background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png?v=fixedFinal');
+            background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png?v=githubFix');
             background-size: 180px 180px; 
             background-repeat: repeat;
             background-position: top left;
@@ -522,10 +522,10 @@
         <!-- LINKS: Großer Medienbereich -->
         <div class="card media-zone" id="card-media">
             
-            <!-- Ansicht 1: Plakat-Diashow -->
+            <!-- Ansicht 1: Plakat-Diashow (0.png bis 3.png von GitHub) -->
             <div class="media-inner-view active" id="media-view-poster">
                 <div class="poster-container" id="poster-container">
-                    <img class="poster-image active" id="poster1" src="0.png" alt="Plakat Ebene 1">
+                    <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/0.png" alt="Plakat Ebene 1">
                     <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
                     <div class="poster-ambient-glaze"></div>
                 </div>
@@ -756,7 +756,6 @@
             }, 600);
         }
 
-        // Oberes linkes Widget ändert den Text per Zufallsprinzip exakt alle 7 Minuten (7 * 60 * 1000 ms)
         setInterval(rotateGreetingsRandom, 7 * 60 * 1000);
 
         // 1. Uhrzeit
@@ -770,8 +769,13 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // 2. GROSSER MEDIEN-WECHSLER (Plakate - Alle 2 Minuten wechseln)
-        const posterImages = ['0.png', '1.png', '2.png', '3.png']; 
+        // 2. GROSSER MEDIEN-WECHSLER (Plakate 0.png bis 3.png direkt von GitHub)
+        const posterImages = [
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/0.png',
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/1.png',
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/2.png',
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/3.png'
+        ]; 
         let currentPosterIndex = 0;
         const img1 = document.getElementById('poster1');
         const img2 = document.getElementById('poster2');
@@ -895,7 +899,6 @@
             }
         }
 
-        // Plakat-Widget wechselt exakt alle 2 Minuten (2 * 60 * 1000 ms)
         setInterval(masterMediaDispatcher, 2 * 60 * 1000);
 
         // 3. Wetter
