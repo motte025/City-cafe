@@ -134,7 +134,6 @@
             display: inline-block;
         }
 
-        /* Partikel-Zerfall auch für das obere Widget */
         .greeting-char-particle {
             display: inline-block;
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease, filter 0.6s ease;
@@ -428,15 +427,15 @@
                     <div class="schlager-content-layer">
                         <div class="schlager-top-header">
                             <div class="schlager-title-group">
-                                <h2 id="media-main-category-title">Party-Schlager & Jukebox-Hits</h2>
-                                <p>80% Party-Schlager • 15% Aktuelle Charts • 5% Rock-Classics</p>
+                                <h2 id="media-main-category-title">Jukebox-Hit</h2>
+                                <p>Offizielle Charts & Party-Stimmung</p>
                             </div>
                             <div class="schlager-chart-badge" id="schlager-chart-badge">Titel 1 von 3</div>
                         </div>
 
                         <div class="schlager-artist-card">
                             <div class="schlager-artist-left">
-                                <span class="schlager-rank-tag" id="schlager-rank">Party-Hit</span>
+                                <span class="schlager-rank-tag" id="schlager-rank">Hit</span>
                                 <div class="schlager-artist-name" id="schlager-artist">Lade Musik...</div>
                                 <div class="schlager-song-title" id="schlager-song">"Titel..."</div>
                             </div>
@@ -560,7 +559,6 @@
             "Gemeinsam gute Zeiten genießen!"
         ];
 
-        // Partikel-Zerfall für das obere Widget
         function setCrumblingGreeting(newText) {
             const container = document.getElementById('greeting-title');
             const currentChars = container.querySelectorAll('.greeting-char-particle');
@@ -602,7 +600,6 @@
             }, 600);
         }
 
-        // Initialer Start für das obere Widget
         setCrumblingGreeting(greetingHeadlines[0]);
 
         setInterval(() => {
@@ -648,57 +645,25 @@
             return chosen + '&t=' + Date.now();
         }
 
-        // --- EXAKT VERKNÜPFTER 1.000ER MUSIK-POOL OHNE NUMERIERUNGS-FEHLER ---
-        const masterMusicPool = [];
-        
-        const verifiedPairs = [
-            { artist: "Helene Fischer", song: "Atemlos durch die Nacht", album: "Farbenspiel", cat: "Party-Schlager Kult" },
-            { artist: "Melissa Naschenweng", song: "Bergbauernbuam", album: "LederHosenRock", cat: "Alpen-Popschlager" },
-            { artist: "DJ Ötzi", song: "Ein Stern (der deinen Namen trägt)", album: "Sternstunden", cat: "Party Fox" },
-            { artist: "Die Nockis", song: "Überrühr'n nach Hawaii", album: "Alles Hits!", cat: "Kärntner Kult" },
-            { artist: "Die Draufgänger", song: "Cordula Grün", album: "Hektarparty", cat: "Party Volksmusik" },
-            { artist: "Mickie Krause", song: "Schatzi schenk mir ein Foto!", album: "Eins.Plus.Eins", cat: "Mallorca Hit" },
-            { artist: "Kerstin Ott", song: "Die immer lacht", album: "Herzbewohner", cat: "Popschlager" },
-            { artist: "Roland Kaiser", song: "Warum hast du nicht nein gesagt", album: "Seelenbahnen", cat: "Schlager Duett" },
-            { artist: "Andrea Berg", song: "Du hast mich tausendmal belogen", album: "Mino", cat: "Klassik Schlager" },
-            { artist: "Beatrice Egli", song: "Mein Herz", album: "Glücksgefühle", cat: "Popschlager" },
-            { artist: "Maite Kelly", song: "Sieben Leben für dich", album: "Sieben Leben", cat: "Popschlager" },
-            { artist: "Tream", song: "Lebenslang", album: "Stammtischparolen", cat: "Party Rock" },
-            { artist: "Vincent Gross", song: "Ouuu", album: "Frei", cat: "Sommer Hit" },
-            { artist: "Ramon Roselly", song: "Eine Nacht und ewige Müh'", album: "Lieblingsmomente", cat: "Schlager Star" },
-            { artist: "Eric Philippi", song: "Schockverliebt", album: "Schockverliebt", cat: "Chart-Durchstarter" },
-            { artist: "Nik P.", song: "Ein geborener Verlierer", album: "Lebenslänglich", cat: "Austropop Schlager" },
-            { artist: "Semino Rossi", song: "Rot sind die Rosen", album: "Tanja", cat: "Romantik Schlager" },
-            { artist: "Andreas Gabalier", song: "I sing a Liad für di", album: "Da Dirndl Wahnsinn", cat: "Volks-Rock'n'Roll" },
-            { artist: "Udo Jürgens", song: "Griechischer Wein", album: "Merci Cherie", cat: "Legende" },
-            { artist: "Wolfgang Ambros", song: "Zwickt's mi", album: "Der Watzmann ruft", cat: "Austropop" },
-            { artist: "STS", song: "Fürstenfeld", album: "Überdosis G'fühl", cat: "Austropop Hymne" },
-            { artist: "Falco", song: "Rock Me Amadeus", album: "Falco 3", cat: "Welthit" },
-            { artist: "Rainhard Fendrich", song: "Macho Macho", album: "Wien bei Nacht", cat: "Austropop Klassiker" },
-            { artist: "Shirin David", song: "Gut Genug", album: "Single 2026", cat: "Aktuelle Charts" },
-            { artist: "Taylor Swift", song: "The Fate Of Ophelia", album: "Showgirl 2026", cat: "Pop Charts" },
-            { artist: "Zara Larsson", song: "Lush Life", album: "So Good", cat: "International Chart" },
-            { artist: "AC/DC", song: "Highway to Hell", album: "Highway to Hell", cat: "Rock Classic" },
-            { artist: "Bon Jovi", song: "Livin' on a Prayer", album: "Slippery When Wet", cat: "Rock Hymne" }
-        ];
+        let masterMusicPool = [];
 
-        // Automatische Aufstockung auf 1000 saubere, echte Kombinationen ohne Ziffern-Salat
-        for (let i = 0; i < 1000; i++) {
-            const base = verifiedPairs[i % verifiedPairs.length];
-            const variants = ["", " (Radio Mix)", " (Live Version)", " (Party Remix)", " (Club Edit)"];
-            const varSuffix = variants[i % variants.length];
-
-            masterMusicPool.push({
-                cat: base.cat,
-                artist: base.artist,
-                song: base.song + varSuffix,
-                album: base.album,
-                rank: i % 3 === 0 ? "Mega Hit" : (i % 3 === 1 ? "Café-Favorit" : "Stimmungshit"),
-                chart: `🇦🇹 Beste Chartplatzierung: Platz ${ (i % 25) + 1 } (${2002 + (i % 24)})`
-            });
+        async function loadSongsFromGitHub() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/motte025/City-cafe/main/songs.json?v=' + Date.now());
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    masterMusicPool = data;
+                }
+            } catch (error) {
+                masterMusicPool = [
+                    { artist: "Nik P.", song: "Ein Stern (der deinen Namen trägt)", album: "Sternstunden", cat: "Schlager & Party", chart: "🇦🇹 Beste Chartplatzierung: Platz 1 (2007)" },
+                    { artist: "Wolfgang Ambros", song: "Zwickt's mi", album: "Der Watzmann ruft", cat: "Austropop Klassiker", chart: "🇦🇹 Beste Chartplatzierung: Platz 3 (1975)" },
+                    { artist: "Helene Fischer", song: "Atemlos durch die Nacht", album: "Farbenspiel", cat: "Schlager Kult", chart: "🇦🇹 Beste Chartplatzierung: Platz 1 (2013)" }
+                ];
+            }
         }
+        loadSongsFromGitHub();
 
-        let artistHistory = [];
         let musicCycleTimer = null;
         let mainStateIsPoster = true; 
         let activeMusicBatch = [];
@@ -706,23 +671,23 @@
         let currentMusicSubIndex = 0;
         let globalMasterTimer = null;
 
-        function pickUniqueSongFromPool() {
-            let candidates = masterMusicPool.filter(item => !artistHistory.includes(item.artist));
-            if (candidates.length === 0) candidates = masterMusicPool;
+        function generateGuaranteedBatch() {
+            if (!masterMusicPool || masterMusicPool.length === 0) {
+                return [
+                    { artist: "Nik P.", song: "Ein Stern (der deinen Namen trägt)", album: "Sternstunden", cat: "Schlager & Party", chart: "🇦🇹 Beste Chartplatzierung: Platz 1 (2007)" },
+                    { artist: "Wolfgang Ambros", song: "Zwickt's mi", album: "Der Watzmann ruft", cat: "Austropop Klassiker", chart: "🇦🇹 Beste Chartplatzierung: Platz 3 (1975)" },
+                    { artist: "Helene Fischer", song: "Atemlos durch die Nacht", album: "Farbenspiel", cat: "Schlager Kult", chart: "🇦🇹 Beste Chartplatzierung: Platz 1 (2013)" }
+                ];
+            }
 
-            const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+            // Greift exakt in der richtigen Reihenfolge die 3er-Blöcke ab, damit Interpret und Song zusammenbleiben
+            let maxIndex = Math.max(0, masterMusicPool.length - 3);
+            let startIndex = Math.floor(Math.random() * maxIndex);
             
-            artistHistory.push(chosen.artist);
-            if (artistHistory.length > 40) artistHistory.shift(); 
-            
-            return chosen;
-        }
-
-        function generateExplicitThreeBatch() {
             return [
-                pickUniqueSongFromPool(),
-                pickUniqueSongFromPool(),
-                pickUniqueSongFromPool()
+                masterMusicPool[startIndex],
+                masterMusicPool[startIndex + 1],
+                masterMusicPool[startIndex + 2]
             ];
         }
 
@@ -748,12 +713,15 @@
                 isSchlagerBg1Active = true;
             }
 
-            document.getElementById('media-main-category-title').textContent = data.cat;
-            document.getElementById('schlager-rank').textContent = data.rank;
+            let cleanTitle = data.song ? data.song.replace(/\s*\(Mix\s*\d+\)/gi, '').replace(/\s*\([^)]*Mix[^)]*\)/gi, '') : "Titel";
+
+            document.getElementById('media-main-category-title').textContent = data.cat || "Jukebox-Hit";
+            document.getElementById('schlager-rank').textContent = data.cat ? data.cat : "Hit";
             document.getElementById('schlager-artist').textContent = data.artist;
-            document.getElementById('schlager-song').textContent = `"${data.song}"`;
-            document.getElementById('schlager-album').textContent = data.album;
-            document.getElementById('schlager-chart-at').textContent = data.chart;
+            document.getElementById('schlager-song').textContent = `"${cleanTitle}"`;
+            document.getElementById('schlager-album').textContent = data.album || "Album-Edition";
+            document.getElementById('schlager-chart-at').textContent = data.chart || "🇦🇹 Jukebox-Favorit";
+
             document.getElementById('schlager-chart-badge').textContent = `Titel ${index + 1} von 3`;
         }
 
@@ -784,7 +752,7 @@
                 document.getElementById('media-view-poster').classList.remove('active');
                 document.getElementById('media-view-schlager').classList.add('active');
                 
-                activeMusicBatch = generateExplicitThreeBatch();
+                activeMusicBatch = generateGuaranteedBatch();
                 currentMusicSubIndex = 0;
                 renderMusicItem(currentMusicSubIndex);
 
@@ -848,7 +816,6 @@
             } catch (e) {}
         }
 
-        // Funktion für den Partikel-Zerfall im Galerie-Widget
         function setCrumblingTitle(newText) {
             const container = document.getElementById('gallery-current-title');
             const currentChars = container.querySelectorAll('.char-particle');
