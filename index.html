@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>City Cafe Klagenfurt Fischl - Ultimate Brick Dashboard (Stand: 22.07.2026)</title>
+    <title>City Cafe Klagenfurt Fischl - Ultimate Brick Dashboard</title>
     
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,9 +35,9 @@
             --schlager-subtitle-size: 1.35vh; 
             --schlager-badge-size: 1.5vh;     
             --schlager-rank-size: 1.4vh;      
-            --schlager-artist-size: 5.8vh;    
-            --schlager-song-size: 3.2vh;      
-            --schlager-info-size: 1.85vh;      
+            --schlager-artist-size: 5.5vh;    
+            --schlager-song-size: 3.0vh;      
+            --schlager-info-size: 1.7vh;      
             --schlager-footer-size: 1.5vh;   
         }
 
@@ -201,12 +201,12 @@
         }
         .schlager-content-layer {
             position: relative; z-index: 10; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: space-between; padding: 3vh 3.5vw;
+            display: flex; flex-direction: column; justify-content: space-between; padding: 2.8vh 3.2vw;
         }
         .schlager-top-header {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 15, 30, 0.45); backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1.5vh; padding: 1.4vh 2vw;
+            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1.5vh; padding: 1.2vh 1.8vw;
         }
         .schlager-title-group h2 {
             font-family: 'Orbitron', sans-serif; font-size: var(--schlager-title-size); font-weight: 900;
@@ -224,10 +224,10 @@
         
         .schlager-artist-card {
             background: transparent !important; backdrop-filter: none !important; border: none !important; box-shadow: none !important; padding: 0 !important;
-            margin-top: auto; margin-bottom: 1.8vh; display: flex; justify-content: space-between; align-items: flex-end; gap: 2vw; width: 100%;
+            margin-top: auto; margin-bottom: 1.5vh; display: flex; justify-content: space-between; align-items: flex-end; gap: 2vw; width: 100%;
         }
         .schlager-artist-left {
-            display: flex; flex-direction: column; gap: 0.8vh; flex: 1; text-align: left;
+            display: flex; flex-direction: column; gap: 0.6vh; flex: 1; text-align: left; max-width: 38vw;
         }
         .schlager-rank-tag {
             align-self: flex-start; background: #00f2fe; color: #020617; font-family: 'Orbitron', sans-serif;
@@ -237,9 +237,29 @@
         .schlager-artist-name { font-size: var(--schlager-artist-size); font-weight: 900; color: #ffffff; line-height: 1.05; text-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.85); }
         .schlager-song-title { font-size: var(--schlager-song-size); font-weight: 800; color: #38bdf8; text-shadow: 0 3px 15px rgba(0,0,0,0.9); }
         
+        /* BIOGRAFIE-BOX LINKS UNTER DEM SONGTITEL */
+        .schlager-bio-card {
+            background: rgba(8, 14, 28, 0.68);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-left: 4px solid var(--primary-glow);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.2vh;
+            padding: 1.2vh 1.2vw;
+            margin-top: 0.8vh;
+            font-size: 1.8vh;
+            font-weight: 600;
+            color: #e2e8f0;
+            line-height: 1.35;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
         .schlager-info-box {
             display: flex; flex-direction: column; gap: 0.5vh; text-align: right;
-            background: rgba(6, 11, 20, 0.65); backdrop-filter: blur(15px);
+            background: rgba(6, 11, 20, 0.70); backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1.5vh; padding: 1.4vh 1.6vw;
             font-size: var(--schlager-info-size); font-weight: 800; color: #f8fafc; 
             text-shadow: 0 2px 8px rgba(0,0,0,0.95); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -249,7 +269,7 @@
         .schlager-bottom-footer {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 15, 30, 0.45); backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1.5vh; padding: 1.3vh 2vw;
+            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1.5vh; padding: 1.2vh 2vw;
             font-size: var(--schlager-footer-size); font-weight: 800; color: #facc15; text-transform: uppercase; letter-spacing: 1px;
         }
 
@@ -402,13 +422,13 @@
         
         <!-- OBERES WIDGET -->
         <div class="card top-custom-widget" id="card-top-custom">
-            <div class="greeting-display-title" id="greeting-title">Willkommen im City Cafe Klagenfurt Fischl!</div>
+            <div class="greeting-display-title" id="greeting-title">Willkommen im City Cafe Klagenfurt Fischl</div>
         </div>
 
         <!-- LINKS: Großer Medienbereich -->
         <div class="card media-zone" id="card-media">
             
-            <!-- Ansicht 1: Plakate (0.png bis 3.png - Wechsel alle 30 Sekunden) -->
+            <!-- Ansicht 1: Plakate -->
             <div class="media-inner-view active" id="media-view-poster">
                 <div class="poster-container" id="poster-container">
                     <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/0.png" alt="Plakat Ebene 1">
@@ -438,11 +458,16 @@
                                 <span class="schlager-rank-tag" id="schlager-rank">Hit</span>
                                 <div class="schlager-artist-name" id="schlager-artist">Lade Musik...</div>
                                 <div class="schlager-song-title" id="schlager-song">"Titel..."</div>
+                                
+                                <!-- BIOGRAFIE BOX LINKS UNTER DEM SONGTITEL -->
+                                <div id="schlager-bio" class="schlager-bio-card">...</div>
                             </div>
 
                             <div class="schlager-info-box">
                                 <div id="schlager-album">Album: Lade...</div>
+                                <div id="schlager-year">📅 Release: Lade...</div>
                                 <div id="schlager-chart-at">🇦🇹 Beste Chartplatzierung: Lade...</div>
+                                <div id="schlager-tags" style="color: #00f2fe; margin-top: 0.3vh; display: none;">🏷️ Tags: ...</div>
                             </div>
                         </div>
 
@@ -539,10 +564,10 @@
         const BILD_WECHSEL_SEKUNDEN = 10; 
 
         const greetingHeadlines = [
-            "Willkommen im City Cafe Klagenfurt Fischl!",
-            "Schön, dass Sie hier sind!",
-            "Genießen Sie Ihre Zeit!",
-            "Herzlich willkommen!"
+            "Willkommen im City Cafe Klagenfurt Fischl",
+            "Schön, dass Sie hier sind",
+            "Genießen Sie Ihre Zeit",
+            "Herzlich willkommen"
         ];
         
         const wunschTexte = [
@@ -558,6 +583,17 @@
             "Die besten Events in Gesellschaft!",
             "Gemeinsam gute Zeiten genießen!"
         ];
+
+        const fallbackPartyBackgrounds = [
+            "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600&auto=format&fit=crop&q=80"
+        ];
+
+        function getRandomFallbackBackground() {
+            return fallbackPartyBackgrounds[Math.floor(Math.random() * fallbackPartyBackgrounds.length)];
+        }
 
         function setCrumblingGreeting(newText) {
             const container = document.getElementById('greeting-title');
@@ -624,27 +660,6 @@
         const img1 = document.getElementById('poster1'), img2 = document.getElementById('poster2');
         let isImg1Active = true;
 
-        const cleanBackgroundPool = [
-            "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1600&auto=format&fit=crop&q=80"
-        ];
-
-        let usedBgHistory = [];
-        function getCleanBackground() {
-            let available = cleanBackgroundPool.filter(bg => !usedBgHistory.includes(bg));
-            if (available.length === 0) available = cleanBackgroundPool;
-            const chosen = available[Math.floor(Math.random() * available.length)];
-            usedBgHistory.push(chosen);
-            if (usedBgHistory.length > 4) usedBgHistory.shift();
-            return chosen + '&t=' + Date.now();
-        }
-
         let masterMusicPool = [];
 
         async function loadSongsFromGitHub() {
@@ -655,11 +670,7 @@
                     masterMusicPool = data;
                 }
             } catch (error) {
-                masterMusicPool = [
-                    { artist: "Nik P.", song: "Ein Stern (der deinen Namen trägt)", album: "Sternstunden", cat: "Schlager & Party", chart: "🇦🇹 Beste Chartplatzierung: Platz 1 (2007)" },
-                    { artist: "Wolfgang Ambros", song: "Zwickt's mi", album: "Der Watzmann ruft", cat: "Austropop Klassiker", chart: "🇦🇹 Beste Chartplatzierung: Platz 3 (1975)" },
-                    { artist: "Helene Fischer", song: "Atemlos durch die Nacht", album: "Farbenspiel", cat: "Schlager Kult", chart: "🇦🇹 Beste Chartplatzierung: Platz 1 (2013)" }
-                ];
+                masterMusicPool = [];
             }
         }
         loadSongsFromGitHub();
@@ -671,56 +682,157 @@
         let currentMusicSubIndex = 0;
         let globalMasterTimer = null;
 
-        function generateGuaranteedBatch() {
-            if (!masterMusicPool || masterMusicPool.length === 0) {
-                return [
-                    { artist: "Nik P.", song: "Ein Stern (der deinen Namen trägt)", album: "Sternstunden", cat: "Schlager & Party", chart: "🇦🇹 Beste Chartplatzierung: Platz 1 (2007)" },
-                    { artist: "Wolfgang Ambros", song: "Zwickt's mi", album: "Der Watzmann ruft", cat: "Austropop Klassiker", chart: "🇦🇹 Beste Chartplatzierung: Platz 3 (1975)" },
-                    { artist: "Helene Fischer", song: "Atemlos durch die Nacht", album: "Farbenspiel", cat: "Schlager Kult", chart: "🇦🇹 Beste Chartplatzierung: Platz 1 (2013)" }
-                ];
+        // GEWICHTETE ZUFALLSAUSWAHL (40x Schlager/Party, 8x Deutschpop, 7x Aktuelle Hits, 5x Andere)
+        function getRandomSongByWeight() {
+            if (!masterMusicPool || masterMusicPool.length === 0) return null;
+
+            const schlagerPool = masterMusicPool.filter(s => {
+                const cat = (s.category || s.cat || "").toLowerCase();
+                return cat.includes("schlager") || cat.includes("party") || cat.includes("volksmusik") || cat.includes("discofox");
+            });
+
+            const deutschpopPool = masterMusicPool.filter(s => {
+                const cat = (s.category || s.cat || "").toLowerCase();
+                return cat.includes("deutschpop") || cat.includes("pop");
+            });
+
+            const aktuelleHitsPool = masterMusicPool.filter(s => {
+                const cat = (s.category || s.cat || "").toLowerCase();
+                return cat.includes("aktuell") || cat.includes("chart") || cat.includes("hit");
+            });
+
+            const anderePool = masterMusicPool.filter(s => {
+                const cat = (s.category || s.cat || "").toLowerCase();
+                return !cat.includes("schlager") && !cat.includes("party") && !cat.includes("volksmusik") &&
+                       !cat.includes("deutschpop") && !cat.includes("pop") && 
+                       !cat.includes("aktuell") && !cat.includes("chart") && !cat.includes("hit");
+            });
+
+            const rand = Math.floor(Math.random() * 60);
+            let targetPool = [];
+
+            if (rand < 40 && schlagerPool.length > 0) {
+                targetPool = schlagerPool;          // 40 von 60 Chance (66,7%)
+            } else if (rand < 48 && deutschpopPool.length > 0) {
+                targetPool = deutschpopPool;       // 8 von 60 Chance (13,3%)
+            } else if (rand < 55 && aktuelleHitsPool.length > 0) {
+                targetPool = aktuelleHitsPool;     // 7 von 60 Chance (11,7%)
+            } else if (anderePool.length > 0) {
+                targetPool = anderePool;           // 5 von 60 Chance (8,3%)
+            } else {
+                targetPool = masterMusicPool;      // Fallback
             }
 
-            // Greift exakt in der richtigen Reihenfolge die 3er-Blöcke ab, damit Interpret und Song zusammenbleiben
-            let maxIndex = Math.max(0, masterMusicPool.length - 3);
-            let startIndex = Math.floor(Math.random() * maxIndex);
+            return targetPool[Math.floor(Math.random() * targetPool.length)];
+        }
+
+        function generateGuaranteedBatch() {
+            if (!masterMusicPool || masterMusicPool.length === 0) return [];
             
             return [
-                masterMusicPool[startIndex],
-                masterMusicPool[startIndex + 1],
-                masterMusicPool[startIndex + 2]
-            ];
+                getRandomSongByWeight(),
+                getRandomSongByWeight(),
+                getRandomSongByWeight()
+            ].filter(Boolean);
         }
 
         function renderMusicItem(index) {
             if (!activeMusicBatch[index]) return;
             const data = activeMusicBatch[index];
-            const bgUrl = getCleanBackground();
+            
+            let artworkUrl = data.cover_url || data.artwork || data.image || data.cover || data.background_url;
+            
+            if (!artworkUrl || artworkUrl.includes("2a96cbd8b46e442fc41c2b86b821562f") || artworkUrl.includes("0.png") || artworkUrl.trim() === "") {
+                artworkUrl = getRandomFallbackBackground();
+            }
 
             const bg1 = document.getElementById('schlager-img1');
             const bg2 = document.getElementById('schlager-img2');
 
+            bg1.onerror = () => { bg1.src = getRandomFallbackBackground(); };
+            bg2.onerror = () => { bg2.src = getRandomFallbackBackground(); };
+
             bg1.classList.remove('zoom'); bg2.classList.remove('zoom');
 
             if (isSchlagerBg1Active) {
-                bg2.src = bgUrl;
+                bg2.src = artworkUrl;
                 bg1.classList.remove('active'); bg2.classList.add('active');
                 setTimeout(() => bg2.classList.add('zoom'), 100);
                 isSchlagerBg1Active = false;
             } else {
-                bg1.src = bgUrl;
+                bg1.src = artworkUrl;
                 bg2.classList.remove('active'); bg1.classList.add('active');
                 setTimeout(() => bg1.classList.add('zoom'), 100);
                 isSchlagerBg1Active = true;
             }
 
-            let cleanTitle = data.song ? data.song.replace(/\s*\(Mix\s*\d+\)/gi, '').replace(/\s*\([^)]*Mix[^)]*\)/gi, '') : "Titel";
+            let rawSong = data.song || data.title || data.titel || data.name || "Unbekannter Titel";
+            let cleanTitle = rawSong.replace(/\s*\(Mix\s*\d+\)/gi, '').replace(/\s*\([^)]*Mix[^)]*\)/gi, '');
 
-            document.getElementById('media-main-category-title').textContent = data.cat || "Jukebox-Hit";
-            document.getElementById('schlager-rank').textContent = data.cat ? data.cat : "Hit";
-            document.getElementById('schlager-artist').textContent = data.artist;
+            let rawAlbum = data.album || data.album_name || "Top-Edition";
+            let cleanAlbum = rawAlbum.replace(/^Album:\s*/i, '');
+
+            let songYear = data.release_date || data.year || data.jahr || "";
+            if (!songYear && data.chart) {
+                let match = data.chart.match(/\b(19\d{2}|20\d{2})\b/);
+                if (match) songYear = match[0];
+            }
+
+            let catName = data.category || data.cat || "Jukebox-Hit";
+
+            document.getElementById('media-main-category-title').textContent = catName;
+            document.getElementById('schlager-rank').textContent = catName;
+            document.getElementById('schlager-artist').textContent = data.artist || data.interpret || "Interpret";
             document.getElementById('schlager-song').textContent = `"${cleanTitle}"`;
-            document.getElementById('schlager-album').textContent = data.album || "Album-Edition";
-            document.getElementById('schlager-chart-at').textContent = data.chart || "🇦🇹 Jukebox-Favorit";
+            document.getElementById('schlager-album').textContent = `Album: ${cleanAlbum}`;
+            
+            const yearBox = document.getElementById('schlager-year');
+            if (songYear) {
+                yearBox.style.display = 'block';
+                yearBox.textContent = `📅 Release: ${songYear}`;
+            } else {
+                yearBox.style.display = 'none';
+            }
+
+            let chartVal = data.chart || data.listeners || data.chart_rank || "Jukebox-Favorit";
+            if (!chartVal.includes("🇦🇹") && !chartVal.includes("🎧") && !chartVal.includes("Mio") && !chartVal.includes("Tsd")) {
+                chartVal = `🇦🇹 ${chartVal}`;
+            }
+            document.getElementById('schlager-chart-at').textContent = chartVal;
+
+            // 1. Tags / Genres (Rechts unten in der Info-Box)
+            let rawTags = data.tags || data.toptags || "";
+            let parsedTags = "";
+            if (Array.isArray(rawTags)) {
+                parsedTags = rawTags.slice(0, 3).map(t => (typeof t === 'object' ? t.name : t)).join(" • ");
+            } else if (typeof rawTags === 'string' && rawTags.trim().length > 0) {
+                parsedTags = rawTags;
+            }
+            const tagsBox = document.getElementById('schlager-tags');
+            if (parsedTags) {
+                tagsBox.style.display = 'block';
+                tagsBox.textContent = `🏷️ ${parsedTags}`;
+            } else {
+                tagsBox.style.display = 'none';
+            }
+
+            // 2. Artist Bio (Links unter dem Songtitel)
+            let rawBio = data.bio || data.wiki || "";
+            const bioBox = document.getElementById('schlager-bio');
+            if (rawBio && typeof rawBio === 'string') {
+                let cleanBio = rawBio.replace(/<[^>]*>?/gm, '').replace(/User-contributed text is available under the Creative Commons By-SA License.*/gi, '').trim();
+                if (cleanBio.length > 160) {
+                    cleanBio = cleanBio.substring(0, 157) + '...';
+                }
+                if (cleanBio.length > 10) {
+                    bioBox.style.display = 'block';
+                    bioBox.textContent = `💡 ${cleanBio}`;
+                } else {
+                    bioBox.style.display = 'none';
+                }
+            } else {
+                bioBox.style.display = 'none';
+            }
 
             document.getElementById('schlager-chart-badge').textContent = `Titel ${index + 1} von 3`;
         }
