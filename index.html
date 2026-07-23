@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>City Cafe Klagenfurt Fischl - Ultimate Brick Dashboard</title>
+    <title>City Cafe Klagenfurt Fischl - Ultimate 1920x1080 Dashboard</title>
     
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,26 +19,6 @@
             --card-border: rgba(255, 255, 255, 0.15);
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
-
-            --top-widget-width: 100%;    
-            --top-widget-height: 15%; 
-            --top-widget-offset-x: 0%;  
-            --top-widget-offset-y: -5%;  
-            --top-widget-font-size: 3.8vh; 
-
-            --media-width: 100%;      
-            --media-height: 83.5%;    
-            --media-offset-x: 0%;     
-            --media-offset-y: 20.5%;   
-
-            --schlager-title-size: 2.8vh;     
-            --schlager-subtitle-size: 1.45vh; 
-            --schlager-badge-size: 1.6vh;     
-            --schlager-rank-size: 1.5vh;      
-            --schlager-artist-size: 5.8vh;    
-            --schlager-song-size: 3.4vh;      
-            --schlager-info-size: 1.9vh;      
-            --schlager-footer-size: 1.6vh;   
         }
 
         * {
@@ -58,6 +38,9 @@
             color: var(--text-light);
             position: relative;
             background-color: #241914; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .fixed-bg-bricks {
@@ -83,23 +66,27 @@
             top: 0; right: 0vw; filter: blur(50px); z-index: 0; pointer-events: none;
         }
 
-        .dashboard-container {
+        /* SKALIERUNGS-WRAPPER: Hält exakt 1920x1080 (16:9) und passt sich perfekt an */
+        #dashboard-scaler {
+            width: 1920px;
+            height: 1080px;
+            position: absolute;
+            transform-origin: center center;
             display: grid;
-            grid-template-columns: 1fr 29vw; 
-            grid-template-rows: 1fr 8.5vh; 
-            width: 100vw; height: 100dvh;
-            padding: 2.5vh 2vw 1.2vh 2vw; 
-            gap: 2.5vh 2vw;
-            position: relative; z-index: 1;
+            grid-template-columns: 1280px 520px; 
+            grid-template-rows: 940px 80px; 
+            padding: 30px 40px 20px 40px; 
+            gap: 25px 40px;
+            z-index: 1;
         }
 
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
             border: 1px solid var(--card-border);
-            border-radius: 2.5vh;
+            border-radius: 24px;
             box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 50px 120px -20px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-            padding: 2.5vh 2vw;
+            padding: 25px 35px;
             transition: border-color 1s ease, box-shadow 1s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative; overflow: hidden;
         }
@@ -115,20 +102,26 @@
             transform: skewX(-30deg); z-index: 5; pointer-events: none;
         }
 
-        .top-custom-widget {
+        /* LINKE SPALTE */
+        .left-main-column {
             grid-column: 1; grid-row: 1;
-            width: var(--top-widget-width); height: var(--top-widget-height);
-            transform: translate(var(--top-widget-offset-x), var(--top-widget-offset-y));
-            justify-self: start; align-self: start; z-index: 10;
+            display: grid;
+            grid-template-rows: 100px 815px;
+            gap: 25px;
+            width: 1280px; height: 940px;
+        }
+
+        .top-custom-widget {
+            width: 1280px; height: 100px;
             display: flex; align-items: center; justify-content: center; text-align: center;
             background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
             border: 1px solid rgba(255, 255, 255, 0.22); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-            border-radius: 2.5vh; padding: 1vh 2vw; overflow: hidden; position: relative;
+            border-radius: 24px; padding: 10px 30px; overflow: hidden; position: relative;
         }
         .top-custom-widget::after { display: none !important; }
 
         .greeting-display-title {
-            font-family: 'Orbitron', sans-serif; font-size: var(--top-widget-font-size); font-weight: 900; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-size: 38px; font-weight: 900; color: #ffffff;
             text-shadow: 0 1px 0 #cccccc, 0 2px 0 #b3b3b3, 0 3px 0 #999999, 0 4px 0 #7f7f7f, 0 5px 12px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.4);
             letter-spacing: 1.5px; text-transform: uppercase; width: 100%;
             display: inline-block;
@@ -150,25 +143,24 @@
         }
 
         .media-zone {
-            grid-column: 1; grid-row: 1; padding: 0;
+            padding: 0;
             background: #020617; border: 2px solid rgba(255, 255, 255, 0.15);
             display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(243, 85, 218, 0.1);
-            width: var(--media-width); height: var(--media-height);
-            transform: translate(var(--media-offset-x), var(--media-offset-y));
-            justify-self: start; align-self: start;
+            width: 1280px; height: 815px;
+            border-radius: 24px;
         }
 
         .media-inner-view {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
             opacity: 0; pointer-events: none; transition: opacity 1.8s ease-in-out; z-index: 1;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
         .media-inner-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
 
-        .poster-container { width: 100%; height: 100%; position: relative; border-radius: 2.3vh; overflow: hidden; }
+        .poster-container { width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; }
         .poster-image {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
             object-fit: contain; display: block; opacity: 0;
             transition: opacity 1.5s ease-in-out; z-index: 1;
             animation: premiumPosterBreathing 24s ease-in-out infinite alternate;
@@ -176,18 +168,18 @@
         }
         .poster-image.active { opacity: 1; z-index: 2; }
         .poster-ambient-glaze {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%);
             mix-blend-mode: overlay; pointer-events: none; z-index: 3;
             animation: softLightingPulse 8s ease-in-out infinite alternate;
         }
 
         .schlager-widget-box {
-            width: 100%; height: 100%; position: relative; background: #070b14;
-            display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; border-radius: 2.3vh;
+            width: 1280px; height: 815px; position: relative; background: #070b14;
+            display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; border-radius: 22px;
         }
         .schlager-bg-img {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top;
+            position: absolute; top: 0; left: 0; width: 1280px; height: 815px; object-fit: cover; object-position: center top;
             opacity: 0; transform: scale(1.12);
             transition: opacity 1.5s ease-in-out, transform 15s cubic-bezier(0.1, 0.8, 0.2, 1); z-index: 1;
         }
@@ -195,55 +187,55 @@
         .schlager-bg-img.zoom { transform: scale(1.00); }
 
         .schlager-gradient-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
             background: linear-gradient(180deg, rgba(7, 11, 20, 0.55) 0%, rgba(7, 11, 20, 0.15) 35%, rgba(7, 11, 20, 0.95) 100%);
             z-index: 3; pointer-events: none;
         }
         .schlager-content-layer {
-            position: relative; z-index: 10; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: space-between; padding: 2.8vh 3.2vw;
+            position: relative; z-index: 10; width: 1280px; height: 815px;
+            display: flex; flex-direction: column; justify-content: space-between; padding: 30px 45px;
         }
         .schlager-top-header {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 15, 30, 0.55); backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1.5vh; padding: 1.2vh 1.8vw;
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 14px 25px;
         }
         .schlager-title-group h2 {
-            font-family: 'Orbitron', sans-serif; font-size: var(--schlager-title-size); font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900;
             background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-transform: uppercase; letter-spacing: 1px; filter: drop-shadow(0 2px 10px rgba(243, 85, 218, 0.4));
         }
-        .schlager-title-group p { font-size: var(--schlager-subtitle-size); color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 0.2vh; }
+        .schlager-title-group p { font-size: 14px; color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
         
         .schlager-chart-badge {
             background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%); color: #060b14; font-family: 'Orbitron', sans-serif; 
-            font-size: var(--schlager-badge-size); font-weight: 900; padding: 0.8vh 1.8vw; border-radius: 1vh; text-transform: uppercase; letter-spacing: 1px;
+            font-size: 16px; font-weight: 900; padding: 10px 22px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px;
             box-shadow: 0 0 20px rgba(243, 85, 218, 0.6);
         }
         
         .schlager-artist-card {
             background: transparent !important; backdrop-filter: none !important; border: none !important; box-shadow: none !important; padding: 0 !important;
-            margin-top: auto; margin-bottom: 1.5vh; display: flex; justify-content: space-between; align-items: flex-end; gap: 2vw; width: 100%;
+            margin-top: auto; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; width: 100%;
         }
         .schlager-artist-left {
-            display: flex; flex-direction: column; gap: 0.8vh; flex: 1; text-align: left; max-width: 42vw;
+            display: flex; flex-direction: column; gap: 8px; flex: 1; text-align: left; max-width: 750px;
         }
         .schlager-badges-row {
-            display: flex; gap: 1vw; align-items: center;
+            display: flex; gap: 15px; align-items: center;
         }
         .schlager-rank-tag {
             align-self: flex-start; background: #00f2fe; color: #020617; font-family: 'Orbitron', sans-serif;
-            font-size: var(--schlager-rank-size); font-weight: 900; padding: 0.5vh 1.4vw; border-radius: 0.6vh; text-transform: uppercase;
+            font-size: 15px; font-weight: 900; padding: 6px 16px; border-radius: 8px; text-transform: uppercase;
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
         }
         .schlager-release-tag {
             align-self: flex-start; background: rgba(0, 242, 254, 0.18); border: 1px solid rgba(0, 242, 254, 0.45); color: #00f2fe; font-family: 'Orbitron', sans-serif;
-            font-size: var(--schlager-rank-size); font-weight: 900; padding: 0.5vh 1.4vw; border-radius: 0.6vh; text-transform: uppercase;
+            font-size: 15px; font-weight: 900; padding: 6px 16px; border-radius: 8px; text-transform: uppercase;
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); display: none;
         }
-        .schlager-artist-name { font-size: var(--schlager-artist-size); font-weight: 900; color: #ffffff; line-height: 1.05; text-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.85); }
-        .schlager-song-title { font-size: var(--schlager-song-size); font-weight: 800; color: #38bdf8; text-shadow: 0 3px 15px rgba(0,0,0,0.9); }
+        .schlager-artist-name { font-size: 58px; font-weight: 900; color: #ffffff; line-height: 1.05; text-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.85); }
+        .schlager-song-title { font-size: 34px; font-weight: 800; color: #38bdf8; text-shadow: 0 3px 15px rgba(0,0,0,0.9); }
         
         .schlager-bio-card {
             background: rgba(8, 14, 28, 0.85);
@@ -252,10 +244,10 @@
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1.2vh;
-            padding: 1.4vh 1.4vw;
-            margin-top: 1vh;
-            font-size: 2.0vh;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-top: 10px;
+            font-size: 18px;
             font-weight: 600;
             color: #f1f5f9;
             line-height: 1.4;
@@ -265,10 +257,10 @@
         }
 
         .schlager-info-box {
-            display: flex; flex-direction: column; gap: 0.6vh; text-align: right;
+            display: flex; flex-direction: column; gap: 8px; text-align: right;
             background: transparent !important; backdrop-filter: none !important;
             border: none !important; border-radius: 0; padding: 0;
-            font-size: var(--schlager-info-size); font-weight: 800; color: #f8fafc; 
+            font-size: 18px; font-weight: 800; color: #f8fafc; 
             text-shadow: 0 2px 8px rgba(0,0,0,0.95); box-shadow: none !important;
             white-space: nowrap; flex-shrink: 0;
         }
@@ -276,86 +268,156 @@
         .schlager-bottom-footer {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 15, 30, 0.55); backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1.5vh; padding: 1.4vh 2vw;
-            font-size: var(--schlager-footer-size); font-weight: 800; color: #facc15; text-transform: uppercase; letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 15px 30px;
+            font-size: 16px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
 
-        .sidebar { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 2vh; }
+        /* RECHTE SIDEBAR */
+        .sidebar { 
+            grid-column: 2; grid-row: 1; 
+            display: flex; flex-direction: column; gap: 20px; 
+            width: 520px; height: 940px;
+        }
 
         .widget-clock {
             flex: 0 0 auto; text-align: center; background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            border: none !important; box-shadow: none !important; padding: 1.2vh 1.2vw;
+            border: none !important; box-shadow: none !important; padding: 15px 20px;
+            height: 120px;
         }
         .widget-clock.card::after { display: none !important; }
         .time-display {
-            font-family: 'Orbitron', sans-serif; font-size: 5.2vh; font-weight: 900; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-size: 52px; font-weight: 900; color: #ffffff;
             text-shadow: 0 1px 0 #cccccc, 0 2px 0 #b3b3b3, 0 3px 0 #999999, 0 4px 0 #7f7f7f, 0 5px 10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.4);
-            letter-spacing: 2px; margin-bottom: 0.1vh;
+            letter-spacing: 2px; margin-bottom: 2px;
         }
-        .date-display { font-size: 1.4vh; font-weight: 700; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); }
+        .date-display { font-size: 14px; font-weight: 700; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); }
 
         .widget-weather {
-            flex: 0 0 auto; position: relative; overflow: hidden; padding: 1.8vh 1.5vw;
+            flex: 0 0 auto; position: relative; overflow: hidden; padding: 20px 25px;
             transition: background 1.5s ease-in-out; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            border: 1px solid var(--card-border); border-radius: 2.5vh;
+            border: 1px solid var(--card-border); border-radius: 24px;
+            height: 140px;
         }
         .widget-weather.card::after { display: none !important; }
         .widget-weather.w-sunny { background: linear-gradient(135deg, rgba(15, 32, 66, 0.65) 0%, rgba(0, 92, 138, 0.5) 100%); }
         .widget-weather.w-cloudy { background: linear-gradient(135deg, rgba(30, 41, 59, 0.65) 0%, rgba(15, 23, 42, 0.6) 100%); }
         .widget-weather.w-rainy { background: linear-gradient(135deg, rgba(17, 30, 48, 0.65) 0%, rgba(30, 41, 59, 0.6) 100%); }
         .widget-weather.w-thunder { background: linear-gradient(135deg, rgba(9, 13, 22, 0.7) 0%, rgba(30, 27, 75, 0.65) 100%); }
-        .weather-content-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; width: 100%; }
-        .weather-city { font-size: 2.5vh; font-weight: 800; color: var(--text-light); }
-        .weather-status { font-size: 1.5vh; color: #00f2fe; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .temp-number { font-size: 5.2vh; font-weight: 800; color: var(--text-light); }
+        .weather-content-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; width: 100%; height: 100%; }
+        .weather-city { font-size: 26px; font-weight: 800; color: var(--text-light); }
+        .weather-status { font-size: 15px; color: #00f2fe; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .temp-number { font-size: 52px; font-weight: 800; color: var(--text-light); }
         .weather-effects-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
 
-        .widget-rotator { flex: 1; padding: 0; position: relative; overflow: hidden; }
+        /* WIDGET ROTATOR */
+        .widget-rotator { 
+            flex: 1; padding: 0 !important; position: relative; overflow: hidden; 
+            background: transparent !important; 
+            backdrop-filter: none !important; 
+            -webkit-backdrop-filter: none !important;
+            border: none !important; 
+            box-shadow: none !important;
+            display: flex; flex-direction: column; justify-content: space-between;
+            height: 640px;
+        }
+        .widget-rotator.card::after { display: none !important; }
         
         .rotator-view {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 0 !important; 
-            display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 1.2s ease-in-out; z-index: 1;
+            position: absolute; top: 0; left: 0; width: 520px; height: 640px; padding: 0 !important; 
+            display: flex; flex-direction: column; justify-content: space-between; opacity: 0; pointer-events: none; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
         .rotator-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
         
-        .rotator-header { display: flex; align-items: center; gap: 0.8vw; border-bottom: 1px solid rgba(255, 255, 255, 0.12); padding-bottom: 0.6vh; margin-bottom: 0.8vh; z-index: 10; position: relative; }
-        .rotator-badge-3d { width: 3.8vh; height: 3.8vh; background: linear-gradient(135deg, #FF0000 0%, #282828 100%); border-radius: 1vh; display: flex; justify-content: center; align-items: center; font-size: 1.9vh; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3); }
-        .rotator-title h2 { font-size: 2.1vh; font-weight: 900; letter-spacing: 0.5px; color: #ffffff; }
-        .rotator-title p { font-size: 1.2vh; color: #ff8080; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        /* ZENTRIERTE, WUCHTIGE ÜBERSCHRIFTEN */
+        .rotator-header { 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25); 
+            padding-bottom: 12px; 
+            margin-bottom: 0px; 
+            z-index: 10; 
+            position: relative; 
+            gap: 6px;
+            width: 100%;
+        }
+        .rotator-badge-3d { width: 42px; height: 42px; background: linear-gradient(135deg, #FF0000 0%, #282828 100%); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); }
+        .rotator-title { text-align: center; width: 100%; }
+        .rotator-title h2 { font-size: 24px; font-weight: 900; letter-spacing: 0.8px; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 20px rgba(0,242,254,0.3); }
+        .rotator-title p { font-size: 13px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.95); }
 
-        .view-gallery-style { border-radius: 2.5vh; overflow: hidden; }
-        .gallery-image-container { width: 100%; height: 100%; position: relative; background: #020617; }
+        .view-gallery-style { border-radius: 24px; overflow: hidden; width: 520px; height: 640px; }
+        .gallery-image-container { width: 520px; height: 640px; position: relative; background: #020617; }
         
         .gallery-img { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0;
+            position: absolute; top: 0; left: 0; width: 520px; height: 640px; object-fit: cover; opacity: 0;
             transform: scale(1.15); transition: opacity 1.8s ease-in-out, transform 4s cubic-bezier(0.1, 0.8, 0.2, 1); z-index: 1;
         }
         .gallery-img.active { opacity: 1; z-index: 2; }
 
-        .gallery-text-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(transparent 0%, rgba(6, 11, 20, 0.95) 75%); padding: 3vh 1.5vw 2.2vh 1.5vw; display: flex; flex-direction: column; gap: 0.5vh; z-index: 10; }
-        .gallery-event-badge { align-self: flex-start; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #060b14; font-size: 1.3vh; font-weight: 800; padding: 0.4vh 1vh; border-radius: 0.6vh; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(0, 242, 254, 0.4); }
+        .gallery-text-overlay { position: absolute; bottom: 0; left: 0; width: 520px; background: linear-gradient(transparent 0%, rgba(6, 11, 20, 0.95) 75%); padding: 30px 25px 25px 25px; display: flex; flex-direction: column; gap: 8px; z-index: 10; }
+        .gallery-event-badge { align-self: flex-start; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #060b14; font-size: 13px; font-weight: 800; padding: 6px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(0, 242, 254, 0.4); }
         
         .gallery-event-title { 
-            font-size: 2.6vh; 
+            font-size: 26px; 
             font-weight: 900; 
             color: #ffffff; 
             display: inline-block;
-            min-height: 3.4vh;
+            min-height: 34px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
 
-        /* 5MIN.AT NEWS STYLING */
-        .view-news-style { border-radius: 2.5vh; overflow: hidden; }
-        .news-image-container { width: 100%; height: 100%; position: relative; background: #020617; display: flex; flex-direction: column; justify-content: space-between; padding: 1.8vh 1.4vw; }
-        .news-bg-img {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0;
-            transform: scale(1.12); transition: opacity 1.5s ease-in-out, transform 3s cubic-bezier(0.1, 0.8, 0.2, 1); z-index: 1;
+        /* 100% VOLLFLÄCHIGE GRÖßE FÜR NEWS- & EVENT-WIDGETS (EXAKT GLEICH GROSS WIE DIE GALERIE) */
+        .view-news-style, .view-music-style { 
+            border-radius: 24px; 
+            background: radial-gradient(circle at center, rgba(3, 7, 15, 0.92) 0%, rgba(8, 16, 32, 0.75) 65%, rgba(0, 242, 254, 0.25) 100%) !important;
+            backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(0, 242, 254, 0.55);
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 50px rgba(0, 0, 0, 0.8), inset 0 1px 3px rgba(255, 255, 255, 0.35);
+            padding: 0 !important;
+            overflow: hidden; 
+            position: absolute;
+            top: 0; left: 0;
+            width: 520px; height: 640px;
+            animation: iceLightningFramePulse 7s infinite ease-in-out;
         }
-        .news-bg-img.active { opacity: 0.85; z-index: 2; }
-        .news-dark-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(6, 11, 20, 0.75) 0%, rgba(6, 11, 20, 0.6) 40%, rgba(6, 11, 20, 0.95) 100%);
-            z-index: 3; pointer-events: none;
+
+        @keyframes iceLightningFramePulse {
+            0%, 70%, 100% {
+                border-color: rgba(0, 242, 254, 0.55);
+                box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 50px rgba(0, 0, 0, 0.8), inset 0 1px 3px rgba(255, 255, 255, 0.35);
+            }
+            73% {
+                border-color: rgba(0, 255, 255, 0.95);
+                box-shadow: 0 0 25px rgba(0, 242, 254, 0.8), 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(0, 242, 254, 0.5);
+            }
+            77% {
+                border-color: rgba(0, 242, 254, 0.6);
+                box-shadow: 0 0 10px rgba(0, 242, 254, 0.4), 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.8);
+            }
+        }
+
+        .widget-inner-padded-wrapper {
+            width: 520px;
+            height: 640px;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 12px;
+            padding: 28px 35px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .news-content-block, .music-content-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            overflow: hidden;
+            width: 100%;
         }
 
         .char-particle {
@@ -385,45 +447,31 @@
             }
         }
 
-        .gallery-event-date { font-size: 1.5vh; font-weight: 800; color: #ffe600; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+        .gallery-event-date { font-size: 15px; font-weight: 800; color: #00f2fe; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); }
 
-        /* LIVE & KONZERTE IN DER NÄHE WIDGET */
-        .view-music-style { border-radius: 2.5vh; overflow: hidden; }
-        .music-image-container { width: 100%; height: 100%; position: relative; background: #020617; display: flex; flex-direction: column; gap: 1vh; padding: 1.8vh 1.4vw; justify-content: flex-start; overflow-y: auto; }
-        
-        .music-bg-img {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0;
-            transform: scale(1.12); transition: opacity 1.8s ease-in-out, transform 4s cubic-bezier(0.1, 0.8, 0.2, 1); z-index: 1;
-        }
-        .music-bg-img.active { opacity: 0.85; z-index: 2; }
-
-        .music-dark-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(180deg, rgba(6, 11, 20, 0.75) 0%, rgba(6, 11, 20, 0.6) 50%, rgba(6, 11, 20, 0.95) 100%);
-            z-index: 3; pointer-events: none;
-        }
-
+        /* TICKER ZONE */
         .ticker-zone {
-            grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 100%; 
+            grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 80px; 
             display: flex; align-items: center; background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            border: 1px solid rgba(255, 255, 255, 0.22); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); border-radius: 1.5vh; overflow: hidden; position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.22); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); border-radius: 16px; overflow: hidden; position: relative;
+            width: 1840px;
         }
         .ticker-zone.card::after { display: none !important; }
         
         .ticker-label-left {
-            height: 100%; padding: 0 2vw; background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
-            display: flex; align-items: center; gap: 0.5vw; color: #ffffff; font-weight: 800; font-size: 2.5vh;
+            height: 80px; padding: 0 35px; background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            display: flex; align-items: center; gap: 12px; color: #ffffff; font-weight: 800; font-size: 24px;
             letter-spacing: 1.5px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-            border-top-left-radius: 1.3vh; border-bottom-left-radius: 1.3vh; box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
+            border-top-left-radius: 15px; border-bottom-left-radius: 15px; box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
         }
         .ticker-wrap { flex: 1; overflow: hidden; display: flex; align-items: center; }
         .ticker-move {
             display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerMove 85s linear infinite; will-change: transform;
-            font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 2.5vh; 
+            font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 24px; 
         }
-        .ticker-item { display: inline-block; padding: 0 3vw; }
-        .ticker-highlight-yellow { color: #ffe600; font-weight: 800; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
-        .ticker-separator { color: rgba(0, 242, 254, 0.9); font-weight: 900; margin: 0 1vw; }
+        .ticker-item { display: inline-block; padding: 0 40px; }
+        .ticker-highlight-yellow { color: #00f2fe; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5); }
+        .ticker-separator { color: rgba(0, 242, 254, 0.9); font-weight: 900; margin: 0 15px; }
 
         @keyframes tickerMove { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
         @keyframes premiumPosterBreathing { 0% { transform: scale(1.00) translate(0px, 0px); } 50% { transform: scale(1.02) translate(2px, -1px); } 100% { transform: scale(1.01) translate(-1px, 1px); } }
@@ -436,68 +484,68 @@
     <div class="bg-glow-static-1"></div>
     <div class="bg-glow-static-2"></div>
 
-    <div class="dashboard-container">
+    <!-- SKALIERUNGS-CONTAINER FÜR EXAKTE 1920x1080 (16:9) AUSHÄNGESCHILD-ANPASSUNG -->
+    <div id="dashboard-scaler">
         
-        <!-- OBERES WIDGET -->
-        <div class="card top-custom-widget" id="card-top-custom">
-            <div class="greeting-display-title" id="greeting-title">Willkommen im City Cafe Klagenfurt Fischl</div>
-        </div>
-
-        <!-- LINKS: Großer Medienbereich -->
-        <div class="card media-zone" id="card-media">
-            
-            <!-- Ansicht 1: Plakate -->
-            <div class="media-inner-view active" id="media-view-poster">
-                <div class="poster-container" id="poster-container">
-                    <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/0.png" alt="Plakat Ebene 1">
-                    <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
-                    <div class="poster-ambient-glaze"></div>
-                </div>
+        <!-- LINKE SPALTE -->
+        <div class="left-main-column">
+            <div class="top-custom-widget" id="card-top-custom">
+                <div class="greeting-display-title" id="greeting-title">Willkommen im City Cafe Klagenfurt Fischl</div>
             </div>
 
-            <!-- Ansicht 2: Großes Musik-Widget -->
-            <div class="media-inner-view" id="media-view-schlager">
-                <div class="schlager-widget-box">
-                    <img class="schlager-bg-img active" id="schlager-img1" src="" alt="Cover 1">
-                    <img class="schlager-bg-img" id="schlager-img2" src="" alt="Cover 2">
-                    <div class="schlager-gradient-overlay"></div>
+            <div class="card media-zone" id="card-media">
+                <!-- Ansicht 1: Plakate -->
+                <div class="media-inner-view active" id="media-view-poster">
+                    <div class="poster-container" id="poster-container">
+                        <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/0.png" alt="Plakat Ebene 1">
+                        <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
+                        <div class="poster-ambient-glaze"></div>
+                    </div>
+                </div>
 
-                    <div class="schlager-content-layer">
-                        <div class="schlager-top-header">
-                            <div class="schlager-title-group">
-                                <h2 id="media-main-category-title">Jukebox-Hit</h2>
-                                <p>Offizielle Charts & Party-Stimmung</p>
-                            </div>
-                            <div class="schlager-chart-badge" id="schlager-chart-badge">Titel 1 von 3</div>
-                        </div>
+                <!-- Ansicht 2: Großes Musik-Widget -->
+                <div class="media-inner-view" id="media-view-schlager">
+                    <div class="schlager-widget-box">
+                        <img class="schlager-bg-img active" id="schlager-img1" src="" alt="Cover 1">
+                        <img class="schlager-bg-img" id="schlager-img2" src="" alt="Cover 2">
+                        <div class="schlager-gradient-overlay"></div>
 
-                        <div class="schlager-artist-card">
-                            <div class="schlager-artist-left">
-                                <div class="schlager-badges-row">
-                                    <span class="schlager-rank-tag" id="schlager-rank">Hit</span>
-                                    <span class="schlager-release-tag" id="schlager-release-badge">📅 2026</span>
+                        <div class="schlager-content-layer">
+                            <div class="schlager-top-header">
+                                <div class="schlager-title-group">
+                                    <h2 id="media-main-category-title">Jukebox-Hit</h2>
+                                    <p>Offizielle Charts & Party-Stimmung</p>
                                 </div>
-                                <div class="schlager-artist-name" id="schlager-artist">Lade Musik...</div>
-                                <div class="schlager-song-title" id="schlager-song">"Titel..."</div>
-                                
-                                <!-- BIOGRAFIE BOX -->
-                                <div id="schlager-bio" class="schlager-bio-card">...</div>
+                                <div class="schlager-chart-badge" id="schlager-chart-badge">Titel 1 von 3</div>
                             </div>
 
-                            <div class="schlager-info-box">
-                                <div id="schlager-album">Album: Lade...</div>
-                                <div id="schlager-chart-at">🇦🇹 Beste Chartplatzierung: Lade...</div>
-                            </div>
-                        </div>
+                            <div class="schlager-artist-card">
+                                <div class="schlager-artist-left">
+                                    <div class="schlager-badges-row">
+                                        <span class="schlager-rank-tag" id="schlager-rank">Hit</span>
+                                        <span class="schlager-release-tag" id="schlager-release-badge">📅 2026</span>
+                                    </div>
+                                    <div class="schlager-artist-name" id="schlager-artist">Lade Musik...</div>
+                                    <div class="schlager-song-title" id="schlager-song">"Titel..."</div>
+                                    
+                                    <!-- BIOGRAFIE BOX -->
+                                    <div id="schlager-bio" class="schlager-bio-card">...</div>
+                                </div>
 
-                        <div class="schlager-bottom-footer">
-                            <span>🎵 Jetzt Lieblingssong in der Jukebox wünschen!</span>
-                            <span>City Cafe Klagenfurt Fischl</span>
+                                <div class="schlager-info-box">
+                                    <div id="schlager-album">Album: Lade...</div>
+                                    <div id="schlager-chart-at">🇦🇹 Beste Chartplatzierung: Lade...</div>
+                                </div>
+                            </div>
+
+                            <div class="schlager-bottom-footer">
+                                <span>🎵 Jetzt Lieblingssong in der Jukebox wünschen!</span>
+                                <span>City Cafe Klagenfurt Fischl</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         <!-- RECHTS: Sidebar -->
@@ -535,55 +583,51 @@
 
                 <!-- 2. 5MIN.AT KLAGENFURT NEWS WIDGET -->
                 <div class="rotator-view view-news-style" id="view-news-klagenfurt">
-                    <div class="news-image-container">
-                        <img class="news-bg-img active" id="news-bg1" src="" alt="News Bild 1">
-                        <img class="news-bg-img" id="news-bg2" src="" alt="News Bild 2">
-                        <div class="news-dark-overlay"></div>
-
+                    <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
-                            <div class="rotator-badge-3d" style="background: #E30613; padding: 0.3vh; display: flex; align-items: center; justify-content: center; border-radius: 1vh; box-shadow: 0 4px 15px rgba(227, 6, 19, 0.5);">
-                                <img src="https://www.5min.at/apple-touch-icon.png" alt="5min.at" style="width: 100%; height: 100%; object-fit: contain; border-radius: 0.6vh;" onerror="this.onerror=null; this.src='https://www.5min.at/favicon.ico';">
+                            <div class="rotator-badge-3d" style="background: #E30613; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 10px; box-shadow: 0 4px 15px rgba(227, 6, 19, 0.5);">
+                                <img src="https://www.5min.at/apple-touch-icon.png" alt="5min.at" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.onerror=null; this.src='https://www.5min.at/favicon.ico';">
                             </div>
                             <div class="rotator-title">
-                                <h2 style="font-size: 2.2vh; font-weight: 900; color: #ffffff;">5min.at Klagenfurt</h2>
-                                <p style="font-size: 1.3vh; color: #ff8080; font-weight: 700;" id="news-badge-counter">Top-Story 1 von 3</p>
+                                <h2>5min.at Klagenfurt</h2>
+                                <p id="news-badge-counter">Top-Story 1 von 3</p>
                             </div>
                         </div>
 
-                        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; gap: 0.6vh; background: rgba(6, 11, 20, 0.88); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 1.4vh; padding: 1.5vh 1.4vw; backdrop-filter: blur(12px);">
-                            <div id="news-date" style="font-size: 1.9vh; color: #00f2fe; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">⏱️ Vor wenigen Minuten</div>
-                            <div id="news-title" style="font-size: 2.45vh; font-weight: 900; color: #ffffff; line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,0.9);">Lade Klagenfurt-News...</div>
-                            <div id="news-teaser" style="font-size: 1.8vh; font-weight: 600; color: #f1f5f9; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">Aktuelle Berichte aus der Landeshauptstadt werden abgerufen...</div>
+                        <div class="news-content-block">
+                            <div id="news-date" style="font-size: 14px; color: #00f2fe; font-weight: 900; text-transform: uppercase; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5);">⏱️ Vor wenigen Minuten</div>
+                            <div id="news-title" style="font-size: 24px; font-weight: 900; color: #ffffff; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);">Lade Klagenfurt-News...</div>
+                            <div id="news-teaser" style="font-size: 16px; font-weight: 700; color: #f8fafc; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Aktuelle Berichte aus der Landeshauptstadt werden abgerufen...</div>
                         </div>
 
-                        <div class="rotator-footer-box" style="position: relative; z-index: 10; background: linear-gradient(135deg, rgba(227, 6, 19, 0.28) 0%, rgba(30, 0, 0, 0.1) 100%); border: 1px solid rgba(227, 6, 19, 0.45); margin-top: auto;">
-                            <span class="rotator-footer-badge" style="background: #E30613; font-size: 1.2vh;">Eilmeldung / Kärnten</span>
-                            <div style="font-size: 1.35vh; color: #ffffff; font-weight: 800; margin-top: 0.2vh;">📍 Region Klagenfurt & Umgebung</div>
+                        <div style="background: rgba(227, 6, 19, 0.45); border: 1px solid rgba(227, 6, 19, 0.85); border-radius: 12px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
+                            <span style="background: #E30613; color: #ffffff; font-size: 12px; font-weight: 900; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">Eilmeldung</span>
+                            <div style="font-size: 13px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">📍 Region Klagenfurt</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 3. LIVE & KONZERTE IN DER NÄHE -->
                 <div class="rotator-view view-music-style" id="view-music-tips">
-                    <div class="music-image-container">
-                        <img class="music-bg-img active" id="music-bg1" src="" alt="Sidebar Cover 1">
-                        <img class="music-bg-img" id="music-bg2" src="" alt="Sidebar Cover 2">
-                        <div class="music-dark-overlay"></div>
-
-                        <div class="rotator-header" style="margin-bottom: 0;">
+                    <div class="widget-inner-padded-wrapper">
+                        <div class="rotator-header">
                             <div class="rotator-badge-3d">🎵</div>
                             <div class="rotator-title">
-                                <h2 id="music-artist-title" style="font-size: 2.2vh;">Lade Event...</h2>
+                                <h2 id="music-artist-title" style="font-size: 24px;">Lade Event...</h2>
                                 <p>Live & Konzerte in der Nähe</p>
                             </div>
                         </div>
                         
-                        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; gap: 0.6vh; background: rgba(0, 0, 0, 0.78); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 1.4vh; padding: 1.4vh 1.4vw; backdrop-filter: blur(15px);">
-                            <div style="font-size: 1.3vh; color: #ff4d4d; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Konzert & Event-Highlight</div>
-                            <div id="music-artist-name-display" style="font-size: 2.2vh; font-weight: 900; color: #ffffff; text-shadow: 0 2px 5px rgba(0,0,0,0.9);"></div>
-                            <div id="music-song-text" style="font-size: 1.7vh; font-weight: 700; color: #f1f5f9; text-shadow: 0 2px 5px rgba(0,0,0,0.9); line-height: 1.25;">Lade Titel...</div>
-                            <div id="music-release-text" style="font-size: 2.2vh; font-weight: 900; color: #ffe600; margin-top: 0.4vh; text-shadow: 0 2px 6px rgba(0,0,0,0.9); background: rgba(0,0,0,0.4); padding: 0.6vh 1vh; border-radius: 0.8vh; border-left: 3px solid #ffe600;">📅 Datum: --</div>
-                            <div id="music-event-text" style="font-size: 1.45vh; font-weight: 800; color: #00f2fe; text-shadow: 0 2px 4px rgba(0,0,0,0.9);">📍 Region Kärnten</div>
+                        <div class="music-content-block">
+                            <div style="font-size: 13px; color: #38bdf8; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(56,189,248,0.5);">Konzert & Event-Highlight</div>
+                            <div id="music-artist-name-display" style="font-size: 24px; font-weight: 900; color: #ffffff; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);"></div>
+                            <div id="music-song-text" style="font-size: 16px; font-weight: 700; color: #f8fafc; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Lade Titel...</div>
+                            <div id="music-release-text" style="font-size: 18px; font-weight: 900; color: #00f2fe; background: rgba(0, 0, 0, 0.65); padding: 8px 14px; border-radius: 10px; border-left: 3px solid #00f2fe; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); box-shadow: 0 8px 25px rgba(0,0,0,0.6);">📅 Datum: --</div>
+                        </div>
+
+                        <div style="background: rgba(0, 242, 254, 0.25); border: 1px solid rgba(0, 242, 254, 0.6); border-radius: 12px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
+                            <span style="color: #00f2fe; font-size: 12px; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">📍 Event-Region</span>
+                            <div id="music-event-text" style="font-size: 13px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">Region Kärnten</div>
                         </div>
                     </div>
                 </div>
@@ -609,6 +653,26 @@
     </div>
 
     <script>
+        // Automatische Skalierung für exakte 1920x1080 (16:9) Auflösung auf jedem Bildschirm
+        function autoScaleDashboard() {
+            const scaler = document.getElementById('dashboard-scaler');
+            const targetWidth = 1920;
+            const targetHeight = 1080;
+            
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            const scaleX = windowWidth / targetWidth;
+            const scaleY = windowHeight / targetHeight;
+            const scale = Math.min(scaleX, scaleY);
+            
+            scaler.style.transform = `scale(${scale})`;
+        }
+        
+        window.addEventListener('resize', autoScaleDashboard);
+        window.addEventListener('load', autoScaleDashboard);
+        autoScaleDashboard();
+
         const BILD_WECHSEL_SEKUNDEN = 16; 
 
         const greetingHeadlines = [
@@ -930,7 +994,6 @@
         // 5MIN.AT RSS XML PARSER
         // -------------------------------------------------------------
         let klagenfurtNewsData = [];
-        let isNewsBg1Active = true;
         let newsCycleTimer = null;
 
         async function fetch5minNews() {
@@ -964,23 +1027,6 @@
                             let title = item.querySelector("title")?.textContent || "";
                             let description = item.querySelector("description")?.textContent || "";
                             let pubDate = item.querySelector("pubDate")?.textContent || "";
-                            
-                            let itemXmlString = new XMLSerializer().serializeToString(item);
-                            let imgUrl = "";
-
-                            let enclosure = item.querySelector("enclosure");
-                            if (enclosure) imgUrl = enclosure.getAttribute("url");
-
-                            if (!imgUrl) {
-                                let mediaContent = item.getElementsByTagNameNS("*", "content")[0];
-                                if (mediaContent) imgUrl = mediaContent.getAttribute("url");
-                            }
-
-                            if (!imgUrl) {
-                                let imgMatch = description.match(/src=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|webp))["']/i) ||
-                                               itemXmlString.match(/src=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|webp))["']/i);
-                                if (imgMatch && imgMatch[1]) imgUrl = imgMatch[1];
-                            }
 
                             let cleanTeaser = description.replace(/<[^>]*>?/gm, '').trim();
                             let cleanTitle = title.replace(/<[^>]*>?/gm, '').trim();
@@ -990,7 +1036,6 @@
                                 fetched.push({
                                     title: cleanTitle,
                                     teaser: cleanTeaser || "Aktuelle Nachrichten aus Klagenfurt.",
-                                    image: imgUrl || getRandomFallbackBackground(),
                                     date: timeStr
                                 });
                             }
@@ -1015,18 +1060,6 @@
             document.getElementById('news-teaser').textContent = data.teaser;
             document.getElementById('news-date').textContent = "⏱️ " + data.date;
             document.getElementById('news-badge-counter').textContent = `Top-Story ${index + 1} von 3`;
-
-            const bg1 = document.getElementById('news-bg1');
-            const bg2 = document.getElementById('news-bg2');
-
-            bg1.onerror = () => { bg1.src = getRandomFallbackBackground(); };
-            bg2.onerror = () => { bg2.src = getRandomFallbackBackground(); };
-
-            if (isNewsBg1Active) {
-                bg2.src = data.image; bg1.classList.remove('active'); bg2.classList.add('active'); isNewsBg1Active = false;
-            } else {
-                bg1.src = data.image; bg2.classList.remove('active'); bg1.classList.add('active'); isNewsBg1Active = true;
-            }
         }
 
         // -------------------------------------------------------------
@@ -1037,54 +1070,47 @@
                 artist: "Burgarena Finkenstein", 
                 song: "Kultige Open-Air-Konzerte und Live-Acts vor der traumhaften Kulisse der Burgruine.", 
                 release: "Sommer / August 2026", 
-                event: "Burgarena Finkenstein", 
-                image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&auto=format&fit=crop&q=80" 
+                event: "Burgarena Finkenstein" 
             },
             { 
                 artist: "Klagenfurter Altstadtzauber", 
                 song: "Klagenfurts legendäres Stadtfest mit Live-Bühnen, Entertainment und Gastronomie in der Altstadt.", 
                 release: "06. – 08. August 2026", 
-                event: "Klagenfurt Altstadt", 
-                image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80" 
+                event: "Klagenfurt Altstadt" 
             },
             { 
                 artist: "Feuerwehrfest Kirschentheuer", 
                 song: "Traditionelles Zeltfest mit Musik, guter Stimmung und bester Bewirtung beim Rüsthaus.", 
                 release: "07. – 09. August 2026", 
-                event: "Ferlach / Kirschentheuer", 
-                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600&auto=format&fit=crop&q=80" 
+                event: "Ferlach / Kirschentheuer" 
             },
             { 
                 artist: "Wörthersee Ufer- & Seefeste", 
                 song: "Sommerflair, Live-Musik und kulinarische Genüsse direkt am malerischen Seeufer.", 
                 release: "Mitte August 2026", 
-                event: "Region Wörthersee", 
-                image: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&auto=format&fit=crop&q=80" 
+                event: "Region Wörthersee" 
             },
             { 
                 artist: "Riesiger Karaoke-Abend", 
                 song: "Zeigen Sie Ihr Gesangstalent am Mikrofon beim großen Karaoke-Monatsabschluss im City Cafe!", 
                 release: "Samstag, 29. August 2026 • ab 20:00 Uhr", 
-                event: "City Cafe Klagenfurt Fischl", 
-                image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&auto=format&fit=crop&q=80" 
+                event: "City Cafe Klagenfurt Fischl" 
             },
             { 
                 artist: "Tage der Alpen-Adria-Küche", 
                 song: "Das große kulinarische Genuss-Highlight mit Spezialitäten, Genussmeile und Top-Köchen.", 
                 release: "04. – 20. September 2026", 
-                event: "Klagenfurt & Region", 
-                image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1600&auto=format&fit=crop&q=80" 
+                event: "Klagenfurt & Region" 
             },
             { 
                 artist: "Klagenfurter Herbstmesse", 
                 song: "Die traditionsreiche Herbstmesse für Lifestyle, Wohnen, Garten und Kulinarik.", 
                 release: "16. – 20. September 2026", 
-                event: "Messegelände Klagenfurt", 
-                image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&auto=format&fit=crop&q=80" 
+                event: "Messegelände Klagenfurt" 
             }
         ];
 
-        let musicTimer = null, isMusicBg1ActiveSidebar = true, currentMusicIndex = 0;
+        let musicTimer = null, currentMusicIndex = 0;
         function showRandomMusicArtist() {
             const data = musicTipsData[currentMusicIndex];
             currentMusicIndex = (currentMusicIndex + 1) % musicTipsData.length;
@@ -1092,15 +1118,8 @@
             document.getElementById('music-artist-title').textContent = data.artist;
             document.getElementById('music-artist-name-display').textContent = data.artist;
             document.getElementById('music-song-text').textContent = data.song;
-            document.getElementById('music-event-text').textContent = "📍 " + data.event;
+            document.getElementById('music-event-text').textContent = data.event;
             document.getElementById('music-release-text').textContent = "📅 " + data.release;
-
-            const bg1 = document.getElementById('music-bg1'), bg2 = document.getElementById('music-bg2');
-            if (isMusicBg1ActiveSidebar) {
-                bg2.src = data.image; bg1.classList.remove('active'); bg2.classList.add('active'); isMusicBg1ActiveSidebar = false;
-            } else {
-                bg1.src = data.image; bg2.classList.remove('active'); bg1.classList.add('active'); isMusicBg1ActiveSidebar = true;
-            }
         }
 
         let activeSidebarWidgetIndex = 0; 
