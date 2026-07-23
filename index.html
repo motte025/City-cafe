@@ -32,13 +32,13 @@
             --media-offset-y: 20.5%;   
 
             --schlager-title-size: 2.8vh;     
-            --schlager-subtitle-size: 1.35vh; 
-            --schlager-badge-size: 1.5vh;     
-            --schlager-rank-size: 1.4vh;      
-            --schlager-artist-size: 5.5vh;    
-            --schlager-song-size: 3.0vh;      
-            --schlager-info-size: 1.7vh;      
-            --schlager-footer-size: 1.5vh;   
+            --schlager-subtitle-size: 1.45vh; 
+            --schlager-badge-size: 1.6vh;     
+            --schlager-rank-size: 1.5vh;      
+            --schlager-artist-size: 5.8vh;    
+            --schlager-song-size: 3.4vh;      
+            --schlager-info-size: 1.9vh;      
+            --schlager-footer-size: 1.6vh;   
         }
 
         * {
@@ -227,40 +227,39 @@
             margin-top: auto; margin-bottom: 1.5vh; display: flex; justify-content: space-between; align-items: flex-end; gap: 2vw; width: 100%;
         }
         .schlager-artist-left {
-            display: flex; flex-direction: column; gap: 0.6vh; flex: 1; text-align: left; max-width: 38vw;
+            display: flex; flex-direction: column; gap: 0.8vh; flex: 1; text-align: left; max-width: 42vw;
         }
         .schlager-rank-tag {
             align-self: flex-start; background: #00f2fe; color: #020617; font-family: 'Orbitron', sans-serif;
-            font-size: var(--schlager-rank-size); font-weight: 900; padding: 0.4vh 1.2vw; border-radius: 0.6vh; text-transform: uppercase;
+            font-size: var(--schlager-rank-size); font-weight: 900; padding: 0.5vh 1.4vw; border-radius: 0.6vh; text-transform: uppercase;
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
         }
         .schlager-artist-name { font-size: var(--schlager-artist-size); font-weight: 900; color: #ffffff; line-height: 1.05; text-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.85); }
         .schlager-song-title { font-size: var(--schlager-song-size); font-weight: 800; color: #38bdf8; text-shadow: 0 3px 15px rgba(0,0,0,0.9); }
         
-        /* BIOGRAFIE-BOX LINKS UNTER DEM SONGTITEL */
         .schlager-bio-card {
-            background: rgba(8, 14, 28, 0.68);
+            background: rgba(8, 14, 28, 0.78);
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             border-left: 4px solid var(--primary-glow);
-            border-top: 1px solid rgba(255, 255, 255, 0.12);
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 1.2vh;
-            padding: 1.2vh 1.2vw;
-            margin-top: 0.8vh;
-            font-size: 1.8vh;
+            padding: 1.4vh 1.4vw;
+            margin-top: 1vh;
+            font-size: 2.0vh;
             font-weight: 600;
-            color: #e2e8f0;
-            line-height: 1.35;
+            color: #f1f5f9;
+            line-height: 1.4;
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
             display: none;
         }
 
         .schlager-info-box {
-            display: flex; flex-direction: column; gap: 0.5vh; text-align: right;
-            background: rgba(6, 11, 20, 0.70); backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1.5vh; padding: 1.4vh 1.6vw;
+            display: flex; flex-direction: column; gap: 0.6vh; text-align: right;
+            background: rgba(6, 11, 20, 0.75); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 1.5vh; padding: 1.6vh 1.8vw;
             font-size: var(--schlager-info-size); font-weight: 800; color: #f8fafc; 
             text-shadow: 0 2px 8px rgba(0,0,0,0.95); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             white-space: nowrap; flex-shrink: 0;
@@ -269,7 +268,7 @@
         .schlager-bottom-footer {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 15, 30, 0.45); backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1.5vh; padding: 1.2vh 2vw;
+            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 1.5vh; padding: 1.4vh 2vw;
             font-size: var(--schlager-footer-size); font-weight: 800; color: #facc15; text-transform: uppercase; letter-spacing: 1px;
         }
 
@@ -285,7 +284,7 @@
             text-shadow: 0 1px 0 #cccccc, 0 2px 0 #b3b3b3, 0 3px 0 #999999, 0 4px 0 #7f7f7f, 0 5px 10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.4);
             letter-spacing: 2px; margin-bottom: 0.1vh;
         }
-        .date-display { font-size: 1.3vh; font-weight: 700; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); }
+        .date-display { font-size: 1.4vh; font-weight: 700; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); }
 
         .widget-weather {
             flex: 0 0 auto; position: relative; overflow: hidden; padding: 1.8vh 1.5vw;
@@ -298,8 +297,8 @@
         .widget-weather.w-rainy { background: linear-gradient(135deg, rgba(17, 30, 48, 0.65) 0%, rgba(30, 41, 59, 0.6) 100%); }
         .widget-weather.w-thunder { background: linear-gradient(135deg, rgba(9, 13, 22, 0.7) 0%, rgba(30, 27, 75, 0.65) 100%); }
         .weather-content-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; width: 100%; }
-        .weather-city { font-size: 2.4vh; font-weight: 800; color: var(--text-light); }
-        .weather-status { font-size: 1.4vh; color: #00f2fe; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .weather-city { font-size: 2.5vh; font-weight: 800; color: var(--text-light); }
+        .weather-status { font-size: 1.5vh; color: #00f2fe; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .temp-number { font-size: 5.2vh; font-weight: 800; color: var(--text-light); }
         .weather-effects-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
 
@@ -310,14 +309,12 @@
         }
         .rotator-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
         .rotator-header { display: flex; align-items: center; gap: 1vw; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1vh; margin-bottom: 1.2vh; z-index: 10; position: relative; }
-        .rotator-badge-3d { width: 4.2vh; height: 4.2vh; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); border-radius: 1vh; display: flex; justify-content: center; align-items: center; font-size: 2vh; }
-        .rotator-title h2 { font-size: 2.1vh; font-weight: 800; }
-        .rotator-title p { font-size: 1.25vh; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .rotator-badge-3d { width: 4.4vh; height: 4.4vh; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); border-radius: 1vh; display: flex; justify-content: center; align-items: center; font-size: 2.2vh; }
+        .rotator-title h2 { font-size: 2.3vh; font-weight: 800; }
+        .rotator-title p { font-size: 1.35vh; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         
         .rotator-footer-box { background: linear-gradient(135deg, rgba(243, 85, 218, 0.15) 0%, rgba(243, 85, 218, 0.03) 100%); border: 1px solid rgba(243, 85, 218, 0.4); border-radius: 1.5vh; padding: 1.5vh 1.2vw; margin-top: auto; }
-        .rotator-footer-badge { background: #f355da; color: white; font-size: 1.2vh; font-weight: 800; padding: 0.3vh 0.7vh; border-radius: 0.5vh; text-transform: uppercase; display: inline-block; margin-bottom: 0.5vh; }
-        .rotator-footer-sub { font-size: 1.45vh; color: #f472b6; font-weight: 800; }
-        .rotator-footer-main { font-size: 2vh; font-weight: 900; color: #ffffff; margin-top: 0.2vh; }
+        .rotator-footer-badge { background: #f355da; color: white; font-size: 1.3vh; font-weight: 800; padding: 0.3vh 0.8vh; border-radius: 0.5vh; text-transform: uppercase; display: inline-block; margin-bottom: 0.5vh; }
 
         .view-gallery-style { padding: 0 !important; border-radius: 2.5vh; overflow: hidden; }
         .gallery-image-container { width: 100%; height: 100%; position: relative; background: #020617; }
@@ -327,17 +324,30 @@
             transform: scale(1.15); transition: opacity 1.5s ease-in-out, transform 3s cubic-bezier(0.1, 0.8, 0.2, 1); z-index: 1;
         }
         .gallery-img.active { opacity: 1; z-index: 2; }
-        .gallery-img.zoom-trigger { transform: scale(1.00); }
 
-        .gallery-text-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(transparent 0%, rgba(6, 11, 20, 0.95) 75%); padding: 3vh 1.5vw 2vh 1.5vw; display: flex; flex-direction: column; gap: 0.3vh; z-index: 10; }
-        .gallery-event-badge { align-self: flex-start; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #060b14; font-size: 1.1vh; font-weight: 800; padding: 0.3vh 0.8vh; border-radius: 0.5vh; text-transform: uppercase; letter-spacing: 1px; }
+        .gallery-text-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(transparent 0%, rgba(6, 11, 20, 0.95) 75%); padding: 3vh 1.5vw 2vh 1.5vw; display: flex; flex-direction: column; gap: 0.4vh; z-index: 10; }
+        .gallery-event-badge { align-self: flex-start; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #060b14; font-size: 1.2vh; font-weight: 800; padding: 0.4vh 0.9vh; border-radius: 0.5vh; text-transform: uppercase; letter-spacing: 1px; }
         
         .gallery-event-title { 
-            font-size: 2.2vh; 
+            font-size: 2.5vh; 
             font-weight: 800; 
             color: #ffffff; 
             display: inline-block;
-            min-height: 3vh;
+            min-height: 3.2vh;
+        }
+
+        /* 5MIN.AT NEWS STYLING - GRÖSSER & LESBARER */
+        .view-news-style { padding: 0 !important; border-radius: 2.5vh; overflow: hidden; }
+        .news-image-container { width: 100%; height: 100%; position: relative; background: #020617; display: flex; flex-direction: column; justify-content: space-between; padding: 2.2vh 1.4vw; }
+        .news-bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0;
+            transform: scale(1.12); transition: opacity 1.5s ease-in-out, transform 3s cubic-bezier(0.1, 0.8, 0.2, 1); z-index: 1;
+        }
+        .news-bg-img.active { opacity: 0.85; z-index: 2; }
+        .news-dark-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(6, 11, 20, 0.75) 0%, rgba(6, 11, 20, 0.6) 40%, rgba(6, 11, 20, 0.95) 100%);
+            z-index: 3; pointer-events: none;
         }
 
         .char-particle {
@@ -367,7 +377,7 @@
             }
         }
 
-        .gallery-event-date { font-size: 1.4vh; font-weight: 600; color: #ffe600; }
+        .gallery-event-date { font-size: 1.5vh; font-weight: 700; color: #ffe600; }
 
         .view-music-style { padding: 0 !important; border-radius: 2.5vh; overflow: hidden; }
         .music-image-container { width: 100%; height: 100%; position: relative; background: #020617; display: flex; flex-direction: column; justify-content: space-between; padding: 2.2vh 1.4vw; }
@@ -377,7 +387,6 @@
             transform: scale(1.12); transition: opacity 1.5s ease-in-out, transform 3s cubic-bezier(0.1, 0.8, 0.2, 1); z-index: 1;
         }
         .music-bg-img.active { opacity: 1; z-index: 2; }
-        .music-bg-img.zoom-trigger { transform: scale(1.00); }
 
         .music-dark-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -394,14 +403,14 @@
         
         .ticker-label-left {
             height: 100%; padding: 0 2vw; background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
-            display: flex; align-items: center; gap: 0.5vw; color: #ffffff; font-weight: 800; font-size: 2.4vh;
+            display: flex; align-items: center; gap: 0.5vw; color: #ffffff; font-weight: 800; font-size: 2.5vh;
             letter-spacing: 1.5px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
             border-top-left-radius: 1.3vh; border-bottom-left-radius: 1.3vh; box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
         }
         .ticker-wrap { flex: 1; overflow: hidden; display: flex; align-items: center; }
         .ticker-move {
             display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerMove 75s linear infinite; will-change: transform;
-            font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 2.4vh; 
+            font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 2.5vh; 
         }
         .ticker-item { display: inline-block; padding: 0 3vw; }
         .ticker-highlight-yellow { color: #ffe600; font-weight: 800; text-shadow: 0 2px 5px rgba(0,0,0,0.9); }
@@ -459,7 +468,7 @@
                                 <div class="schlager-artist-name" id="schlager-artist">Lade Musik...</div>
                                 <div class="schlager-song-title" id="schlager-song">"Titel..."</div>
                                 
-                                <!-- BIOGRAFIE BOX LINKS UNTER DEM SONGTITEL -->
+                                <!-- BIOGRAFIE BOX -->
                                 <div id="schlager-bio" class="schlager-bio-card">...</div>
                             </div>
 
@@ -467,7 +476,7 @@
                                 <div id="schlager-album">Album: Lade...</div>
                                 <div id="schlager-year">📅 Release: Lade...</div>
                                 <div id="schlager-chart-at">🇦🇹 Beste Chartplatzierung: Lade...</div>
-                                <div id="schlager-tags" style="color: #00f2fe; margin-top: 0.3vh; display: none;">🏷️ Tags: ...</div>
+                                <div id="schlager-tags" style="color: #00f2fe; margin-top: 0.4vh; display: none;">🏷️ Tags: ...</div>
                             </div>
                         </div>
 
@@ -501,6 +510,7 @@
             </div>
 
             <div class="card widget-rotator" id="card-rotator">
+                <!-- 1. GOOGLE DRIVE BESUCHER-GALERIE -->
                 <div class="rotator-view active view-gallery-style" id="view-event-gallery">
                     <div class="gallery-image-container">
                         <img class="gallery-img active" id="gallery-img1" src="" alt="Foto 1">
@@ -513,6 +523,37 @@
                     </div>
                 </div>
 
+                <!-- 2. 5MIN.AT KLAGENFURT NEWS WIDGET (Größerer Text) -->
+                <div class="rotator-view view-news-style" id="view-news-klagenfurt">
+                    <div class="news-image-container">
+                        <img class="news-bg-img active" id="news-bg1" src="" alt="News Bild 1">
+                        <img class="news-bg-img" id="news-bg2" src="" alt="News Bild 2">
+                        <div class="news-dark-overlay"></div>
+
+                        <div class="rotator-header">
+                            <div class="rotator-badge-3d" style="background: #E30613; padding: 0.4vh; display: flex; align-items: center; justify-content: center; border-radius: 1vh; box-shadow: 0 4px 15px rgba(227, 6, 19, 0.5);">
+                                <img src="https://www.5min.at/apple-touch-icon.png" alt="5min.at" style="width: 100%; height: 100%; object-fit: contain; border-radius: 0.6vh;" onerror="this.onerror=null; this.src='https://www.5min.at/favicon.ico';">
+                            </div>
+                            <div class="rotator-title">
+                                <h2 style="font-size: 2.3vh; font-weight: 900; color: #ffffff;">5min.at Klagenfurt</h2>
+                                <p style="font-size: 1.4vh; color: #ff8080; font-weight: 700;" id="news-badge-counter">Top-Story 1 von 3</p>
+                            </div>
+                        </div>
+
+                        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; gap: 0.8vh; background: rgba(6, 11, 20, 0.7); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 1.5vh; padding: 1.8vh 1.5vw; backdrop-filter: blur(12px);">
+                            <div id="news-date" style="font-size: 1.35vh; color: #00f2fe; font-weight: 800; text-transform: uppercase;">Vor wenigen Minuten</div>
+                            <div id="news-title" style="font-size: 2.1vh; font-weight: 900; color: #ffffff; line-height: 1.3; text-shadow: 0 2px 4px rgba(0,0,0,0.9);">Lade Klagenfurt-News...</div>
+                            <div id="news-teaser" style="font-size: 1.55vh; font-weight: 600; color: #e2e8f0; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">Aktuelle Berichte aus der Landeshauptstadt werden abgerufen...</div>
+                        </div>
+
+                        <div class="rotator-footer-box" style="position: relative; z-index: 10; background: linear-gradient(135deg, rgba(227, 6, 19, 0.25) 0%, rgba(30, 0, 0, 0.1) 100%); border: 1px solid rgba(227, 6, 19, 0.4); backdrop-filter: blur(10px);">
+                            <span class="rotator-footer-badge" style="background: #E30613; font-size: 1.2vh; padding: 0.3vh 0.9vh;">Eilmeldung / Kärnten</span>
+                            <div style="font-size: 1.45vh; color: #ffffff; font-weight: 800; margin-top: 0.3vh;">📍 Region Klagenfurt & Umgebung</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. MUSIK-TIPPS -->
                 <div class="rotator-view view-music-style" id="view-music-tips">
                     <div class="music-image-container">
                         <img class="music-bg-img active" id="music-bg1" src="" alt="Sidebar Cover 1">
@@ -520,22 +561,22 @@
                         <div class="music-dark-overlay"></div>
 
                         <div class="rotator-header">
-                            <div class="rotator-badge-3d" style="background: linear-gradient(135deg, #FF0000 0%, #282828 100%);">🎵</div>
+                            <div class="rotator-badge-3d" style="background: linear-gradient(135deg, #FF0000 0%, #282828 100%); font-size: 2.2vh;">🎵</div>
                             <div class="rotator-title">
-                                <h2 id="music-artist-title" style="font-size: 2.3vh; font-weight: 900; letter-spacing: 0.5px;">Lade Künstler...</h2>
-                                <p style="font-size: 1.3vh; color: #ff8080; font-weight: 700;">Musikbox & Live-Tipp Kärnten</p>
+                                <h2 id="music-artist-title" style="font-size: 2.5vh; font-weight: 900; letter-spacing: 0.5px;">Lade Künstler...</h2>
+                                <p style="font-size: 1.4vh; color: #ff8080; font-weight: 700;">Musikbox & Live-Tipp Kärnten</p>
                             </div>
                         </div>
                         
-                        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; gap: 0.6vh; background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1.5vh; padding: 1.6vh 1.4vw; backdrop-filter: blur(10px);">
-                            <div style="font-size: 1.25vh; color: #ff4d4d; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Top-Titel / Jukebox-Anregung</div>
-                            <div id="music-song-text" style="font-size: 1.9vh; font-weight: 900; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Lade Titel...</div>
+                        <div style="position: relative; z-index: 10; display: flex; flex-direction: column; gap: 0.8vh; background: rgba(0, 0, 0, 0.55); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 1.5vh; padding: 1.8vh 1.5vw; backdrop-filter: blur(10px);">
+                            <div style="font-size: 1.35vh; color: #ff4d4d; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Top-Titel / Jukebox-Anregung</div>
+                            <div id="music-song-text" style="font-size: 2.2vh; font-weight: 900; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Lade Titel...</div>
                         </div>
 
                         <div class="rotator-footer-box" style="position: relative; z-index: 10; background: linear-gradient(135deg, rgba(255, 0, 0, 0.28) 0%, rgba(40, 40, 40, 0.12) 100%); border: 1px solid rgba(255, 0, 0, 0.45); backdrop-filter: blur(10px);">
-                            <span class="rotator-footer-badge" style="background: #FF0000; font-size: 1.15vh; padding: 0.3vh 0.8vh;">Live-Event in der Nähe</span>
-                            <div id="music-release-text" style="font-size: 1.35vh; color: #ffb3b3; font-weight: 800; margin-top: 0.2vh;">Veröffentlichung: --</div>
-                            <div id="music-event-text" style="font-size: 1.8vh; font-weight: 900; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Region Kärnten</div>
+                            <span class="rotator-footer-badge" style="background: #FF0000; font-size: 1.2vh; padding: 0.3vh 0.9vh;">Live-Event in der Nähe</span>
+                            <div id="music-release-text" style="font-size: 1.45vh; color: #ffb3b3; font-weight: 800; margin-top: 0.3vh;">Veröffentlichung: --</div>
+                            <div id="music-event-text" style="font-size: 1.95vh; font-weight: 900; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Region Kärnten</div>
                         </div>
                     </div>
                 </div>
@@ -682,7 +723,6 @@
         let currentMusicSubIndex = 0;
         let globalMasterTimer = null;
 
-        // GEWICHTETE ZUFALLSAUSWAHL (40x Schlager/Party, 8x Deutschpop, 7x Aktuelle Hits, 5x Andere)
         function getRandomSongByWeight() {
             if (!masterMusicPool || masterMusicPool.length === 0) return null;
 
@@ -712,15 +752,15 @@
             let targetPool = [];
 
             if (rand < 40 && schlagerPool.length > 0) {
-                targetPool = schlagerPool;          // 40 von 60 Chance (66,7%)
+                targetPool = schlagerPool;
             } else if (rand < 48 && deutschpopPool.length > 0) {
-                targetPool = deutschpopPool;       // 8 von 60 Chance (13,3%)
+                targetPool = deutschpopPool;
             } else if (rand < 55 && aktuelleHitsPool.length > 0) {
-                targetPool = aktuelleHitsPool;     // 7 von 60 Chance (11,7%)
+                targetPool = aktuelleHitsPool;
             } else if (anderePool.length > 0) {
-                targetPool = anderePool;           // 5 von 60 Chance (8,3%)
+                targetPool = anderePool;
             } else {
-                targetPool = masterMusicPool;      // Fallback
+                targetPool = masterMusicPool;
             }
 
             return targetPool[Math.floor(Math.random() * targetPool.length)];
@@ -800,7 +840,6 @@
             }
             document.getElementById('schlager-chart-at').textContent = chartVal;
 
-            // 1. Tags / Genres (Rechts unten in der Info-Box)
             let rawTags = data.tags || data.toptags || "";
             let parsedTags = "";
             if (Array.isArray(rawTags)) {
@@ -816,10 +855,12 @@
                 tagsBox.style.display = 'none';
             }
 
-            // 2. Artist Bio (Links unter dem Songtitel)
             let rawBio = data.bio || data.wiki || "";
             const bioBox = document.getElementById('schlager-bio');
-            if (rawBio && typeof rawBio === 'string') {
+            
+            let isEnglish = /\b(is an|was an|is a|was a|born|singer|band|group|from|composed|released)\b/i.test(rawBio);
+
+            if (rawBio && typeof rawBio === 'string' && !isEnglish) {
                 let cleanBio = rawBio.replace(/<[^>]*>?/gm, '').replace(/User-contributed text is available under the Creative Commons By-SA License.*/gi, '').trim();
                 if (cleanBio.length > 160) {
                     cleanBio = cleanBio.substring(0, 157) + '...';
@@ -896,6 +937,128 @@
         }
         setInterval(fetchLiveWeather, 600000); fetchLiveWeather();
 
+        // -------------------------------------------------------------
+        // ROBUSTER 5MIN.AT RSS XML PARSER MIT MULTI-PROXY & BILDERN
+        // -------------------------------------------------------------
+        let klagenfurtNewsData = [];
+        let isNewsBg1Active = true;
+        let newsCycleTimer = null;
+
+        async function fetch5minNews() {
+            const klagenfurtRssUrl = 'https://www.5min.at/feed/rss_klagenfurt/';
+            const proxies = [
+                'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(klagenfurtRssUrl),
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent(klagenfurtRssUrl),
+                'https://corsproxy.io/?' + encodeURIComponent(klagenfurtRssUrl)
+            ];
+
+            let success = false;
+
+            for (let proxyUrl of proxies) {
+                if (success) break;
+                try {
+                    const response = await fetch(proxyUrl);
+                    if (!response.ok) continue;
+                    const textData = await response.text();
+
+                    if (textData.includes("Cloudflare") || textData.includes("Attention Required")) continue;
+
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(textData, "text/xml");
+                    const items = xmlDoc.querySelectorAll("item");
+
+                    if (items && items.length > 0) {
+                        let fetched = [];
+                        items.forEach((item) => {
+                            if (fetched.length >= 3) return;
+
+                            let title = item.querySelector("title")?.textContent || "";
+                            let description = item.querySelector("description")?.textContent || "";
+                            let pubDate = item.querySelector("pubDate")?.textContent || "";
+                            
+                            let itemXmlString = new XMLSerializer().serializeToString(item);
+                            let imgUrl = "";
+
+                            let enclosure = item.querySelector("enclosure");
+                            if (enclosure) imgUrl = enclosure.getAttribute("url");
+
+                            if (!imgUrl) {
+                                let mediaContent = item.getElementsByTagNameNS("*", "content")[0];
+                                if (mediaContent) imgUrl = mediaContent.getAttribute("url");
+                            }
+
+                            if (!imgUrl) {
+                                let imgMatch = description.match(/src=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|webp))["']/i) ||
+                                               itemXmlString.match(/src=["'](https?:\/\/[^"']+\.(?:jpg|jpeg|png|webp))["']/i);
+                                if (imgMatch && imgMatch[1]) imgUrl = imgMatch[1];
+                            }
+
+                            let cleanTeaser = description.replace(/<[^>]*>?/gm, '').trim();
+                            let cleanTitle = title.replace(/<[^>]*>?/gm, '').trim();
+                            let timeStr = pubDate ? new Date(pubDate).toLocaleTimeString('de-AT', {hour: '2-digit', minute:'2-digit'}) + ' Uhr' : 'Vor wenigen Min.';
+
+                            if (cleanTitle) {
+                                fetched.push({
+                                    title: cleanTitle,
+                                    teaser: cleanTeaser || "Aktuelle Nachrichten aus Klagenfurt.",
+                                    image: imgUrl || getRandomFallbackBackground(),
+                                    date: timeStr
+                                });
+                            }
+                        });
+
+                        if (fetched.length > 0) {
+                            klagenfurtNewsData = fetched;
+                            success = true;
+                            if (document.getElementById('view-news-klagenfurt').classList.contains('active')) {
+                                renderNewsItem(0);
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log("Proxy Versuch fehlgeschlagen:", e);
+                }
+            }
+
+            if (!success && klagenfurtNewsData.length === 0) {
+                klagenfurtNewsData = [
+                    { title: "Klagenfurt im Blick: Aktuelles aus der Landeshauptstadt", teaser: "Spitzen-Stimmung und Events in Klagenfurt Fischl.", image: getRandomFallbackBackground(), date: "Live" },
+                    { title: "Sommer in Kärnten: Top-Veranstaltungen im August", teaser: "Besuchen Sie unsere Highlights im City Cafe.", image: getRandomFallbackBackground(), date: "Aktuell" }
+                ];
+                if (document.getElementById('view-news-klagenfurt').classList.contains('active')) {
+                    renderNewsItem(0);
+                }
+            }
+        }
+
+        fetch5minNews();
+        setInterval(fetch5minNews, 10 * 60 * 1000); 
+
+        function renderNewsItem(index) {
+            if (!klagenfurtNewsData || klagenfurtNewsData.length === 0) return;
+            const data = klagenfurtNewsData[index] || klagenfurtNewsData[0];
+
+            document.getElementById('news-title').textContent = data.title;
+            document.getElementById('news-teaser').textContent = data.teaser;
+            document.getElementById('news-date').textContent = "⏱️ " + data.date;
+            document.getElementById('news-badge-counter').textContent = `Top-Story ${index + 1} von 3`;
+
+            const bg1 = document.getElementById('news-bg1');
+            const bg2 = document.getElementById('news-bg2');
+
+            bg1.onerror = () => { bg1.src = getRandomFallbackBackground(); };
+            bg2.onerror = () => { bg2.src = getRandomFallbackBackground(); };
+
+            if (isNewsBg1Active) {
+                bg2.src = data.image; bg1.classList.remove('active'); bg2.classList.add('active'); isNewsBg1Active = false;
+            } else {
+                bg1.src = data.image; bg2.classList.remove('active'); bg1.classList.add('active'); isNewsBg1Active = true;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // ROTATOR RECHTS (Sidebar-Widget Rotation)
+        // -------------------------------------------------------------
         const musicTipsData = [
             { artist: "Maite Kelly", song: "Sieben Leben für dich", release: "Juli 2026", event: "Samstag, 05.09.2026 • Burgarena Finkenstein", image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1600&auto=format&fit=crop&q=80" },
             { artist: "Melissa Naschenweng", song: "Bergbauernbuam", release: "Juli 2026", event: "Freitag, 14.08.2026 • Schlosswiese Moosburg", image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&auto=format&fit=crop&q=80" }
@@ -917,7 +1080,8 @@
             }
         }
 
-        let activeWidgetIndex = 0, visitorGalleryData = [], galleryTimer = null, isGalleryImg1Active = true;
+        let activeSidebarWidgetIndex = 0; 
+        let visitorGalleryData = [], galleryTimer = null, isGalleryImg1Active = true;
         const googleScriptUrl = "https://script.google.com/macros/s/AKfycbxhKiWMV_qehIDFDqndaP4VCMG8OAq5kH0s7DBpUXrR8HWmAJOQaP5UfTZIaplXWP1S/exec";
 
         async function loadDriveFolderImages() {
@@ -986,32 +1150,59 @@
             }
         }
 
+        let sidebarMasterTimer = null;
+
         function rotateSidebarWidgets() {
             const galleryView = document.getElementById('view-event-gallery');
+            const newsView = document.getElementById('view-news-klagenfurt');
             const musicView = document.getElementById('view-music-tips');
 
-            galleryView.classList.remove('active'); musicView.classList.remove('active');
-            activeWidgetIndex = (activeWidgetIndex + 1) % 2;
+            galleryView.classList.remove('active');
+            newsView.classList.remove('active');
+            musicView.classList.remove('active');
 
             if (galleryTimer) clearInterval(galleryTimer);
             if (musicTimer) clearInterval(musicTimer);
+            if (newsCycleTimer) clearInterval(newsCycleTimer);
 
-            if (activeWidgetIndex === 0) {
+            if (activeSidebarWidgetIndex === 0) {
                 galleryView.classList.add('active');
                 showRandomImage();
                 galleryTimer = setInterval(showRandomImage, BILD_WECHSEL_SEKUNDEN * 1000);
                 loadDriveFolderImages();
+
+                activeSidebarWidgetIndex = 1;
+                sidebarMasterTimer = setTimeout(rotateSidebarWidgets, 60000);
+
+            } else if (activeSidebarWidgetIndex === 1) {
+                newsView.classList.add('active');
+                let newsSubIdx = 0;
+                renderNewsItem(newsSubIdx);
+
+                newsCycleTimer = setInterval(() => {
+                    newsSubIdx++;
+                    if (newsSubIdx < 3) {
+                        renderNewsItem(newsSubIdx);
+                    } else {
+                        clearInterval(newsCycleTimer);
+                    }
+                }, 15000);
+
+                activeSidebarWidgetIndex = 2;
+                sidebarMasterTimer = setTimeout(rotateSidebarWidgets, 45000);
+
             } else {
                 musicView.classList.add('active');
                 showRandomMusicArtist(); 
                 musicTimer = setInterval(showRandomMusicArtist, 12 * 1000); 
+
+                activeSidebarWidgetIndex = 0;
+                sidebarMasterTimer = setTimeout(rotateSidebarWidgets, 40000);
             }
         }
         
-        setInterval(rotateSidebarWidgets, 60000); 
         loadDriveFolderImages();
-        showRandomImage();
-        galleryTimer = setInterval(showRandomImage, BILD_WECHSEL_SEKUNDEN * 1000);
+        rotateSidebarWidgets();
 
         const allCards = [document.getElementById('card-media'), document.getElementById('card-clock'), document.getElementById('card-weather'), document.getElementById('card-rotator'), document.getElementById('card-ticker')];
         function loopBorderShimmer() {
@@ -1026,4 +1217,3 @@
     </script>
 </body>
 </html>
-
