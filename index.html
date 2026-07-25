@@ -346,8 +346,8 @@
         }
         .rotator-badge-3d { width: 42px; height: 42px; background: linear-gradient(135deg, #FF0000 0%, #282828 100%); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); }
         .rotator-title { text-align: center; width: 100%; }
-        .rotator-title h2 { font-size: 24px; font-weight: 900; letter-spacing: 0.8px; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 20px rgba(0,242,254,0.3); }
-        .rotator-title p { font-size: 13px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.95); }
+        .rotator-title h2 { font-size: 31px; font-weight: 900; letter-spacing: 0.8px; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 20px rgba(0,242,254,0.3); }
+        .rotator-title p { font-size: 18px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.95); }
 
         .view-gallery-style { border-radius: 24px; overflow: hidden; width: 520px; height: 640px; }
         .gallery-image-container { width: 520px; height: 640px; position: relative; background: #020617; }
@@ -359,14 +359,14 @@
         .gallery-img.active { opacity: 1; z-index: 2; }
 
         .gallery-text-overlay { position: absolute; bottom: 0; left: 0; width: 520px; background: linear-gradient(transparent 0%, rgba(6, 11, 20, 0.95) 75%); padding: 30px 25px 25px 25px; display: flex; flex-direction: column; gap: 8px; z-index: 10; }
-        .gallery-event-badge { align-self: flex-start; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #060b14; font-size: 13px; font-weight: 800; padding: 6px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(0, 242, 254, 0.4); }
+        .gallery-event-badge { align-self: flex-start; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #060b14; font-size: 18px; font-weight: 800; padding: 6px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(0, 242, 254, 0.4); }
         
         .gallery-event-title { 
-            font-size: 26px; 
+            font-size: 31px; 
             font-weight: 900; 
             color: #ffffff; 
             display: inline-block;
-            min-height: 34px;
+            min-height: 38px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
 
@@ -406,7 +406,7 @@
             display: grid;
             grid-template-rows: auto 1fr auto;
             gap: 12px;
-            padding: 28px 35px;
+            padding: 20px 26px;
             position: relative;
             z-index: 5;
         }
@@ -447,9 +447,9 @@
             }
         }
 
-        .gallery-event-date { font-size: 15px; font-weight: 800; color: #00f2fe; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); }
+        .gallery-event-date { font-size: 20px; font-weight: 800; color: #00f2fe; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); }
 
-        /* TICKER ZONE */
+        /* TICKER ZONE (Schriftgröße auf 32px erhöht) */
         .ticker-zone {
             grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 80px; 
             display: flex; align-items: center; background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
@@ -460,14 +460,14 @@
         
         .ticker-label-left {
             height: 80px; padding: 0 35px; background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
-            display: flex; align-items: center; gap: 12px; color: #ffffff; font-weight: 800; font-size: 24px;
+            display: flex; align-items: center; gap: 12px; color: #ffffff; font-weight: 800; font-size: 32px;
             letter-spacing: 1.5px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
             border-top-left-radius: 15px; border-bottom-left-radius: 15px; box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
         }
         .ticker-wrap { flex: 1; overflow: hidden; display: flex; align-items: center; }
         .ticker-move {
             display: inline-block; white-space: nowrap; padding-left: 100%; animation: tickerMove 85s linear infinite; will-change: transform;
-            font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 24px; 
+            font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 32px; 
         }
         .ticker-item { display: inline-block; padding: 0 40px; }
         .ticker-highlight-yellow { color: #00f2fe; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5); }
@@ -589,45 +589,45 @@
                                 <img src="https://www.5min.at/apple-touch-icon.png" alt="5min.at" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.onerror=null; this.src='https://www.5min.at/favicon.ico';">
                             </div>
                             <div class="rotator-title">
-                                <h2>5min.at Klagenfurt</h2>
+                                <h2 style="font-size: 31px;">5min.at Klagenfurt</h2>
                                 <p id="news-badge-counter">Top-Story 1 von 3</p>
                             </div>
                         </div>
 
                         <div class="news-content-block">
-                            <div id="news-date" style="font-size: 14px; color: #00f2fe; font-weight: 900; text-transform: uppercase; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5);">⏱️ Vor wenigen Minuten</div>
-                            <div id="news-title" style="font-size: 24px; font-weight: 900; color: #ffffff; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);">Lade Klagenfurt-News...</div>
-                            <div id="news-teaser" style="font-size: 16px; font-weight: 700; color: #f8fafc; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Aktuelle Berichte aus der Landeshauptstadt werden abgerufen...</div>
+                            <div id="news-date" style="font-size: 20px; color: #00f2fe; font-weight: 900; text-transform: uppercase; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5);">⏱️ Vor wenigen Minuten</div>
+                            <div id="news-title" style="font-size: 33px; font-weight: 900; color: #ffffff; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);">Lade Klagenfurt-News...</div>
+                            <div id="news-teaser" style="font-size: 24px; font-weight: 700; color: #f8fafc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Aktuelle Berichte aus der Landeshauptstadt werden abgerufen...</div>
                         </div>
 
-                        <div style="background: rgba(227, 6, 19, 0.45); border: 1px solid rgba(227, 6, 19, 0.85); border-radius: 12px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
-                            <span style="background: #E30613; color: #ffffff; font-size: 12px; font-weight: 900; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">Eilmeldung</span>
-                            <div style="font-size: 13px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">📍 Region Klagenfurt</div>
+                        <div style="background: rgba(227, 6, 19, 0.45); border: 1px solid rgba(227, 6, 19, 0.85); border-radius: 12px; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
+                            <span style="background: #E30613; color: #ffffff; font-size: 18px; font-weight: 900; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">Eilmeldung</span>
+                            <div style="font-size: 19px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">📍 Region Klagenfurt</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. LIVE & KONZERTE IN DER NÄHE -->
+                <!-- 3. LIVE & KONZERTE IN DER NÄHE / INFO WIDGET -->
                 <div class="rotator-view view-music-style" id="view-music-tips">
                     <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
                             <div class="rotator-badge-3d">🎪</div>
                             <div class="rotator-title">
-                                <h2 id="music-artist-title" style="font-size: 24px;">Lade Event...</h2>
+                                <h2 id="music-artist-title" style="font-size: 31px;">Lade Event...</h2>
                                 <p>Live-Musik & Schmankerl</p>
                             </div>
                         </div>
                         
                         <div class="music-content-block">
-                            <div style="font-size: 13px; color: #38bdf8; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(56,189,248,0.5);">Kirchtags-Highlight</div>
-                            <div id="music-artist-name-display" style="font-size: 24px; font-weight: 900; color: #ffffff; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);"></div>
-                            <div id="music-song-text" style="font-size: 16px; font-weight: 700; color: #f8fafc; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Lade Titel...</div>
-                            <div id="music-release-text" style="font-size: 18px; font-weight: 900; color: #00f2fe; background: rgba(0, 0, 0, 0.65); padding: 8px 14px; border-radius: 10px; border-left: 3px solid #00f2fe; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); box-shadow: 0 8px 25px rgba(0,0,0,0.6);">📅 Datum: --</div>
+                            <div style="font-size: 20px; color: #38bdf8; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(56,189,248,0.5);">Kirchtags-Highlight</div>
+                            <div id="music-artist-name-display" style="font-size: 33px; font-weight: 900; color: #ffffff; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);"></div>
+                            <div id="music-song-text" style="font-size: 24px; font-weight: 700; color: #f8fafc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Lade Titel...</div>
+                            <div id="music-release-text" style="font-size: 24px; font-weight: 900; color: #00f2fe; background: rgba(0, 0, 0, 0.65); padding: 8px 14px; border-radius: 10px; border-left: 3px solid #00f2fe; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); box-shadow: 0 8px 25px rgba(0,0,0,0.6);">📅 Datum: --</div>
                         </div>
 
-                        <div style="background: rgba(0, 242, 254, 0.25); border: 1px solid rgba(0, 242, 254, 0.6); border-radius: 12px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
-                            <span style="color: #00f2fe; font-size: 12px; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">🍻 Spezialität des Abends</span>
-                            <div id="music-event-text" style="font-size: 13px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">Saftige Rippalan</div>
+                        <div style="background: rgba(0, 242, 254, 0.25); border: 1px solid rgba(0, 242, 254, 0.6); border-radius: 12px; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
+                            <span style="color: #00f2fe; font-size: 18px; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">🍻 Spezialität des Abends</span>
+                            <div id="music-event-text" style="font-size: 19px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">Saftige Rippalan</div>
                         </div>
                     </div>
                 </div>
@@ -1064,50 +1064,44 @@
         }
 
         // -------------------------------------------------------------
-        // LOKALE EVENT- & FEST-HIGHLIGHTS (KORRIGIERT: 7. AUG = FREITAG, 23. AUG ENTFERNT)
+        // LOKALE EVENT- & FEST-HIGHLIGHTS
         // -------------------------------------------------------------
         const musicTipsData = [
             { 
                 artist: "Kirchtag im City Cafe", 
-                song: "Live auf der Bühne: Reinisch & Hubert Dreier! Dazu servieren wir frisch vom Ofen herrlich knusprige Rippalan.", 
-                release: "Freitag, 7. August 2026 • 18:00 Uhr", 
-                event: "City Cafe Klagenfurt Fischl" 
-            },
-            { 
-                artist: "Calamari Grillabend", 
-                song: "Frisch vom Grill! Sichern Sie sich Ihren Tisch für unser kulinarisches Event direkt im City Cafe.", 
-                release: "15. August 2026 • 18:00 Uhr", 
+                song: "Feiern Sie mit uns den großen Kirchtag! Live auf der Bühne sorgen Reinisch & Hubert Dreier für erstklassige musikalische Unterhaltung und ausgelassene Stimmung. Genießen Sie dazu unser kulinarisches Highlight: Frisch aus dem Ofen servieren wir Ihnen herrlich saftige, knusprige Rippalan mit klassischen Beilagen. Sichern Sie sich rechtzeitig Ihren Platz!", 
+                release: "Freitag, 7. August 2026 • ab 18:00 Uhr", 
                 event: "City Cafe Klagenfurt Fischl" 
             },
             { 
                 artist: "Riesiger Karaoke-Abend", 
-                song: "Zeigen Sie Ihr Gesangstalent am Mikrofon beim großen Karaoke-Monatsabschluss!", 
-                release: "Samstag, 29. August 2026 • 20:00 Uhr", 
+                song: "Der ultimative Monatsabschluss für alle Gesangstalente und Musikfans! Beweisen Sie Ihr Können am Mikrofon, singen Sie Ihre Lieblingshits und erleben Sie einen unvergesslichen Abend voller Spaß, guter Musik und bester Gesellschaft im City Cafe.", 
+                release: "Samstag, 29. August 2026 • ab 20:00 Uhr", 
                 event: "City Cafe Klagenfurt Fischl" 
             },
             { 
                 artist: "Klagenfurter Altstadtzauber", 
-                song: "Das legendäre Stadtfest! Genießen Sie Ihren Drink vor oder nach dem Bummel in gemütlicher Atmosphäre bei uns.", 
+                song: "Das legendäre Stadtfest lockt Tausende in die Innenstadt! Machen Sie das City Cafe zu Ihrer perfekten Anlaufstelle für eine genüssliche Stärkung vor dem Bummel oder für einen entspannten Ausklang in stimmungsvollem Ambiente.", 
                 release: "06. – 08. August 2026", 
-                event: "Klagenfurt Altstadt" 
+                event: "Klagenfurt Altstadt & City Cafe" 
             },
             { 
                 artist: "Tage der Alpen-Adria-Küche", 
-                song: "Kulinarischer Genuss in der Region – der ideale Stopp für Kaffeespezialitäten und Erfrischungen.", 
+                song: "Kulinarischer Genuss der Extraklasse in der gesamten Region! Genießen Sie bei uns ausgewählte Kaffeespezialitäten, erfrischende Drinks und mediterran-alpenländische Leckereien in gemütlicher Atmosphäre.", 
                 release: "04. – 20. September 2026", 
-                event: "Klagenfurt & Region" 
+                event: "Klagenfurt & Region Fischl" 
             },
             { 
                 artist: "Klagenfurter Herbstmesse", 
-                song: "Traditionsmesse in Klagenfurt: Perfekt, um den Messetag bei einem kühlen Drink ausklingen zu lassen.", 
+                song: "Die traditionsreiche Herbstmesse öffnet ihre Tore! Perfekt, um den erlebnisreichen Messetag bei einem kühlen Fassbier, erfrischenden Getränken und netten Gesprächen gemütlich ausklingen zu lassen.", 
                 release: "16. – 20. September 2026", 
                 event: "Messegelände Klagenfurt" 
             },
             { 
-                artist: "Burgarena Finkenstein", 
-                song: "Open-Air-Konzerte vor Traumkulisse – ideal für die Einkehr vor dem Konzertbeginn.", 
+                artist: "Konzert-Highlights in der Region", 
+                song: "Erleben Sie unvergessliche Open-Air-Konzerte vor traumhaften Kulissen in Kärnten. Das City Cafe Fischl ist Ihr idealer Treffpunkt für den perfekten Start oder Ausklang eines jeden Konzertabends.", 
                 release: "Sommer / August 2026", 
-                event: "Burgarena Finkenstein" 
+                event: "Klagenfurt & Umgebung" 
             }
         ];
 
@@ -1275,10 +1269,10 @@
                 musicView.classList.add('active');
                 currentMusicIndex = 0;
                 showRandomMusicArtist(); 
-                musicTimer = setInterval(showRandomMusicArtist, 18 * 1000); 
+                musicTimer = setInterval(showRandomMusicArtist, 24 * 1000); 
 
                 activeSidebarWidgetIndex = 0;
-                sidebarMasterTimer = setTimeout(rotateSidebarWidgets, musicTipsData.length * 18000);
+                sidebarMasterTimer = setTimeout(rotateSidebarWidgets, musicTipsData.length * 24000);
             }
         }
         
