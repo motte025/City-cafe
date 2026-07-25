@@ -641,7 +641,7 @@
                 <div class="ticker-move">
                     <span class="ticker-item">✨ Willkommen im City Cafe Klagenfurt Fischl!</span>
                     <span class="ticker-separator">•</span>
-                    <span class="ticker-item">🎪 <span class="ticker-highlight-yellow">KIRCHTAG-HIGHLIGHT:</span> Donnerstag, 7. August 2026 ab 18:00 Uhr mit Reinisch & Hubert Dreier live und saftigen Rippalan im City Cafe!</span>
+                    <span class="ticker-item">🎪 <span class="ticker-highlight-yellow">KIRCHTAG-HIGHLIGHT:</span> Freitag, 7. August 2026 ab 18:00 Uhr mit Reinisch & Hubert Dreier live und saftigen Rippalan im City Cafe!</span>
                     <span class="ticker-separator">•</span>
                     <span class="ticker-item">🎤 <span class="ticker-highlight-yellow">HIGHLIGHT-EVENT:</span> RIESIGER KARAOKE-ABEND im City Cafe am Samstag, 29. August 2026 ab 20:00 Uhr!</span>
                     <span class="ticker-separator">•</span>
@@ -759,7 +759,6 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // Plakat-Array (1.png ist jetzt das neue Kirchtags-Plakat)
         const posterImages = [
             'https://raw.githubusercontent.com/motte025/City-cafe/main/0.png',
             'https://raw.githubusercontent.com/motte025/City-cafe/main/1.png',
@@ -1065,25 +1064,19 @@
         }
 
         // -------------------------------------------------------------
-        // LOKALE EVENT- & FEST-HIGHLIGHTS (INKL. KIRCHTAG)
+        // LOKALE EVENT- & FEST-HIGHLIGHTS (KORRIGIERT: 7. AUG = FREITAG, 23. AUG ENTFERNT)
         // -------------------------------------------------------------
         const musicTipsData = [
             { 
                 artist: "Kirchtag im City Cafe", 
                 song: "Live auf der Bühne: Reinisch & Hubert Dreier! Dazu servieren wir frisch vom Ofen herrlich knusprige Rippalan.", 
-                release: "Donnerstag, 7. August 2026 • 18:00 Uhr", 
+                release: "Freitag, 7. August 2026 • 18:00 Uhr", 
                 event: "City Cafe Klagenfurt Fischl" 
             },
             { 
                 artist: "Calamari Grillabend", 
                 song: "Frisch vom Grill! Sichern Sie sich Ihren Tisch für unser kulinarisches Event direkt im City Cafe.", 
                 release: "15. August 2026 • 18:00 Uhr", 
-                event: "City Cafe Klagenfurt Fischl" 
-            },
-            { 
-                artist: "Live-Musik: Reinisch & Dreier", 
-                song: "Musikalische Höhepunkte und beste Live-Unterhaltung direkt bei uns im Lokal erleben.", 
-                release: "23. August 2026 • 10:00 Uhr", 
                 event: "City Cafe Klagenfurt Fischl" 
             },
             { 
@@ -1109,6 +1102,12 @@
                 song: "Traditionsmesse in Klagenfurt: Perfekt, um den Messetag bei einem kühlen Drink ausklingen zu lassen.", 
                 release: "16. – 20. September 2026", 
                 event: "Messegelände Klagenfurt" 
+            },
+            { 
+                artist: "Burgarena Finkenstein", 
+                song: "Open-Air-Konzerte vor Traumkulisse – ideal für die Einkehr vor dem Konzertbeginn.", 
+                release: "Sommer / August 2026", 
+                event: "Burgarena Finkenstein" 
             }
         ];
 
