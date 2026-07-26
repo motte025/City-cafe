@@ -15,10 +15,12 @@
             --primary-glow: #00f2fe;
             --secondary-glow: #4facfe;
             --accent-glow: #f355da;
-            --card-bg: rgba(10, 20, 38, 0.65); 
-            --card-border: rgba(255, 255, 255, 0.15);
+            --card-bg: rgba(10, 20, 38, 0.78); 
+            --card-border: rgba(255, 255, 255, 0.18);
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
+            --bundesliga-accent: #0066ff;
+            --live-red: #ff3333;
         }
 
         * {
@@ -134,8 +136,7 @@
         }
         .greeting-char-particle.crumble {
             transform: translate(calc(var(--rand-x) * 60px), calc(var(--rand-y) * 60px)) rotate(calc(var(--rand-rot) * 120deg)) scale(0.2);
-            opacity: 0;
-            filter: blur(6px);
+            opacity: 0; filter: blur(6px);
         }
         .greeting-char-particle.assemble {
             animation: assembleParticle 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -247,10 +248,7 @@
             border-radius: 12px;
             padding: 15px 20px;
             margin-top: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #f1f5f9;
-            line-height: 1.4;
+            font-size: 18px; font-weight: 600; color: #f1f5f9; line-height: 1.4;
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
             display: none;
@@ -270,6 +268,76 @@
             background: rgba(10, 15, 30, 0.55); backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 15px 30px;
             font-size: 16px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+        }
+
+        /* BUNDESLIGA WIDGET - 6 BOXEN (3 SPALTEN x 2 REIHEN) - EXTRA GROßE TEAMS & SPIELSTÄNDE */
+        .bundesliga-widget-box {
+            width: 1280px; height: 815px; position: relative; background: #070b14;
+            display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; border-radius: 22px;
+        }
+        .bundesliga-bg-img {
+            position: absolute; top: 0; left: 0; width: 1280px; height: 815px; object-fit: cover; object-position: center;
+            opacity: 0.8; transform: scale(1.05); transition: transform 15s ease; z-index: 1;
+        }
+        .bundesliga-gradient-overlay {
+            position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
+            background: linear-gradient(180deg, rgba(7, 11, 20, 0.85) 0%, rgba(7, 11, 20, 0.55) 40%, rgba(7, 11, 20, 0.99) 100%);
+            z-index: 3; pointer-events: none;
+        }
+        .bundesliga-content-layer {
+            position: relative; z-index: 10; width: 1280px; height: 815px;
+            display: flex; flex-direction: column; justify-content: space-between; padding: 20px 30px;
+        }
+        .bundesliga-top-header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 102, 255, 0.4); border-radius: 16px; padding: 10px 22px;
+        }
+        .bundesliga-title-group h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .bundesliga-title-group p { font-size: 12px; color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+        .bundesliga-badge {
+            background: linear-gradient(135deg, #0066ff 0%, #00f2fe 100%); color: #060b14; font-family: 'Orbitron', sans-serif; 
+            font-size: 14px; font-weight: 900; padding: 6px 16px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+        }
+        
+        /* 6 BOXEN GRID (3 x 2) */
+        .bundesliga-matches-grid {
+            margin-top: 6px; margin-bottom: 6px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 12px; width: 100%; height: 620px;
+        }
+        .bl-match-card {
+            background: rgba(8, 14, 28, 0.95); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.22); border-left: 5px solid #00f2fe;
+            border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.85);
+        }
+        .bl-match-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+        .bl-live-indicator { display: flex; align-items: center; gap: 5px; color: #ff3333; font-weight: 900; animation: liveBlink 1.5s infinite; }
+        @keyframes liveBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .bl-dot { width: 7px; height: 7px; background: #ff3333; border-radius: 50%; box-shadow: 0 0 8px #ff3333; }
+        
+        .bl-match-teams { font-size: 21px; font-weight: 900; color: #ffffff; display: flex; justify-content: space-between; align-items: center; }
+        .bl-match-score { font-family: 'Orbitron', sans-serif; font-size: 23px; font-weight: 900; color: #00f2fe; background: rgba(0,242,254,0.18); padding: 4px 14px; border-radius: 8px; border: 1px solid rgba(0,242,254,0.5); }
+        .bl-match-score.upcoming { color: #cbd5e1; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); font-size: 20px; }
+
+        .bl-match-details {
+            font-size: 11px; font-weight: 700; color: #e2e8f0; background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px; border-radius: 8px; display: flex; flex-direction: column; gap: 3px; border-left: 3px solid #f355da;
+        }
+        .bl-match-info-text { color: #f1f5f9; font-style: italic; font-size: 11px; }
+        .bl-match-events-row { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; font-weight: 800; color: #00f2fe; }
+
+        .bundesliga-bottom-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 15, 30, 0.75); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 10px 25px;
+            font-size: 14px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px;
             text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
 
@@ -313,11 +381,8 @@
         /* WIDGET ROTATOR */
         .widget-rotator { 
             flex: 1; padding: 0 !important; position: relative; overflow: hidden; 
-            background: transparent !important; 
-            backdrop-filter: none !important; 
-            -webkit-backdrop-filter: none !important;
-            border: none !important; 
-            box-shadow: none !important;
+            background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+            border: none !important; box-shadow: none !important;
             display: flex; flex-direction: column; justify-content: space-between;
             height: 640px;
         }
@@ -329,20 +394,10 @@
         }
         .rotator-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
         
-        /* ZENTRIERTE, WUCHTIGE ÜBERSCHRIFTEN */
         .rotator-header { 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.25); 
-            padding-bottom: 12px; 
-            margin-bottom: 0px; 
-            z-index: 10; 
-            position: relative; 
-            gap: 6px;
-            width: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25); padding-bottom: 12px; margin-bottom: 0px; 
+            z-index: 10; position: relative; gap: 6px; width: 100%;
         }
         .rotator-badge-3d { width: 42px; height: 42px; background: linear-gradient(135deg, #FF0000 0%, #282828 100%); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); }
         .rotator-title { text-align: center; width: 100%; }
@@ -362,62 +417,25 @@
         .gallery-event-badge { align-self: flex-start; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #060b14; font-size: 18px; font-weight: 800; padding: 6px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(0, 242, 254, 0.4); }
         
         .gallery-event-title { 
-            font-size: 31px; 
-            font-weight: 900; 
-            color: #ffffff; 
-            display: inline-block;
-            min-height: 38px;
+            font-size: 31px; font-weight: 900; color: #ffffff; display: inline-block; min-height: 38px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
 
-        /* 100% VOLLFLÄCHIGE GRÖßE FÜR NEWS- & EVENT-WIDGETS */
         .view-news-style, .view-music-style { 
             border-radius: 24px; 
             background: radial-gradient(circle at center, rgba(3, 7, 15, 0.92) 0%, rgba(8, 16, 32, 0.75) 65%, rgba(0, 242, 254, 0.25) 100%) !important;
             backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
             border: 1px solid rgba(0, 242, 254, 0.55);
             box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 50px rgba(0, 0, 0, 0.8), inset 0 1px 3px rgba(255, 255, 255, 0.35);
-            padding: 0 !important;
-            overflow: hidden; 
-            position: absolute;
-            top: 0; left: 0;
-            width: 520px; height: 640px;
-            animation: iceLightningFramePulse 7s infinite ease-in-out;
-        }
-
-        @keyframes iceLightningFramePulse {
-            0%, 70%, 100% {
-                border-color: rgba(0, 242, 254, 0.55);
-                box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 50px rgba(0, 0, 0, 0.8), inset 0 1px 3px rgba(255, 255, 255, 0.35);
-            }
-            73% {
-                border-color: rgba(0, 255, 255, 0.95);
-                box-shadow: 0 0 25px rgba(0, 242, 254, 0.8), 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(0, 242, 254, 0.5);
-            }
-            77% {
-                border-color: rgba(0, 242, 254, 0.6);
-                box-shadow: 0 0 10px rgba(0, 242, 254, 0.4), 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.8);
-            }
+            padding: 0 !important; overflow: hidden; position: absolute; top: 0; left: 0; width: 520px; height: 640px;
         }
 
         .widget-inner-padded-wrapper {
-            width: 520px;
-            height: 640px;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            gap: 12px;
-            padding: 20px 26px;
-            position: relative;
-            z-index: 5;
+            width: 520px; height: 640px; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 20px 26px; position: relative; z-index: 5;
         }
 
         .news-content-block, .music-content-block {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 10px;
-            overflow: hidden;
-            width: 100%;
+            display: flex; flex-direction: column; justify-content: center; gap: 10px; overflow: hidden; width: 100%;
         }
 
         .char-particle {
@@ -427,29 +445,20 @@
         }
         .char-particle.crumble {
             transform: translate(calc(var(--rand-x) * 60px), calc(var(--rand-y) * 60px)) rotate(calc(var(--rand-rot) * 120deg)) scale(0.2);
-            opacity: 0;
-            filter: blur(6px);
+            opacity: 0; filter: blur(6px);
         }
         .char-particle.assemble {
             animation: assembleParticle 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             animation-delay: var(--delay);
         }
         @keyframes assembleParticle {
-            0% {
-                transform: translate(calc(var(--rand-x) * -60px), calc(var(--rand-y) * -60px)) rotate(calc(var(--rand-rot) * -120deg)) scale(1.5);
-                opacity: 0;
-                filter: blur(8px);
-            }
-            100% {
-                transform: translate(0, 0) rotate(0deg) scale(1);
-                opacity: 1;
-                filter: blur(0px);
-            }
+            0% { transform: translate(calc(var(--rand-x) * -60px), calc(var(--rand-y) * -60px)) rotate(calc(var(--rand-rot) * -120deg)) scale(1.5); opacity: 0; filter: blur(8px); }
+            100% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; filter: blur(0px); }
         }
 
         .gallery-event-date { font-size: 20px; font-weight: 800; color: #00f2fe; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); }
 
-        /* TICKER ZONE (Schriftgröße auf 32px erhöht) */
+        /* TICKER ZONE */
         .ticker-zone {
             grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 80px; 
             display: flex; align-items: center; background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
@@ -484,7 +493,6 @@
     <div class="bg-glow-static-1"></div>
     <div class="bg-glow-static-2"></div>
 
-    <!-- SKALIERUNGS-CONTAINER FÜR EXAKTE 1920x1080 (16:9) AUSHÄNGESCHILD-ANPASSUNG -->
     <div id="dashboard-scaler">
         
         <!-- LINKE SPALTE -->
@@ -528,7 +536,6 @@
                                     <div class="schlager-artist-name" id="schlager-artist">Lade Musik...</div>
                                     <div class="schlager-song-title" id="schlager-song">"Titel..."</div>
                                     
-                                    <!-- BIOGRAFIE BOX -->
                                     <div id="schlager-bio" class="schlager-bio-card">...</div>
                                 </div>
 
@@ -545,6 +552,110 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Ansicht 3: ADMIRAL Bundesliga Live-Ticker (6 Boxen) -->
+                <div class="media-inner-view" id="media-view-football">
+                    <div class="bundesliga-widget-box">
+                        <img class="bundesliga-bg-img" src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1600&auto=format&fit=crop&q=80" alt="Stadion">
+                        <div class="bundesliga-gradient-overlay"></div>
+
+                        <div class="bundesliga-content-layer">
+                            <div class="bundesliga-top-header">
+                                <div class="bundesliga-title-group">
+                                    <h2>ADMIRAL Bundesliga • Alle 6 Spiele im Überblick</h2>
+                                    <p>1. Spieltag Saison 2026/27 • Vollständige Spieltagsübersicht</p>
+                                </div>
+                                <div class="bundesliga-badge">⚽ Bundesliga Live</div>
+                            </div>
+
+                            <div class="bundesliga-matches-grid">
+                                <!-- SPIEL 1 -->
+                                <div class="bl-match-card">
+                                    <div class="bl-match-top">
+                                        <span>--.--. • --:--</span>
+                                        <span style="color:#f355da; font-weight:800;">LADE...</span>
+                                    </div>
+                                    <div class="bl-match-teams"><span>Team Heim</span> <span class="bl-match-score upcoming">- : -</span> <span>Team Gast</span></div>
+                                    <div class="bl-match-details">
+                                        <div class="bl-match-info-text">Live-Daten von API-Football werden geladen...</div>
+                                        <div class="bl-match-events-row"><span>Admiral Bundesliga</span></div>
+                                    </div>
+                                </div>
+
+                                <!-- SPIEL 2 -->
+                                <div class="bl-match-card">
+                                    <div class="bl-match-top">
+                                        <span>--.--. • --:--</span>
+                                        <span style="color:#f355da; font-weight:800;">LADE...</span>
+                                    </div>
+                                    <div class="bl-match-teams"><span>Team Heim</span> <span class="bl-match-score upcoming">- : -</span> <span>Team Gast</span></div>
+                                    <div class="bl-match-details">
+                                        <div class="bl-match-info-text">Live-Daten von API-Football werden geladen...</div>
+                                        <div class="bl-match-events-row"><span>Admiral Bundesliga</span></div>
+                                    </div>
+                                </div>
+
+                                <!-- SPIEL 3 -->
+                                <div class="bl-match-card">
+                                    <div class="bl-match-top">
+                                        <span>--.--. • --:--</span>
+                                        <span style="color:#f355da; font-weight:800;">LADE...</span>
+                                    </div>
+                                    <div class="bl-match-teams"><span>Team Heim</span> <span class="bl-match-score upcoming">- : -</span> <span>Team Gast</span></div>
+                                    <div class="bl-match-details">
+                                        <div class="bl-match-info-text">Live-Daten von API-Football werden geladen...</div>
+                                        <div class="bl-match-events-row"><span>Admiral Bundesliga</span></div>
+                                    </div>
+                                </div>
+
+                                <!-- SPIEL 4 -->
+                                <div class="bl-match-card">
+                                    <div class="bl-match-top">
+                                        <span>--.--. • --:--</span>
+                                        <span style="color:#f355da; font-weight:800;">LADE...</span>
+                                    </div>
+                                    <div class="bl-match-teams"><span>Team Heim</span> <span class="bl-match-score upcoming">- : -</span> <span>Team Gast</span></div>
+                                    <div class="bl-match-details">
+                                        <div class="bl-match-info-text">Live-Daten von API-Football werden geladen...</div>
+                                        <div class="bl-match-events-row"><span>Admiral Bundesliga</span></div>
+                                    </div>
+                                </div>
+
+                                <!-- SPIEL 5 -->
+                                <div class="bl-match-card">
+                                    <div class="bl-match-top">
+                                        <span>--.--. • --:--</span>
+                                        <span style="color:#f355da; font-weight:800;">LADE...</span>
+                                    </div>
+                                    <div class="bl-match-teams"><span>Team Heim</span> <span class="bl-match-score upcoming">- : -</span> <span>Team Gast</span></div>
+                                    <div class="bl-match-details">
+                                        <div class="bl-match-info-text">Live-Daten von API-Football werden geladen...</div>
+                                        <div class="bl-match-events-row"><span>Admiral Bundesliga</span></div>
+                                    </div>
+                                </div>
+
+                                <!-- SPIEL 6 -->
+                                <div class="bl-match-card">
+                                    <div class="bl-match-top">
+                                        <span>--.--. • --:--</span>
+                                        <span style="color:#f355da; font-weight:800;">LADE...</span>
+                                    </div>
+                                    <div class="bl-match-teams"><span>Team Heim</span> <span class="bl-match-score upcoming">- : -</span> <span>Team Gast</span></div>
+                                    <div class="bl-match-details">
+                                        <div class="bl-match-info-text">Live-Daten von API-Football werden geladen...</div>
+                                        <div class="bl-match-events-row"><span>Admiral Bundesliga</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bundesliga-bottom-footer">
+                                <span>🔴⚪ Alle 6 Spiele der ADMIRAL Bundesliga im Blick</span>
+                                <span>City Cafe Klagenfurt Fischl</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -607,7 +718,7 @@
                     </div>
                 </div>
 
-                <!-- 3. LIVE & KONZERTE IN DER NÄHE / INFO WIDGET -->
+                <!-- 3. LIVE & KONZERTE IN DER NÄHE / INFO WIDGET (Inkl. Villacher Kirchtag) -->
                 <div class="rotator-view view-music-style" id="view-music-tips">
                     <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
@@ -619,15 +730,15 @@
                         </div>
                         
                         <div class="music-content-block">
-                            <div style="font-size: 20px; color: #38bdf8; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(56,189,248,0.5);">Kirchtags-Highlight</div>
+                            <div style="font-size: 20px; color: #38bdf8; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(56,189,248,0.5);">Kärntner Highlight</div>
                             <div id="music-artist-name-display" style="font-size: 33px; font-weight: 900; color: #ffffff; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);"></div>
                             <div id="music-song-text" style="font-size: 24px; font-weight: 700; color: #f8fafc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Lade Titel...</div>
                             <div id="music-release-text" style="font-size: 24px; font-weight: 900; color: #00f2fe; background: rgba(0, 0, 0, 0.65); padding: 8px 14px; border-radius: 10px; border-left: 3px solid #00f2fe; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); box-shadow: 0 8px 25px rgba(0,0,0,0.6);">📅 Datum: --</div>
                         </div>
 
                         <div style="background: rgba(0, 242, 254, 0.25); border: 1px solid rgba(0, 242, 254, 0.6); border-radius: 12px; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
-                            <span style="color: #00f2fe; font-size: 18px; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">🍻 Spezialität des Abends</span>
-                            <div id="music-event-text" style="font-size: 19px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">Saftige Rippalan</div>
+                            <span style="color: #00f2fe; font-size: 18px; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">🍻 Region Kärnten</span>
+                            <div id="music-event-text" style="font-size: 19px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">Brauchtum & Kultur</div>
                         </div>
                     </div>
                 </div>
@@ -653,22 +764,13 @@
     </div>
 
     <script>
-        // Automatische Skalierung für exakte 1920x1080 (16:9) Auflösung auf jedem Bildschirm
         function autoScaleDashboard() {
             const scaler = document.getElementById('dashboard-scaler');
             const targetWidth = 1920;
             const targetHeight = 1080;
-            
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            
-            const scaleX = windowWidth / targetWidth;
-            const scaleY = windowHeight / targetHeight;
-            const scale = Math.min(scaleX, scaleY);
-            
+            const scale = Math.min(window.innerWidth / targetWidth, window.innerHeight / targetHeight);
             scaler.style.transform = `scale(${scale})`;
         }
-        
         window.addEventListener('resize', autoScaleDashboard);
         window.addEventListener('load', autoScaleDashboard);
         autoScaleDashboard();
@@ -746,7 +848,6 @@
         }
 
         setCrumblingGreeting(greetingHeadlines[0]);
-
         setInterval(() => {
             const nextGreeting = greetingHeadlines[Math.floor(Math.random() * greetingHeadlines.length)];
             setCrumblingGreeting(nextGreeting);
@@ -771,93 +872,42 @@
         let isImg1Active = true;
 
         let masterMusicPool = [];
-
         async function loadSongsFromGitHub() {
             try {
                 const response = await fetch('https://raw.githubusercontent.com/motte025/City-cafe/main/songs.json?v=' + Date.now());
                 const data = await response.json();
-                if (data && data.length > 0) {
-                    masterMusicPool = data;
-                }
-            } catch (error) {
-                masterMusicPool = [];
-            }
+                if (data && data.length > 0) masterMusicPool = data;
+            } catch (error) { masterMusicPool = []; }
         }
         loadSongsFromGitHub();
 
         let musicCycleTimer = null;
-        let mainStateIsPoster = true; 
         let activeMusicBatch = [];
         let isSchlagerBg1Active = true;
         let currentMusicSubIndex = 0;
         let globalMasterTimer = null;
+        let mediaStateIndex = 0; 
 
         function getRandomSongByWeight() {
             if (!masterMusicPool || masterMusicPool.length === 0) return null;
-
-            const schlagerPool = masterMusicPool.filter(s => {
-                const cat = (s.category || s.cat || "").toLowerCase();
-                return cat.includes("schlager") || cat.includes("party") || cat.includes("volksmusik") || cat.includes("discofox");
-            });
-
-            const deutschpopPool = masterMusicPool.filter(s => {
-                const cat = (s.category || s.cat || "").toLowerCase();
-                return cat.includes("deutschpop") || cat.includes("pop");
-            });
-
-            const aktuelleHitsPool = masterMusicPool.filter(s => {
-                const cat = (s.category || s.cat || "").toLowerCase();
-                return cat.includes("aktuell") || cat.includes("chart") || cat.includes("hit");
-            });
-
-            const anderePool = masterMusicPool.filter(s => {
-                const cat = (s.category || s.cat || "").toLowerCase();
-                return !cat.includes("schlager") && !cat.includes("party") && !cat.includes("volksmusik") &&
-                       !cat.includes("deutschpop") && !cat.includes("pop") && 
-                       !cat.includes("aktuell") && !cat.includes("chart") && !cat.includes("hit");
-            });
-
-            const rand = Math.floor(Math.random() * 60);
-            let targetPool = [];
-
-            if (rand < 40 && schlagerPool.length > 0) {
-                targetPool = schlagerPool;
-            } else if (rand < 48 && deutschpopPool.length > 0) {
-                targetPool = deutschpopPool;
-            } else if (rand < 55 && aktuelleHitsPool.length > 0) {
-                targetPool = aktuelleHitsPool;
-            } else if (anderePool.length > 0) {
-                targetPool = anderePool;
-            } else {
-                targetPool = masterMusicPool;
-            }
-
-            return targetPool[Math.floor(Math.random() * targetPool.length)];
+            return masterMusicPool[Math.floor(Math.random() * masterMusicPool.length)];
         }
 
         function generateGuaranteedBatch() {
             if (!masterMusicPool || masterMusicPool.length === 0) return [];
-            
-            return [
-                getRandomSongByWeight(),
-                getRandomSongByWeight(),
-                getRandomSongByWeight()
-            ].filter(Boolean);
+            return [getRandomSongByWeight(), getRandomSongByWeight(), getRandomSongByWeight()].filter(Boolean);
         }
 
         function renderMusicItem(index) {
             if (!activeMusicBatch[index]) return;
             const data = activeMusicBatch[index];
-            
             let artworkUrl = data.cover_url || data.artwork || data.image || data.cover || data.background_url;
-            
-            if (!artworkUrl || artworkUrl.includes("2a96cbd8b46e442fc41c2b86b821562f") || artworkUrl.includes("0.png") || artworkUrl.trim() === "") {
+            if (!artworkUrl || artworkUrl.includes("0.png") || artworkUrl.trim() === "") {
                 artworkUrl = getRandomFallbackBackground();
             }
 
             const bg1 = document.getElementById('schlager-img1');
             const bg2 = document.getElementById('schlager-img2');
-
             bg1.onerror = () => { bg1.src = getRandomFallbackBackground(); };
             bg2.onerror = () => { bg2.src = getRandomFallbackBackground(); };
 
@@ -876,17 +926,10 @@
             }
 
             let rawSong = data.song || data.title || data.titel || data.name || "Unbekannter Titel";
-            let cleanTitle = rawSong.replace(/\s*\(Mix\s*\d+\)/gi, '').replace(/\s*\([^)]*Mix[^)]*\)/gi, '');
-
+            let cleanTitle = rawSong.replace(/\s*\(Mix\s*\d+\)/gi, '');
             let rawAlbum = data.album || data.album_name || "Top-Edition";
             let cleanAlbum = rawAlbum.replace(/^Album:\s*/i, '');
-
             let songYear = data.release_date || data.year || data.jahr || "";
-            if (!songYear && data.chart) {
-                let match = data.chart.match(/\b(19\d{2}|20\d{2})\b/);
-                if (match) songYear = match[0];
-            }
-
             let catName = data.category || data.cat || "Jukebox-Hit";
 
             document.getElementById('media-main-category-title').textContent = catName;
@@ -903,40 +946,99 @@
                 releaseTag.style.display = 'none';
             }
 
-            let chartVal = data.chart || data.listeners || data.chart_rank || "Jukebox-Favorit";
-            if (!chartVal.includes("🇦🇹") && !chartVal.includes("🎧") && !chartVal.includes("Mio") && !chartVal.includes("Tsd")) {
-                chartVal = `🇦🇹 ${chartVal}`;
-            }
+            let chartVal = data.chart || data.listeners || "Jukebox-Favorit";
             document.getElementById('schlager-chart-at').textContent = chartVal;
 
             let rawBio = data.bio || data.wiki || "";
             const bioBox = document.getElementById('schlager-bio');
-            
-            let isEnglish = /\b(is an|was an|is a|was a|born|singer|band|group|from|composed|released)\b/i.test(rawBio);
-
-            if (rawBio && typeof rawBio === 'string' && !isEnglish) {
-                let cleanBio = rawBio.replace(/<[^>]*>?/gm, '').replace(/User-contributed text is available under the Creative Commons By-SA License.*/gi, '').trim();
-                if (cleanBio.length > 160) {
-                    cleanBio = cleanBio.substring(0, 157) + '...';
-                }
+            if (rawBio && typeof rawBio === 'string' && !/\b(is an|was an)\b/i.test(rawBio)) {
+                let cleanBio = rawBio.replace(/<[^>]*>?/gm, '').trim();
+                if (cleanBio.length > 157) cleanBio = cleanBio.substring(0, 157) + '...';
                 if (cleanBio.length > 10) {
                     bioBox.style.display = 'block';
                     bioBox.textContent = `💡 ${cleanBio}`;
-                } else {
-                    bioBox.style.display = 'none';
-                }
-            } else {
-                bioBox.style.display = 'none';
-            }
+                } else { bioBox.style.display = 'none'; }
+            } else { bioBox.style.display = 'none'; }
 
             document.getElementById('schlager-chart-badge').textContent = `Titel ${index + 1} von 3`;
         }
 
-        function runMasterSequence() {
-            if (mainStateIsPoster) {
-                document.getElementById('media-view-schlager').classList.remove('active');
-                document.getElementById('media-view-poster').classList.add('active');
+        const bundesligaProxyUrl = "https://script.google.com/macros/s/AKfycbwzi8lpomXE4c9wQkbZlLR2b-DDPzgiZDCYN7T42pZYJ4-JX8HUs2l2rZLmCKacfyvX/exec";
+
+        async function fetchLiveBundesligaData() {
+            try {
+                const response = await fetch(bundesligaProxyUrl);
+                const data = await response.json();
                 
+                if (data.error) {
+                    const infoText = document.querySelector('.bl-match-card .bl-match-info-text');
+                    if (infoText) infoText.textContent = "API Fehler: " + data.error;
+                    return;
+                }
+                
+                if (data && data.response && data.response.length > 0) {
+                    const matches = data.response; 
+                    const matchCards = document.querySelectorAll('.bl-match-card');
+                    
+                    matches.slice(0, matchCards.length).forEach((match, index) => {
+                        const card = matchCards[index];
+                        if (!card) return;
+                        
+                        const homeTeam = match.teams.home.name;
+                        const awayTeam = match.teams.away.name;
+                        const homeGoals = match.goals.home !== null ? match.goals.home : '-';
+                        const awayGoals = match.goals.away !== null ? match.goals.away : '-';
+                        const statusShort = match.fixture.status.short; 
+                        
+                        const matchDate = new Date(match.fixture.date);
+                        const timeStr = matchDate.toLocaleTimeString('de-AT', { hour: '2-digit', minute:'2-digit' });
+                        const dateStr = matchDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+                        
+                        const topSpan = card.querySelector('.bl-match-top span:first-child');
+                        const statusSpan = card.querySelector('.bl-match-top span:last-child');
+                        const teamsDiv = card.querySelector('.bl-match-teams');
+                        
+                        if (topSpan) topSpan.textContent = `${dateStr} • ${timeStr}`;
+                        
+                        let statusText = "VORBERICHT";
+                        let scoreClass = "bl-match-score upcoming";
+                        let scoreText = `${homeGoals} : ${awayGoals}`;
+                        
+                        if (statusShort === 'FT') {
+                            statusText = "ENDE";
+                            scoreClass = "bl-match-score";
+                        } else if (statusShort === '1H' || statusShort === '2H' || statusShort === 'HT') {
+                            statusText = "LIVE";
+                            scoreClass = "bl-match-score";
+                        }
+                        
+                        if (statusSpan) {
+                            statusSpan.textContent = statusText;
+                            statusSpan.style.color = (statusText === "LIVE" ? "#ff3333" : (statusText === "ENDE" ? "#00f2fe" : "#f355da"));
+                        }
+                        
+                        if (teamsDiv) {
+                            teamsDiv.innerHTML = `<span>${homeTeam}</span> <span class="${scoreClass}">${scoreText}</span> <span>${awayTeam}</span>`;
+                        }
+                    });
+                } else {
+                    const infoText = document.querySelector('.bl-match-card .bl-match-info-text');
+                    if (infoText) infoText.textContent = "Keine Spieldaten in Response gefunden";
+                }
+            } catch (error) {
+                const infoText = document.querySelector('.bl-match-card .bl-match-info-text');
+                if (infoText) infoText.textContent = "Netzwerk-/Fetch-Fehler aufgetreten";
+                console.error("Fehler beim Abrufen der Bundesliga-Daten:", error);
+            }
+        }
+
+        function runMasterSequence() {
+            document.getElementById('media-view-poster').classList.remove('active');
+            document.getElementById('media-view-schlager').classList.remove('active');
+            document.getElementById('media-view-football').classList.remove('active');
+
+            if (mediaStateIndex === 0) {
+                document.getElementById('media-view-poster').classList.add('active');
                 currentPosterIndex = (currentPosterIndex + 1) % posterImages.length;
                 const nextSource = posterImages[currentPosterIndex] + '?v=' + Date.now();
                 const preloadPoster = new Image();
@@ -952,13 +1054,11 @@
                         isImg1Active = true;
                     }
                 };
-
-                mainStateIsPoster = false;
+                mediaStateIndex = 1;
                 globalMasterTimer = setTimeout(runMasterSequence, 35000); 
-            } else {
-                document.getElementById('media-view-poster').classList.remove('active');
+
+            } else if (mediaStateIndex === 1) {
                 document.getElementById('media-view-schlager').classList.add('active');
-                
                 activeMusicBatch = generateGuaranteedBatch();
                 currentMusicSubIndex = 0;
                 renderMusicItem(currentMusicSubIndex);
@@ -966,21 +1066,22 @@
                 if (musicCycleTimer) clearInterval(musicCycleTimer);
                 musicCycleTimer = setInterval(() => {
                     currentMusicSubIndex++;
-                    if (currentMusicSubIndex < 3) {
-                        renderMusicItem(currentMusicSubIndex);
-                    } else {
-                        clearInterval(musicCycleTimer);
-                    }
+                    if (currentMusicSubIndex < 3) renderMusicItem(currentMusicSubIndex);
+                    else clearInterval(musicCycleTimer);
                 }, 18000);
 
-                mainStateIsPoster = true;
+                mediaStateIndex = 2;
                 globalMasterTimer = setTimeout(runMasterSequence, 54000); 
+
+            } else {
+                document.getElementById('media-view-football').classList.add('active');
+                fetchLiveBundesligaData(); // Sofortiges Laden bei Aktivierung
+                mediaStateIndex = 0;
+                globalMasterTimer = setTimeout(runMasterSequence, 25000); 
             }
         }
 
-        setTimeout(() => {
-            runMasterSequence();
-        }, 35000);
+        setTimeout(() => { runMasterSequence(); }, 35000);
 
         async function fetchLiveWeather() {
             try {
@@ -991,61 +1092,35 @@
         }
         setInterval(fetchLiveWeather, 600000); fetchLiveWeather();
 
-        // -------------------------------------------------------------
-        // 5MIN.AT RSS XML PARSER
-        // -------------------------------------------------------------
         let klagenfurtNewsData = [];
         let newsCycleTimer = null;
-
         async function fetch5minNews() {
             const klagenfurtRssUrl = 'https://www.5min.at/feed/rss_klagenfurt/';
             const proxies = [
                 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(klagenfurtRssUrl),
-                'https://api.allorigins.win/raw?url=' + encodeURIComponent(klagenfurtRssUrl),
-                'https://corsproxy.io/?' + encodeURIComponent(klagenfurtRssUrl)
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent(klagenfurtRssUrl)
             ];
-
-            let success = false;
-
             for (let proxyUrl of proxies) {
-                if (success) break;
                 try {
                     const response = await fetch(proxyUrl);
                     if (!response.ok) continue;
                     const textData = await response.text();
-
-                    if (textData.includes("Cloudflare") || textData.includes("Attention Required")) continue;
-
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(textData, "text/xml");
                     const items = xmlDoc.querySelectorAll("item");
-
                     if (items && items.length > 0) {
                         let fetched = [];
                         items.forEach((item) => {
                             if (fetched.length >= 3) return;
-
                             let title = item.querySelector("title")?.textContent || "";
                             let description = item.querySelector("description")?.textContent || "";
                             let pubDate = item.querySelector("pubDate")?.textContent || "";
-
                             let cleanTeaser = description.replace(/<[^>]*>?/gm, '').trim();
                             let cleanTitle = title.replace(/<[^>]*>?/gm, '').trim();
                             let timeStr = pubDate ? new Date(pubDate).toLocaleTimeString('de-AT', {hour: '2-digit', minute:'2-digit'}) + ' Uhr' : 'Vor wenigen Min.';
-
-                            if (cleanTitle) {
-                                fetched.push({
-                                    title: cleanTitle,
-                                    teaser: cleanTeaser || "Aktuelle Nachrichten aus Klagenfurt.",
-                                    date: timeStr
-                                });
-                            }
+                            if (cleanTitle) fetched.push({ title: cleanTitle, teaser: cleanTeaser, date: timeStr });
                         });
-
-                        if (fetched.length > 0) {
-                            klagenfurtNewsData = fetched;
-                            success = true;
-                        }
+                        if (fetched.length > 0) { klagenfurtNewsData = fetched; break; }
                     }
                 } catch (e) {}
             }
@@ -1056,60 +1131,22 @@
         function renderNewsItem(index) {
             if (!klagenfurtNewsData || klagenfurtNewsData.length === 0) return;
             const data = klagenfurtNewsData[index] || klagenfurtNewsData[0];
-
             document.getElementById('news-title').textContent = data.title;
             document.getElementById('news-teaser').textContent = data.teaser;
             document.getElementById('news-date').textContent = "⏱️ " + data.date;
             document.getElementById('news-badge-counter').textContent = `Top-Story ${index + 1} von 3`;
         }
 
-        // -------------------------------------------------------------
-        // LOKALE EVENT- & FEST-HIGHLIGHTS
-        // -------------------------------------------------------------
         const musicTipsData = [
-            { 
-                artist: "Kirchtag im City Cafe", 
-                song: "Feiern Sie mit uns den großen Kirchtag! Live auf der Bühne sorgen Reinisch & Hubert Dreier für erstklassige musikalische Unterhaltung und ausgelassene Stimmung. Genießen Sie dazu unser kulinarisches Highlight: Frisch aus dem Ofen servieren wir Ihnen herrlich saftige, knusprige Rippalan mit klassischen Beilagen. Sichern Sie sich rechtzeitig Ihren Platz!", 
-                release: "Freitag, 7. August 2026 • ab 18:00 Uhr", 
-                event: "City Cafe Klagenfurt Fischl" 
-            },
-            { 
-                artist: "Riesiger Karaoke-Abend", 
-                song: "Der ultimative Monatsabschluss für alle Gesangstalente und Musikfans! Beweisen Sie Ihr Können am Mikrofon, singen Sie Ihre Lieblingshits und erleben Sie einen unvergesslichen Abend voller Spaß, guter Musik und bester Gesellschaft im City Cafe.", 
-                release: "Samstag, 29. August 2026 • ab 20:00 Uhr", 
-                event: "City Cafe Klagenfurt Fischl" 
-            },
-            { 
-                artist: "Klagenfurter Altstadtzauber", 
-                song: "Das legendäre Stadtfest lockt Tausende in die Innenstadt! Machen Sie das City Cafe zu Ihrer perfekten Anlaufstelle für eine genüssliche Stärkung vor dem Bummel oder für einen entspannten Ausklang in stimmungsvollem Ambiente.", 
-                release: "06. – 08. August 2026", 
-                event: "Klagenfurt Altstadt & City Cafe" 
-            },
-            { 
-                artist: "Tage der Alpen-Adria-Küche", 
-                song: "Kulinarischer Genuss der Extraklasse in der gesamten Region! Genießen Sie bei uns ausgewählte Kaffeespezialitäten, erfrischende Drinks und mediterran-alpenländische Leckereien in gemütlicher Atmosphäre.", 
-                release: "04. – 20. September 2026", 
-                event: "Klagenfurt & Region Fischl" 
-            },
-            { 
-                artist: "Klagenfurter Herbstmesse", 
-                song: "Die traditionsreiche Herbstmesse öffnet ihre Tore! Perfekt, um den erlebnisreichen Messetag bei einem kühlen Fassbier, erfrischenden Getränken und netten Gesprächen gemütlich ausklingen zu lassen.", 
-                release: "16. – 20. September 2026", 
-                event: "Messegelände Klagenfurt" 
-            },
-            { 
-                artist: "Konzert-Highlights in der Region", 
-                song: "Erleben Sie unvergessliche Open-Air-Konzerte vor traumhaften Kulissen in Kärnten. Das City Cafe Fischl ist Ihr idealer Treffpunkt für den perfekten Start oder Ausklang eines jeden Konzertabends.", 
-                release: "Sommer / August 2026", 
-                event: "Klagenfurt & Umgebung" 
-            }
+            { artist: "Kirchtag im City Cafe", song: "Feiern Sie mit uns den großen Kirchtag! Live auf der Bühne sorgen Reinisch & Hubert Dreier für erstklassige musikalische Unterhaltung und saftige Rippalan.", release: "Freitag, 7. August 2026 • ab 18:00 Uhr", event: "City Cafe Klagenfurt Fischl" },
+            { artist: "Villacher Kirchtag", song: "Österreichs größtes Brauchtumsfest lockt wieder mit Tradition, Tracht, Gemütlichkeit und tausenden Besuchern nach Kärnten!", release: "Ende Juli / Anfang August 2026", event: "Kärntner Brauchtumshighlight" },
+            { artist: "Riesiger Karaoke-Abend", song: "Der ultimative Monatsabschluss für alle Gesangstalente und Musikfans! Beweisen Sie Ihr Können am Mikrofon im City Cafe.", release: "Samstag, 29. August 2026 • ab 20:00 Uhr", event: "City Cafe Klagenfurt Fischl" }
         ];
 
         let musicTimer = null, currentMusicIndex = 0;
         function showRandomMusicArtist() {
             const data = musicTipsData[currentMusicIndex];
             currentMusicIndex = (currentMusicIndex + 1) % musicTipsData.length;
-
             document.getElementById('music-artist-title').textContent = data.artist;
             document.getElementById('music-artist-name-display').textContent = data.artist;
             document.getElementById('music-song-text').textContent = data.song;
@@ -1117,9 +1154,6 @@
             document.getElementById('music-release-text').textContent = "📅 " + data.release;
         }
 
-        // -------------------------------------------------------------
-        // GOOGLE DRIVE GALERIE: INTELLIGENTE PLAYLIST-LOGIK
-        // -------------------------------------------------------------
         let activeSidebarWidgetIndex = 0; 
         let visitorGalleryData = [], galleryTimer = null, isGalleryImg1Active = true;
         let imagePlaylist = [];
@@ -1130,9 +1164,7 @@
             try {
                 const response = await fetch(googleScriptUrl);
                 const data = await response.json();
-                if(data && data.length > 0) {
-                    visitorGalleryData = data;
-                }
+                if(data && data.length > 0) visitorGalleryData = data;
             } catch (e) {}
         }
 
@@ -1146,10 +1178,7 @@
         }
 
         function preparePlaylist() {
-            if (!visitorGalleryData || visitorGalleryData.length === 0) {
-                imagePlaylist = [];
-                return;
-            }
+            if (!visitorGalleryData || visitorGalleryData.length === 0) { imagePlaylist = []; return; }
             const last10 = visitorGalleryData.slice(-10);
             const olderImages = visitorGalleryData.slice(0, Math.max(0, visitorGalleryData.length - 10));
             imagePlaylist = [...shuffleArray(last10), ...shuffleArray(olderImages)];
@@ -1159,7 +1188,6 @@
         function setCrumblingTitle(newText) {
             const container = document.getElementById('gallery-current-title');
             const currentChars = container.querySelectorAll('.char-particle');
-
             if (currentChars.length === 0) {
                 container.innerHTML = '';
                 newText.split('').forEach((char, idx) => {
@@ -1174,14 +1202,12 @@
                 });
                 return;
             }
-
             currentChars.forEach(span => {
                 span.style.setProperty('--rand-x', (Math.random() - 0.5).toFixed(2));
                 span.style.setProperty('--rand-y', (Math.random() - 0.5).toFixed(2));
                 span.style.setProperty('--rand-rot', (Math.random() - 0.5).toFixed(2));
                 span.classList.add('crumble');
             });
-
             setTimeout(() => {
                 container.innerHTML = '';
                 newText.split('').forEach((char, idx) => {
@@ -1199,15 +1225,12 @@
 
         function showNextPlaylistImage() {
             if (!imagePlaylist || imagePlaylist.length === 0) return;
-            
             const data = imagePlaylist[currentPlaylistIndex];
             currentPlaylistIndex = (currentPlaylistIndex + 1) % imagePlaylist.length;
 
             document.getElementById('gallery-current-badge').textContent = data.badge;
             document.getElementById('gallery-current-date').textContent = data.date;
-            
-            const randomText = wunschTexte[Math.floor(Math.random() * wunschTexte.length)];
-            setCrumblingTitle(randomText);
+            setCrumblingTitle(wunschTexte[Math.floor(Math.random() * wunschTexte.length)]);
 
             const gImg1 = document.getElementById('gallery-img1'), gImg2 = document.getElementById('gallery-img2');
             if (isGalleryImg1Active) {
@@ -1216,8 +1239,6 @@
                 gImg1.src = data.src; gImg2.classList.remove('active'); gImg1.classList.add('active'); isGalleryImg1Active = true;
             }
         }
-
-        let sidebarMasterTimer = null;
 
         async function rotateSidebarWidgets() {
             const galleryView = document.getElementById('view-event-gallery');
@@ -1235,50 +1256,36 @@
             if (activeSidebarWidgetIndex === 0) {
                 await loadDriveFolderImages();
                 preparePlaylist();
-
                 galleryView.classList.add('active');
-                
                 if (imagePlaylist.length > 0) {
                     showNextPlaylistImage();
                     galleryTimer = setInterval(showNextPlaylistImage, BILD_WECHSEL_SEKUNDEN * 1000);
                 }
-
                 const totalGalleryDuration = Math.max(30000, (imagePlaylist.length > 0 ? imagePlaylist.length : 5) * BILD_WECHSEL_SEKUNDEN * 1000);
-
                 activeSidebarWidgetIndex = 1;
-                sidebarMasterTimer = setTimeout(rotateSidebarWidgets, totalGalleryDuration); 
-
+                setTimeout(rotateSidebarWidgets, totalGalleryDuration); 
             } else if (activeSidebarWidgetIndex === 1) {
                 newsView.classList.add('active');
                 let newsSubIdx = 0;
                 renderNewsItem(newsSubIdx);
-
                 newsCycleTimer = setInterval(() => {
                     newsSubIdx++;
-                    if (newsSubIdx < 3) {
-                        renderNewsItem(newsSubIdx);
-                    } else {
-                        clearInterval(newsCycleTimer);
-                    }
+                    if (newsSubIdx < 3) renderNewsItem(newsSubIdx);
+                    else clearInterval(newsCycleTimer);
                 }, 15000);
-
                 activeSidebarWidgetIndex = 2;
-                sidebarMasterTimer = setTimeout(rotateSidebarWidgets, 45000);
-
+                setTimeout(rotateSidebarWidgets, 45000);
             } else {
                 musicView.classList.add('active');
                 currentMusicIndex = 0;
                 showRandomMusicArtist(); 
                 musicTimer = setInterval(showRandomMusicArtist, 24 * 1000); 
-
                 activeSidebarWidgetIndex = 0;
-                sidebarMasterTimer = setTimeout(rotateSidebarWidgets, musicTipsData.length * 24000);
+                setTimeout(rotateSidebarWidgets, musicTipsData.length * 24000);
             }
         }
         
-        loadDriveFolderImages().then(() => {
-            rotateSidebarWidgets();
-        });
+        loadDriveFolderImages().then(() => { rotateSidebarWidgets(); });
 
         const allCards = [document.getElementById('card-media'), document.getElementById('card-clock'), document.getElementById('card-weather'), document.getElementById('card-rotator'), document.getElementById('card-ticker')];
         function loopBorderShimmer() {
