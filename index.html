@@ -52,7 +52,6 @@
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100dvh;
-            /* DEIN NEUES HINTERGRUNDBILD 100.jpg */
             background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.jpg');
             background-size: cover;
             background-repeat: no-repeat;
@@ -345,7 +344,7 @@
         .time-display { font-family: 'Orbitron', sans-serif; font-size: 52px; font-weight: 900; color: #ffffff; text-shadow: 0 1px 0 #cccccc, 0 2px 0 #b3b3b3, 0 3px 0 #999999, 0 4px 0 #7f7f7f, 0 5px 10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.4); letter-spacing: 2px; margin-bottom: 2px; }
         .date-display { font-size: 14px; font-weight: 700; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); }
 
-        /* WETTER WIDGET - ULTRA KOMPAKTER RAHMEN (110px) */
+        /* WETTER WIDGET */
         .widget-weather { 
             flex: 0 0 110px !important; 
             height: 110px !important; 
@@ -468,7 +467,7 @@
             </div>
 
             <div class="card media-zone" id="card-media">
-                <!-- Ansicht 1: Plakate (Exakt nur vorhandene Dateien 0.png, 1.png, 3.png) -->
+                <!-- Ansicht 1: Plakate (Vorhandene Dateien 0.png, 1.png, 3.png) -->
                 <div class="media-inner-view active" id="media-view-poster">
                     <div class="poster-container" id="poster-container">
                         <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/0.png" alt="Plakat Ebene 1">
@@ -549,6 +548,39 @@
                     </div>
                 </div>
 
+                <!-- ANSICHT 4: MULTI-WEBCAM ROTATION LIGNANO MIT LIVE-WETTER -->
+                <div class="media-inner-view" id="media-view-webcam">
+                    <div class="webcam-widget-box" style="width: 1280px; height: 815px; position: relative; background-color: #000; border-radius: 22px; overflow: hidden;">
+                        
+                        <!-- HEADER OVERLAY MIT LIVE WETTER -->
+                        <div style="position: absolute; top: 20px; left: 30px; right: 30px; z-index: 10; display: flex; justify-content: space-between; align-items: center; background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0, 242, 254, 0.5); border-radius: 16px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+                            <div>
+                                <h2 id="lignano-cam-title" style="font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px;">🔴 LIVE WEBCAM • Lignano Sabbiadoro</h2>
+                                <p id="lignano-cam-sub" style="font-size: 13px; color: #00f2fe; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px;">Ansicht 1/3 • Live-Bild</p>
+                            </div>
+                            
+                            <!-- LIVE WETTER BADGE FÜR LIGNANO -->
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="background: rgba(0, 242, 254, 0.15); border: 1px solid rgba(0, 242, 254, 0.6); border-radius: 12px; padding: 8px 16px; color: #ffffff; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);">
+                                    <span>☀️ Lignano:</span> <span id="lignano-live-temp">--°C</span>
+                                </div>
+                                <div id="lignano-cam-badge" style="background: linear-gradient(135deg, #ff3333 0%, #f355da 100%); color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 900; padding: 8px 18px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 20px rgba(255, 51, 51, 0.6);">
+                                    LIVE FOTO 1
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WEBCAM BILDER ROTATION -->
+                        <img id="lignano-live-img" src="https://www.lignanosabbiadoro.com/images/webcam3.jpg" alt="Lignano Live Webcam" style="width: 1280px; height: 815px; object-fit: cover; display: block; position: absolute; top: 0; left: 0; z-index: 2; transition: opacity 1s ease-in-out;">
+
+                        <!-- FOOTER OVERLAY -->
+                        <div style="position: absolute; bottom: 0; left: 0; width: 1280px; background: linear-gradient(0deg, rgba(7, 11, 20, 0.95) 0%, rgba(7, 11, 20, 0) 100%); padding: 22px 35px; z-index: 10; display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px;">
+                            <span id="lignano-cam-footer">🌊 Offizielle Live-Ansicht von lignanosabbiadoro.com</span>
+                            <span>City Cafe Klagenfurt Fischl</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -584,47 +616,47 @@
                     </div>
                 </div>
 
-                <!-- 2. 5MIN.AT KLAGENFURT NEWS WIDGET -->
+                <!-- 2. KLAGENFURT & REGIONAL NEWS WIDGET -->
                 <div class="rotator-view view-news-style" id="view-news-klagenfurt">
                     <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
-                            <div class="rotator-badge-3d" style="background: #E30613; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 10px; box-shadow: 0 4px 15px rgba(227, 6, 19, 0.5);">
-                                <img src="https://www.5min.at/apple-touch-icon.png" alt="5min.at" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;" onerror="this.onerror=null; this.src='https://www.5min.at/favicon.ico';">
+                            <div class="rotator-badge-3d" style="background: #00f2fe; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4); color: #020617; font-weight: 900; font-size: 20px;">
+                                📰
                             </div>
                             <div class="rotator-title">
-                                <h2 style="font-size: 27px;">5min.at Klagenfurt</h2>
-                                <p id="news-badge-counter" style="font-size: 14px;">Top-Story 1 von 3</p>
+                                <h2 style="font-size: 27px;">Klagenfurt News</h2>
+                                <p id="news-badge-counter" style="font-size: 14px;">Lade Top-Storys...</p>
                             </div>
                         </div>
 
                         <div class="news-content-block">
                             <div id="news-date" style="font-size: 16px; color: #00f2fe; font-weight: 900; text-transform: uppercase; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5);">⏱️ Vor wenigen Minuten</div>
                             <div id="news-title" style="font-size: 29px; font-weight: 900; color: #ffffff; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);">Lade Klagenfurt-News...</div>
-                            <div id="news-teaser" style="font-size: 20px; font-weight: 700; color: #f8fafc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Aktuelle Berichte aus der Landeshauptstadt werden abgerufen...</div>
+                            <div id="news-teaser" style="font-size: 20px; font-weight: 700; color: #f8fafc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Aktuelle Berichte aus der Landeshauptstadt & Region werden abgerufen...</div>
                         </div>
 
-                        <div style="background: rgba(227, 6, 19, 0.45); border: 1px solid rgba(227, 6, 19, 0.85); border-radius: 12px; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
-                            <span style="background: #E30613; color: #ffffff; font-size: 14px; font-weight: 900; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">Eilmeldung</span>
-                            <div style="font-size: 15px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">📍 Region Klagenfurt</div>
+                        <div style="background: rgba(0, 242, 254, 0.25); border: 1px solid rgba(0, 242, 254, 0.65); border-radius: 12px; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 25px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);">
+                            <span id="news-source-tag" style="background: #00f2fe; color: #020617; font-size: 14px; font-weight: 900; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; text-shadow: none;">Regional</span>
+                            <div style="font-size: 15px; color: #ffffff; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95);">📍 Klagenfurt & Kärnten</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. LIVE & KONZERTE IN DER NÄHE -->
+                <!-- 3. LIVE EVENTS & KALENDER -->
                 <div class="rotator-view view-music-style" id="view-music-tips">
                     <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
                             <div class="rotator-badge-3d">🎪</div>
                             <div class="rotator-title">
-                                <h2 id="music-artist-title" style="font-size: 27px;">Lade Event...</h2>
-                                <p style="font-size: 14px;">Live-Musik & Schmankerl</p>
+                                <h2 id="music-artist-title" style="font-size: 27px;">Live Events & Kultur</h2>
+                                <p style="font-size: 14px;">Termine, Kirchtage & Konzerte</p>
                             </div>
                         </div>
                         
                         <div class="music-content-block">
-                            <div style="font-size: 16px; color: #38bdf8; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(56,189,248,0.5);">Kärntner Highlight</div>
-                            <div id="music-artist-name-display" style="font-size: 29px; font-weight: 900; color: #ffffff; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);"></div>
-                            <div id="music-song-text" style="font-size: 20px; font-weight: 700; color: #f8fafc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Lade Titel...</div>
+                            <div style="font-size: 16px; color: #38bdf8; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(56,189,248,0.5);">Event Highlight</div>
+                            <div id="music-artist-name-display" style="font-size: 29px; font-weight: 900; color: #ffffff; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 4px 20px rgba(0,0,0,0.99), 0 0 25px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.3);">Lade Events...</div>
+                            <div id="music-song-text" style="font-size: 20px; font-weight: 700; color: #f8fafc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 0 3px 12px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.8);">Veranstaltungen aus Klagenfurt und Kärnten werden abgerufen...</div>
                             <div id="music-release-text" style="font-size: 20px; font-weight: 900; color: #00f2fe; background: rgba(0, 0, 0, 0.65); padding: 8px 14px; border-radius: 10px; border-left: 3px solid #00f2fe; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); box-shadow: 0 8px 25px rgba(0,0,0,0.6);">📅 Datum: --</div>
                         </div>
 
@@ -643,11 +675,11 @@
                 <div class="ticker-move">
                     <span class="ticker-item">✨ Willkommen im City Cafe Klagenfurt Fischl!</span>
                     <span class="ticker-separator">•</span>
-                    <span class="ticker-item">🎪 <span class="ticker-highlight-yellow">KIRCHTAG-HIGHLIGHT:</span> Freitag, 7. August 2026 ab 18:00 Uhr mit Reinisch & Hubert Dreier live und saftigen Rippalan im City Cafe!</span>
+                    <span class="ticker-item">🎪 <span class="ticker-highlight-yellow">KIRCHTAGS-HIGHLIGHT:</span> Freitag, 7. August 2026 ab 18:00 Uhr mit Reinisch & Hubert Dreier live und saftigen Rippalan im City Cafe!</span>
                     <span class="ticker-separator">•</span>
                     <span class="ticker-item">🎤 <span class="ticker-highlight-yellow">HIGHLIGHT-EVENT:</span> RIESIGER KARAOKE-ABEND im City Cafe am Samstag, 29. August 2026 ab 20:00 Uhr!</span>
                     <span class="ticker-separator">•</span>
-                    <span class="ticker-item">🏙️ <span class="ticker-highlight-yellow">EVENT-TIPP:</span> Klagenfurter Altstadtzauber vom 6. bis 8. August 2026!</span>
+                    <span class="ticker-item">🌊 <span class="ticker-highlight-yellow">LIVE WEBCAM:</span> Aktuelle Ansichten aus Lignano Sabbiadoro direkt im Café!</span>
                 </div>
             </div>
         </div>
@@ -736,7 +768,7 @@
         /* VORHANDENE PLAKATE VERWENDEN */
         const posterImages = [
             'https://raw.githubusercontent.com/motte025/City-cafe/main/0.png', 
-            'https://raw.githubusercontent.com/motte025/City-cafe/main/1.png', // Kirchtags-Plakat
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/1.png', 
             'https://raw.githubusercontent.com/motte025/City-cafe/main/3.png'
         ]; 
         let currentPosterIndex = 0, isImg1Active = true;
@@ -818,6 +850,72 @@
             } catch (error) {}
         }
 
+        /* LIGNANO MULTI-WEBCAM ROTATION (Jedes Bild läuft exakt 60 Sekunden) */
+        const lignanoWebcamFeeds = [
+            {
+                url: "https://www.lignanosabbiadoro.com/images/webcam3.jpg",
+                title: "🔴 LIVE WEBCAM • Lignano Terrazza a Mare",
+                sub: "Offizielle Strandansicht • Live-Bild",
+                footer: "🌊 Strand & Meerblick live aus Lignano Sabbiadoro"
+            },
+            {
+                url: "https://www.lignanosabbiadoro.com/images/webcam4.jpg",
+                title: "🔴 LIVE WEBCAM • Lignano Küstenpanorama",
+                sub: "Promenade & Strandabschnitt • Live-Bild",
+                footer: "🌴 Küstenlinie & Urlaubsflair in Lignano"
+            },
+            {
+                url: "https://www.lignanosabbiadoro.com/images/webcam-1.jpg",
+                title: "🔴 LIVE WEBCAM • Lignano Strand & Meer",
+                sub: "Adria Panorama • Live-Bild",
+                footer: "☀️ Adria-Strand & Wellen live aus Lignano"
+            }
+        ];
+
+        let lignanoSubIndex = 0;
+        let lignanoSubTimer = null;
+
+        function startLignanoWebcamSequence(onCompleteCallback) {
+            lignanoSubIndex = 0;
+            
+            function showNextCamImage() {
+                if (lignanoSubIndex >= lignanoWebcamFeeds.length) {
+                    if (onCompleteCallback) onCompleteCallback();
+                    return;
+                }
+
+                const camData = lignanoWebcamFeeds[lignanoSubIndex];
+                const imgElement = document.getElementById('lignano-live-img');
+                
+                if (imgElement) {
+                    imgElement.src = camData.url + "?t=" + new Date().getTime();
+                }
+                
+                document.getElementById('lignano-cam-title').textContent = camData.title;
+                document.getElementById('lignano-cam-sub').textContent = camData.sub;
+                document.getElementById('lignano-cam-footer').textContent = camData.footer;
+                document.getElementById('lignano-cam-badge').textContent = `LIVE FOTO ${lignanoSubIndex + 1}`;
+
+                lignanoSubIndex++;
+                lignanoSubTimer = setTimeout(showNextCamImage, 60000); // Exakt 60 Sekunden pro Bild
+            }
+
+            showNextCamImage();
+        }
+
+        async function fetchLignanoLiveWeather() {
+            try {
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=45.6865&longitude=13.1255&current=temperature_2m');
+                const data = await res.json();
+                const temp = Math.round(data.current.temperature_2m);
+                document.getElementById('lignano-live-temp').textContent = `${temp}°C`;
+            } catch (e) {
+                document.getElementById('lignano-live-temp').textContent = `28°C`;
+            }
+        }
+        fetchLignanoLiveWeather();
+        setInterval(fetchLignanoLiveWeather, 600000);
+
         // STEUERUNG VOLLBILD & SIDEBAR PAUSE
         let isSidebarPaused = false;
         let sidebarTimerId = null;
@@ -825,6 +923,7 @@
         function pauseSidebar() {
             isSidebarPaused = true;
             if (sidebarTimerId) clearTimeout(sidebarTimerId);
+            if (lignanoSubTimer) clearTimeout(lignanoSubTimer);
             if (galleryTimer) clearInterval(galleryTimer);
             if (newsCycleTimer) clearInterval(newsCycleTimer);
             if (musicTimer) clearInterval(musicTimer);
@@ -857,13 +956,13 @@
             document.getElementById('media-view-poster').classList.remove('active');
             document.getElementById('media-view-schlager').classList.remove('active');
             document.getElementById('media-view-football').classList.remove('active');
+            document.getElementById('media-view-webcam').classList.remove('active');
 
             if (mediaStateIndex === 0) {
-                // 1. Nächstes Plakat bestimmen
+                // 1. PLAKATE
                 currentPosterIndex = (currentPosterIndex + 1) % posterImages.length;
                 const nextSource = posterImages[currentPosterIndex] + '?v=' + Date.now();
 
-                // 2. Bild im Hintergrund vorladen
                 const imgPreloader = new Image();
                 imgPreloader.src = nextSource;
 
@@ -888,21 +987,17 @@
 
                 imgPreloader.onload = showPoster;
                 imgPreloader.onerror = showPoster;
-                
                 setTimeout(showPoster, 1500);
 
-                // 3. Timer setzen
                 if (currentPosterIndex === 1) {
-                    globalMasterTimer = setTimeout(() => {
-                        triggerKirchtagFullscreen();
-                    }, 35000);
+                    globalMasterTimer = setTimeout(() => { triggerKirchtagFullscreen(); }, 35000);
                 } else {
                     mediaStateIndex = 1; 
                     globalMasterTimer = setTimeout(runMasterSequence, 35000); 
                 }
 
             } else if (mediaStateIndex === 1) {
-                // JUKEBOX-HITS
+                // 2. JUKEBOX-HITS
                 document.getElementById('media-view-schlager').classList.add('active');
                 activeMusicBatch = generateGuaranteedBatch(); 
                 currentMusicSubIndex = 0; 
@@ -918,12 +1013,20 @@
                 mediaStateIndex = 2; 
                 globalMasterTimer = setTimeout(runMasterSequence, 54000); 
 
-            } else {
-                // BUNDESLIGA TICKER
+            } else if (mediaStateIndex === 2) {
+                // 3. BUNDESLIGA TICKER
                 document.getElementById('media-view-football').classList.add('active');
                 fetchLiveBundesligaData();
-                mediaStateIndex = 0; 
+                mediaStateIndex = 3; 
                 globalMasterTimer = setTimeout(runMasterSequence, 25000); 
+
+            } else {
+                // 4. LIGNANO WEBCAM WIDGET (Läuft 3 Bilder à 60 Sek. = 180 Sek. Gesamt)
+                document.getElementById('media-view-webcam').classList.add('active');
+                startLignanoWebcamSequence(() => {
+                    mediaStateIndex = 0; 
+                    runMasterSequence();
+                });
             }
         }
         setTimeout(() => { runMasterSequence(); }, 35000);
@@ -935,48 +1038,149 @@
         }
         setInterval(fetchLiveWeather, 600000); fetchLiveWeather();
 
+        /* MULTI-FEED NEWS ENGINE */
         let klagenfurtNewsData = [], newsCycleTimer = null;
-        async function fetch5minNews() {
-            const klagenfurtRssUrl = 'https://www.5min.at/feed/rss_klagenfurt/';
-            const proxies = ['https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(klagenfurtRssUrl), 'https://api.allorigins.win/raw?url=' + encodeURIComponent(klagenfurtRssUrl)];
-            for (let proxyUrl of proxies) {
-                try {
-                    const response = await fetch(proxyUrl); if (!response.ok) continue;
-                    const textData = await response.text(); const xmlDoc = new DOMParser().parseFromString(textData, "text/xml"); const items = xmlDoc.querySelectorAll("item");
-                    if (items && items.length > 0) {
-                        let fetched = [];
-                        items.forEach((item) => {
-                            if (fetched.length >= 3) return;
-                            let title = item.querySelector("title")?.textContent || ""; let description = item.querySelector("description")?.textContent || ""; let pubDate = item.querySelector("pubDate")?.textContent || "";
-                            let cleanTeaser = description.replace(/<[^>]*>?/gm, '').trim(); let cleanTitle = title.replace(/<[^>]*>?/gm, '').trim();
-                            let parsedDate = new Date(pubDate);
-                            let timeStr = (!isNaN(parsedDate)) ? parsedDate.toLocaleTimeString('de-AT', {hour: '2-digit', minute:'2-digit'}) + ' Uhr' : 'Vor wenigen Min.';
-                            if (cleanTitle) fetched.push({ title: cleanTitle, teaser: cleanTeaser, date: timeStr });
-                        });
-                        if (fetched.length > 0) { klagenfurtNewsData = fetched; break; }
-                    }
-                } catch (e) {}
+        async function fetchRegionalNews() {
+            const rssSources = [
+                { name: '5min.at', url: 'https://www.5min.at/feed/rss_klagenfurt/' },
+                { name: 'MeinBezirk', url: 'https://www.meinbezirk.at/klagenfurt/rss' }
+            ];
+
+            let combinedArticles = [];
+
+            for (let source of rssSources) {
+                const proxies = [
+                    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(source.url),
+                    'https://api.allorigins.win/raw?url=' + encodeURIComponent(source.url)
+                ];
+
+                for (let proxyUrl of proxies) {
+                    try {
+                        const response = await fetch(proxyUrl);
+                        if (!response.ok) continue;
+                        const textData = await response.text();
+                        const xmlDoc = new DOMParser().parseFromString(textData, "text/xml");
+                        const items = xmlDoc.querySelectorAll("item");
+
+                        if (items && items.length > 0) {
+                            items.forEach((item, index) => {
+                                if (index >= 5) return;
+                                let title = item.querySelector("title")?.textContent || "";
+                                let description = item.querySelector("description")?.textContent || "";
+                                let pubDate = item.querySelector("pubDate")?.textContent || "";
+                                
+                                let cleanTeaser = description.replace(/<[^>]*>?/gm, '').trim();
+                                let cleanTitle = title.replace(/<[^>]*>?/gm, '').trim();
+                                let parsedDate = new Date(pubDate);
+                                let timeStr = (!isNaN(parsedDate)) ? parsedDate.toLocaleTimeString('de-AT', {hour: '2-digit', minute:'2-digit'}) + ' Uhr' : 'Vor wenigen Min.';
+
+                                if (cleanTitle) {
+                                    combinedArticles.push({
+                                        source: source.name,
+                                        title: cleanTitle,
+                                        teaser: cleanTeaser,
+                                        date: timeStr
+                                    });
+                                }
+                            });
+                            break;
+                        }
+                    } catch (e) {}
+                }
+            }
+
+            if (combinedArticles.length > 0) {
+                klagenfurtNewsData = combinedArticles.slice(0, 10);
             }
         }
-        fetch5minNews(); setInterval(fetch5minNews, 10 * 60 * 1000); 
+        fetchRegionalNews(); 
+        setInterval(fetchRegionalNews, 10 * 60 * 1000); 
 
         function renderNewsItem(index) {
             if (!klagenfurtNewsData || klagenfurtNewsData.length === 0) return;
-            const data = klagenfurtNewsData[index] || klagenfurtNewsData[0];
-            document.getElementById('news-title').textContent = data.title; document.getElementById('news-teaser').textContent = data.teaser;
-            document.getElementById('news-date').textContent = "⏱️ " + data.date; document.getElementById('news-badge-counter').textContent = `Top-Story ${index + 1} von 3`;
+            const data = klagenfurtNewsData[index % klagenfurtNewsData.length];
+            document.getElementById('news-title').textContent = data.title;
+            document.getElementById('news-teaser').textContent = data.teaser;
+            document.getElementById('news-date').textContent = "⏱️ " + data.date;
+            document.getElementById('news-source-tag').textContent = data.source || "Regional";
+            document.getElementById('news-badge-counter').textContent = `Top-Story ${(index % klagenfurtNewsData.length) + 1} von ${klagenfurtNewsData.length}`;
         }
 
-        const musicTipsData = [
-            { artist: "Kirchtag im City Cafe", song: "Feiern Sie mit uns den großen Kirchtag! Live auf der Bühne sorgen Reinisch & Hubert Dreier für erstklassige musikalische Unterhaltung und saftige Rippalan.", release: "Freitag, 7. August 2026 • ab 18:00 Uhr", event: "City Cafe Klagenfurt Fischl" },
-            { artist: "Villacher Kirchtag", song: "Österreichs größtes Brauchtumsfest lockt wieder mit Tradition, Tracht, Gemütlichkeit und tausenden Besuchern nach Kärnten!", release: "Ende Juli / Anfang August 2026", event: "Kärntner Brauchtumshighlight" },
-            { artist: "Riesiger Karaoke-Abend", song: "Der ultimative Monatsabschluss für alle Gesangstalente und Musikfans! Beweisen Sie Ihr Können am Mikrofon im City Cafe.", release: "Samstag, 29. August 2026 • ab 20:00 Uhr", event: "City Cafe Klagenfurt Fischl" }
+        /* LIVE-EVENT-IMPORT ÜBER FEEDS + FIXPUNKTE */
+        let dynamicEventsData = [];
+        const baselineEvents = [
+            { artist: "Kirchtag im City Cafe", song: "Reinisch & Hubert Dreier live auf der Bühne mit saftigen Rippalan im City Cafe Klagenfurt Fischl!", release: "Freitag, 07. August 2026 • ab 18:00 Uhr", event: "City Cafe Klagenfurt Fischl" },
+            { artist: "Riesiger Karaoke-Abend", song: "Der ultimative Karaoke-Abend am letzten Samstag im Monat! Zeigen Sie Ihr Talent am Mikrofon.", release: "Samstag, 29. August 2026 • ab 20:00 Uhr", event: "City Cafe Klagenfurt Fischl" },
+            { artist: "Klagenfurter Altstadtzauber", song: "Großes Straßenkunst- & Live-Musik Festival in den Gassen der Klagenfurter Innenstadt.", release: "Donnerstag, 06.08. – Samstag, 08.08.2026", event: "Innenstadt Klagenfurt" },
+            { artist: "Villacher Kirchtag", song: "Österreichs größtes Brauchtums- & Volksfest mit Trachtengruppen und Tanzelmusik.", release: "Sonntag, 02.08. – Sonntag, 09.08.2026", event: "Stadtzentrum Villach" }
         ];
+
+        async function fetchRegionalEvents() {
+            const eventFeedUrl = 'https://www.meinbezirk.at/klagenfurt/c-freizeit/rss';
+            const proxies = [
+                'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(eventFeedUrl),
+                'https://api.allorigins.win/raw?url=' + encodeURIComponent(eventFeedUrl)
+            ];
+
+            let fetchedEvents = [];
+
+            for (let proxyUrl of proxies) {
+                try {
+                    const response = await fetch(proxyUrl);
+                    if (!response.ok) continue;
+                    const textData = await response.text();
+                    const xmlDoc = new DOMParser().parseFromString(textData, "text/xml");
+                    const items = xmlDoc.querySelectorAll("item");
+
+                    if (items && items.length > 0) {
+                        items.forEach((item, index) => {
+                            if (index >= 8) return;
+                            let title = item.querySelector("title")?.textContent || "";
+                            let description = item.querySelector("description")?.textContent || "";
+                            let pubDate = item.querySelector("pubDate")?.textContent || "";
+
+                            let cleanTitle = title.replace(/<[^>]*>?/gm, '').trim();
+                            let cleanText = description.replace(/<[^>]*>?/gm, '').trim();
+                            
+                            let parsedDate = new Date(pubDate);
+                            let formattedDate = (!isNaN(parsedDate)) 
+                                ? parsedDate.toLocaleDateString('de-AT', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' })
+                                : 'Aktuelles Event';
+
+                            if (cleanTitle) {
+                                fetchedEvents.push({
+                                    artist: cleanTitle,
+                                    song: cleanText.length > 120 ? cleanText.substring(0, 120) + "..." : cleanText,
+                                    release: `${formattedDate}`,
+                                    event: "Klagenfurt & Kärnten"
+                                });
+                            }
+                        });
+                        break;
+                    }
+                } catch (e) {}
+            }
+
+            if (fetchedEvents.length > 0) {
+                dynamicEventsData = [...baselineEvents, ...fetchedEvents];
+            } else {
+                dynamicEventsData = baselineEvents;
+            }
+        }
+        fetchRegionalEvents();
+        setInterval(fetchRegionalEvents, 10 * 60 * 1000);
+
         let musicTimer = null, currentMusicIndex = 0;
         function showRandomMusicArtist() {
-            const data = musicTipsData[currentMusicIndex]; currentMusicIndex = (currentMusicIndex + 1) % musicTipsData.length;
-            document.getElementById('music-artist-title').textContent = data.artist; document.getElementById('music-artist-name-display').textContent = data.artist;
-            document.getElementById('music-song-text').textContent = data.song; document.getElementById('music-event-text').textContent = data.event; document.getElementById('music-release-text').textContent = "📅 " + data.release;
+            const pool = (dynamicEventsData && dynamicEventsData.length > 0) ? dynamicEventsData : baselineEvents;
+            const data = pool[currentMusicIndex % pool.length]; 
+            currentMusicIndex = (currentMusicIndex + 1) % pool.length;
+
+            document.getElementById('music-artist-title').textContent = data.artist; 
+            document.getElementById('music-artist-name-display').textContent = data.artist;
+            document.getElementById('music-song-text').textContent = data.song; 
+            document.getElementById('music-event-text').textContent = data.event; 
+            document.getElementById('music-release-text').textContent = "📅 " + data.release;
         }
 
         let activeSidebarWidgetIndex = 0, visitorGalleryData = [], galleryTimer = null, isGalleryImg1Active = true, imagePlaylist = [], currentPlaylistIndex = 0;
@@ -1046,22 +1250,23 @@
                 
                 newsCycleTimer = setInterval(() => { 
                     newsSubIdx++; 
-                    if (newsSubIdx < 3) renderNewsItem(newsSubIdx); 
-                    else clearInterval(newsCycleTimer); 
-                }, 15000);
+                    renderNewsItem(newsSubIdx); 
+                }, 10000);
                 
                 activeSidebarWidgetIndex = 2; 
-                sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), 45000);
+                const newsDuration = Math.max(30000, klagenfurtNewsData.length * 10000);
+                sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), newsDuration);
 
             } else {
                 musicView.classList.add('active'); 
                 currentMusicIndex = 0; 
                 showRandomMusicArtist(); 
                 
-                musicTimer = setInterval(showRandomMusicArtist, 24000); 
+                musicTimer = setInterval(showRandomMusicArtist, 18000); 
                 
                 activeSidebarWidgetIndex = 0; 
-                sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), musicTipsData.length * 24000);
+                const poolLen = (dynamicEventsData && dynamicEventsData.length > 0) ? dynamicEventsData.length : baselineEvents.length;
+                sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), poolLen * 18000);
             }
         }
         
