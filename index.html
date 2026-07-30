@@ -42,7 +42,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: var(--text-light);
             position: relative;
-            background-color: #241914; 
+            background-color: #020617; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,10 +52,11 @@
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100dvh;
-            background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.png?v=githubFix');
-            background-size: 180px 180px; 
-            background-repeat: repeat;
-            background-position: top left;
+            /* DEIN NEUES HINTERGRUNDBILD 100.jpg */
+            background-image: url('https://raw.githubusercontent.com/motte025/City-cafe/main/100.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             z-index: -999;
             pointer-events: none;
         }
@@ -467,7 +468,7 @@
             </div>
 
             <div class="card media-zone" id="card-media">
-                <!-- Ansicht 1: Plakate -->
+                <!-- Ansicht 1: Plakate (Exakt nur vorhandene Dateien 0.png, 1.png, 3.png) -->
                 <div class="media-inner-view active" id="media-view-poster">
                     <div class="poster-container" id="poster-container">
                         <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/0.png" alt="Plakat Ebene 1">
@@ -732,7 +733,7 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // NUR EXISTIERENDE PLAKATE VORHANDEN (0.png, 1.png, 3.png)
+        /* VORHANDENE PLAKATE VERWENDEN */
         const posterImages = [
             'https://raw.githubusercontent.com/motte025/City-cafe/main/0.png', 
             'https://raw.githubusercontent.com/motte025/City-cafe/main/1.png', // Kirchtags-Plakat
@@ -845,13 +846,13 @@
             setTimeout(() => {
                 overlay.classList.remove('active');
                 resumeSidebar();
-                currentPosterIndex = 1; // Nach Kirchtag steht der Index auf 1, sodass beim nächsten Durchlauf (1+1)%3 = Index 2 (3.png) geladen wird
+                currentPosterIndex = 1;
                 mediaStateIndex = 1;
                 runMasterSequence();
             }, 60000);
         }
 
-        // MASTER ROTATION CONTROLLER (ROBUSTER PLAKAT-WECHSEL MIT VORLADEN)
+        // MASTER ROTATION CONTROLLER
         function runMasterSequence() {
             document.getElementById('media-view-poster').classList.remove('active');
             document.getElementById('media-view-schlager').classList.remove('active');
@@ -888,7 +889,6 @@
                 imgPreloader.onload = showPoster;
                 imgPreloader.onerror = showPoster;
                 
-                // Fallback nach max. 1,5s
                 setTimeout(showPoster, 1500);
 
                 // 3. Timer setzen
