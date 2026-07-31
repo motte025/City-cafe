@@ -157,21 +157,27 @@
         }
         .top-custom-widget::after { display: none !important; }
 
+        /* BEGRÜSSUNGSTITEL: AUF 37PX ANGEPASST */
         .greeting-display-title {
-            font-family: 'Orbitron', sans-serif; font-size: 38px; font-weight: 900; color: #ffffff;
-            text-shadow: 0 1px 0 #cccccc, 0 2px 0 #b3b3b3, 0 3px 0 #999999, 0 4px 0 #7f7f7f, 0 5px 12px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.4);
-            letter-spacing: 1.5px; text-transform: uppercase; width: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            font-size: 37px; 
+            font-weight: 800; 
+            color: #ffffff;
+            text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9);
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+            width: 100%;
             display: inline-block;
         }
 
         .greeting-char-particle {
             display: inline-block;
-            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease, filter 0.6s ease;
-            will-change: transform, opacity, filter;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease;
+            will-change: transform, opacity;
         }
         .greeting-char-particle.crumble {
             transform: translate(calc(var(--rand-x) * 60px), calc(var(--rand-y) * 60px)) rotate(calc(var(--rand-rot) * 120deg)) scale(0.2);
-            opacity: 0; filter: blur(6px);
+            opacity: 0;
         }
         .greeting-char-particle.assemble {
             animation: assembleParticle 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -401,11 +407,23 @@
         .gallery-event-title { font-size: 27px; font-weight: 900; color: #ffffff; display: inline-block; min-height: 38px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
 
         .view-news-style, .view-music-style { 
-            border-radius: 24px; background: radial-gradient(circle at center, rgba(3, 7, 15, 0.92) 0%, rgba(8, 16, 32, 0.75) 65%, rgba(0, 242, 254, 0.25) 100%) !important;
+            border-radius: 24px; background: radial-gradient(circle at center, rgba(3, 7, 15, 0.85) 0%, rgba(8, 16, 32, 0.65) 65%, rgba(0, 242, 254, 0.25) 100%) !important;
             backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border: 1px solid rgba(0, 242, 254, 0.55);
             box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 50px rgba(0, 0, 0, 0.8), inset 0 1px 3px rgba(255, 255, 255, 0.35);
             padding: 0 !important; overflow: hidden; position: absolute; top: 0; left: 0; width: 520px; height: 670px;
         }
+
+        /* HINTERGRUND-VIDEO FÜR INFO & EVENT WIDGET */
+        .widget-bg-video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
         .widget-inner-padded-wrapper { width: 520px; height: 670px; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 20px 26px; position: relative; z-index: 5; }
         .news-content-block, .music-content-block { display: flex; flex-direction: column; justify-content: center; gap: 10px; overflow: hidden; width: 100%; }
 
@@ -556,7 +574,7 @@
                         <div style="position: absolute; top: 20px; left: 30px; right: 30px; z-index: 10; display: flex; justify-content: space-between; align-items: center; background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0, 242, 254, 0.5); border-radius: 16px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
                             <div>
                                 <h2 id="lignano-cam-title" style="font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px;">🔴 LIVE WEBCAM • Lignano Sabbiadoro</h2>
-                                <p id="lignano-cam-sub" style="font-size: 13px; color: #00f2fe; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px;">Ansicht 1/3 • Live-Bild</p>
+                                <p id="lignano-cam-sub" style="font-size: 13px; color: #00f2fe; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px;">Ansicht 1/2 • Live-Bild</p>
                             </div>
                             
                             <!-- LIVE WETTER BADGE FÜR LIGNANO -->
@@ -616,8 +634,12 @@
                     </div>
                 </div>
 
-                <!-- 2. KLAGENFURT & REGIONAL NEWS WIDGET -->
+                <!-- 2. KLAGENFURT & REGIONAL NEWS WIDGET (MIT LOOP VIDEO HINTERGRUND 1.mp4) -->
                 <div class="rotator-view view-news-style" id="view-news-klagenfurt">
+                    <video class="widget-bg-video" autoplay loop muted playsinline>
+                        <source src="1.mp4" type="video/mp4">
+                    </video>
+
                     <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
                             <div class="rotator-badge-3d" style="background: #00f2fe; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4); color: #020617; font-weight: 900; font-size: 20px;">
@@ -642,8 +664,12 @@
                     </div>
                 </div>
 
-                <!-- 3. LIVE EVENTS & KALENDER -->
+                <!-- 3. LIVE EVENTS & KALENDER (MIT LOOP VIDEO HINTERGRUND 1.mp4) -->
                 <div class="rotator-view view-music-style" id="view-music-tips">
+                    <video class="widget-bg-video" autoplay loop muted playsinline>
+                        <source src="1.mp4" type="video/mp4">
+                    </video>
+
                     <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
                             <div class="rotator-badge-3d">🎪</div>
@@ -687,6 +713,15 @@
     </div>
 
     <script>
+        // HALBES TEMPO FÜR ALLE HINTERGRUND-VIDEOS
+        function initVideoSpeed() {
+            const bgVideos = document.querySelectorAll('.widget-bg-video');
+            bgVideos.forEach(video => {
+                video.playbackRate = 0.5; // 50% Abspielgeschwindigkeit
+            });
+        }
+        document.addEventListener('DOMContentLoaded', initVideoSpeed);
+
         function autoScaleDashboard() {
             const scaler = document.getElementById('dashboard-scaler');
             const targetWidth = 1920;
@@ -695,7 +730,10 @@
             scaler.style.transform = `scale(${scale})`;
         }
         window.addEventListener('resize', autoScaleDashboard);
-        window.addEventListener('load', autoScaleDashboard);
+        window.addEventListener('load', () => {
+            autoScaleDashboard();
+            initVideoSpeed();
+        });
         autoScaleDashboard();
 
         const BILD_WECHSEL_SEKUNDEN = 16; 
@@ -850,7 +888,7 @@
             } catch (error) {}
         }
 
-        /* LIGNANO MULTI-WEBCAM FEEDS MIT ANGEPASSTER BILD-2 BESCHREIBUNG */
+        /* LIGNANO WEBCAM FEEDS: BILD 3 ENTFERNT (NUR NOCH 2 BILDER) */
         const lignanoWebcamFeeds = [
             {
                 url: "https://www.lignanosabbiadoro.com/images/webcam3.jpg",
@@ -863,12 +901,6 @@
                 title: "🔴 Lignano Hauptplatz & Zentrum",
                 sub: "Blick auf den Hauptplatz im historischen Zentrum von Lignano Sabbiadoro",
                 footer: "🌴 Historisches Zentrum & Leben in Lignano live"
-            },
-            {
-                url: "https://www.lignanosabbiadoro.com/images/webcam-1.jpg",
-                title: "🔴 Lignano Strand & Strandbüros 4–7",
-                sub: "Sonnenschirme, 'Frecce Tricolori', 'La Sacca' & Bar 'Movil'",
-                footer: "☀️ Strand, Adria & Bar 'Movil' mit Strohschirmen live"
             }
         ];
 
@@ -934,6 +966,7 @@
             rotateSidebarWidgets();
         }
 
+        /* KIRCHTAGS-PLAKAT (1.png) EXAKT 3 MINUTEN VOLLBILD */
         function triggerKirchtagFullscreen() {
             const overlay = document.getElementById('fullscreen-overlay');
             const fsImg = document.getElementById('fullscreen-img');
@@ -948,10 +981,10 @@
                 currentPosterIndex = 1;
                 mediaStateIndex = 1;
                 runMasterSequence();
-            }, 60000);
+            }, 180000); // 3 Minuten Vollbilddauer
         }
 
-        // MASTER ROTATION CONTROLLER
+        // MASTER ROTATION CONTROLLER (KONTROLLIERTE ABLAUFREIHENFOLGE)
         function runMasterSequence() {
             document.getElementById('media-view-poster').classList.remove('active');
             document.getElementById('media-view-schlager').classList.remove('active');
@@ -1021,7 +1054,7 @@
                 globalMasterTimer = setTimeout(runMasterSequence, 25000); 
 
             } else {
-                // 4. LIGNANO WEBCAM WIDGET (3 Bilder à 60 Sek.)
+                // 4. LIGNANO WEBCAM WIDGET (2 Bilder à 60 Sek.)
                 document.getElementById('media-view-webcam').classList.add('active');
                 startLignanoWebcamSequence(() => {
                     mediaStateIndex = 0; 
