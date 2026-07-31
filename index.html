@@ -350,7 +350,7 @@
         .time-display { font-family: 'Orbitron', sans-serif; font-size: 52px; font-weight: 900; color: #ffffff; text-shadow: 0 1px 0 #cccccc, 0 2px 0 #b3b3b3, 0 3px 0 #999999, 0 4px 0 #7f7f7f, 0 5px 10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.4); letter-spacing: 2px; margin-bottom: 2px; }
         .date-display { font-size: 14px; font-weight: 700; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); }
 
-        /* WETTER WIDGET */
+        /* WETTER WIDGET MIT DYNAMISCHER REGEN-ANIMATION */
         .widget-weather { 
             flex: 0 0 110px !important; 
             height: 110px !important; 
@@ -367,11 +367,27 @@
         }
         .widget-weather.card::after { display: none !important; }
         .widget-weather.w-sunny { background: linear-gradient(135deg, rgba(15, 32, 66, 0.65) 0%, rgba(0, 92, 138, 0.5) 100%); }
+        .widget-weather.w-rainy { background: linear-gradient(135deg, rgba(10, 20, 35, 0.85) 0%, rgba(20, 50, 80, 0.75) 100%); }
         .weather-content-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; width: 100%; height: 100%; }
         .weather-city { font-size: 22px !important; font-weight: 800; color: var(--text-light); line-height: 1.1; }
         .weather-status { font-size: 13px !important; color: #00f2fe; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; line-height: 1.1; }
         .temp-number { font-size: 40px !important; font-weight: 800; color: var(--text-light); line-height: 1; display: flex; align-items: center; }
+        
+        /* REGEN-EFFEKT DROPS */
         .weather-effects-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        .raindrop {
+            position: absolute;
+            background: linear-gradient(transparent, rgba(0, 242, 254, 0.75));
+            width: 2px;
+            height: 16px;
+            opacity: 0.8;
+            animation: rainFall 0.6s linear infinite;
+        }
+        @keyframes rainFall {
+            0% { transform: translateY(-20px); opacity: 0; }
+            50% { opacity: 0.9; }
+            100% { transform: translateY(120px); opacity: 0; }
+        }
 
         /* WIDGET ROTATOR */
         .widget-rotator { 
@@ -614,9 +630,9 @@
                 <div class="weather-content-wrapper">
                     <div>
                         <div class="weather-city">Klagenfurt</div>
-                        <div class="weather-status">Sonnig & Klar</div>
+                        <div class="weather-status" id="weather-status-text">Lade Wetter...</div>
                     </div>
-                    <div class="temp-number">26°C</div>
+                    <div class="temp-number" id="weather-temp-text">--°C</div>
                 </div>
             </div>
 
@@ -634,10 +650,10 @@
                     </div>
                 </div>
 
-                <!-- 2. KLAGENFURT & REGIONAL NEWS WIDGET (MIT LOOP VIDEO HINTERGRUND 1.mp4) -->
+                <!-- 2. KLAGENFURT & REGIONAL NEWS WIDGET (MIT DIRECT RAW VIDEO LINK & SPEED 0.1) -->
                 <div class="rotator-view view-news-style" id="view-news-klagenfurt">
-                    <video class="widget-bg-video" autoplay loop muted playsinline>
-                        <source src="1.mp4" type="video/mp4">
+                    <video class="widget-bg-video" autoplay loop muted playsinline preload="auto">
+                        <source src="https://raw.githubusercontent.com/motte025/City-cafe/main/1.mp4" type="video/mp4">
                     </video>
 
                     <div class="widget-inner-padded-wrapper">
@@ -664,10 +680,10 @@
                     </div>
                 </div>
 
-                <!-- 3. LIVE EVENTS & KALENDER (MIT LOOP VIDEO HINTERGRUND 1.mp4) -->
+                <!-- 3. LIVE EVENTS & KALENDER (MIT DIRECT RAW VIDEO LINK & SPEED 0.1) -->
                 <div class="rotator-view view-music-style" id="view-music-tips">
-                    <video class="widget-bg-video" autoplay loop muted playsinline>
-                        <source src="1.mp4" type="video/mp4">
+                    <video class="widget-bg-video" autoplay loop muted playsinline preload="auto">
+                        <source src="https://raw.githubusercontent.com/motte025/City-cafe/main/1.mp4" type="video/mp4">
                     </video>
 
                     <div class="widget-inner-padded-wrapper">
@@ -713,14 +729,14 @@
     </div>
 
     <script>
-        // HALBES TEMPO FÜR ALLE HINTERGRUND-VIDEOS
+        // VIDEO-SPEED FORCE ON ALL BACKDROP VIDEOS (0.1 SPEED)
         function initVideoSpeed() {
             const bgVideos = document.querySelectorAll('.widget-bg-video');
             bgVideos.forEach(video => {
-                video.playbackRate = 0.5; // 50% Abspielgeschwindigkeit
+                video.playbackRate = 0.1; // 10% Geschwindigkeit (Extremes Slow-Motion)
+                video.play().catch(e => { /* Handhabung Autoplay */ });
             });
         }
-        document.addEventListener('DOMContentLoaded', initVideoSpeed);
 
         function autoScaleDashboard() {
             const scaler = document.getElementById('dashboard-scaler');
@@ -888,7 +904,7 @@
             } catch (error) {}
         }
 
-        /* LIGNANO WEBCAM FEEDS: BILD 3 ENTFERNT (NUR NOCH 2 BILDER) */
+        /* LIGNANO WEBCAM FEEDS: 2 BILDER */
         const lignanoWebcamFeeds = [
             {
                 url: "https://www.lignanosabbiadoro.com/images/webcam3.jpg",
@@ -929,7 +945,7 @@
                 document.getElementById('lignano-cam-badge').textContent = `LIVE FOTO ${lignanoSubIndex + 1}`;
 
                 lignanoSubIndex++;
-                lignanoSubTimer = setTimeout(showNextCamImage, 60000); // 60 Sekunden pro Bild
+                lignanoSubTimer = setTimeout(showNextCamImage, 60000); 
             }
 
             showNextCamImage();
@@ -981,10 +997,10 @@
                 currentPosterIndex = 1;
                 mediaStateIndex = 1;
                 runMasterSequence();
-            }, 180000); // 3 Minuten Vollbilddauer
+            }, 180000);
         }
 
-        // MASTER ROTATION CONTROLLER (KONTROLLIERTE ABLAUFREIHENFOLGE)
+        // MASTER ROTATION CONTROLLER
         function runMasterSequence() {
             document.getElementById('media-view-poster').classList.remove('active');
             document.getElementById('media-view-schlager').classList.remove('active');
@@ -1054,7 +1070,7 @@
                 globalMasterTimer = setTimeout(runMasterSequence, 25000); 
 
             } else {
-                // 4. LIGNANO WEBCAM WIDGET (2 Bilder à 60 Sek.)
+                // 4. LIGNANO WEBCAM WIDGET
                 document.getElementById('media-view-webcam').classList.add('active');
                 startLignanoWebcamSequence(() => {
                     mediaStateIndex = 0; 
@@ -1064,12 +1080,53 @@
         }
         setTimeout(() => { runMasterSequence(); }, 35000);
 
+        /* KLAGENFURT LIVE-WETTER MIT REGEN-ERKENNUNG & DYNAMISCHER REGEN-ANIMATION */
         async function fetchLiveWeather() {
-            try { const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=46.6249&longitude=14.3053&current=temperature_2m,weather_code');
-                const data = await response.json(); document.querySelector('.temp-number').textContent = `${Math.round(data.current.temperature_2m)}°C`;
-            } catch (e) {}
+            try { 
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=46.6249&longitude=14.3053&current=temperature_2m,weather_code');
+                const data = await response.json(); 
+                
+                const temp = Math.round(data.current.temperature_2m);
+                const code = data.current.weather_code;
+                
+                document.getElementById('weather-temp-text').textContent = `${temp}°C`;
+
+                const weatherWidget = document.getElementById('card-weather');
+                const statusText = document.getElementById('weather-status-text');
+                const effectsContainer = document.getElementById('weather-effects');
+
+                // Prüft Wetter-Codes für Regen/Schauer
+                const isRainy = (code >= 51 && code <= 67) || (code >= 80 && code <= 82);
+
+                effectsContainer.innerHTML = ''; // Vorherige Effekte aufräumen
+
+                if (isRainy) {
+                    weatherWidget.className = "card widget-weather w-rainy";
+                    statusText.textContent = "Regnerisch";
+
+                    // 25 Regentropfen für die Fall-Animation erzeugen
+                    for (let i = 0; i < 25; i++) {
+                        const drop = document.createElement('div');
+                        drop.className = 'raindrop';
+                        drop.style.left = `${Math.random() * 100}%`;
+                        drop.style.animationDuration = `${0.4 + Math.random() * 0.4}s`;
+                        drop.style.animationDelay = `${Math.random() * 0.8}s`;
+                        effectsContainer.appendChild(drop);
+                    }
+                } else if (code >= 1 && code <= 3) {
+                    weatherWidget.className = "card widget-weather w-sunny";
+                    statusText.textContent = "Leicht Bewölkt";
+                } else {
+                    weatherWidget.className = "card widget-weather w-sunny";
+                    statusText.textContent = "Sonnig & Klar";
+                }
+            } catch (e) {
+                document.getElementById('weather-temp-text').textContent = `26°C`;
+                document.getElementById('weather-status-text').textContent = `Sonnig & Klar`;
+            }
         }
-        setInterval(fetchLiveWeather, 600000); fetchLiveWeather();
+        setInterval(fetchLiveWeather, 300000); // Alle 5 Min aktualisieren
+        fetchLiveWeather();
 
         /* MULTI-FEED NEWS ENGINE */
         let klagenfurtNewsData = [], newsCycleTimer = null;
@@ -1137,6 +1194,7 @@
             document.getElementById('news-date').textContent = "⏱️ " + data.date;
             document.getElementById('news-source-tag').textContent = data.source || "Regional";
             document.getElementById('news-badge-counter').textContent = `Top-Story ${(index % klagenfurtNewsData.length) + 1} von ${klagenfurtNewsData.length}`;
+            initVideoSpeed(); // Stellt sicher, dass das Hintergrundvideo bei Anzeige läuft
         }
 
         /* LIVE-EVENT-IMPORT ÜBER FEEDS + FIXPUNKTE */
@@ -1214,6 +1272,7 @@
             document.getElementById('music-song-text').textContent = data.song; 
             document.getElementById('music-event-text').textContent = data.event; 
             document.getElementById('music-release-text').textContent = "📅 " + data.release;
+            initVideoSpeed(); // Stellt sicher, dass das Hintergrundvideo bei Anzeige läuft
         }
 
         let activeSidebarWidgetIndex = 0, visitorGalleryData = [], galleryTimer = null, isGalleryImg1Active = true, imagePlaylist = [], currentPlaylistIndex = 0;
