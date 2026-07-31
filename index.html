@@ -552,10 +552,10 @@
                 <div class="media-inner-view" id="media-view-webcam">
                     <div class="webcam-widget-box" style="width: 1280px; height: 815px; position: relative; background-color: #000; border-radius: 22px; overflow: hidden;">
                         
-                        <!-- HEADER OVERLAY MIT LIVE WETTER -->
+                        <!-- HEADER OVERLAY MIT LIVE WETTER & AKTUALISIERTEN BESCHREIBUNGEN -->
                         <div style="position: absolute; top: 20px; left: 30px; right: 30px; z-index: 10; display: flex; justify-content: space-between; align-items: center; background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0, 242, 254, 0.5); border-radius: 16px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
                             <div>
-                                <h2 id="lignano-cam-title" style="font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px;">🔴 LIVE WEBCAM • Lignano Sabbiadoro</h2>
+                                <h2 id="lignano-cam-title" style="font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px;">🔴 LIVE WEBCAM • Lignano Sabbiadoro</h2>
                                 <p id="lignano-cam-sub" style="font-size: 13px; color: #00f2fe; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px;">Ansicht 1/3 • Live-Bild</p>
                             </div>
                             
@@ -850,25 +850,25 @@
             } catch (error) {}
         }
 
-        /* LIGNANO MULTI-WEBCAM ROTATION (Jedes Bild läuft exakt 60 Sekunden) */
+        /* LIGNANO MULTI-WEBCAM FEEDS MIT ANGEPASSTER BILD-2 BESCHREIBUNG */
         const lignanoWebcamFeeds = [
             {
                 url: "https://www.lignanosabbiadoro.com/images/webcam3.jpg",
-                title: "🔴 LIVE WEBCAM • Lignano Terrazza a Mare",
+                title: "🔴 Lignano Strand & Terrazza a Mare",
                 sub: "Offizielle Strandansicht • Live-Bild",
                 footer: "🌊 Strand & Meerblick live aus Lignano Sabbiadoro"
             },
             {
                 url: "https://www.lignanosabbiadoro.com/images/webcam4.jpg",
-                title: "🔴 LIVE WEBCAM • Lignano Küstenpanorama",
-                sub: "Promenade & Strandabschnitt • Live-Bild",
-                footer: "🌴 Küstenlinie & Urlaubsflair in Lignano"
+                title: "🔴 Lignano Hauptplatz & Zentrum",
+                sub: "Blick auf den Hauptplatz im historischen Zentrum von Lignano Sabbiadoro",
+                footer: "🌴 Historisches Zentrum & Leben in Lignano live"
             },
             {
                 url: "https://www.lignanosabbiadoro.com/images/webcam-1.jpg",
-                title: "🔴 LIVE WEBCAM • Lignano Strand & Meer",
-                sub: "Adria Panorama • Live-Bild",
-                footer: "☀️ Adria-Strand & Wellen live aus Lignano"
+                title: "🔴 Lignano Strand & Strandbüros 4–7",
+                sub: "Sonnenschirme, 'Frecce Tricolori', 'La Sacca' & Bar 'Movil'",
+                footer: "☀️ Strand, Adria & Bar 'Movil' mit Strohschirmen live"
             }
         ];
 
@@ -897,7 +897,7 @@
                 document.getElementById('lignano-cam-badge').textContent = `LIVE FOTO ${lignanoSubIndex + 1}`;
 
                 lignanoSubIndex++;
-                lignanoSubTimer = setTimeout(showNextCamImage, 60000); // Exakt 60 Sekunden pro Bild
+                lignanoSubTimer = setTimeout(showNextCamImage, 60000); // 60 Sekunden pro Bild
             }
 
             showNextCamImage();
@@ -1021,7 +1021,7 @@
                 globalMasterTimer = setTimeout(runMasterSequence, 25000); 
 
             } else {
-                // 4. LIGNANO WEBCAM WIDGET (Läuft 3 Bilder à 60 Sek. = 180 Sek. Gesamt)
+                // 4. LIGNANO WEBCAM WIDGET (3 Bilder à 60 Sek.)
                 document.getElementById('media-view-webcam').classList.add('active');
                 startLignanoWebcamSequence(() => {
                     mediaStateIndex = 0; 
