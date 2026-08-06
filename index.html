@@ -19,7 +19,6 @@
             --card-border: rgba(255, 255, 255, 0.18);
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
-            --bundesliga-accent: #0066ff;
             --live-red: #ff3333;
         }
 
@@ -85,7 +84,7 @@
             z-index: 1;
         }
 
-        /* VOLLBILD OVERLAY FÜR KIRCHTAGS-PLAKAT (EXAKT 3 MINUTEN VOLLBILD) */
+        /* VOLLBILD OVERLAY */
         .fullscreen-overlay {
             position: absolute;
             top: 0; left: 0;
@@ -157,30 +156,18 @@
         }
         .top-custom-widget::after { display: none !important; }
 
+        /* Countdown Design: +4px (jetzt 38px) und Cyan-Design */
         .greeting-display-title {
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            font-size: 37px; 
+            font-size: 38px; 
             font-weight: 800; 
-            color: #ffffff;
-            text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9);
+            color: #00f2fe;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 16px rgba(0,242,254,0.6);
             letter-spacing: 1px; 
             text-transform: uppercase; 
             width: 100%;
             display: inline-block;
-        }
-
-        .greeting-char-particle {
-            display: inline-block;
-            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease;
-            will-change: transform, opacity;
-        }
-        .greeting-char-particle.crumble {
-            transform: translate(calc(var(--rand-x) * 60px), calc(var(--rand-y) * 60px)) rotate(calc(var(--rand-rot) * 120deg)) scale(0.2);
-            opacity: 0;
-        }
-        .greeting-char-particle.assemble {
-            animation: assembleParticle 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            animation-delay: var(--delay);
+            font-variant-numeric: tabular-nums;
         }
 
         .media-zone {
@@ -269,14 +256,6 @@
         }
         .schlager-artist-name { font-size: 58px; font-weight: 900; color: #ffffff; line-height: 1.05; text-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.85); }
         .schlager-song-title { font-size: 34px; font-weight: 800; color: #38bdf8; text-shadow: 0 3px 15px rgba(0,0,0,0.9); }
-        .schlager-bio-card {
-            background: rgba(8, 14, 28, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-left: 4px solid var(--primary-glow); border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-right: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; padding: 15px 20px; margin-top: 10px;
-            font-size: 18px; font-weight: 600; color: #f1f5f9; line-height: 1.4; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6); display: none;
-        }
         .schlager-info-box {
             display: flex; flex-direction: column; gap: 8px; text-align: right; background: transparent !important; backdrop-filter: none !important;
             border: none !important; border-radius: 0; padding: 0; font-size: 18px; font-weight: 800; color: #f8fafc; 
@@ -286,67 +265,6 @@
             display: flex; justify-content: space-between; align-items: center; background: rgba(10, 15, 30, 0.55); backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 15px 30px;
             font-size: 16px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);
-        }
-
-        /* ADMIRAL BUNDESLIGA WIDGET (6 KARTEN) */
-        .bundesliga-widget-box {
-            width: 1280px; height: 815px; position: relative; background: #070b14;
-            display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; border-radius: 22px;
-        }
-        .bundesliga-bg-img {
-            position: absolute; top: 0; left: 0; width: 1280px; height: 815px; object-fit: cover; object-position: center;
-            opacity: 0.8; z-index: 1;
-        }
-        .bundesliga-gradient-overlay {
-            position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
-            background: linear-gradient(180deg, rgba(7, 11, 20, 0.85) 0%, rgba(7, 11, 20, 0.55) 40%, rgba(7, 11, 20, 0.99) 100%);
-            z-index: 3; pointer-events: none;
-        }
-        .bundesliga-content-layer {
-            position: relative; z-index: 10; width: 1280px; height: 815px;
-            display: flex; flex-direction: column; justify-content: space-between; padding: 20px 30px;
-        }
-        .bundesliga-top-header {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 102, 255, 0.4); border-radius: 16px; padding: 12px 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-        }
-        .bundesliga-title-group h2 {
-            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
-            color: #ffffff; text-transform: uppercase; letter-spacing: 1px;
-            text-shadow: 0 0 20px rgba(0, 102, 255, 0.6);
-        }
-        .bundesliga-title-group p { font-size: 13px; color: #00f2fe; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
-        .bundesliga-badge {
-            background: linear-gradient(135deg, #0066ff 0%, #00f2fe 100%); color: #060b14; font-family: 'Orbitron', sans-serif;
-            font-size: 14px; font-weight: 900; padding: 8px 18px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 0 20px rgba(0, 102, 255, 0.5);
-        }
-        .bundesliga-matches-grid {
-            margin-top: 6px; margin-bottom: 6px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 12px; width: 100%; height: 620px;
-        }
-        .bl-match-card {
-            background: rgba(8, 14, 28, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.22); border-left: 5px solid #00f2fe;
-            border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.85); transition: transform 0.3s ease;
-        }
-        .bl-match-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-        .bl-match-teams { font-size: 19px; font-weight: 900; color: #ffffff; display: flex; justify-content: space-between; align-items: center; gap: 6px; line-height: 1.1; }
-        .bl-match-teams span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-        .bl-match-score {
-            font-family: 'Orbitron', sans-serif; font-size: 23px; font-weight: 900; color: #00f2fe;
-            background: rgba(0, 242, 254, 0.18); padding: 4px 14px; border-radius: 8px; border: 1px solid rgba(0, 242, 254, 0.5);
-            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6); flex-shrink: 0;
-        }
-        .bl-match-score.upcoming { color: #cbd5e1; background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.2); font-size: 20px; text-shadow: none; }
-        .bl-match-score.live { color: #ff3333; background: rgba(255, 51, 51, 0.2); border-color: rgba(255, 51, 51, 0.6); animation: livePulse 1.5s infinite alternate; }
-        @keyframes livePulse { 0% { box-shadow: 0 0 5px rgba(255, 51, 51, 0.4); } 100% { box-shadow: 0 0 20px rgba(255, 51, 51, 0.9); } }
-        .bundesliga-bottom-footer {
-            display: flex; justify-content: space-between; align-items: center; background: rgba(10, 15, 30, 0.75); backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 10px 25px;
-            font-size: 15px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
 
         /* RECHTE SIDEBAR */
@@ -396,29 +314,18 @@
             100% { transform: translateY(120px); opacity: 0; }
         }
 
-        /* WIDGET ROTATOR MIT NATIVE HINTERGRUND-VIDEO LAYER */
+        /* WIDGET ROTATOR */
         .widget-rotator { 
             flex: 1; padding: 0 !important; position: relative; overflow: hidden; 
-            background: #020617 !important; border: 1px solid rgba(0, 242, 254, 0.55); border-radius: 24px;
-            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9); display: flex; flex-direction: column; justify-content: space-between; height: 670px;
+            background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+            border: none !important; box-shadow: none !important; display: flex; flex-direction: column; justify-content: space-between; height: 670px;
         }
         .widget-rotator.card::after { display: none !important; }
-        
-        .widget-bg-video {
-            position: absolute;
-            top: 0; left: 0;
-            width: 520px; height: 670px;
-            object-fit: cover;
-            z-index: 1;
-            opacity: 0.45;
-            pointer-events: none;
-        }
-
         .rotator-view {
             position: absolute; top: 0; left: 0; width: 520px; height: 670px; padding: 0 !important; 
-            display: flex; flex-direction: column; justify-content: space-between; opacity: 0; pointer-events: none; transition: opacity 1.2s ease-in-out; z-index: 3;
+            display: flex; flex-direction: column; justify-content: space-between; opacity: 0; pointer-events: none; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
-        .rotator-view.active { opacity: 1; pointer-events: auto; z-index: 4; }
+        .rotator-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
         .rotator-header { 
             display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.25); padding-bottom: 12px; margin-bottom: 0px; 
@@ -429,7 +336,7 @@
         .rotator-title h2 { font-size: 27px; font-weight: 900; letter-spacing: 0.8px; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 20px rgba(0,242,254,0.3); }
         .rotator-title p { font-size: 14px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.95); }
 
-        .view-gallery-style { border-radius: 24px; overflow: hidden; width: 520px; height: 670px; background: #020617; }
+        .view-gallery-style { border-radius: 24px; overflow: hidden; width: 520px; height: 670px; }
         .gallery-image-container { width: 520px; height: 670px; position: relative; background: #020617; }
         .gallery-img { 
             position: absolute; top: 0; left: 0; width: 520px; height: 670px; object-fit: cover; opacity: 0;
@@ -441,8 +348,20 @@
         .gallery-event-title { font-size: 27px; font-weight: 900; color: #ffffff; display: inline-block; min-height: 38px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
 
         .view-news-style, .view-music-style { 
-            border-radius: 24px; background: transparent !important;
+            border-radius: 24px; background: radial-gradient(circle at center, rgba(3, 7, 15, 0.85) 0%, rgba(8, 16, 32, 0.65) 65%, rgba(0, 242, 254, 0.25) 100%) !important;
+            backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); border: 1px solid rgba(0, 242, 254, 0.55);
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 50px rgba(0, 0, 0, 0.8), inset 0 1px 3px rgba(255, 255, 255, 0.35);
             padding: 0 !important; overflow: hidden; position: absolute; top: 0; left: 0; width: 520px; height: 670px;
+        }
+
+        .widget-bg-video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.45;
+            pointer-events: none;
         }
 
         .widget-inner-padded-wrapper { width: 520px; height: 670px; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 20px 26px; position: relative; z-index: 5; }
@@ -457,7 +376,7 @@
         }
         .gallery-event-date { font-size: 18px; font-weight: 800; color: #00f2fe; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); }
 
-        /* TICKER ZONE */
+        /* TICKER ZONE MIT ERWEITERTER JUKEBOX INFO */
         .ticker-zone {
             grid-column: 1 / span 2; grid-row: 2; padding: 0; height: 80px; 
             display: flex; align-items: center; background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
@@ -493,7 +412,7 @@
 
     <div id="dashboard-scaler">
         
-        <!-- VOLLBILD OVERLAY FÜR KIRCHTAGS-PLAKAT (EXAKT 3 MINUTEN VOLLBILD) -->
+        <!-- VOLLBILD OVERLAY -->
         <div id="fullscreen-overlay" class="fullscreen-overlay">
             <img id="fullscreen-img" src="https://raw.githubusercontent.com/motte025/City-cafe/main/1.png" alt="Kirchtag Vollbild">
             <div class="fullscreen-ambient-glaze"></div>
@@ -539,7 +458,6 @@
                                     </div>
                                     <div class="schlager-artist-name" id="schlager-artist">Lade Musik...</div>
                                     <div class="schlager-song-title" id="schlager-song">"Titel..."</div>
-                                    <div id="schlager-bio" class="schlager-bio-card">...</div>
                                 </div>
                                 <div class="schlager-info-box">
                                     <div id="schlager-album">Album: Lade...</div>
@@ -555,42 +473,9 @@
                     </div>
                 </div>
 
-                <!-- Ansicht 3: ADMIRAL BUNDESLIGA WIDGET (6 KARTEN) -->
-                <div class="media-inner-view" id="media-view-football">
-                    <div class="bundesliga-widget-box">
-                        <img class="bundesliga-bg-img" src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1600&auto=format&fit=crop&q=80" alt="Stadion">
-                        <div class="bundesliga-gradient-overlay"></div>
-
-                        <div class="bundesliga-content-layer">
-                            <div class="bundesliga-top-header">
-                                <div class="bundesliga-title-group">
-                                    <h2>ADMIRAL Bundesliga • Alle 6 Spiele</h2>
-                                    <p>Live-Spieltag & Ergebnisse</p>
-                                </div>
-                                <div class="bundesliga-badge">⚽ Bundesliga Live</div>
-                            </div>
-
-                            <div class="bundesliga-matches-grid">
-                                <div class="bl-match-card"><div class="bl-match-top"><span>--.--. • --:--</span><span>LADE...</span></div><div class="bl-match-teams"><span>Team Heim</span><span class="bl-match-score upcoming">- : -</span><span>Team Gast</span></div></div>
-                                <div class="bl-match-card"><div class="bl-match-top"><span>--.--. • --:--</span><span>LADE...</span></div><div class="bl-match-teams"><span>Team Heim</span><span class="bl-match-score upcoming">- : -</span><span>Team Gast</span></div></div>
-                                <div class="bl-match-card"><div class="bl-match-top"><span>--.--. • --:--</span><span>LADE...</span></div><div class="bl-match-teams"><span>Team Heim</span><span class="bl-match-score upcoming">- : -</span><span>Team Gast</span></div></div>
-                                <div class="bl-match-card"><div class="bl-match-top"><span>--.--. • --:--</span><span>LADE...</span></div><div class="bl-match-teams"><span>Team Heim</span><span class="bl-match-score upcoming">- : -</span><span>Team Gast</span></div></div>
-                                <div class="bl-match-card"><div class="bl-match-top"><span>--.--. • --:--</span><span>LADE...</span></div><div class="bl-match-teams"><span>Team Heim</span><span class="bl-match-score upcoming">- : -</span><span>Team Gast</span></div></div>
-                                <div class="bl-match-card"><div class="bl-match-top"><span>--.--. • --:--</span><span>LADE...</span></div><div class="bl-match-teams"><span>Team Heim</span><span class="bl-match-score upcoming">- : -</span><span>Team Gast</span></div></div>
-                            </div>
-
-                            <div class="bundesliga-bottom-footer">
-                                <span>🔴⚪ Alle 6 Spiele der ADMIRAL Bundesliga</span>
-                                <span>City Cafe Klagenfurt Fischl</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ANSICHT 4: WEBCAM ROTATION LIGNANO -->
+                <!-- ANSICHT 3: MULTI-WEBCAM ROTATION LIGNANO -->
                 <div class="media-inner-view" id="media-view-webcam">
                     <div class="webcam-widget-box" style="width: 1280px; height: 815px; position: relative; background-color: #000; border-radius: 22px; overflow: hidden;">
-                        
                         <div style="position: absolute; top: 20px; left: 30px; right: 30px; z-index: 10; display: flex; justify-content: space-between; align-items: center; background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0, 242, 254, 0.5); border-radius: 16px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
                             <div>
                                 <h2 id="lignano-cam-title" style="font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px;">🔴 LIVE WEBCAM • Lignano Sabbiadoro</h2>
@@ -638,12 +523,7 @@
             </div>
 
             <div class="card widget-rotator" id="card-rotator">
-                <!-- SINGLE HINTERGRUND-VIDEO -->
-                <video class="widget-bg-video" autoplay loop muted playsinline id="global-rotator-video">
-                    <source src="https://raw.githubusercontent.com/motte025/City-cafe/main/1.mp4" type="video/mp4">
-                </video>
-
-                <!-- 1. GOOGLE DRIVE GALERIE -->
+                <!-- 1. GOOGLE DRIVE BESUCHER-GALERIE -->
                 <div class="rotator-view active view-gallery-style" id="view-event-gallery">
                     <div class="gallery-image-container">
                         <img class="gallery-img active" id="gallery-img1" src="" alt="Foto 1">
@@ -656,11 +536,17 @@
                     </div>
                 </div>
 
-                <!-- 2. KLAGENFURT NEWS -->
+                <!-- 2. KLAGENFURT & REGIONAL NEWS WIDGET -->
                 <div class="rotator-view view-news-style" id="view-news-klagenfurt">
+                    <video class="widget-bg-video" autoplay loop muted playsinline preload="auto">
+                        <source src="https://raw.githubusercontent.com/motte025/City-cafe/main/1.mp4" type="video/mp4">
+                    </video>
+
                     <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
-                            <div class="rotator-badge-3d" style="background: #00f2fe; color: #020617;">📰</div>
+                            <div class="rotator-badge-3d" style="background: #00f2fe; padding: 2px; display: flex; align-items: center; justify-content: center; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4); color: #020617; font-weight: 900; font-size: 20px;">
+                                📰
+                            </div>
                             <div class="rotator-title">
                                 <h2 style="font-size: 27px;">Klagenfurt News</h2>
                                 <p id="news-badge-counter" style="font-size: 14px;">Lade Top-Storys...</p>
@@ -680,8 +566,12 @@
                     </div>
                 </div>
 
-                <!-- 3. LIVE EVENTS -->
+                <!-- 3. LIVE EVENTS & KALENDER -->
                 <div class="rotator-view view-music-style" id="view-music-tips">
+                    <video class="widget-bg-video" autoplay loop muted playsinline preload="auto">
+                        <source src="https://raw.githubusercontent.com/motte025/City-cafe/main/1.mp4" type="video/mp4">
+                    </video>
+
                     <div class="widget-inner-padded-wrapper">
                         <div class="rotator-header">
                             <div class="rotator-badge-3d">🎪</div>
@@ -707,15 +597,18 @@
             </div>
         </div>
 
+        <!-- TICKER ZONE MIT ERWEITERTER JUKEBOX INFO -->
         <div class="card ticker-zone" id="card-ticker">
             <div class="ticker-label-left"><span>ℹ️</span> INFO</div>
             <div class="ticker-wrap">
                 <div class="ticker-move">
                     <span class="ticker-item">✨ Willkommen im City Cafe Klagenfurt Fischl!</span>
                     <span class="ticker-separator">•</span>
-                    <span class="ticker-item">🎪 <span class="ticker-highlight-yellow">KIRCHTAGS-HIGHLIGHT:</span> Freitag, 7. August 2026 ab 18:00 Uhr mit Reinisch & Hubert Dreier live und saftigen Rippalan im City Cafe!</span>
+                    <span class="ticker-item">🎪 <span class="ticker-highlight-yellow" id="ticker-kirchtag-countdown">LADE COUNTDOWN...</span></span>
                     <span class="ticker-separator">•</span>
                     <span class="ticker-item">🎤 <span class="ticker-highlight-yellow">HIGHLIGHT-EVENT:</span> RIESIGER KARAOKE-ABEND im City Cafe am Samstag, 29. August 2026 ab 20:00 Uhr!</span>
+                    <span class="ticker-separator">•</span>
+                    <span class="ticker-item">🎵 <span class="ticker-highlight-yellow">JUKEBOX-HITS:</span> Einfach Lieblingssong am Musik-Terminal im Café wünschen & mitfeiern!</span>
                     <span class="ticker-separator">•</span>
                     <span class="ticker-item">🌊 <span class="ticker-highlight-yellow">LIVE WEBCAM:</span> Aktuelle Ansichten aus Lignano Sabbiadoro direkt im Café!</span>
                 </div>
@@ -725,13 +618,21 @@
     </div>
 
     <script>
-        const rotatorVideo = document.getElementById('global-rotator-video');
-        if (rotatorVideo) {
-            rotatorVideo.addEventListener('loadedmetadata', () => {
-                rotatorVideo.playbackRate = 0.2;
+        // TEST-SCHALTER
+        const TEST_MODE = true;
+
+        function isKirchtagActiveNow() {
+            const eventDate = new Date("2026-08-07T18:00:00").getTime();
+            const now = new Date().getTime();
+            return TEST_MODE || (eventDate - now <= 0);
+        }
+
+        function initVideoSpeed() {
+            const bgVideos = document.querySelectorAll('.widget-bg-video');
+            bgVideos.forEach(video => {
+                video.playbackRate = 0.2;
+                video.play().catch(e => {});
             });
-            rotatorVideo.playbackRate = 0.2;
-            rotatorVideo.play().catch(e => {});
         }
 
         function autoScaleDashboard() {
@@ -742,18 +643,14 @@
             scaler.style.transform = `scale(${scale})`;
         }
         window.addEventListener('resize', autoScaleDashboard);
-        window.addEventListener('load', autoScaleDashboard);
+        window.addEventListener('load', () => {
+            autoScaleDashboard();
+            initVideoSpeed();
+        });
         autoScaleDashboard();
 
         const BILD_WECHSEL_SEKUNDEN = 16; 
 
-        const greetingHeadlines = [
-            "Willkommen im City Cafe Klagenfurt Fischl",
-            "Schön, dass Sie hier sind",
-            "Genießen Sie Ihre Zeit",
-            "Herzlich willkommen"
-        ];
-        
         const wunschTexte = [
             "Beste Stimmung im Cafe!",
             "Gemeinsam feiern & erleben!",
@@ -772,38 +669,14 @@
         ];
         function getRandomFallbackBackground() { return fallbackPartyBackgrounds[Math.floor(Math.random() * fallbackPartyBackgrounds.length)]; }
 
-        function setCrumblingGreeting(newText) {
+        // Glatter Textwechsel ohne Sekundenzappeln
+        let currentGreetingText = "";
+        function setStaticGreetingText(newText) {
+            if (currentGreetingText === newText) return;
+            currentGreetingText = newText;
             const container = document.getElementById('greeting-title');
-            const currentChars = container.querySelectorAll('.greeting-char-particle');
-            if (currentChars.length === 0) {
-                container.innerHTML = '';
-                newText.split('').forEach((char, idx) => {
-                    const span = document.createElement('span');
-                    span.className = 'greeting-char-particle assemble';
-                    span.textContent = char === ' ' ? '\u00A0' : char;
-                    span.style.setProperty('--rand-x', (Math.random() - 0.5).toFixed(2)); span.style.setProperty('--rand-y', (Math.random() - 0.5).toFixed(2));
-                    span.style.setProperty('--rand-rot', (Math.random() - 0.5).toFixed(2)); span.style.setProperty('--delay', (idx * 0.02) + 's');
-                    container.appendChild(span);
-                }); return;
-            }
-            currentChars.forEach(span => {
-                span.style.setProperty('--rand-x', (Math.random() - 0.5).toFixed(2)); span.style.setProperty('--rand-y', (Math.random() - 0.5).toFixed(2));
-                span.style.setProperty('--rand-rot', (Math.random() - 0.5).toFixed(2)); span.classList.add('crumble');
-            });
-            setTimeout(() => {
-                container.innerHTML = '';
-                newText.split('').forEach((char, idx) => {
-                    const span = document.createElement('span');
-                    span.className = 'greeting-char-particle assemble';
-                    span.textContent = char === ' ' ? '\u00A0' : char;
-                    span.style.setProperty('--rand-x', (Math.random() - 0.5).toFixed(2)); span.style.setProperty('--rand-y', (Math.random() - 0.5).toFixed(2));
-                    span.style.setProperty('--rand-rot', (Math.random() - 0.5).toFixed(2)); span.style.setProperty('--delay', (idx * 0.02) + 's');
-                    container.appendChild(span);
-                });
-            }, 600);
+            container.textContent = newText;
         }
-        setCrumblingGreeting(greetingHeadlines[0]);
-        setInterval(() => { setCrumblingGreeting(greetingHeadlines[Math.floor(Math.random() * greetingHeadlines.length)]); }, 30 * 1000);
 
         function updateClock() {
             const now = new Date();
@@ -819,69 +692,6 @@
         ]; 
         let currentPosterIndex = 0, isImg1Active = true;
         const img1 = document.getElementById('poster1'), img2 = document.getElementById('poster2');
-
-        // NEUE AKTUELLE BUNDESLIGA PROXY URL
-        const bundesligaProxyUrl = "https://script.google.com/macros/s/AKfycbx9zpFQLl6u8c6ZunNpupOdIUdpzxK7K7ewsHa7ZwL0ggPODZCrIHnitl4NG4_KhtXXxg/exec";
-
-        async function fetchLiveBundesligaData() {
-            try {
-                const response = await fetch(bundesligaProxyUrl, { redirect: "follow" });
-                const rawText = await response.text();
-                const data = JSON.parse(rawText);
-                
-                const matches = data.response || (Array.isArray(data) ? data : null);
-
-                if (matches && matches.length > 0) {
-                    const matchCards = document.querySelectorAll('.bundesliga-matches-grid .bl-match-card');
-                    matches.slice(0, matchCards.length).forEach((match, index) => {
-                        const card = matchCards[index]; 
-                        if (!card) return;
-
-                        const matchDate = new Date(match.fixture ? match.fixture.date : Date.now());
-                        const timeStr = matchDate.toLocaleTimeString('de-AT', { hour: '2-digit', minute:'2-digit' });
-                        const dateStr = matchDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-                        
-                        let statusText = "VORBERICHT", scoreClass = "bl-match-score upcoming";
-                        const shortStatus = match.fixture && match.fixture.status ? match.fixture.status.short : 'NS';
-
-                        if (shortStatus === 'FT') { 
-                            statusText = "ENDE"; 
-                            scoreClass = "bl-match-score"; 
-                        } else if (['1H', '2H', 'HT', 'LIVE'].includes(shortStatus)) { 
-                            statusText = "LIVE"; 
-                            scoreClass = "bl-match-score live"; 
-                        }
-                        
-                        const homeName = match.teams && match.teams.home ? match.teams.home.name : "Heim";
-                        const awayName = match.teams && match.teams.away ? match.teams.away.name : "Gast";
-                        const homeGoals = match.goals && match.goals.home !== null ? match.goals.home : '-';
-                        const awayGoals = match.goals && match.goals.away !== null ? match.goals.away : '-';
-
-                        card.querySelector('.bl-match-top span:first-child').textContent = `${dateStr} • ${timeStr} Uhr`;
-                        card.querySelector('.bl-match-top span:last-child').textContent = statusText;
-                        card.querySelector('.bl-match-teams').innerHTML = `<span>${homeName}</span> <span class="${scoreClass}">${homeGoals} : ${awayGoals}</span> <span>${awayName}</span>`;
-                    });
-                }
-            } catch (error) {
-                console.error("Bundesliga Fetch Fehler:", error);
-            }
-        }
-
-        // KORREKTE GOOGLE DRIVE WEB-APP PROXY URL
-        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbykUQiiGuExmcQnHfRpZTizrZplWK5SOf9mjS3adKBxZ1sk7ZAGLNRTSUdqXfoXFdum/exec";
-        let visitorGalleryData = [];
-
-        async function loadDriveFolderImages() { 
-            try { 
-                const response = await fetch(googleScriptUrl, { redirect: "follow" }); 
-                const data = await response.json(); 
-                if (data && Array.isArray(data) && data.length > 0) {
-                    visitorGalleryData = data; 
-                } 
-            } catch (e) {
-                console.error("Drive-Gallery-Fehler:", e);
-            } 
-        }
 
         let masterMusicPool = [];
         async function loadSongsFromGitHub() {
@@ -933,7 +743,6 @@
             document.getElementById('schlager-chart-badge').textContent = `Titel ${index + 1} von 3`;
         }
 
-        /* LIGNANO WEBCAM FEEDS */
         const lignanoWebcamFeeds = [
             {
                 url: "https://www.lignanosabbiadoro.com/images/webcam3.jpg",
@@ -956,8 +765,6 @@
             lignanoSubIndex = 0;
             
             function showNextCamImage() {
-                if (isSidebarPaused) return;
-
                 if (lignanoSubIndex >= lignanoWebcamFeeds.length) {
                     if (onCompleteCallback) onCompleteCallback();
                     return;
@@ -971,12 +778,12 @@
                 }
                 
                 document.getElementById('lignano-cam-title').textContent = camData.title;
-                document.getElementById('lignano-cam-sub').textContent = `Ansicht ${lignanoSubIndex + 1}/2 • Live-Bild`;
+                document.getElementById('lignano-cam-sub').textContent = camData.sub;
                 document.getElementById('lignano-cam-footer').textContent = camData.footer;
                 document.getElementById('lignano-cam-badge').textContent = `LIVE FOTO ${lignanoSubIndex + 1}`;
 
                 lignanoSubIndex++;
-                lignanoSubTimer = setTimeout(showNextCamImage, 60000); 
+                lignanoSubTimer = setTimeout(showNextCamImage, 30000); 
             }
 
             showNextCamImage();
@@ -995,49 +802,9 @@
         fetchLignanoLiveWeather();
         setInterval(fetchLignanoLiveWeather, 600000);
 
-        let isSidebarPaused = false;
-        let sidebarTimerId = null;
-
-        // GLOBALE PAUSE FÜR ALLE TIMER BEIM KIRCHTAGS-VOLLBILD
-        function pauseAllWidgets() {
-            isSidebarPaused = true;
-            if (sidebarTimerId) clearTimeout(sidebarTimerId);
-            if (lignanoSubTimer) clearTimeout(lignanoSubTimer);
-            if (galleryTimer) clearInterval(galleryTimer);
-            if (newsCycleTimer) clearInterval(newsCycleTimer);
-            if (musicTimer) clearInterval(musicTimer);
-            if (globalMasterTimer) clearTimeout(globalMasterTimer);
-        }
-
-        function resumeAllWidgets() {
-            isSidebarPaused = false;
-            rotateSidebarWidgets();
-        }
-
-        // TRIGGER KIRCHTAGS-VOLLBILD (EXAKT 3 MINUTEN = 180.000 ms)
-        function triggerKirchtagFullscreen() {
-            const overlay = document.getElementById('fullscreen-overlay');
-            const fsImg = document.getElementById('fullscreen-img');
-            fsImg.src = posterImages[1] + '?v=' + Date.now();
-
-            pauseAllWidgets();
-            overlay.classList.add('active');
-
-            setTimeout(() => {
-                overlay.classList.remove('active');
-                resumeAllWidgets();
-                currentPosterIndex = 1;
-                mediaStateIndex = 1;
-                runMasterSequence();
-            }, 180000); 
-        }
-
         function runMasterSequence() {
-            if (isSidebarPaused) return;
-
             document.getElementById('media-view-poster').classList.remove('active');
             document.getElementById('media-view-schlager').classList.remove('active');
-            document.getElementById('media-view-football').classList.remove('active');
             document.getElementById('media-view-webcam').classList.remove('active');
 
             if (mediaStateIndex === 0) {
@@ -1070,12 +837,8 @@
                 imgPreloader.onerror = showPoster;
                 setTimeout(showPoster, 1500);
 
-                if (currentPosterIndex === 1) {
-                    globalMasterTimer = setTimeout(() => { triggerKirchtagFullscreen(); }, 35000);
-                } else {
-                    mediaStateIndex = 1; 
-                    globalMasterTimer = setTimeout(runMasterSequence, 35000); 
-                }
+                mediaStateIndex = 1; 
+                globalMasterTimer = setTimeout(runMasterSequence, 35000);
 
             } else if (mediaStateIndex === 1) {
                 document.getElementById('media-view-schlager').classList.add('active');
@@ -1092,12 +855,6 @@
                 
                 mediaStateIndex = 2; 
                 globalMasterTimer = setTimeout(runMasterSequence, 54000); 
-
-            } else if (mediaStateIndex === 2) {
-                document.getElementById('media-view-football').classList.add('active');
-                fetchLiveBundesligaData(); 
-                mediaStateIndex = 3; 
-                globalMasterTimer = setTimeout(runMasterSequence, 30000); 
 
             } else {
                 document.getElementById('media-view-webcam').classList.add('active');
@@ -1219,14 +976,16 @@
             document.getElementById('news-date').textContent = "⏱️ " + data.date;
             document.getElementById('news-source-tag').textContent = data.source || "Regional";
             document.getElementById('news-badge-counter').textContent = `Top-Story ${(index % klagenfurtNewsData.length) + 1} von ${klagenfurtNewsData.length}`;
+            initVideoSpeed(); 
         }
 
         let dynamicEventsData = [];
+        // Aktualisierte Event-Liste (Abgelaufener Villacher Kirchtag entfernt)
         const baselineEvents = [
             { artist: "Kirchtag im City Cafe", song: "Reinisch & Hubert Dreier live auf der Bühne mit saftigen Rippalan im City Cafe Klagenfurt Fischl!", release: "Freitag, 07. August 2026 • ab 18:00 Uhr", event: "City Cafe Klagenfurt Fischl" },
-            { artist: "Riesiger Karaoke-Abend", song: "Der ultimative Karaoke-Abend am letzten Samstag im Monat! Zeigen Sie Ihr Talent am Mikrofon.", release: "Samstag, 29. August 2026 • ab 20:00 Uhr", event: "City Cafe Klagenfurt Fischl" },
-            { artist: "Klagenfurter Altstadtzauber", song: "Großes Straßenkunst- & Live-Musik Festival in den Gassen der Klagenfurter Innenstadt.", release: "Donnerstag, 06.08. – Samstag, 08.08.2026", event: "Innenstadt Klagenfurt" },
-            { artist: "Villacher Kirchtag", song: "Österreichs größtes Brauchtums- & Volksfest mit Trachtengruppen und Tanzelmusik.", release: "Sonntag, 02.08. – Sonntag, 09.08.2026", event: "Stadtzentrum Villach" }
+            { artist: "Riesiger Karaoke-Abend", song: "Der ultimative Karaoke-Abend im City Cafe! Zeigen Sie Ihr Talent am Mikrofon bei bester Stimmung.", release: "Samstag, 29. August 2026 • ab 20:00 Uhr", event: "City Cafe Klagenfurt Fischl" },
+            { artist: "Wörthersee Ostbucht Festival", song: "Sommerkonzerte und Open-Air Highlights direkt am Wörthersee in Klagenfurt.", release: "Mitte bis Ende August 2026", event: "Ostbucht Klagenfurt" },
+            { artist: "St. Veiter Wiesenmarkt", song: "Tradiotonsreiches Kärntner Volksfest mit großem Vergnügungspark und Festzelten.", release: "September 2026", event: "St. Veit an der Glan" }
         ];
 
         async function fetchRegionalEvents() {
@@ -1295,16 +1054,26 @@
             document.getElementById('music-song-text').textContent = data.song; 
             document.getElementById('music-event-text').textContent = data.event; 
             document.getElementById('music-release-text').textContent = "📅 " + data.release;
+            initVideoSpeed(); 
         }
 
-        let activeSidebarWidgetIndex = 0, galleryTimer = null, isGalleryImg1Active = true, imagePlaylist = [], currentPlaylistIndex = 0;
-        
+        let activeSidebarWidgetIndex = 0, visitorGalleryData = [], galleryTimer = null, isGalleryImg1Active = true, imagePlaylist = [], currentPlaylistIndex = 0;
+        let sidebarTimerId = null;
+
+        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbykUQiiGuExmcQnHfRpZTizrZplWK5SOf9mjS3adKBxZ1sk7ZAGLNRTSUdqXfoXFdum/exec";
+
+        async function loadDriveFolderImages() { 
+            try { 
+                const response = await fetch(googleScriptUrl); 
+                const data = await response.json(); 
+                if(data && data.length > 0) visitorGalleryData = data; 
+            } catch (e) {} 
+        }
+
         function shuffleArray(array) { let arr = [...array]; for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
         
-        // GALERIE SORTIERUNG: 1. Kirchtag gemischt -> 2. Rest gemischt
         function preparePlaylist() {
             if (!visitorGalleryData || visitorGalleryData.length === 0) { imagePlaylist = []; return; }
-            
             const kirchtagImages = visitorGalleryData.filter(img => img.isKirchtag || (img.badge && img.badge.toLowerCase().includes('kirchtag')));
             const normalImages = visitorGalleryData.filter(img => !img.isKirchtag && (!img.badge || !img.badge.toLowerCase().includes('kirchtag')));
             
@@ -1323,58 +1092,62 @@
         }
 
         function showNextPlaylistImage() {
-            if (isSidebarPaused) return;
             if (!imagePlaylist || imagePlaylist.length === 0) return;
-            
-            const data = imagePlaylist[currentPlaylistIndex]; 
-            currentPlaylistIndex = (currentPlaylistIndex + 1) % imagePlaylist.length;
-            
-            document.getElementById('gallery-current-badge').textContent = data.badge || "Kirchtag-Special";
-            document.getElementById('gallery-current-date').textContent = data.date || "August 2026";
-            setCrumblingTitle(wunschTexte[Math.floor(Math.random() * wunschTexte.length)]);
-            
+            const data = imagePlaylist[currentPlaylistIndex]; currentPlaylistIndex = (currentPlaylistIndex + 1) % imagePlaylist.length;
+            document.getElementById('gallery-current-badge').textContent = data.badge || "Zu Besuch"; 
+            document.getElementById('gallery-current-date').textContent = data.date || "";
+            setCrumblingTitle(data.title || wunschTexte[Math.floor(Math.random() * wunschTexte.length)]);
             const gImg1 = document.getElementById('gallery-img1'), gImg2 = document.getElementById('gallery-img2');
-            if (isGalleryImg1Active) { 
-                gImg2.src = data.src; gImg1.classList.remove('active'); gImg2.classList.add('active'); isGalleryImg1Active = false; 
-            } else { 
-                gImg1.src = data.src; gImg2.classList.remove('active'); gImg1.classList.add('active'); isGalleryImg1Active = true; 
-            }
+            if (isGalleryImg1Active) { gImg2.src = data.src; gImg1.classList.remove('active'); gImg2.classList.add('active'); isGalleryImg1Active = false; } 
+            else { gImg1.src = data.src; gImg2.classList.remove('active'); gImg1.classList.add('active'); isGalleryImg1Active = true; }
         }
 
         async function rotateSidebarWidgets() {
-            if (isSidebarPaused) return;
-
             const galleryView = document.getElementById('view-event-gallery'), 
                   newsView = document.getElementById('view-news-klagenfurt'), 
                   musicView = document.getElementById('view-music-tips');
-            
-            galleryView.classList.remove('active'); 
-            newsView.classList.remove('active'); 
-            musicView.classList.remove('active');
-            
+
             if (galleryTimer) clearInterval(galleryTimer); 
             if (newsCycleTimer) clearInterval(newsCycleTimer); 
             if (musicTimer) clearInterval(musicTimer);
+            if (sidebarTimerId) clearTimeout(sidebarTimerId);
 
-            if (activeSidebarWidgetIndex === 0) {
-                // Auf den Abruf der Google-Drive-Bilder warten
+            // KIRCHTAG / TEST-MODUS AKTIV: GALERIE
+            if (isKirchtagActiveNow()) {
+                newsView.classList.remove('active'); 
+                musicView.classList.remove('active');
+                galleryView.classList.add('active');
+
                 await loadDriveFolderImages(); 
                 preparePlaylist(); 
-                
-                if (isSidebarPaused) return;
-
                 if (imagePlaylist && imagePlaylist.length > 0) {
-                    galleryView.classList.add('active');
                     showNextPlaylistImage(); 
                     galleryTimer = setInterval(showNextPlaylistImage, BILD_WECHSEL_SEKUNDEN * 1000);
-                    
-                    const totalGalleryDuration = Math.min(imagePlaylist.length * BILD_WECHSEL_SEKUNDEN * 1000, 180000);
-                    activeSidebarWidgetIndex = 1; 
-                    sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), totalGalleryDuration); 
-                } else {
+                }
+                return;
+            }
+
+            galleryView.classList.remove('active'); 
+            newsView.classList.remove('active'); 
+            musicView.classList.remove('active');
+
+            if (activeSidebarWidgetIndex === 0) {
+                await loadDriveFolderImages(); 
+                preparePlaylist(); 
+
+                if (!imagePlaylist || imagePlaylist.length === 0) {
                     activeSidebarWidgetIndex = 1;
                     rotateSidebarWidgets();
+                    return;
                 }
+
+                galleryView.classList.add('active');
+                showNextPlaylistImage(); 
+                galleryTimer = setInterval(showNextPlaylistImage, BILD_WECHSEL_SEKUNDEN * 1000);
+                
+                const totalGalleryDuration = imagePlaylist.length * BILD_WECHSEL_SEKUNDEN * 1000;
+                activeSidebarWidgetIndex = 1; 
+                sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), totalGalleryDuration); 
 
             } else if (activeSidebarWidgetIndex === 1) {
                 newsView.classList.add('active'); 
@@ -1382,10 +1155,8 @@
                 renderNewsItem(newsSubIdx);
                 
                 newsCycleTimer = setInterval(() => { 
-                    if (!isSidebarPaused) {
-                        newsSubIdx++; 
-                        renderNewsItem(newsSubIdx); 
-                    }
+                    newsSubIdx++; 
+                    renderNewsItem(newsSubIdx); 
                 }, 10000);
                 
                 activeSidebarWidgetIndex = 2; 
@@ -1397,16 +1168,52 @@
                 currentMusicIndex = 0; 
                 showRandomMusicArtist(); 
                 
-                musicTimer = setInterval(() => {
-                    if (!isSidebarPaused) showRandomMusicArtist();
-                }, 18000); 
+                musicTimer = setInterval(showRandomMusicArtist, 18000); 
                 
                 activeSidebarWidgetIndex = 0; 
                 const poolLen = (dynamicEventsData && dynamicEventsData.length > 0) ? dynamicEventsData.length : baselineEvents.length;
                 sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), poolLen * 18000);
             }
         }
+
+        // COUNTDOWN & EVENT-STATUS LOGIK
+        function checkKirchtagStatus() {
+            const eventDate = new Date("2026-08-07T18:00:00").getTime();
+            const now = new Date().getTime();
+            const isLive = isKirchtagActiveNow();
+
+            const tickerEl = document.getElementById('ticker-kirchtag-countdown');
+
+            if (isLive) {
+                if (tickerEl) {
+                    tickerEl.style.color = "#ff3333";
+                    tickerEl.style.textShadow = "0 0 12px rgba(255, 51, 51, 0.9)";
+                    tickerEl.innerHTML = "🔥 JETZT LIVE IM CITY CAFE: KIRCHTAG MIT REINISCH & DREIER! 🍖 SAFTIGE RIPPALAN BEIM WIRT!";
+                }
+                setStaticGreetingText("🎉 WILLKOMMEN ZUM KIRCHTAG 🎉");
+            } else {
+                const diff = eventDate - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                const countdownText = `⏳ NOCH ${days}D ${hours}H ${minutes}M ${seconds}S BIS ZUM KIRCHTAG!`;
+
+                if (tickerEl) {
+                    tickerEl.style.color = "#00f2fe";
+                    tickerEl.style.textShadow = "0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5)";
+                    tickerEl.textContent = countdownText;
+                }
+                
+                // Ruhiger Countdown ohne Zappeln
+                setStaticGreetingText(countdownText);
+            }
+        }
         
+        setInterval(checkKirchtagStatus, 1000);
+        checkKirchtagStatus();
+
         rotateSidebarWidgets();
 
         const allCards = [document.getElementById('card-media'), document.getElementById('card-clock'), document.getElementById('card-weather'), document.getElementById('card-rotator'), document.getElementById('card-ticker')];
