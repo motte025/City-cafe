@@ -157,6 +157,7 @@
             will-change: transform;
         }
         .poster-image.active { opacity: 1; z-index: 2; }
+        #posterVideo { animation: none; object-fit: contain; background: #000; }
         .poster-ambient-glaze {
             position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%);
@@ -455,8 +456,9 @@
             <div class="card media-zone" id="card-media">
                 <div class="media-inner-view active" id="media-view-poster">
                     <div class="poster-container" id="poster-container">
-                        <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/0.png" alt="Plakat Ebene 1">
+                        <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_tag.png" alt="Plakat Ebene 1">
                         <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
+                        <video class="poster-image" id="posterVideo" muted playsinline preload="auto"></video>
                         <div class="poster-ambient-glaze"></div>
                     </div>
                 </div>
@@ -786,12 +788,84 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        const posterImages = [
-            'https://raw.githubusercontent.com/motte025/City-cafe/main/0.png', 
-            'https://raw.githubusercontent.com/motte025/City-cafe/main/3.png'
-        ]; 
+        // Tag/Nacht-Plakat + Übergangsvideos
+        const POSTER_TAG_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_tag.png';
+        const POSTER_NACHT_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_nacht.png';
+        const KARAOKE_POSTER_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/3.png';
+        const VIDEO_NACHT_ZU_TAG = 'https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Nacht_zu_Tag_FHD_30s.mp4';
+        const VIDEO_TAG_ZU_NACHT = 'https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Tag_zu_Nacht_FHD_30s.mp4';
+
+        const DAY_START_HOUR = 9;    // 09:00 -> Nacht-zu-Tag-Video, danach city_cafe_tag.png
+        const NIGHT_START_HOUR = 19; // 19:00 -> Tag-zu-Nacht-Video, danach city_cafe_nacht.png
+        const TRANSITION_VIDEO_MS = 30000;      // Videolänge: exakt 30s
+        const TRANSITION_LOOPS = 8;             // 8x abspielen = 4 Minuten
+        const TRANSITION_WINDOW_MS = TRANSITION_VIDEO_MS * TRANSITION_LOOPS;
+
+        // Test-Modus: URL mit ?testtransition=day oder ?testtransition=night öffnen,
+        // um die Übergänge sofort zu sehen statt bis 9:00/19:00 Uhr zu warten.
+        function getDayNightPhase() {
+            const testParam = new URLSearchParams(location.search).get('testtransition');
+            if (testParam === 'day') return { type: 'video', video: VIDEO_NACHT_ZU_TAG };
+            if (testParam === 'night') return { type: 'video', video: VIDEO_TAG_ZU_NACHT };
+
+            const now = new Date();
+            const minutesNow = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+            const dayStart = DAY_START_HOUR * 60;
+            const nightStart = NIGHT_START_HOUR * 60;
+            const windowMin = TRANSITION_WINDOW_MS / 60000;
+
+            if (minutesNow >= dayStart && minutesNow < dayStart + windowMin) {
+                return { type: 'video', video: VIDEO_NACHT_ZU_TAG };
+            }
+            if (minutesNow >= nightStart && minutesNow < nightStart + windowMin) {
+                return { type: 'video', video: VIDEO_TAG_ZU_NACHT };
+            }
+            if (minutesNow >= dayStart + windowMin && minutesNow < nightStart) {
+                return { type: 'image', image: POSTER_TAG_URL };
+            }
+            return { type: 'image', image: POSTER_NACHT_URL };
+        }
+
         let currentPosterIndex = 0, isImg1Active = true;
         const img1 = document.getElementById('poster1'), img2 = document.getElementById('poster2');
+        const posterVideoEl = document.getElementById('posterVideo');
+
+        function showPosterImage(url) {
+            posterVideoEl.pause();
+            posterVideoEl.classList.remove('active');
+            const nextSource = url + '?v=' + Date.now();
+            const imgPreloader = new Image();
+            imgPreloader.src = nextSource;
+            let isApplied = false;
+            const apply = () => {
+                if (isApplied) return;
+                isApplied = true;
+                if (isImg1Active) { img2.src = nextSource; img1.classList.remove('active'); img2.classList.add('active'); isImg1Active = false; }
+                else { img1.src = nextSource; img2.classList.remove('active'); img1.classList.add('active'); isImg1Active = true; }
+                document.getElementById('media-view-poster').classList.add('active');
+            };
+            imgPreloader.onload = apply;
+            imgPreloader.onerror = apply;
+            setTimeout(apply, 1500);
+        }
+
+        function showPosterVideo(url) {
+            img1.classList.remove('active');
+            img2.classList.remove('active');
+            posterVideoEl.src = url + '?v=' + Date.now();
+            posterVideoEl.loop = true;
+            posterVideoEl.muted = true;
+            posterVideoEl.playsInline = true;
+            posterVideoEl.classList.add('active');
+            const playPromise = posterVideoEl.play();
+            if (playPromise && playPromise.catch) playPromise.catch(() => {});
+            document.getElementById('media-view-poster').classList.add('active');
+        }
+
+        // Videos früh im Hintergrund vorladen, damit sie beim eigentlichen Übergang sofort da sind
+        setTimeout(() => {
+            [VIDEO_NACHT_ZU_TAG, VIDEO_TAG_ZU_NACHT].forEach(src => fetch(src).catch(() => {}));
+        }, 8000);
 
         let masterMusicPool = [];
         async function loadSongsFromGitHub() {
@@ -1083,23 +1157,20 @@
             document.getElementById('media-view-webcam').classList.remove('active');
 
             if (mediaStateIndex === 0) {
-                currentPosterIndex = (currentPosterIndex + 1) % posterImages.length;
-                const nextSource = posterImages[currentPosterIndex] + '?v=' + Date.now();
-                const imgPreloader = new Image();
-                imgPreloader.src = nextSource;
+                currentPosterIndex = (currentPosterIndex + 1) % 2; // 0 = Tag/Nacht-Plakat, 1 = Karaoke-Plakat
 
-                let isApplied = false;
-                const showPoster = () => {
-                    if (isApplied) return;
-                    isApplied = true;
-                    if (isImg1Active) { img2.src = nextSource; img1.classList.remove('active'); img2.classList.add('active'); isImg1Active = false; } 
-                    else { img1.src = nextSource; img2.classList.remove('active'); img1.classList.add('active'); isImg1Active = true; }
-                    document.getElementById('media-view-poster').classList.add('active');
-                };
-
-                imgPreloader.onload = showPoster;
-                imgPreloader.onerror = showPoster;
-                setTimeout(showPoster, 1500);
+                if (currentPosterIndex === 0) {
+                    const phase = getDayNightPhase();
+                    if (phase.type === 'video') {
+                        showPosterVideo(phase.video);
+                        mediaStateIndex = 1;
+                        globalMasterTimer = setTimeout(runMasterSequence, TRANSITION_WINDOW_MS + 1500);
+                        return;
+                    }
+                    showPosterImage(phase.image);
+                } else {
+                    showPosterImage(KARAOKE_POSTER_URL);
+                }
 
                 mediaStateIndex = 1; 
                 globalMasterTimer = setTimeout(runMasterSequence, 35000);
@@ -1128,6 +1199,11 @@
                 });
             }
         }
+        (function initialPoster() {
+            const phase = getDayNightPhase();
+            if (phase.type === 'video') showPosterVideo(phase.video);
+            else showPosterImage(phase.image);
+        })();
         setTimeout(() => { runMasterSequence(); }, 35000);
 
         async function fetchLiveWeather() {
