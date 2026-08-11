@@ -633,7 +633,7 @@
             </div>
         </div>
 
-        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-11 · v1.3</div>
+        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-11 · v1.5</div>
 
     </div>
 
@@ -795,35 +795,44 @@
         const VIDEO_NACHT_ZU_TAG = 'https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Nacht_zu_Tag_FHD_30s.mp4';
         const VIDEO_TAG_ZU_NACHT = 'https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Tag_zu_Nacht_FHD_30s.mp4';
 
-        const DAY_START_HOUR = 9;    // 09:00 -> Nacht-zu-Tag-Video, danach city_cafe_tag.png
-        const NIGHT_START_HOUR = 19; // 19:00 -> Tag-zu-Nacht-Video, danach city_cafe_nacht.png
-        const TRANSITION_VIDEO_MS = 30000;      // Videolänge: exakt 30s
-        const TRANSITION_LOOPS = 8;             // 8x abspielen = 4 Minuten
-        const TRANSITION_WINDOW_MS = TRANSITION_VIDEO_MS * TRANSITION_LOOPS;
+        const DAY_START_HOUR = 9;    // ab 09:00 -> Nacht-zu-Tag-Video, danach city_cafe_tag.png
+        const NIGHT_START_HOUR = 19; // ab 19:00 -> Tag-zu-Nacht-Video, danach city_cafe_nacht.png
+        const TRANSITION_LOOPS = 8;  // Video kommt 8x im normalen Rhythmus wieder, statt am Stück durchzulaufen
+
+        let videoPlaysRemaining = 0;
+        let lastBoundaryId = null;
+
+        // Eindeutige ID für den aktuell laufenden Tag/Nacht-Abschnitt (wechselt exakt um 9:00 bzw. 19:00)
+        function getCurrentBoundaryId(now) {
+            const h = now.getHours();
+            if (h >= DAY_START_HOUR && h < NIGHT_START_HOUR) {
+                return now.toISOString().slice(0, 10) + '-day-' + DAY_START_HOUR;
+            }
+            const refDate = h < DAY_START_HOUR ? new Date(now.getTime() - 24 * 3600 * 1000) : now;
+            return refDate.toISOString().slice(0, 10) + '-night-' + NIGHT_START_HOUR;
+        }
 
         // Test-Modus: URL mit ?testtransition=day oder ?testtransition=night öffnen,
-        // um die Übergänge sofort zu sehen statt bis 9:00/19:00 Uhr zu warten.
-        function getDayNightPhase() {
+        // um die Videos sofort im normalen Rhythmus zu sehen statt bis 9:00/19:00 Uhr zu warten.
+        function getDayNightPoster() {
             const testParam = new URLSearchParams(location.search).get('testtransition');
             if (testParam === 'day') return { type: 'video', video: VIDEO_NACHT_ZU_TAG };
             if (testParam === 'night') return { type: 'video', video: VIDEO_TAG_ZU_NACHT };
 
             const now = new Date();
-            const minutesNow = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
-            const dayStart = DAY_START_HOUR * 60;
-            const nightStart = NIGHT_START_HOUR * 60;
-            const windowMin = TRANSITION_WINDOW_MS / 60000;
+            const boundaryId = getCurrentBoundaryId(now);
+            const isDay = boundaryId.includes('-day-');
 
-            if (minutesNow >= dayStart && minutesNow < dayStart + windowMin) {
-                return { type: 'video', video: VIDEO_NACHT_ZU_TAG };
+            if (boundaryId !== lastBoundaryId) {
+                lastBoundaryId = boundaryId;
+                videoPlaysRemaining = TRANSITION_LOOPS;
             }
-            if (minutesNow >= nightStart && minutesNow < nightStart + windowMin) {
-                return { type: 'video', video: VIDEO_TAG_ZU_NACHT };
+
+            if (videoPlaysRemaining > 0) {
+                videoPlaysRemaining--;
+                return { type: 'video', video: isDay ? VIDEO_NACHT_ZU_TAG : VIDEO_TAG_ZU_NACHT };
             }
-            if (minutesNow >= dayStart + windowMin && minutesNow < nightStart) {
-                return { type: 'image', image: POSTER_TAG_URL };
-            }
-            return { type: 'image', image: POSTER_NACHT_URL };
+            return { type: 'image', image: isDay ? POSTER_TAG_URL : POSTER_NACHT_URL };
         }
 
         let currentPosterIndex = 0, isImg1Active = true;
@@ -849,13 +858,16 @@
             setTimeout(apply, 1500);
         }
 
+        // Video läuft nur EINMAL durch (nicht in Schleife) und setzt genau da ein,
+        // wo sonst das City-Cafe-Plakat käme - gleiche 35s-Slot-Dauer wie ein Bild.
         function showPosterVideo(url) {
             img1.classList.remove('active');
             img2.classList.remove('active');
             posterVideoEl.src = url + '?v=' + Date.now();
-            posterVideoEl.loop = true;
+            posterVideoEl.loop = false;
             posterVideoEl.muted = true;
             posterVideoEl.playsInline = true;
+            posterVideoEl.currentTime = 0;
             posterVideoEl.classList.add('active');
             const playPromise = posterVideoEl.play();
             if (playPromise && playPromise.catch) playPromise.catch(() => {});
@@ -1035,7 +1047,7 @@
             if (!qrImg) return;
             const artist = data.artist || data.interpret || "";
             const title = (data.title || data.song || "").replace(/\s*\(Mix\s*\d+\)/gi, '');
-            const searchQuery = encodeURIComponent(`${artist} ${title} karaoke`.trim());
+            const searchQuery = encodeURIComponent(`${artist} ${title}`.trim());
             const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
             qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(youtubeSearchUrl)}`;
         }
@@ -1160,14 +1172,9 @@
                 currentPosterIndex = (currentPosterIndex + 1) % 2; // 0 = Tag/Nacht-Plakat, 1 = Karaoke-Plakat
 
                 if (currentPosterIndex === 0) {
-                    const phase = getDayNightPhase();
-                    if (phase.type === 'video') {
-                        showPosterVideo(phase.video);
-                        mediaStateIndex = 1;
-                        globalMasterTimer = setTimeout(runMasterSequence, TRANSITION_WINDOW_MS + 1500);
-                        return;
-                    }
-                    showPosterImage(phase.image);
+                    const poster = getDayNightPoster();
+                    if (poster.type === 'video') showPosterVideo(poster.video);
+                    else showPosterImage(poster.image);
                 } else {
                     showPosterImage(KARAOKE_POSTER_URL);
                 }
@@ -1200,9 +1207,9 @@
             }
         }
         (function initialPoster() {
-            const phase = getDayNightPhase();
-            if (phase.type === 'video') showPosterVideo(phase.video);
-            else showPosterImage(phase.image);
+            const poster = getDayNightPoster();
+            if (poster.type === 'video') showPosterVideo(poster.video);
+            else showPosterImage(poster.image);
         })();
         setTimeout(() => { runMasterSequence(); }, 35000);
 
