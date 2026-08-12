@@ -990,7 +990,7 @@
 
         // Wächst deine Songs-Datenbank: unbekannte Last.fm-Vorschläge werden an ein Google-Sheet gemeldet
         // (Einrichtung: siehe song-collector-setup.gs) – leer lassen, um dieses Feature auszuschalten.
-        const SONG_COLLECTOR_URL = "";
+        const SONG_COLLECTOR_URL = "https://script.google.com/macros/s/AKfycbyJAuVSWj5SxBXdyHmuKEZfQDXkOx-yrHD-SVgTkxjoTAOFstqUgWhpBOF9CCPxjryT/exec";
 
         function isSongInLocalPool(artist, title) {
             if (!masterMusicPool || masterMusicPool.length === 0) return false;
@@ -999,13 +999,13 @@
             return masterMusicPool.some(s => (s.artist || '').trim().toLowerCase() === a && (s.title || '').trim().toLowerCase() === t);
         }
 
-        function reportNewSongCandidate(artist, title, foundVia) {
+        function reportNewSongCandidate(artist, title, foundVia, category, tags) {
             if (!SONG_COLLECTOR_URL) return;
             try {
                 fetch(SONG_COLLECTOR_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ artist, title, foundVia })
+                    body: JSON.stringify({ artist, title, foundVia, category, tags })
                 }).catch(() => {});
             } catch (e) {}
         }
@@ -1017,7 +1017,7 @@
             if (similar && similar.length > 0) {
                 similar.forEach(s => {
                     if (!isSongInLocalPool(s.artist, s.title)) {
-                        reportNewSongCandidate(s.artist, s.title, `${artist} – ${title}`);
+                        reportNewSongCandidate(s.artist, s.title, `${artist} – ${title}`, data.category, data.tags);
                     }
                 });
             } else {
