@@ -24278,5 +24278,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Starship",
+    "title": "We Built This City",
+    "album": "",
+    "category": "80s Pop / Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "80s",
+      "Sommer",
+      "Gute Laune"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
