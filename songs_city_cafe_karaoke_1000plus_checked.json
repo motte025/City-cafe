@@ -24298,5 +24298,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Michelle",
+    "title": "Kopfüber in die Nacht",
+    "album": "",
+    "category": "Schlager-Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Klassiker",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
