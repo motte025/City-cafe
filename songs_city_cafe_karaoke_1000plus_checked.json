@@ -21566,5 +21566,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Dead or Alive",
+    "title": "You Spin Me Round (Like a Record)",
+    "album": "",
+    "category": "Party & Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Rock",
+      "Anthem"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
