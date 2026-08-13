@@ -28292,5 +28292,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "The Strokes",
+    "title": "The Adults Are Talking",
+    "album": "",
+    "category": "Party & Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Rock",
+      "Anthem"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
