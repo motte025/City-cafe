@@ -37670,5 +37670,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Andy Borg",
+    "title": "Die Fischer Von San Juan",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Evergreen",
+      "Kult"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
