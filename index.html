@@ -506,26 +506,13 @@
             0% { opacity: 0; transform: translateX(-50%) translateY(40px); }
             100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
-        .polaroid-slot {
-            position: absolute; width: 300px; padding: 16px 16px 58px 16px;
+        .polaroid-card {
+            position: absolute; width: 250px; padding: 14px 14px 46px 14px; box-sizing: border-box;
             background: #f7f5f0; border-radius: 3px;
             box-shadow: 0 18px 40px rgba(0,0,0,0.6), 0 6px 14px rgba(0,0,0,0.4);
             opacity: 0;
-            transition: opacity 0.55s ease, transform 0.65s cubic-bezier(0.2, 1.15, 0.4, 1);
         }
-        .polaroid-slot img { width: 100%; height: 266px; object-fit: cover; display: block; background: #ccc; }
-        .polaroid-slot.landed { opacity: 1; }
-
-        .polaroid-1 { top: 34px;  left: 34px;  transform: rotate(-16deg) scale(0.5); z-index: 1; }
-        .polaroid-1.landed { transform: rotate(-9deg) scale(1); }
-        .polaroid-2 { top: 22px;  left: 756px; transform: rotate(13deg) scale(0.5);  z-index: 2; }
-        .polaroid-2.landed { transform: rotate(7deg) scale(1); }
-        .polaroid-3 { top: 246px; left: 390px; transform: rotate(-9deg) scale(0.5);  z-index: 3; }
-        .polaroid-3.landed { transform: rotate(-2deg) scale(1); }
-        .polaroid-4 { top: 372px; left: 66px;  transform: rotate(17deg) scale(0.5);  z-index: 4; }
-        .polaroid-4.landed { transform: rotate(11deg) scale(1); }
-        .polaroid-5 { top: 386px; left: 822px; transform: rotate(-14deg) scale(0.5); z-index: 5; }
-        .polaroid-5.landed { transform: rotate(-8deg) scale(1); }
+        .polaroid-card img { width: 100%; height: 222px; object-fit: cover; display: block; background: #ccc; }
 
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
@@ -639,11 +626,7 @@
 
                 <div class="media-inner-view" id="media-view-hypereel">
                     <div style="width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; background: #14101c;">
-                        <div class="polaroid-slot polaroid-1" id="polaroid-1"><img src="" alt=""></div>
-                        <div class="polaroid-slot polaroid-2" id="polaroid-2"><img src="" alt=""></div>
-                        <div class="polaroid-slot polaroid-3" id="polaroid-3"><img src="" alt=""></div>
-                        <div class="polaroid-slot polaroid-4" id="polaroid-4"><img src="" alt=""></div>
-                        <div class="polaroid-slot polaroid-5" id="polaroid-5"><img src="" alt=""></div>
+                        <div id="polaroid-container" style="position: absolute; inset: 0;"></div>
                         <div class="hype-vignette"></div>
                         <div class="hype-text-overlay" id="hype-text-overlay">🔥 HEUTE IM CITY CAFE</div>
                     </div>
@@ -779,7 +762,7 @@
             </div>
         </div>
 
-        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-13 · v3.7</div>
+        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-13 · v3.9</div>
 
     </div>
 
@@ -1663,32 +1646,80 @@
         ];
         // Fünf feste Positionen/Drehungen für den "verstreuten Polaroid-Stapel"
 
+        // Gesteuerter Zufall: Fläche in ein lockeres 5x2-Raster aufgeteilt, dann innerhalb
+        // jeder Zelle zufällig verschoben - verhindert Klumpen/leere Ecken, sieht aber
+        // trotzdem komplett zufällig aus. Reihenfolge wird zusätzlich gemischt.
+        function getJitteredGridPositions(count, canvasW, canvasH, cardW, cardH) {
+            const cols = 5, rows = 2;
+            const cellW = canvasW / cols, cellH = canvasH / rows;
+            const positions = [];
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const cellCenterX = c * cellW + cellW / 2;
+                    const cellCenterY = r * cellH + cellH / 2;
+                    const jitterX = (Math.random() - 0.5) * Math.max(0, cellW - cardW) * 0.8;
+                    const jitterY = (Math.random() - 0.5) * Math.max(0, cellH - cardH) * 0.8;
+                    positions.push({
+                        left: cellCenterX + jitterX - cardW / 2,
+                        top: cellCenterY + jitterY - cardH / 2
+                    });
+                }
+            }
+            return shuffleArray(positions).slice(0, count);
+        }
+
+        // "Tornado"-Landung: klein & wild gedreht -> wächst über die Zielgröße hinaus
+        // (Höhepunkt = 2x Endgröße) -> fällt zurück auf Endgröße mit leichter Schräglage
+        // Zwei-Phasen-Landung: 1) wächst am Widget-Zentrum auf den Höhepunkt (leicht gekippt,
+        // nicht perfekt gerade), bleibt dort 2s stehen  2) fällt/schrumpft dann auf die
+        // eigentliche (verstreute) Endposition und -größe zurück
+        function animateLanding(cardEl, centerOffset, finalRotation, onSettled) {
+            const spinDir = Math.random() < 0.5 ? -1 : 1;
+            const spinStart = spinDir * (380 + Math.random() * 260);
+            const peakTilt = Math.random() * 20 - 10; // am Höhepunkt: leicht links/rechts gekippt
+            const cx = centerOffset.x, cy = centerOffset.y;
+
+            const growAnim = cardEl.animate([
+                { transform: `translate(${cx}px, ${cy}px) scale(0.1) rotate(${spinStart}deg)`, opacity: 0, offset: 0 },
+                { transform: `translate(${cx}px, ${cy}px) scale(0.32) rotate(${spinStart * 0.5}deg)`, opacity: 1, offset: 0.22 },
+                { transform: `translate(${cx}px, ${cy}px) scale(2.4) rotate(${peakTilt}deg)`, opacity: 1, offset: 1 }
+            ], { duration: 1300, easing: 'cubic-bezier(0.22, 0.85, 0.3, 1)', fill: 'forwards' });
+
+            growAnim.onfinish = () => {
+                setTimeout(() => { // 2s Stillstand am Höhepunkt (mittig, 600px)
+                    const fallAnim = cardEl.animate([
+                        { transform: `translate(${cx}px, ${cy}px) scale(2.4) rotate(${peakTilt}deg)`, opacity: 1, offset: 0 },
+                        { transform: `translate(0px, 0px) scale(1.0) rotate(${finalRotation}deg)`, opacity: 1, offset: 1 }
+                    ], { duration: 900, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
+                    if (onSettled) fallAnim.onfinish = onSettled;
+                }, 2000);
+            };
+        }
+
         function runHypeReelState(nextStateIndex) {
             document.getElementById('media-view-hypereel').classList.add('active');
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
                 ? visitorGalleryData.map(d => d.src)
                 : [POSTER_TAG_URL, KARAOKE_POSTER_URL, POSTER_NACHT_URL];
-            const shots = shuffleArray(pool).slice(0, 5);
+            const shots = shuffleArray(pool).slice(0, Math.min(10, pool.length));
             const overlay = document.getElementById('hype-text-overlay');
             overlay.textContent = HYPE_REEL_TEXTS[Math.floor(Math.random() * HYPE_REEL_TEXTS.length)];
             retriggerAnim(overlay);
 
-            // Vom letzten Durchlauf zurücksetzen, falls weniger als 5 Fotos verfügbar waren
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById('polaroid-' + i).classList.remove('landed');
-            }
+            const container = document.getElementById('polaroid-container');
+            container.innerHTML = ''; // Stapel vom letzten Durchlauf leeren
+
+            const CARD_W = 250, CARD_H = 282, CENTER_X = 640, CENTER_Y = 407.5;
+            const positions = getJitteredGridPositions(shots.length, 1280, 815, CARD_W, CARD_H);
 
             let idx = 0;
             function landNext() {
-                if (idx >= shots.length) {
-                    // kurz den ganzen Stapel bewundern lassen, bevor's weitergeht
-                    setTimeout(() => { mediaStateIndex = nextStateIndex; runMasterSequence(); }, 2600);
-                    return;
-                }
+                if (idx >= shots.length) return;
                 const sep = shots[idx].includes('?') ? '&' : '?';
                 const src = shots[idx] + sep + 'v=' + Date.now();
-                const slot = document.getElementById('polaroid-' + (idx + 1));
-                const img = slot.querySelector('img');
+                const pos = positions[idx];
+                const zIndex = idx + 1;
+                const isLast = idx === shots.length - 1;
                 idx++;
 
                 // Bild erst vorladen, damit es nicht leer/kaputt "landet"
@@ -1698,9 +1729,28 @@
                 const apply = () => {
                     if (applied) return;
                     applied = true;
+
+                    const card = document.createElement('div');
+                    card.className = 'polaroid-card';
+                    card.style.left = pos.left + 'px';
+                    card.style.top = pos.top + 'px';
+                    card.style.zIndex = zIndex;
+                    const img = document.createElement('img');
                     img.src = src;
-                    slot.classList.add('landed');
-                    setTimeout(landNext, 2200);
+                    card.appendChild(img);
+                    container.appendChild(card);
+
+                    const finalRotation = Math.random() * 24 - 12; // leichte Schräglage, nicht perfekt gerade
+                    const centerOffset = {
+                        x: CENTER_X - (pos.left + CARD_W / 2),
+                        y: CENTER_Y - (pos.top + CARD_H / 2)
+                    };
+                    animateLanding(card, centerOffset, finalRotation, isLast ? () => {
+                        // Nach dem letzten Foto: Collage noch 5s zeigen, dann weiter
+                        setTimeout(() => { mediaStateIndex = nextStateIndex; runMasterSequence(); }, 5000);
+                    } : null);
+
+                    if (!isLast) setTimeout(landNext, 4000);
                 };
                 preloader.onload = apply;
                 preloader.onerror = apply;
