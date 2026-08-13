@@ -29728,5 +29728,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Suzi Quatro",
+    "title": "If You Can't Give Me Love - 2017 Remaster",
+    "album": "",
+    "category": "Party-Hit",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Kult",
+      "Retro"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
