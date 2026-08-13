@@ -33821,5 +33821,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Kate Ryan",
+    "title": "Je T'Adore - Eurovision Mix",
+    "album": "",
+    "category": "Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
