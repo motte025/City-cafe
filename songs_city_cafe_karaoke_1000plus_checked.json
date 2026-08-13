@@ -35655,5 +35655,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Billy Joel",
+    "title": "Just the Way You Are",
+    "album": "",
+    "category": "Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Karaoke",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
