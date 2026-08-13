@@ -29469,5 +29469,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Billy Joel",
+    "title": "We Didn't Start the Fire",
+    "album": "",
+    "category": "80s Pop / Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "80s",
+      "Sommer",
+      "Gute Laune"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
