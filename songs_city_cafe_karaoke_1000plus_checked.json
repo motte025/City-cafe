@@ -34000,5 +34000,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "No Angels",
+    "title": "Anchor Your Love",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Deutsch",
+      "Pop",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
