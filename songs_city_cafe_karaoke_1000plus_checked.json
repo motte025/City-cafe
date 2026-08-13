@@ -38686,5 +38686,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Lea",
+    "title": "Immer wenn wir uns sehn (\"Das schönste Mädchen der Welt\", Soundtrack)",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
