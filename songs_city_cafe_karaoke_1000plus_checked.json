@@ -37252,5 +37252,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Armand van Helden",
+    "title": "You Don't Know Me (Feat. Duane Harden) - Radio Edit",
+    "album": "",
+    "category": "Electro House",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Electro",
+      "House",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
