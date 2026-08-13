@@ -26475,5 +26475,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Gym Class Heroes",
+    "title": "Stereo Hearts (feat. Adam Levine)",
+    "album": "",
+    "category": "Internationale Party-Hits",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Hip-Hop",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
