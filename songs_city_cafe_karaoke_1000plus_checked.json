@@ -27334,5 +27334,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Mike Posner",
+    "title": "Cooler Than Me (Single Mix)",
+    "album": "",
+    "category": "Internationale Party-Hits",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Hip-Hop",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
