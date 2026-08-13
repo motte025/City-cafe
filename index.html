@@ -263,7 +263,7 @@
 
         .event-row {
             display: flex; align-items: center; gap: 24px;
-            background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 16px; padding: 23px 32px;
             transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s ease;
         }
@@ -625,7 +625,7 @@
                 </div>
 
                 <div class="media-inner-view" id="media-view-hypereel">
-                    <div style="width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; background: #14101c;">
+                    <div id="hypereel-card" style="width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; background: #14101c; background-size: cover; background-position: center;">
                         <div id="polaroid-container" style="position: absolute; inset: 0;"></div>
                         <div class="hype-vignette"></div>
                         <div class="hype-text-overlay" id="hype-text-overlay">🔥 HEUTE IM CITY CAFE</div>
@@ -648,7 +648,7 @@
                 </div>
 
                 <div class="media-inner-view" id="media-view-events">
-                    <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #1a0f24 0%, #0a1426 100%); border-radius: 22px; overflow: hidden; padding: 32px 40px; box-sizing: border-box;">
+                    <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #2a7a94 0%, #1c5270 100%); border-radius: 22px; overflow: hidden; padding: 32px 40px; box-sizing: border-box;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 22px;">
                             <div>
                                 <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">📅 Veranstaltungen in Kärnten</h2>
@@ -762,7 +762,7 @@
             </div>
         </div>
 
-        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-13 · v3.9</div>
+        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-13 · v4.0</div>
 
     </div>
 
@@ -1696,8 +1696,16 @@
             };
         }
 
+        const HYPEREEL_BACKGROUNDS = [
+            "https://raw.githubusercontent.com/motte025/City-cafe/main/5T1osIFW-fond-decran-Bois-37.png",
+            "https://raw.githubusercontent.com/motte025/City-cafe/main/oM4rzI1d-fond-decran-Bois-79.png"
+        ];
+        let hypeReelBgIndex = 0;
+
         function runHypeReelState(nextStateIndex) {
             document.getElementById('media-view-hypereel').classList.add('active');
+            document.getElementById('hypereel-card').style.backgroundImage = `url('${HYPEREEL_BACKGROUNDS[hypeReelBgIndex]}')`;
+            hypeReelBgIndex = (hypeReelBgIndex + 1) % HYPEREEL_BACKGROUNDS.length; // beim nächsten Mal abwechseln
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
                 ? visitorGalleryData.map(d => d.src)
                 : [POSTER_TAG_URL, KARAOKE_POSTER_URL, POSTER_NACHT_URL];
