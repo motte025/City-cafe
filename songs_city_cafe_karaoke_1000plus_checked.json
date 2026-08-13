@@ -39446,5 +39446,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Prince and the New Power Generation",
+    "title": "Gett Off",
+    "album": "",
+    "category": "Funk / Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Funk",
+      "Party",
+      "Hit"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
