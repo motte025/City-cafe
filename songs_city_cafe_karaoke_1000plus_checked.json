@@ -31445,5 +31445,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Sylvester",
+    "title": "You Make Me Feel (Mighty Real)",
+    "album": "",
+    "category": "Disco / Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Disco",
+      "Mitmach-Hit",
+      "Kult"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
