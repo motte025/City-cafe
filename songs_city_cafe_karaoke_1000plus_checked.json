@@ -27953,5 +27953,24 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Markus",
+    "title": "Ich will Spass",
+    "album": "",
+    "category": "Party-Klassiker",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "NDW",
+      "Kult"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
