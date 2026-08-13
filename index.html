@@ -109,8 +109,8 @@
         .top-custom-widget {
             width: 1280px; height: 100px;
             display: flex; align-items: center; justify-content: center; text-align: center;
-            background: rgba(24, 36, 56, 0.5) !important; backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.22); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+            background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+            border: none !important; box-shadow: none !important;
             border-radius: 24px; padding: 10px 30px; overflow: hidden; position: relative;
         }
         .top-custom-widget::after { display: none !important; }
@@ -119,8 +119,8 @@
             font-family: 'Plus Jakarta Sans', sans-serif; 
             font-size: 34px; 
             font-weight: 800; 
-            color: #00f2fe;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 16px rgba(0,242,254,0.6);
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 16px rgba(0,0,0,0.6);
             letter-spacing: 1px; 
             text-transform: uppercase; 
             width: 100%;
@@ -283,6 +283,38 @@
         .event-meta { text-align: right; flex-shrink: 0; min-width: 240px; line-height: 1.4; }
         .event-location { display: block; font-size: 17px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; }
         .event-time { display: block; font-size: 20px; font-weight: 800; color: #f355da; }
+
+        .hr-lane {
+            position: relative; height: 19%; margin-bottom: 1%;
+            background: repeating-linear-gradient(90deg, #a97c50 0px, #a97c50 60px, #9c6f45 60px, #9c6f45 120px);
+            border-top: 2px solid rgba(255,255,255,0.25); border-bottom: 2px solid rgba(0,0,0,0.2);
+            border-radius: 4px; overflow: hidden;
+        }
+        .hr-finish-line {
+            position: absolute; top: 0; right: 60px; width: 14px; height: 100%; z-index: 5;
+            background: repeating-linear-gradient(45deg, #fff 0 10px, #1a1a1a 10px 20px);
+        }
+        .hr-lane-number {
+            position: absolute; top: 50%; left: 8px; transform: translateY(-50%); z-index: 6;
+            width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.55);
+            color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 17px;
+            display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.5);
+        }
+        .hr-horse {
+            position: absolute; top: 50%; left: 46px; transform: translateY(-50%); z-index: 7;
+            font-size: 52px; line-height: 1; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+            transition: left 0.32s linear;
+        }
+        .hr-horse-bounce { animation: hrGallop 0.3s ease-in-out infinite alternate; }
+        @keyframes hrGallop { 0% { transform: translateY(-50%) rotate(-3deg); } 100% { transform: translateY(-56%) rotate(2deg); } }
+        .hr-rank-row {
+            display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 28px; width: 480px;
+        }
+        .hr-rank-row.hr-last { background: rgba(255,60,60,0.22); border-color: rgba(255,90,90,0.7); }
+        .hr-rank-place { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: #00f2fe; width: 40px; }
+        .hr-rank-row.hr-last .hr-rank-place { color: #ff5566; }
+        .hr-rank-label { flex: 1; font-size: 20px; font-weight: 800; color: #fff; }
         .schlager-similar-row {
             display: none; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; max-width: 900px;
         }
@@ -507,12 +539,20 @@
             100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         .polaroid-card {
-            position: absolute; width: 250px; padding: 14px 14px 46px 14px; box-sizing: border-box;
+            position: absolute; width: 200px; padding: 12px 12px 40px 12px; box-sizing: border-box;
             background: #f7f5f0; border-radius: 3px;
             box-shadow: 0 18px 40px rgba(0,0,0,0.6), 0 6px 14px rgba(0,0,0,0.4);
             opacity: 0;
         }
-        .polaroid-card img { width: 100%; height: 222px; object-fit: cover; display: block; background: #ccc; }
+        .polaroid-card img { width: 100%; height: 176px; object-fit: cover; display: block; background: #ccc; }
+        .polaroid-card.hr-pair-loser { box-shadow: 0 0 0 6px #ff3344, 0 18px 40px rgba(255,30,30,0.7); }
+        .hr-pair-label {
+            position: absolute; width: 72px; height: 72px; border-radius: 50%;
+            background: rgba(0,0,0,0.5); border: 3px solid rgba(255,255,255,0.55);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 32px; color: #ffffff;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+        }
 
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
@@ -626,9 +666,14 @@
 
                 <div class="media-inner-view" id="media-view-hypereel">
                     <div id="hypereel-card" style="width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; background: #14101c; background-size: cover; background-position: center;">
-                        <div id="polaroid-container" style="position: absolute; inset: 0;"></div>
+                        <div id="pair-labels-container" style="position: absolute; inset: 0; z-index: 2;"></div>
+                        <div id="polaroid-container" style="position: absolute; inset: 0; z-index: 3;"></div>
                         <div class="hype-vignette"></div>
                         <div class="hype-text-overlay" id="hype-text-overlay">🔥 HEUTE IM CITY CAFE</div>
+                        <div id="hype-countdown-overlay" style="position: absolute; top: 0; left: 0; right: 0; z-index: 15; display: none; flex-direction: column; align-items: center; padding: 20px 0 12px; background: linear-gradient(180deg, rgba(10,10,18,0.85) 0%, rgba(10,10,18,0) 100%);">
+                            <div style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 3px 10px rgba(0,0,0,0.8);">🍻 City Cafe Trinkspiel</div>
+                            <div id="hype-countdown-timer" style="font-family: 'Orbitron', sans-serif; font-size: 48px; font-weight: 900; color: #00f2fe; text-shadow: 0 0 20px rgba(0,242,254,0.6); margin-top: 2px;">60</div>
+                        </div>
                     </div>
                 </div>
 
@@ -660,6 +705,21 @@
                     </div>
                 </div>
 
+                <div class="media-inner-view" id="media-view-horserace">
+                    <div style="width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; background: linear-gradient(180deg, #7ec8e3 0%, #7ec8e3 22%, #4a8c3f 22%, #3d7534 100%);">
+                        <div style="position: absolute; top: 14px; left: 0; right: 0; text-align: center; z-index: 20;">
+                            <span style="font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.6); letter-spacing: 2px; text-transform: uppercase;">🏇 City Cafe Pferderennen</span>
+                        </div>
+                        <div id="horserace-track" style="position: absolute; top: 90px; left: 30px; right: 30px; bottom: 30px;"></div>
+                        <div id="horserace-results" style="position: absolute; inset: 0; z-index: 30; display: none; align-items: center; justify-content: center; background: rgba(10, 15, 20, 0.82);">
+                            <div style="text-align: center;">
+                                <div style="font-family: 'Orbitron', sans-serif; font-size: 34px; font-weight: 900; color: #00f2fe; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 18px;">🏁 Ergebnis</div>
+                                <div id="horserace-ranking" style="display: flex; flex-direction: column; gap: 10px; align-items: center;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -672,12 +732,16 @@
 
             <div class="card widget-weather w-sunny" id="card-weather">
                 <div class="weather-effects-container" id="weather-effects"></div>
-                <div class="weather-content-wrapper">
+                <div class="weather-content-wrapper" id="weather-normal-content">
                     <div>
                         <div class="weather-city">Klagenfurt</div>
                         <div class="weather-status" id="weather-status-text">Lade Wetter...</div>
                     </div>
                     <div class="temp-number" id="weather-temp-text">--°C</div>
+                </div>
+                <div id="weather-countdown-content" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%;">
+                    <div style="font-size: 15px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.6);">🍻 Trinkspiel startet in</div>
+                    <div id="weather-countdown-number" style="font-family: 'Orbitron', sans-serif; font-size: 64px; font-weight: 900; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.6); line-height: 1;">60</div>
                 </div>
             </div>
 
@@ -762,7 +826,7 @@
             </div>
         </div>
 
-        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-13 · v4.0</div>
+        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-13 · v4.5</div>
 
     </div>
 
@@ -1644,28 +1708,26 @@
             "🌤️ CHILLEN, PLAUDERN, GENIESSEN",
             "🕰️ IMMER EINEN BESUCH WERT"
         ];
-        // Fünf feste Positionen/Drehungen für den "verstreuten Polaroid-Stapel"
-
-        // Gesteuerter Zufall: Fläche in ein lockeres 5x2-Raster aufgeteilt, dann innerhalb
-        // jeder Zelle zufällig verschoben - verhindert Klumpen/leere Ecken, sieht aber
-        // trotzdem komplett zufällig aus. Reihenfolge wird zusätzlich gemischt.
-        function getJitteredGridPositions(count, canvasW, canvasH, cardW, cardH) {
-            const cols = 5, rows = 2;
-            const cellW = canvasW / cols, cellH = canvasH / rows;
-            const positions = [];
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    const cellCenterX = c * cellW + cellW / 2;
-                    const cellCenterY = r * cellH + cellH / 2;
-                    const jitterX = (Math.random() - 0.5) * Math.max(0, cellW - cardW) * 0.8;
-                    const jitterY = (Math.random() - 0.5) * Math.max(0, cellH - cardH) * 0.8;
-                    positions.push({
-                        left: cellCenterX + jitterX - cardW / 2,
-                        top: cellCenterY + jitterY - cardH / 2
+        // Feste Spalten-Positionen (5 Spalten x 2 Reihen = 10 Plätze) statt frei verstreut -
+        // jede Spalte ist ein "Pärchen" (oben+unten dieselbe Nummer). Leichter Jitter für
+        // den "hingeworfen"-Look, aber Spalten bleiben klar zuordenbar.
+        function getPairSlotPositions(canvasW, cardW, cardH) {
+            const cols = 5;
+            const colWidth = canvasW / cols;
+            const rowYs = [130, 460];
+            const slots = [];
+            for (let c = 0; c < cols; c++) {
+                const colCenterX = c * colWidth + colWidth / 2;
+                rowYs.forEach((rowY, rowIdx) => {
+                    slots.push({
+                        left: colCenterX - cardW / 2 + (Math.random() - 0.5) * 22,
+                        top: rowY + (Math.random() - 0.5) * 14,
+                        column: c + 1,
+                        row: rowIdx === 0 ? 'top' : 'bottom'
                     });
-                }
+                });
             }
-            return shuffleArray(positions).slice(0, count);
+            return slots;
         }
 
         // "Tornado"-Landung: klein & wild gedreht -> wächst über die Zielgröße hinaus
@@ -1686,13 +1748,13 @@
             ], { duration: 1300, easing: 'cubic-bezier(0.22, 0.85, 0.3, 1)', fill: 'forwards' });
 
             growAnim.onfinish = () => {
-                setTimeout(() => { // 2s Stillstand am Höhepunkt (mittig, 600px)
+                setTimeout(() => { // 3s Stillstand am Höhepunkt (mittig, 600px)
                     const fallAnim = cardEl.animate([
                         { transform: `translate(${cx}px, ${cy}px) scale(2.4) rotate(${peakTilt}deg)`, opacity: 1, offset: 0 },
                         { transform: `translate(0px, 0px) scale(1.0) rotate(${finalRotation}deg)`, opacity: 1, offset: 1 }
                     ], { duration: 900, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
                     if (onSettled) fallAnim.onfinish = onSettled;
-                }, 2000);
+                }, 3000);
             };
         }
 
@@ -1702,69 +1764,163 @@
         ];
         let hypeReelBgIndex = 0;
 
+        // ---------- Hype-Reel = 5-Spieler-Trinkspiel ----------
+        // 5 Spalten (Pärchen), 60s Countdown zum Nummer-Aussuchen, dann landen 10 Fotos in
+        // zufälliger Reihenfolge - wessen Spalte als letztes komplett wird, zahlt die Runde.
         function runHypeReelState(nextStateIndex) {
             document.getElementById('media-view-hypereel').classList.add('active');
             document.getElementById('hypereel-card').style.backgroundImage = `url('${HYPEREEL_BACKGROUNDS[hypeReelBgIndex]}')`;
-            hypeReelBgIndex = (hypeReelBgIndex + 1) % HYPEREEL_BACKGROUNDS.length; // beim nächsten Mal abwechseln
+            hypeReelBgIndex = (hypeReelBgIndex + 1) % HYPEREEL_BACKGROUNDS.length;
+
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
                 ? visitorGalleryData.map(d => d.src)
                 : [POSTER_TAG_URL, KARAOKE_POSTER_URL, POSTER_NACHT_URL];
-            const shots = shuffleArray(pool).slice(0, Math.min(10, pool.length));
+            // Immer genau 10 Fotos fürs Spiel - bei kleiner Galerie notfalls mit Wiederholung auffüllen
+            let shots = shuffleArray(pool);
+            while (shots.length < 10) shots = shots.concat(shuffleArray(pool));
+            shots = shots.slice(0, 10);
+
             const overlay = document.getElementById('hype-text-overlay');
             overlay.textContent = HYPE_REEL_TEXTS[Math.floor(Math.random() * HYPE_REEL_TEXTS.length)];
             retriggerAnim(overlay);
 
             const container = document.getElementById('polaroid-container');
-            container.innerHTML = ''; // Stapel vom letzten Durchlauf leeren
+            container.innerHTML = '';
+            const labelsContainer = document.getElementById('pair-labels-container');
+            labelsContainer.innerHTML = '';
 
-            const CARD_W = 250, CARD_H = 282, CENTER_X = 640, CENTER_Y = 407.5;
-            const positions = getJitteredGridPositions(shots.length, 1280, 815, CARD_W, CARD_H);
+            const CARD_W = 200, CARD_H = 228, CENTER_X = 640, CENTER_Y = 407.5;
+            const slots = getPairSlotPositions(1280, CARD_W, CARD_H);
 
-            let idx = 0;
-            function landNext() {
-                if (idx >= shots.length) return;
-                const sep = shots[idx].includes('?') ? '&' : '?';
-                const src = shots[idx] + sep + 'v=' + Date.now();
-                const pos = positions[idx];
-                const zIndex = idx + 1;
-                const isLast = idx === shots.length - 1;
-                idx++;
+            // Nummern-Labels an allen 10 Plätzen zeigen (oben+unten je Spalte dieselbe Zahl) -
+            // werden später von den landenden Fotos automatisch verdeckt
+            slots.forEach(slot => {
+                const label = document.createElement('div');
+                label.className = 'hr-pair-label';
+                label.style.left = (slot.left + CARD_W / 2 - 36) + 'px';
+                label.style.top = (slot.top + CARD_H / 2 - 36) + 'px';
+                label.textContent = slot.column;
+                labelsContainer.appendChild(label);
+            });
 
-                // Bild erst vorladen, damit es nicht leer/kaputt "landet"
-                let applied = false;
-                const preloader = new Image();
-                preloader.src = src;
-                const apply = () => {
-                    if (applied) return;
-                    applied = true;
+            // Reihenfolge, in der die 10 Plätze gefüllt werden, zufällig mischen
+            const arrivalOrder = shuffleArray([...Array(10).keys()]);
 
-                    const card = document.createElement('div');
-                    card.className = 'polaroid-card';
-                    card.style.left = pos.left + 'px';
-                    card.style.top = pos.top + 'px';
-                    card.style.zIndex = zIndex;
-                    const img = document.createElement('img');
-                    img.src = src;
-                    card.appendChild(img);
-                    container.appendChild(card);
+            function startPhotoLanding() {
+                let idx = 0;
+                function landNext() {
+                    if (idx >= 10) return;
+                    const slot = slots[arrivalOrder[idx]];
+                    const sep = shots[idx].includes('?') ? '&' : '?';
+                    const src = shots[idx] + sep + 'v=' + Date.now();
+                    const zIndex = idx + 1;
+                    const isLast = idx === 9;
+                    idx++;
 
-                    const finalRotation = Math.random() * 24 - 12; // leichte Schräglage, nicht perfekt gerade
-                    const centerOffset = {
-                        x: CENTER_X - (pos.left + CARD_W / 2),
-                        y: CENTER_Y - (pos.top + CARD_H / 2)
+                    // Bild erst vorladen, damit es nicht leer/kaputt "landet"
+                    let applied = false;
+                    const preloader = new Image();
+                    preloader.src = src;
+                    const apply = () => {
+                        if (applied) return;
+                        applied = true;
+
+                        const card = document.createElement('div');
+                        card.className = 'polaroid-card';
+                        card.dataset.column = slot.column;
+                        card.style.left = slot.left + 'px';
+                        card.style.top = slot.top + 'px';
+                        card.style.zIndex = zIndex;
+                        const img = document.createElement('img');
+                        img.src = src;
+                        card.appendChild(img);
+                        container.appendChild(card);
+
+                        const finalRotation = Math.random() * 24 - 12; // leichte Schräglage, nicht perfekt gerade
+                        const centerOffset = {
+                            x: CENTER_X - (slot.left + CARD_W / 2),
+                            y: CENTER_Y - (slot.top + CARD_H / 2)
+                        };
+                        animateLanding(card, centerOffset, finalRotation, isLast ? () => {
+                            announceLoserPair(card, nextStateIndex);
+                        } : null);
+
+                        if (!isLast) setTimeout(landNext, 5500);
                     };
-                    animateLanding(card, centerOffset, finalRotation, isLast ? () => {
-                        // Nach dem letzten Foto: Collage noch 5s zeigen, dann weiter
-                        setTimeout(() => { mediaStateIndex = nextStateIndex; runMasterSequence(); }, 5000);
-                    } : null);
-
-                    if (!isLast) setTimeout(landNext, 4000);
-                };
-                preloader.onload = apply;
-                preloader.onerror = apply;
-                setTimeout(apply, 1200); // Sicherheitsnetz, falls das Laden zu lange dauert
+                    preloader.onload = apply;
+                    preloader.onerror = apply;
+                    setTimeout(apply, 1200); // Sicherheitsnetz, falls das Laden zu lange dauert
+                }
+                landNext();
             }
-            landNext();
+
+            // 60s Countdown, danach starten die Fotos zu landen (nur lokal im Widget, die
+            // Wetter-Karte zeigt hier NICHT mehr mit - die zählt stattdessen erst ab Rundenende
+            // bis zur nächsten Runde runter, siehe announceLoserPair unten)
+            clearInterval(nextTrinkspielInterval); // falls durch Timing-Ungenauigkeit noch aktiv
+            document.getElementById('weather-countdown-content').style.display = 'none';
+            document.getElementById('weather-normal-content').style.display = 'flex';
+
+            const countdownOverlay = document.getElementById('hype-countdown-overlay');
+            const countdownTimer = document.getElementById('hype-countdown-timer');
+            countdownOverlay.style.display = 'flex';
+            countdownTimer.style.display = 'block';
+
+            let secondsLeft = 60;
+            countdownTimer.textContent = secondsLeft;
+            const countdownInterval = setInterval(() => {
+                secondsLeft--;
+                countdownTimer.textContent = secondsLeft;
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownTimer.style.display = 'none'; // Banner selbst bleibt die ganze Runde sichtbar, nur die Zahl verschwindet
+                    startPhotoLanding();
+                }
+            }, 1000);
+        }
+
+        // Restliche Zykluszeit bis das Hype-Reel/Trinkspiel wieder drankommt:
+        // Getränke(20s) + Webcam(30s) + Musik(90s) + Veranstaltungen(36s) + Plakat(35s) +
+        // Musik(90s) + Getränke(20s) = 321s. Läuft in der Wetter-Karte gegenläufig runter.
+        const NEXT_TRINKSPIEL_GAP_SECONDS = 321;
+        let nextTrinkspielInterval = null;
+
+        function announceLoserPair(lastCard, nextStateIndex) {
+            lastCard.classList.add('hr-pair-loser');
+
+            setTimeout(() => {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                startNextTrinkspielCountdown();
+            }, 12000);
+        }
+
+        function startNextTrinkspielCountdown() {
+            const weatherNormal = document.getElementById('weather-normal-content');
+            const weatherCountdown = document.getElementById('weather-countdown-content');
+            const weatherLabel = weatherCountdown.querySelector('div'); // "Trinkspiel startet in"
+            const weatherCountdownNumber = document.getElementById('weather-countdown-number');
+            if (weatherLabel) weatherLabel.textContent = '🍻 Nächstes Trinkspiel in';
+
+            weatherNormal.style.display = 'none';
+            weatherCountdown.style.display = 'flex';
+
+            let secondsLeft = NEXT_TRINKSPIEL_GAP_SECONDS;
+            const render = () => {
+                const m = Math.floor(secondsLeft / 60), s = secondsLeft % 60;
+                weatherCountdownNumber.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+            };
+            render();
+
+            nextTrinkspielInterval = setInterval(() => {
+                secondsLeft--;
+                render();
+                if (secondsLeft <= 0) {
+                    clearInterval(nextTrinkspielInterval);
+                    weatherCountdown.style.display = 'none';
+                    weatherNormal.style.display = 'flex';
+                }
+            }, 1000);
         }
 
         // ---------- Veranstaltungen in Kärnten ----------
@@ -1895,7 +2051,108 @@
             globalMasterTimer = setTimeout(runMasterSequence, MUSIC_BATCH_SIZE * 18000); 
         }
 
+        // ---------- Pferderennen (per Fernbedienung ausgelöst) ----------
+        let raceInProgress = false;
+        const HR_LANES = 5;
+        const HR_TRACK_LENGTH = 1080; // px, Innenbreite der Bahn abzüglich Pferd/Ziel
+        const HR_TICK_MS = 320;
+        const HR_JOCKEY_COLORS = ['#e63946', '#2a9d8f', '#f4a300', '#4361ee', '#9d4edd'];
+
+        function buildHorseraceTrack() {
+            const track = document.getElementById('horserace-track');
+            track.innerHTML = '';
+            for (let i = 0; i < HR_LANES; i++) {
+                const lane = document.createElement('div');
+                lane.className = 'hr-lane';
+                lane.innerHTML = `
+                    <div class="hr-finish-line"></div>
+                    <div class="hr-lane-number" style="background:${HR_JOCKEY_COLORS[i]};">${i + 1}</div>
+                    <div class="hr-horse hr-horse-bounce" id="hr-horse-${i}">🐎</div>
+                `;
+                track.appendChild(lane);
+            }
+        }
+
+        function startHorseRace() {
+            if (raceInProgress) return;
+            raceInProgress = true;
+            clearTimeout(globalMasterTimer);
+
+            document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
+            document.getElementById('media-view-horserace').classList.add('active');
+            document.getElementById('horserace-results').style.display = 'none';
+            buildHorseraceTrack();
+
+            const positions = new Array(HR_LANES).fill(0);
+            const finished = new Array(HR_LANES).fill(false);
+            const finishOrder = [];
+            let tick = 0;
+            const MAX_TICKS = 90; // Sicherheitsnetz gegen ein zu langes Rennen
+
+            const raceTimer = setInterval(() => {
+                tick++;
+                const leader = Math.max(...positions);
+
+                for (let i = 0; i < HR_LANES; i++) {
+                    if (finished[i]) continue;
+                    // Wer weit hinten liegt, bekommt etwas mehr Schwung (verhindert extrem lange Rennen)
+                    const catchUpBonus = Math.min(18, (leader - positions[i]) * 0.12);
+                    let step = 8 + Math.random() * 27 + catchUpBonus;
+                    if (Math.random() < 0.12) step += 25; // gelegentlicher Spurt
+                    if (tick > MAX_TICKS - 15) step += 20; // Sicherheitsnetz greift gegen Ende
+
+                    positions[i] = Math.min(HR_TRACK_LENGTH, positions[i] + step);
+                    document.getElementById('hr-horse-' + i).style.left = positions[i] + 'px';
+
+                    if (positions[i] >= HR_TRACK_LENGTH && !finished[i]) {
+                        finished[i] = true;
+                        finishOrder.push(i);
+                        document.getElementById('hr-horse-' + i).classList.remove('hr-horse-bounce');
+                    }
+                }
+
+                if (finishOrder.length >= HR_LANES || tick >= MAX_TICKS) {
+                    clearInterval(raceTimer);
+                    // Falls durchs Sicherheitsnetz noch nicht alle im Ziel sind: nach aktueller Position einsortieren
+                    for (let i = 0; i < HR_LANES; i++) {
+                        if (!finishOrder.includes(i)) finishOrder.push(i);
+                    }
+                    showHorseraceResults(finishOrder);
+                }
+            }, HR_TICK_MS);
+        }
+
+        function showHorseraceResults(finishOrder) {
+            const list = document.getElementById('horserace-ranking');
+            list.innerHTML = finishOrder.map((laneIdx, place) => {
+                const isLast = place === finishOrder.length - 1;
+                const placeLabel = ['🥇 1.', '🥈 2.', '🥉 3.', '4.', '5.'][place] || (place + 1) + '.';
+                const extra = isLast ? ' — zahlt die Runde! 🍻' : '';
+                return `<div class="hr-rank-row ${isLast ? 'hr-last' : ''}">
+                    <div class="hr-rank-place">${placeLabel}</div>
+                    <div class="hr-rank-label" style="color:${HR_JOCKEY_COLORS[laneIdx]};">Pferd ${laneIdx + 1}</div>
+                    <div style="font-weight:800; color:#fff;">${extra}</div>
+                </div>`;
+            }).join('');
+            document.getElementById('horserace-results').style.display = 'flex';
+
+            setTimeout(() => {
+                raceInProgress = false;
+                mediaStateIndex = 0; // sauber neu starten
+                runMasterSequence();
+            }, 9000);
+        }
+
+        // Auslösung über die Bluetooth-Fernbedienung (OK/Enter-Taste)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                startHorseRace();
+            }
+        });
+
         function runMasterSequence() {
+            if (raceInProgress) return; // Rennen läuft - normale Rotation pausiert
+
             document.getElementById('media-view-poster').classList.remove('active');
             document.getElementById('media-view-schlager').classList.remove('active');
             document.getElementById('media-view-webcam').classList.remove('active');
