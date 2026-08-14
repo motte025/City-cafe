@@ -230,8 +230,8 @@
             font-size: 15px; font-weight: 900; padding: 6px 16px; border-radius: 8px; text-transform: uppercase;
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); display: none;
         }
-        .schlager-artist-name { font-size: 58px; font-weight: 900; color: #ffffff; line-height: 1.05; text-shadow: 0 4px 20px rgba(0,0,0,0.95), 0 0 35px rgba(0,0,0,0.85); animation: textRevealSlide 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        .schlager-song-title { font-size: 34px; font-weight: 800; color: #38bdf8; text-shadow: 0 3px 15px rgba(0,0,0,0.9); animation: textRevealSlide 0.7s cubic-bezier(0.16, 1, 0.3, 1) both 0.1s; }
+        .schlager-artist-name { font-size: 58px; font-weight: 900; color: #ffffff; line-height: 1.05; text-shadow: 0 3px 6px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.9); animation: textRevealSlide 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .schlager-song-title { font-size: 34px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 5px rgba(0,0,0,0.95), 0 0 3px rgba(0,0,0,0.9); animation: textRevealSlide 0.7s cubic-bezier(0.16, 1, 0.3, 1) both 0.1s; }
 
         .football-fixture-row {
             display: flex; flex-direction: column; gap: 10px;
@@ -315,6 +315,43 @@
         .hr-rank-place { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: #00f2fe; width: 40px; }
         .hr-rank-row.hr-last .hr-rank-place { color: #ff5566; }
         .hr-rank-label { flex: 1; font-size: 20px; font-weight: 800; color: #fff; }
+
+        .wo-chip { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .wo-chip-label { font-size: 14px; color: rgba(255,255,255,0.65); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .wo-chip-value { font-size: 27px; color: #ffffff; font-weight: 900; }
+        .wo-hour-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .wo-hour-time { font-size: 17px; color: rgba(255,255,255,0.7); font-weight: 700; }
+        .wo-hour-icon { font-size: 36px; line-height: 1; }
+        .wo-hour-temp { font-size: 23px; color: #ffffff; font-weight: 800; }
+        .wo-hour-pct { font-size: 16px; color: #7dd3fc; font-weight: 800; }
+        .wo-day-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .wo-day-name { font-size: 18px; color: rgba(255,255,255,0.7); font-weight: 800; text-transform: uppercase; }
+        .wo-day-icon { font-size: 40px; line-height: 1; }
+        .wo-day-temps { font-size: 22px; color: #ffffff; font-weight: 800; }
+        .wo-day-temps span { color: rgba(255,255,255,0.55); font-weight: 700; }
+        .wo-day-pct { font-size: 16px; color: #7dd3fc; font-weight: 800; }
+        .wo-raindrop {
+            position: absolute; background: linear-gradient(transparent, rgba(200, 230, 255, 0.7));
+            width: 3px; height: 60px; opacity: 0.7; animation: woRainFall linear infinite;
+        }
+        @keyframes woRainFall {
+            0% { transform: translateY(-60px); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(830px); opacity: 0.2; }
+        }
+        .wo-snowflake {
+            position: absolute; background: rgba(255,255,255,0.9); border-radius: 50%;
+            animation: woSnowFall linear infinite;
+        }
+        @keyframes woSnowFall {
+            0% { transform: translateY(-20px) translateX(0); opacity: 0; }
+            10% { opacity: 0.9; }
+            100% { transform: translateY(830px) translateX(40px); opacity: 0.3; }
+        }
+        .wo-stormflash {
+            position: absolute; inset: 0; background: rgba(255,255,255,0.5); opacity: 0;
+            animation: stormFlash 4.5s ease-in-out infinite;
+        }
         .schlager-similar-row {
             display: none; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; max-width: 900px;
         }
@@ -390,10 +427,23 @@
         .widget-weather.w-snowy { background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(148, 163, 184, 0.35) 100%); }
         .widget-weather.w-foggy { background: linear-gradient(135deg, rgba(51, 65, 85, 0.75) 0%, rgba(100, 116, 139, 0.45) 100%); }
         .widget-weather.w-stormy { background: linear-gradient(135deg, rgba(15, 15, 30, 0.9) 0%, rgba(60, 30, 90, 0.55) 100%); }
-        .weather-content-wrapper { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; width: 100%; height: 100%; }
+        #weather-normal-content { position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; width: 100%; height: 100%; }
+        .weather-content-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; }
         .weather-city { font-size: 22px !important; font-weight: 800; color: var(--text-light); line-height: 1.1; }
         .weather-status { font-size: 13px !important; color: #00f2fe; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; line-height: 1.1; }
         .temp-number { font-size: 40px !important; font-weight: 800; color: var(--text-light); line-height: 1; display: flex; align-items: center; }
+
+        /* Kleine Sidebar-Wetterkarte bleibt kompakt - Regen/3-Tage-Details leben stattdessen
+           in der großen Wetter-Übersicht (media-view-weather-overview) */
+        .weather-hourly-row { display: none; }
+        .weather-hourly-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .weather-hourly-time { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 700; }
+        .weather-hourly-pct { font-size: 15px; color: #38bdf8; font-weight: 900; }
+        .weather-daily-row { display: none; }
+        .weather-daily-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .weather-daily-day { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 700; text-transform: uppercase; }
+        .weather-daily-icon { font-size: 18px; line-height: 1; }
+        .weather-daily-temp { font-size: 14px; color: var(--text-light); font-weight: 800; }
         
         .weather-effects-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
         .raindrop {
@@ -523,7 +573,7 @@
         .ticker-move {
             display: inline-block; white-space: nowrap; padding-left: 100%; 
             animation: tickerMove 2600s linear infinite; will-change: transform;
-            font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 31px; 
+            font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 34px; 
         }
         .ticker-item { display: inline-block; padding: 0 35px; }
         .ticker-highlight-yellow { color: #00f2fe; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5); }
@@ -546,6 +596,27 @@
         }
         .polaroid-card img { width: 100%; height: 176px; object-fit: cover; display: block; background: #ccc; }
         .polaroid-card.hr-pair-loser { box-shadow: 0 0 0 6px #ff3344, 0 18px 40px rgba(255,30,30,0.7); }
+
+        .tg-card { position: absolute; opacity: 0; }
+        .tg-card img { width: 100%; height: auto; display: block; border-radius: 9px; box-shadow: 0 12px 26px rgba(0,0,0,0.65); }
+        .tg-card.tg-winner img { box-shadow: 0 0 0 5px #2ecc71, 0 0 24px rgba(46,204,113,0.7), 0 12px 26px rgba(0,0,0,0.5); }
+        .tg-card.tg-loser img { box-shadow: 0 0 0 5px #ff3344, 0 0 24px rgba(255,51,68,0.7), 0 12px 26px rgba(0,0,0,0.5); }
+        .tg-score-chip {
+            position: absolute; transform: translateX(-50%);
+            background: rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.35); border-radius: 12px;
+            padding: 10px 20px; font-family: 'Inter', 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 26px; color: #ffffff;
+        }
+        .tg-score-chip span { color: #7dd3fc; font-size: 32px; margin-left: 10px; font-weight: 900; }
+        .tg-score-chip.tg-winner { border-color: #2ecc71; box-shadow: 0 0 18px rgba(46,204,113,0.6); }
+        .tg-score-chip.tg-winner span { color: #2ecc71; }
+        .tg-score-chip.tg-loser { border-color: #ff3344; box-shadow: 0 0 18px rgba(255,51,68,0.6); }
+        .tg-score-chip.tg-loser span { color: #ff3344; }
+        .tg-last-badge {
+            position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+            background: #f4a300; color: #1a1400; font-family: 'Orbitron', sans-serif;
+            font-size: 12px; font-weight: 900; white-space: nowrap; padding: 4px 10px;
+            border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 30;
+        }
         .hr-pair-label {
             position: absolute; width: 72px; height: 72px; border-radius: 50%;
             background: rgba(0,0,0,0.5); border: 3px solid rgba(255,255,255,0.55);
@@ -560,7 +631,7 @@
         }
         .hype-text-overlay {
             position: absolute; bottom: 45px; left: 50%; z-index: 10;
-            font-family: 'Orbitron', sans-serif; font-size: 50px; font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 46px; font-weight: 900;
             background: linear-gradient(180deg, #ffffff 0%, #ffffff 60%, rgba(0,242,254,0.55) 85%, rgba(243,85,218,0.6) 100%);
             -webkit-background-clip: text; background-clip: text; color: transparent;
             filter:
@@ -668,10 +739,16 @@
                     <div id="hypereel-card" style="width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; background: #14101c; background-size: cover; background-position: center;">
                         <div id="pair-labels-container" style="position: absolute; inset: 0; z-index: 2;"></div>
                         <div id="polaroid-container" style="position: absolute; inset: 0; z-index: 3;"></div>
+                        <div id="card-game-container" style="position: absolute; inset: 0; z-index: 3;"></div>
                         <div class="hype-vignette"></div>
                         <div class="hype-text-overlay" id="hype-text-overlay">🔥 HEUTE IM CITY CAFE</div>
+                        <div id="tg-live-scores" style="position: absolute; top: 14px; left: 0; right: 0; height: 56px; z-index: 12; display: none;"></div>
+                        <div id="tg-version-badge" style="position: absolute; top: 18px; right: 22px; z-index: 20; font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 900; color: rgba(255,255,255,0.55); letter-spacing: 1px; background: rgba(0,0,0,0.35); padding: 5px 12px; border-radius: 8px;">V1</div>
                         <div id="hype-countdown-overlay" style="position: absolute; top: 0; left: 0; right: 0; z-index: 15; display: none; flex-direction: column; align-items: center; padding: 20px 0 12px; background: linear-gradient(180deg, rgba(10,10,18,0.85) 0%, rgba(10,10,18,0) 100%);">
-                            <div style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 3px 10px rgba(0,0,0,0.8);">🍻 City Cafe Trinkspiel</div>
+                            <div style="position: relative; height: 42px; display: flex; align-items: center; justify-content: center;">
+                                <div id="hype-countdown-label-a" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); transition: opacity 0.6s ease;">🍻 City Cafe Trinkspiel V1</div>
+                                <div id="hype-countdown-label-b" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); opacity: 0; transition: opacity 0.6s ease;">Trinkspiel V1</div>
+                            </div>
                             <div id="hype-countdown-timer" style="font-family: 'Orbitron', sans-serif; font-size: 48px; font-weight: 900; color: #00f2fe; text-shadow: 0 0 20px rgba(0,242,254,0.6); margin-top: 2px;">60</div>
                         </div>
                     </div>
@@ -720,6 +797,31 @@
                     </div>
                 </div>
 
+                <div class="media-inner-view" id="media-view-weather-overview">
+                    <div id="wo-card" style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #0f2847 0%, #0a1830 100%); border-radius: 22px; overflow: hidden; padding: 34px 40px; box-sizing: border-box; transition: background 1.5s ease-in-out;">
+                        <div id="wo-effects" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1;"></div>
+                        <div style="position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                            <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">🌤️ Wetter Klagenfurt</h2>
+                            <div id="wo-sun-times" style="font-size: 18px; color: rgba(255,255,255,0.8); font-weight: 700; text-shadow: 0 2px 6px rgba(0,0,0,0.5);"></div>
+                        </div>
+
+                        <div id="wo-current-row" style="position: relative; z-index: 2; display: flex; align-items: center; gap: 44px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 28px 40px; margin-bottom: 24px;">
+                            <div id="wo-current-icon" style="font-size: 110px; line-height: 1;">☀️</div>
+                            <div>
+                                <div id="wo-current-temp" style="font-family: 'Orbitron', sans-serif; font-size: 92px; font-weight: 900; color: #ffffff; line-height: 1; text-shadow: 0 3px 10px rgba(0,0,0,0.4);">--°</div>
+                                <div id="wo-current-desc" style="font-size: 21px; color: #ffffff; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Lädt...</div>
+                            </div>
+                            <div style="flex: 1; display: flex; justify-content: space-around;" id="wo-stat-chips"></div>
+                        </div>
+
+                        <div style="position: relative; z-index: 2; font-size: 17px; font-weight: 800; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Nächste Stunden</div>
+                        <div id="wo-hourly-row" style="position: relative; z-index: 2; display: flex; justify-content: space-between; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 22px 26px; margin-bottom: 24px;"></div>
+
+                        <div style="position: relative; z-index: 2; font-size: 17px; font-weight: 800; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Nächste Tage</div>
+                        <div id="wo-daily-row" style="position: relative; z-index: 2; display: flex; justify-content: space-between; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 26px 26px;"></div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -732,12 +834,16 @@
 
             <div class="card widget-weather w-sunny" id="card-weather">
                 <div class="weather-effects-container" id="weather-effects"></div>
-                <div class="weather-content-wrapper" id="weather-normal-content">
-                    <div>
-                        <div class="weather-city">Klagenfurt</div>
-                        <div class="weather-status" id="weather-status-text">Lade Wetter...</div>
+                <div id="weather-normal-content">
+                    <div class="weather-content-wrapper">
+                        <div>
+                            <div class="weather-city">Klagenfurt</div>
+                            <div class="weather-status" id="weather-status-text">Lade Wetter...</div>
+                        </div>
+                        <div class="temp-number" id="weather-temp-text">--°C</div>
                     </div>
-                    <div class="temp-number" id="weather-temp-text">--°C</div>
+                    <div class="weather-hourly-row" id="weather-hourly-row"></div>
+                    <div class="weather-daily-row" id="weather-daily-row"></div>
                 </div>
                 <div id="weather-countdown-content" style="display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%;">
                     <div style="font-size: 15px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.6);">🍻 Trinkspiel startet in</div>
@@ -826,7 +932,7 @@
             </div>
         </div>
 
-        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-13 · v4.5</div>
+        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-14 · v5.4</div>
 
     </div>
 
@@ -1767,10 +1873,53 @@
         // ---------- Hype-Reel = 5-Spieler-Trinkspiel ----------
         // 5 Spalten (Pärchen), 60s Countdown zum Nummer-Aussuchen, dann landen 10 Fotos in
         // zufälliger Reihenfolge - wessen Spalte als letztes komplett wird, zahlt die Runde.
-        function runHypeReelState(nextStateIndex) {
-            document.getElementById('media-view-hypereel').classList.add('active');
+        // Gemeinsame Vorbereitungsphase für beide Trinkspiel-Varianten: Hintergrund wechseln,
+        // V1/V2-Abzeichen setzen, 60s-Countdown mit alle 10s wechselndem Label (Fade)
+        function startTrinkspielCountdown(version, onComplete) {
             document.getElementById('hypereel-card').style.backgroundImage = `url('${HYPEREEL_BACKGROUNDS[hypeReelBgIndex]}')`;
             hypeReelBgIndex = (hypeReelBgIndex + 1) % HYPEREEL_BACKGROUNDS.length;
+            document.getElementById('tg-version-badge').textContent = version;
+
+            clearInterval(nextTrinkspielInterval); // falls durch Timing-Ungenauigkeit noch aktiv
+            document.getElementById('weather-countdown-content').style.display = 'none';
+            document.getElementById('weather-normal-content').style.display = 'flex';
+
+            const countdownOverlay = document.getElementById('hype-countdown-overlay');
+            const countdownTimer = document.getElementById('hype-countdown-timer');
+            const labelA = document.getElementById('hype-countdown-label-a');
+            const labelB = document.getElementById('hype-countdown-label-b');
+            labelA.textContent = '🍻 City Cafe Trinkspiel ' + version;
+            labelB.textContent = 'Trinkspiel ' + version;
+            labelA.style.opacity = '1';
+            labelB.style.opacity = '0';
+            countdownOverlay.style.display = 'flex';
+            countdownTimer.style.display = 'block';
+
+            let showingA = true;
+            const labelSwitchInterval = setInterval(() => {
+                showingA = !showingA;
+                labelA.style.opacity = showingA ? '1' : '0';
+                labelB.style.opacity = showingA ? '0' : '1';
+            }, 10000);
+
+            let secondsLeft = 60;
+            countdownTimer.textContent = secondsLeft;
+            const countdownInterval = setInterval(() => {
+                secondsLeft--;
+                countdownTimer.textContent = secondsLeft;
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    clearInterval(labelSwitchInterval);
+                    countdownTimer.style.display = 'none'; // Banner-Label bleibt die ganze Runde sichtbar, nur die Zahl verschwindet
+                    onComplete();
+                }
+            }, 1000);
+        }
+
+        // ---------- Trinkspiel V1 (Foto-Pärchen) ----------
+        function runPhotoTrinkspielV1(nextStateIndex) {
+            document.getElementById('media-view-hypereel').classList.add('active');
+            document.getElementById('card-game-container').innerHTML = ''; // Reste von V2 entfernen
 
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
                 ? visitorGalleryData.map(d => d.src)
@@ -1781,6 +1930,7 @@
             shots = shots.slice(0, 10);
 
             const overlay = document.getElementById('hype-text-overlay');
+            overlay.style.display = 'block';
             overlay.textContent = HYPE_REEL_TEXTS[Math.floor(Math.random() * HYPE_REEL_TEXTS.length)];
             retriggerAnim(overlay);
 
@@ -1854,35 +2004,15 @@
                 landNext();
             }
 
-            // 60s Countdown, danach starten die Fotos zu landen (nur lokal im Widget, die
-            // Wetter-Karte zeigt hier NICHT mehr mit - die zählt stattdessen erst ab Rundenende
-            // bis zur nächsten Runde runter, siehe announceLoserPair unten)
-            clearInterval(nextTrinkspielInterval); // falls durch Timing-Ungenauigkeit noch aktiv
-            document.getElementById('weather-countdown-content').style.display = 'none';
-            document.getElementById('weather-normal-content').style.display = 'flex';
-
-            const countdownOverlay = document.getElementById('hype-countdown-overlay');
-            const countdownTimer = document.getElementById('hype-countdown-timer');
-            countdownOverlay.style.display = 'flex';
-            countdownTimer.style.display = 'block';
-
-            let secondsLeft = 60;
-            countdownTimer.textContent = secondsLeft;
-            const countdownInterval = setInterval(() => {
-                secondsLeft--;
-                countdownTimer.textContent = secondsLeft;
-                if (secondsLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    countdownTimer.style.display = 'none'; // Banner selbst bleibt die ganze Runde sichtbar, nur die Zahl verschwindet
-                    startPhotoLanding();
-                }
-            }, 1000);
+            startTrinkspielCountdown('V1', startPhotoLanding);
         }
 
-        // Restliche Zykluszeit bis das Hype-Reel/Trinkspiel wieder drankommt:
-        // Getränke(20s) + Webcam(30s) + Musik(90s) + Veranstaltungen(36s) + Plakat(35s) +
-        // Musik(90s) + Getränke(20s) = 321s. Läuft in der Wetter-Karte gegenläufig runter.
-        const NEXT_TRINKSPIEL_GAP_SECONDS = 321;
+        // Restliche Zykluszeit bis das jeweils ANDERE Trinkspiel drankommt:
+        // Nach V1 (Foto) kommt als nächstes V2: Plakat(35s)+Musik(90s)+Getränke(20s) = 145s
+        // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Webcam(30s)+Musik(90s)+
+        // Veranstaltungen(36s)+Wetter(25s) = 201s
+        const GAP_AFTER_V1_TO_V2 = 145;
+        const GAP_AFTER_V2_TO_V1 = 201;
         let nextTrinkspielInterval = null;
 
         function announceLoserPair(lastCard, nextStateIndex) {
@@ -1891,21 +2021,263 @@
             setTimeout(() => {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
-                startNextTrinkspielCountdown();
-            }, 12000);
+                startNextTrinkspielCountdown('V2', GAP_AFTER_V1_TO_V2);
+            }, 15000);
         }
 
-        function startNextTrinkspielCountdown() {
+        // ---------- Trinkspiel V2 (Karten, "Hosen obe") ----------
+        const CARD_SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
+        const CARD_RANKS = ['7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'];
+        const CARD_VALUES = { '7': 7, '8': 8, '9': 9, '10': 10, 'jack': 10, 'queen': 10, 'king': 10, 'ace': 11 };
+        const CARD_ASSET_BASE = 'https://raw.githubusercontent.com/motte025/City-cafe/main/assets/';
+
+        // Bildkarten (Bube/Dame/König) und Ass-Pik haben ein "2" im Dateinamen, der Rest nicht
+        function getCardFilename(rank, suit) {
+            const needsSuffix = (rank === 'jack' || rank === 'queen' || rank === 'king') || (rank === 'ace' && suit === 'spades');
+            return `${rank}_of_${suit}${needsSuffix ? '2' : ''}.svg`;
+        }
+        function buildFullDeck() {
+            const deck = [];
+            CARD_SUITS.forEach(suit => CARD_RANKS.forEach(rank => deck.push({ rank, suit })));
+            return deck; // 32 Karten
+        }
+        // "Hosen obe"-Zählweise: höchste Farb-Summe gewinnt; Sonderfälle Feuer (3 Asse=32)
+        // und Drei Gleiche (30,5). Funktioniert auch mit 1-2 Karten (für Live-Anzeige).
+        function scoreHand(cards) {
+            if (cards.length === 3) {
+                if (cards.every(c => c.rank === 'ace')) return 32;
+                if (cards[0].rank === cards[1].rank && cards[1].rank === cards[2].rank) return 30.5;
+            }
+            let best = 0;
+            CARD_SUITS.forEach(suit => {
+                const sum = cards.filter(c => c.suit === suit).reduce((s, c) => s + CARD_VALUES[c.rank], 0);
+                if (sum > best) best = sum;
+            });
+            return best;
+        }
+
+        // Kein Unentschieden: bei gleicher Punktzahl entscheidet die höchste Einzelkarte,
+        // bei gleichem Rang die Farbe (Herz > Pik > Karo > Kreuz)
+        const RANK_ORDER = { '7': 7, '8': 8, '9': 9, '10': 10, 'jack': 11, 'queen': 12, 'king': 13, 'ace': 14 };
+        const SUIT_PRIORITY = { hearts: 4, spades: 3, diamonds: 2, clubs: 1 };
+
+        function getHighestCard(cards) {
+            return cards.reduce((best, c) => {
+                if (!best) return c;
+                if (RANK_ORDER[c.rank] > RANK_ORDER[best.rank]) return c;
+                if (RANK_ORDER[c.rank] === RANK_ORDER[best.rank] && SUIT_PRIORITY[c.suit] > SUIT_PRIORITY[best.suit]) return c;
+                return best;
+            }, null);
+        }
+
+        // > 0 wenn handA besser ist, < 0 wenn handB besser ist - nie 0 (kein Unentschieden)
+        function compareHands(handA, handB) {
+            const diff = scoreHand(handA) - scoreHand(handB);
+            if (diff !== 0) return diff;
+            const highA = getHighestCard(handA), highB = getHighestCard(handB);
+            const rankDiff = RANK_ORDER[highA.rank] - RANK_ORDER[highB.rank];
+            if (rankDiff !== 0) return rankDiff;
+            return SUIT_PRIORITY[highA.suit] - SUIT_PRIORITY[highB.suit];
+        }
+
+        // 5 Spalten x 3 Reihen = 15 feste Plätze (mit leichtem Jitter für den "hingeworfen"-Look)
+        function getCardSlotPositions(canvasW, cardW, cardH) {
+            const cols = 5;
+            const colWidth = canvasW / cols;
+            const rowYs = [90, 328, 566];
+            const slots = [];
+            for (let c = 0; c < cols; c++) {
+                const colCenterX = c * colWidth + colWidth / 2;
+                rowYs.forEach((rowY, rowIdx) => {
+                    slots.push({
+                        left: colCenterX - cardW / 2 + (Math.random() - 0.5) * 16,
+                        top: rowY + (Math.random() - 0.5) * 8,
+                        column: c + 1,
+                        row: rowIdx
+                    });
+                });
+            }
+            return slots;
+        }
+
+        function runCardTrinkspielV2(nextStateIndex) {
+            document.getElementById('media-view-hypereel').classList.add('active');
+            document.getElementById('polaroid-container').innerHTML = ''; // Reste von V1 entfernen
+            document.getElementById('hype-text-overlay').style.display = 'none'; // V2: kein Untertext, Platzgrund
+
+            const cardContainer = document.getElementById('card-game-container');
+            cardContainer.innerHTML = '';
+            const labelsContainer = document.getElementById('pair-labels-container');
+            labelsContainer.innerHTML = '';
+            const scoresRow = document.getElementById('tg-live-scores');
+            scoresRow.innerHTML = '';
+            scoresRow.style.display = 'none';
+
+            const CARD_W = 150, CARD_H = 220, CENTER_X = 640, CENTER_Y = 407.5;
+            const slots = getCardSlotPositions(1280, CARD_W, CARD_H);
+
+            slots.forEach(slot => {
+                const label = document.createElement('div');
+                label.className = 'hr-pair-label';
+                label.style.left = (slot.left + CARD_W / 2 - 36) + 'px';
+                label.style.top = (slot.top + CARD_H / 2 - 36) + 'px';
+                label.textContent = slot.column;
+                labelsContainer.appendChild(label);
+            });
+
+            const deck = shuffleArray(buildFullDeck()).slice(0, 15);
+            const arrivalOrder = shuffleArray([...Array(15).keys()]);
+            const columnCards = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+            let lastCardEl = null;
+            let stoppedEarly = false;
+
+            function updateLiveScores() {
+                const colWidth = 1280 / 5;
+                scoresRow.innerHTML = [1, 2, 3, 4, 5].map(c => {
+                    const hand = columnCards[c].map(x => ({ rank: x.rank, suit: x.suit }));
+                    const score = hand.length > 0 ? scoreHand(hand) : 0;
+                    const centerX = (c - 1) * colWidth + colWidth / 2;
+                    return `<div class="tg-score-chip" data-column="${c}" style="left:${centerX}px;">${c}<span>${score}</span></div>`;
+                }).join('');
+            }
+
+            function startCardDealing() {
+                document.getElementById('hype-countdown-overlay').style.display = 'none'; // Platz für Live-Punkte
+                scoresRow.style.display = 'block';
+                updateLiveScores();
+
+                let idx = 0;
+                function dealNext() {
+                    if (idx >= 15 || stoppedEarly) return;
+                    const slot = slots[arrivalOrder[idx]];
+                    const cardData = deck[idx];
+                    const src = CARD_ASSET_BASE + getCardFilename(cardData.rank, cardData.suit);
+                    const zIndex = idx + 1;
+                    const isLast = idx === 14;
+                    idx++;
+
+                    let applied = false;
+                    const preloader = new Image();
+                    preloader.src = src;
+                    const apply = () => {
+                        if (applied) return;
+                        applied = true;
+
+                        const cardEl = document.createElement('div');
+                        cardEl.className = 'tg-card';
+                        cardEl.style.left = slot.left + 'px';
+                        cardEl.style.top = slot.top + 'px';
+                        cardEl.style.zIndex = zIndex;
+                        cardEl.style.width = CARD_W + 'px';
+                        const img = document.createElement('img');
+                        img.src = src;
+                        cardEl.appendChild(img);
+                        cardContainer.appendChild(cardEl);
+                        columnCards[slot.column].push({ el: cardEl, rank: cardData.rank, suit: cardData.suit });
+                        if (isLast) lastCardEl = cardEl;
+
+                        const finalRotation = Math.random() * 18 - 9;
+                        const centerOffset = {
+                            x: CENTER_X - (slot.left + CARD_W / 2),
+                            y: CENTER_Y - (slot.top + CARD_H / 2)
+                        };
+
+                        // Feuer (32) oder 31 -> sofortiges Rundenende, sobald diese Spalte 3 Karten hat
+                        let specialScore = null;
+                        if (columnCards[slot.column].length === 3) {
+                            const hand = columnCards[slot.column].map(x => ({ rank: x.rank, suit: x.suit }));
+                            const s = scoreHand(hand);
+                            if (s === 32 || s === 31) specialScore = s;
+                        }
+
+                        if (specialScore !== null) {
+                            stoppedEarly = true;
+                            animateLanding(cardEl, centerOffset, finalRotation, () => {
+                                updateLiveScores(); // Punkte erst jetzt, wenn die Karte wirklich liegt
+                                triggerSpecialEnd(specialScore);
+                            });
+                            return;
+                        }
+
+                        animateLanding(cardEl, centerOffset, finalRotation, () => {
+                            updateLiveScores(); // Punkte erst jetzt, wenn die Karte wirklich liegt
+                            if (isLast) finishCardRound();
+                        });
+
+                        if (!isLast) setTimeout(dealNext, 5500);
+                    };
+                    preloader.onload = apply;
+                    preloader.onerror = apply;
+                    setTimeout(apply, 1200);
+                }
+                dealNext();
+            }
+
+            // Feuer/31: Widget blinkt 5x rot, jeder mit weniger als 3 Karten verliert
+            function triggerSpecialEnd(specialScore) {
+                const card = document.getElementById('hypereel-card');
+                let flashes = 0;
+                const flashInterval = setInterval(() => {
+                    card.style.boxShadow = (flashes % 2 === 0) ? 'inset 0 0 0 14px #ff0000' : 'none';
+                    flashes++;
+                    if (flashes >= 10) { // 5x an + 5x aus
+                        clearInterval(flashInterval);
+                        card.style.boxShadow = 'none';
+                        for (let c = 1; c <= 5; c++) {
+                            if (columnCards[c].length < 3) {
+                                columnCards[c].forEach(x => x.el.classList.add('tg-loser'));
+                                scoresRow.querySelector(`[data-column="${c}"]`)?.classList.add('tg-loser');
+                            }
+                        }
+                        finishRoundCommon();
+                    }
+                }, 300);
+            }
+
+            function finishCardRound() {
+                let winCol = 1, loseCol = 1;
+                for (let c = 2; c <= 5; c++) {
+                    const handC = columnCards[c].map(x => ({ rank: x.rank, suit: x.suit }));
+                    const handWin = columnCards[winCol].map(x => ({ rank: x.rank, suit: x.suit }));
+                    const handLose = columnCards[loseCol].map(x => ({ rank: x.rank, suit: x.suit }));
+                    if (compareHands(handC, handWin) > 0) winCol = c;
+                    if (compareHands(handC, handLose) < 0) loseCol = c;
+                }
+                columnCards[winCol].forEach(x => x.el.classList.add('tg-winner'));
+                columnCards[loseCol].forEach(x => x.el.classList.add('tg-loser'));
+                scoresRow.querySelector(`[data-column="${winCol}"]`)?.classList.add('tg-winner');
+                scoresRow.querySelector(`[data-column="${loseCol}"]`)?.classList.add('tg-loser');
+                if (lastCardEl) {
+                    const badge = document.createElement('div');
+                    badge.className = 'tg-last-badge';
+                    badge.textContent = '🕐 Letzte Karte';
+                    lastCardEl.appendChild(badge);
+                }
+                finishRoundCommon();
+            }
+
+            function finishRoundCommon() {
+                setTimeout(() => {
+                    mediaStateIndex = nextStateIndex;
+                    runMasterSequence();
+                    startNextTrinkspielCountdown('V1', GAP_AFTER_V2_TO_V1);
+                }, 15000);
+            }
+
+            startTrinkspielCountdown('V2', startCardDealing);
+        }
+
+        function startNextTrinkspielCountdown(nextVersion, gapSeconds) {
             const weatherNormal = document.getElementById('weather-normal-content');
             const weatherCountdown = document.getElementById('weather-countdown-content');
-            const weatherLabel = weatherCountdown.querySelector('div'); // "Trinkspiel startet in"
+            const weatherLabel = weatherCountdown.querySelector('div'); // "Nächstes Trinkspiel Vx in"
             const weatherCountdownNumber = document.getElementById('weather-countdown-number');
-            if (weatherLabel) weatherLabel.textContent = '🍻 Nächstes Trinkspiel in';
+            if (weatherLabel) weatherLabel.textContent = `🍻 Nächstes Trinkspiel ${nextVersion} in`;
 
             weatherNormal.style.display = 'none';
             weatherCountdown.style.display = 'flex';
 
-            let secondsLeft = NEXT_TRINKSPIEL_GAP_SECONDS;
+            let secondsLeft = gapSeconds;
             const render = () => {
                 const m = Math.floor(secondsLeft / 60), s = secondsLeft % 60;
                 weatherCountdownNumber.textContent = `${m}:${s.toString().padStart(2, '0')}`;
@@ -2160,6 +2532,7 @@
             document.getElementById('media-view-drinks').classList.remove('active');
             document.getElementById('media-view-hypereel').classList.remove('active');
             document.getElementById('media-view-events').classList.remove('active');
+            document.getElementById('media-view-weather-overview').classList.remove('active');
 
             if (mediaStateIndex === 0) {
                 currentPosterIndex = (currentPosterIndex + 1) % 2; // 0 = Tag/Nacht-Plakat, 1 = Karaoke-Plakat
@@ -2182,7 +2555,7 @@
                 runDrinksState(3); // -> Hype-Reel
 
             } else if (mediaStateIndex === 3) {
-                runHypeReelState(4); // -> Getränke (nach Hype-Reel)
+                runCardTrinkspielV2(4); // -> Getränke (nach Trinkspiel V2)
 
             } else if (mediaStateIndex === 4) {
                 runDrinksState(5); // -> Webcam
@@ -2200,8 +2573,14 @@
             // Fußball-Widget pausiert (raus aus dem Kreislauf) bis die deutsche Bundesliga
             // am 28.8. startet - dann zurück auf OpenLigaDB (bl1), das zuverlässig lief.
 
+            } else if (mediaStateIndex === 7) {
+                runEventsState(8); // -> Wetter-Übersicht
+
+            } else if (mediaStateIndex === 8) {
+                runWeatherOverviewState(9); // -> Trinkspiel V1 (Foto)
+
             } else {
-                runEventsState(0); // -> wieder Plakat
+                runPhotoTrinkspielV1(0); // -> wieder Plakat
             }
         }
         (function initialPoster() {
@@ -2211,13 +2590,200 @@
         })();
         setTimeout(() => { runMasterSequence(); }, 35000);
 
+        function weatherCodeToIcon(code) {
+            if (code === 95 || code === 96 || code === 99) return '⛈️';
+            if ((code >= 71 && code <= 77) || code === 85 || code === 86) return '❄️';
+            if (code === 45 || code === 48) return '🌫️';
+            if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return '🌧️';
+            if (code >= 1 && code <= 3) return '⛅';
+            return '☀️';
+        }
+
+        function weatherCodeToLabel(code) {
+            if (code === 95 || code === 96 || code === 99) return 'Gewitter';
+            if ((code >= 71 && code <= 77) || code === 85 || code === 86) return 'Schneefall';
+            if (code === 45 || code === 48) return 'Neblig';
+            if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'Regnerisch';
+            if (code >= 1 && code <= 3) return 'Leicht Bewölkt';
+            return 'Sonnig & Klar';
+        }
+
+        function renderHourlyRain(hourly) {
+            const row = document.getElementById('weather-hourly-row');
+            if (!hourly || !hourly.time) { row.innerHTML = ''; return; }
+            const nowIso = new Date().toISOString().slice(0, 13); // "YYYY-MM-DDTHH"
+            let startIdx = hourly.time.findIndex(t => t.slice(0, 13) >= nowIso);
+            if (startIdx === -1) startIdx = 0;
+            const slice = hourly.time.slice(startIdx + 1, startIdx + 4); // nächste 3 Stunden
+            const probs = hourly.precipitation_probability.slice(startIdx + 1, startIdx + 4);
+            row.innerHTML = slice.map((t, i) => {
+                const hour = t.slice(11, 16);
+                return `<div class="weather-hourly-item">
+                    <div class="weather-hourly-time">${hour}</div>
+                    <div class="weather-hourly-pct">${probs[i]}%</div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderDailyForecast(daily) {
+            const row = document.getElementById('weather-daily-row');
+            if (!daily || !daily.time) { row.innerHTML = ''; return; }
+            const dayNames = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+            // Index 0 = heute, wir zeigen die naechsten 3 Tage (1,2,3)
+            row.innerHTML = [1, 2, 3].map(i => {
+                if (!daily.time[i]) return '';
+                const d = new Date(daily.time[i]);
+                const dayLabel = dayNames[d.getDay()];
+                const icon = weatherCodeToIcon(daily.weather_code[i]);
+                const maxTemp = Math.round(daily.temperature_2m_max[i]);
+                return `<div class="weather-daily-item">
+                    <div class="weather-daily-day">${dayLabel}</div>
+                    <div class="weather-daily-icon">${icon}</div>
+                    <div class="weather-daily-temp">${maxTemp}°</div>
+                </div>`;
+            }).join('');
+        }
+
+        let latestWeatherData = null;
+
+        // ---------- Wetter-Übersicht (großes Widget) ----------
+        function windDegToCompass(deg) {
+            const dirs = ['N', 'NO', 'O', 'SO', 'S', 'SW', 'W', 'NW'];
+            return dirs[Math.round(deg / 45) % 8];
+        }
+
+        // Hintergrund + Partikel-Effekte passend zum aktuellen Wettercode
+        function applyWeatherOverviewTheme(code) {
+            const card = document.getElementById('wo-card');
+            const effects = document.getElementById('wo-effects');
+            effects.innerHTML = '';
+
+            const isStormy = (code === 95 || code === 96 || code === 99);
+            const isSnowy = (code >= 71 && code <= 77) || code === 85 || code === 86;
+            const isFoggy = (code === 45 || code === 48);
+            const isRainy = (code >= 51 && code <= 67) || (code >= 80 && code <= 82);
+            const isCloudy = (code >= 1 && code <= 3);
+
+            if (isStormy) {
+                card.style.background = 'linear-gradient(160deg, #1c1030 0%, #0a0a18 100%)';
+                for (let i = 0; i < 35; i++) {
+                    const d = document.createElement('div');
+                    d.className = 'wo-raindrop';
+                    d.style.left = Math.random() * 100 + '%';
+                    d.style.animationDuration = (0.5 + Math.random() * 0.3) + 's';
+                    d.style.animationDelay = Math.random() * 1 + 's';
+                    effects.appendChild(d);
+                }
+                const flash = document.createElement('div');
+                flash.className = 'wo-stormflash';
+                effects.appendChild(flash);
+            } else if (isSnowy) {
+                card.style.background = 'linear-gradient(160deg, #3a4a5f 0%, #1c2836 100%)';
+                for (let i = 0; i < 40; i++) {
+                    const f = document.createElement('div');
+                    f.className = 'wo-snowflake';
+                    const size = 3 + Math.random() * 5;
+                    f.style.width = size + 'px'; f.style.height = size + 'px';
+                    f.style.left = Math.random() * 100 + '%';
+                    f.style.animationDuration = (4 + Math.random() * 3) + 's';
+                    f.style.animationDelay = Math.random() * 3 + 's';
+                    effects.appendChild(f);
+                }
+            } else if (isFoggy) {
+                card.style.background = 'linear-gradient(160deg, #5a6472 0%, #333d4a 100%)';
+            } else if (isRainy) {
+                card.style.background = 'linear-gradient(160deg, #1e3a52 0%, #0f1f30 100%)';
+                for (let i = 0; i < 45; i++) {
+                    const d = document.createElement('div');
+                    d.className = 'wo-raindrop';
+                    d.style.left = Math.random() * 100 + '%';
+                    d.style.animationDuration = (0.6 + Math.random() * 0.4) + 's';
+                    d.style.animationDelay = Math.random() * 1 + 's';
+                    effects.appendChild(d);
+                }
+            } else if (isCloudy) {
+                card.style.background = 'linear-gradient(160deg, #3d5570 0%, #1e2f42 100%)';
+            } else {
+                card.style.background = 'linear-gradient(160deg, #2a7ac9 0%, #0f3f6b 100%)';
+            }
+        }
+
+        async function runWeatherOverviewState(nextStateIndex) {
+            document.getElementById('media-view-weather-overview').classList.add('active');
+            try {
+                const url = 'https://api.open-meteo.com/v1/forecast?latitude=46.6249&longitude=14.3053'
+                    + '&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,uv_index'
+                    + '&hourly=temperature_2m,precipitation_probability,weather_code'
+                    + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max,sunrise,sunset'
+                    + '&timezone=Europe%2FVienna&forecast_days=6';
+                const res = await fetch(url);
+                const data = await res.json();
+                applyWeatherOverviewTheme(data.current.weather_code);
+
+                // Aktuelle Bedingungen
+                document.getElementById('wo-current-temp').textContent = Math.round(data.current.temperature_2m) + '°';
+                document.getElementById('wo-current-icon').textContent = weatherCodeToIcon(data.current.weather_code);
+                document.getElementById('wo-current-desc').textContent = weatherCodeToLabel(data.current.weather_code);
+
+                document.getElementById('wo-stat-chips').innerHTML = `
+                    <div class="wo-chip"><div class="wo-chip-label">Gefühlt</div><div class="wo-chip-value">${Math.round(data.current.apparent_temperature)}°</div></div>
+                    <div class="wo-chip"><div class="wo-chip-label">Luftfeuchte</div><div class="wo-chip-value">${Math.round(data.current.relative_humidity_2m)}%</div></div>
+                    <div class="wo-chip"><div class="wo-chip-label">Wind</div><div class="wo-chip-value">${Math.round(data.current.wind_speed_10m)} km/h ${windDegToCompass(data.current.wind_direction_10m)}</div></div>
+                    <div class="wo-chip"><div class="wo-chip-label">Luftdruck</div><div class="wo-chip-value">${Math.round(data.current.surface_pressure)} hPa</div></div>
+                    <div class="wo-chip"><div class="wo-chip-label">UV-Index</div><div class="wo-chip-value">${Math.round(data.current.uv_index)}</div></div>
+                `;
+
+                // Sonnenauf-/-untergang (heute)
+                if (data.daily.sunrise && data.daily.sunrise[0]) {
+                    const sr = data.daily.sunrise[0].slice(11, 16);
+                    const ss = data.daily.sunset[0].slice(11, 16);
+                    document.getElementById('wo-sun-times').textContent = `🌅 ${sr} · 🌇 ${ss}`;
+                }
+
+                // Nächste Stunden
+                const nowIso = new Date().toISOString().slice(0, 13);
+                let startIdx = data.hourly.time.findIndex(t => t.slice(0, 13) >= nowIso);
+                if (startIdx === -1) startIdx = 0;
+                const hourSlice = data.hourly.time.slice(startIdx, startIdx + 8);
+                document.getElementById('wo-hourly-row').innerHTML = hourSlice.map((t, i) => {
+                    const idx = startIdx + i;
+                    return `<div class="wo-hour-col">
+                        <div class="wo-hour-time">${t.slice(11, 16)}</div>
+                        <div class="wo-hour-icon">${weatherCodeToIcon(data.hourly.weather_code[idx])}</div>
+                        <div class="wo-hour-temp">${Math.round(data.hourly.temperature_2m[idx])}°</div>
+                        <div class="wo-hour-pct">💧${data.hourly.precipitation_probability[idx]}%</div>
+                    </div>`;
+                }).join('');
+
+                // Nächste Tage
+                const dayNames = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+                document.getElementById('wo-daily-row').innerHTML = [1, 2, 3, 4, 5].map(i => {
+                    if (!data.daily.time[i]) return '';
+                    const d = new Date(data.daily.time[i]);
+                    return `<div class="wo-day-col">
+                        <div class="wo-day-name">${dayNames[d.getDay()]}</div>
+                        <div class="wo-day-icon">${weatherCodeToIcon(data.daily.weather_code[i])}</div>
+                        <div class="wo-day-temps">${Math.round(data.daily.temperature_2m_max[i])}° <span>${Math.round(data.daily.temperature_2m_min[i])}°</span></div>
+                        <div class="wo-day-pct">💧${data.daily.precipitation_probability_max[i]}%</div>
+                    </div>`;
+                }).join('');
+            } catch (e) {
+                console.log('Wetter-Übersicht fehlgeschlagen: ' + e.message);
+            }
+            globalMasterTimer = setTimeout(() => { mediaStateIndex = nextStateIndex; runMasterSequence(); }, 25000);
+        }
+
+
         async function fetchLiveWeather() {
             try { 
-                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=46.6249&longitude=14.3053&current=temperature_2m,weather_code');
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=46.6249&longitude=14.3053&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_gusts_10m&hourly=temperature_2m,precipitation_probability,weather_code,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max,wind_speed_10m_max&timezone=Europe%2FVienna&forecast_days=7');
                 const data = await response.json(); 
+                latestWeatherData = data;
                 const temp = Math.round(data.current.temperature_2m);
                 const code = data.current.weather_code;
                 document.getElementById('weather-temp-text').textContent = `${temp}°C`;
+                renderHourlyRain(data.hourly);
+                renderDailyForecast(data.daily);
 
                 const weatherWidget = document.getElementById('card-weather');
                 const statusText = document.getElementById('weather-status-text');
