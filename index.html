@@ -932,7 +932,7 @@
             </div>
         </div>
 
-        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-14 · v5.4</div>
+        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-14 · v5.5</div>
 
     </div>
 
@@ -1095,50 +1095,25 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // Tag/Nacht-Plakat + Übergangsvideos
+        // Tag/Nacht-Plakat
         const POSTER_TAG_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_tag.png';
         const POSTER_NACHT_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_nacht.png';
         const KARAOKE_POSTER_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/3.png';
-        const VIDEO_NACHT_ZU_TAG = 'https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Nacht_zu_Tag_FHD_30s.mp4';
-        const VIDEO_TAG_ZU_NACHT = 'https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Tag_zu_Nacht_FHD_30s.mp4';
 
-        const DAY_START_HOUR = 9;    // ab 09:00 -> Nacht-zu-Tag-Video, danach city_cafe_tag.png
-        const NIGHT_START_HOUR = 19; // ab 19:00 -> Tag-zu-Nacht-Video, danach city_cafe_nacht.png
-        const TRANSITION_LOOPS = 8;  // Video kommt 8x im normalen Rhythmus wieder, statt am Stück durchzulaufen
+        const DAY_START_HOUR = 9;    // ab 09:00 -> city_cafe_tag.png
+        const NIGHT_START_HOUR = 19; // ab 19:00 -> city_cafe_nacht.png
 
-        let videoPlaysRemaining = 0;
-        let lastBoundaryId = null;
-
-        // Eindeutige ID für den aktuell laufenden Tag/Nacht-Abschnitt (wechselt exakt um 9:00 bzw. 19:00)
-        function getCurrentBoundaryId(now) {
-            const h = now.getHours();
-            if (h >= DAY_START_HOUR && h < NIGHT_START_HOUR) {
-                return now.toISOString().slice(0, 10) + '-day-' + DAY_START_HOUR;
-            }
-            const refDate = h < DAY_START_HOUR ? new Date(now.getTime() - 24 * 3600 * 1000) : now;
-            return refDate.toISOString().slice(0, 10) + '-night-' + NIGHT_START_HOUR;
+        const WEATHER_WIDGET_START_HOUR = 8;  // ab 08:00 -> Wetter-Übersicht läuft mit
+        const WEATHER_WIDGET_END_HOUR = 18;   // ab 18:00 -> Wetter-Übersicht pausiert
+        function isWeatherWidgetHour() {
+            const h = new Date().getHours();
+            return h >= WEATHER_WIDGET_START_HOUR && h < WEATHER_WIDGET_END_HOUR;
         }
 
-        // Test-Modus: URL mit ?testtransition=day oder ?testtransition=night öffnen,
-        // um die Videos sofort im normalen Rhythmus zu sehen statt bis 9:00/19:00 Uhr zu warten.
+        // Direkter Wechsel zwischen Tag- und Nacht-Plakat, keine Übergangsvideos mehr
         function getDayNightPoster() {
-            const testParam = new URLSearchParams(location.search).get('testtransition');
-            if (testParam === 'day') return { type: 'video', video: VIDEO_NACHT_ZU_TAG };
-            if (testParam === 'night') return { type: 'video', video: VIDEO_TAG_ZU_NACHT };
-
-            const now = new Date();
-            const boundaryId = getCurrentBoundaryId(now);
-            const isDay = boundaryId.includes('-day-');
-
-            if (boundaryId !== lastBoundaryId) {
-                lastBoundaryId = boundaryId;
-                videoPlaysRemaining = TRANSITION_LOOPS;
-            }
-
-            if (videoPlaysRemaining > 0) {
-                videoPlaysRemaining--;
-                return { type: 'video', video: isDay ? VIDEO_NACHT_ZU_TAG : VIDEO_TAG_ZU_NACHT };
-            }
+            const h = new Date().getHours();
+            const isDay = h >= DAY_START_HOUR && h < NIGHT_START_HOUR;
             return { type: 'image', image: isDay ? POSTER_TAG_URL : POSTER_NACHT_URL };
         }
 
@@ -2010,9 +1985,13 @@
         // Restliche Zykluszeit bis das jeweils ANDERE Trinkspiel drankommt:
         // Nach V1 (Foto) kommt als nächstes V2: Plakat(35s)+Musik(90s)+Getränke(20s) = 145s
         // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Webcam(30s)+Musik(90s)+
-        // Veranstaltungen(36s)+Wetter(25s) = 201s
+        // Veranstaltungen(36s) = 176s, +25s Wetter-Übersicht, aber nur wenn die zwischen
+        // 8-18 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
         const GAP_AFTER_V1_TO_V2 = 145;
-        const GAP_AFTER_V2_TO_V1 = 201;
+        const GAP_AFTER_V2_TO_V1_BASE = 176;
+        function getGapAfterV2ToV1() {
+            return GAP_AFTER_V2_TO_V1_BASE + (isWeatherWidgetHour() ? 25 : 0);
+        }
         let nextTrinkspielInterval = null;
 
         function announceLoserPair(lastCard, nextStateIndex) {
@@ -2260,7 +2239,7 @@
                 setTimeout(() => {
                     mediaStateIndex = nextStateIndex;
                     runMasterSequence();
-                    startNextTrinkspielCountdown('V1', GAP_AFTER_V2_TO_V1);
+                    startNextTrinkspielCountdown('V1', getGapAfterV2ToV1());
                 }, 15000);
             }
 
@@ -2577,7 +2556,12 @@
                 runEventsState(8); // -> Wetter-Übersicht
 
             } else if (mediaStateIndex === 8) {
-                runWeatherOverviewState(9); // -> Trinkspiel V1 (Foto)
+                if (isWeatherWidgetHour()) {
+                    runWeatherOverviewState(9); // -> Trinkspiel V1 (Foto)
+                } else {
+                    mediaStateIndex = 9;
+                    runMasterSequence(); // Wetter pausiert (18-8 Uhr) -> direkt zu Trinkspiel V1
+                }
 
             } else {
                 runPhotoTrinkspielV1(0); // -> wieder Plakat
