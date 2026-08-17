@@ -667,6 +667,14 @@
                     </div>
                 </div>
 
+                <div class="media-inner-view" id="media-view-musicslides">
+                    <div class="poster-container">
+                        <img class="poster-image active" id="musicSlide1" src="" alt="Musik-Slide 1">
+                        <img class="poster-image" id="musicSlide2" src="" alt="Musik-Slide 2">
+                        <div class="poster-ambient-glaze"></div>
+                    </div>
+                </div>
+
                 <div class="media-inner-view" id="media-view-schlager">
                     <div class="schlager-widget-box">
                         <img class="schlager-bg-img active" id="schlager-img1" src="" alt="Cover 1">
@@ -1099,6 +1107,16 @@
         const POSTER_TAG_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_tag.png';
         const POSTER_NACHT_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_nacht.png';
         const KARAOKE_POSTER_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/3.png';
+
+        // Musik-Atmosphäre-Slides (5 Bilder, je 6s mit Crossfade, im großen Media-Widget)
+        const MUSIC_SLIDES_URLS = [
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/beat1.png',
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/beat2.png',
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/beat3.png',
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/beat4.png',
+            'https://raw.githubusercontent.com/motte025/City-cafe/main/beat5.png'
+        ];
+        const MUSIC_SLIDE_SECONDS = 6;
 
         const DAY_START_HOUR = 9;    // ab 09:00 -> city_cafe_tag.png
         const NIGHT_START_HOUR = 19; // ab 19:00 -> city_cafe_nacht.png
@@ -1895,6 +1913,9 @@
         function runPhotoTrinkspielV1(nextStateIndex) {
             document.getElementById('media-view-hypereel').classList.add('active');
             document.getElementById('card-game-container').innerHTML = ''; // Reste von V2 entfernen
+            const scoresRow = document.getElementById('tg-live-scores');
+            scoresRow.style.display = 'none'; // Punktezähler von V2 darf hier nicht mehr sichtbar sein
+            scoresRow.innerHTML = '';
 
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
                 ? visitorGalleryData.map(d => d.src)
@@ -2385,6 +2406,39 @@
             }
         }
 
+        // ---------- Musik-Atmosphäre-Slides (5 Bilder, Crossfade, im großen Media-Widget) ----------
+        let musicSlidesTimer = null, musicSlidesIndex = 0, isMusicSlide1Active = true;
+
+        function showMusicSlide(url) {
+            const slide1 = document.getElementById('musicSlide1'), slide2 = document.getElementById('musicSlide2');
+            const preloader = new Image();
+            preloader.src = url;
+            const apply = () => {
+                if (isMusicSlide1Active) { slide2.src = url; slide2.classList.add('active'); slide1.classList.remove('active'); isMusicSlide1Active = false; }
+                else { slide1.src = url; slide1.classList.add('active'); slide2.classList.remove('active'); isMusicSlide1Active = true; }
+            };
+            if (preloader.complete) apply(); else { preloader.onload = apply; preloader.onerror = apply; }
+        }
+
+        function runMusicSlidesState(nextStateIndex) {
+            document.getElementById('media-view-musicslides').classList.add('active');
+            musicSlidesIndex = 0;
+            showMusicSlide(MUSIC_SLIDES_URLS[0]);
+
+            if (musicSlidesTimer) clearInterval(musicSlidesTimer);
+            musicSlidesTimer = setInterval(() => {
+                musicSlidesIndex++;
+                if (musicSlidesIndex < MUSIC_SLIDES_URLS.length) {
+                    showMusicSlide(MUSIC_SLIDES_URLS[musicSlidesIndex]);
+                } else {
+                    clearInterval(musicSlidesTimer);
+                }
+            }, MUSIC_SLIDE_SECONDS * 1000);
+
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = setTimeout(runMasterSequence, MUSIC_SLIDES_URLS.length * MUSIC_SLIDE_SECONDS * 1000);
+        }
+
         function runMusicState(nextStateIndex) {
             document.getElementById('media-view-schlager').classList.add('active');
             activeMusicBatch = generateGuaranteedBatch(); 
@@ -2505,6 +2559,7 @@
             if (raceInProgress) return; // Rennen läuft - normale Rotation pausiert
 
             document.getElementById('media-view-poster').classList.remove('active');
+            document.getElementById('media-view-musicslides').classList.remove('active');
             document.getElementById('media-view-schlager').classList.remove('active');
             document.getElementById('media-view-webcam').classList.remove('active');
             document.getElementById('media-view-football').classList.remove('active');
@@ -2557,11 +2612,14 @@
 
             } else if (mediaStateIndex === 8) {
                 if (isWeatherWidgetHour()) {
-                    runWeatherOverviewState(9); // -> Trinkspiel V1 (Foto)
+                    runWeatherOverviewState(9); // -> Musik-Slides
                 } else {
                     mediaStateIndex = 9;
-                    runMasterSequence(); // Wetter pausiert (18-8 Uhr) -> direkt zu Trinkspiel V1
+                    runMasterSequence(); // Wetter pausiert (18-8 Uhr) -> direkt zu Musik-Slides
                 }
+
+            } else if (mediaStateIndex === 9) {
+                runMusicSlidesState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
                 runPhotoTrinkspielV1(0); // -> wieder Plakat
