@@ -660,9 +660,16 @@
             <div class="card media-zone" id="card-media">
                 <div class="media-inner-view active" id="media-view-poster">
                     <div class="poster-container" id="poster-container">
-                        <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_tag.png" alt="Plakat Ebene 1">
+                        <img class="poster-image active" id="poster1" src="https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Tag_1280x815_v2.jpg" alt="Plakat Ebene 1">
                         <img class="poster-image" id="poster2" src="" alt="Plakat Ebene 2">
                         <video class="poster-image" id="posterVideo" muted playsinline preload="auto"></video>
+                        <div class="poster-ambient-glaze"></div>
+                    </div>
+                </div>
+
+                <div class="media-inner-view" id="media-view-jaeger">
+                    <div class="poster-container">
+                        <img class="poster-image active" id="jaegerImage" src="" alt="Jägermeister & Puntigamer">
                         <div class="poster-ambient-glaze"></div>
                     </div>
                 </div>
@@ -1104,8 +1111,10 @@
         setInterval(updateClock, 1000); updateClock();
 
         // Tag/Nacht-Plakat
-        const POSTER_TAG_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_tag.png';
-        const POSTER_NACHT_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/city_cafe_nacht.png';
+        const POSTER_TAG_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Tag_1280x815_v2.jpg';
+        const POSTER_NACHT_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/City_Cafe_Nacht_1280x815_v2.jpg';
+        const JAEGER_PUNTIGAMER_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/Jaegermeister_Puntigamer_1280x815.png';
+        const JAEGER_PUNTIGAMER_SECONDS = 30;
         const KARAOKE_POSTER_URL = 'https://raw.githubusercontent.com/motte025/City-cafe/main/3.png';
 
         // Musik-Atmosphäre-Slides (5 Bilder, je 6s mit Crossfade, im großen Media-Widget)
@@ -2018,23 +2027,34 @@
         }
 
         // Restliche Zykluszeit bis das jeweils ANDERE Trinkspiel drankommt:
-        // Nach V1 (Foto) kommt als nächstes V2: Plakat(35s)+Musik(90s)+Getränke(20s) = 145s
+        // Nach V1 (Foto) kommt als nächstes V2: Jäger/Puntigamer(30s)+Plakat(35s)+Musik(90s)+
+        // Getränke(20s) = 175s
         // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Webcam(30s)+Musik(90s)+
         // Veranstaltungen(36s)+Musik-Slides(30s) = 206s, +25s Wetter-Übersicht, aber nur wenn die
         // zwischen 8-18 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
-        const GAP_AFTER_V1_TO_V2 = 145;
+        const GAP_AFTER_V1_TO_V2 = 175;
         const GAP_AFTER_V2_TO_V1_BASE = 206;
         function getGapAfterV2ToV1() {
             return GAP_AFTER_V2_TO_V1_BASE + (isWeatherWidgetHour() ? 25 : 0);
         }
         let nextTrinkspielInterval = null;
 
-        function announceLoserPair(lastCard, nextStateIndex) {
-            lastCard.classList.add('hr-pair-loser');
+        // ---------- Jägermeister & Puntigamer (30s, nach Trinkspiel V1) ----------
+        function runJaegerPuntigamerState(nextStateIndex) {
+            document.getElementById('media-view-jaeger').classList.add('active');
+            document.getElementById('jaegerImage').src = JAEGER_PUNTIGAMER_URL;
 
             setTimeout(() => {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
+            }, JAEGER_PUNTIGAMER_SECONDS * 1000);
+        }
+
+        function announceLoserPair(lastCard, nextStateIndex) {
+            lastCard.classList.add('hr-pair-loser');
+
+            setTimeout(() => {
+                runJaegerPuntigamerState(nextStateIndex); // -> 30s Jäger/Puntigamer, dann erst wieder Plakat
                 startNextTrinkspielCountdown('V2', GAP_AFTER_V1_TO_V2);
             }, 15000);
         }
@@ -2575,6 +2595,7 @@
             if (raceInProgress) return; // Rennen läuft - normale Rotation pausiert
 
             document.getElementById('media-view-poster').classList.remove('active');
+            document.getElementById('media-view-jaeger').classList.remove('active');
             document.getElementById('media-view-musicslides').classList.remove('active');
             document.getElementById('media-view-schlager').classList.remove('active');
             document.getElementById('media-view-webcam').classList.remove('active');
