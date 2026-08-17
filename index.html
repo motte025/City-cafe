@@ -1789,6 +1789,20 @@
             return drinkQueue.shift();
         }
 
+        // Schaut sich das nächste Getränke-Video an, OHNE es aus der Warteschlange zu nehmen -
+        // damit wir es schon während des vorherigen Widgets im Hintergrund laden können.
+        function peekNextDrinkVideo() {
+            if (drinkQueue.length === 0) drinkQueue = shuffleArray(drinkPromoVideos.slice());
+            return drinkQueue[0];
+        }
+
+        // Lädt das nächste Getränke-Video ein paar Sekunden im Voraus in den Browser-Cache,
+        // damit beim eigentlichen Widget-Wechsel kein Play-Symbol/Ladezeit mehr sichtbar ist.
+        function prefetchNextDrinkVideo() {
+            const next = peekNextDrinkVideo();
+            if (next && next.url) fetch(next.url).catch(() => {});
+        }
+
         // ---------- Hype-Reel: schneller Foto-Schnitt zwischendurch ----------
         const HYPE_REEL_TEXTS = [
             "🍹 DRINKS · GENUSS · PARTY",
@@ -2006,10 +2020,10 @@
         // Restliche Zykluszeit bis das jeweils ANDERE Trinkspiel drankommt:
         // Nach V1 (Foto) kommt als nächstes V2: Plakat(35s)+Musik(90s)+Getränke(20s) = 145s
         // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Webcam(30s)+Musik(90s)+
-        // Veranstaltungen(36s) = 176s, +25s Wetter-Übersicht, aber nur wenn die zwischen
-        // 8-18 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
+        // Veranstaltungen(36s)+Musik-Slides(30s) = 206s, +25s Wetter-Übersicht, aber nur wenn die
+        // zwischen 8-18 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
         const GAP_AFTER_V1_TO_V2 = 145;
-        const GAP_AFTER_V2_TO_V1_BASE = 176;
+        const GAP_AFTER_V2_TO_V1_BASE = 206;
         function getGapAfterV2ToV1() {
             return GAP_AFTER_V2_TO_V1_BASE + (isWeatherWidgetHour() ? 25 : 0);
         }
@@ -2104,6 +2118,7 @@
             document.getElementById('media-view-hypereel').classList.add('active');
             document.getElementById('polaroid-container').innerHTML = ''; // Reste von V1 entfernen
             document.getElementById('hype-text-overlay').style.display = 'none'; // V2: kein Untertext, Platzgrund
+            prefetchNextDrinkVideo(); // Getränke-Video schon jetzt im Hintergrund laden, kein Play-Symbol beim Wechsel
 
             const cardContainer = document.getElementById('card-game-container');
             cardContainer.innerHTML = '';
@@ -2376,7 +2391,7 @@
             const videoEl = document.getElementById('drinks-promo-video');
             const drink = getNextDrinkVideo();
             videoEl.loop = false;
-            videoEl.src = drink.url + "?v=" + Date.now();
+            videoEl.src = drink.url; // kein Cache-Busting mehr, damit der Vorlade-fetch() greift
             videoEl.currentTime = 0;
 
             const playPromise = videoEl.play();
@@ -2441,6 +2456,7 @@
 
         function runMusicState(nextStateIndex) {
             document.getElementById('media-view-schlager').classList.add('active');
+            prefetchNextDrinkVideo(); // Getränke-Video schon jetzt im Hintergrund laden, kein Play-Symbol beim Wechsel
             activeMusicBatch = generateGuaranteedBatch(); 
             currentMusicSubIndex = 0; 
             renderMusicItem(currentMusicSubIndex);
