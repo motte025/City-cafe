@@ -1786,7 +1786,8 @@
             { url: "https://raw.githubusercontent.com/motte025/City-cafe/main/60.mp4" },  // Coca-Cola
             { url: "https://raw.githubusercontent.com/motte025/City-cafe/main/53.mp4" },  // Captain Morgan
             { url: "https://raw.githubusercontent.com/motte025/City-cafe/main/54.mp4" },  // Vodka + Red Bull
-            { url: "https://raw.githubusercontent.com/motte025/City-cafe/main/61.mp4" }   // Fanta
+            { url: "https://raw.githubusercontent.com/motte025/City-cafe/main/61.mp4" },  // Fanta
+            { url: "https://raw.githubusercontent.com/motte025/City-cafe/main/62.mp4" }   // Lipton Eistee
         ];
         const DRINKS_TOTAL_MS = 20000; // Video + Standbild zusammen immer 20s
 
@@ -2041,6 +2042,7 @@
 
         // ---------- Jägermeister & Puntigamer (30s, nach Trinkspiel V1) ----------
         function runJaegerPuntigamerState(nextStateIndex) {
+            document.getElementById('media-view-hypereel').classList.remove('active'); // V1 lag sonst noch drüber und verdeckte das Bild
             document.getElementById('media-view-jaeger').classList.add('active');
             document.getElementById('jaegerImage').src = JAEGER_PUNTIGAMER_URL;
 
