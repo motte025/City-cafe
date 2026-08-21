@@ -1182,7 +1182,7 @@
             return isDay ? POSTER_TAG_URL : POSTER_NACHT_URL;
         }
 
-        let currentPosterIndex = 0, isImg1Active = true;
+        let isImg1Active = true;
         const img1 = document.getElementById('poster1'), img2 = document.getElementById('poster2');
 
         // Schaltet ein Bild sofort sichtbar/unsichtbar, ohne eigene Überblendung -
@@ -2638,8 +2638,15 @@
             document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
 
             if (mediaStateIndex === 0) {
-                currentPosterIndex = (currentPosterIndex + 1) % 2; // 0 = Tag/Nacht-Plakat, 1 = Karaoke-Plakat
-                showPosterImage(currentPosterIndex === 0 ? getDayNightPoster() : KARAOKE_POSTER_URL);
+                // Tag/Nacht-Plakat und Karaoke-Plakat laufen jetzt nacheinander in JEDEM
+                // Zyklus (vorher wechselten sie sich ab - Karaoke kam nur alle zwei Zyklen).
+                showPosterImage(getDayNightPoster());
+
+                mediaStateIndex = 0.5;
+                globalMasterTimer = later(runMasterSequence, 35000);
+
+            } else if (mediaStateIndex === 0.5) {
+                showPosterImage(KARAOKE_POSTER_URL);
 
                 mediaStateIndex = 1;
                 globalMasterTimer = later(runMasterSequence, 35000);
