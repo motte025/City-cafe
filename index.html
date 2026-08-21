@@ -35,10 +35,14 @@
         }
 
         /* Native Player-Steuerung komplett unterdruecken - genau dieses Overlay
-           blitzt in WebView-basierten Playern als Play-Symbol auf. */
+           blitzt in WebView-basierten Playern als Play-Symbol auf.
+           Der grosse mittige Knopf unter Android ist -overlay-play-button und war
+           beim ersten Anlauf nicht abgedeckt. */
         video::-webkit-media-controls,
         video::-webkit-media-controls-enclosure,
-        video::-webkit-media-controls-panel { display: none !important; }
+        video::-webkit-media-controls-panel,
+        video::-webkit-media-controls-overlay-enclosure,
+        video::-webkit-media-controls-overlay-play-button { display: none !important; }
         video::-webkit-media-controls-start-playback-button {
             display: none !important;
             -webkit-appearance: none;
@@ -168,12 +172,16 @@
             width: 1280px; height: 815px; position: relative;
             background: #000; border-radius: 22px; overflow: hidden;
         }
+        /* Ausblenden ohne transition (sofort), Einblenden weich: die transition steht
+           bewusst nur in .is-visible. Sonst bliebe die alte, pausierte Ebene waehrend
+           des Ausblendens noch sichtbar - und genau ein pausiertes <video> ist es,
+           auf dem WebView sein Play-Overlay zeichnet. */
         .drink-layer {
             position: absolute; top: 0; left: 0;
             width: 1280px; height: 815px; object-fit: cover; display: block;
-            opacity: 0; transition: opacity 0.25s linear; z-index: 1;
+            opacity: 0; z-index: 1; background: #000;
         }
-        .drink-layer.is-visible { opacity: 1; z-index: 2; }
+        .drink-layer.is-visible { opacity: 1; z-index: 2; transition: opacity 0.2s linear; }
 
         .poster-container { width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; }
         .poster-image {
@@ -759,9 +767,11 @@
                 <div class="media-inner-view" id="media-view-drinks">
                     <div class="drinks-stage">
                         <video class="drink-layer" id="drinkVideoA" muted playsinline preload="auto"
-                               disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
+                               disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"
+                               poster="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAC0lEQVR42mNgQAYAAA4AATo1BFYAAAAASUVORK5CYII="></video>
                         <video class="drink-layer" id="drinkVideoB" muted playsinline preload="auto"
-                               disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
+                               disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"
+                               poster="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAC0lEQVR42mNgQAYAAA4AATo1BFYAAAAASUVORK5CYII="></video>
                     </div>
                 </div>
 
@@ -1874,6 +1884,17 @@
                 if (item.blobUrl) el.dataset.blobUrl = item.blobUrl;
                 el.load();
                 await waitForEvent(el, 'canplay', 15000);
+
+                // Ersten Frame vorab dekodieren: kurz anspielen, sofort anhalten,
+                // zurueck auf 0. Danach haelt das Element ein fertiges Bild, statt
+                // beim Sichtbarschalten erst noch eines erzeugen zu muessen.
+                try {
+                    await el.play();
+                    el.pause();
+                    el.currentTime = 0;
+                } catch (e) {
+                    // Autoplay abgelehnt oder Wiedergabe abgebrochen - dann eben erst im Slot
+                }
             })().catch(() => {});
 
             preparedDrink = item;
@@ -2488,6 +2509,10 @@
 
         function runDrinksState(nextStateIndex) {
             const view = document.getElementById('media-view-drinks');
+            // Beide Ebenen sofort ausblenden. Sonst haengt hier noch die Ebene des
+            // VORIGEN Getraenke-Slots mit ihrem eingefrorenen Schlussbild - ein
+            // pausiertes <video>, das waehrend der 0,7s Einblendung sichtbar ist.
+            drinkLayers.forEach(ebene => ebene.classList.remove('is-visible'));
             view.classList.add('active'); // Buehne ist schwarz, das Video kommt gleich darauf
 
             const item = prepareDrinkVideo();
