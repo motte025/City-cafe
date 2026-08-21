@@ -1863,7 +1863,15 @@
                 el.loop = false;
                 el.muted = true;
                 el.playsInline = true;
+                // Blob-URL sofort an der Ebene vermerken, nicht erst wenn das Video laeuft:
+                // sonst bleibt der Speicher eines fehlgeschlagenen Clips fuer immer belegt.
+                // Und was noch an dieser Ebene haengt, vorher freigeben.
+                if (el.dataset.blobUrl) {
+                    URL.revokeObjectURL(el.dataset.blobUrl);
+                    delete el.dataset.blobUrl;
+                }
                 el.src = quelle;
+                if (item.blobUrl) el.dataset.blobUrl = item.blobUrl;
                 el.load();
                 await waitForEvent(el, 'canplay', 15000);
             })().catch(() => {});
@@ -2520,7 +2528,6 @@
                 // Erst wenn wirklich Bild da ist, wird die Ebene sichtbar geschaltet
                 waitForEvent(el, 'playing', 3000).then(() => {
                     if (weitergeschaltet) return;
-                    if (item.blobUrl) el.dataset.blobUrl = item.blobUrl;
                     el.classList.add('is-visible');
                     releaseDrinkLayer(vorherigeEbene);
                     activeDrinkLayer = 1 - activeDrinkLayer;
