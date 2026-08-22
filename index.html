@@ -2129,12 +2129,12 @@
         }
 
         // Restliche Zykluszeit bis das jeweils ANDERE Trinkspiel drankommt:
-        // Nach V1 (Foto) kommt als nächstes V2: Jäger/Puntigamer(30s)+Plakat(35s)+Musik(90s)+
-        // Getränke(20s) = 175s
+        // Nach V1 (Foto) kommt als nächstes V2: Jäger/Puntigamer(30s)+Tag/Nacht-Plakat(35s)+
+        // Karaoke-Plakat(35s)+Karaoke-Getränke(30s)+Musik(90s)+Getränke(20s) = 240s
         // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Webcam(30s)+Musik(90s)+
         // Veranstaltungen(36s)+Musik-Slides(30s) = 206s, +25s Wetter-Übersicht, aber nur wenn die
         // zwischen 8-18 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
-        const GAP_AFTER_V1_TO_V2 = 175;
+        const GAP_AFTER_V1_TO_V2 = 240;
         const GAP_AFTER_V2_TO_V1_BASE = 206;
         function getGapAfterV2ToV1() {
             return GAP_AFTER_V2_TO_V1_BASE + (isWeatherWidgetHour() ? 25 : 0);
