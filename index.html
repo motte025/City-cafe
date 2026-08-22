@@ -1154,6 +1154,8 @@
         const JAEGER_PUNTIGAMER_URL = 'jaeger.webp';
         const JAEGER_PUNTIGAMER_SECONDS = 30;
         const KARAOKE_POSTER_URL = 'karaoke.webp';
+        const KARAOKE_DRINKS_URL = 'karaoke_drinks.webp';
+        const KARAOKE_DRINKS_SECONDS = 30;
 
         // Musik-Atmosphäre-Slides (5 Bilder, je 6s mit Crossfade, im großen Media-Widget)
         const MUSIC_SLIDES_URLS = [
@@ -2648,8 +2650,15 @@
             } else if (mediaStateIndex === 0.5) {
                 showPosterImage(KARAOKE_POSTER_URL);
 
-                mediaStateIndex = 1;
+                mediaStateIndex = 0.75;
                 globalMasterTimer = later(runMasterSequence, 35000);
+
+            } else if (mediaStateIndex === 0.75) {
+                // Getränke-Angebot für den Karaoke-Abend, direkt nach dem Karaoke-Plakat
+                showPosterImage(KARAOKE_DRINKS_URL);
+
+                mediaStateIndex = 1;
+                globalMasterTimer = later(runMasterSequence, KARAOKE_DRINKS_SECONDS * 1000);
 
             } else if (mediaStateIndex === 1) {
                 runMusicState(2); // -> Getränke (vor Hype-Reel)
