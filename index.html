@@ -292,6 +292,250 @@
         .fb-scorers-line span:last-child { text-align: left; }
         .football-empty-msg { color: rgba(255,255,255,0.75); font-size: 22px; text-align: center; margin-top: 60px; }
 
+        /* ---------- Bundesliga-Widgets (OpenLigaDB) ---------- */
+        /* Gemeinsame Buehne fuer beide Slots: Spieltag und Tabelle sehen dadurch
+           wie zwei Seiten desselben Widgets aus, nicht wie zwei fremde Ansichten. */
+        .bl-stage {
+            width: 1280px; height: 815px; position: relative; box-sizing: border-box;
+            background: linear-gradient(160deg, #0b1f2e 0%, #0a1426 55%, #120a24 100%);
+            border-radius: 22px; overflow: hidden; padding: 26px 40px;
+            display: flex; flex-direction: column;
+        }
+        /* Ruhiger Farbschleier oben links/rechts - gleiche Handschrift wie die
+           bg-glow-Flaechen des Dashboards, nur klein und ohne blur-Filter (GPU). */
+        .bl-stage::before {
+            content: ''; position: absolute; top: -180px; left: -120px; width: 720px; height: 460px;
+            background: radial-gradient(ellipse at center, rgba(0, 242, 254, 0.16) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+        .bl-stage::after {
+            content: ''; position: absolute; bottom: -220px; right: -140px; width: 760px; height: 520px;
+            background: radial-gradient(ellipse at center, rgba(243, 85, 218, 0.14) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+        .bl-stage > * { position: relative; z-index: 2; }
+
+        .bl-header { display: flex; justify-content: space-between; align-items: flex-end; height: 62px; margin-bottom: 16px; }
+        .bl-header h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 31px; font-weight: 900; color: #ffffff;
+            text-transform: uppercase; letter-spacing: 1px; margin: 0; white-space: nowrap;
+        }
+        .bl-header p {
+            font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.4px; margin: 5px 0 0; white-space: nowrap;
+        }
+        .bl-header-right { display: flex; align-items: center; gap: 14px; }
+        .bl-source-chip {
+            background: rgba(0, 242, 254, 0.12); border: 1px solid rgba(0, 242, 254, 0.42); color: #00f2fe;
+            font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+            padding: 7px 15px; border-radius: 11px; white-space: nowrap;
+        }
+        .bl-live-badge {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255, 51, 51, 0.16); border: 1px solid rgba(255, 51, 51, 0.65);
+            color: #ff6b6b; font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900;
+            letter-spacing: 1.5px; text-transform: uppercase; padding: 7px 17px; border-radius: 11px;
+            box-shadow: 0 0 18px rgba(255, 51, 51, 0.28); white-space: nowrap;
+        }
+        .bl-live-dot {
+            width: 11px; height: 11px; border-radius: 50%; background: var(--live-red); flex-shrink: 0;
+            animation: blLivePulse 1.4s ease-in-out infinite;
+        }
+        /* Bewusst nur transform/opacity: beides laeuft im Compositor. Ein animierter
+           box-shadow wuerde jeden Frame neu zeichnen - auf der Odroid-Box teuer. */
+        @keyframes blLivePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            60%      { transform: scale(0.68); opacity: 0.4; }
+        }
+        @keyframes blCardIn {
+            0%   { opacity: 0; transform: translateY(16px) scale(0.985); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ---------- Slot 1: Spieltag ---------- */
+        .bl-spotlight {
+            height: 596px; margin-bottom: 14px;
+            background: rgba(255, 255, 255, 0.055); border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 20px; padding: 24px 34px; box-sizing: border-box;
+            display: flex; flex-direction: column;
+        }
+        .bl-spot-card { display: flex; flex-direction: column; height: 100%; animation: blCardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        /* Der obere Block nimmt sich, was die Torschuetzen-Liste uebrig laesst: bei
+           einem 1:0 stehen Wappen und Spielstand luftig in der Mitte, bei einem 4:3
+           schrumpft er bis zur Untergrenze. Keine tote Flaeche, kein Ueberlauf. */
+        .bl-spot-top { display: flex; align-items: center; flex: 1; min-height: 300px; }
+        /* Noch nicht angepfiffen: es gibt keine Torschuetzen-Spalten, also ruecken
+           Wappen und Anstosszeit in die Mitte statt eine leere Haelfte stehenzulassen. */
+        .bl-spot-card.is-preview { justify-content: center; gap: 40px; }
+        .bl-spot-card.is-preview .bl-spot-top { flex: 0 0 auto; min-height: 0; }
+        .bl-spot-hint {
+            text-align: center; font-size: 18px; font-weight: 800; color: rgba(255,255,255,0.42);
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+        .bl-spot-team { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 18px; min-width: 0; }
+        /* Heller Halo: einige Wappen sind fast schwarz (z. B. Paderborn) und wuerden
+           auf dem dunklen Panel sonst verschwinden. */
+        .bl-spot-crest {
+            width: 200px; height: 172px; object-fit: contain;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.65)) drop-shadow(0 0 4px rgba(255,255,255,0.8));
+        }
+        .bl-spot-name {
+            font-size: 28px; font-weight: 800; color: #ffffff; text-align: center; line-height: 1.2;
+            max-width: 350px; text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+        }
+        .bl-spot-center { width: 340px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .bl-spot-score {
+            font-family: 'Orbitron', sans-serif; font-size: 100px; font-weight: 900; color: #ffffff;
+            line-height: 1; letter-spacing: 2px; text-shadow: 0 0 26px rgba(0, 242, 254, 0.35), 0 4px 14px rgba(0,0,0,0.7);
+            font-variant-numeric: tabular-nums;
+        }
+        .bl-spot-kickoff-label {
+            font-size: 17px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;
+        }
+        .bl-spot-kickoff-time {
+            font-family: 'Orbitron', sans-serif; font-size: 62px; font-weight: 900; color: #00f2fe;
+            line-height: 1.05; text-shadow: 0 0 24px rgba(0, 242, 254, 0.4); font-variant-numeric: tabular-nums;
+        }
+        .bl-spot-status {
+            display: flex; align-items: center; gap: 9px;
+            font-family: 'Orbitron', sans-serif; font-size: 19px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 6px 15px;
+        }
+        .bl-spot-status.is-live { color: #ff6b6b; border-color: rgba(255, 51, 51, 0.6); background: rgba(255, 51, 51, 0.12); }
+        .bl-spot-status.is-final { color: #00f2fe; border-color: rgba(0, 242, 254, 0.45); background: rgba(0, 242, 254, 0.1); }
+        .bl-spot-date { font-size: 16px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; }
+
+        .bl-spot-divider { height: 1px; background: rgba(255,255,255,0.13); margin: 14px 0 12px; flex-shrink: 0; }
+        .bl-scorer-head {
+            font-size: 14px; font-weight: 800; color: #94a3b8; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 8px; flex-shrink: 0;
+        }
+        /* Platz reicht fuer 5 Zeilen je Seite - alles darueber wird zusammengefasst. */
+        .bl-scorer-cols { display: flex; gap: 30px; flex: 0 0 auto; max-height: 160px; overflow: hidden; }
+        .bl-scorer-col { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+        .bl-scorer-col.is-away { text-align: right; }
+        .bl-scorer-line {
+            font-size: 20px; font-weight: 700; line-height: 27px; color: rgba(255,255,255,0.9);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .bl-scorer-min {
+            display: inline-block; min-width: 58px; font-family: 'Orbitron', sans-serif;
+            font-size: 17px; font-weight: 900; color: #00f2fe; font-variant-numeric: tabular-nums;
+        }
+        .bl-scorer-col.is-away .bl-scorer-min { min-width: 0; margin-left: 10px; }
+        .bl-scorer-tag { font-size: 15px; font-weight: 800; color: #94a3b8; margin-left: 6px; }
+        .bl-scorer-empty { font-size: 19px; font-weight: 700; color: rgba(255,255,255,0.4); }
+
+        .bl-ticker-bar {
+            height: 75px; flex-shrink: 0; display: flex; align-items: center; overflow: hidden;
+            background: rgba(0, 0, 0, 0.32); border: 1px solid rgba(255, 255, 255, 0.13); border-radius: 16px;
+        }
+        .bl-ticker-wrap { flex: 1; overflow: hidden; }
+        .bl-ticker-move {
+            display: flex; align-items: center; width: max-content;
+            animation: blTickerScroll 34s linear infinite; will-change: transform;
+        }
+        /* Der Inhalt steht genau zweimal im Element - deshalb ist -50 % exakt eine
+           Kopienbreite und die Schleife laeuft ohne sichtbaren Sprung durch. */
+        @keyframes blTickerScroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+        .bl-tk-item {
+            display: flex; align-items: center; gap: 11px; padding: 0 26px; flex-shrink: 0;
+            border-right: 1px solid rgba(255,255,255,0.1); height: 46px;
+        }
+        /* Breiter als hoch: einige Wappen sind Schriftzuege (Union Berlin, HSV, Leipzig)
+           und waeren in einem quadratischen Kasten winzig. */
+        .bl-tk-crest {
+            width: 44px; height: 34px; object-fit: contain; flex-shrink: 0;
+            filter: drop-shadow(0 0 3px rgba(255,255,255,0.75));
+        }
+        .bl-tk-team { font-size: 21px; font-weight: 800; color: #ffffff; white-space: nowrap; }
+        .bl-tk-score {
+            font-family: 'Orbitron', sans-serif; font-size: 23px; font-weight: 900; color: #ffffff;
+            padding: 0 6px; font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+        .bl-tk-score.is-live { color: #ff6b6b; text-shadow: 0 0 12px rgba(255, 51, 51, 0.5); }
+        .bl-tk-score.is-final { color: #00f2fe; }
+        .bl-tk-time {
+            font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #94a3b8;
+            padding: 0 6px; font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+
+        /* ---------- Slot 2: Tabelle ---------- */
+        .bl-tbl-head, .bl-tbl-row {
+            display: grid; grid-template-columns: 46px 46px 1fr 68px 132px 86px 78px;
+            align-items: center; gap: 12px; padding: 0 18px; box-sizing: border-box;
+        }
+        .bl-tbl-head {
+            height: 24px; margin-bottom: 6px; font-size: 13px; font-weight: 800; color: #94a3b8;
+            text-transform: uppercase; letter-spacing: 1.4px;
+        }
+        .bl-tbl-body { display: flex; flex-direction: column; gap: 2px; }
+        .bl-tbl-row {
+            height: 31px; border-radius: 8px; border: 1px solid transparent;
+            background: rgba(255,255,255,0.035); position: relative;
+        }
+        /* Der farbige Zonenbalken sitzt als ::before im Zeilenrand - so verschiebt er
+           das Grid nicht und alle Zeilen bleiben exakt gleich breit. */
+        .bl-tbl-row::before {
+            content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 4px;
+            border-radius: 0 3px 3px 0; background: transparent;
+        }
+        .bl-tbl-row.zone-cl      { background: rgba(0, 242, 254, 0.09); }
+        .bl-tbl-row.zone-cl::before      { background: #00f2fe; box-shadow: 0 0 9px rgba(0, 242, 254, 0.85); }
+        .bl-tbl-row.zone-el      { background: rgba(79, 172, 254, 0.085); }
+        .bl-tbl-row.zone-el::before      { background: #4facfe; box-shadow: 0 0 9px rgba(79, 172, 254, 0.8); }
+        .bl-tbl-row.zone-conf    { background: rgba(52, 211, 153, 0.075); }
+        .bl-tbl-row.zone-conf::before    { background: #34d399; box-shadow: 0 0 9px rgba(52, 211, 153, 0.75); }
+        .bl-tbl-row.zone-releg   { background: rgba(251, 191, 36, 0.085); }
+        .bl-tbl-row.zone-releg::before   { background: #fbbf24; box-shadow: 0 0 9px rgba(251, 191, 36, 0.8); }
+        .bl-tbl-row.zone-abstieg { background: rgba(255, 51, 85, 0.09); }
+        .bl-tbl-row.zone-abstieg::before { background: #ff3355; box-shadow: 0 0 9px rgba(255, 51, 85, 0.8); }
+
+        /* Teams, die genau jetzt spielen - gleiche Bildsprache wie das LIVE-Badge oben.
+           Der Rand liegt als eigene Ebene darueber, damit nur deren Deckkraft animiert
+           wird. Rand und Schein selbst werden einmal gezeichnet und bleiben stehen. */
+        .bl-tbl-row.is-live::after {
+            content: ''; position: absolute; inset: 0; border-radius: 8px; pointer-events: none;
+            border: 1px solid rgba(255, 51, 51, 0.85);
+            box-shadow: 0 0 14px rgba(255, 51, 51, 0.3);
+            animation: blRowLivePulse 1.6s ease-in-out infinite;
+        }
+        @keyframes blRowLivePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.22; } }
+        .bl-tbl-rank {
+            font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; color: #ffffff;
+            text-align: center; font-variant-numeric: tabular-nums;
+        }
+        .bl-tbl-crest {
+            width: 46px; height: 26px; object-fit: contain; justify-self: center;
+            filter: drop-shadow(0 0 3px rgba(255,255,255,0.8));
+        }
+        .bl-tbl-name {
+            font-size: 19px; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 10px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+        }
+        .bl-tbl-name .bl-live-dot { width: 9px; height: 9px; }
+        .bl-tbl-num {
+            font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.82);
+            text-align: center; font-variant-numeric: tabular-nums;
+        }
+        .bl-tbl-sun { letter-spacing: 1px; }
+        .bl-tbl-diff.is-pos { color: #34d399; }
+        .bl-tbl-diff.is-neg { color: #ff6b6b; }
+        .bl-tbl-pts {
+            font-family: 'Orbitron', sans-serif; font-size: 21px; font-weight: 900; color: #00f2fe;
+            text-align: center; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+        }
+        .bl-legend { display: flex; align-items: center; gap: 22px; height: 30px; margin-top: 10px; flex-shrink: 0; }
+        .bl-legend-item { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .bl-legend-swatch { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+        .bl-legend-note { margin-left: auto; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: none; letter-spacing: 0.5px; }
+
+        .bl-empty-msg {
+            flex: 1; display: flex; align-items: center; justify-content: center; text-align: center;
+            color: rgba(255,255,255,0.65); font-size: 24px; font-weight: 700; line-height: 1.5;
+        }
+
         .event-row {
             display: flex; align-items: center; gap: 24px;
             background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.14);
@@ -762,6 +1006,60 @@
                     </div>
                 </div>
 
+                <!-- Bundesliga-Slot 1: Spieltag (Ergebnisse, Torschützen, Anstoßzeiten) -->
+                <div class="media-inner-view" id="media-view-bl-matchday">
+                    <div class="bl-stage">
+                        <div class="bl-header">
+                            <div>
+                                <h2 id="bl-md-title">⚽ 1. Bundesliga · Spieltag –</h2>
+                                <p id="bl-md-sub">Ergebnisse &amp; Anstoßzeiten</p>
+                            </div>
+                            <div class="bl-header-right">
+                                <div class="bl-source-chip" id="bl-md-stand">Stand --:--</div>
+                                <div class="bl-live-badge" id="bl-md-live" style="display: none;"><span class="bl-live-dot"></span>Live</div>
+                            </div>
+                        </div>
+                        <div class="bl-spotlight" id="bl-md-spotlight"></div>
+                        <div class="bl-ticker-bar">
+                            <div class="bl-ticker-wrap"><div class="bl-ticker-move" id="bl-md-ticker"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bundesliga-Slot 2: Tabelle (alle 18 Teams, live markiert) -->
+                <div class="media-inner-view" id="media-view-bl-table">
+                    <div class="bl-stage">
+                        <div class="bl-header">
+                            <div>
+                                <h2>⚽ 1. Bundesliga · Tabelle</h2>
+                                <p id="bl-tbl-sub">Nach Spieltag –</p>
+                            </div>
+                            <div class="bl-header-right">
+                                <div class="bl-source-chip" id="bl-tbl-stand">Stand --:--</div>
+                                <div class="bl-live-badge" id="bl-tbl-live" style="display: none;"><span class="bl-live-dot"></span>Live</div>
+                            </div>
+                        </div>
+                        <div class="bl-tbl-head">
+                            <span style="text-align: center;">#</span>
+                            <span></span>
+                            <span>Verein</span>
+                            <span style="text-align: center;">Sp</span>
+                            <span style="text-align: center;">S · U · N</span>
+                            <span style="text-align: center;">Diff</span>
+                            <span style="text-align: center;">Pkt</span>
+                        </div>
+                        <div class="bl-tbl-body" id="bl-tbl-body"></div>
+                        <div class="bl-legend" id="bl-tbl-legend">
+                            <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #00f2fe; box-shadow: 0 0 8px rgba(0,242,254,0.8);"></span>Champions League</span>
+                            <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #4facfe; box-shadow: 0 0 8px rgba(79,172,254,0.8);"></span>Europa League</span>
+                            <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.8);"></span>Conference League</span>
+                            <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.8);"></span>Relegation</span>
+                            <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #ff3355; box-shadow: 0 0 8px rgba(255,51,85,0.8);"></span>Abstieg</span>
+                            <span class="bl-legend-note">Daten: OpenLigaDB</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Zwei Video-Ebenen: waehrend A laeuft, laedt B im Hintergrund den naechsten Clip.
                      Beim Wechsel wird nur die Sichtbarkeit getauscht - keine Ladezeit im sichtbaren Moment. -->
                 <div class="media-inner-view" id="media-view-drinks">
@@ -915,7 +1213,7 @@
             </div>
         </div>
 
-        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-21 · v6.0</div>
+        <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-24 · v6.1</div>
 
     </div>
 
@@ -1815,6 +2113,638 @@
             globalMasterTimer = later(runMasterSequence, 30000);
         }
 
+        // ---------- Bundesliga (OpenLigaDB) ----------
+        // Offene Datenquelle, kein Schluessel, keine Kontingente. Zwei Rotations-Slots:
+        // Spieltag (Ergebnisse/Torschuetzen/Anstosszeiten) und Tabelle (alle 18 Teams).
+        //
+        // BEWUSST NICHT ENTHALTEN: Gelbe/Rote Karten. OpenLigaDB liefert sie schlicht
+        // nicht - lieber gar nicht zeigen als einen leeren Platzhalter.
+        //
+        // Zur Datenquelle: OpenLigaDB wird von der Community gepflegt. Live-Ergebnisse
+        // (und damit auch die daraus berechnete Tabelle) koennen ein paar Minuten
+        // nachhinken. Das ist eine Eigenschaft der Quelle, kein Fehler im Widget.
+        const BL_API = 'https://api.openligadb.de';
+        const BL_LEAGUE = 'bl1';
+        const VIENNA_TZ = 'Europe/Vienna';
+
+        const BL_SPOTLIGHT_MS = 6500;            // Wechsel der Spotlight-Karte
+        const BL_MATCHDAY_SLOT_MS = 45000;       // Standzeit Slot 1
+        const BL_TABLE_SLOT_MS = 30000;          // Standzeit Slot 2
+        const BL_SCHEDULE_TTL_MS = 12 * 60 * 60 * 1000;  // Saison-Rahmendaten: 2x taeglich reicht
+        const BL_POLL_LIVE_MS = 75000;           // 60-90s waehrend Spiele laufen
+        const BL_POLL_IDLE_MS = 60 * 60 * 1000;  // sonst stuendlich
+        const BL_POLL_RETRY_MS = 5 * 60 * 1000;  // nach einem fehlgeschlagenen Abruf
+        const BL_LIVE_WINDOW_MS = 3 * 60 * 60 * 1000; // Sicherheitsnetz: nach 3h nie mehr "live"
+        const BL_PAUSE_DAYS = 14;                // laenger als das bis zum Anstoss = Slots aussetzen
+
+        // Wappen liegen als PNG im Repo (wappen/<teamId>.png), damit nicht bei jedem
+        // Seitenaufruf gegen Wikimedia/imgur gehotlinkt wird. Faellt ein Bild aus,
+        // springt onerror auf die Original-URL aus der API zurueck.
+        const BL_LOCAL_CRESTS = new Set([6, 7, 9, 16, 31, 40, 65, 80, 81, 87, 91, 95, 100, 112, 134, 175, 198, 1635]);
+
+        let blSeasonSchedule = { season: null, matchdays: [], fetchedAt: 0 };
+        let blMatchdayData = { order: null, label: '', matches: [], fetchedAt: 0 };
+        let blTableData = { rows: [], fetchedAt: 0 };
+        let blPollTimer = null;
+        let blSpotlightTimer = null;
+        let blSpotlightIndex = 0;
+
+        const blTimeFmt = new Intl.DateTimeFormat('de-AT', { timeZone: VIENNA_TZ, hour: '2-digit', minute: '2-digit' });
+        const blWeekdayFmt = new Intl.DateTimeFormat('de-AT', { timeZone: VIENNA_TZ, weekday: 'short' });
+        const blDateFmt = new Intl.DateTimeFormat('de-AT', { timeZone: VIENNA_TZ, day: '2-digit', month: '2-digit' });
+
+        // "Fr 28.08." statt des sperrigen "Fr., 28.08." aus dem Standardformat.
+        function blDayLabel(date) {
+            return blWeekdayFmt.format(date).replace('.', '') + ' ' + blDateFmt.format(date);
+        }
+
+        // OpenLigaDB liefert heute camelCase, aeltere Antworten/Spiegel PascalCase.
+        // Ein Zugriff, der beides kennt, macht das Widget gegen den Wechsel immun.
+        function blField(obj, name) {
+            if (!obj) return undefined;
+            if (obj[name] !== undefined) return obj[name];
+            return obj[name.charAt(0).toUpperCase() + name.slice(1)];
+        }
+
+        function blEsc(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, c =>
+                ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+        }
+
+        // ---------- Zeitrechnung in Europe/Vienna ----------
+        // Die Umschaltlogik haengt an "Dienstag 08:00 Wiener Zeit". Das darf nicht davon
+        // abhaengen, auf welche Zeitzone die Android-Box gerade eingestellt ist.
+        function blViennaFields(date) {
+            const parts = {};
+            new Intl.DateTimeFormat('en-GB', {
+                timeZone: VIENNA_TZ, hour12: false, weekday: 'short',
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }).formatToParts(date).forEach(p => { parts[p.type] = p.value; });
+            return {
+                year: +parts.year, month: +parts.month, day: +parts.day,
+                hour: parts.hour === '24' ? 0 : +parts.hour,
+                minute: +parts.minute, second: +parts.second,
+                weekday: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.weekday)
+            };
+        }
+
+        // Wiener Wanduhrzeit -> echter Zeitpunkt. Zwei Naeherungsschritte reichen auch
+        // ueber die Sommerzeit-Umstellung hinweg.
+        function blViennaWallClockToDate(year, month, day, hour, minute) {
+            const target = Date.UTC(year, month - 1, day, hour, minute, 0);
+            let ts = target;
+            for (let i = 0; i < 2; i++) {
+                const f = blViennaFields(new Date(ts));
+                const asIfUTC = Date.UTC(f.year, f.month - 1, f.day, f.hour, f.minute, f.second);
+                ts += target - asIfUTC;
+            }
+            return new Date(ts);
+        }
+
+        function blNextTuesday0800After(date) {
+            const f = blViennaFields(date);
+            let addDays = (2 - f.weekday + 7) % 7; // 2 = Dienstag
+            for (let guard = 0; guard < 3; guard++) {
+                const cal = new Date(Date.UTC(f.year, f.month - 1, f.day + addDays));
+                const inst = blViennaWallClockToDate(cal.getUTCFullYear(), cal.getUTCMonth() + 1, cal.getUTCDate(), 8, 0);
+                if (inst.getTime() > date.getTime()) return inst;
+                addDays += 7;
+            }
+            return new Date(date.getTime() + 7 * 86400000);
+        }
+
+        // Saison 2026/27 heisst bei OpenLigaDB "2026". Ab Juli zaehlt das laufende Jahr.
+        function blSeasonYear(now) {
+            const f = blViennaFields(now || new Date());
+            return f.month >= 7 ? f.year : f.year - 1;
+        }
+
+        function blKickoff(match) {
+            const utc = blField(match, 'matchDateTimeUTC');
+            if (utc) {
+                const d = new Date(utc);
+                if (!isNaN(d.getTime())) return d;
+            }
+            const local = blField(match, 'matchDateTime');
+            if (local) {
+                // Ohne Zeitzonen-Suffix: OpenLigaDB meint deutsche Ortszeit - identisch mit Wien.
+                const p = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(local);
+                if (p) return blViennaWallClockToDate(+p[1], +p[2], +p[3], +p[4], +p[5]);
+                const d = new Date(local);
+                if (!isNaN(d.getTime())) return d;
+            }
+            return null;
+        }
+
+        function blIsFinished(match) { return !!blField(match, 'matchIsFinished'); }
+
+        function blIsLive(match, nowMs) {
+            if (blIsFinished(match)) return false;
+            const k = blKickoff(match);
+            if (!k) return false;
+            const elapsed = nowMs - k.getTime();
+            return elapsed >= 0 && elapsed < BL_LIVE_WINDOW_MS;
+        }
+
+        function blAnyLive(nowMs) {
+            const now = nowMs || Date.now();
+            return (blMatchdayData.matches || []).some(m => blIsLive(m, now));
+        }
+
+        // OpenLigaDB kennt keine laufende Spielminute - sie wird aus dem Anstoss
+        // geschaetzt (45 + 15 Minuten Pause + 45). Deshalb steht im Widget "ca."
+        // nirgends als Zahl, sondern die Minute ist bewusst grob gerundet.
+        function blEstimateMinute(kickoff, nowMs) {
+            const mins = Math.floor((nowMs - kickoff.getTime()) / 60000);
+            if (mins < 0) return null;
+            if (mins <= 45) return { text: Math.max(1, mins) + "'", half: 1 };
+            if (mins <= 60) return { text: 'Halbzeit', half: 0 };
+            const second = mins - 15;
+            return { text: (second >= 90 ? "90+'" : second + "'"), half: 2 };
+        }
+
+        // Spielstand: matchResults ist die offizielle Quelle, die Tore-Liste ist bei
+        // laufenden Spielen aber oft frueher aktuell. Es gewinnt der hoehere Gesamtstand.
+        function blReadScore(match) {
+            let t1 = null, t2 = null;
+            const results = blField(match, 'matchResults') || [];
+            const final = results.find(r => blField(r, 'resultTypeID') === 2);
+            const fallback = results.slice().sort((a, b) =>
+                (blField(a, 'resultOrderID') || 0) - (blField(b, 'resultOrderID') || 0)).pop();
+            const chosen = final || fallback;
+            if (chosen) {
+                t1 = blField(chosen, 'pointsTeam1');
+                t2 = blField(chosen, 'pointsTeam2');
+            }
+            (blField(match, 'goals') || []).forEach(g => {
+                const g1 = blField(g, 'scoreTeam1'), g2 = blField(g, 'scoreTeam2');
+                if (g1 == null || g2 == null) return;
+                if (t1 == null || (g1 + g2) > (t1 + t2)) { t1 = g1; t2 = g2; }
+            });
+            return { t1: t1 == null ? 0 : t1, t2: t2 == null ? 0 : t2, known: t1 != null };
+        }
+
+        // Torschuetzen je Seite. Welches Team getroffen hat, ergibt sich aus dem
+        // Sprung im Zwischenstand - ein eigenes Team-Feld liefert OpenLigaDB nicht.
+        function blScorers(match) {
+            const goals = (blField(match, 'goals') || [])
+                .filter(g => blField(g, 'scoreTeam1') != null && blField(g, 'scoreTeam2') != null)
+                .slice()
+                .sort((a, b) => (blField(a, 'scoreTeam1') + blField(a, 'scoreTeam2')) -
+                                (blField(b, 'scoreTeam1') + blField(b, 'scoreTeam2')));
+            const home = [], away = [];
+            let prev1 = 0, prev2 = 0;
+            goals.forEach(g => {
+                const s1 = blField(g, 'scoreTeam1'), s2 = blField(g, 'scoreTeam2');
+                const tags = [];
+                if (blField(g, 'isPenalty')) tags.push('11m');
+                if (blField(g, 'isOwnGoal')) tags.push('ET');
+                const minute = blField(g, 'matchMinute');
+                const entry = {
+                    minute: minute == null ? '' : minute + "'",
+                    name: blField(g, 'goalGetterName') || 'Unbekannt',
+                    tag: tags.length ? '(' + tags.join(', ') + ')' : ''
+                };
+                // Eigentore stehen bei der Mannschaft, der das Tor gutgeschrieben wird.
+                if (s1 > prev1) home.push(entry); else if (s2 > prev2) away.push(entry);
+                prev1 = s1; prev2 = s2;
+            });
+            return { home, away };
+        }
+
+        function blTeamId(team) {
+            const id = blField(team, 'teamId');
+            return id == null ? blField(team, 'teamInfoId') : id;
+        }
+
+        function blCrestImg(team, cls) {
+            const id = blTeamId(team);
+            const remote = blField(team, 'teamIconUrl') || '';
+            const local = (id != null && BL_LOCAL_CRESTS.has(Number(id))) ? 'wappen/' + id + '.png' : remote;
+            const name = blField(team, 'teamName') || '';
+            return `<img class="${cls}" src="${blEsc(local)}" data-bl-remote="${blEsc(remote)}" alt="${blEsc(name)}" onerror="blCrestFallback(this)">`;
+        }
+
+        // Faellt das lokale Wappen aus, wird einmal die Original-URL probiert -
+        // danach wird der Platz nur noch freigehalten, damit das Layout nicht springt.
+        window.blCrestFallback = function (img) {
+            const remote = img.getAttribute('data-bl-remote');
+            img.removeAttribute('data-bl-remote');
+            if (remote && remote !== img.getAttribute('src')) img.setAttribute('src', remote);
+            else img.style.visibility = 'hidden';
+        };
+
+        // ---------- Abruf ----------
+        async function blFetchJson(path) {
+            const res = await fetch(BL_API + path, { cache: 'no-store' });
+            if (!res.ok) throw new Error('HTTP ' + res.status + ' bei ' + path);
+            return res.json();
+        }
+
+        // Ganze Saison einmal (bzw. taeglich) laden, um pro Spieltag den Datumsbereich
+        // zu kennen. Nur daraus laesst sich lokal bestimmen, was "jetzt" dran ist.
+        async function blLoadSeasonSchedule() {
+            const season = blSeasonYear();
+            const fresh = blSeasonSchedule.season === season &&
+                          blSeasonSchedule.matchdays.length > 0 &&
+                          (Date.now() - blSeasonSchedule.fetchedAt) < BL_SCHEDULE_TTL_MS;
+            if (fresh) return blSeasonSchedule;
+
+            const all = await blFetchJson(`/getmatchdata/${BL_LEAGUE}/${season}`);
+            const byOrder = new Map();
+            (all || []).forEach(m => {
+                const group = blField(m, 'group');
+                const order = blField(group, 'groupOrderID');
+                const kickoff = blKickoff(m);
+                if (order == null || !kickoff) return;
+                let entry = byOrder.get(order);
+                if (!entry) {
+                    entry = { order, label: blField(group, 'groupName') || (order + '. Spieltag'), first: kickoff, last: kickoff };
+                    byOrder.set(order, entry);
+                }
+                if (kickoff < entry.first) entry.first = kickoff;
+                if (kickoff > entry.last) entry.last = kickoff;
+            });
+            const matchdays = [...byOrder.values()].sort((a, b) => a.first - b.first);
+            if (matchdays.length) blSeasonSchedule = { season, matchdays, fetchedAt: Date.now() };
+            return blSeasonSchedule;
+        }
+
+        // Eigene Regel statt OpenLigaDBs "aktueller Gruppe":
+        // Spieltag N laeuft ab seinem ersten Anstoss bis einschliesslich Montag.
+        // Ab Dienstag 08:00 Wiener Zeit uebernimmt N+1 (dann nur Anstosszeiten).
+        // In einer englischen Woche greift der frueher eintretende Fall: schon der
+        // erste Anpfiff von N+1 schaltet um.
+        function blCurrentMatchday(nowDate) {
+            const now = (nowDate || new Date()).getTime();
+            const mds = blSeasonSchedule.matchdays;
+            if (!mds.length) return null;
+            let chosen = mds[0];
+            for (let i = 0; i < mds.length - 1; i++) {
+                const md = mds[i], next = mds[i + 1];
+                const switchAt = Math.min(blNextTuesday0800After(md.last).getTime(), next.first.getTime());
+                if (now >= switchAt) chosen = next;
+                else { chosen = md; break; }
+            }
+            return chosen;
+        }
+
+        // Rang selbst vergeben: solange alle bei 0 Punkten stehen, liefert die API die
+        // Teams alphabetisch. Sortierkriterien wie im Regelwerk - Punkte, Tordifferenz,
+        // erzielte Tore; bei exakter Gleichheit bleibt die Reihenfolge der API stehen.
+        function blRankTable(rows) {
+            const list = (rows || []).map((r, i) => {
+                const goals = +(blField(r, 'goals') || 0);
+                const against = +(blField(r, 'opponentGoals') || 0);
+                return {
+                    idx: i,
+                    teamInfoId: blField(r, 'teamInfoId'),
+                    teamId: blField(r, 'teamInfoId'),
+                    teamName: blField(r, 'teamName') || '',
+                    shortName: blField(r, 'shortName') || blField(r, 'teamName') || '',
+                    teamIconUrl: blField(r, 'teamIconUrl') || '',
+                    points: +(blField(r, 'points') || 0),
+                    matches: +(blField(r, 'matches') || 0),
+                    won: +(blField(r, 'won') || 0),
+                    draw: +(blField(r, 'draw') || 0),
+                    lost: +(blField(r, 'lost') || 0),
+                    goals, against, goalDiff: goals - against
+                };
+            });
+            list.sort((a, b) => b.points - a.points || b.goalDiff - a.goalDiff || b.goals - a.goals || a.idx - b.idx);
+            list.forEach((r, i) => { r.rank = i + 1; });
+            return list;
+        }
+
+        // Abruftakt: waehrend Spiele laufen (oder kurz davor/danach) alle 75s,
+        // sonst stuendlich. Die Zeiten kommen aus den echten Anstossdaten statt aus
+        // fest verdrahteten "Fr 20:30 / Sa 15:30" - das deckt englische Wochen mit ab.
+        function blPollIntervalMs() {
+            const now = Date.now();
+            const matches = blMatchdayData.matches || [];
+            if (!matches.length) return blSeasonSchedule.matchdays.length ? BL_POLL_IDLE_MS : BL_POLL_RETRY_MS;
+            let nextKickoff = Infinity;
+            let recentlyFinished = false;
+            for (const m of matches) {
+                if (blIsLive(m, now)) return BL_POLL_LIVE_MS;
+                const k = blKickoff(m);
+                if (!k) continue;
+                if (k.getTime() > now) nextKickoff = Math.min(nextKickoff, k.getTime());
+                // Kurz nach Abpfiff noch einmal nachfassen: die Tabelle zieht traeger nach.
+                else if (blIsFinished(m) && (now - k.getTime()) < (BL_LIVE_WINDOW_MS + 20 * 60 * 1000)) recentlyFinished = true;
+            }
+            if (recentlyFinished) return BL_POLL_LIVE_MS;
+            if (nextKickoff - now <= 15 * 60 * 1000) return BL_POLL_LIVE_MS;
+            return BL_POLL_IDLE_MS;
+        }
+
+        async function blRefresh() {
+            let retry = false;
+            try {
+                await blLoadSeasonSchedule();
+                const md = blCurrentMatchday();
+                if (md) {
+                    const matches = await blFetchJson(`/getmatchdata/${BL_LEAGUE}/${blSeasonSchedule.season}/${md.order}`);
+                    if (Array.isArray(matches)) {
+                        blMatchdayData = { order: md.order, label: md.label, matches, fetchedAt: Date.now() };
+                    }
+                }
+                const table = await blFetchJson(`/getbltable/${BL_LEAGUE}/${blSeasonSchedule.season}`);
+                if (Array.isArray(table) && table.length) {
+                    blTableData = { rows: blRankTable(table), fetchedAt: Date.now() };
+                }
+                blRefreshVisibleWidget();
+            } catch (e) {
+                retry = true;
+                console.log('OpenLigaDB-Abruf fehlgeschlagen: ' + e.message);
+            } finally {
+                // Der Poller haengt bewusst NICHT an sequenceTimers: er laeuft weiter,
+                // waehrend ein ganz anderer Slot zu sehen ist - sonst waere die Tabelle
+                // beim naechsten Einblenden jedes Mal veraltet.
+                clearTimeout(blPollTimer);
+                blPollTimer = setTimeout(blRefresh, retry ? BL_POLL_RETRY_MS : blPollIntervalMs());
+            }
+        }
+
+        // Slots aussetzen, wenn nichts Sinnvolles anzuzeigen ist: kein Abruf geglueckt
+        // oder Sommer-/Winterpause (naechster Anstoss mehr als 14 Tage entfernt).
+        function blSlotsAvailable() {
+            const matches = blMatchdayData.matches || [];
+            if (!matches.length) return false;
+            const kicks = matches.map(blKickoff).filter(Boolean).map(d => d.getTime());
+            if (!kicks.length) return false;
+            return (Math.min(...kicks) - Date.now()) <= BL_PAUSE_DAYS * 86400000;
+        }
+
+        function blStandText(fetchedAt) {
+            return fetchedAt ? 'Stand ' + blTimeFmt.format(new Date(fetchedAt)) : 'Stand --:--';
+        }
+
+        // ---------- Slot 1: Spieltag ----------
+        // Interessantestes Spiel zuerst: laufende Partien, dann beendete mit den
+        // meisten Toren, zuletzt die noch anstehenden nach Anstosszeit.
+        function blSpotlightOrder(matches, nowMs) {
+            return matches.map(m => {
+                const score = blReadScore(m);
+                const k = blKickoff(m);
+                return {
+                    match: m,
+                    rank: blIsLive(m, nowMs) ? 0 : (blIsFinished(m) ? 1 : 2),
+                    goals: score.t1 + score.t2,
+                    kick: k ? k.getTime() : Infinity
+                };
+            }).sort((a, b) =>
+                a.rank - b.rank ||
+                (a.rank === 2 ? a.kick - b.kick : (b.goals - a.goals || a.kick - b.kick))
+            ).map(x => x.match);
+        }
+
+        function blScorerColumn(entries, isAway) {
+            if (!entries.length) return `<div class="bl-scorer-col${isAway ? ' is-away' : ''}"><span class="bl-scorer-empty">–</span></div>`;
+            // Fuenf Zeilen passen in die Spalte. Sind es mehr Tore, macht die letzte
+            // Zeile Platz fuer die Zusammenfassung.
+            const shown = entries.length <= 5 ? entries : entries.slice(0, 4);
+            const rest = entries.length - shown.length;
+            const lines = shown.map(e => {
+                const min = `<span class="bl-scorer-min">${blEsc(e.minute)}</span>`;
+                const name = `${blEsc(e.name)}${e.tag ? ` <span class="bl-scorer-tag">${blEsc(e.tag)}</span>` : ''}`;
+                return `<div class="bl-scorer-line">${isAway ? name + ' ' + min : min + ' ' + name}</div>`;
+            });
+            if (rest > 0) lines.push(`<div class="bl-scorer-line bl-scorer-empty">+${rest} weitere</div>`);
+            return `<div class="bl-scorer-col${isAway ? ' is-away' : ''}">${lines.join('')}</div>`;
+        }
+
+        function blRenderSpotlight(match) {
+            const box = document.getElementById('bl-md-spotlight');
+            if (!box) return;
+            if (!match) {
+                box.innerHTML = `<div class="bl-empty-msg">Aktuell keine Spieldaten verfügbar.<br>Nächster Spieltag folgt in Kürze ⚽</div>`;
+                return;
+            }
+            const now = Date.now();
+            const team1 = blField(match, 'team1') || {};
+            const team2 = blField(match, 'team2') || {};
+            const kickoff = blKickoff(match);
+            const live = blIsLive(match, now);
+            const finished = blIsFinished(match);
+            const started = live || finished;
+
+            let center;
+            if (started) {
+                // Zustand A: Spielstand gross, darunter Minute bzw. "Endstand".
+                const score = blReadScore(match);
+                const minute = live && kickoff ? blEstimateMinute(kickoff, now) : null;
+                const status = finished
+                    ? `<div class="bl-spot-status is-final">Endstand</div>`
+                    : `<div class="bl-spot-status is-live"><span class="bl-live-dot"></span>${blEsc(minute ? minute.text : '')} Live</div>`;
+                center = `<div class="bl-spot-score">${score.t1} : ${score.t2}</div>${status}`;
+            } else {
+                // Zustand B: noch nicht angepfiffen - Anstosszeit statt Spielstand.
+                center = `<div class="bl-spot-kickoff-label">Anstoß</div>
+                    <div class="bl-spot-kickoff-time">${kickoff ? blEsc(blTimeFmt.format(kickoff)) : '--:--'} Uhr</div>
+                    <div class="bl-spot-date">${kickoff ? blEsc(blDayLabel(kickoff)) : ''}</div>`;
+            }
+
+            const scorers = blScorers(match);
+            const lowerBlock = started
+                ? `<div class="bl-spot-divider"></div>
+                   <div class="bl-scorer-head">Torschützen</div>
+                   <div class="bl-scorer-cols">
+                       ${blScorerColumn(scorers.home, false)}
+                       ${blScorerColumn(scorers.away, true)}
+                   </div>`
+                : `<div class="bl-spot-hint">Torschützen erscheinen ab Anpfiff</div>`;
+
+            box.innerHTML = `<div class="bl-spot-card${started ? '' : ' is-preview'}">
+                <div class="bl-spot-top">
+                    <div class="bl-spot-team">
+                        ${blCrestImg(team1, 'bl-spot-crest')}
+                        <div class="bl-spot-name">${blEsc(blField(team1, 'teamName') || '')}</div>
+                    </div>
+                    <div class="bl-spot-center">${center}</div>
+                    <div class="bl-spot-team">
+                        ${blCrestImg(team2, 'bl-spot-crest')}
+                        <div class="bl-spot-name">${blEsc(blField(team2, 'teamName') || '')}</div>
+                    </div>
+                </div>
+                ${lowerBlock}
+            </div>`;
+        }
+
+        function blRenderTicker() {
+            const el = document.getElementById('bl-md-ticker');
+            if (!el) return;
+            const now = Date.now();
+            const matches = (blMatchdayData.matches || []).slice()
+                .sort((a, b) => {
+                    const ka = blKickoff(a), kb = blKickoff(b);
+                    return (ka ? ka.getTime() : Infinity) - (kb ? kb.getTime() : Infinity);
+                });
+            if (!matches.length) { el.innerHTML = ''; return; }
+
+            const items = matches.map(m => {
+                const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
+                const live = blIsLive(m, now), finished = blIsFinished(m);
+                let middle;
+                if (live || finished) {
+                    const s = blReadScore(m);
+                    middle = `<span class="bl-tk-score ${live ? 'is-live' : 'is-final'}">${s.t1}:${s.t2}</span>`;
+                } else {
+                    const k = blKickoff(m);
+                    middle = `<span class="bl-tk-time">${k ? blEsc(blTimeFmt.format(k)) : '--:--'}</span>`;
+                }
+                return `<span class="bl-tk-item">
+                    ${blCrestImg(t1, 'bl-tk-crest')}
+                    <span class="bl-tk-team">${blEsc(blField(t1, 'shortName') || blField(t1, 'teamName') || '')}</span>
+                    ${middle}
+                    <span class="bl-tk-team">${blEsc(blField(t2, 'shortName') || blField(t2, 'teamName') || '')}</span>
+                    ${blCrestImg(t2, 'bl-tk-crest')}
+                </span>`;
+            }).join('');
+
+            // Zweimal derselbe Inhalt - die Animation laeuft genau eine Kopienbreite weit
+            // und springt am Ende nahtlos zurueck.
+            el.innerHTML = items + items;
+        }
+
+        function blRenderMatchdayChrome() {
+            const now = Date.now();
+            const title = document.getElementById('bl-md-title');
+            const sub = document.getElementById('bl-md-sub');
+            const stand = document.getElementById('bl-md-stand');
+            const live = document.getElementById('bl-md-live');
+            const md = blSeasonSchedule.matchdays.find(m => m.order === blMatchdayData.order);
+
+            if (title) title.textContent = '⚽ 1. Bundesliga · Spieltag ' + (blMatchdayData.order || '–');
+            if (sub) {
+                sub.textContent = md
+                    ? `${blDayLabel(md.first)} – ${blDayLabel(md.last)} · Saison ${blSeasonSchedule.season}/${String((blSeasonSchedule.season || 0) + 1).slice(-2)}`
+                    : 'Ergebnisse & Anstoßzeiten';
+            }
+            if (stand) stand.textContent = blStandText(blMatchdayData.fetchedAt);
+            if (live) live.style.display = blAnyLive(now) ? 'flex' : 'none';
+        }
+
+        function blStopSpotlight() {
+            if (blSpotlightTimer) { clearInterval(blSpotlightTimer); blSpotlightTimer = null; }
+        }
+
+        function runBlMatchdayState(nextStateIndex) {
+            document.getElementById('media-view-bl-matchday').classList.add('active');
+            blStopSpotlight();
+            blRenderMatchdayChrome();
+            blRenderTicker();
+            retriggerAnim(document.getElementById('bl-md-ticker'));
+
+            let order = blSpotlightOrder(blMatchdayData.matches || [], Date.now());
+            blSpotlightIndex = 0;
+            blRenderSpotlight(order[0] || null);
+
+            // repeat() haengt am zentralen Timer-Set und wird beim naechsten Slot
+            // automatisch mit abgeraeumt.
+            blSpotlightTimer = repeat(() => {
+                order = blSpotlightOrder(blMatchdayData.matches || [], Date.now());
+                if (!order.length) return;
+                blSpotlightIndex = (blSpotlightIndex + 1) % order.length;
+                blRenderSpotlight(order[blSpotlightIndex]);
+                blRenderMatchdayChrome();
+            }, BL_SPOTLIGHT_MS);
+
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = later(runMasterSequence, BL_MATCHDAY_SLOT_MS);
+        }
+
+        // ---------- Slot 2: Tabelle ----------
+        function blZoneClass(rank) {
+            if (rank <= 4) return 'zone-cl';
+            if (rank === 5) return 'zone-el';
+            if (rank === 6) return 'zone-conf';
+            if (rank === 16) return 'zone-releg';
+            if (rank >= 17) return 'zone-abstieg';
+            return '';
+        }
+
+        // Teams, die gerade auf dem Platz stehen - dieselbe Bedingung wie im Spotlight:
+        // nicht beendet und Anstoss liegt bereits zurueck.
+        function blLiveTeamIds(nowMs) {
+            const ids = new Set();
+            (blMatchdayData.matches || []).forEach(m => {
+                if (!blIsLive(m, nowMs)) return;
+                [blField(m, 'team1'), blField(m, 'team2')].forEach(t => {
+                    const id = blTeamId(t);
+                    if (id != null) ids.add(Number(id));
+                });
+            });
+            return ids;
+        }
+
+        function blRenderTable() {
+            const body = document.getElementById('bl-tbl-body');
+            const sub = document.getElementById('bl-tbl-sub');
+            const stand = document.getElementById('bl-tbl-stand');
+            const liveBadge = document.getElementById('bl-tbl-live');
+            if (!body) return;
+
+            const now = Date.now();
+            const liveIds = blLiveTeamIds(now);
+            if (sub) {
+                const md = blMatchdayData.order || '–';
+                const started = (blMatchdayData.matches || []).some(m => {
+                    const k = blKickoff(m);
+                    return k && k.getTime() <= now;
+                });
+                sub.textContent = blAnyLive(now) ? `Spieltag ${md} läuft · live berechnet`
+                    : (started ? `Nach Spieltag ${md}` : `Vor Spieltag ${md}`);
+            }
+            if (stand) stand.textContent = blStandText(blTableData.fetchedAt);
+            if (liveBadge) liveBadge.style.display = liveIds.size ? 'flex' : 'none';
+
+            if (!blTableData.rows.length) {
+                body.innerHTML = `<div class="bl-empty-msg">Tabelle wird geladen …</div>`;
+                return;
+            }
+
+            body.innerHTML = blTableData.rows.map(r => {
+                const isLive = liveIds.has(Number(r.teamInfoId));
+                const diff = (r.goalDiff > 0 ? '+' : '') + r.goalDiff;
+                const diffCls = r.goalDiff > 0 ? ' is-pos' : (r.goalDiff < 0 ? ' is-neg' : '');
+                return `<div class="bl-tbl-row ${blZoneClass(r.rank)}${isLive ? ' is-live' : ''}">
+                    <span class="bl-tbl-rank">${r.rank}</span>
+                    ${blCrestImg(r, 'bl-tbl-crest')}
+                    <span class="bl-tbl-name">${blEsc(r.shortName)}${isLive ? '<span class="bl-live-dot"></span>' : ''}</span>
+                    <span class="bl-tbl-num">${r.matches}</span>
+                    <span class="bl-tbl-num bl-tbl-sun">${r.won} · ${r.draw} · ${r.lost}</span>
+                    <span class="bl-tbl-num bl-tbl-diff${diffCls}">${diff}</span>
+                    <span class="bl-tbl-pts">${r.points}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function runBlTableState(nextStateIndex) {
+            document.getElementById('media-view-bl-table').classList.add('active');
+            blRenderTable();
+            // Waehrend der Slot steht, laufende Spiele weiter markieren (der Poller
+            // liefert neue Daten, die Live-Markierung soll nicht 30s einfrieren).
+            repeat(blRenderTable, 15000);
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = later(runMasterSequence, BL_TABLE_SLOT_MS);
+        }
+
+        // Nach einem erfolgreichen Abruf sofort nachziehen, falls gerade einer der
+        // beiden Slots sichtbar ist.
+        function blRefreshVisibleWidget() {
+            const mdView = document.getElementById('media-view-bl-matchday');
+            const tblView = document.getElementById('media-view-bl-table');
+            if (mdView && mdView.classList.contains('active')) {
+                blRenderMatchdayChrome();
+                blRenderTicker();
+            }
+            if (tblView && tblView.classList.contains('active')) blRenderTable();
+        }
+
+        blRefresh();
+
         // ---------- Getränke-Highlights ----------
         // Alle Clips: 1280x720, 10s, ohne Tonspur (das <video> ist muted - die Tonspur war reiner Ballast).
         // stopAt: bei 52.mp4 (Gin Tonic) dunkelt das Video zum Ende hin ab - Anzeige stoppt
@@ -2682,11 +3612,30 @@
             } else if (mediaStateIndex === 6) {
                 runMusicState(7); // -> Veranstaltungen
 
-            // Fußball-Widget pausiert (raus aus dem Kreislauf) bis die deutsche Bundesliga
-            // am 28.8. startet - dann zurück auf OpenLigaDB (bl1), das zuverlässig lief.
+            // Der alte api-football-Slot (Österreich Bundesliga, media-view-football)
+            // bleibt bewusst aus dem Kreislauf: Deutschland läuft jetzt über die beiden
+            // OpenLigaDB-Slots weiter unten (Spieltag + Tabelle).
 
             } else if (mediaStateIndex === 7) {
-                runEventsState(8); // -> Wetter-Übersicht
+                runEventsState(7.25); // -> Bundesliga-Spieltag
+
+            } else if (mediaStateIndex === 7.25) {
+                // Beide Fußball-Slots setzen in der Sommer-/Winterpause und bei
+                // fehlgeschlagenem Abruf automatisch aus - dann geht es direkt weiter.
+                if (blSlotsAvailable()) {
+                    runBlMatchdayState(7.5); // -> Bundesliga-Tabelle
+                } else {
+                    mediaStateIndex = 8;
+                    runMasterSequence();
+                }
+
+            } else if (mediaStateIndex === 7.5) {
+                if (blSlotsAvailable() && blTableData.rows.length) {
+                    runBlTableState(8); // -> Wetter-Übersicht
+                } else {
+                    mediaStateIndex = 8;
+                    runMasterSequence();
+                }
 
             } else if (mediaStateIndex === 8) {
                 if (isWeatherWidgetHour()) {
