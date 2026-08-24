@@ -392,9 +392,12 @@
         .bl-spot-kickoff-label {
             font-size: 17px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;
         }
+        /* nowrap: "20:30" darf nie umbrechen - genau das passierte mit dem
+           frueheren Zusatz "Uhr" bei 20:30-Anstoessen. */
         .bl-spot-kickoff-time {
             font-family: 'Orbitron', sans-serif; font-size: 62px; font-weight: 900; color: #00f2fe;
             line-height: 1.05; text-shadow: 0 0 24px rgba(0, 242, 254, 0.4); font-variant-numeric: tabular-nums;
+            white-space: nowrap;
         }
         .bl-spot-status {
             display: flex; align-items: center; gap: 9px;
@@ -2542,7 +2545,7 @@
             } else {
                 // Zustand B: noch nicht angepfiffen - Anstosszeit statt Spielstand.
                 center = `<div class="bl-spot-kickoff-label">Anstoß</div>
-                    <div class="bl-spot-kickoff-time">${kickoff ? blEsc(blTimeFmt.format(kickoff)) : '--:--'} Uhr</div>
+                    <div class="bl-spot-kickoff-time">${kickoff ? blEsc(blTimeFmt.format(kickoff)) : '--:--'}</div>
                     <div class="bl-spot-date">${kickoff ? blEsc(blDayLabel(kickoff)) : ''}</div>`;
             }
 
