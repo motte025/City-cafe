@@ -118,7 +118,7 @@ exakt dort weiter, wo sie angehalten wurde.
 ### Was du beim Testen im Blick behalten solltest
 
 - alle Spieleranzahlen 2–6 einmal durchspielen (die Sitzpositionen wechseln)
-- Handy während des eigenen Zugs sperren → nach 20 s wird übersprungen
+- Handy während des eigenen Zugs sperren → nach zwei Minuten wird übersprungen
 - Handy-Seite neu laden → der Sitzplatz bleibt erhalten
 - zwei Handys gleichzeitig scannen → beide bekommen verschiedene Plätze
 - Pause/Fortsetzen mitten in einem Getränke-**Video** prüfen: es muss an
@@ -134,8 +134,11 @@ Alles Weitere steht in `hosn-obe-config.js`:
 |---|---|---|
 | `hostSelectSeconds` | Wartezeit auf die Spieleranzahl, danach zurück in die Rotation | 20 |
 | `lobbySeconds` | Countdown, in dem die übrigen Gäste scannen können | 60 |
-| `turnTimeoutSeconds` | Nach dieser Zeit wird ein Zug übersprungen | 20 |
-| `revealSeconds` | Wie lange das Ergebnis am TV stehen bleibt | 12 |
+| `turnTimeoutSeconds` | Nach dieser Zeit wird ein Zug übersprungen | 120 |
+| `revealSeconds` | Wie lange das Ergebnis am TV stehen bleibt | 30 |
+| `botIdleStartSeconds` | Countdown, sobald das Widget im Zyklus erscheint; danach spielt der Computer allein | 60 |
+| `botPlayerCount` | So viele Plätze besetzt der Computer beim Start aus dem Zyklus | 6 |
+| `botMoveSeconds` | Denkpause zwischen zwei Computer-Zügen | 8 |
 | `testFirstInCycle` | Hos’n Obe läuft als **erstes** Widget im Zyklus | `true` |
 | `mobileUrl` | Adresse der Handy-Seite (steckt im QR-Code) | GitHub Pages |
 
@@ -190,5 +193,6 @@ Runden darauf, dass immer genau ein Verlierer feststeht.
 | `hosn-obe-engine.test.js` | Regel-Checks (`node hosn-obe-engine.test.js`) |
 | `hosn-obe-net.js` | Firebase-Anbindung, anonyme Anmeldung, Sitzplatzvergabe |
 | `hosn-obe.html` | Handy-Seite (Ziel des QR-Codes) |
-| `cards/player_card_back_design_2_*.svg` | Zwei Kartenrückseiten, pro Karte zufällig gewählt |
+| `cards/back_lightblue.webp`, `cards/back_red.webp` | Zwei Kartenrückseiten, pro Runde eine davon |
+| `hosn-obe-browser.test.js` | Browsertests (Handy + TV, `node hosn-obe-browser.test.js`) |
 | `index.html` | TV-Widget, Pause/Fortsetzen der Rotation, QR-Overlay |
