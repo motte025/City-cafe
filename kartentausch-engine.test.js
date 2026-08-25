@@ -36,9 +36,10 @@ var cardsDir = path.join(__dirname, 'cards');
 var onDisk = new Set(fs.readdirSync(cardsDir));
 var missing = deck.map(function (c) { return E.cardImage(c, ''); }).filter(function (f) { return !onDisk.has(f); });
 eq('Alle 32 Kartenbilder existieren im cards/-Ordner', missing, []);
-check('Kartenrückseite für den TV liegt bereit', onDisk.has('back.webp'));
-// 32 Vorderseiten + genau eine Rückseite, sonst schleicht sich unbenutztes Material ein.
-eq('Keine überzähligen Dateien im cards/-Ordner', onDisk.size, 33);
+var missingBacks = E.CARD_BACKS.filter(function (f) { return !onDisk.has(f); });
+eq('Beide Kartenrückseiten liegen bereit', missingBacks, []);
+// 32 Vorderseiten + genau zwei Rückseiten, sonst schleicht sich unbenutztes Material ein.
+eq('Keine überzähligen Dateien im cards/-Ordner', onDisk.size, 34);
 eq('cardImage nutzt cards/ als Standardpfad', E.cardImage('H7'), 'cards/7_of_hearts.webp');
 eq('Pik-Ass hat die 2-Endung', E.cardImage('SA', ''), 'ace_of_spades2.webp');
 eq('Herz-Ass hat keine 2-Endung', E.cardImage('HA', ''), 'ace_of_hearts.webp');
@@ -195,6 +196,77 @@ for (var a = 0; a < deck.length; a++) {
 eq('Alle Kombinationen geprüft', handCount, 4960);
 eq('Keine Punktzahl außerhalb 7-31', scoreOutOfRange, 0);
 eq('Genau 24 Feuer-Hände im 32er-Blatt', fireHands, 24);
+
+// ---------- "Alle 3 tauschen" nur bei Drilling oder gleicher Farbe ----------
+eq('Mitte mit Drilling erlaubt Rundumtausch', E.middleWorthTakingAll(['H9', 'S9', 'D9']), true);
+eq('Mitte mit drei gleichen Farben erlaubt Rundumtausch', E.middleWorthTakingAll(['H7', 'HK', 'HA']), true);
+eq('Gemischte Mitte erlaubt keinen Rundumtausch', E.middleWorthTakingAll(['H7', 'S8', 'D9']), false);
+eq('Zwei gleiche Farben reichen nicht', E.middleWorthTakingAll(['H7', 'H8', 'D9']), false);
+eq('Unvollstaendige Mitte erlaubt keinen Rundumtausch', E.middleWorthTakingAll(['H7', 'H8']), false);
+
+// ---------- Kartenrueckseiten ----------
+eq('Zwei Rueckseiten-Motive vorhanden', E.CARD_BACKS.length, 2);
+eq('Rueckseite mit Basispfad', E.cardBackImage('cards/', function () { return 0; }),
+   'cards/player_card_back_design_2_lightblue.svg');
+eq('Zweite Rueckseite wird auch gezogen', E.cardBackImage('cards/', function () { return 0.99; }),
+   'cards/player_card_back_design_2_red.svg');
+var backsSeen = {};
+for (var bi = 0; bi < 400; bi++) backsSeen[E.cardBackImage('cards/')] = true;
+eq('Ueber viele Ziehungen kommen beide Motive vor', Object.keys(backsSeen).length, 2);
+
+// ---------- Computer-Spieler ----------
+var botAll = E.botDecide(['C7', 'S8', 'D9'], ['H7', 'HK', 'HA'], { canKnock: false });
+eq('Computer nimmt einen lohnenden Rundumtausch', botAll.type, 'all');
+
+var botKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'], { canKnock: true });
+eq('Computer klopft mit starker Hand', botKnock.type, 'knock');
+
+var botNoKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'], { canKnock: false });
+eq('Ohne Klopf-Erlaubnis wird nicht geklopft', botNoKnock.type !== 'knock', true);
+
+var botSingle = E.botDecide(['C7', 'S8', 'H9'], ['HA', 'S9', 'D7'], { canKnock: false });
+eq('Computer waehlt sonst einen Einzeltausch', botSingle.type, 'single');
+eq('Einzeltausch nennt eine Handkarte', botSingle.handIndex >= 0 && botSingle.handIndex <= 2, true);
+eq('Einzeltausch nennt eine Mittenkarte', botSingle.middleIndex >= 0 && botSingle.middleIndex <= 2, true);
+eq('Computer ohne Hand zieht nicht', E.botDecide([], ['HA', 'S9', 'D7'], {}).type, 'skip');
+
+/*
+ * Zwei echte Invarianten statt einer Statistik:
+ *  1. Ein Rundumtausch wird nie gewaehlt, wenn er die Hand verschlechtert.
+ *  2. Der gewaehlte Einzeltausch ist immer der bestmoegliche - der Computer
+ *     laesst nie einen besseren Tausch liegen. Dass ein Notzug die Hand
+ *     verschlechtern kann, ist erlaubt: vor der zweiten Runde darf nicht
+ *     geklopft werden, irgendetwas muss der Computer also ziehen.
+ */
+var botAllWorse = 0, botSuboptimal = 0, botForced = 0;
+for (var bt = 0; bt < 3000; bt++) {
+    var d = E.deal(2);
+    var h = d.hands[0], mid = d.middleCards;
+    var mv = E.botDecide(h, mid, { canKnock: bt % 2 === 0 });
+    var before = E.scoreHand(h).score;
+
+    if (mv.type === 'all' && E.scoreHand(mid).score < before) botAllWorse++;
+
+    if (mv.type === 'single') {
+        var chosen = h.slice();
+        chosen[mv.handIndex] = mid[mv.middleIndex];
+        var chosenScore = E.scoreHand(chosen).score;
+        if (chosenScore < before) botForced++;
+
+        var bestPossible = -1;
+        for (var qh = 0; qh < 3; qh++) {
+            for (var qm = 0; qm < 3; qm++) {
+                var probe = h.slice();
+                probe[qh] = mid[qm];
+                bestPossible = Math.max(bestPossible, E.scoreHand(probe).score);
+            }
+        }
+        if (chosenScore < bestPossible) botSuboptimal++;
+    }
+}
+eq('Rundumtausch nie zum eigenen Nachteil', botAllWorse, 0);
+eq('Computer laesst nie einen besseren Einzeltausch liegen', botSuboptimal, 0);
+console.log('Computer-Statistik: ' + botForced + ' von 3000 Zuegen waren Notzuege ohne Verbesserung.');
 
 // ---------- Ergebnis ----------
 console.log('\n' + passed + ' Checks bestanden.');

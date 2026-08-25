@@ -31,8 +31,13 @@ window.KARTENTAUSCH_CONFIG = {
     // --- Zeiten in Sekunden (gefahrlos anpassbar) ---
     hostSelectSeconds: 20,   // so lange wartet der TV auf die Spieleranzahl, sonst zurück in die Rotation
     lobbySeconds: 60,        // Countdown, in dem die übrigen Gäste scannen können
-    turnTimeoutSeconds: 20,  // wer so lange nicht zieht, wird übersprungen
+    turnTimeoutSeconds: 120, // wer zwei Minuten nicht zieht, wird übersprungen
     revealSeconds: 12,       // wie lange das Ergebnis am TV stehen bleibt
+
+    // --- Computer-Runde (Vorführmodus) ---
+    botPlayerCount: 3,       // so viele Plätze besetzt der Computer
+    botMoveSeconds: 3,       // Denkpause zwischen zwei Computer-Zügen
+    botIdleStartSeconds: 60, // so lange bleibt es still, bevor der Computer von selbst spielt
 
     // Zum Testen: Kartentausch läuft als ERSTES Widget im Rotationszyklus an.
     // Auf false stellen, sobald nur noch der permanente QR-Code auslösen soll.

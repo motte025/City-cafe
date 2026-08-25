@@ -204,6 +204,88 @@
         return SUIT_SYMBOL[p.suit] + ' ' + RANK_NAME[p.rank];
     }
 
+    // Zwei Rueckseiten-Motive, pro Karte zufaellig gemischt - dadurch sieht ein
+    // verdeckter Faecher aus wie ein echtes Blatt und nicht wie eine Kachel.
+    var CARD_BACKS = ['player_card_back_design_2_lightblue.svg', 'player_card_back_design_2_red.svg'];
+
+    function cardBackImage(basePath, rng) {
+        var random = rng || Math.random;
+        var prefix = basePath === undefined ? 'cards/' : basePath;
+        return prefix + CARD_BACKS[Math.floor(random() * CARD_BACKS.length) % CARD_BACKS.length];
+    }
+
+    /*
+     * Darf "Alle 3 tauschen" angeboten werden?
+     *
+     * Nutzer-Vorgabe: nur wenn die offene Mitte selbst etwas hergibt - drei
+     * gleiche Raenge (Drilling) oder drei gleiche Farben. Sonst ist der
+     * Rundumtausch reine Zeitverschwendung und der Knopf bleibt weg.
+     */
+    function middleWorthTakingAll(middleCards) {
+        if (!middleCards || middleCards.length !== 3) return false;
+        var r = scoreHand(middleCards);
+        return !!(r.threeOfAKind || r.flush);
+    }
+
+    var BOT_KNOCK_FROM = 27;      // ab dieser Punktzahl klopft der Computer
+    var BOT_MIN_GAIN = 0.5;       // darunter lohnt ein Tausch nicht
+
+    /*
+     * Zugentscheidung des Computers.
+     *
+     * Bewusst simpel und nachvollziehbar: alle neun Einzeltausche durchrechnen,
+     * den besten nehmen, den Rundumtausch nur pruefen wenn er ueberhaupt
+     * erlaubt ist. Klopfen, sobald die Hand gut genug ist - aber nur, wenn die
+     * Regel es an dieser Stelle zulaesst.
+     *
+     * Gibt { type: 'single', handIndex, middleIndex } | { type: 'all' } |
+     * { type: 'knock' } | { type: 'skip' } zurueck.
+     */
+    function botDecide(hand, middleCards, options) {
+        var opts = options || {};
+        if (!hand || hand.length !== 3 || !middleCards || middleCards.length !== 3) {
+            return { type: 'skip' };
+        }
+
+        var current = scoreHand(hand).score;
+
+        var best = null;
+        for (var h = 0; h < 3; h++) {
+            for (var m = 0; m < 3; m++) {
+                var trial = hand.slice();
+                trial[h] = middleCards[m];
+                var value = scoreHand(trial).score;
+                if (!best || value > best.value) {
+                    best = { type: 'single', handIndex: h, middleIndex: m, value: value };
+                }
+            }
+        }
+
+        if (middleWorthTakingAll(middleCards)) {
+            var allValue = scoreHand(middleCards).score;
+            if (!best || allValue > best.value) best = { type: 'all', value: allValue };
+        }
+
+        // Hand ist bereits stark und Klopfen erlaubt: Runde beenden, statt sie
+        // durch sinnlose Tausche in die Laenge zu ziehen.
+        if (opts.canKnock && current >= BOT_KNOCK_FROM && (!best || best.value <= current)) {
+            return { type: 'knock' };
+        }
+
+        if (best && best.value >= current + BOT_MIN_GAIN) {
+            return best.type === 'all'
+                ? { type: 'all' }
+                : { type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex };
+        }
+
+        if (opts.canKnock && current >= BOT_KNOCK_FROM) return { type: 'knock' };
+
+        // Nichts zu gewinnen: lieber die schwaechste Karte gegen die staerkste
+        // Mittenkarte tauschen, damit sich ueberhaupt etwas bewegt.
+        return best ? { type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex }
+                    : { type: 'skip' };
+    }
+
     return {
         SUITS: SUITS,
         RANKS: RANKS,
@@ -223,6 +305,11 @@
         evaluateRound: evaluateRound,
         nextSeat: nextSeat,
         cardImage: cardImage,
-        cardLabel: cardLabel
+        cardLabel: cardLabel,
+        CARD_BACKS: CARD_BACKS,
+        cardBackImage: cardBackImage,
+        middleWorthTakingAll: middleWorthTakingAll,
+        BOT_KNOCK_FROM: BOT_KNOCK_FROM,
+        botDecide: botDecide
     };
 });

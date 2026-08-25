@@ -638,9 +638,12 @@
         }
 
         .schlager-bottom-footer {
-            display: flex; justify-content: space-between; align-items: center; 
+            display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 15, 30, 0.35); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
-            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 15px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px;
+            /* Links Platz fuer den Kartentausch-Starter-QR (150px + Rand), sonst
+               liegt er auf der Karaoke-Zeile. */
+            padding: 15px 30px 15px 185px;
             font-size: 16px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
 
@@ -860,11 +863,23 @@
         /* ---------- Kartentausch (Trinkspiel V3) ----------
            Bewusst durchgehend absolut positioniert statt CSS Grid: Grid ist im
            WebView der Odroid-Box unzuverlaessig (gleicher Grund wie beim Haupt-Layout). */
-        #media-view-kartentausch { background: radial-gradient(ellipse at 50% 45%, #12233d 0%, #060e1c 62%, #03070f 100%); }
+        /* Holz-Hintergrund wie bei Trinkspiel V2 (holz1/holz2, wechselt pro Runde).
+           Das Bild setzt ktSetFelt(), die Grundfarbe traegt bis zum Ladezeitpunkt. */
+        #media-view-kartentausch {
+            background-color: #14101c;
+            background-size: cover;
+            background-position: center;
+        }
         /* Liegt beim Pausieren UEBER dem angehaltenen Widget, das seine .active-Klasse behaelt. */
         #media-view-kartentausch.active { z-index: 24; }
 
         .kt-stage { position: absolute; inset: 0; }
+        /* Abdunklung ueber dem Holz: ohne sie verschwinden weisse Karten und
+           heller Text im Maserungs-Kontrast. */
+        .kt-felt-tint {
+            position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            background: radial-gradient(ellipse at 50% 45%, rgba(6,16,30,0.62) 0%, rgba(4,10,20,0.82) 62%, rgba(2,6,14,0.92) 100%);
+        }
 
         .kt-banner {
             position: absolute; top: 0; left: 0; right: 0; z-index: 20;
@@ -885,15 +900,19 @@
 
         /* Spielerplatz: aufgefaecherte Kartenreihe statt gerader Stapel */
         .kt-seat { position: absolute; transform: translateX(-50%); z-index: 10; }
-        .kt-fan { position: relative; width: 176px; height: 172px; }
+        .kt-fan { position: relative; width: 232px; height: 202px; }
         .kt-fan-card {
-            position: absolute; top: 7px; left: 50%; width: 92px; height: 138px;
-            margin-left: -46px; border-radius: 9px; overflow: hidden;
+            position: absolute; top: 7px; left: 50%; width: 116px; height: 174px;
+            margin-left: -58px; border-radius: 11px; overflow: hidden;
             background: #0a1426;
             box-shadow: 0 12px 26px rgba(0,0,0,0.65);
             transition: box-shadow 0.4s ease, transform 0.5s ease;
         }
         .kt-fan-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* Die Rueckseiten-SVGs sind durchsichtig (fill="none"), ohne weisse
+           Flaeche dahinter schiene das dunkle Kartenelement durch und das
+           Motiv wirkt schwarz. */
+        .kt-fan-card.is-back { background: #ffffff; }
         .kt-seat-name {
             margin-top: 6px; text-align: center;
             font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
@@ -920,17 +939,22 @@
         .kt-seat.is-fire .kt-seat-name, .kt-seat.is-fire .kt-seat-score { color: #ff8a3d; }
         .kt-seat.is-knocker .kt-seat-tag { border-color: #f4a300; color: #f4a300; }
 
-        /* Offene Mitte, waagrecht im freien Band zwischen oberer und unterer Reihe */
-        .kt-middle { position: absolute; left: 50%; top: 352px; transform: translateX(-50%); z-index: 12; display: flex; gap: 14px; }
+        /* Offene Mitte, waagrecht im freien Band zwischen oberer und unterer Reihe.
+           Die Karten liegen bewusst schief und leicht versetzt - wie echte Karten,
+           die jemand auf den Tisch geworfen hat, nicht wie ein Raster. Rotation und
+           Versatz kommen per Zufall aus ktRenderMiddle(). */
+        .kt-middle { position: absolute; left: 50%; top: 336px; transform: translateX(-50%); z-index: 12; display: flex; gap: 22px; }
         .kt-middle-card {
-            width: 104px; height: 156px; border-radius: 10px; overflow: hidden;
+            width: 130px; height: 195px; border-radius: 11px; overflow: hidden;
             background: #0a1426; box-shadow: 0 14px 30px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.14);
+            transition: transform 0.45s ease;
         }
         .kt-middle-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .kt-middle-label {
-            position: absolute; left: 50%; top: 328px; transform: translateX(-50%); z-index: 12;
-            font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: #64748b;
-        }
+        /* Kein Schriftzug ueber der Mitte: bei sechs Spielern reicht die obere
+           Reihe mit Name und "am Zug"-Abzeichen bis dicht an die Mitte heran,
+           die Beschriftung lag dann hinter dem Spielernamen. Die offenen Karten
+           in der Tischmitte erklaeren sich ohnehin von selbst. */
+        .kt-middle-label { display: none; }
 
         /* Lobby: grosser QR-Code mit Sitzplatzliste */
         .kt-lobby {
@@ -975,6 +999,10 @@
             margin-top: 5px; text-align: center; font-size: 10px; font-weight: 800;
             letter-spacing: 0.7px; text-transform: uppercase; color: #00f2fe;
         }
+        /* In der Bundesliga-Tabelle stuende der Starter-QR ueber den unteren
+           Tabellenplaetzen - dort bleibt er weg. Der Starter liegt als
+           Geschwister-Element NACH den Ansichten, daher greift der ~-Selektor. */
+        #media-view-bl-table.active ~ .kt-launcher { display: none !important; }
 
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
@@ -1237,6 +1265,7 @@
                      die Haende liegen privat auf den Handys der Gaeste. -->
                 <div class="media-inner-view" id="media-view-kartentausch">
                     <div class="kt-stage">
+                        <div class="kt-felt-tint"></div>
                         <div class="kt-banner">
                             <div class="kt-banner-title" id="kt-banner-title">🍻 City Cafe Kartentausch</div>
                             <div class="kt-banner-sub" id="kt-banner-sub">Schwimmen · 31 · Hosn Obe</div>
@@ -3848,7 +3877,10 @@
         const KT = window.KARTENTAUSCH_CONFIG || {};
         const KtEngine = window.KartentauschEngine;
 
-        const KT_ROW_TOP = 96, KT_ROW_BOTTOM = 540;
+        // Reihen-Hoehen auf die groesseren Karten abgestimmt: obere Reihe endet bei
+        // ~324px, die offene Mitte liegt im Band 336-531, die untere Reihe beginnt
+        // darunter und bleibt mit ~791px innerhalb der 815px hohen Media-Zone.
+        const KT_ROW_TOP = 78, KT_ROW_BOTTOM = 545;
         const KT_SEAT_POSITIONS = {
             LO: { x: 232,  y: KT_ROW_TOP },
             MO: { x: 640,  y: KT_ROW_TOP },
@@ -3869,11 +3901,10 @@
         };
         // Aufgefaechert statt gerade gestapelt: leichte Drehung + Versatz je Karte.
         const KT_FAN = [
-            { rotate: -14, dx: -46, dy: 6 },
+            { rotate: -14, dx: -58, dy: 8 },
             { rotate: 0,   dx: 0,   dy: 0 },
-            { rotate: 14,  dx: 46,  dy: 6 }
+            { rotate: 14,  dx: 58,  dy: 8 }
         ];
-        const KT_BACK_IMAGE = 'cards/back.webp';
 
         let ktDb = null, ktUid = null, ktSessionId = null;
         let ktPub = {};
@@ -3901,6 +3932,46 @@
         function ktClearTimers() {
             if (ktPhaseTimer) { clearTimeout(ktPhaseTimer); ktPhaseTimer = null; }
             if (ktTickTimer) { clearInterval(ktTickTimer); ktTickTimer = null; }
+            ktClearBotTimer();
+        }
+
+        // Rueckseiten-Motiv je Karte, einmal pro Runde ausgewuerfelt und dann
+        // festgehalten - sonst wuerde bei jedem Firebase-Update neu gemischt und
+        // der Faecher flackert.
+        // Holz-Hintergruende von Trinkspiel V2 weiterverwenden, damit die drei
+        // Trinkspiele optisch zusammengehoeren. Wechselt pro Runde.
+        let ktFeltIndex = 0;
+        function ktSetFelt() {
+            const view = ktEl('media-view-kartentausch');
+            if (!view || typeof HYPEREEL_BACKGROUNDS === 'undefined' || !HYPEREEL_BACKGROUNDS.length) return;
+            view.style.backgroundImage = "url('" + HYPEREEL_BACKGROUNDS[ktFeltIndex] + "')";
+            ktFeltIndex = (ktFeltIndex + 1) % HYPEREEL_BACKGROUNDS.length;
+        }
+
+        // Rueckseiten-Motiv: beim Austeilen EINMAL gewaehlt und dann fuer alle
+        // verdeckten Karten der Runde verwendet - ein Blatt hat schliesslich nur
+        // eine Rueckseite. Die naechste Runde wuerfelt neu.
+        let ktBackImage = null;
+        function ktCurrentBack() {
+            if (!ktBackImage) ktBackImage = KtEngine.cardBackImage('cards/');
+            return ktBackImage;
+        }
+
+        /*
+         * Schraeglage der offenen Mitte.
+         *
+         * Bewusst aus dem Kartencode abgeleitet statt zufaellig gezogen: dadurch
+         * liegt dieselbe Karte immer gleich da und springt nicht bei jedem
+         * Update herum - eine neu eingetauschte Karte bekommt aber automatisch
+         * eine andere Lage.
+         */
+        function ktMiddleSkew(code, index) {
+            let hash = index * 2654435761;
+            for (let i = 0; i < code.length; i++) hash = (hash * 31 + code.charCodeAt(i)) >>> 0;
+            const rotate = ((hash % 17) - 8) * 1.15;          // rund -9 bis +9 Grad
+            const dx = (((hash >> 5) % 13) - 6);              // -6 bis +6 px
+            const dy = (((hash >> 9) % 19) - 9);              // -9 bis +9 px
+            return 'translate(' + dx + 'px, ' + dy + 'px) rotate(' + rotate.toFixed(2) + 'deg)';
         }
 
         function ktQrUrl(size) {
@@ -3961,12 +4032,13 @@
                 fan.className = 'kt-fan';
                 const hand = revealed[seat];
                 for (let i = 0; i < 3; i++) {
+                    const faceUp = !!(hand && hand[i]);
                     const card = document.createElement('div');
-                    card.className = 'kt-fan-card';
+                    card.className = 'kt-fan-card' + (faceUp ? '' : ' is-back');
                     card.style.transform = 'translate(' + KT_FAN[i].dx + 'px, ' + KT_FAN[i].dy + 'px) rotate(' + KT_FAN[i].rotate + 'deg)';
                     card.style.zIndex = String(10 + i);
                     const img = document.createElement('img');
-                    img.src = (hand && hand[i]) ? KtEngine.cardImage(hand[i], 'cards/') : KT_BACK_IMAGE;
+                    img.src = faceUp ? KtEngine.cardImage(hand[i], 'cards/') : ktCurrentBack();
                     card.appendChild(img);
                     fan.appendChild(card);
                 }
@@ -4009,9 +4081,10 @@
             label.style.display = show ? '' : 'none';
             wrap.innerHTML = '';
             if (!show) return;
-            cards.forEach(code => {
+            cards.forEach((code, index) => {
                 const el = document.createElement('div');
                 el.className = 'kt-middle-card';
+                el.style.transform = ktMiddleSkew(code, index);
                 const img = document.createElement('img');
                 img.src = KtEngine.cardImage(code, 'cards/');
                 el.appendChild(img);
@@ -4131,6 +4204,10 @@
             if (count < 2) { ktResetSession(); return; }
             ktDealing = true;
 
+            // Neue Runde: eine Rueckseite fuer das ganze Blatt und neues Holz.
+            ktBackImage = null;
+            ktSetFelt();
+
             const dealt = KtEngine.deal(count);
             ktMirrorHands = dealt.hands;
 
@@ -4144,6 +4221,7 @@
                 middleCards: dealt.middleCards,
                 phase: 'playing',
                 currentTurnSeat: 0,
+                turnsPlayed: 0,
                 knockedBySeat: null,
                 finalTurnsRemaining: null,
                 revealedHands: null,
@@ -4156,6 +4234,123 @@
                 console.warn('[Kartentausch] Austeilen fehlgeschlagen:', err);
                 ktResetSession();
             }).then(() => { ktDealing = false; });
+        }
+
+        /* ---------- Computer-Runde (Vorfuehrmodus) ----------
+         *
+         * Der TV besetzt alle Plaetze selbst, teilt aus und spielt jeden Zug.
+         * Weil er ohnehin ausgeteilt hat, kennt er alle Haende aus ktMirrorHands
+         * und braucht keine Leserechte auf /private - die Security Rules bleiben
+         * unangetastet.
+         */
+        let ktBotTimer = null;
+
+        function ktIsBotGame() { return !!ktPub.botGame; }
+
+        function ktClearBotTimer() {
+            if (ktBotTimer) { clearTimeout(ktBotTimer); ktBotTimer = null; }
+        }
+
+        function ktStartBotRound(count) {
+            if (!ktReady() || ktDealing) return;
+            const players = Math.min(6, Math.max(2, Number(count) || KT.botPlayerCount || 3));
+            ktDealing = true;
+            ktBackImage = null;
+            ktSetFelt();
+
+            const dealt = KtEngine.deal(players);
+            ktMirrorHands = dealt.hands;
+
+            const seats = {};
+            for (let seat = 0; seat < players; seat++) {
+                seats[seat] = { uid: 'bot:' + seat, joined: true, bot: true };
+            }
+
+            const writes = [];
+            for (let seat = 0; seat < players; seat++) {
+                writes.push(KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: dealt.hands[seat] }));
+            }
+
+            Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update({
+                botGame: true,
+                playerCount: players,
+                seats: seats,
+                middleCards: dealt.middleCards,
+                phase: 'playing',
+                currentTurnSeat: 0,
+                turnsPlayed: 0,
+                knockedBySeat: null,
+                finalTurnsRemaining: null,
+                revealedHands: null,
+                scores: null,
+                loserSeat: null,
+                payingSeats: null,
+                fireSeats: null,
+                turnStartedAt: firebase.database.ServerValue.TIMESTAMP
+            })).catch(err => {
+                console.warn('[Kartentausch] Computer-Runde fehlgeschlagen:', err);
+                ktResetSession();
+            }).then(() => { ktDealing = false; });
+        }
+
+        function ktBotPlayTurn() {
+            if (!ktIsBotGame() || !ktReady()) return;
+            const phase = ktPub.phase;
+            if (phase !== 'playing' && phase !== 'knocked') return;
+
+            const count = Number(ktPub.playerCount) || 2;
+            const seat = Number(ktPub.currentTurnSeat) || 0;
+            const hand = ktMirrorHands[seat];
+            const middle = (ktPub.middleCards || []).slice();
+            if (!hand || hand.length !== 3 || middle.length !== 3) return;
+
+            const canKnock = !ktHasKnocked() && (Number(ktPub.turnsPlayed) || 0) >= count;
+            const move = KtEngine.botDecide(hand, middle, { canKnock: canKnock });
+
+            const updates = {
+                currentTurnSeat: KtEngine.nextSeat(seat, count),
+                turnsPlayed: (Number(ktPub.turnsPlayed) || 0) + 1,
+                turnStartedAt: firebase.database.ServerValue.TIMESTAMP,
+                lastMove: { type: move.type, seat: seat }
+            };
+            const reveals = {};
+
+            if (move.type === 'knock') {
+                updates.knockedBySeat = seat;
+                updates.finalTurnsRemaining = count - 1;
+                updates.phase = 'knocked';
+                reveals[seat] = hand;                       // Klopfer deckt sofort auf
+            } else {
+                if (move.type === 'all') {
+                    ktMirrorHands[seat] = middle.slice();
+                    updates.middleCards = hand.slice();
+                } else if (move.type === 'single') {
+                    const newHand = hand.slice();
+                    newHand[move.handIndex] = middle[move.middleIndex];
+                    middle[move.middleIndex] = hand[move.handIndex];
+                    ktMirrorHands[seat] = newHand;
+                    updates.middleCards = middle;
+                } else {
+                    updates.middleCards = middle;
+                }
+                if (ktHasKnocked()) {
+                    reveals[seat] = ktMirrorHands[seat];    // nach dem Klopfen deckt jeder nach seinem Zug auf
+                    const left = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
+                    updates.finalTurnsRemaining = left;
+                    if (left <= 0) updates.phase = 'reveal';
+                }
+            }
+
+            Object.keys(reveals).forEach(s => { updates['revealedHands/' + s] = reveals[s]; });
+            KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: ktMirrorHands[seat] }).catch(() => {});
+            KtNet.publicRef(ktDb, ktSessionId).update(updates)
+                .catch(err => console.warn('[Kartentausch] Computer-Zug fehlgeschlagen:', err));
+        }
+
+        function ktArmBotTurn() {
+            ktClearBotTimer();
+            if (!ktIsBotGame()) return;
+            ktBotTimer = setTimeout(ktBotPlayTurn, (KT.botMoveSeconds || 3) * 1000);
         }
 
         function ktArmTurnTimeout() {
@@ -4171,6 +4366,7 @@
             const seat = Number(ktPub.currentTurnSeat) || 0;
             const updates = {
                 currentTurnSeat: KtEngine.nextSeat(seat, count),
+                turnsPlayed: (Number(ktPub.turnsPlayed) || 0) + 1,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP,
                 lastMove: { type: 'skip', seat: seat }
             };
@@ -4237,9 +4433,11 @@
                     phase: 'idle',
                     playerCount: null,
                     hostUid: null,
+                    botGame: null,
                     seats: null,
                     middleCards: null,
                     currentTurnSeat: null,
+                    turnsPlayed: null,
                     knockedBySeat: null,
                     finalTurnsRemaining: null,
                     revealedHands: null,
@@ -4256,6 +4454,10 @@
 
         function ktOnPhaseChange(phase) {
             ktClearTimers();
+            // Zahl immer zuruecksetzen: wird die Lobby vorzeitig geschlossen (alle
+            // Plaetze belegt), laeuft der Countdown nie ab und die letzte Zahl blieb
+            // sonst waehrend des ganzen Spiels am Bildschirm stehen.
+            ktSetTimer(null);
 
             if (phase === 'hostSelect') {
                 ktEnterGame();
@@ -4267,9 +4469,15 @@
                 ktEnterGame();
                 ktStartCountdown(KT.lobbySeconds || 60, ktDealIfPossible);
 
+            } else if (phase === 'botRound') {
+                // Vom Handy angefordert: der TV uebernimmt alle Plaetze selbst.
+                ktEnterGame();
+                ktStartBotRound(ktPub.playerCount);
+
             } else if (phase === 'playing' || phase === 'knocked') {
                 ktEnterGame();
-                ktArmTurnTimeout();
+                if (ktIsBotGame()) ktArmBotTurn();
+                else ktArmTurnTimeout();
 
             } else if (phase === 'reveal') {
                 ktEnterGame();
@@ -4292,7 +4500,12 @@
 
             if (phase === 'playing' || phase === 'knocked') {
                 const seat = Number(ktPub.currentTurnSeat) || 0;
-                if (seat !== ktLastTurnSeat) { ktLastTurnSeat = seat; ktArmTurnTimeout(); }
+                if (seat !== ktLastTurnSeat) {
+                    ktLastTurnSeat = seat;
+                    // Im Computer-Spiel zieht der TV selbst, ein Zug-Timeout waere sinnlos.
+                    if (ktIsBotGame()) ktArmBotTurn();
+                    else ktArmTurnTimeout();
+                }
             }
 
             // Lobby vorzeitig schliessen, sobald alle Plaetze belegt sind.
@@ -4352,7 +4565,14 @@
             };
             ktTestSlotDone = advance;
             ktRender();
-            globalMasterTimer = later(advance, (KT.lobbySeconds || 60) * 1000);
+
+            // Hat nach der Wartezeit niemand gescannt, spielt der Computer eine
+            // Runde vor, statt dass ein toter QR-Code am Bildschirm steht. Erst
+            // danach geht die Rotation weiter (ueber ktExitGame -> advance).
+            globalMasterTimer = later(() => {
+                if ((ktPub.phase || 'idle') === 'idle') ktStartBotRound(KT.botPlayerCount || 3);
+                else advance();
+            }, (KT.botIdleStartSeconds || 60) * 1000);
         }
 
         function runMasterSequence() {
