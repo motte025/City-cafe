@@ -4,30 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#060e1c">
-<title>Kartentausch · City Cafe Klagenfurt</title>
+<title>Hosen Obe · City Cafe Klagenfurt</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    html, body { height: 100%; }
+    html { height: 100%; }
 
-    /* Ganzer Bildschirm im Hochformat: die Seite scrollt nicht, sondern teilt
-       die verfuegbare Hoehe auf Hand, Mitte, Status und Aktionen auf. Die Hand
-       bekommt den groessten Anteil, damit die Karten so gross wie moeglich sind. */
     body {
         margin: 0;
-        height: 100dvh;
-        min-height: 100vh;
+        min-height: 100%;
         background: linear-gradient(180deg, #0b1526 0%, #060e1c 55%, #040914 100%);
         color: #f8fafc;
         font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        overflow-x: hidden;
+    }
+
+    /* Das Spiel fuellt genau einen Bildschirm im Hochformat und teilt die
+       Hoehe auf Hand, Mitte, Status und Aktionen auf. Alles Weitere (der
+       Beenden-Knopf) liegt bewusst DARUNTER - man muss erst scrollen. */
+    .kt-screen {
+        min-height: 100dvh;
         display: flex;
         flex-direction: column;
         gap: 8px;
-        padding: calc(env(safe-area-inset-top) + 6px) 6px calc(env(safe-area-inset-bottom) + 8px);
-        overflow: hidden;
+        padding: calc(env(safe-area-inset-top) + 6px) 6px 8px;
     }
 
     .kt-head {
@@ -37,12 +40,12 @@
     }
     .kt-brand {
         font-family: 'Orbitron', sans-serif; font-weight: 900;
-        font-size: 15px; letter-spacing: 1.2px; color: #00f2fe;
+        font-size: 17px; letter-spacing: 1.2px; color: #00f2fe;
         text-shadow: 0 0 14px rgba(0,242,254,0.45);
     }
     .kt-seat-badge {
-        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 15px;
-        padding: 6px 13px; border-radius: 999px;
+        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px;
+        padding: 8px 18px; border-radius: 999px;
         background: rgba(0,242,254,0.12); border: 1px solid rgba(0,242,254,0.45);
         color: #00f2fe; white-space: nowrap;
     }
@@ -83,14 +86,48 @@
     }
     .kt-middle-panel .kt-card { max-width: 26vh; }
 
-    .kt-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .kt-card.is-pickable { cursor: pointer; border-color: rgba(0,242,254,0.35); }
+    .kt-card img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        /* Bilder sind in HTML von Haus aus ziehbar. Ohne diese drei Zeilen
+           startet der Browser sein eigenes Bild-Ziehen und beendet unsere
+           Geste sofort mit pointercancel - die Karte bliebe liegen. */
+        -webkit-user-drag: none;
+        user-select: none; -webkit-user-select: none;
+        pointer-events: none;
+    }
+    .kt-card.is-pickable {
+        cursor: pointer;
+        border-color: rgba(0,242,254,0.35);
+        /* Ohne das reisst der Browser die Wischgeste ans Scrollen: er schickt
+           mitten im Ziehen ein pointercancel und die Karte bleibt liegen.
+           Nur spielbare Karten sind betroffen, der Rest der Seite scrollt
+           weiterhin normal (der Beenden-Knopf liegt ja unten). */
+        touch-action: none;
+    }
     .kt-card.is-selected {
         border-color: #00f2fe;
         box-shadow: 0 0 0 4px rgba(0,242,254,0.28), 0 0 26px rgba(0,242,254,0.6);
         transform: translateY(-9px);
     }
     .kt-card.is-middle.is-selected { border-color: #f355da; box-shadow: 0 0 0 4px rgba(243,85,218,0.28), 0 0 26px rgba(243,85,218,0.6); }
+
+    /* Ziehen: die gezogene Karte klebt am Finger, moegliche Ziele leuchten. */
+    .kt-card.is-dragging {
+        opacity: 0.35;
+        transition: none;
+    }
+    .kt-card.is-droptarget {
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 4px rgba(46,204,113,0.3), 0 0 26px rgba(46,204,113,0.6);
+    }
+    .kt-drag-ghost {
+        position: fixed; z-index: 999; pointer-events: none; touch-action: none;
+        border-radius: 12px; overflow: hidden;
+        border: 3px solid #00f2fe;
+        box-shadow: 0 18px 40px rgba(0,0,0,0.7), 0 0 30px rgba(0,242,254,0.5);
+        transform: translate(-50%, -50%) rotate(-4deg) scale(1.06);
+    }
+    .kt-drag-ghost img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .kt-score-line {
         text-align: center; margin-top: 9px;
@@ -138,7 +175,7 @@
 
     .kt-seat-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 11px; }
     .kt-seat-pill {
-        font-size: 14px; font-weight: 700; padding: 8px 14px; border-radius: 999px;
+        font-size: 19px; font-weight: 800; padding: 10px 18px; border-radius: 999px;
         border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.05); color: #94a3b8;
     }
     .kt-seat-pill.is-taken { border-color: rgba(46,204,113,0.5); color: #6ee7a8; background: rgba(46,204,113,0.1); }
@@ -164,18 +201,40 @@
     }
     .kt-reveal-row.is-paying { border-color: #ff3344; background: rgba(255,51,68,0.14); }
     .kt-reveal-row.is-fire { border-color: #ff8a3d; background: rgba(255,138,61,0.14); }
-    .kt-reveal-name { font-weight: 800; font-size: 14px; min-width: 78px; text-align: left; }
+    .kt-reveal-name { font-weight: 800; font-size: 19px; min-width: 96px; text-align: left; }
     .kt-reveal-cards { display: flex; gap: 4px; flex: 1; justify-content: center; }
     .kt-reveal-cards img { width: 38px; border-radius: 5px; display: block; }
     .kt-reveal-score { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 19px; }
+
+    /* Notausstieg fuer den Host. Liegt unter dem Bildschirmrand, damit ihn
+       niemand im Spielverlauf versehentlich trifft. */
+    .kt-danger-zone {
+        padding: 26px 14px calc(env(safe-area-inset-bottom) + 34px);
+        display: flex; flex-direction: column; align-items: center; gap: 12px;
+        border-top: 1px dashed rgba(255,51,68,0.35);
+        margin-top: 18px;
+    }
+    .kt-danger-hint { font-size: 13px; color: #64748b; text-align: center; max-width: 34ch; }
+    .kt-btn-end {
+        width: 100%; padding: 20px 14px; border-radius: 15px;
+        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 19px; font-weight: 800;
+        border: 2px solid #ff3344; background: rgba(255,51,68,0.18); color: #ffd9dd;
+    }
+    .kt-btn-end:active { transform: scale(0.975); }
+    .kt-scroll-hint {
+        text-align: center; font-size: 12px; color: #475569;
+        padding: 2px 0 6px;
+    }
 
     .kt-hidden { display: none !important; }
 </style>
 </head>
 <body>
 
+<div class="kt-screen">
+
 <div class="kt-head">
-    <div class="kt-brand">CITY CAFE · KARTENTAUSCH</div>
+    <div class="kt-brand">CITY CAFE · HOSEN OBE</div>
     <div class="kt-seat-badge kt-hidden" id="kt-seat-badge">—</div>
 </div>
 
@@ -199,6 +258,15 @@
 </div>
 
 <div class="kt-actions" id="kt-actions"></div>
+
+<div class="kt-scroll-hint kt-hidden" id="kt-scroll-hint">Zum Beenden nach unten scrollen ↓</div>
+
+</div><!-- /kt-screen -->
+
+<div class="kt-danger-zone kt-hidden" id="kt-danger-zone">
+    <div class="kt-danger-hint">Nur im Notfall: beendet die laufende Runde für alle und schickt den Fernseher zurück ins Programm.</div>
+    <button class="kt-btn-end" id="kt-btn-end">Runde beenden</button>
+</div>
 
 <script src="kartentausch-config.js"></script>
 <script src="kartentausch-engine.js"></script>
@@ -224,7 +292,10 @@
         statusMain: document.getElementById('kt-status-main'),
         statusSub: document.getElementById('kt-status-sub'),
         statusExtra: document.getElementById('kt-status-extra'),
-        actions: document.getElementById('kt-actions')
+        actions: document.getElementById('kt-actions'),
+        dangerZone: document.getElementById('kt-danger-zone'),
+        endButton: document.getElementById('kt-btn-end'),
+        scrollHint: document.getElementById('kt-scroll-hint')
     };
 
     var sessionId = new URLSearchParams(location.search).get('session') || '';
@@ -237,6 +308,11 @@
     var pickedHand = null;
     var pickedMiddle = null;
     var busy = false;
+    // Solange gezogen wird, darf nicht neu gezeichnet werden: das Neuaufbauen
+    // der Karten wuerde das Element unter dem Finger entfernen, und der Browser
+    // bricht die Geste dann mit pointercancel ab.
+    var dragActive = false;
+    var renderPending = false;
 
     function setStatus(main, sub, cls) {
         els.statusMain.textContent = main;
@@ -252,6 +328,7 @@
         var img = document.createElement('img');
         img.src = E.cardImage(code, 'cards/');
         img.alt = E.cardLabel(code);
+        img.draggable = false;
         return img;
     }
 
@@ -261,12 +338,128 @@
             var card = document.createElement('div');
             card.className = 'kt-card' + (opts.middle ? ' is-middle' : '');
             card.appendChild(cardImg(code));
+            card.setAttribute('data-zone', opts.middle ? 'middle' : 'hand');
+            card.setAttribute('data-index', String(index));
             if (opts.pickable) {
                 card.classList.add('is-pickable');
                 if (opts.selected === index) card.classList.add('is-selected');
-                card.addEventListener('click', function () { opts.onPick(index); });
+                attachPointer(card, opts.middle ? 'middle' : 'hand', index, opts.onPick);
             }
             container.appendChild(card);
+        });
+    }
+
+    /*
+     * Eine Geste, zwei Bedienarten.
+     *
+     * Kurz antippen  -> Karte waehlen; die zweite angetippte Karte der anderen
+     *                   Seite tauscht sofort, ohne Bestaetigung.
+     * Ziehen         -> Karte an die Zielkarte ziehen und loslassen. Funktioniert
+     *                   in beide Richtungen (Hand -> Mitte und Mitte -> Hand).
+     *
+     * Bewusst ueber Pointer-Events statt HTML5-Drag-and-Drop: letzteres ist auf
+     * Handy-Browsern unzuverlaessig.
+     */
+    var DRAG_THRESHOLD = 10;   // darunter gilt es als Antippen
+
+    function attachPointer(card, zone, index, onTap) {
+        // Antippen laeuft ueber ein normales click-Ereignis - dadurch reagiert
+        // die Karte auch dort, wo keine Pointer-Ereignisse ankommen (Maus ohne
+        // Pointer-Unterstuetzung, Bedienhilfen, automatisierte Tests).
+        // Das Ziehen haengt an den Pointer-Ereignissen; nach einem Ziehen wird
+        // das darauf folgende click bewusst verschluckt.
+        var suppressClick = false;
+
+        card.addEventListener('click', function () {
+            if (suppressClick) { suppressClick = false; return; }
+            if (busy) return;
+            onTap(index);
+        });
+
+        card.addEventListener('pointerdown', function (ev) {
+            if (busy) return;
+            var startX = ev.clientX, startY = ev.clientY;
+            var dragging = false;
+            var ghost = null;
+            var lastTarget = null;
+
+            function targetAt(x, y) {
+                if (ghost) ghost.style.display = 'none';
+                var el = document.elementFromPoint(x, y);
+                if (ghost) ghost.style.display = '';
+                var hit = el && el.closest ? el.closest('.kt-card') : null;
+                if (!hit || hit.getAttribute('data-zone') === zone) return null;
+                return hit;
+            }
+
+            function clearHighlight() {
+                if (lastTarget) { lastTarget.classList.remove('is-droptarget'); lastTarget = null; }
+            }
+
+            function detach() {
+                document.removeEventListener('pointermove', move);
+                document.removeEventListener('pointerup', finish);
+                document.removeEventListener('pointercancel', cancel);
+                card.classList.remove('is-dragging');
+                if (ghost) { ghost.remove(); ghost = null; }
+                clearHighlight();
+                dragActive = false;
+                // Waehrend des Ziehens zurueckgehaltene Aktualisierungen nachholen.
+                if (renderPending) { renderPending = false; render(); }
+            }
+
+            function move(mv) {
+                var dx = mv.clientX - startX, dy = mv.clientY - startY;
+                if (!dragging && Math.sqrt(dx * dx + dy * dy) < DRAG_THRESHOLD) return;
+                if (!dragging) {
+                    dragging = true;
+                    dragActive = true;
+                    card.classList.add('is-dragging');
+                    var box = card.getBoundingClientRect();
+                    ghost = document.createElement('div');
+                    ghost.className = 'kt-drag-ghost';
+                    ghost.style.width = box.width + 'px';
+                    ghost.style.height = box.height + 'px';
+                    var inner = card.querySelector('img');
+                    if (inner) {
+                        var copy = document.createElement('img');
+                        copy.src = inner.src;
+                        ghost.appendChild(copy);
+                    }
+                    document.body.appendChild(ghost);
+                }
+                ghost.style.left = mv.clientX + 'px';
+                ghost.style.top = mv.clientY + 'px';
+
+                var t = targetAt(mv.clientX, mv.clientY);
+                if (t !== lastTarget) {
+                    clearHighlight();
+                    if (t) { t.classList.add('is-droptarget'); lastTarget = t; }
+                }
+            }
+
+            function finish(up) {
+                var wasDragging = dragging;
+                var target = wasDragging ? targetAt(up.clientX, up.clientY) : null;
+                detach();
+                if (!wasDragging) return;          // war ein Antippen -> click uebernimmt
+
+                suppressClick = true;              // kein zusaetzliches Antippen ausloesen
+                if (!target) { render(); return; }
+                var otherIndex = Number(target.getAttribute('data-index'));
+                if (zone === 'hand') swapNow(index, otherIndex);
+                else swapNow(otherIndex, index);
+            }
+
+            function cancel() {
+                var wasDragging = dragging;
+                detach();
+                if (wasDragging) { suppressClick = true; render(); }
+            }
+
+            document.addEventListener('pointermove', move);
+            document.addEventListener('pointerup', finish);
+            document.addEventListener('pointercancel', cancel);
         });
     }
 
@@ -350,7 +543,7 @@
         var cards = hand || myHand;
         if (!cards || cards.length !== 3) return Promise.resolve();
         return KtNet.publicRef(db, sessionId, 'revealedHands/' + mySeat).set(cards)
-            .catch(function (err) { console.warn('[Kartentausch] Aufdecken fehlgeschlagen:', err); });
+            .catch(function (err) { console.warn('[Hosen Obe] Aufdecken fehlgeschlagen:', err); });
     }
 
     // Nach dem Klopfen deckt jeder direkt nach seinem Zug auf.
@@ -359,19 +552,29 @@
         return publishMyHand(hand);
     }
 
-    function doSingleSwap() {
-        if (busy || pickedHand === null || pickedMiddle === null) return;
-        busy = true;
+    // Tauscht sofort - ohne Bestaetigungsschritt. Wird sowohl vom zweiten
+    // Antippen als auch vom Loslassen nach dem Ziehen aufgerufen.
+    function swapNow(handIndex, middleIndex) {
+        if (busy || !isMyTurn()) return;
+        if (handIndex === null || middleIndex === null) return;
         var middle = (pub.middleCards || []).slice();
         var hand = myHand.slice();
-        var given = hand[pickedHand];
-        var taken = middle[pickedMiddle];
-        hand[pickedHand] = taken;
-        middle[pickedMiddle] = given;
+        if (!hand[handIndex] || !middle[middleIndex]) return;
+
+        busy = true;
+        var given = hand[handIndex];
+        var taken = middle[middleIndex];
+        hand[handIndex] = taken;
+        middle[middleIndex] = given;
 
         writeHand(hand)
             .then(function () { return revealAfterMoveIfNeeded(hand); })
-            .then(function () { return commitTurn(middle, { type: 'single', seat: mySeat, gave: given, took: taken }); })
+            .then(function () {
+                return commitTurn(middle, {
+                    type: 'single', seat: mySeat,
+                    gave: given, took: taken, middleIndex: middleIndex
+                });
+            })
             .then(resetSwapMode)
             .catch(handleWriteError)
             .then(function () { busy = false; });
@@ -385,7 +588,12 @@
 
         writeHand(middle)
             .then(function () { return revealAfterMoveIfNeeded(middle); })
-            .then(function () { return commitTurn(hand, { type: 'all', seat: mySeat }); })
+            .then(function () {
+                return commitTurn(hand, {
+                    type: 'all', seat: mySeat,
+                    gave: hand.slice(), took: middle.slice()
+                });
+            })
             .then(resetSwapMode)
             .catch(handleWriteError)
             .then(function () { busy = false; });
@@ -403,7 +611,7 @@
     }
 
     function handleWriteError(err) {
-        console.warn('[Kartentausch] Zug fehlgeschlagen:', err);
+        console.warn('[Hosen Obe] Zug fehlgeschlagen:', err);
         setStatus('Zug nicht angekommen', 'Netzwerkproblem — bitte nochmal antippen.', 'is-error');
     }
 
@@ -434,25 +642,27 @@
                 grid.appendChild(b);
             });
             els.actions.appendChild(grid);
-            els.actions.appendChild(button('🤖 Nur zuschauen — Computer spielt', 'kt-btn-bot', startBotRound));
+            els.actions.appendChild(button('🤖 Nur zuschauen — Computer spielt', 'kt-btn-bot', function () {
+                startBotRound(CFG.botPlayerCount || 3);
+            }));
+            return;
+        }
+
+        // In der Lobby darf der Host jederzeit an den Computer uebergeben.
+        if (pub.phase === 'lobby' && isHost && !pub.botGame) {
+            els.actions.appendChild(button('🤖 Computer übernimmt', 'kt-btn-bot', function () {
+                startBotRound(Number(pub.playerCount) || CFG.botPlayerCount || 3);
+            }));
             return;
         }
 
         if (!isMyTurn()) return;
 
-        // Einzeltausch braucht keinen eigenen Knopf mehr: Karten sind am Zug
-        // direkt antippbar, der Bestaetigen-Knopf erscheint, sobald beide
-        // Karten gewaehlt sind.
-        if (pickedHand !== null || pickedMiddle !== null) {
-            var ready = pickedHand !== null && pickedMiddle !== null;
-            els.actions.appendChild(button(ready ? 'Tausch bestätigen' : 'Karte aus der Mitte wählen…',
-                'kt-btn-confirm', doSingleSwap, !ready));
-            els.actions.appendChild(button('Abbrechen', 'kt-btn-ghost', resetSwapMode));
-            return;
-        }
-
-        // Rundumtausch nur, wenn die Mitte ihn wert ist (Drilling oder drei
-        // gleiche Farben) - sonst bleibt der Knopf weg.
+        /*
+         * Getauscht wird ohne Bestaetigung - zweites Antippen oder Ziehen
+         * genuegt. Genau deshalb bleiben "Alle 3 tauschen" und "Klopfen" hier
+         * stehen: frueher verschwanden beide, sobald man eine Karte antippte.
+         */
         if (E.middleWorthTakingAll(pub.middleCards || [])) {
             els.actions.appendChild(button('Alle 3 tauschen', '', doSwapAll));
         }
@@ -496,12 +706,19 @@
     }
 
     function render() {
+        if (dragActive) { renderPending = true; return; }
         var phase = pub.phase || 'idle';
         var count = Number(pub.playerCount) || 0;
         var seats = pub.seats || {};
 
         els.seatBadge.textContent = mySeat >= 0 ? seatName(mySeat) : '—';
         show(els.seatBadge, mySeat >= 0);
+
+        // Beenden-Knopf nur fuer den Host und nur, solange etwas laeuft.
+        var running = phase !== 'idle';
+        var mayEnd = isHost && running;
+        show(els.dangerZone, mayEnd);
+        show(els.scrollHint, mayEnd);
 
         var showCards = myHand.length === 3 && phase !== 'idle' && phase !== 'hostSelect';
         show(els.handPanel, showCards);
@@ -511,13 +728,24 @@
         renderCards(els.handCards, myHand, {
             pickable: myTurn,
             selected: pickedHand,
-            onPick: function (i) { pickedHand = (pickedHand === i ? null : i); render(); }
+            onPick: function (i) {
+                if (pickedHand === i) { pickedHand = null; render(); return; }
+                pickedHand = i;
+                // Liegt die Mittenkarte schon fest, wird sofort getauscht.
+                if (pickedMiddle !== null) swapNow(pickedHand, pickedMiddle);
+                else render();
+            }
         });
         renderCards(els.middleCards, pub.middleCards || [], {
             middle: true,
             pickable: myTurn,
             selected: pickedMiddle,
-            onPick: function (i) { pickedMiddle = (pickedMiddle === i ? null : i); render(); }
+            onPick: function (i) {
+                if (pickedMiddle === i) { pickedMiddle = null; render(); return; }
+                pickedMiddle = i;
+                if (pickedHand !== null) swapNow(pickedHand, pickedMiddle);
+                else render();
+            }
         });
         renderHandScore();
         els.statusExtra.innerHTML = '';
@@ -598,22 +826,34 @@
             if (seat >= 0) localStorage.setItem('kt_seat_' + sessionId, String(seat));
             watchMyHand();
         }).catch(function (err) {
-            console.warn('[Kartentausch] Spieleranzahl konnte nicht gesetzt werden:', err);
+            console.warn('[Hosen Obe] Spieleranzahl konnte nicht gesetzt werden:', err);
         }).then(function () { busy = false; });
     }
 
     // Vorfuehrrunde: der TV besetzt alle Plaetze selbst und spielt sie aus.
-    function startBotRound() {
+    function startBotRound(count) {
         if (busy) return;
         busy = true;
+        var players = Math.min(6, Math.max(2, Number(count) || CFG.botPlayerCount || 3));
         KtNet.publicRef(db, sessionId).update({
             botGame: true,
-            playerCount: CFG.botPlayerCount || 3,
+            playerCount: players,
             phase: 'botRound',
-            hostUid: null
+            hostUid: null,
+            seats: null
         }).catch(function (err) {
-            console.warn('[Kartentausch] Computer-Runde konnte nicht gestartet werden:', err);
+            console.warn('[Hosen Obe] Computer-Runde konnte nicht gestartet werden:', err);
         }).then(function () { busy = false; });
+    }
+
+    // Notausstieg des Hosts: Runde fuer alle beenden, TV zurueck ins Programm.
+    function endRound() {
+        if (busy) return;
+        busy = true;
+        KtNet.publicRef(db, sessionId).update({ endRequestedBy: uid })
+            .catch(function (err) {
+                console.warn('[Hosen Obe] Beenden fehlgeschlagen:', err);
+            }).then(function () { busy = false; });
     }
 
     function tryJoin() {
@@ -629,7 +869,7 @@
             }
             render();
         }).catch(function (err) {
-            console.warn('[Kartentausch] Sitzplatz konnte nicht belegt werden:', err);
+            console.warn('[Hosen Obe] Sitzplatz konnte nicht belegt werden:', err);
         }).then(function () { busy = false; });
     }
 
@@ -642,7 +882,7 @@
             myHand = (val && val.hand) || [];
             render();
         }, function (err) {
-            console.warn('[Kartentausch] Hand nicht lesbar:', err);
+            console.warn('[Hosen Obe] Hand nicht lesbar:', err);
         });
     }
 
@@ -674,6 +914,8 @@
         maybePublishHand();
         render();
     }
+
+    els.endButton.addEventListener('click', endRound);
 
     function start() {
         if (!sessionId) {
@@ -708,12 +950,12 @@
                 }
             }).then(function () {
                 KtNet.publicRef(db, sessionId).on('value', onPublic, function (err) {
-                    console.warn('[Kartentausch] Spielstand nicht lesbar:', err);
+                    console.warn('[Hosen Obe] Spielstand nicht lesbar:', err);
                     setStatus('Verbindung verloren', 'Bitte neu laden.', 'is-error');
                 });
             });
         }).catch(function (err) {
-            console.warn('[Kartentausch] Start fehlgeschlagen:', err);
+            console.warn('[Hosen Obe] Start fehlgeschlagen:', err);
             setStatus('Fehler beim Start', 'Bitte die Seite neu laden.', 'is-error');
         });
     }
