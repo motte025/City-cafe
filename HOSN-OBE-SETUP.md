@@ -1,7 +1,7 @@
-# Kartentausch (Trinkspiel V3) — Einrichtung
+# Hos’n Obe (Trinkspiel V3) — Einrichtung
 
 Das Spiel ist fertig gebaut, aber noch **abgeschaltet**: solange in
-`kartentausch-config.js` keine Firebase-Daten stehen, blendet das Dashboard
+`hosn-obe-config.js` keine Firebase-Daten stehen, blendet das Dashboard
 weder den QR-Code ein noch startet es eine Runde. Die restliche Rotation läuft
 davon völlig unberührt weiter — du kannst das Repo also jederzeit
 veröffentlichen, ohne dass etwas kaputtgeht.
@@ -13,7 +13,7 @@ Zum Aktivieren sind vier Schritte nötig. Dauer: ca. 10 Minuten.
 ## 1. Firebase-Projekt anlegen
 
 1. Auf <https://console.firebase.google.com> mit einem Google-Konto anmelden.
-2. **Projekt hinzufügen** → Name z. B. `city-cafe-kartentausch`.
+2. **Projekt hinzufügen** → Name z. B. `city-cafe-hosnobe`.
    Google Analytics kannst du abwählen, es wird nicht gebraucht.
 3. Der kostenlose **Spark-Tarif** reicht für diesen Anwendungsfall bei weitem.
    Es wird keine Kreditkarte verlangt.
@@ -39,14 +39,14 @@ Zum Aktivieren sind vier Schritte nötig. Dauer: ca. 10 Minuten.
 3. Namen vergeben (z. B. `dashboard`), **kein** Firebase Hosting auswählen,
    auf **App registrieren**.
 4. Es erscheint ein `firebaseConfig`-Block. Die fünf Werte daraus in
-   **`kartentausch-config.js`** eintragen:
+   **`hosn-obe-config.js`** eintragen:
 
 ```js
 firebase: {
     apiKey: 'AIza…',
-    authDomain: 'city-cafe-kartentausch.firebaseapp.com',
-    databaseURL: 'https://city-cafe-kartentausch-default-rtdb.europe-west1.firebasedatabase.app',
-    projectId: 'city-cafe-kartentausch',
+    authDomain: 'city-cafe-hosnobe.firebaseapp.com',
+    databaseURL: 'https://city-cafe-hosnobe-default-rtdb.europe-west1.firebasedatabase.app',
+    projectId: 'city-cafe-hosnobe',
     appId: '1:1234567890:web:abcdef…'
 }
 ```
@@ -103,7 +103,7 @@ Was die Regeln bewirken:
 Nach dem Eintragen der Daten und einem Push:
 
 1. Dashboard am TV neu laden. Unten links erscheint ein kleiner QR-Code
-   ("Kartentausch spielen").
+   ("Hos’n Obe spielen").
 2. Mit dem ersten Handy scannen → die laufende Rotation **hält sofort an**
    (sie springt nicht weiter, sondern friert an genau der Stelle ein). Das
    Handy fragt nach der Spieleranzahl.
@@ -128,7 +128,7 @@ exakt dort weiter, wo sie angehalten wurde.
 
 ## Einstellungen
 
-Alles Weitere steht in `kartentausch-config.js`:
+Alles Weitere steht in `hosn-obe-config.js`:
 
 | Einstellung | Bedeutung | Standard |
 |---|---|---|
@@ -136,7 +136,7 @@ Alles Weitere steht in `kartentausch-config.js`:
 | `lobbySeconds` | Countdown, in dem die übrigen Gäste scannen können | 60 |
 | `turnTimeoutSeconds` | Nach dieser Zeit wird ein Zug übersprungen | 20 |
 | `revealSeconds` | Wie lange das Ergebnis am TV stehen bleibt | 12 |
-| `testFirstInCycle` | Kartentausch läuft als **erstes** Widget im Zyklus | `true` |
+| `testFirstInCycle` | Hos’n Obe läuft als **erstes** Widget im Zyklus | `true` |
 | `mobileUrl` | Adresse der Handy-Seite (steckt im QR-Code) | GitHub Pages |
 
 **`testFirstInCycle` ist bewusst auf `true`** — so musst du beim Ausprobieren
@@ -155,21 +155,25 @@ welches Widget gerade läuft.
 - **Drei gleiche Ränge** (z. B. drei Asse) = **31 Punkte**, aber ausdrücklich
   *kein* Feuer — es wird ganz normal weitergespielt.
 - **Feuer** = drei Karten **derselben Farbe** mit genau 31 Punkten
-  (Ass + zwei Zehner-Karten, in jeder Farbe möglich). Auch hier kein
-  vorzeitiges Rundenende, nur ein Highlight am TV.
+  (Ass + zwei Zehner-Karten, in jeder Farbe möglich). Feuer **beendet die
+  Runde sofort**: es wird nicht mehr getauscht, alle decken auf.
 - **Normalfall:** die niedrigste Hand zahlt. Bei Gleichstand entscheidet die
   höchste Einzelkarte, danach die Farbrangfolge **Herz > Pik > Karo > Kreuz**.
   Da jede Karte im Deck einmalig ist, gibt es immer genau einen Verlierer.
-- **Bei Feuer** gilt das nicht: dann zahlen **alle Spieler unter 12 Punkten** —
-  das können auch null oder mehrere sein.
+- **Bei Feuer** zahlen **alle unter 11 Punkten** — und zusätzlich der
+  **Schwächste in jedem Fall**, auch wenn er darüber liegt.
+- Liegt in der Mitte ein **Drilling oder drei gleiche Farben**, ist der
+  Einzeltausch gesperrt: es gilt **alles oder nichts**. Man nimmt alle drei,
+  klopft oder gibt weiter.
+- **„Weiter"** (abgeben ohne Tausch) darf jeder **einmal pro Runde** nutzen.
 - Sind nach dem Lobby-Countdown weniger Gäste verbunden als gewählt, wird ab
   **zwei** Spielern trotzdem gespielt; darunter bricht die Runde ab.
 
-Die Regeln stecken vollständig in `kartentausch-engine.js` und sind mit
+Die Regeln stecken vollständig in `hosn-obe-engine.js` und sind mit
 Regel-Checks abgesichert:
 
 ```bash
-node kartentausch-engine.test.js
+node hosn-obe-engine.test.js
 ```
 
 Der Lauf prüft unter anderem alle 4960 möglichen Hände und 20 000 zufällige
@@ -181,10 +185,10 @@ Runden darauf, dass immer genau ein Verlierer feststeht.
 
 | Datei | Zweck |
 |---|---|
-| `kartentausch-config.js` | **Die einzige Datei, die du bearbeiten musst.** |
-| `kartentausch-engine.js` | Kartendeck, Wertung, Tie-Break, Feuer-Regel |
-| `kartentausch-engine.test.js` | Regel-Checks (`node kartentausch-engine.test.js`) |
-| `kartentausch-net.js` | Firebase-Anbindung, anonyme Anmeldung, Sitzplatzvergabe |
-| `kartentausch.html` | Handy-Seite (Ziel des QR-Codes) |
+| `hosn-obe-config.js` | **Die einzige Datei, die du bearbeiten musst.** |
+| `hosn-obe-engine.js` | Kartendeck, Wertung, Tie-Break, Feuer-Regel |
+| `hosn-obe-engine.test.js` | Regel-Checks (`node hosn-obe-engine.test.js`) |
+| `hosn-obe-net.js` | Firebase-Anbindung, anonyme Anmeldung, Sitzplatzvergabe |
+| `hosn-obe.html` | Handy-Seite (Ziel des QR-Codes) |
 | `cards/player_card_back_design_2_*.svg` | Zwei Kartenrückseiten, pro Karte zufällig gewählt |
 | `index.html` | TV-Widget, Pause/Fortsetzen der Rotation, QR-Overlay |

@@ -641,7 +641,7 @@
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 15, 30, 0.35); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px;
-            /* Links Platz fuer den Kartentausch-Starter-QR (150px + Rand), sonst
+            /* Links Platz fuer den Hos’n Obe-Starter-QR (150px + Rand), sonst
                liegt er auf der Karaoke-Zeile. */
             padding: 15px 30px 15px 185px;
             font-size: 16px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);
@@ -860,18 +860,18 @@
             text-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
-        /* ---------- Kartentausch (Trinkspiel V3) ----------
+        /* ---------- Hos’n Obe (Trinkspiel V3) ----------
            Bewusst durchgehend absolut positioniert statt CSS Grid: Grid ist im
            WebView der Odroid-Box unzuverlaessig (gleicher Grund wie beim Haupt-Layout). */
         /* Holz-Hintergrund wie bei Trinkspiel V2 (holz1/holz2, wechselt pro Runde).
            Das Bild setzt ktSetFelt(), die Grundfarbe traegt bis zum Ladezeitpunkt. */
-        #media-view-kartentausch {
+        #media-view-hosnobe {
             background-color: #14101c;
             background-size: cover;
             background-position: center;
         }
         /* Liegt beim Pausieren UEBER dem angehaltenen Widget, das seine .active-Klasse behaelt. */
-        #media-view-kartentausch.active { z-index: 24; }
+        #media-view-hosnobe.active { z-index: 24; }
 
         .kt-stage { position: absolute; inset: 0; }
 
@@ -887,14 +887,14 @@
            Scaler. Bei einem Fernseher, dessen Fenster kleiner als 1920x1080 ist,
            ergab das ein zu kleines Kaestchen oben links statt Vollbild.
            Deshalb hier fest die Entwurfsgroesse: sie deckt den Scaler exakt ab. */
-        #media-view-kartentausch.kt-fullscreen {
+        #media-view-hosnobe.kt-fullscreen {
             position: fixed;
             left: 0; top: 0;
             width: 1920px; height: 1080px;
             z-index: 9000;
             border-radius: 0;
         }
-        #media-view-kartentausch.kt-fullscreen .kt-stage {
+        #media-view-hosnobe.kt-fullscreen .kt-stage {
             inset: auto;
             left: 50%; top: 50%;
             width: 1280px; height: 815px;
@@ -922,15 +922,15 @@
         .kt-banner {
             position: absolute; top: 0; left: 0; right: 0; z-index: 20;
             display: flex; flex-direction: column; align-items: center;
-            padding: 16px 0 12px;
+            padding: 8px 0 6px;
         }
         .kt-banner-title {
-            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900;
             color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 4px 16px rgba(0,0,0,0.85), 0 0 30px rgba(0,0,0,0.7);
         }
         .kt-banner-sub {
-            margin-top: 5px; font-size: 17px; font-weight: 800; color: #f1f5f9;
+            margin-top: 3px; font-size: 15px; font-weight: 800; color: #f1f5f9;
             text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 3px 12px rgba(0,0,0,0.8);
         }
         .kt-banner-timer {
@@ -945,8 +945,7 @@
             position: absolute; top: 7px; left: 50%; width: 116px; height: 174px;
             margin-left: -58px; border-radius: 11px; overflow: hidden;
             background: #0a1426;
-            box-shadow: 0 12px 26px rgba(0,0,0,0.65);
-            transition: box-shadow 0.4s ease, transform 0.5s ease;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.55);
         }
         .kt-fan-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
         /* Die Rueckseiten-SVGs sind durchsichtig (fill="none"), ohne weisse
@@ -954,28 +953,28 @@
            Motiv wirkt schwarz. */
         .kt-fan-card.is-back { background: #ffffff; }
         .kt-seat-name {
-            margin-top: 6px; text-align: center;
+            margin-top: 4px; text-align: center; line-height: 1.15;
             font-family: 'Orbitron', sans-serif; font-size: 25px; font-weight: 900;
             color: #ffffff; letter-spacing: 0.6px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 4px 14px rgba(0,0,0,0.85);
         }
         .kt-seat-score {
-            margin-top: 3px; text-align: center;
-            font-family: 'Orbitron', sans-serif; font-size: 25px; font-weight: 900; color: #7dd3fc;
+            margin-top: 2px; text-align: center; line-height: 1.1;
+            font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: #7dd3fc;
         }
         .kt-seat-tag {
-            margin: 5px auto 0; width: fit-content; padding: 4px 13px; border-radius: 8px;
+            margin: 4px auto 0; width: fit-content; padding: 3px 12px; border-radius: 8px;
             font-size: 15px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
             background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); color: #cbd5e1;
         }
 
         .kt-seat.is-empty .kt-fan-card { opacity: 0.2; }
         .kt-seat.is-empty .kt-seat-name { color: rgba(255,255,255,0.45); }
-        .kt-seat.is-active .kt-fan-card { box-shadow: 0 0 0 4px #00f2fe, 0 0 26px rgba(0,242,254,0.75), 0 12px 26px rgba(0,0,0,0.55); }
+        .kt-seat.is-active .kt-fan-card { box-shadow: 0 0 0 4px #00f2fe, 0 6px 12px rgba(0,0,0,0.55); }
         .kt-seat.is-active .kt-seat-name { color: #00f2fe; text-shadow: 0 0 16px rgba(0,242,254,0.7); }
-        .kt-seat.is-loser .kt-fan-card { box-shadow: 0 0 0 5px #ff3344, 0 0 26px rgba(255,51,68,0.75), 0 12px 26px rgba(0,0,0,0.5); }
+        .kt-seat.is-loser .kt-fan-card { box-shadow: 0 0 0 5px #ff3344, 0 6px 12px rgba(0,0,0,0.5); }
         .kt-seat.is-loser .kt-seat-name, .kt-seat.is-loser .kt-seat-score { color: #ff3344; }
-        .kt-seat.is-fire .kt-fan-card { box-shadow: 0 0 0 5px #ff8a3d, 0 0 30px rgba(255,138,61,0.8), 0 12px 26px rgba(0,0,0,0.5); }
+        .kt-seat.is-fire .kt-fan-card { box-shadow: 0 0 0 5px #ff8a3d, 0 6px 12px rgba(0,0,0,0.5); }
         .kt-seat.is-fire .kt-seat-name, .kt-seat.is-fire .kt-seat-score { color: #ff8a3d; }
         .kt-seat.is-knocker .kt-seat-tag { border-color: #f4a300; color: #f4a300; }
 
@@ -983,11 +982,10 @@
            Die Karten liegen bewusst schief und leicht versetzt - wie echte Karten,
            die jemand auf den Tisch geworfen hat, nicht wie ein Raster. Rotation und
            Versatz kommen per Zufall aus ktRenderMiddle(). */
-        .kt-middle { position: absolute; left: 50%; top: 336px; transform: translateX(-50%); z-index: 12; display: flex; gap: 22px; }
+        .kt-middle { position: absolute; left: 50%; top: 342px; transform: translateX(-50%); z-index: 12; display: flex; gap: 20px; }
         .kt-middle-card {
-            width: 130px; height: 195px; border-radius: 11px; overflow: hidden;
-            background: #0a1426; box-shadow: 0 14px 30px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.14);
-            transition: transform 0.45s ease;
+            width: 122px; height: 183px; border-radius: 11px; overflow: hidden;
+            background: #0a1426; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
         }
         .kt-middle-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
@@ -996,15 +994,20 @@
         .kt-flyer {
             position: absolute; z-index: 40; width: 130px; height: 195px;
             border-radius: 11px; overflow: hidden; background: #fff;
-            box-shadow: 0 20px 44px rgba(0,0,0,0.8), 0 0 0 2px rgba(255,255,255,0.2);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.2);
             pointer-events: none;
         }
         .kt-flyer img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        /* Kein Schriftzug ueber der Mitte: bei sechs Spielern reicht die obere
-           Reihe mit Name und "am Zug"-Abzeichen bis dicht an die Mitte heran,
-           die Beschriftung lag dann hinter dem Spielernamen. Die offenen Karten
-           in der Tischmitte erklaeren sich ohnehin von selbst. */
-        .kt-middle-label { display: none; }
+        /* Hinweis ueber der Mitte - erscheint nur, wenn dort ein Drilling oder
+           drei gleiche Farben liegen und deshalb nur "alle oder keine" gilt. */
+        .kt-middle-hint {
+            position: absolute; left: 50%; top: 312px; transform: translateX(-50%); z-index: 14;
+            padding: 7px 20px; border-radius: 10px; white-space: nowrap;
+            font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
+            letter-spacing: 1.4px; color: #ffe9a8;
+            background: rgba(20,10,0,0.72); border: 2px solid rgba(244,163,0,0.75);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.9);
+        }
 
         /* Lobby: grosser QR-Code mit Sitzplatzliste */
         .kt-lobby {
@@ -1036,7 +1039,7 @@
         .kt-result.is-fire { border-color: #ff8a3d; box-shadow: 0 0 46px rgba(255,138,61,0.6); }
         .kt-result.is-fire .kt-result-sub { color: #ffd2ab; }
 
-        /* Permanenter QR-Code: startet den Kartentausch aus jedem Widget heraus.
+        /* Permanenter QR-Code: startet den Hos’n Obe aus jedem Widget heraus.
            Unten links, damit er dem YouTube-QR der Musik-Widgets nicht in die Quere kommt. */
         .kt-launcher {
             position: absolute; bottom: 8px; left: 8px; z-index: 26;
@@ -1053,6 +1056,9 @@
            Tabellenplaetzen - dort bleibt er weg. Der Starter liegt als
            Geschwister-Element NACH den Ansichten, daher greift der ~-Selektor. */
         #media-view-bl-table.active ~ .kt-launcher { display: none !important; }
+        /* Auch in den beiden alten Trinkspielen bleibt der Starter-QR weg -
+           dort laeuft bereits ein Spiel, ein zweiter Aufruf stiftet nur Verwirrung. */
+        #media-view-hypereel.active ~ .kt-launcher { display: none !important; }
 
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
@@ -1311,20 +1317,20 @@
                     </div>
                 </div>
 
-                <!-- Trinkspiel V3 "Kartentausch": TV zeigt nur den oeffentlichen Stand,
+                <!-- Trinkspiel V3 "Hos’n Obe": TV zeigt nur den oeffentlichen Stand,
                      die Haende liegen privat auf den Handys der Gaeste. -->
-                <div class="media-inner-view" id="media-view-kartentausch">
+                <div class="media-inner-view" id="media-view-hosnobe">
                     <div class="kt-felt-tint"></div>
                     <div class="kt-stage">
                         <div class="kt-banner">
-                            <div class="kt-banner-title" id="kt-banner-title">🍻 City Cafe Hosen Obe</div>
+                            <div class="kt-banner-title" id="kt-banner-title">🍻 City Cafe Hos’n Obe</div>
                             <div class="kt-banner-sub" id="kt-banner-sub">Schwimmen · 31 · Hosn Obe</div>
                             <div class="kt-banner-timer" id="kt-banner-timer"></div>
                         </div>
 
                         <div id="kt-seats"></div>
 
-                        <div class="kt-middle-label" id="kt-middle-label">Offene Mitte</div>
+                        <div class="kt-middle-hint" id="kt-middle-hint" style="display: none;"></div>
                         <div class="kt-middle" id="kt-middle"></div>
 
                         <div class="kt-lobby" id="kt-lobby">
@@ -1343,8 +1349,8 @@
                 <!-- Dauerhaft sichtbarer Starter-QR: liegt ausserhalb der .media-inner-view,
                      bleibt also in jedem Rotationszustand stehen. -->
                 <div class="kt-launcher" id="kt-launcher" style="display: none;">
-                    <img id="kt-launcher-img" src="" alt="QR-Code Hosen Obe">
-                    <div class="kt-launcher-label">Hosen Obe spielen</div>
+                    <img id="kt-launcher-img" src="" alt="QR-Code Hos’n Obe">
+                    <div class="kt-launcher-label">Hos’n Obe spielen</div>
                 </div>
 
             </div>
@@ -1453,16 +1459,16 @@
 
     </div>
 
-    <!-- Kartentausch (Trinkspiel V3): Konfiguration, Spiel-Logik und Firebase.
+    <!-- Hos’n Obe (Trinkspiel V3): Konfiguration, Spiel-Logik und Firebase.
          Das "compat"-SDK statt der ES-Module, weil der WebView der Odroid-Box alt
-         ist. Bleibt kartentausch-config.js leer, schaltet sich das Widget selbst
+         ist. Bleibt hosn-obe-config.js leer, schaltet sich das Widget selbst
          ab und die uebrige Rotation laeuft unveraendert weiter. -->
-    <script src="kartentausch-config.js"></script>
-    <script src="kartentausch-engine.js"></script>
+    <script src="hosn-obe-config.js"></script>
+    <script src="hosn-obe-engine.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
-    <script src="kartentausch-net.js"></script>
+    <script src="hosn-obe-net.js"></script>
 
     <script>
         function autoScaleDashboard() {
@@ -1491,7 +1497,7 @@
         // startete eine zweite Sequenz parallel. Alles, was zur Medien-Rotation gehoert,
         // laeuft jetzt ueber later()/repeat() und ist damit zentral abbrechbar.
         // Dauerlaeufer wie Uhr, Wetter und Ticker bleiben bewusst aussen vor.
-        // Seit dem Kartentausch-Widget koennen alle Rotations-Timer zusaetzlich
+        // Seit dem Hos’n Obe-Widget koennen alle Rotations-Timer zusaetzlich
         // eingefroren und spaeter an exakt derselben Stelle fortgesetzt werden
         // (pauseRotation/resumeRotation) - das laufende Widget haelt an, statt
         // uebersprungen zu werden.
@@ -3912,7 +3918,7 @@
         }
 
         // ==================================================================
-        //  Trinkspiel V3 "Kartentausch" (Schwimmen / 31 / Hosn Obe)
+        //  Trinkspiel V3 "Hos’n Obe" (Schwimmen / 31 / Hosn Obe)
         //
         //  Der TV ist Geber und Schiedsrichter, zeigt aber nur den oeffentlichen
         //  Stand: verdeckte Faecher je Sitzplatz und die offene Mitte. Die Haende
@@ -3924,13 +3930,16 @@
         //  eingefroren - Registry-Timer stehen dann still, das Spiel muss aber
         //  weiterticken.
         // ==================================================================
-        const KT = window.KARTENTAUSCH_CONFIG || {};
-        const KtEngine = window.KartentauschEngine;
+        const KT = window.HOSN_OBE_CONFIG || {};
+        const KtEngine = window.HosnObeEngine;
 
-        // Reihen-Hoehen auf die groesseren Karten abgestimmt: obere Reihe endet bei
-        // ~324px, die offene Mitte liegt im Band 336-531, die untere Reihe beginnt
-        // darunter und bleibt mit ~791px innerhalb der 815px hohen Media-Zone.
-        const KT_ROW_TOP = 78, KT_ROW_BOTTOM = 545;
+        /* Hoehen-Rechnung fuer die 815px hohe Buehne (sechs Spieler, Aufdecken):
+         *   Banner        0 .. 57
+         *   obere Reihe   62 + Faecher 192 + Name 29 + Abzeichen 26  -> endet 309
+         *   offene Mitte  342 + Karte 183                            -> endet 525
+         *   untere Reihe 532 + Faecher 192 + Name 29 + Punkte 28 + Abzeichen 25 -> endet 806
+         * Der Abstand oben war zu knapp: "am Zug" beruehrte die Mittenkarten. */
+        const KT_ROW_TOP = 62, KT_ROW_BOTTOM = 532;
         const KT_SEAT_POSITIONS = {
             LO: { x: 232,  y: KT_ROW_TOP },
             MO: { x: 640,  y: KT_ROW_TOP },
@@ -3992,7 +4001,7 @@
         // Trinkspiele optisch zusammengehoeren. Wechselt pro Runde.
         let ktFeltIndex = 0;
         function ktSetFelt() {
-            const view = ktEl('media-view-kartentausch');
+            const view = ktEl('media-view-hosnobe');
             if (!view || typeof HYPEREEL_BACKGROUNDS === 'undefined' || !HYPEREEL_BACKGROUNDS.length) return;
             view.style.backgroundImage = "url('" + HYPEREEL_BACKGROUNDS[ktFeltIndex] + "')";
             ktFeltIndex = (ktFeltIndex + 1) % HYPEREEL_BACKGROUNDS.length;
@@ -4047,21 +4056,24 @@
 
         // ---------- Darstellung ----------
 
-        function ktRenderSeats() {
-            const host = ktEl('kt-seats');
-            const phase = ktPub.phase;
-            const count = Number(ktPub.playerCount) || 0;
-            const show = count >= 2 && (phase === 'playing' || phase === 'knocked' || phase === 'reveal');
-            host.style.display = show ? '' : 'none';
-            host.innerHTML = '';
-            if (!show) return;
+        /*
+         * ---------- Sitzplaetze zeichnen ----------
+         *
+         * PERFORMANCE: Frueher wurde bei JEDEM Firebase-Update der komplette
+         * Tisch neu aufgebaut - 6 Sitze mal 3 Karten samt Bildern, Schatten und
+         * Transformationen. Auf der Odroid-Box kostete das sichtbar Bildrate und
+         * liess das Widget ruckeln. Jetzt entsteht die Struktur einmal pro Runde
+         * und danach werden nur noch die Werte angefasst, die sich wirklich
+         * geaendert haben.
+         */
+        let ktSeatEls = [];          // { wrap, cards[], imgs[], name, score, tag }
+        let ktSeatLayoutKey = '';    // Spieleranzahl, fuer die die Struktur gebaut wurde
 
+        function ktBuildSeats(count) {
+            const host = ktEl('kt-seats');
+            host.innerHTML = '';
+            ktSeatEls = [];
             const layout = KT_LAYOUT[count] || KT_LAYOUT[6];
-            const seats = ktPub.seats || {};
-            const revealed = ktPub.revealedHands || {};
-            const scores = ktPub.scores || {};
-            const paying = ktPub.payingSeats || [];
-            const fireSeats = ktPub.fireSeats || [];
 
             for (let seat = 0; seat < count; seat++) {
                 const pos = KT_SEAT_POSITIONS[layout[seat]];
@@ -4070,27 +4082,20 @@
                 wrap.style.left = pos.x + 'px';
                 wrap.style.top = pos.y + 'px';
 
-                const occupied = !!(seats[seat] && seats[seat].uid);
-                const isTurn = phase !== 'reveal' && Number(ktPub.currentTurnSeat) === seat;
-                if (!occupied) wrap.classList.add('is-empty');
-                if (isTurn) wrap.classList.add('is-active');
-                if (phase === 'reveal' && paying.indexOf(seat) !== -1) wrap.classList.add('is-loser');
-                if (fireSeats.indexOf(seat) !== -1) wrap.classList.add('is-fire');
-                if (Number(ktPub.knockedBySeat) === seat) wrap.classList.add('is-knocker');
-
                 const fan = document.createElement('div');
                 fan.className = 'kt-fan';
-                const hand = revealed[seat];
+                const cards = [], imgs = [];
                 for (let i = 0; i < 3; i++) {
-                    const faceUp = !!(hand && hand[i]);
                     const card = document.createElement('div');
-                    card.className = 'kt-fan-card' + (faceUp ? '' : ' is-back');
+                    card.className = 'kt-fan-card is-back';
                     card.style.transform = 'translate(' + KT_FAN[i].dx + 'px, ' + KT_FAN[i].dy + 'px) rotate(' + KT_FAN[i].rotate + 'deg)';
                     card.style.zIndex = String(10 + i);
                     const img = document.createElement('img');
-                    img.src = faceUp ? KtEngine.cardImage(hand[i], 'cards/') : ktCurrentBack();
+                    img.src = ktCurrentBack();
                     card.appendChild(img);
                     fan.appendChild(card);
+                    cards.push(card);
+                    imgs.push(img);
                 }
                 wrap.appendChild(fan);
 
@@ -4099,47 +4104,134 @@
                 name.textContent = ktName(seat);
                 wrap.appendChild(name);
 
-                if (phase === 'reveal' && scores[seat] !== undefined) {
-                    const sc = document.createElement('div');
-                    sc.className = 'kt-seat-score';
-                    sc.textContent = scores[seat] + (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : '');
-                    wrap.appendChild(sc);
-                }
+                const score = document.createElement('div');
+                score.className = 'kt-seat-score';
+                score.style.display = 'none';
+                wrap.appendChild(score);
 
-                const tag = Number(ktPub.knockedBySeat) === seat ? 'geschlossen'
-                    : !occupied ? 'frei'
-                    : isTurn ? 'am Zug' : '';
-                if (tag) {
-                    const t = document.createElement('div');
-                    t.className = 'kt-seat-tag';
-                    t.textContent = tag;
-                    wrap.appendChild(t);
-                }
+                const tag = document.createElement('div');
+                tag.className = 'kt-seat-tag';
+                tag.style.display = 'none';
+                wrap.appendChild(tag);
 
                 host.appendChild(wrap);
+                ktSeatEls.push({ wrap: wrap, cards: cards, imgs: imgs, name: name, score: score, tag: tag });
+            }
+            ktSeatLayoutKey = String(count);
+        }
+
+        // Nur setzen, wenn sich der Wert wirklich unterscheidet - jede
+        // ueberfluessige Zuweisung kostet auf schwacher Hardware ein Neuzeichnen.
+        function ktSetText(el, text) {
+            if (el.textContent !== text) el.textContent = text;
+        }
+        function ktSetClass(el, cls, on) {
+            if (el.classList.contains(cls) !== !!on) el.classList.toggle(cls, !!on);
+        }
+        function ktSetSrc(img, src) {
+            if (img.getAttribute('src') !== src) img.src = src;
+        }
+        function ktSetShown(el, shown) {
+            const want = shown ? '' : 'none';
+            if (el.style.display !== want) el.style.display = want;
+        }
+
+        function ktRenderSeats() {
+            const host = ktEl('kt-seats');
+            const phase = ktPub.phase;
+            const count = Number(ktPub.playerCount) || 0;
+            const show = count >= 2 && (phase === 'playing' || phase === 'knocked' || phase === 'reveal');
+            ktSetShown(host, show);
+            if (!show) return;
+
+            if (ktSeatLayoutKey !== String(count) || ktSeatEls.length !== count) ktBuildSeats(count);
+
+            const seats = ktPub.seats || {};
+            const revealed = ktPub.revealedHands || {};
+            const scores = ktPub.scores || {};
+            const paying = ktPub.payingSeats || [];
+            const fireSeats = ktPub.fireSeats || [];
+            const back = ktCurrentBack();
+
+            for (let seat = 0; seat < count; seat++) {
+                const el = ktSeatEls[seat];
+                if (!el) continue;
+
+                const occupied = !!(seats[seat] && seats[seat].uid);
+                const isTurn = phase !== 'reveal' && Number(ktPub.currentTurnSeat) === seat;
+                ktSetClass(el.wrap, 'is-empty', !occupied);
+                ktSetClass(el.wrap, 'is-active', isTurn);
+                ktSetClass(el.wrap, 'is-loser', phase === 'reveal' && paying.indexOf(seat) !== -1);
+                ktSetClass(el.wrap, 'is-fire', fireSeats.indexOf(seat) !== -1);
+                ktSetClass(el.wrap, 'is-knocker', Number(ktPub.knockedBySeat) === seat);
+
+                const hand = revealed[seat];
+                for (let i = 0; i < 3; i++) {
+                    const faceUp = !!(hand && hand[i]);
+                    ktSetClass(el.cards[i], 'is-back', !faceUp);
+                    ktSetSrc(el.imgs[i], faceUp ? KtEngine.cardImage(hand[i], 'cards/') : back);
+                }
+
+                const hasScore = phase === 'reveal' && scores[seat] !== undefined;
+                ktSetShown(el.score, hasScore);
+                if (hasScore) {
+                    ktSetText(el.score, scores[seat] + (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : ''));
+                }
+
+                const tagText = Number(ktPub.knockedBySeat) === seat ? 'geklopft'
+                    : !occupied ? 'frei'
+                    : isTurn ? 'am Zug' : '';
+                ktSetShown(el.tag, !!tagText);
+                if (tagText) ktSetText(el.tag, tagText);
+            }
+        }
+
+        // Auch die Mitte wird nur noch aktualisiert, nicht neu gebaut.
+        let ktMiddleEls = null;
+
+        function ktBuildMiddle() {
+            const wrap = ktEl('kt-middle');
+            wrap.innerHTML = '';
+            ktMiddleEls = [];
+            for (let i = 0; i < 3; i++) {
+                const el = document.createElement('div');
+                el.className = 'kt-middle-card';
+                const img = document.createElement('img');
+                el.appendChild(img);
+                wrap.appendChild(el);
+                ktMiddleEls.push({ el: el, img: img, code: null });
             }
         }
 
         function ktRenderMiddle() {
             const wrap = ktEl('kt-middle');
-            const label = ktEl('kt-middle-label');
+            const hint = ktEl('kt-middle-hint');
             const cards = ktPub.middleCards || [];
             const phase = ktPub.phase;
             // Beim Aufdecken steht an dieser Stelle das Ergebnis-Panel.
             const show = cards.length === 3 && (phase === 'playing' || phase === 'knocked');
-            wrap.style.display = show ? '' : 'none';
-            label.style.display = show ? '' : 'none';
-            wrap.innerHTML = '';
-            if (!show) return;
+            ktSetShown(wrap, show);
+            if (!show) { ktSetShown(hint, false); return; }
+
+            if (!ktMiddleEls) ktBuildMiddle();
             cards.forEach((code, index) => {
-                const el = document.createElement('div');
-                el.className = 'kt-middle-card';
-                el.style.transform = ktMiddleSkew(code, index);
-                const img = document.createElement('img');
-                img.src = KtEngine.cardImage(code, 'cards/');
-                el.appendChild(img);
-                wrap.appendChild(el);
+                const slot = ktMiddleEls[index];
+                if (!slot || slot.code === code) return;      // unveraendert: nichts anfassen
+                slot.code = code;
+                slot.img.src = KtEngine.cardImage(code, 'cards/');
+                slot.el.style.transform = ktMiddleSkew(code, index);
             });
+
+            // Hinweis "Alle 3 nehmen" liegt ueber der Mitte, sobald sie einen
+            // Drilling oder drei gleiche Farben zeigt - dann ist der Einzeltausch
+            // gesperrt und es gilt alles oder nichts.
+            const allOnly = KtEngine.middleWorthTakingAll(cards);
+            ktSetShown(hint, allOnly);
+            if (allOnly) {
+                const r = KtEngine.scoreHand(cards);
+                ktSetText(hint, r.threeOfAKind ? 'DRILLING — NUR ALLE 3 ODER KEINE'
+                                               : 'DREI GLEICHE FARBEN — NUR ALLE 3 ODER KEINE');
+            }
         }
 
         function ktRenderLobby() {
@@ -4184,8 +4276,9 @@
                 phase === 'lobby' ? 'Scannen und mitspielen' :
                 phase === 'playing' ? ktName(ktPub.currentTurnSeat || 0) + ' ist am Zug' :
                 phase === 'knocked' ? 'Geschlossen — die letzten Züge laufen' :
-                phase === 'reveal' ? 'Aufgedeckt' :
-                'Schwimmen · 31 · Kartentausch';
+                phase === 'reveal' ? (ktPub.fireBySeat !== null && ktPub.fireBySeat !== undefined
+                    ? '🔥 FEUER — alle decken auf!' : 'Aufgedeckt') :
+                'Schwimmen · 31 · Hos’n Obe';
         }
 
         function ktRenderResult() {
@@ -4230,7 +4323,7 @@
         }
 
         function ktFly(code, from, to, delay) {
-            const stage = document.querySelector('#media-view-kartentausch .kt-stage');
+            const stage = document.querySelector('#media-view-hosnobe .kt-stage');
             if (!stage || !from || !to || !code) return;
             const el = document.createElement('div');
             el.className = 'kt-flyer';
@@ -4299,7 +4392,7 @@
         // sonst haengt die Groesse doppelt am Bildschirm.
         const KT_STAGE_SCALE = Math.min(1920 / 1280, 1080 / 815);
         function ktFitFullscreen() {
-            const view = ktEl('media-view-kartentausch');
+            const view = ktEl('media-view-hosnobe');
             if (!view || !view.classList.contains('kt-fullscreen')) return;
             view.style.setProperty('--kt-scale', String(KT_STAGE_SCALE));
         }
@@ -4312,7 +4405,7 @@
             // das Hosen-Obe-Overlay legt sich per z-index darueber.
             pauseRotation();
             ktEl('kt-launcher').style.display = 'none';
-            const view = ktEl('media-view-kartentausch');
+            const view = ktEl('media-view-hosnobe');
             view.classList.add('active');
             view.classList.add('kt-fullscreen');
             document.body.classList.add('kt-fullscreen-on');
@@ -4324,7 +4417,7 @@
             ktSetTimer(null);
             if (!ktActive) return;
             ktActive = false;
-            const view = ktEl('media-view-kartentausch');
+            const view = ktEl('media-view-hosnobe');
             view.classList.remove('kt-fullscreen');
             view.style.removeProperty('--kt-scale');
             document.body.classList.remove('kt-fullscreen-on');
@@ -4338,7 +4431,7 @@
                 done();
                 return;
             }
-            ktEl('media-view-kartentausch').classList.remove('active');
+            ktEl('media-view-hosnobe').classList.remove('active');
         }
 
         // ---------- Spielablauf ----------
@@ -4378,7 +4471,7 @@
                 fireSeats: null,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
             })).catch(err => {
-                console.warn('[Hosen Obe] Austeilen fehlgeschlagen:', err);
+                console.warn('[Hos’n Obe] Austeilen fehlgeschlagen:', err);
                 ktResetSession();
             }).then(() => { ktDealing = false; });
         }
@@ -4418,6 +4511,12 @@
                 writes.push(KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: dealt.hands[seat] }));
             }
 
+            // Schon beim Austeilen kann ein Feuer dabei sein.
+            let dealtFire = -1;
+            for (let seat = 0; seat < players; seat++) {
+                if (KtEngine.scoreHand(dealt.hands[seat]).fire) { dealtFire = seat; break; }
+            }
+
             Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update({
                 botGame: true,
                 playerCount: players,
@@ -4434,8 +4533,17 @@
                 payingSeats: null,
                 fireSeats: null,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
-            })).catch(err => {
-                console.warn('[Hosen Obe] Computer-Runde fehlgeschlagen:', err);
+            })).then(() => {
+                if (dealtFire >= 0) {
+                    return KtNet.publicRef(ktDb, ktSessionId).update({
+                        phase: 'reveal',
+                        fireBySeat: dealtFire,
+                        ['revealedHands/' + dealtFire]: dealt.hands[dealtFire],
+                        lastMove: { type: 'fire', seat: dealtFire }
+                    });
+                }
+            }).catch(err => {
+                console.warn('[Hos’n Obe] Computer-Runde fehlgeschlagen:', err);
                 ktResetSession();
             }).then(() => { ktDealing = false; });
         }
@@ -4508,10 +4616,19 @@
                 }
             }
 
+            // Feuer beendet die Runde auf der Stelle - auch beim Computer.
+            const afterHand = ktMirrorHands[seat];
+            if (afterHand && afterHand.length === 3 && KtEngine.scoreHand(afterHand).fire) {
+                reveals[seat] = afterHand;
+                updates.phase = 'reveal';
+                updates.fireBySeat = seat;
+                updates.lastMove = { type: 'fire', seat: seat };
+            }
+
             Object.keys(reveals).forEach(s => { updates['revealedHands/' + s] = reveals[s]; });
             KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: ktMirrorHands[seat] }).catch(() => {});
             KtNet.publicRef(ktDb, ktSessionId).update(updates)
-                .catch(err => console.warn('[Hosen Obe] Computer-Zug fehlgeschlagen:', err));
+                .catch(err => console.warn('[Hos’n Obe] Computer-Zug fehlgeschlagen:', err));
         }
 
         function ktArmBotTurn() {
@@ -4570,7 +4687,7 @@
                     loserSeat: outcome.loserSeat,
                     payingSeats: outcome.payingSeats,
                     fireSeats: outcome.fireSeats
-                }).catch(err => console.warn('[Hosen Obe] Ergebnis nicht schreibbar:', err))
+                }).catch(err => console.warn('[Hos’n Obe] Ergebnis nicht schreibbar:', err))
                   .then(() => {
                       ktRender();
                       ktPhaseTimer = setTimeout(() => {
@@ -4587,6 +4704,8 @@
             ktMirrorHands = {};
             ktLastTurnSeat = null;
             ktLastAnimatedMove = null;
+            ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
+            ktMiddleEls = null;
             ktDealing = false;
             ktResolving = false;
             if (!ktReady()) return Promise.resolve();
@@ -4615,12 +4734,13 @@
                     loserSeat: null,
                     payingSeats: null,
                     fireSeats: null,
+                    fireBySeat: null,
                     lastMove: null,
                     endRequestedBy: null,
                     turnStartedAt: null,
                     dealerUid: ktUid
                 }))
-                .catch(err => console.warn('[Hosen Obe] Zuruecksetzen fehlgeschlagen:', err));
+                .catch(err => console.warn('[Hos’n Obe] Zuruecksetzen fehlgeschlagen:', err));
         }
 
         function ktOnPhaseChange(phase) {
@@ -4697,7 +4817,7 @@
 
         function ktInit() {
             if (!window.KtNet || !KtNet.isConfigured() || !KtEngine) {
-                console.info('[Hosen Obe] Nicht eingerichtet — Widget bleibt aus.');
+                console.info('[Hos’n Obe] Nicht eingerichtet — Widget bleibt aus.');
                 return;
             }
             KtNet.ready().then(conn => {
@@ -4715,24 +4835,24 @@
                     createdAt: firebase.database.ServerValue.TIMESTAMP
                 }).then(() => {
                     KtNet.publicRef(ktDb, ktSessionId).on('value', ktOnPublic,
-                        err => console.warn('[Hosen Obe] Abo fehlgeschlagen:', err));
+                        err => console.warn('[Hos’n Obe] Abo fehlgeschlagen:', err));
                 });
-            }).catch(err => console.warn('[Hosen Obe] Start fehlgeschlagen:', err));
+            }).catch(err => console.warn('[Hos’n Obe] Start fehlgeschlagen:', err));
         }
         ktInit();
 
-        // Testphase: Kartentausch als erster Zustand im Zyklus, damit man beim
+        // Testphase: Hos’n Obe als erster Zustand im Zyklus, damit man beim
         // Ausprobieren nicht die ganze Rotation abwarten muss. Ueber
-        // KARTENTAUSCH_CONFIG.testFirstInCycle abschaltbar - danach loest nur noch
+        // HOSN_OBE_CONFIG.testFirstInCycle abschaltbar - danach loest nur noch
         // der permanente QR-Code aus.
-        function runKartentauschTestSlot(nextStateIndex) {
+        function runHosnObeTestSlot(nextStateIndex) {
             if (!ktReady()) {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
                 return;
             }
 
-            const view = ktEl('media-view-kartentausch');
+            const view = ktEl('media-view-hosnobe');
             view.classList.add('active');
 
             const advance = () => {
@@ -4744,13 +4864,20 @@
             ktTestSlotDone = advance;
             ktRender();
 
-            // Hat nach der Wartezeit niemand gescannt, spielt der Computer eine
-            // Runde vor, statt dass ein toter QR-Code am Bildschirm steht. Erst
-            // danach geht die Rotation weiter (ueber ktExitGame -> advance).
-            globalMasterTimer = later(() => {
-                if ((ktPub.phase || 'idle') === 'idle') ktStartBotRound(KT.botPlayerCount || 3);
+            /* Sichtbarer Countdown, solange das Widget im Zyklus wartet: die
+             * Gaeste sollen sehen, wie lange sie noch scannen koennen. Laeuft er
+             * ab, ohne dass jemand gescannt hat, spielt der Computer eine Runde
+             * mit voller Besetzung vor, statt einen toten QR-Code zu zeigen.
+             * Erst danach geht die Rotation weiter (ueber ktExitGame -> advance). */
+            ktStartCountdown(KT.botIdleStartSeconds || 60, () => {
+                if ((ktPub.phase || 'idle') === 'idle') ktStartBotRound(KT.botPlayerCount || 6);
                 else advance();
-            }, (KT.botIdleStartSeconds || 60) * 1000);
+            });
+            // Sicherheitsnetz, falls der Countdown durch einen Phasenwechsel
+            // abgeraeumt wird und niemand weiterschaltet.
+            globalMasterTimer = later(() => {
+                if ((ktPub.phase || 'idle') === 'idle') advance();
+            }, ((KT.botIdleStartSeconds || 60) + 25) * 1000);
         }
 
         function runMasterSequence() {
@@ -4761,7 +4888,7 @@
             document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
 
             if (mediaStateIndex === -1) {
-                runKartentauschTestSlot(0); // -> Tag/Nacht-Plakat
+                runHosnObeTestSlot(0); // -> Tag/Nacht-Plakat
 
             } else if (mediaStateIndex === 0) {
                 // Tag/Nacht-Plakat und Karaoke-Plakat laufen jetzt nacheinander in JEDEM
@@ -4858,7 +4985,7 @@
             prepareDrinkVideo(); // erstes Getraenke-Video schon beim Start vorbereiten
         })();
         // Im Testmodus geht es nach kurzer Anlaufzeit (Firebase-Anmeldung) sofort
-        // in den Kartentausch-Slot, sonst laeuft der Zyklus wie bisher an.
+        // in den Hos’n Obe-Slot, sonst laeuft der Zyklus wie bisher an.
         if (KT.testFirstInCycle) mediaStateIndex = -1;
         globalMasterTimer = later(runMasterSequence, KT.testFirstInCycle ? 6000 : 35000);
 

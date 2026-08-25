@@ -1,15 +1,15 @@
 /*
- * Kartentausch (Schwimmen / 31 / Hosn Obe) — reine Spiel-Logik.
+ * Hos’n Obe (Schwimmen / 31 / Hosn Obe) — reine Spiel-Logik.
  *
- * Wird von index.html (TV) und kartentausch.html (Handy) geteilt, damit beide
+ * Wird von index.html (TV) und hosn-obe.html (Handy) geteilt, damit beide
  * Seiten dieselbe Wertung rechnen. Enthält bewusst keinerlei DOM- oder
- * Firebase-Zugriffe, damit die Regeln mit `node kartentausch-engine.test.js`
+ * Firebase-Zugriffe, damit die Regeln mit `node hosn-obe-engine.test.js`
  * ohne Browser geprüft werden können.
  */
 (function (root, factory) {
     var api = factory();
     if (typeof module === 'object' && module.exports) module.exports = api;
-    else root.KartentauschEngine = api;
+    else root.HosnObeEngine = api;
 })(typeof self !== 'undefined' ? self : this, function () {
     'use strict';
 
@@ -34,7 +34,7 @@
     var RANK_FILE = { '7': '7', '8': '8', '9': '9', '10': '10', 'J': 'jack', 'Q': 'queen', 'K': 'king', 'A': 'ace' };
 
     var FIRE_TOTAL = 31;          // gleichfarbiger Flush mit exakt 31 = "Feuer"
-    var FIRE_PAY_BELOW = 12;      // bei Feuer zahlt jeder unter 12 Punkten
+    var FIRE_PAY_BELOW = 11;      // bei Feuer zahlt jeder unter 11 Punkten
 
     function parseCard(code) {
         var suit = code.charAt(0);
@@ -153,18 +153,8 @@
             if (r.fire) fireSeats.push(seat);
         });
 
-        if (fireSeats.length) {
-            return {
-                mode: 'fire',
-                scores: scores,
-                results: results,
-                fireSeats: fireSeats,
-                payingSeats: seats.filter(function (seat) { return scores[seat] < FIRE_PAY_BELOW; }),
-                loserSeat: null,
-                tieBreak: false
-            };
-        }
-
+        // Schwaechster Sitz, eindeutig - bei Gleichstand entscheidet die
+        // hoechste Einzelkarte, dann die Farbrangfolge.
         var lowest = Math.min.apply(null, seats.map(function (seat) { return scores[seat]; }));
         var tied = seats.filter(function (seat) { return scores[seat] === lowest; });
 
@@ -173,6 +163,26 @@
             if (compareCards(highestCard(hands[tied[i]]), highestCard(hands[loserSeat])) < 0) {
                 loserSeat = tied[i];
             }
+        }
+
+        if (fireSeats.length) {
+            /*
+             * Feuer: es wird nicht mehr getauscht, alle decken auf.
+             * Zahlen muss jeder unter 11 Punkten - UND der Schwaechste in
+             * jedem Fall, auch wenn der ueber 11 liegt.
+             */
+            var firePaying = seats.filter(function (seat) { return scores[seat] < FIRE_PAY_BELOW; });
+            if (firePaying.indexOf(loserSeat) === -1) firePaying.push(loserSeat);
+            firePaying.sort(function (a, b) { return a - b; });
+            return {
+                mode: 'fire',
+                scores: scores,
+                results: results,
+                fireSeats: fireSeats,
+                payingSeats: firePaying,
+                loserSeat: loserSeat,
+                tieBreak: tied.length > 1
+            };
         }
 
         return {
@@ -206,7 +216,10 @@
 
     // Zwei Rueckseiten-Motive, pro Karte zufaellig gemischt - dadurch sieht ein
     // verdeckter Faecher aus wie ein echtes Blatt und nicht wie eine Kachel.
-    var CARD_BACKS = ['player_card_back_design_2_lightblue.svg', 'player_card_back_design_2_red.svg'];
+    // Raster statt SVG: die SVG-Rueckseiten enthalten ein Linienmuster, das der
+    // Browser bei jeder Groessenaenderung neu zeichnen muss - 18-mal gleichzeitig
+    // auf der Odroid-Box war das der teuerste Posten im Bild.
+    var CARD_BACKS = ['back_lightblue.webp', 'back_red.webp'];
 
     function cardBackImage(basePath, rng) {
         var random = rng || Math.random;
@@ -304,7 +317,21 @@
 
         if (opts.canKnock && current >= BOT_KNOCK_STRONG) return { type: 'knock' };
 
+        /*
+         * Liegt in der Mitte ein Drilling oder drei gleiche Farben, gilt
+         * "alle oder keine": ein Einzeltausch wuerde den Satz zerreissen und
+         * ist deshalb gesperrt - fuer den Computer genauso wie fuer die Gaeste.
+         */
+        var allOrNothing = middleWorthTakingAll(middleCards);
         var best = null;
+
+        if (allOrNothing) {
+            var setValue = scoreHand(middleCards).score;
+            if (setValue >= current + BOT_MIN_GAIN) return { type: 'all' };
+            if (opts.canKnock && current >= knockAt) return { type: 'knock' };
+            return { type: 'pass' };
+        }
+
         for (var h = 0; h < 3; h++) {
             for (var m = 0; m < 3; m++) {
                 var trial = hand.slice();
@@ -314,13 +341,6 @@
                 if (!best || utility > best.utility) {
                     best = { type: 'single', handIndex: h, middleIndex: m, value: value, utility: utility };
                 }
-            }
-        }
-
-        if (middleWorthTakingAll(middleCards)) {
-            var allValue = scoreHand(middleCards).score;
-            if (allValue > (best ? best.value : 0)) {
-                best = { type: 'all', value: allValue, utility: allValue };
             }
         }
 

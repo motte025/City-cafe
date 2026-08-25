@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#060e1c">
-<title>Hosen Obe · City Cafe Klagenfurt</title>
+<title>Hos’n Obe · City Cafe Klagenfurt</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
@@ -158,7 +158,12 @@
     .kt-status.is-myturn .kt-status-main { color: #00f2fe; }
     .kt-status.is-error { border-color: rgba(255,51,68,0.5); background: rgba(255,51,68,0.1); }
 
-    .kt-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
+    /* Die Knoepfe fuellen den Rest der Hoehe und sitzen unten - dort, wo der
+       Daumen beim Halten des Handys ohnehin liegt. */
+    .kt-actions {
+        flex: 1 1 auto; min-height: 0;
+        display: flex; flex-direction: column; justify-content: flex-end; gap: 10px;
+    }
     .kt-btn {
         width: 100%; padding: 22px 14px; border-radius: 15px;
         font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800;
@@ -172,6 +177,18 @@
     .kt-btn.kt-btn-confirm { border-color: rgba(46,204,113,0.6); background: rgba(46,204,113,0.16); color: #d8ffe9; }
     .kt-btn.kt-btn-ghost { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.06); color: #cbd5e1; }
     .kt-btn.kt-btn-bot { border-color: rgba(244,163,0,0.55); background: rgba(244,163,0,0.14); color: #ffe4b3; }
+
+    /* Am eigenen Zug entfaellt die Statusbox - die Knoepfe bekommen den Platz
+       und muessen aus Armlaenge lesbar sein. */
+    .kt-btn.kt-btn-big {
+        padding: 34px 14px;
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        border-width: 3px;
+        border-radius: 20px;
+    }
+    .kt-btn.kt-btn-knock.kt-btn-big { border-color: #ff3344; background: rgba(255,51,68,0.2); color: #ffe3e6; }
 
     .kt-seat-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 11px; }
     .kt-seat-pill {
@@ -239,7 +256,7 @@
 <div class="kt-screen">
 
 <div class="kt-head">
-    <div class="kt-brand">CITY CAFE · HOSEN OBE</div>
+    <div class="kt-brand">CITY CAFE · HOS’N OBE</div>
     <div class="kt-seat-badge kt-hidden" id="kt-seat-badge">—</div>
 </div>
 
@@ -273,18 +290,18 @@
     <button class="kt-btn-end" id="kt-btn-end">Runde beenden</button>
 </div>
 
-<script src="kartentausch-config.js"></script>
-<script src="kartentausch-engine.js"></script>
+<script src="hosn-obe-config.js"></script>
+<script src="hosn-obe-engine.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
-<script src="kartentausch-net.js"></script>
+<script src="hosn-obe-net.js"></script>
 <script>
 (function () {
     'use strict';
 
-    var CFG = window.KARTENTAUSCH_CONFIG || {};
-    var E = window.KartentauschEngine;
+    var CFG = window.HOSN_OBE_CONFIG || {};
+    var E = window.HosnObeEngine;
 
     var els = {
         seatBadge: document.getElementById('kt-seat-badge'),
@@ -318,6 +335,8 @@
     // bricht die Geste dann mit pointercancel ab.
     var dragActive = false;
     var renderPending = false;
+    // "Weiter" ist ein Notnagel, kein Dauerzustand: einmal pro Runde.
+    var passUsed = false;
 
     function setStatus(main, sub, cls) {
         els.statusMain.textContent = main;
@@ -541,6 +560,35 @@
     }
 
     /*
+     * Feuer beendet die Runde auf der Stelle.
+     *
+     * Nutzer-Vorgabe: wer 31 in einer Farbe hat, zeigt sie her - danach wird
+     * nicht mehr getauscht, alle decken auf. Erkennen kann das nur das Handy
+     * des Betroffenen, denn nur dort liegt die Hand. Es veroeffentlicht sie
+     * und schaltet die Runde direkt auf "reveal".
+     */
+    var firePublished = false;
+    function checkFire(hand) {
+        var cards = hand || myHand;
+        if (firePublished || mySeat < 0 || !cards || cards.length !== 3) return Promise.resolve(false);
+        if (!E.scoreHand(cards).fire) return Promise.resolve(false);
+        firePublished = true;
+        return KtNet.publicRef(db, sessionId, 'revealedHands/' + mySeat).set(cards)
+            .then(function () {
+                return KtNet.publicRef(db, sessionId).update({
+                    phase: 'reveal',
+                    fireBySeat: mySeat,
+                    lastMove: { type: 'fire', seat: mySeat }
+                });
+            })
+            .then(function () { return true; })
+            .catch(function (err) {
+                console.warn('[Hos’n Obe] Feuer konnte nicht gemeldet werden:', err);
+                return false;
+            });
+    }
+
+    /*
      * Schrittweises Aufdecken: Wer klopft, legt seine Karten sofort offen hin.
      * Jeder danach spielt noch einen Zug und deckt dann ebenfalls auf. Am Ende
      * liegen alle Haende offen - der TV zeigt jede Hand in dem Moment, in dem
@@ -551,7 +599,7 @@
         var cards = hand || myHand;
         if (!cards || cards.length !== 3) return Promise.resolve();
         return KtNet.publicRef(db, sessionId, 'revealedHands/' + mySeat).set(cards)
-            .catch(function (err) { console.warn('[Hosen Obe] Aufdecken fehlgeschlagen:', err); });
+            .catch(function (err) { console.warn('[Hos’n Obe] Aufdecken fehlgeschlagen:', err); });
     }
 
     // Nach dem Klopfen deckt jeder direkt nach seinem Zug auf.
@@ -562,8 +610,15 @@
 
     // Tauscht sofort - ohne Bestaetigungsschritt. Wird sowohl vom zweiten
     // Antippen als auch vom Loslassen nach dem Ziehen aufgerufen.
+    // Liegt in der Mitte ein Drilling oder drei gleiche Farben, gilt "alle oder
+    // keine" - ein Einzeltausch wuerde den Satz zerreissen.
+    function singleSwapBlocked() {
+        return E.middleWorthTakingAll(pub.middleCards || []);
+    }
+
     function swapNow(handIndex, middleIndex) {
         if (busy || !isMyTurn()) return;
+        if (singleSwapBlocked()) { resetSwapMode(); return; }
         if (handIndex === null || middleIndex === null) return;
         var middle = (pub.middleCards || []).slice();
         var hand = myHand.slice();
@@ -610,8 +665,9 @@
     // Weitergeben, ohne zu tauschen. Ohne diesen Zug sass ein Spieler fest,
     // wenn ihm kein Tausch passte und Klopfen noch nicht erlaubt war.
     function doPass() {
-        if (busy || !isMyTurn()) return;
+        if (busy || !isMyTurn() || passUsed) return;
         busy = true;
+        passUsed = true;
         revealAfterMoveIfNeeded(myHand)
             .then(function () {
                 return commitTurn((pub.middleCards || []).slice(), { type: 'pass', seat: mySeat });
@@ -633,7 +689,7 @@
     }
 
     function handleWriteError(err) {
-        console.warn('[Hosen Obe] Zug fehlgeschlagen:', err);
+        console.warn('[Hos’n Obe] Zug fehlgeschlagen:', err);
         setStatus('Zug nicht angekommen', 'Netzwerkproblem — bitte nochmal antippen.', 'is-error');
     }
 
@@ -686,15 +742,16 @@
          * stehen: frueher verschwanden beide, sobald man eine Karte antippte.
          */
         if (E.middleWorthTakingAll(pub.middleCards || [])) {
-            els.actions.appendChild(button('Alle 3 tauschen', '', doSwapAll));
+            els.actions.appendChild(button('ALLE 3 NEHMEN', 'kt-btn-big', doSwapAll));
         }
 
         if (canKnockNow()) {
-            els.actions.appendChild(button('Klopfen', 'kt-btn-knock', doKnock));
+            els.actions.appendChild(button('KLOPFEN', 'kt-btn-knock kt-btn-big', doKnock));
         }
 
-        // Immer erreichbar: weitergeben, ohne etwas zu tauschen.
-        els.actions.appendChild(button('Weiter', 'kt-btn-ghost', doPass));
+        // Weitergeben, ohne zu tauschen - einmal pro Runde.
+        els.actions.appendChild(button(passUsed ? 'WEITER (schon genutzt)' : 'WEITER',
+            'kt-btn-ghost kt-btn-big', doPass, passUsed));
     }
 
     function renderReveal(keepExisting) {
@@ -752,8 +809,9 @@
         show(els.middlePanel, (pub.middleCards || []).length === 3 && phase !== 'idle' && phase !== 'hostSelect');
 
         var myTurn = isMyTurn();
+        var pickable = myTurn && !singleSwapBlocked();
         renderCards(els.handCards, myHand, {
-            pickable: myTurn,
+            pickable: pickable,
             selected: pickedHand,
             onPick: function (i) {
                 if (pickedHand === i) { pickedHand = null; render(); return; }
@@ -765,7 +823,7 @@
         });
         renderCards(els.middleCards, pub.middleCards || [], {
             middle: true,
-            pickable: myTurn,
+            pickable: pickable,
             selected: pickedMiddle,
             onPick: function (i) {
                 if (pickedMiddle === i) { pickedMiddle = null; render(); return; }
@@ -802,6 +860,8 @@
                 ? ' · ' + (Number(pub.knockedBySeat) === mySeat ? 'Du hast' : seatName(pub.knockedBySeat) + ' hat') + ' geklopft'
                 : '';
             if (myTurn) {
+                // Am eigenen Zug braucht es keine Statusbox - die Knoepfe darunter
+                // sagen alles, und der Platz gehoert den Karten.
                 var hint;
                 if (pickedHand !== null || pickedMiddle !== null) {
                     hint = 'Jetzt die Karte aus der Mitte antippen, dann bestätigen.';
@@ -843,6 +903,9 @@
             setStatus('Warte auf die nächste Runde', 'Der TV startet gleich eine neue Runde.');
         }
 
+        // Am eigenen Zug verschwindet die Statusbox zugunsten grosser Knoepfe.
+        show(els.status, !isMyTurn());
+
         renderActions();
     }
 
@@ -860,9 +923,10 @@
         }).then(function (seat) {
             mySeat = seat;
             if (seat >= 0) localStorage.setItem('kt_seat_' + sessionId, String(seat));
+            passUsed = false;
             watchMyHand();
         }).catch(function (err) {
-            console.warn('[Hosen Obe] Spieleranzahl konnte nicht gesetzt werden:', err);
+            console.warn('[Hos’n Obe] Spieleranzahl konnte nicht gesetzt werden:', err);
         }).then(function () { busy = false; });
     }
 
@@ -878,7 +942,7 @@
             hostUid: null,
             seats: null
         }).catch(function (err) {
-            console.warn('[Hosen Obe] Computer-Runde konnte nicht gestartet werden:', err);
+            console.warn('[Hos’n Obe] Computer-Runde konnte nicht gestartet werden:', err);
         }).then(function () { busy = false; });
     }
 
@@ -888,7 +952,7 @@
         busy = true;
         KtNet.publicRef(db, sessionId).update({ endRequestedBy: uid })
             .catch(function (err) {
-                console.warn('[Hosen Obe] Beenden fehlgeschlagen:', err);
+                console.warn('[Hos’n Obe] Beenden fehlgeschlagen:', err);
             }).then(function () { busy = false; });
     }
 
@@ -905,7 +969,7 @@
             }
             render();
         }).catch(function (err) {
-            console.warn('[Hosen Obe] Sitzplatz konnte nicht belegt werden:', err);
+            console.warn('[Hos’n Obe] Sitzplatz konnte nicht belegt werden:', err);
         }).then(function () { busy = false; });
     }
 
@@ -926,7 +990,7 @@
         var entry = (pub.seats || {})[mySeat];
         if (entry && entry.uid === uid) return;                   // alles in Ordnung
 
-        console.warn('[Hosen Obe] Sitzplatz', mySeat, 'gehoert uns nicht (mehr) - wird freigegeben.');
+        console.warn('[Hos’n Obe] Sitzplatz', mySeat, 'gehoert uns nicht (mehr) - wird freigegeben.');
         mySeat = -1;
         myHand = [];
         if (handWatcher) { handWatcher.off(); handWatcher = null; }
@@ -940,9 +1004,11 @@
         handWatcher.on('value', function (snap) {
             var val = snap.val();
             myHand = (val && val.hand) || [];
+            // Auch eine bereits ausgeteilte Feuer-Hand beendet die Runde sofort.
+            if (pub.phase === 'playing' || pub.phase === 'knocked') checkFire(myHand);
             render();
         }, function (err) {
-            console.warn('[Hosen Obe] Hand nicht lesbar:', err);
+            console.warn('[Hos’n Obe] Hand nicht lesbar:', err);
         });
     }
 
@@ -958,12 +1024,13 @@
     function onPublic(snap) {
         var prevPhase = pub.phase;
         pub = snap.val() || {};
-        if (pub.phase !== 'reveal') publishedReveal = false;
+        if (pub.phase !== 'reveal') { publishedReveal = false; firePublished = false; }
 
         // Neue Runde: alter Sitzplatz gilt nicht mehr.
         if (prevPhase === 'reveal' && pub.phase === 'idle') {
             mySeat = -1;
             myHand = [];
+            passUsed = false;
             if (handWatcher) { handWatcher.off(); handWatcher = null; }
             localStorage.removeItem('kt_seat_' + sessionId);
         }
@@ -986,7 +1053,7 @@
             return;
         }
         if (!KtNet.isConfigured()) {
-            setStatus('Noch nicht eingerichtet', 'Die Firebase-Zugangsdaten fehlen in kartentausch-config.js.', 'is-error');
+            setStatus('Noch nicht eingerichtet', 'Die Firebase-Zugangsdaten fehlen in hosn-obe-config.js.', 'is-error');
             return;
         }
 
@@ -1015,12 +1082,12 @@
                 }
             }).then(function () {
                 KtNet.publicRef(db, sessionId).on('value', onPublic, function (err) {
-                    console.warn('[Hosen Obe] Spielstand nicht lesbar:', err);
+                    console.warn('[Hos’n Obe] Spielstand nicht lesbar:', err);
                     setStatus('Verbindung verloren', 'Bitte neu laden.', 'is-error');
                 });
             });
         }).catch(function (err) {
-            console.warn('[Hosen Obe] Start fehlgeschlagen:', err);
+            console.warn('[Hos’n Obe] Start fehlgeschlagen:', err);
             setStatus('Fehler beim Start', 'Bitte die Seite neu laden.', 'is-error');
         });
     }

@@ -1,5 +1,5 @@
 /*
- * Kartentausch — gemeinsame Firebase-Schicht für TV und Handy.
+ * Hos’n Obe — gemeinsame Firebase-Schicht für TV und Handy.
  *
  * Absichtlich gegen das "compat"-SDK gebaut (klassische <script>-Tags statt
  * ES-Modulen): der WebView auf der Odroid-Box ist alt genug, dass dort schon
@@ -9,7 +9,7 @@
 (function (global) {
     'use strict';
 
-    var cfg = global.KARTENTAUSCH_CONFIG || {};
+    var cfg = global.HOSN_OBE_CONFIG || {};
     var fbCfg = cfg.firebase || {};
 
     // Ohne Datenbank-URL bleibt das ganze Feature still liegen, statt beim
@@ -37,7 +37,7 @@
             try {
                 if (!global.firebase.apps.length) global.firebase.initializeApp(fbCfg);
             } catch (err) {
-                console.warn('[Kartentausch] Firebase-Init fehlgeschlagen:', err);
+                console.warn('[Hos’n Obe] Firebase-Init fehlgeschlagen:', err);
                 return finish(null);
             }
 
@@ -46,12 +46,12 @@
                 if (user) finish({ uid: user.uid, db: global.firebase.database() });
             });
             auth.signInAnonymously().catch(function (err) {
-                console.warn('[Kartentausch] Anonyme Anmeldung fehlgeschlagen:', err);
+                console.warn('[Hos’n Obe] Anonyme Anmeldung fehlgeschlagen:', err);
                 finish(null);
             });
 
             setTimeout(function () {
-                if (!settled) console.warn('[Kartentausch] Firebase antwortet nicht — Feature bleibt aus.');
+                if (!settled) console.warn('[Hos’n Obe] Firebase antwortet nicht — Feature bleibt aus.');
                 finish(null);
             }, 12000);
         });
