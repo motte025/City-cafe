@@ -1,9 +1,9 @@
 /*
- * Kartentausch — gemeinsame Firebase-Schicht fuer TV und Handy.
+ * Kartentausch — gemeinsame Firebase-Schicht für TV und Handy.
  *
  * Absichtlich gegen das "compat"-SDK gebaut (klassische <script>-Tags statt
  * ES-Modulen): der WebView auf der Odroid-Box ist alt genug, dass dort schon
- * CSS Grid nicht zuverlaessig laeuft — auf dynamische import()-Ketten wollen
+ * CSS Grid nicht zuverlässig läuft — auf dynamische import()-Ketten wollen
  * wir uns da nicht verlassen.
  */
 (function (global) {
@@ -13,7 +13,7 @@
     var fbCfg = cfg.firebase || {};
 
     // Ohne Datenbank-URL bleibt das ganze Feature still liegen, statt beim
-    // Start Fehler zu werfen und die uebrige Rotation mitzureissen.
+    // Start Fehler zu werfen und die übrige Rotation mitzureißen.
     var hasKeys = !!(fbCfg.databaseURL && fbCfg.apiKey && fbCfg.projectId);
     var readyPromise = null;
 
@@ -21,7 +21,7 @@
         return hasKeys && typeof global.firebase !== 'undefined' && !!global.firebase.database;
     }
 
-    // Loest mit { uid, db } auf — oder mit null, wenn Firebase nicht nutzbar ist.
+    // Löst mit { uid, db } auf — oder mit null, wenn Firebase nicht nutzbar ist.
     function ready() {
         if (!isConfigured()) return Promise.resolve(null);
         if (readyPromise) return readyPromise;
@@ -75,9 +75,9 @@
     }
 
     /*
-     * Sitzplatz atomar belegen. Zwei Handys, die gleichzeitig scannen, koennen
-     * denselben freien Platz nicht doppelt bekommen — die Transaktion laesst nur
-     * einen der beiden Schreibvorgaenge durch, der andere versucht es erneut.
+     * Sitzplatz atomar belegen. Zwei Handys, die gleichzeitig scannen, können
+     * denselben freien Platz nicht doppelt bekommen — die Transaktion lässt nur
+     * einen der beiden Schreibvorgänge durch, der andere versucht es erneut.
      * Liefert den Sitzplatz-Index oder -1, wenn alles besetzt ist.
      */
     function claimSeat(db, sessionId, uid, playerCount) {
@@ -105,7 +105,7 @@
     }
 
     // Host wird, wer zuerst da ist. Ebenfalls als Transaktion, damit bei zwei
-    // gleichzeitigen Scans nicht beide Handys die Spieleranzahl waehlen duerfen.
+    // gleichzeitigen Scans nicht beide Handys die Spieleranzahl wählen dürfen.
     function claimHost(db, sessionId, uid) {
         return publicRef(db, sessionId, 'hostUid').transaction(function (current) {
             if (current === null) return uid;

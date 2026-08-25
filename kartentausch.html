@@ -39,7 +39,7 @@
         color: #00f2fe; white-space: nowrap;
     }
 
-    /* Eigene Hand bewusst GANZ OBEN: so laesst sich das Display mit einer Hand
+    /* Eigene Hand bewusst GANZ OBEN: so lässt sich das Display mit einer Hand
        abschirmen oder wegkippen, ohne dass Nachbarn mitlesen. */
     .kt-hand-panel {
         background: rgba(10,20,38,0.82);
@@ -264,14 +264,14 @@
         return b;
     }
 
-    // ---------- Zuege ----------
+    // ---------- Züge ----------
 
     function isMyTurn() {
         return pub.phase && (pub.phase === 'playing' || pub.phase === 'knocked') &&
                Number(pub.currentTurnSeat) === mySeat && myHand.length === 3;
     }
 
-    // Gemeinsamer Abschluss jedes Zuges: Mitte + naechster Sitz + ggf. Schluss-Countdown.
+    // Gemeinsamer Abschluss jedes Zuges: Mitte + nächster Sitz + ggf. Schluss-Countdown.
     function commitTurn(newMiddle, move) {
         var count = Number(pub.playerCount) || 2;
         var updates = {
@@ -553,8 +553,8 @@
         });
     }
 
-    // Beim Aufdecken veroeffentlicht jedes Handy seine eigene Hand. Der TV kennt
-    // sie dadurch, ohne jemals Leserechte auf fremde Haende zu brauchen.
+    // Beim Aufdecken veröffentlicht jedes Handy seine eigene Hand. Der TV kennt
+    // sie dadurch, ohne jemals Leserechte auf fremde Hände zu brauchen.
     var publishedReveal = false;
     function maybePublishHand() {
         if (pub.phase !== 'reveal' || publishedReveal || mySeat < 0 || myHand.length !== 3) return;

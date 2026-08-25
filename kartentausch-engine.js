@@ -2,9 +2,9 @@
  * Kartentausch (Schwimmen / 31 / Hosn Obe) — reine Spiel-Logik.
  *
  * Wird von index.html (TV) und kartentausch.html (Handy) geteilt, damit beide
- * Seiten dieselbe Wertung rechnen. Enthaelt bewusst keinerlei DOM- oder
+ * Seiten dieselbe Wertung rechnen. Enthält bewusst keinerlei DOM- oder
  * Firebase-Zugriffe, damit die Regeln mit `node kartentausch-engine.test.js`
- * ohne Browser geprueft werden koennen.
+ * ohne Browser geprüft werden können.
  */
 (function (root, factory) {
     var api = factory();
@@ -19,9 +19,9 @@
 
     var CARD_VALUE = { '7': 7, '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11 };
 
-    // Fuer den Tie-Break wird nach Rang-Reihenfolge verglichen, nicht nach
-    // Punktwert: sonst waeren Bube/Dame/Koenig/Zehn alle gleich "10" und zwei
-    // Spieler koennten unaufloesbar gleichstehen. Rang + Farbe ist pro Deck
+    // Für den Tie-Break wird nach Rang-Reihenfolge verglichen, nicht nach
+    // Punktwert: sonst wären Bube/Dame/König/Zehn alle gleich "10" und zwei
+    // Spieler könnten unauflösbar gleichstehen. Rang + Farbe ist pro Deck
     // eindeutig, also gibt es immer genau einen Verlierer.
     var RANK_ORDER = { '7': 0, '8': 1, '9': 2, '10': 3, 'J': 4, 'Q': 5, 'K': 6, 'A': 7 };
     var SUIT_ORDER = { 'H': 3, 'S': 2, 'D': 1, 'C': 0 };               // Herz > Pik > Karo > Kreuz
@@ -78,8 +78,8 @@
 
     /*
      * Wertung einer 3-Karten-Hand:
-     *   - gleiche Farbe: Punktwerte addieren (bester Farb-Teilstapel zaehlt)
-     *   - drei gleiche Raenge: 31 Punkte, aber ausdruecklich KEIN Feuer
+     *   - gleiche Farbe: Punktwerte addieren (bester Farb-Teilstapel zählt)
+     *   - drei gleiche Ränge: 31 Punkte, aber ausdrücklich KEIN Feuer
      *   - "Feuer": alle drei gleiche Farbe UND Summe exakt 31 (Ass + zwei Zehner-Karten)
      */
     function scoreHand(cards) {
@@ -113,7 +113,7 @@
         };
     }
 
-    // >0 wenn a staerker als b. Zwei verschiedene Karten sind nie gleich stark.
+    // >0 wenn a stärker als b. Zwei verschiedene Karten sind nie gleich stark.
     function compareCards(a, b) {
         var pa = parseCard(a);
         var pb = parseCard(b);
@@ -133,15 +133,15 @@
      * Rundenauswertung.
      *
      * Normalfall: niedrigste Punktzahl verliert. Bei Gleichstand entscheidet die
-     * hoechste Einzelkarte (Rang, dann Herz > Pik > Karo > Kreuz) — wer die
+     * höchste Einzelkarte (Rang, dann Herz > Pik > Karo > Kreuz) — wer die
      * niedrigste davon hat, verliert. Ergebnis ist immer genau ein Verlierer.
      *
-     * Feuer: die Ein-Verlierer-Regel faellt weg, stattdessen zahlt jeder Spieler
-     * unter 12 Punkten. Das koennen 0, 1 oder mehrere sein.
+     * Feuer: die Ein-Verlierer-Regel fällt weg, stattdessen zahlt jeder Spieler
+     * unter 12 Punkten. Das können 0, 1 oder mehrere sein.
      */
     function evaluateRound(hands) {
         var seats = Object.keys(hands).map(Number).sort(function (a, b) { return a - b; });
-        if (!seats.length) throw new Error('Keine Haende zum Auswerten');
+        if (!seats.length) throw new Error('Keine Hände zum Auswerten');
 
         var results = {};
         var scores = {};
@@ -191,7 +191,7 @@
     }
 
     // Dateinamen im Repo sind uneinheitlich gewachsen: Bildkarten und Pik-Ass
-    // tragen ein "2" am Ende, die uebrigen Asse und alle Zahlenkarten nicht.
+    // tragen ein "2" am Ende, die übrigen Asse und alle Zahlenkarten nicht.
     function cardImage(code, basePath) {
         var p = parseCard(code);
         var needsSuffix = p.rank === 'J' || p.rank === 'Q' || p.rank === 'K' || (p.rank === 'A' && p.suit === 'S');
