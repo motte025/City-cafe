@@ -370,6 +370,13 @@ async function run() {
     check('Verdeckte Karten nutzen die neuen Rückseiten',
         backsUsed.length > 0 && backsUsed.every(s => /player_card_back_design_2_(lightblue|red)\.svg$/.test(s)),
         JSON.stringify(backsUsed));
+    check('Genau EINE Rückseiten-Farbe pro Runde', backsUsed.length === 1, JSON.stringify(backsUsed));
+
+    const backBg = await tv.evaluate(() => {
+        const el = document.querySelector('.kt-fan-card.is-back');
+        return el ? getComputedStyle(el).backgroundColor : null;
+    });
+    check('Rückseiten liegen auf Weiß', backBg === 'rgb(255, 255, 255)', String(backBg));
 
     const skews = await tv.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-middle-card')).map(c => c.style.transform));

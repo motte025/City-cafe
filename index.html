@@ -909,6 +909,10 @@
             transition: box-shadow 0.4s ease, transform 0.5s ease;
         }
         .kt-fan-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* Die Rueckseiten-SVGs sind durchsichtig (fill="none"), ohne weisse
+           Flaeche dahinter schiene das dunkle Kartenelement durch und das
+           Motiv wirkt schwarz. */
+        .kt-fan-card.is-back { background: #ffffff; }
         .kt-seat-name {
             margin-top: 6px; text-align: center;
             font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
@@ -3944,11 +3948,13 @@
             ktFeltIndex = (ktFeltIndex + 1) % HYPEREEL_BACKGROUNDS.length;
         }
 
-        let ktBackChoice = {};
-        function ktBackFor(seat, index) {
-            const key = seat + ':' + index;
-            if (!ktBackChoice[key]) ktBackChoice[key] = KtEngine.cardBackImage('cards/');
-            return ktBackChoice[key];
+        // Rueckseiten-Motiv: beim Austeilen EINMAL gewaehlt und dann fuer alle
+        // verdeckten Karten der Runde verwendet - ein Blatt hat schliesslich nur
+        // eine Rueckseite. Die naechste Runde wuerfelt neu.
+        let ktBackImage = null;
+        function ktCurrentBack() {
+            if (!ktBackImage) ktBackImage = KtEngine.cardBackImage('cards/');
+            return ktBackImage;
         }
 
         /*
@@ -4026,12 +4032,13 @@
                 fan.className = 'kt-fan';
                 const hand = revealed[seat];
                 for (let i = 0; i < 3; i++) {
+                    const faceUp = !!(hand && hand[i]);
                     const card = document.createElement('div');
-                    card.className = 'kt-fan-card';
+                    card.className = 'kt-fan-card' + (faceUp ? '' : ' is-back');
                     card.style.transform = 'translate(' + KT_FAN[i].dx + 'px, ' + KT_FAN[i].dy + 'px) rotate(' + KT_FAN[i].rotate + 'deg)';
                     card.style.zIndex = String(10 + i);
                     const img = document.createElement('img');
-                    img.src = (hand && hand[i]) ? KtEngine.cardImage(hand[i], 'cards/') : ktBackFor(seat, i);
+                    img.src = faceUp ? KtEngine.cardImage(hand[i], 'cards/') : ktCurrentBack();
                     card.appendChild(img);
                     fan.appendChild(card);
                 }
@@ -4197,8 +4204,8 @@
             if (count < 2) { ktResetSession(); return; }
             ktDealing = true;
 
-            // Neue Runde: frische Rueckseiten-Mischung und neues Holz.
-            ktBackChoice = {};
+            // Neue Runde: eine Rueckseite fuer das ganze Blatt und neues Holz.
+            ktBackImage = null;
             ktSetFelt();
 
             const dealt = KtEngine.deal(count);
@@ -4248,7 +4255,7 @@
             if (!ktReady() || ktDealing) return;
             const players = Math.min(6, Math.max(2, Number(count) || KT.botPlayerCount || 3));
             ktDealing = true;
-            ktBackChoice = {};
+            ktBackImage = null;
             ktSetFelt();
 
             const dealt = KtEngine.deal(players);
