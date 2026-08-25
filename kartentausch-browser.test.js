@@ -207,6 +207,16 @@ async function run() {
         await page.exposeBinding('__ktOp', (_src, json) => dbOp(JSON.parse(json)));
         await page.addInitScript(`window.__ktUid = ${JSON.stringify(uid)};`);
         await page.addInitScript(STUB);
+        // Im Test denkt der Computer schneller als im Cafe (dort 8s pro Zug),
+        // sonst laeuft der Testlauf minutenlang.
+        await page.addInitScript(`
+            window.addEventListener('DOMContentLoaded', function () {
+                if (window.KARTENTAUSCH_CONFIG) {
+                    window.KARTENTAUSCH_CONFIG.botMoveSeconds = 0.5;
+                    window.KARTENTAUSCH_CONFIG.revealSeconds = 3;
+                }
+            });
+        `);
         page.__errors = errors;
         pages.push(page);
         await page.goto(url, { waitUntil: 'domcontentloaded' });
@@ -287,6 +297,7 @@ async function run() {
     check('Kein "1 Karte tauschen"-Knopf mehr', !labels.some(l => /1 Karte tauschen/.test(l)),
         JSON.stringify(labels));
     check('Kein Klopfen in der ersten Runde', !labels.some(l => l === 'Klopfen'), JSON.stringify(labels));
+    check('"Weiter" steht immer zur Verfügung', labels.includes('Weiter'), JSON.stringify(labels));
 
     const middleWorth = await active.evaluate(
         m => window.KartentauschEngine.middleWorthTakingAll(m || []), pubNow().middleCards);

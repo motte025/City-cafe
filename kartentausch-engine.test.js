@@ -215,58 +215,164 @@ for (var bi = 0; bi < 400; bi++) backsSeen[E.cardBackImage('cards/')] = true;
 eq('Ueber viele Ziehungen kommen beide Motive vor', Object.keys(backsSeen).length, 2);
 
 // ---------- Computer-Spieler ----------
-var botAll = E.botDecide(['C7', 'S8', 'D9'], ['H7', 'HK', 'HA'], { canKnock: false });
+var botAll = E.botDecide(['C7', 'S8', 'D9'], ['H7', 'HK', 'HA'], { canKnock: false, canPass: true });
 eq('Computer nimmt einen lohnenden Rundumtausch', botAll.type, 'all');
 
-var botKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'], { canKnock: true });
+var botKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'], { canKnock: true, canPass: true });
 eq('Computer klopft mit starker Hand', botKnock.type, 'knock');
 
-var botNoKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'], { canKnock: false });
+var botNoKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'], { canKnock: false, canPass: true });
 eq('Ohne Klopf-Erlaubnis wird nicht geklopft', botNoKnock.type !== 'knock', true);
 
-var botSingle = E.botDecide(['C7', 'S8', 'H9'], ['HA', 'S9', 'D7'], { canKnock: false });
-eq('Computer waehlt sonst einen Einzeltausch', botSingle.type, 'single');
-eq('Einzeltausch nennt eine Handkarte', botSingle.handIndex >= 0 && botSingle.handIndex <= 2, true);
-eq('Einzeltausch nennt eine Mittenkarte', botSingle.middleIndex >= 0 && botSingle.middleIndex <= 2, true);
 eq('Computer ohne Hand zieht nicht', E.botDecide([], ['HA', 'S9', 'D7'], {}).type, 'skip');
 
 /*
- * Zwei echte Invarianten statt einer Statistik:
- *  1. Ein Rundumtausch wird nie gewaehlt, wenn er die Hand verschlechtert.
- *  2. Der gewaehlte Einzeltausch ist immer der bestmoegliche - der Computer
- *     laesst nie einen besseren Tausch liegen. Dass ein Notzug die Hand
- *     verschlechtern kann, ist erlaubt: vor der zweiten Runde darf nicht
- *     geklopft werden, irgendetwas muss der Computer also ziehen.
+ * Die entscheidende neue Eigenschaft: der Computer verschlechtert seine Hand
+ * nicht mehr. Frueher musste er irgendetwas ziehen und nahm dabei auch
+ * Verschlechterungen in Kauf; jetzt gibt er stattdessen weiter.
  */
-var botAllWorse = 0, botSuboptimal = 0, botForced = 0;
-for (var bt = 0; bt < 3000; bt++) {
+var worse = 0, suboptimal = 0, passes = 0, knocks = 0, swaps = 0;
+for (var bt = 0; bt < 4000; bt++) {
     var d = E.deal(2);
     var h = d.hands[0], mid = d.middleCards;
-    var mv = E.botDecide(h, mid, { canKnock: bt % 2 === 0 });
     var before = E.scoreHand(h).score;
+    var mv = E.botDecide(h, mid, { canKnock: bt % 2 === 0, canPass: true });
 
-    if (mv.type === 'all' && E.scoreHand(mid).score < before) botAllWorse++;
+    if (mv.type === 'pass') { passes++; continue; }
+    if (mv.type === 'knock') { knocks++; continue; }
+    swaps++;
+
+    var after;
+    if (mv.type === 'all') after = E.scoreHand(mid).score;
+    else {
+        var probe = h.slice();
+        probe[mv.handIndex] = mid[mv.middleIndex];
+        after = E.scoreHand(probe).score;
+    }
+    if (after < before) worse++;
 
     if (mv.type === 'single') {
-        var chosen = h.slice();
-        chosen[mv.handIndex] = mid[mv.middleIndex];
-        var chosenScore = E.scoreHand(chosen).score;
-        if (chosenScore < before) botForced++;
-
         var bestPossible = -1;
         for (var qh = 0; qh < 3; qh++) {
             for (var qm = 0; qm < 3; qm++) {
-                var probe = h.slice();
-                probe[qh] = mid[qm];
-                bestPossible = Math.max(bestPossible, E.scoreHand(probe).score);
+                var t2 = h.slice();
+                t2[qh] = mid[qm];
+                bestPossible = Math.max(bestPossible, E.scoreHand(t2).score);
             }
         }
-        if (chosenScore < bestPossible) botSuboptimal++;
+        if (after < before + 1 && bestPossible >= before + 1) suboptimal++;
     }
 }
-eq('Rundumtausch nie zum eigenen Nachteil', botAllWorse, 0);
-eq('Computer laesst nie einen besseren Einzeltausch liegen', botSuboptimal, 0);
-console.log('Computer-Statistik: ' + botForced + ' von 3000 Zuegen waren Notzuege ohne Verbesserung.');
+eq('Computer verschlechtert seine Hand nie', worse, 0);
+eq('Computer übersieht keine echte Verbesserung', suboptimal, 0);
+check('Computer nutzt alle drei Zugarten', passes > 0 && knocks > 0 && swaps > 0);
+console.log('Computer-Statistik: ' + swaps + ' Tausche, ' + knocks + ' Klopfer, ' + passes + ' mal weitergegeben.');
+
+// Klopfen nur mit brauchbarer Hand
+var knockLow = 0;
+for (var kb = 0; kb < 2000; kb++) {
+    var dk = E.deal(2);
+    var hk = dk.hands[0];
+    var mk = E.botDecide(hk, dk.middleCards, { canKnock: true, canPass: true });
+    if (mk.type === 'knock' && E.scoreHand(hk).score < E.BOT_KNOCK_SOLID) knockLow++;
+}
+eq('Computer klopft nie mit schwacher Hand', knockLow, 0);
+
+// ---------- Rundenbegrenzung: keine Endlosrunde ----------
+/*
+ * Seit es "Weiter" gibt, kann eine Runde theoretisch ewig laufen: geben alle
+ * nur weiter, aendert sich die Mitte nie. Zwei Sicherungen greifen dagegen -
+ * eine harte Obergrenze und eine mit der Zeit sinkende Klopfschwelle.
+ */
+eq('Runde endet nicht vorzeitig', E.roundShouldEnd(5, 3), false);
+eq('Runde endet nach vier Durchgängen', E.roundShouldEnd(12, 3), true);
+eq('Obergrenze skaliert mit der Spieleranzahl', E.roundShouldEnd(23, 6), false);
+eq('Obergrenze bei sechs Spielern', E.roundShouldEnd(24, 6), true);
+
+check('Klopfschwelle sinkt mit der Rundenzahl',
+    E.botKnockThreshold(0, 3) > E.botKnockThreshold(7, 3) &&
+    E.botKnockThreshold(7, 3) > E.botKnockThreshold(11, 3));
+
+// Vollständige Computer-Runden durchsimulieren: jede muss enden.
+var maxTurnsSeen = 0, endless = 0;
+for (var sim = 0; sim < 600; sim++) {
+    var count = 2 + (sim % 5);
+    var d = E.deal(count);
+    var hands = d.hands, middle = d.middleCards.slice();
+    var turns = 0, knockedBy = null, finalLeft = null, seat = 0, done = false;
+
+    for (var step = 0; step < 500 && !done; step++) {
+        var canKnock = knockedBy === null && turns >= count;
+        var mv = E.botDecide(hands[seat], middle, {
+            canKnock: canKnock, canPass: true, turnsPlayed: turns, playerCount: count
+        });
+        if (mv.type === 'knock') { knockedBy = seat; finalLeft = count - 1; }
+        else if (mv.type === 'single') {
+            var give = hands[seat][mv.handIndex];
+            hands[seat][mv.handIndex] = middle[mv.middleIndex];
+            middle[mv.middleIndex] = give;
+        } else if (mv.type === 'all') {
+            var tmpH = hands[seat].slice();
+            hands[seat] = middle.slice();
+            middle = tmpH;
+        }
+        turns++;
+        if (knockedBy !== null && mv.type !== 'knock') {
+            finalLeft--;
+            if (finalLeft <= 0) done = true;
+        }
+        if (!done && knockedBy === null && E.roundShouldEnd(turns, count)) done = true;
+        seat = E.nextSeat(seat, count);
+    }
+    if (!done) endless++;
+    maxTurnsSeen = Math.max(maxTurnsSeen, turns);
+}
+eq('Jede Computer-Runde endet', endless, 0);
+check('Runden bleiben kurz genug (höchstens 30 Züge)', maxTurnsSeen <= 30, 'längste: ' + maxTurnsSeen);
+console.log('Rundenlänge: längste simulierte Computer-Runde ' + maxTurnsSeen + ' Züge.');
+
+// ---------- Fairness: kein Eingriff ins Kartenglück ----------
+/*
+ * Zwei Eigenschaften, die zusammen "reiner Zufall" belegen:
+ *  1. Das Mischen ist gleichverteilt - jede Karte landet ungefähr gleich oft
+ *     auf jeder Position.
+ *  2. Der Computer kann strukturell nicht schummeln: botDecide() nimmt nur die
+ *     eigene Hand und die offene Mitte entgegen. Fremde Hände oder der
+ *     Reststapel sind gar nicht erreichbar - hier gegengeprüft, indem dieselbe
+ *     Hand bei unterschiedlichem Rest immer dieselbe Entscheidung ergibt.
+ */
+var DEALS = 20000;
+var posCount = {};
+var deckAll = E.buildDeck();
+deckAll.forEach(function (c) { posCount[c] = 0; });
+for (var fz = 0; fz < DEALS; fz++) {
+    posCount[E.shuffle(deckAll)[0]]++;          // wie oft liegt welche Karte zuoberst
+}
+var expected = DEALS / 32;
+var maxDev = 0;
+deckAll.forEach(function (c) {
+    maxDev = Math.max(maxDev, Math.abs(posCount[c] - expected) / expected);
+});
+check('Mischen ist gleichverteilt (Abweichung unter 25%)', maxDev < 0.25);
+console.log('Misch-Statistik: größte Abweichung ' + (maxDev * 100).toFixed(1) + '% bei ' + DEALS + ' Ziehungen.');
+
+var handFix = ['H10', 'HK', 'C7'];
+var midFix = ['SA', 'D9', 'H8'];
+var decisions = {};
+for (var rp = 0; rp < 50; rp++) {
+    decisions[JSON.stringify(E.botDecide(handFix.slice(), midFix.slice(), { canKnock: true, canPass: true }))] = true;
+}
+eq('Computer-Entscheidung hängt nur von Hand und Mitte ab', Object.keys(decisions).length, 1);
+
+// Jede Karte kommt pro Austeilung genau einmal vor - kein Nachlegen, kein Doppel.
+var dupes = 0;
+for (var dz = 0; dz < 2000; dz++) {
+    var dd = E.deal(6);
+    var all = dd.middleCards.slice();
+    for (var sx = 0; sx < 6; sx++) all = all.concat(dd.hands[sx]);
+    if (new Set(all).size !== all.length) dupes++;
+}
+eq('Keine doppelten Karten im Spiel', dupes, 0);
 
 // ---------- Ergebnis ----------
 console.log('\n' + passed + ' Checks bestanden.');

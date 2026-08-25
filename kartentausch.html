@@ -61,11 +61,11 @@
         box-shadow: 0 14px 40px rgba(0,0,0,0.55), inset 0 1px 1px rgba(255,255,255,0.09);
     }
     .kt-panel-label {
-        font-size: 12px; font-weight: 800; text-transform: uppercase;
-        letter-spacing: 1.4px; color: #94a3b8; margin-bottom: 8px; text-align: center;
+        font-size: 15px; font-weight: 800; text-transform: uppercase;
+        letter-spacing: 1.4px; color: #a8b8c8; margin-bottom: 8px; text-align: center;
     }
     .kt-privacy-hint {
-        font-size: 12px; color: #64748b; text-align: center; margin-top: 8px;
+        font-size: 14px; color: #7c8ea0; text-align: center; margin-top: 8px;
     }
 
     .kt-cards { display: flex; justify-content: center; align-items: flex-start; gap: 6px; }
@@ -152,16 +152,16 @@
         border: 1px solid rgba(255,255,255,0.12);
         border-radius: 16px; padding: 12px 12px;
     }
-    .kt-status-main { font-weight: 800; font-size: 18px; }
-    .kt-status-sub { font-size: 14px; color: #94a3b8; margin-top: 5px; line-height: 1.45; }
+    .kt-status-main { font-weight: 800; font-size: 23px; }
+    .kt-status-sub { font-size: 17px; color: #a8b8c8; margin-top: 7px; line-height: 1.5; }
     .kt-status.is-myturn { border-color: rgba(0,242,254,0.5); background: rgba(0,242,254,0.09); }
     .kt-status.is-myturn .kt-status-main { color: #00f2fe; }
     .kt-status.is-error { border-color: rgba(255,51,68,0.5); background: rgba(255,51,68,0.1); }
 
     .kt-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
     .kt-btn {
-        width: 100%; padding: 18px 14px; border-radius: 15px;
-        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 19px; font-weight: 800;
+        width: 100%; padding: 22px 14px; border-radius: 15px;
+        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800;
         border: 1px solid rgba(0,242,254,0.45);
         background: rgba(0,242,254,0.12); color: #e6fbff;
         transition: transform 0.12s ease, opacity 0.15s ease;
@@ -190,21 +190,21 @@
     }
     .kt-count-btn:active { transform: scale(0.96); }
     .kt-count-caption {
-        font-size: 14px; font-weight: 700; color: #94a3b8;
+        font-size: 18px; font-weight: 700; color: #a8b8c8;
         text-align: center; margin-bottom: 10px;
     }
 
     .kt-reveal-row {
         display: flex; align-items: center; gap: 10px;
-        padding: 9px 11px; border-radius: 13px; margin-top: 8px;
+        padding: 12px 13px; border-radius: 13px; margin-top: 9px;
         border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
     }
     .kt-reveal-row.is-paying { border-color: #ff3344; background: rgba(255,51,68,0.14); }
     .kt-reveal-row.is-fire { border-color: #ff8a3d; background: rgba(255,138,61,0.14); }
-    .kt-reveal-name { font-weight: 800; font-size: 19px; min-width: 96px; text-align: left; }
+    .kt-reveal-name { font-weight: 800; font-size: 20px; min-width: 104px; text-align: left; }
     .kt-reveal-cards { display: flex; gap: 4px; flex: 1; justify-content: center; }
-    .kt-reveal-cards img { width: 38px; border-radius: 5px; display: block; }
-    .kt-reveal-score { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 19px; }
+    .kt-reveal-cards img { width: 58px; border-radius: 6px; display: block; }
+    .kt-reveal-score { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px; }
 
     /* Notausstieg fuer den Host. Liegt unter dem Bildschirmrand, damit ihn
        niemand im Spielverlauf versehentlich trifft. */
@@ -214,16 +214,21 @@
         border-top: 1px dashed rgba(255,51,68,0.35);
         margin-top: 18px;
     }
-    .kt-danger-hint { font-size: 13px; color: #64748b; text-align: center; max-width: 34ch; }
+    .kt-danger-hint { font-size: 16px; color: #8496a8; text-align: center; max-width: 34ch; line-height: 1.5; }
     .kt-btn-end {
-        width: 100%; padding: 20px 14px; border-radius: 15px;
-        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 19px; font-weight: 800;
+        width: 100%; padding: 24px 14px; border-radius: 15px;
+        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800;
         border: 2px solid #ff3344; background: rgba(255,51,68,0.18); color: #ffd9dd;
     }
     .kt-btn-end:active { transform: scale(0.975); }
     .kt-scroll-hint {
-        text-align: center; font-size: 12px; color: #475569;
-        padding: 2px 0 6px;
+        text-align: center; font-size: 15px; color: #64798f;
+        padding: 4px 0 8px; font-weight: 600;
+    }
+
+    .kt-reveal-caption {
+        margin-top: 14px; font-size: 14px; font-weight: 800; letter-spacing: 1.2px;
+        text-transform: uppercase; color: #7c8ea0; text-align: center;
     }
 
     .kt-hidden { display: none !important; }
@@ -521,6 +526,9 @@
             var left = (Number(pub.finalTurnsRemaining) || 0) - 1;
             updates.finalTurnsRemaining = left;
             if (left <= 0) updates.phase = 'reveal';
+        } else if (E.roundShouldEnd(updates.turnsPlayed, count)) {
+            // Notbremse gegen endloses Weitergeben - siehe Engine.
+            updates.phase = 'reveal';
         }
 
         return KtNet.publicRef(db, sessionId).update(updates);
@@ -599,6 +607,20 @@
             .then(function () { busy = false; });
     }
 
+    // Weitergeben, ohne zu tauschen. Ohne diesen Zug sass ein Spieler fest,
+    // wenn ihm kein Tausch passte und Klopfen noch nicht erlaubt war.
+    function doPass() {
+        if (busy || !isMyTurn()) return;
+        busy = true;
+        revealAfterMoveIfNeeded(myHand)
+            .then(function () {
+                return commitTurn((pub.middleCards || []).slice(), { type: 'pass', seat: mySeat });
+            })
+            .then(resetSwapMode)
+            .catch(handleWriteError)
+            .then(function () { busy = false; });
+    }
+
     function doKnock() {
         if (busy) return;
         busy = true;
@@ -670,10 +692,13 @@
         if (canKnockNow()) {
             els.actions.appendChild(button('Klopfen', 'kt-btn-knock', doKnock));
         }
+
+        // Immer erreichbar: weitergeben, ohne etwas zu tauschen.
+        els.actions.appendChild(button('Weiter', 'kt-btn-ghost', doPass));
     }
 
-    function renderReveal() {
-        els.statusExtra.innerHTML = '';
+    function renderReveal(keepExisting) {
+        if (!keepExisting) els.statusExtra.innerHTML = '';
         var hands = pub.revealedHands || {};
         var scores = pub.scores || {};
         var paying = pub.payingSeats || [];
@@ -714,9 +739,11 @@
         els.seatBadge.textContent = mySeat >= 0 ? seatName(mySeat) : '—';
         show(els.seatBadge, mySeat >= 0);
 
-        // Beenden-Knopf nur fuer den Host und nur, solange etwas laeuft.
+        /* Beenden-Knopf: fuer den Host UND fuer jeden Spieler mit Sitzplatz.
+           Vorher haing er allein an isHost - das war nach einem Neuladen des
+           Host-Handys verloren, und genau dann braucht man den Notausstieg. */
         var running = phase !== 'idle';
-        var mayEnd = isHost && running;
+        var mayEnd = running && (isHost || mySeat >= 0);
         show(els.dangerZone, mayEnd);
         show(els.scrollHint, mayEnd);
 
@@ -779,10 +806,13 @@
                 if (pickedHand !== null || pickedMiddle !== null) {
                     hint = 'Jetzt die Karte aus der Mitte antippen, dann bestätigen.';
                 } else if (canKnockNow()) {
-                    hint = 'Eigene Karte antippen und tauschen — oder klopfen.';
+                    hint = 'Karte antippen oder ziehen — oder klopfen. Mit „Weiter“ gibst du ab.';
+                } else if (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined) {
+                    // Es wurde bereits geklopft: hier ist Klopfen kein Thema mehr.
+                    hint = 'Letzter Zug vor dem Aufdecken. Karte tauschen oder „Weiter“.';
                 } else {
                     var left = knockRoundsLeft();
-                    hint = 'Eigene Karte antippen und tauschen. Klopfen geht erst ab der zweiten Runde' +
+                    hint = 'Karte antippen oder ziehen. Klopfen geht erst ab der zweiten Runde' +
                            (left > 0 ? ' (noch ' + left + (left === 1 ? ' Zug' : ' Züge') + ').' : '.');
                 }
                 setStatus('Du bist dran!', hint + knockNote, 'is-myturn');
@@ -790,7 +820,13 @@
                 setStatus(seatName(pub.currentTurnSeat) + ' ist dran',
                     'Warte, bis du dran bist.' + knockNote);
             }
-            if (Object.keys(pub.revealedHands || {}).length) renderReveal();
+            if (Object.keys(pub.revealedHands || {}).length) {
+                var caption = document.createElement('div');
+                caption.className = 'kt-reveal-caption';
+                caption.textContent = 'Bereits aufgedeckt';
+                els.statusExtra.appendChild(caption);
+                renderReveal(true);
+            }
 
         } else if (phase === 'reveal') {
             var paying = pub.payingSeats || [];
@@ -873,6 +909,30 @@
         }).then(function () { busy = false; });
     }
 
+    /*
+     * Der in localStorage gemerkte Sitzplatz darf NIE blind uebernommen werden.
+     *
+     * Aus einer frueheren Runde derselben Sitzung kann dort ein Platz stehen,
+     * der inzwischen jemand anderem gehoert. Bisher hat das Handy dann die
+     * Karten dieses Platzes abonniert: je nach Datenbank-Regeln sah man
+     * entweder gar keine Karten (Zugriff verweigert - das gemeldete "zeigt
+     * meine Karten nicht an") oder im schlimmsten Fall die eines anderen
+     * Spielers. Deshalb wird der Platz bei jedem Spielstand gegengeprueft.
+     */
+    function verifySeat() {
+        if (mySeat < 0) return;
+        var phase = pub.phase || 'idle';
+        if (phase === 'idle' || phase === 'hostSelect') return;   // noch keine Plaetze vergeben
+        var entry = (pub.seats || {})[mySeat];
+        if (entry && entry.uid === uid) return;                   // alles in Ordnung
+
+        console.warn('[Hosen Obe] Sitzplatz', mySeat, 'gehoert uns nicht (mehr) - wird freigegeben.');
+        mySeat = -1;
+        myHand = [];
+        if (handWatcher) { handWatcher.off(); handWatcher = null; }
+        try { localStorage.removeItem('kt_seat_' + sessionId); } catch (e) { /* egal */ }
+    }
+
     var handWatcher = null;
     function watchMyHand() {
         if (mySeat < 0 || handWatcher) return;
@@ -908,7 +968,10 @@
             localStorage.removeItem('kt_seat_' + sessionId);
         }
 
-        if (pub.phase === 'hostSelect' && !isHost && pub.hostUid === uid) isHost = true;
+        // Host bleibt Host, auch nach einem Neuladen des Handys.
+        if (pub.hostUid && pub.hostUid === uid) isHost = true;
+
+        verifySeat();
         if (pub.phase === 'lobby') tryJoin();
         if (mySeat >= 0) watchMyHand();
         maybePublishHand();
@@ -935,8 +998,10 @@
             db = conn.db;
             uid = conn.uid;
 
-            var stored = localStorage.getItem('kt_seat_' + sessionId);
-            if (stored !== null) mySeat = Number(stored);
+            // Nur als Vorschlag - verifySeat() prueft ihn gegen den Spielstand.
+            var stored = null;
+            try { stored = localStorage.getItem('kt_seat_' + sessionId); } catch (e) { /* egal */ }
+            if (stored !== null && stored !== '') mySeat = Number(stored);
 
             return KtNet.claimHost(db, sessionId, uid).then(function (gotHost) {
                 isHost = gotHost;
