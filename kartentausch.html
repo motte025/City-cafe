@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#060e1c">
+<title>Kartentausch · City Cafe Klagenfurt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #0b1526 0%, #060e1c 55%, #040914 100%);
+        color: #f8fafc;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        display: flex;
+        flex-direction: column;
+        padding: env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 14px);
+        overflow-x: hidden;
+    }
+
+    .kt-head {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 10px; padding: 12px 2px 8px;
+    }
+    .kt-brand {
+        font-family: 'Orbitron', sans-serif; font-weight: 900;
+        font-size: 14px; letter-spacing: 1.2px; color: #00f2fe;
+        text-shadow: 0 0 14px rgba(0,242,254,0.45);
+    }
+    .kt-seat-badge {
+        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 13px;
+        padding: 5px 11px; border-radius: 999px;
+        background: rgba(0,242,254,0.12); border: 1px solid rgba(0,242,254,0.45);
+        color: #00f2fe; white-space: nowrap;
+    }
+
+    /* Eigene Hand bewusst GANZ OBEN: so laesst sich das Display mit einer Hand
+       abschirmen oder wegkippen, ohne dass Nachbarn mitlesen. */
+    .kt-hand-panel {
+        background: rgba(10,20,38,0.82);
+        border: 1px solid rgba(0,242,254,0.28);
+        border-radius: 20px;
+        padding: 12px 12px 14px;
+        box-shadow: 0 14px 40px rgba(0,0,0,0.55), inset 0 1px 1px rgba(255,255,255,0.09);
+    }
+    .kt-panel-label {
+        font-size: 11px; font-weight: 800; text-transform: uppercase;
+        letter-spacing: 1.4px; color: #94a3b8; margin-bottom: 9px; text-align: center;
+    }
+    .kt-privacy-hint {
+        font-size: 11px; color: #64748b; text-align: center; margin-top: 9px;
+    }
+
+    .kt-cards { display: flex; justify-content: center; gap: 9px; }
+    .kt-card {
+        position: relative; flex: 0 1 32%; max-width: 116px;
+        aspect-ratio: 2 / 3;
+        border-radius: 10px; overflow: hidden;
+        border: 2px solid transparent;
+        background: #0a1426;
+        transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .kt-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .kt-card.is-pickable { cursor: pointer; border-color: rgba(0,242,254,0.35); }
+    .kt-card.is-selected {
+        border-color: #00f2fe;
+        box-shadow: 0 0 0 3px rgba(0,242,254,0.28), 0 0 22px rgba(0,242,254,0.55);
+        transform: translateY(-7px);
+    }
+    .kt-card.is-middle.is-selected { border-color: #f355da; box-shadow: 0 0 0 3px rgba(243,85,218,0.28), 0 0 22px rgba(243,85,218,0.55); }
+
+    .kt-score-line {
+        text-align: center; margin-top: 10px;
+        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px;
+        color: #f8fafc;
+    }
+    .kt-score-line .kt-score-suit { color: #00f2fe; font-size: 15px; }
+    .kt-score-line.is-fire { color: #ff8a3d; text-shadow: 0 0 18px rgba(255,138,61,0.6); }
+
+    .kt-middle-panel {
+        margin-top: 14px;
+        background: rgba(10,20,38,0.62);
+        border: 1px solid rgba(255,255,255,0.14);
+        border-radius: 20px; padding: 12px;
+    }
+
+    .kt-status {
+        margin-top: 14px; text-align: center;
+        background: rgba(10,20,38,0.62);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px; padding: 13px 14px;
+    }
+    .kt-status-main { font-weight: 800; font-size: 15px; }
+    .kt-status-sub { font-size: 12px; color: #94a3b8; margin-top: 5px; line-height: 1.45; }
+    .kt-status.is-myturn { border-color: rgba(0,242,254,0.5); background: rgba(0,242,254,0.09); }
+    .kt-status.is-myturn .kt-status-main { color: #00f2fe; }
+    .kt-status.is-error { border-color: rgba(255,51,68,0.5); background: rgba(255,51,68,0.1); }
+
+    .kt-actions { margin-top: 14px; display: flex; flex-direction: column; gap: 9px; }
+    .kt-btn {
+        width: 100%; padding: 16px 14px; border-radius: 14px;
+        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800;
+        border: 1px solid rgba(0,242,254,0.45);
+        background: rgba(0,242,254,0.12); color: #e6fbff;
+        transition: transform 0.12s ease, opacity 0.15s ease;
+    }
+    .kt-btn:active { transform: scale(0.975); }
+    .kt-btn[disabled] { opacity: 0.32; }
+    .kt-btn.kt-btn-knock { border-color: rgba(255,51,68,0.55); background: rgba(255,51,68,0.14); color: #ffd9dd; }
+    .kt-btn.kt-btn-confirm { border-color: rgba(46,204,113,0.6); background: rgba(46,204,113,0.16); color: #d8ffe9; }
+    .kt-btn.kt-btn-ghost { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.06); color: #cbd5e1; }
+
+    .kt-seat-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 11px; }
+    .kt-seat-pill {
+        font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.05); color: #94a3b8;
+    }
+    .kt-seat-pill.is-taken { border-color: rgba(46,204,113,0.5); color: #6ee7a8; background: rgba(46,204,113,0.1); }
+    .kt-seat-pill.is-me { border-color: #00f2fe; color: #00f2fe; background: rgba(0,242,254,0.14); }
+
+    .kt-count-grid { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; margin-top: 12px; }
+    .kt-count-btn {
+        flex: 1 1 28%; min-width: 84px; padding: 20px 8px; border-radius: 16px;
+        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px;
+        border: 1px solid rgba(0,242,254,0.4); background: rgba(0,242,254,0.1); color: #e6fbff;
+    }
+    .kt-count-btn:active { transform: scale(0.96); }
+
+    .kt-reveal-row {
+        display: flex; align-items: center; gap: 10px;
+        padding: 9px 11px; border-radius: 13px; margin-top: 8px;
+        border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+    }
+    .kt-reveal-row.is-paying { border-color: #ff3344; background: rgba(255,51,68,0.14); }
+    .kt-reveal-row.is-fire { border-color: #ff8a3d; background: rgba(255,138,61,0.14); }
+    .kt-reveal-name { font-weight: 800; font-size: 13px; min-width: 74px; }
+    .kt-reveal-cards { display: flex; gap: 4px; flex: 1; }
+    .kt-reveal-cards img { width: 30px; border-radius: 4px; display: block; }
+    .kt-reveal-score { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 17px; }
+
+    .kt-hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="kt-head">
+    <div class="kt-brand">CITY CAFE · KARTENTAUSCH</div>
+    <div class="kt-seat-badge kt-hidden" id="kt-seat-badge">—</div>
+</div>
+
+<!-- Eigene Hand ganz oben im Viewport (Sichtschutz beim Halten des Handys) -->
+<div class="kt-hand-panel kt-hidden" id="kt-hand-panel">
+    <div class="kt-panel-label">Deine Karten — nicht herzeigen</div>
+    <div class="kt-cards" id="kt-hand-cards"></div>
+    <div class="kt-score-line" id="kt-hand-score"></div>
+    <div class="kt-privacy-hint">Nur du siehst diese Karten. Am TV liegen sie verdeckt.</div>
+</div>
+
+<div class="kt-middle-panel kt-hidden" id="kt-middle-panel">
+    <div class="kt-panel-label">Offene Mitte</div>
+    <div class="kt-cards" id="kt-middle-cards"></div>
+</div>
+
+<div class="kt-status" id="kt-status">
+    <div class="kt-status-main" id="kt-status-main">Verbinde…</div>
+    <div class="kt-status-sub" id="kt-status-sub">Einen Moment.</div>
+    <div id="kt-status-extra"></div>
+</div>
+
+<div class="kt-actions" id="kt-actions"></div>
+
+<script src="kartentausch-config.js"></script>
+<script src="kartentausch-engine.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="kartentausch-net.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    var CFG = window.KARTENTAUSCH_CONFIG || {};
+    var E = window.KartentauschEngine;
+
+    var els = {
+        seatBadge: document.getElementById('kt-seat-badge'),
+        handPanel: document.getElementById('kt-hand-panel'),
+        handCards: document.getElementById('kt-hand-cards'),
+        handScore: document.getElementById('kt-hand-score'),
+        middlePanel: document.getElementById('kt-middle-panel'),
+        middleCards: document.getElementById('kt-middle-cards'),
+        status: document.getElementById('kt-status'),
+        statusMain: document.getElementById('kt-status-main'),
+        statusSub: document.getElementById('kt-status-sub'),
+        statusExtra: document.getElementById('kt-status-extra'),
+        actions: document.getElementById('kt-actions')
+    };
+
+    var sessionId = new URLSearchParams(location.search).get('session') || '';
+    var db = null;
+    var uid = null;
+    var mySeat = -1;
+    var isHost = false;
+    var myHand = [];
+    var pub = {};
+    var swapMode = null;      // null | 'single'
+    var pickedHand = null;
+    var pickedMiddle = null;
+    var busy = false;
+
+    function setStatus(main, sub, cls) {
+        els.statusMain.textContent = main;
+        els.statusSub.textContent = sub || '';
+        els.status.className = 'kt-status' + (cls ? ' ' + cls : '');
+    }
+
+    function show(el, visible) { el.classList.toggle('kt-hidden', !visible); }
+
+    function seatName(seat) { return 'Spieler ' + (Number(seat) + 1); }
+
+    function cardImg(code) {
+        var img = document.createElement('img');
+        img.src = E.cardImage(code, 'cards/');
+        img.alt = E.cardLabel(code);
+        return img;
+    }
+
+    function renderCards(container, codes, opts) {
+        container.innerHTML = '';
+        (codes || []).forEach(function (code, index) {
+            var card = document.createElement('div');
+            card.className = 'kt-card' + (opts.middle ? ' is-middle' : '');
+            card.appendChild(cardImg(code));
+            if (opts.pickable) {
+                card.classList.add('is-pickable');
+                if (opts.selected === index) card.classList.add('is-selected');
+                card.addEventListener('click', function () { opts.onPick(index); });
+            }
+            container.appendChild(card);
+        });
+    }
+
+    function renderHandScore() {
+        if (!myHand.length) { els.handScore.textContent = ''; return; }
+        var r = E.scoreHand(myHand);
+        els.handScore.className = 'kt-score-line' + (r.fire ? ' is-fire' : '');
+        var suffix = r.fire ? ' 🔥 FEUER'
+            : r.threeOfAKind ? ' <span class="kt-score-suit">Drilling</span>'
+            : r.suit ? ' <span class="kt-score-suit">' + E.SUIT_SYMBOL[r.suit] + '</span>' : '';
+        els.handScore.innerHTML = r.score + suffix;
+    }
+
+    function button(label, cls, onClick, disabled) {
+        var b = document.createElement('button');
+        b.className = 'kt-btn' + (cls ? ' ' + cls : '');
+        b.textContent = label;
+        if (disabled) b.disabled = true;
+        else b.addEventListener('click', onClick);
+        return b;
+    }
+
+    // ---------- Zuege ----------
+
+    function isMyTurn() {
+        return pub.phase && (pub.phase === 'playing' || pub.phase === 'knocked') &&
+               Number(pub.currentTurnSeat) === mySeat && myHand.length === 3;
+    }
+
+    // Gemeinsamer Abschluss jedes Zuges: Mitte + naechster Sitz + ggf. Schluss-Countdown.
+    function commitTurn(newMiddle, move) {
+        var count = Number(pub.playerCount) || 2;
+        var updates = {
+            middleCards: newMiddle,
+            currentTurnSeat: E.nextSeat(mySeat, count),
+            lastMove: move,
+            turnStartedAt: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        if (move.type === 'knock') {
+            updates.knockedBySeat = mySeat;
+            updates.finalTurnsRemaining = count - 1;
+            updates.phase = 'knocked';
+        } else if (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined) {
+            var left = (Number(pub.finalTurnsRemaining) || 0) - 1;
+            updates.finalTurnsRemaining = left;
+            if (left <= 0) updates.phase = 'reveal';
+        }
+
+        return KtNet.publicRef(db, sessionId).update(updates);
+    }
+
+    function writeHand(hand) {
+        myHand = hand;
+        renderHandScore();
+        return KtNet.privateRef(db, sessionId, mySeat).set({ hand: hand });
+    }
+
+    function doSingleSwap() {
+        if (busy || pickedHand === null || pickedMiddle === null) return;
+        busy = true;
+        var middle = (pub.middleCards || []).slice();
+        var hand = myHand.slice();
+        var given = hand[pickedHand];
+        var taken = middle[pickedMiddle];
+        hand[pickedHand] = taken;
+        middle[pickedMiddle] = given;
+
+        writeHand(hand)
+            .then(function () { return commitTurn(middle, { type: 'single', seat: mySeat, gave: given, took: taken }); })
+            .then(resetSwapMode)
+            .catch(handleWriteError)
+            .then(function () { busy = false; });
+    }
+
+    function doSwapAll() {
+        if (busy) return;
+        busy = true;
+        var middle = (pub.middleCards || []).slice();
+        var hand = myHand.slice();
+
+        writeHand(middle)
+            .then(function () { return commitTurn(hand, { type: 'all', seat: mySeat }); })
+            .then(resetSwapMode)
+            .catch(handleWriteError)
+            .then(function () { busy = false; });
+    }
+
+    function doKnock() {
+        if (busy) return;
+        busy = true;
+        commitTurn((pub.middleCards || []).slice(), { type: 'knock', seat: mySeat })
+            .then(resetSwapMode)
+            .catch(handleWriteError)
+            .then(function () { busy = false; });
+    }
+
+    function handleWriteError(err) {
+        console.warn('[Kartentausch] Zug fehlgeschlagen:', err);
+        setStatus('Zug nicht angekommen', 'Netzwerkproblem — bitte nochmal antippen.', 'is-error');
+    }
+
+    function resetSwapMode() {
+        swapMode = null;
+        pickedHand = null;
+        pickedMiddle = null;
+        render();
+    }
+
+    // ---------- Darstellung ----------
+
+    function renderActions() {
+        els.actions.innerHTML = '';
+
+        if (pub.phase === 'hostSelect' && isHost) {
+            var grid = document.createElement('div');
+            grid.className = 'kt-count-grid';
+            [2, 3, 4, 5, 6].forEach(function (n) {
+                var b = document.createElement('button');
+                b.className = 'kt-count-btn';
+                b.textContent = n;
+                b.addEventListener('click', function () { choosePlayerCount(n); });
+                grid.appendChild(b);
+            });
+            els.actions.appendChild(grid);
+            return;
+        }
+
+        if (!isMyTurn()) return;
+
+        if (swapMode === 'single') {
+            var ready = pickedHand !== null && pickedMiddle !== null;
+            els.actions.appendChild(button(ready ? 'Tausch bestätigen' : 'Karten auswählen…',
+                'kt-btn-confirm', doSingleSwap, !ready));
+            els.actions.appendChild(button('Abbrechen', 'kt-btn-ghost', resetSwapMode));
+            return;
+        }
+
+        els.actions.appendChild(button('1 Karte tauschen', '', function () {
+            swapMode = 'single';
+            pickedHand = null;
+            pickedMiddle = null;
+            render();
+        }));
+        els.actions.appendChild(button('Alle 3 tauschen', '', doSwapAll));
+        els.actions.appendChild(button('Schließen / Klopfen', 'kt-btn-knock', doKnock));
+    }
+
+    function renderReveal() {
+        els.statusExtra.innerHTML = '';
+        var hands = pub.revealedHands || {};
+        var scores = pub.scores || {};
+        var paying = pub.payingSeats || [];
+        var fireSeats = pub.fireSeats || [];
+
+        Object.keys(hands).map(Number).sort(function (a, b) { return a - b; }).forEach(function (seat) {
+            var row = document.createElement('div');
+            row.className = 'kt-reveal-row' +
+                (paying.indexOf(seat) !== -1 ? ' is-paying' : '') +
+                (fireSeats.indexOf(seat) !== -1 ? ' is-fire' : '');
+
+            var name = document.createElement('div');
+            name.className = 'kt-reveal-name';
+            name.textContent = (seat === mySeat ? 'Du' : seatName(seat)) +
+                (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : '');
+            row.appendChild(name);
+
+            var cards = document.createElement('div');
+            cards.className = 'kt-reveal-cards';
+            (hands[seat] || []).forEach(function (code) { cards.appendChild(cardImg(code)); });
+            row.appendChild(cards);
+
+            var score = document.createElement('div');
+            score.className = 'kt-reveal-score';
+            score.textContent = scores[seat] !== undefined ? scores[seat] : '–';
+            row.appendChild(score);
+
+            els.statusExtra.appendChild(row);
+        });
+    }
+
+    function render() {
+        var phase = pub.phase || 'idle';
+        var count = Number(pub.playerCount) || 0;
+        var seats = pub.seats || {};
+
+        els.seatBadge.textContent = mySeat >= 0 ? seatName(mySeat) : '—';
+        show(els.seatBadge, mySeat >= 0);
+
+        var showCards = myHand.length === 3 && phase !== 'idle' && phase !== 'hostSelect';
+        show(els.handPanel, showCards);
+        show(els.middlePanel, (pub.middleCards || []).length === 3 && phase !== 'idle');
+
+        var myTurn = isMyTurn();
+        renderCards(els.handCards, myHand, {
+            pickable: myTurn && swapMode === 'single',
+            selected: pickedHand,
+            onPick: function (i) { pickedHand = (pickedHand === i ? null : i); render(); }
+        });
+        renderCards(els.middleCards, pub.middleCards || [], {
+            middle: true,
+            pickable: myTurn && swapMode === 'single',
+            selected: pickedMiddle,
+            onPick: function (i) { pickedMiddle = (pickedMiddle === i ? null : i); render(); }
+        });
+        renderHandScore();
+        els.statusExtra.innerHTML = '';
+
+        if (phase === 'hostSelect') {
+            if (isHost) setStatus('Wie viele spielen mit?', 'Du bist der Host dieser Runde. Tippe die Spieleranzahl an — danach können die anderen scannen.');
+            else setStatus('Runde wird gestartet…', 'Jemand anderes wählt gerade die Spieleranzahl.');
+
+        } else if (phase === 'lobby') {
+            var taken = Object.keys(seats).filter(function (k) { return seats[k] && seats[k].uid; }).length;
+            setStatus(mySeat >= 0 ? 'Du bist dabei!' : 'Kein Platz mehr frei',
+                mySeat >= 0 ? taken + ' von ' + count + ' Plätzen belegt. Gleich geht es los.'
+                            : 'Diese Runde ist voll. Warte auf die nächste.');
+            var grid = document.createElement('div');
+            grid.className = 'kt-seat-grid';
+            for (var i = 0; i < count; i++) {
+                var pill = document.createElement('div');
+                var occupied = seats[i] && seats[i].uid;
+                pill.className = 'kt-seat-pill' + (occupied ? ' is-taken' : '') + (i === mySeat ? ' is-me' : '');
+                pill.textContent = i === mySeat ? 'Du' : (occupied ? seatName(i) : 'frei');
+                grid.appendChild(pill);
+            }
+            els.statusExtra.appendChild(grid);
+
+        } else if (phase === 'playing' || phase === 'knocked') {
+            var knockNote = (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined)
+                ? ' · ' + (Number(pub.knockedBySeat) === mySeat ? 'Du hast' : seatName(pub.knockedBySeat) + ' hat') + ' geschlossen'
+                : '';
+            if (myTurn) {
+                setStatus('Du bist dran!',
+                    (swapMode === 'single'
+                        ? 'Eigene Karte antippen, dann Karte aus der Mitte, dann bestätigen.'
+                        : 'Tausche eine Karte, alle drei — oder schließe die Runde.') + knockNote,
+                    'is-myturn');
+            } else {
+                setStatus(seatName(pub.currentTurnSeat) + ' ist dran',
+                    'Warte, bis du dran bist.' + knockNote);
+            }
+
+        } else if (phase === 'reveal') {
+            var paying = pub.payingSeats || [];
+            var fire = (pub.fireSeats || []).length > 0;
+            var iPay = paying.indexOf(mySeat) !== -1;
+            setStatus(
+                fire ? '🔥 FEUER!' : (iPay ? 'Du zahlst die Runde!' : 'Aufgedeckt'),
+                fire ? 'Alle unter 12 Punkten zahlen.' + (iPay ? ' Du bist dabei.' : ' Du bist raus.')
+                     : (iPay ? 'Niedrigste Hand — Prost!' : 'Diesmal nicht du.'),
+                iPay ? 'is-error' : '');
+            renderReveal();
+
+        } else {
+            setStatus('Warte auf die nächste Runde', 'Der TV startet gleich eine neue Runde.');
+        }
+
+        renderActions();
+    }
+
+    // ---------- Ablauf ----------
+
+    function choosePlayerCount(n) {
+        if (busy) return;
+        busy = true;
+        KtNet.publicRef(db, sessionId).update({
+            playerCount: n,
+            phase: 'lobby',
+            lobbyStartedAt: firebase.database.ServerValue.TIMESTAMP
+        }).then(function () {
+            return KtNet.claimSeat(db, sessionId, uid, n);
+        }).then(function (seat) {
+            mySeat = seat;
+            if (seat >= 0) localStorage.setItem('kt_seat_' + sessionId, String(seat));
+            watchMyHand();
+        }).catch(function (err) {
+            console.warn('[Kartentausch] Spieleranzahl konnte nicht gesetzt werden:', err);
+        }).then(function () { busy = false; });
+    }
+
+    function tryJoin() {
+        if (mySeat >= 0 || busy) return;
+        var count = Number(pub.playerCount) || 0;
+        if (!count) return;
+        busy = true;
+        KtNet.claimSeat(db, sessionId, uid, count).then(function (seat) {
+            mySeat = seat;
+            if (seat >= 0) {
+                localStorage.setItem('kt_seat_' + sessionId, String(seat));
+                watchMyHand();
+            }
+            render();
+        }).catch(function (err) {
+            console.warn('[Kartentausch] Sitzplatz konnte nicht belegt werden:', err);
+        }).then(function () { busy = false; });
+    }
+
+    var handWatcher = null;
+    function watchMyHand() {
+        if (mySeat < 0 || handWatcher) return;
+        handWatcher = KtNet.privateRef(db, sessionId, mySeat);
+        handWatcher.on('value', function (snap) {
+            var val = snap.val();
+            myHand = (val && val.hand) || [];
+            render();
+        }, function (err) {
+            console.warn('[Kartentausch] Hand nicht lesbar:', err);
+        });
+    }
+
+    // Beim Aufdecken veroeffentlicht jedes Handy seine eigene Hand. Der TV kennt
+    // sie dadurch, ohne jemals Leserechte auf fremde Haende zu brauchen.
+    var publishedReveal = false;
+    function maybePublishHand() {
+        if (pub.phase !== 'reveal' || publishedReveal || mySeat < 0 || myHand.length !== 3) return;
+        publishedReveal = true;
+        KtNet.publicRef(db, sessionId, 'revealedHands/' + mySeat).set(myHand)
+            .catch(function (err) { console.warn('[Kartentausch] Aufdecken fehlgeschlagen:', err); });
+    }
+
+    function onPublic(snap) {
+        var prevPhase = pub.phase;
+        pub = snap.val() || {};
+        if (pub.phase !== 'reveal') publishedReveal = false;
+
+        // Neue Runde: alter Sitzplatz gilt nicht mehr.
+        if (prevPhase === 'reveal' && pub.phase === 'idle') {
+            mySeat = -1;
+            myHand = [];
+            if (handWatcher) { handWatcher.off(); handWatcher = null; }
+            localStorage.removeItem('kt_seat_' + sessionId);
+        }
+
+        if (pub.phase === 'hostSelect' && !isHost && pub.hostUid === uid) isHost = true;
+        if (pub.phase === 'lobby') tryJoin();
+        if (mySeat >= 0) watchMyHand();
+        maybePublishHand();
+        render();
+    }
+
+    function start() {
+        if (!sessionId) {
+            setStatus('Kein Spiel gefunden', 'Bitte den QR-Code am Fernseher noch einmal scannen.', 'is-error');
+            return;
+        }
+        if (!KtNet.isConfigured()) {
+            setStatus('Noch nicht eingerichtet', 'Die Firebase-Zugangsdaten fehlen in kartentausch-config.js.', 'is-error');
+            return;
+        }
+
+        KtNet.ready().then(function (conn) {
+            if (!conn) {
+                setStatus('Keine Verbindung', 'Der Spielserver ist nicht erreichbar. Nochmal scannen?', 'is-error');
+                return;
+            }
+            db = conn.db;
+            uid = conn.uid;
+
+            var stored = localStorage.getItem('kt_seat_' + sessionId);
+            if (stored !== null) mySeat = Number(stored);
+
+            return KtNet.claimHost(db, sessionId, uid).then(function (gotHost) {
+                isHost = gotHost;
+                if (gotHost) {
+                    // Erster Scan der Runde: TV pausiert die Rotation und wartet
+                    // auf die Spieleranzahl.
+                    return KtNet.publicRef(db, sessionId).update({
+                        phase: 'hostSelect',
+                        hostRequestedAt: firebase.database.ServerValue.TIMESTAMP
+                    });
+                }
+            }).then(function () {
+                KtNet.publicRef(db, sessionId).on('value', onPublic, function (err) {
+                    console.warn('[Kartentausch] Spielstand nicht lesbar:', err);
+                    setStatus('Verbindung verloren', 'Bitte neu laden.', 'is-error');
+                });
+            });
+        }).catch(function (err) {
+            console.warn('[Kartentausch] Start fehlgeschlagen:', err);
+            setStatus('Fehler beim Start', 'Bitte die Seite neu laden.', 'is-error');
+        });
+    }
+
+    start();
+})();
+</script>
+</body>
+</html>
