@@ -478,9 +478,20 @@ async function run() {
     const done = pubNow2();
     check('Runde läuft von allein bis zum Ende',
         done.phase === 'reveal' || done.phase === 'idle', done.phase);
-    check('Es wurde geklopft', sawKnock);
-    check('Aufdecken erfolgt schrittweise, nicht auf einen Schlag',
-        sawProgressiveReveal, 'max. gleichzeitig offen während knocked: ' + maxRevealDuringPlay);
+    /*
+     * Eine Runde endet auf zwei Wegen: jemand klopft, oder es gibt Feuer -
+     * dann ist sofort Schluss und alle decken auf, ohne Klopfen. Mit sechs
+     * Spielern ist Feuer haeufig genug, dass der Test beides zulassen muss.
+     */
+    const endedByFire = done.fireBySeat !== undefined && done.fireBySeat !== null;
+    check('Runde endet durch Klopfen oder Feuer', sawKnock || endedByFire,
+        'geklopft=' + sawKnock + ' feuer=' + endedByFire);
+    if (sawKnock && !endedByFire) {
+        check('Nach dem Klopfen wird schrittweise aufgedeckt',
+            sawProgressiveReveal, 'max. gleichzeitig offen während knocked: ' + maxRevealDuringPlay);
+    } else {
+        console.log('  (übersprungen: Runde endete durch Feuer, nicht durch Klopfen)');
+    }
 
     if (done.scores) {
         check('Sechs Ergebnisse', Object.keys(done.scores).length === 6, JSON.stringify(done.scores));
