@@ -857,6 +857,125 @@
             text-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
+        /* ---------- Kartentausch (Trinkspiel V3) ----------
+           Bewusst durchgehend absolut positioniert statt CSS Grid: Grid ist im
+           WebView der Odroid-Box unzuverlaessig (gleicher Grund wie beim Haupt-Layout). */
+        #media-view-kartentausch { background: radial-gradient(ellipse at 50% 45%, #12233d 0%, #060e1c 62%, #03070f 100%); }
+        /* Liegt beim Pausieren UEBER dem angehaltenen Widget, das seine .active-Klasse behaelt. */
+        #media-view-kartentausch.active { z-index: 24; }
+
+        .kt-stage { position: absolute; inset: 0; }
+
+        .kt-banner {
+            position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 16px 0 12px;
+            background: linear-gradient(180deg, rgba(4,10,20,0.9) 0%, rgba(4,10,20,0) 100%);
+        }
+        .kt-banner-title {
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.8);
+        }
+        .kt-banner-sub { margin-top: 5px; font-size: 16px; font-weight: 700; color: #94a3b8; }
+        .kt-banner-timer {
+            font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900;
+            color: #00f2fe; text-shadow: 0 0 20px rgba(0,242,254,0.6); line-height: 1.05;
+        }
+
+        /* Spielerplatz: aufgefaecherte Kartenreihe statt gerader Stapel */
+        .kt-seat { position: absolute; transform: translateX(-50%); z-index: 10; }
+        .kt-fan { position: relative; width: 176px; height: 172px; }
+        .kt-fan-card {
+            position: absolute; top: 7px; left: 50%; width: 92px; height: 138px;
+            margin-left: -46px; border-radius: 9px; overflow: hidden;
+            background: #0a1426;
+            box-shadow: 0 12px 26px rgba(0,0,0,0.65);
+            transition: box-shadow 0.4s ease, transform 0.5s ease;
+        }
+        .kt-fan-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .kt-seat-name {
+            margin-top: 6px; text-align: center;
+            font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
+            color: rgba(255,255,255,0.72); letter-spacing: 0.6px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+        }
+        .kt-seat-score {
+            margin-top: 3px; text-align: center;
+            font-family: 'Orbitron', sans-serif; font-size: 25px; font-weight: 900; color: #7dd3fc;
+        }
+        .kt-seat-tag {
+            margin: 5px auto 0; width: fit-content; padding: 3px 11px; border-radius: 8px;
+            font-size: 12px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
+            background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); color: #cbd5e1;
+        }
+
+        .kt-seat.is-empty .kt-fan-card { opacity: 0.2; }
+        .kt-seat.is-empty .kt-seat-name { color: rgba(255,255,255,0.3); }
+        .kt-seat.is-active .kt-fan-card { box-shadow: 0 0 0 4px #00f2fe, 0 0 26px rgba(0,242,254,0.75), 0 12px 26px rgba(0,0,0,0.55); }
+        .kt-seat.is-active .kt-seat-name { color: #00f2fe; text-shadow: 0 0 16px rgba(0,242,254,0.7); }
+        .kt-seat.is-loser .kt-fan-card { box-shadow: 0 0 0 5px #ff3344, 0 0 26px rgba(255,51,68,0.75), 0 12px 26px rgba(0,0,0,0.5); }
+        .kt-seat.is-loser .kt-seat-name, .kt-seat.is-loser .kt-seat-score { color: #ff3344; }
+        .kt-seat.is-fire .kt-fan-card { box-shadow: 0 0 0 5px #ff8a3d, 0 0 30px rgba(255,138,61,0.8), 0 12px 26px rgba(0,0,0,0.5); }
+        .kt-seat.is-fire .kt-seat-name, .kt-seat.is-fire .kt-seat-score { color: #ff8a3d; }
+        .kt-seat.is-knocker .kt-seat-tag { border-color: #f4a300; color: #f4a300; }
+
+        /* Offene Mitte, waagrecht im freien Band zwischen oberer und unterer Reihe */
+        .kt-middle { position: absolute; left: 50%; top: 352px; transform: translateX(-50%); z-index: 12; display: flex; gap: 14px; }
+        .kt-middle-card {
+            width: 104px; height: 156px; border-radius: 10px; overflow: hidden;
+            background: #0a1426; box-shadow: 0 14px 30px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.14);
+        }
+        .kt-middle-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .kt-middle-label {
+            position: absolute; left: 50%; top: 328px; transform: translateX(-50%); z-index: 12;
+            font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: #64748b;
+        }
+
+        /* Lobby: grosser QR-Code mit Sitzplatzliste */
+        .kt-lobby {
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            z-index: 15; display: flex; flex-direction: column; align-items: center;
+            background: rgba(10,20,38,0.9); border: 2px solid rgba(0,242,254,0.4);
+            border-radius: 24px; padding: 26px 40px 30px;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.7), inset 0 0 30px rgba(0,242,254,0.08);
+        }
+        .kt-lobby-qr { width: 260px; height: 260px; background: #fff; border-radius: 14px; padding: 10px; }
+        .kt-lobby-qr img { width: 100%; height: 100%; display: block; }
+        .kt-lobby-hint { margin-top: 14px; font-size: 19px; font-weight: 800; color: #f8fafc; }
+        .kt-lobby-seats { margin-top: 12px; display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; max-width: 420px; }
+        .kt-lobby-pill {
+            font-size: 14px; font-weight: 800; padding: 7px 14px; border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #94a3b8;
+        }
+        .kt-lobby-pill.is-taken { border-color: rgba(46,204,113,0.6); color: #6ee7a8; background: rgba(46,204,113,0.12); }
+
+        .kt-result {
+            position: absolute; left: 50%; top: 352px; transform: translateX(-50%); z-index: 30;
+            padding: 16px 40px; border-radius: 18px; text-align: center;
+            background: rgba(4,10,20,0.9); border: 3px solid #ff3344;
+            box-shadow: 0 0 46px rgba(255,51,68,0.55);
+            font-family: 'Orbitron', sans-serif; font-weight: 900; color: #ffffff;
+        }
+        .kt-result-main { font-size: 38px; letter-spacing: 1px; }
+        .kt-result-sub { margin-top: 7px; font-size: 20px; color: #ffb3ba; letter-spacing: 0.5px; }
+        .kt-result.is-fire { border-color: #ff8a3d; box-shadow: 0 0 46px rgba(255,138,61,0.6); }
+        .kt-result.is-fire .kt-result-sub { color: #ffd2ab; }
+
+        /* Permanenter QR-Code: startet den Kartentausch aus jedem Widget heraus.
+           Unten links, damit er dem YouTube-QR der Musik-Widgets nicht in die Quere kommt. */
+        .kt-launcher {
+            position: absolute; bottom: 8px; left: 8px; z-index: 26;
+            width: 150px; padding: 8px 8px 6px; border-radius: 14px;
+            background: rgba(6,14,28,0.82); border: 2px solid rgba(0,242,254,0.5);
+            box-shadow: 0 10px 26px rgba(0,0,0,0.6);
+        }
+        .kt-launcher img { width: 100%; height: 134px; display: block; background: #fff; border-radius: 8px; padding: 5px; }
+        .kt-launcher-label {
+            margin-top: 5px; text-align: center; font-size: 10px; font-weight: 800;
+            letter-spacing: 0.7px; text-transform: uppercase; color: #00f2fe;
+        }
+
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
             background: linear-gradient(0deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.35) 100%);
@@ -1114,6 +1233,41 @@
                     </div>
                 </div>
 
+                <!-- Trinkspiel V3 "Kartentausch": TV zeigt nur den oeffentlichen Stand,
+                     die Haende liegen privat auf den Handys der Gaeste. -->
+                <div class="media-inner-view" id="media-view-kartentausch">
+                    <div class="kt-stage">
+                        <div class="kt-banner">
+                            <div class="kt-banner-title" id="kt-banner-title">🍻 City Cafe Kartentausch</div>
+                            <div class="kt-banner-sub" id="kt-banner-sub">Schwimmen · 31 · Hosn Obe</div>
+                            <div class="kt-banner-timer" id="kt-banner-timer"></div>
+                        </div>
+
+                        <div id="kt-seats"></div>
+
+                        <div class="kt-middle-label" id="kt-middle-label">Offene Mitte</div>
+                        <div class="kt-middle" id="kt-middle"></div>
+
+                        <div class="kt-lobby" id="kt-lobby">
+                            <div class="kt-lobby-qr"><img id="kt-lobby-qr-img" src="" alt="QR-Code zum Mitspielen"></div>
+                            <div class="kt-lobby-hint" id="kt-lobby-hint">Mit dem Handy scannen und mitspielen</div>
+                            <div class="kt-lobby-seats" id="kt-lobby-seats"></div>
+                        </div>
+
+                        <div class="kt-result" id="kt-result" style="display: none;">
+                            <div class="kt-result-main" id="kt-result-main"></div>
+                            <div class="kt-result-sub" id="kt-result-sub"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dauerhaft sichtbarer Starter-QR: liegt ausserhalb der .media-inner-view,
+                     bleibt also in jedem Rotationszustand stehen. -->
+                <div class="kt-launcher" id="kt-launcher" style="display: none;">
+                    <img id="kt-launcher-img" src="" alt="QR-Code Kartentausch">
+                    <div class="kt-launcher-label">Kartentausch spielen</div>
+                </div>
+
             </div>
         </div>
 
@@ -1220,6 +1374,17 @@
 
     </div>
 
+    <!-- Kartentausch (Trinkspiel V3): Konfiguration, Spiel-Logik und Firebase.
+         Das "compat"-SDK statt der ES-Module, weil der WebView der Odroid-Box alt
+         ist. Bleibt kartentausch-config.js leer, schaltet sich das Widget selbst
+         ab und die uebrige Rotation laeuft unveraendert weiter. -->
+    <script src="kartentausch-config.js"></script>
+    <script src="kartentausch-engine.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+    <script src="kartentausch-net.js"></script>
+
     <script>
         function autoScaleDashboard() {
             const scaler = document.getElementById('dashboard-scaler');
@@ -1247,21 +1412,121 @@
         // startete eine zweite Sequenz parallel. Alles, was zur Medien-Rotation gehoert,
         // laeuft jetzt ueber later()/repeat() und ist damit zentral abbrechbar.
         // Dauerlaeufer wie Uhr, Wetter und Ticker bleiben bewusst aussen vor.
-        const sequenceTimers = new Set();
+        // Seit dem Kartentausch-Widget koennen alle Rotations-Timer zusaetzlich
+        // eingefroren und spaeter an exakt derselben Stelle fortgesetzt werden
+        // (pauseRotation/resumeRotation) - das laufende Widget haelt an, statt
+        // uebersprungen zu werden.
+        const sequenceTimers = new Map();   // stabiles Handle -> Datensatz
+        let rotationIsPaused = false;
+
+        function armTimer(rec) {
+            rec.startedAt = Date.now();
+            if (rec.type === 'timeout') {
+                rec.native = setTimeout(() => {
+                    sequenceTimers.delete(rec.handle);
+                    rec.fn();
+                }, rec.remaining);
+            } else if (rec.partial) {
+                // Intervall wurde mitten im Takt angehalten: erst den Rest des
+                // angebrochenen Takts abwarten, danach wieder normal weiterlaufen.
+                rec.native = setTimeout(() => {
+                    rec.partial = false;
+                    rec.fn();
+                    if (!rec.cancelled) { rec.remaining = rec.ms; armTimer(rec); }
+                }, rec.remaining);
+            } else {
+                rec.native = setInterval(rec.fn, rec.ms);
+            }
+        }
+
+        function trackTimer(rec) {
+            armTimer(rec);
+            rec.handle = rec.native;   // der erste native Timer bleibt dauerhaft das Handle
+            sequenceTimers.set(rec.handle, rec);
+            return rec.handle;
+        }
 
         function later(fn, ms) {
-            const id = setTimeout(() => { sequenceTimers.delete(id); fn(); }, ms);
-            sequenceTimers.add(id);
-            return id;
+            return trackTimer({ type: 'timeout', fn, ms, remaining: ms, partial: false, cancelled: false });
         }
         function repeat(fn, ms) {
-            const id = setInterval(fn, ms);
-            sequenceTimers.add(id);
-            return id;
+            return trackTimer({ type: 'interval', fn, ms, remaining: ms, partial: false, cancelled: false });
         }
+
+        function stopNative(rec) { clearTimeout(rec.native); clearInterval(rec.native); }
+
+        // Muss statt clearTimeout/clearInterval fuer Handles aus later()/repeat()
+        // benutzt werden: nach einer Pause zeigt das Handle auf einen neuen
+        // nativen Timer, der sonst weiterlaufen wuerde.
+        function cancelTimer(handle) {
+            const rec = sequenceTimers.get(handle);
+            if (!rec) { clearTimeout(handle); clearInterval(handle); return; }
+            rec.cancelled = true;
+            stopNative(rec);
+            sequenceTimers.delete(handle);
+        }
+
         function cancelSequenceTimers() {
-            sequenceTimers.forEach(id => { clearTimeout(id); clearInterval(id); });
+            sequenceTimers.forEach(rec => { rec.cancelled = true; stopNative(rec); });
             sequenceTimers.clear();
+        }
+
+        function pauseSequenceTimers() {
+            const now = Date.now();
+            sequenceTimers.forEach(rec => {
+                stopNative(rec);
+                const elapsed = now - rec.startedAt;
+                if (rec.type === 'timeout' || rec.partial) {
+                    rec.remaining = Math.max(0, rec.remaining - elapsed);
+                } else {
+                    rec.remaining = rec.ms - (elapsed % rec.ms);
+                    rec.partial = true;
+                }
+            });
+        }
+
+        function resumeSequenceTimers() {
+            sequenceTimers.forEach(rec => { if (!rec.cancelled) armTimer(rec); });
+        }
+
+        const pausedVideoState = [];
+        let pausedAnimations = [];
+
+        // Haelt die Rotation dort an, wo sie gerade steht: Timer, Videos und die
+        // Landeanimationen der Trinkspiele. Kein Weiterschalten zum naechsten Widget.
+        function pauseRotation() {
+            if (rotationIsPaused) return;
+            rotationIsPaused = true;
+            pauseSequenceTimers();
+
+            document.querySelectorAll('#card-media video').forEach(v => {
+                if (!v.paused && !v.ended) {
+                    pausedVideoState.push({ el: v, time: v.currentTime });
+                    v.pause();
+                }
+            });
+
+            // Die Karten-/Foto-Landungen laufen ueber die Web Animations API und
+            // wuerden sonst hinter dem Overlay unsichtbar weiterlaufen.
+            if (document.getAnimations) {
+                pausedAnimations = document.getAnimations().filter(a => a.playState === 'running');
+                pausedAnimations.forEach(a => { try { a.pause(); } catch (e) {} });
+            }
+        }
+
+        function resumeRotation() {
+            if (!rotationIsPaused) return;
+            rotationIsPaused = false;
+
+            pausedAnimations.forEach(a => { try { a.play(); } catch (e) {} });
+            pausedAnimations = [];
+
+            pausedVideoState.splice(0).forEach(({ el, time }) => {
+                if (Math.abs(el.currentTime - time) > 0.35) el.currentTime = time;
+                el.play().catch(() => {});
+            });
+
+            resumeSequenceTimers();
         }
 
         // Wartet auf ein Media-Event, gibt aber nach spaetestens timeoutMs auf.
@@ -2632,7 +2897,7 @@
         }
 
         function blStopSpotlight() {
-            if (blSpotlightTimer) { clearInterval(blSpotlightTimer); blSpotlightTimer = null; }
+            if (blSpotlightTimer) { cancelTimer(blSpotlightTimer); blSpotlightTimer = null; }
         }
 
         function runBlMatchdayState(nextStateIndex) {
@@ -2962,8 +3227,8 @@
                 secondsLeft--;
                 countdownTimer.textContent = secondsLeft;
                 if (secondsLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    clearInterval(labelSwitchInterval);
+                    cancelTimer(countdownInterval);
+                    cancelTimer(labelSwitchInterval);
                     countdownTimer.style.display = 'none'; // Banner-Label bleibt die ganze Runde sichtbar, nur die Zahl verschwindet
                     onComplete();
                 }
@@ -3294,7 +3559,7 @@
                     card.style.boxShadow = (flashes % 2 === 0) ? 'inset 0 0 0 14px #ff0000' : 'none';
                     flashes++;
                     if (flashes >= 10) { // 5x an + 5x aus
-                        clearInterval(flashInterval);
+                        cancelTimer(flashInterval);
                         card.style.boxShadow = 'none';
                         for (let c = 1; c <= 5; c++) {
                             if (columnCards[c].length < 3) {
@@ -3468,7 +3733,7 @@
             const advance = () => {
                 if (weitergeschaltet) return;
                 weitergeschaltet = true;
-                clearTimeout(notausgang);
+                cancelTimer(notausgang);
                 sequenceTimers.delete(notausgang);
                 if (onTimeUpdate) el.removeEventListener('timeupdate', onTimeUpdate);
                 el.onended = null;
@@ -3535,13 +3800,13 @@
             musicSlidesIndex = 0;
             showMusicSlide(MUSIC_SLIDES_URLS[0]);
 
-            if (musicSlidesTimer) clearInterval(musicSlidesTimer);
+            if (musicSlidesTimer) cancelTimer(musicSlidesTimer);
             musicSlidesTimer = repeat(() => {
                 musicSlidesIndex++;
                 if (musicSlidesIndex < MUSIC_SLIDES_URLS.length) {
                     showMusicSlide(MUSIC_SLIDES_URLS[musicSlidesIndex]);
                 } else {
-                    clearInterval(musicSlidesTimer);
+                    cancelTimer(musicSlidesTimer);
                 }
             }, MUSIC_SLIDE_SECONDS * 1000);
 
@@ -3556,15 +3821,538 @@
             currentMusicSubIndex = 0; 
             renderMusicItem(currentMusicSubIndex);
             
-            if (musicCycleTimer) clearInterval(musicCycleTimer);
+            if (musicCycleTimer) cancelTimer(musicCycleTimer);
             musicCycleTimer = repeat(() => { 
                 currentMusicSubIndex++; 
                 if (currentMusicSubIndex < MUSIC_BATCH_SIZE) renderMusicItem(currentMusicSubIndex); 
-                else clearInterval(musicCycleTimer); 
+                else cancelTimer(musicCycleTimer); 
             }, 18000);
             
             mediaStateIndex = nextStateIndex; 
             globalMasterTimer = later(runMasterSequence, MUSIC_BATCH_SIZE * 18000);
+        }
+
+        // ==================================================================
+        //  Trinkspiel V3 "Kartentausch" (Schwimmen / 31 / Hosn Obe)
+        //
+        //  Der TV ist Geber und Schiedsrichter, zeigt aber nur den oeffentlichen
+        //  Stand: verdeckte Faecher je Sitzplatz und die offene Mitte. Die Haende
+        //  liegen unter /private/{seat} und sind per Security Rule ausschliesslich
+        //  fuer das jeweilige Handy lesbar - der TV abonniert sie nie.
+        //
+        //  Wichtig: alle Timer dieses Widgets laufen ueber setTimeout/setInterval
+        //  statt ueber later()/repeat(). Waehrend einer Runde ist die Rotation
+        //  eingefroren - Registry-Timer stehen dann still, das Spiel muss aber
+        //  weiterticken.
+        // ==================================================================
+        const KT = window.KARTENTAUSCH_CONFIG || {};
+        const KtEngine = window.KartentauschEngine;
+
+        const KT_ROW_TOP = 96, KT_ROW_BOTTOM = 540;
+        const KT_SEAT_POSITIONS = {
+            LO: { x: 232,  y: KT_ROW_TOP },
+            MO: { x: 640,  y: KT_ROW_TOP },
+            RO: { x: 1048, y: KT_ROW_TOP },
+            LU: { x: 232,  y: KT_ROW_BOTTOM },
+            MU: { x: 640,  y: KT_ROW_BOTTOM },
+            RU: { x: 1048, y: KT_ROW_BOTTOM }
+        };
+        // Symmetrische Standardbelegung, Sitzreihenfolge = Zugreihenfolge im
+        // Uhrzeigersinn. Reine Tabellenwerte - falls beim Testen eine andere
+        // Anordnung besser aussieht, nur hier aendern.
+        const KT_LAYOUT = {
+            2: ['MO', 'MU'],
+            3: ['MO', 'LU', 'RU'],
+            4: ['LO', 'RO', 'LU', 'RU'],
+            5: ['LO', 'MO', 'RO', 'LU', 'RU'],
+            6: ['LO', 'MO', 'RO', 'LU', 'MU', 'RU']
+        };
+        // Aufgefaechert statt gerade gestapelt: leichte Drehung + Versatz je Karte.
+        const KT_FAN = [
+            { rotate: -14, dx: -46, dy: 6 },
+            { rotate: 0,   dx: 0,   dy: 0 },
+            { rotate: 14,  dx: 46,  dy: 6 }
+        ];
+        const KT_BACK_IMAGE = 'cards/back.webp';
+
+        let ktDb = null, ktUid = null, ktSessionId = null;
+        let ktPub = {};
+        let ktMirrorHands = {};      // was der TV ausgeteilt hat - Rueckfall beim Aufdecken
+        let ktActive = false;        // Widget sichtbar UND Rotation angehalten
+        let ktPhaseTimer = null, ktTickTimer = null;
+        let ktLastTurnSeat = null;
+        let ktDealing = false, ktResolving = false;
+        let ktTestSlotDone = null;   // Testmodus: so geht die Rotation weiter
+
+        function ktEl(id) { return document.getElementById(id); }
+        function ktReady() { return !!(ktDb && ktSessionId && KtEngine); }
+        function ktName(seat) { return 'Spieler ' + (Number(seat) + 1); }
+        function ktNameList(seats) {
+            return (seats || []).map(s => ktName(s)).join(' & ') || '—';
+        }
+        function ktSeatsTaken() {
+            const seats = ktPub.seats || {};
+            return Object.keys(seats).filter(k => seats[k] && seats[k].uid).length;
+        }
+        function ktHasKnocked() {
+            return ktPub.knockedBySeat !== null && ktPub.knockedBySeat !== undefined;
+        }
+
+        function ktClearTimers() {
+            if (ktPhaseTimer) { clearTimeout(ktPhaseTimer); ktPhaseTimer = null; }
+            if (ktTickTimer) { clearInterval(ktTickTimer); ktTickTimer = null; }
+        }
+
+        function ktQrUrl(size) {
+            const target = (KT.mobileUrl || '') + '?session=' + encodeURIComponent(ktSessionId);
+            return 'https://api.qrserver.com/v1/create-qr-code/?size=' + size + 'x' + size +
+                   '&data=' + encodeURIComponent(target);
+        }
+
+        function ktSetTimer(value) {
+            ktEl('kt-banner-timer').textContent =
+                (value === null || value === undefined) ? '' : String(Math.max(0, value));
+        }
+
+        function ktStartCountdown(seconds, onDone) {
+            let left = seconds;
+            ktSetTimer(left);
+            ktTickTimer = setInterval(() => {
+                left--;
+                ktSetTimer(left);
+                if (left <= 0) { ktClearTimers(); ktSetTimer(null); onDone(); }
+            }, 1000);
+        }
+
+        // ---------- Darstellung ----------
+
+        function ktRenderSeats() {
+            const host = ktEl('kt-seats');
+            const phase = ktPub.phase;
+            const count = Number(ktPub.playerCount) || 0;
+            const show = count >= 2 && (phase === 'playing' || phase === 'knocked' || phase === 'reveal');
+            host.style.display = show ? '' : 'none';
+            host.innerHTML = '';
+            if (!show) return;
+
+            const layout = KT_LAYOUT[count] || KT_LAYOUT[6];
+            const seats = ktPub.seats || {};
+            const revealed = ktPub.revealedHands || {};
+            const scores = ktPub.scores || {};
+            const paying = ktPub.payingSeats || [];
+            const fireSeats = ktPub.fireSeats || [];
+
+            for (let seat = 0; seat < count; seat++) {
+                const pos = KT_SEAT_POSITIONS[layout[seat]];
+                const wrap = document.createElement('div');
+                wrap.className = 'kt-seat';
+                wrap.style.left = pos.x + 'px';
+                wrap.style.top = pos.y + 'px';
+
+                const occupied = !!(seats[seat] && seats[seat].uid);
+                const isTurn = phase !== 'reveal' && Number(ktPub.currentTurnSeat) === seat;
+                if (!occupied) wrap.classList.add('is-empty');
+                if (isTurn) wrap.classList.add('is-active');
+                if (phase === 'reveal' && paying.indexOf(seat) !== -1) wrap.classList.add('is-loser');
+                if (fireSeats.indexOf(seat) !== -1) wrap.classList.add('is-fire');
+                if (Number(ktPub.knockedBySeat) === seat) wrap.classList.add('is-knocker');
+
+                const fan = document.createElement('div');
+                fan.className = 'kt-fan';
+                const hand = revealed[seat];
+                for (let i = 0; i < 3; i++) {
+                    const card = document.createElement('div');
+                    card.className = 'kt-fan-card';
+                    card.style.transform = 'translate(' + KT_FAN[i].dx + 'px, ' + KT_FAN[i].dy + 'px) rotate(' + KT_FAN[i].rotate + 'deg)';
+                    card.style.zIndex = String(10 + i);
+                    const img = document.createElement('img');
+                    img.src = (hand && hand[i]) ? KtEngine.cardImage(hand[i], 'cards/') : KT_BACK_IMAGE;
+                    card.appendChild(img);
+                    fan.appendChild(card);
+                }
+                wrap.appendChild(fan);
+
+                const name = document.createElement('div');
+                name.className = 'kt-seat-name';
+                name.textContent = ktName(seat);
+                wrap.appendChild(name);
+
+                if (phase === 'reveal' && scores[seat] !== undefined) {
+                    const sc = document.createElement('div');
+                    sc.className = 'kt-seat-score';
+                    sc.textContent = scores[seat] + (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : '');
+                    wrap.appendChild(sc);
+                }
+
+                const tag = Number(ktPub.knockedBySeat) === seat ? 'geschlossen'
+                    : !occupied ? 'frei'
+                    : isTurn ? 'am Zug' : '';
+                if (tag) {
+                    const t = document.createElement('div');
+                    t.className = 'kt-seat-tag';
+                    t.textContent = tag;
+                    wrap.appendChild(t);
+                }
+
+                host.appendChild(wrap);
+            }
+        }
+
+        function ktRenderMiddle() {
+            const wrap = ktEl('kt-middle');
+            const label = ktEl('kt-middle-label');
+            const cards = ktPub.middleCards || [];
+            const phase = ktPub.phase;
+            // Beim Aufdecken steht an dieser Stelle das Ergebnis-Panel.
+            const show = cards.length === 3 && (phase === 'playing' || phase === 'knocked');
+            wrap.style.display = show ? '' : 'none';
+            label.style.display = show ? '' : 'none';
+            wrap.innerHTML = '';
+            if (!show) return;
+            cards.forEach(code => {
+                const el = document.createElement('div');
+                el.className = 'kt-middle-card';
+                const img = document.createElement('img');
+                img.src = KtEngine.cardImage(code, 'cards/');
+                el.appendChild(img);
+                wrap.appendChild(el);
+            });
+        }
+
+        function ktRenderLobby() {
+            const lobby = ktEl('kt-lobby');
+            const phase = ktPub.phase || 'idle';
+            const waitingForScan = !!ktTestSlotDone && phase === 'idle';
+            const show = phase === 'hostSelect' || phase === 'lobby' || waitingForScan;
+            lobby.style.display = show ? '' : 'none';
+            if (!show) return;
+
+            const img = ktEl('kt-lobby-qr-img');
+            const wanted = ktQrUrl(400);
+            if (img.getAttribute('data-src') !== wanted) {
+                img.src = wanted;
+                img.setAttribute('data-src', wanted);
+            }
+
+            const count = Number(ktPub.playerCount) || 0;
+            const seats = ktPub.seats || {};
+            const pills = ktEl('kt-lobby-seats');
+            pills.innerHTML = '';
+            if (phase === 'lobby' && count) {
+                for (let i = 0; i < count; i++) {
+                    const p = document.createElement('div');
+                    const taken = !!(seats[i] && seats[i].uid);
+                    p.className = 'kt-lobby-pill' + (taken ? ' is-taken' : '');
+                    p.textContent = taken ? ktName(i) : 'frei';
+                    pills.appendChild(p);
+                }
+            }
+
+            ktEl('kt-lobby-hint').textContent =
+                phase === 'hostSelect' ? 'Warte auf Spieleranzahl-Auswahl…' :
+                phase === 'lobby' ? ktSeatsTaken() + ' von ' + count + ' Spielern bereit' :
+                'Mit dem Handy scannen und mitspielen';
+        }
+
+        function ktRenderBanner() {
+            const phase = ktPub.phase || 'idle';
+            ktEl('kt-banner-sub').textContent =
+                phase === 'hostSelect' ? 'Host wählt die Spieleranzahl…' :
+                phase === 'lobby' ? 'Scannen und mitspielen' :
+                phase === 'playing' ? ktName(ktPub.currentTurnSeat || 0) + ' ist am Zug' :
+                phase === 'knocked' ? 'Geschlossen — die letzten Züge laufen' :
+                phase === 'reveal' ? 'Aufgedeckt' :
+                'Schwimmen · 31 · Hosn Obe';
+        }
+
+        function ktRenderResult() {
+            const box = ktEl('kt-result');
+            if (ktPub.phase !== 'reveal' || !ktPub.scores) { box.style.display = 'none'; return; }
+            const paying = ktPub.payingSeats || [];
+            const fire = (ktPub.fireSeats || []).length > 0;
+            box.style.display = '';
+            box.className = 'kt-result' + (fire ? ' is-fire' : '');
+            if (fire) {
+                ktEl('kt-result-main').textContent = '🔥 FEUER!';
+                ktEl('kt-result-sub').textContent = paying.length
+                    ? ktNameList(paying) + (paying.length > 1 ? ' zahlen' : ' zahlt') + ' die Runde (unter 12 Punkte)'
+                    : 'Niemand unter 12 Punkten — diesmal kommen alle davon!';
+            } else {
+                ktEl('kt-result-main').textContent = ktNameList(paying) + ' zahlt die Runde!';
+                ktEl('kt-result-sub').textContent = 'Niedrigste Hand';
+            }
+        }
+
+        function ktRender() {
+            ktRenderBanner();
+            ktRenderSeats();
+            ktRenderMiddle();
+            ktRenderLobby();
+            ktRenderResult();
+        }
+
+        // ---------- Ein-/Ausblenden samt Pause der Rotation ----------
+
+        function ktEnterGame() {
+            if (ktActive) return;
+            ktActive = true;
+            // Die laufende Ansicht behaelt ihre .active-Klasse und friert ein -
+            // das Kartentausch-Overlay legt sich per z-index darueber.
+            pauseRotation();
+            ktEl('kt-launcher').style.display = 'none';
+            ktEl('media-view-kartentausch').classList.add('active');
+        }
+
+        function ktExitGame() {
+            ktClearTimers();
+            ktSetTimer(null);
+            if (!ktActive) return;
+            ktActive = false;
+            ktEl('kt-launcher').style.display = '';
+            resumeRotation();
+
+            if (ktTestSlotDone) {
+                const done = ktTestSlotDone;
+                ktTestSlotDone = null;
+                cancelTimer(globalMasterTimer);
+                done();
+                return;
+            }
+            ktEl('media-view-kartentausch').classList.remove('active');
+        }
+
+        // ---------- Spielablauf ----------
+
+        function ktDealIfPossible() {
+            if (ktDealing || !ktReady()) return;
+            // Nutzer-Vorgabe: ab zwei verbundenen Spielern wird trotzdem gespielt,
+            // leere Plaetze fallen einfach weg. Darunter lohnt die Runde nicht.
+            const count = ktSeatsTaken();
+            if (count < 2) { ktResetSession(); return; }
+            ktDealing = true;
+
+            const dealt = KtEngine.deal(count);
+            ktMirrorHands = dealt.hands;
+
+            const writes = [];
+            for (let seat = 0; seat < count; seat++) {
+                writes.push(KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: dealt.hands[seat] }));
+            }
+
+            Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update({
+                playerCount: count,
+                middleCards: dealt.middleCards,
+                phase: 'playing',
+                currentTurnSeat: 0,
+                knockedBySeat: null,
+                finalTurnsRemaining: null,
+                revealedHands: null,
+                scores: null,
+                loserSeat: null,
+                payingSeats: null,
+                fireSeats: null,
+                turnStartedAt: firebase.database.ServerValue.TIMESTAMP
+            })).catch(err => {
+                console.warn('[Kartentausch] Austeilen fehlgeschlagen:', err);
+                ktResetSession();
+            }).then(() => { ktDealing = false; });
+        }
+
+        function ktArmTurnTimeout() {
+            if (ktPhaseTimer) { clearTimeout(ktPhaseTimer); ktPhaseTimer = null; }
+            ktPhaseTimer = setTimeout(ktSkipTurn, (KT.turnTimeoutSeconds || 20) * 1000);
+        }
+
+        // Handy zugeklappt oder weggelegt: nach Ablauf wird der Zug uebersprungen,
+        // damit die Runde nicht stehen bleibt.
+        function ktSkipTurn() {
+            if (ktPub.phase !== 'playing' && ktPub.phase !== 'knocked') return;
+            const count = Number(ktPub.playerCount) || 2;
+            const seat = Number(ktPub.currentTurnSeat) || 0;
+            const updates = {
+                currentTurnSeat: KtEngine.nextSeat(seat, count),
+                turnStartedAt: firebase.database.ServerValue.TIMESTAMP,
+                lastMove: { type: 'skip', seat: seat }
+            };
+            if (ktHasKnocked()) {
+                const left = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
+                updates.finalTurnsRemaining = left;
+                if (left <= 0) updates.phase = 'reveal';
+            }
+            KtNet.publicRef(ktDb, ktSessionId).update(updates).catch(() => {});
+        }
+
+        function ktResolveReveal() {
+            if (ktResolving || !ktReady()) return;
+            ktResolving = true;
+
+            // Kurz warten, bis die Handys ihre Haende selbst veroeffentlicht haben.
+            // Was fehlt (Handy weg, Akku leer), ergaenzt der TV aus dem Austeil-Protokoll.
+            ktPhaseTimer = setTimeout(() => {
+                const count = Number(ktPub.playerCount) || 0;
+                const published = ktPub.revealedHands || {};
+                const hands = {};
+                for (let seat = 0; seat < count; seat++) {
+                    const hand = published[seat] || ktMirrorHands[seat];
+                    if (hand && hand.length === 3) hands[seat] = hand;
+                }
+                if (!Object.keys(hands).length) { ktResolving = false; ktResetSession(); return; }
+
+                const outcome = KtEngine.evaluateRound(hands);
+                KtNet.publicRef(ktDb, ktSessionId).update({
+                    revealedHands: hands,
+                    scores: outcome.scores,
+                    loserSeat: outcome.loserSeat,
+                    payingSeats: outcome.payingSeats,
+                    fireSeats: outcome.fireSeats
+                }).catch(err => console.warn('[Kartentausch] Ergebnis nicht schreibbar:', err))
+                  .then(() => {
+                      ktRender();
+                      ktPhaseTimer = setTimeout(() => {
+                          ktResolving = false;
+                          ktResetSession();
+                      }, (KT.revealSeconds || 12) * 1000);
+                  });
+            }, 3500);
+        }
+
+        function ktResetSession() {
+            ktClearTimers();
+            ktSetTimer(null);
+            ktMirrorHands = {};
+            ktLastTurnSeat = null;
+            ktDealing = false;
+            ktResolving = false;
+            if (!ktReady()) return Promise.resolve();
+
+            // Sitzplatzweise loeschen statt den ganzen /private-Knoten: die Security
+            // Rules vergeben Schreibrechte nur pro Sitzplatz, ein remove() auf dem
+            // Elternknoten waere abgelehnt worden.
+            const wipes = [];
+            for (let seat = 0; seat < 6; seat++) {
+                wipes.push(KtNet.privateRef(ktDb, ktSessionId, seat).remove().catch(() => {}));
+            }
+            return Promise.all(wipes)
+                .then(() => KtNet.publicRef(ktDb, ktSessionId).update({
+                    phase: 'idle',
+                    playerCount: null,
+                    hostUid: null,
+                    seats: null,
+                    middleCards: null,
+                    currentTurnSeat: null,
+                    knockedBySeat: null,
+                    finalTurnsRemaining: null,
+                    revealedHands: null,
+                    scores: null,
+                    loserSeat: null,
+                    payingSeats: null,
+                    fireSeats: null,
+                    lastMove: null,
+                    turnStartedAt: null,
+                    dealerUid: ktUid
+                }))
+                .catch(err => console.warn('[Kartentausch] Zuruecksetzen fehlgeschlagen:', err));
+        }
+
+        function ktOnPhaseChange(phase) {
+            ktClearTimers();
+
+            if (phase === 'hostSelect') {
+                ktEnterGame();
+                // Bestaetigt niemand die Spieleranzahl, laeuft die Rotation exakt
+                // an der pausierten Stelle weiter - kein Neustart, kein Sprung.
+                ktStartCountdown(KT.hostSelectSeconds || 20, ktResetSession);
+
+            } else if (phase === 'lobby') {
+                ktEnterGame();
+                ktStartCountdown(KT.lobbySeconds || 60, ktDealIfPossible);
+
+            } else if (phase === 'playing' || phase === 'knocked') {
+                ktEnterGame();
+                ktArmTurnTimeout();
+
+            } else if (phase === 'reveal') {
+                ktEnterGame();
+                ktResolveReveal();
+
+            } else {
+                ktExitGame();
+            }
+        }
+
+        function ktOnPublic(snapshot) {
+            const prevPhase = ktPub.phase;
+            ktPub = snapshot.val() || {};
+            const phase = ktPub.phase || 'idle';
+
+            if (phase !== prevPhase) {
+                ktLastTurnSeat = null;
+                ktOnPhaseChange(phase);
+            }
+
+            if (phase === 'playing' || phase === 'knocked') {
+                const seat = Number(ktPub.currentTurnSeat) || 0;
+                if (seat !== ktLastTurnSeat) { ktLastTurnSeat = seat; ktArmTurnTimeout(); }
+            }
+
+            // Lobby vorzeitig schliessen, sobald alle Plaetze belegt sind.
+            if (phase === 'lobby' && Number(ktPub.playerCount) > 0 &&
+                ktSeatsTaken() >= Number(ktPub.playerCount)) {
+                ktDealIfPossible();
+            }
+
+            ktRender();
+        }
+
+        function ktInit() {
+            if (!window.KtNet || !KtNet.isConfigured() || !KtEngine) {
+                console.info('[Kartentausch] Nicht eingerichtet — Widget bleibt aus.');
+                return;
+            }
+            KtNet.ready().then(conn => {
+                if (!conn) return;
+                ktDb = conn.db;
+                ktUid = conn.uid;
+                ktSessionId = KtNet.newSessionId();
+
+                ktEl('kt-launcher-img').src = ktQrUrl(300);
+                ktEl('kt-launcher').style.display = '';
+
+                return KtNet.publicRef(ktDb, ktSessionId).set({
+                    phase: 'idle',
+                    dealerUid: ktUid,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    KtNet.publicRef(ktDb, ktSessionId).on('value', ktOnPublic,
+                        err => console.warn('[Kartentausch] Abo fehlgeschlagen:', err));
+                });
+            }).catch(err => console.warn('[Kartentausch] Start fehlgeschlagen:', err));
+        }
+        ktInit();
+
+        // Testphase: Kartentausch als erster Zustand im Zyklus, damit man beim
+        // Ausprobieren nicht die ganze Rotation abwarten muss. Ueber
+        // KARTENTAUSCH_CONFIG.testFirstInCycle abschaltbar - danach loest nur noch
+        // der permanente QR-Code aus.
+        function runKartentauschTestSlot(nextStateIndex) {
+            if (!ktReady()) {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
+
+            const view = ktEl('media-view-kartentausch');
+            view.classList.add('active');
+
+            const advance = () => {
+                ktTestSlotDone = null;
+                view.classList.remove('active');
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+            };
+            ktTestSlotDone = advance;
+            ktRender();
+            globalMasterTimer = later(advance, (KT.lobbySeconds || 60) * 1000);
         }
 
         function runMasterSequence() {
@@ -3574,7 +4362,10 @@
 
             document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
 
-            if (mediaStateIndex === 0) {
+            if (mediaStateIndex === -1) {
+                runKartentauschTestSlot(0); // -> Tag/Nacht-Plakat
+
+            } else if (mediaStateIndex === 0) {
                 // Tag/Nacht-Plakat und Karaoke-Plakat laufen jetzt nacheinander in JEDEM
                 // Zyklus (vorher wechselten sie sich ab - Karaoke kam nur alle zwei Zyklen).
                 showPosterImage(getDayNightPoster());
@@ -3661,14 +4452,17 @@
                 runMusicSlidesState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
-                runPhotoTrinkspielV1(0); // -> wieder Plakat
+                runPhotoTrinkspielV1(KT.testFirstInCycle ? -1 : 0); // -> wieder an den Zyklusanfang
             }
         }
         (function initialPoster() {
             showPosterImage(getDayNightPoster());
             prepareDrinkVideo(); // erstes Getraenke-Video schon beim Start vorbereiten
         })();
-        globalMasterTimer = later(runMasterSequence, 35000);
+        // Im Testmodus geht es nach kurzer Anlaufzeit (Firebase-Anmeldung) sofort
+        // in den Kartentausch-Slot, sonst laeuft der Zyklus wie bisher an.
+        if (KT.testFirstInCycle) mediaStateIndex = -1;
+        globalMasterTimer = later(runMasterSequence, KT.testFirstInCycle ? 6000 : 35000);
 
         function weatherCodeToIcon(code) {
             if (code === 95 || code === 96 || code === 99) return '⛈️';
