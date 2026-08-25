@@ -1,19 +1,19 @@
 /*
- * Kartentausch — Browser-Test fuer den kompletten Spielablauf.
+ * Hos’n Obe — Browser-Test fuer den kompletten Spielablauf.
  *
- * OPTIONAL. Die Regel-Logik prueft `node kartentausch-engine.test.js` ohne
+ * OPTIONAL. Die Regel-Logik prueft `node hosn-obe-engine.test.js` ohne
  * jede Abhaengigkeit; dieser Test hier faehrt zusaetzlich die echten Seiten
- * (index.html als TV, kartentausch.html als Handy) in einem Browser und
+ * (index.html als TV, hosn-obe.html als Handy) in einem Browser und
  * spielt eine ganze Runde durch. Firebase wird dabei durch einen
  * gemeinsamen Speicher in Node ersetzt, es geht also nichts ins Netz.
  *
  * Voraussetzung:  npm install playwright
- * Aufruf:         node kartentausch-browser.test.js
+ * Aufruf:         node hosn-obe-browser.test.js
  *
  * Faellt der Test mit "Executable doesn't exist" aus, fehlt der Browser:
  *   npx playwright install chromium
  * Alternativ den Pfad zu einem vorhandenen Chromium setzen:
- *   CHROMIUM_PATH=/pfad/zu/chrome node kartentausch-browser.test.js
+ *   CHROMIUM_PATH=/pfad/zu/chrome node hosn-obe-browser.test.js
  *
  * Geprueft werden vor allem die Regeln, die man beim Umbauen leicht
  * kaputtmacht: Klopfen erst ab der zweiten Runde, schrittweises Aufdecken
@@ -211,9 +211,9 @@ async function run() {
         // sonst laeuft der Testlauf minutenlang.
         await page.addInitScript(`
             window.addEventListener('DOMContentLoaded', function () {
-                if (window.KARTENTAUSCH_CONFIG) {
-                    window.KARTENTAUSCH_CONFIG.botMoveSeconds = 0.5;
-                    window.KARTENTAUSCH_CONFIG.revealSeconds = 3;
+                if (window.HOSN_OBE_CONFIG) {
+                    window.HOSN_OBE_CONFIG.botMoveSeconds = 0.5;
+                    window.HOSN_OBE_CONFIG.revealSeconds = 3;
                 }
             });
         `);
@@ -237,8 +237,8 @@ async function run() {
         banner: document.getElementById('kt-banner-title').textContent,
         launcher: document.querySelector('.kt-launcher-label').textContent
     }));
-    check('TV nennt das Spiel "Hosen Obe"',
-        /Hosen Obe/.test(names.banner) && /Hosen Obe/.test(names.launcher), JSON.stringify(names));
+    check('TV nennt das Spiel "Hos’n Obe"',
+        /Hos’n Obe/.test(names.banner) && /Hos’n Obe/.test(names.launcher), JSON.stringify(names));
 
     const launcherVisible = await tv.evaluate(() => {
         const el = document.getElementById('kt-launcher');
@@ -247,7 +247,7 @@ async function run() {
     check('Starter-QR ist sichtbar', launcherVisible);
 
     console.log('\n--- Handy 1 scannt (wird Host) ---');
-    const phone1 = await open(`http://localhost:${PORT}/kartentausch.html?session=${sessionId}`, 'phone-1');
+    const phone1 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-1');
     await sleep(1200);
 
     check('Phase wechselt auf hostSelect', pubNow().phase === 'hostSelect', pubNow().phase);
@@ -272,7 +272,7 @@ async function run() {
         Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '2').click();
     });
     await sleep(800);
-    const phone2 = await open(`http://localhost:${PORT}/kartentausch.html?session=${sessionId}`, 'phone-2');
+    const phone2 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-2');
     await sleep(2500);
 
     const pubAfterDeal = pubNow();
@@ -296,12 +296,12 @@ async function run() {
         Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
     check('Kein "1 Karte tauschen"-Knopf mehr', !labels.some(l => /1 Karte tauschen/.test(l)),
         JSON.stringify(labels));
-    check('Kein Klopfen in der ersten Runde', !labels.some(l => l === 'Klopfen'), JSON.stringify(labels));
-    check('"Weiter" steht immer zur Verfügung', labels.includes('Weiter'), JSON.stringify(labels));
+    check('Kein Klopfen in der ersten Runde', !labels.some(l => l === 'KLOPFEN'), JSON.stringify(labels));
+    check('"Weiter" steht immer zur Verfügung', labels.includes('WEITER'), JSON.stringify(labels));
 
     const middleWorth = await active.evaluate(
-        m => window.KartentauschEngine.middleWorthTakingAll(m || []), pubNow().middleCards);
-    const hasAll = labels.some(l => /Alle 3 tauschen/.test(l));
+        m => window.HosnObeEngine.middleWorthTakingAll(m || []), pubNow().middleCards);
+    const hasAll = labels.some(l => /ALLE 3 NEHMEN/.test(l));
     check('"Alle 3 tauschen" genau dann, wenn die Mitte es hergibt', hasAll === middleWorth,
         'Knopf=' + hasAll + ' Mitte=' + middleWorth);
 
@@ -363,12 +363,12 @@ async function run() {
     })();
     const labels3 = await active3.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
-    check('Ab der zweiten Runde erscheint "Klopfen"', labels3.some(l => l === 'Klopfen'),
+    check('Ab der zweiten Runde erscheint "Klopfen"', labels3.some(l => l === 'KLOPFEN'),
         JSON.stringify(labels3));
 
     console.log('\n--- Klopfen deckt sofort auf ---');
     await active3.evaluate(() => {
-        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'Klopfen').click();
+        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'KLOPFEN').click();
     });
     await sleep(1000);
     const afterKnock = pubNow();
@@ -380,16 +380,16 @@ async function run() {
 
     const facesUp = await tv.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-fan-card img'))
-            .filter(i => !/player_card_back/.test(i.getAttribute('src'))).length);
+            .filter(i => !/back_(lightblue|red)\.webp/.test(i.getAttribute('src'))).length);
     check('TV zeigt die offenen Karten des Klopfers', facesUp === 3, String(facesUp));
 
     const backsUsed = await tv.evaluate(() => {
         const s = new Set(Array.from(document.querySelectorAll('.kt-fan-card img'))
-            .map(i => i.getAttribute('src')).filter(x => /player_card_back/.test(x)));
+            .map(i => i.getAttribute('src')).filter(x => /back_(lightblue|red)\.webp/.test(x)));
         return Array.from(s);
     });
     check('Verdeckte Karten nutzen die neuen Rückseiten',
-        backsUsed.length > 0 && backsUsed.every(s => /player_card_back_design_2_(lightblue|red)\.svg$/.test(s)),
+        backsUsed.length > 0 && backsUsed.every(s => /back_(lightblue|red)\.webp$/.test(s)),
         JSON.stringify(backsUsed));
     check('Genau EINE Rückseiten-Farbe pro Runde', backsUsed.length === 1, JSON.stringify(backsUsed));
 
@@ -444,7 +444,7 @@ async function run() {
     const pubNow2 = () => (tree.games[sessionId2] || {}).public || {};
     check('Zweite Session vorhanden', !!sessionId2, String(sessionId2));
 
-    const phone3 = await open(`http://localhost:${PORT}/kartentausch.html?session=${sessionId2}`, 'phone-1');
+    const phone3 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-1');
     await sleep(1200);
 
     await phone3.evaluate(() => {
@@ -454,8 +454,8 @@ async function run() {
 
     const started = pubNow2();
     check('Computer-Runde markiert', started.botGame === true, JSON.stringify(started.botGame));
-    check('Drei Plätze vom Computer besetzt',
-        Object.keys(started.seats || {}).length === 3, JSON.stringify(Object.keys(started.seats || {})));
+    check('Sechs Plätze vom Computer besetzt',
+        Object.keys(started.seats || {}).length === 6, JSON.stringify(Object.keys(started.seats || {})));
     check('Alle Plätze sind Computer',
         Object.values(started.seats || {}).every(s => s && s.bot === true),
         JSON.stringify(started.seats));
@@ -483,7 +483,7 @@ async function run() {
         sawProgressiveReveal, 'max. gleichzeitig offen während knocked: ' + maxRevealDuringPlay);
 
     if (done.scores) {
-        check('Drei Ergebnisse', Object.keys(done.scores).length === 3, JSON.stringify(done.scores));
+        check('Sechs Ergebnisse', Object.keys(done.scores).length === 6, JSON.stringify(done.scores));
         const fire = (done.fireSeats || []).length > 0;
         check('Genau ein Verlierer (oder Feuer)',
             fire || (done.payingSeats || []).length === 1, JSON.stringify(done.payingSeats));

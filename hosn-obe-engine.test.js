@@ -1,12 +1,12 @@
 /*
- * Regel-Checks für kartentausch-engine.js — läuft ohne Browser:
- *   node kartentausch-engine.test.js
+ * Regel-Checks für hosn-obe-engine.js — läuft ohne Browser:
+ *   node hosn-obe-engine.test.js
  */
 'use strict';
 
 var fs = require('fs');
 var path = require('path');
-var E = require('./kartentausch-engine.js');
+var E = require('./hosn-obe-engine.js');
 
 var passed = 0;
 var failed = [];
@@ -38,8 +38,8 @@ var missing = deck.map(function (c) { return E.cardImage(c, ''); }).filter(funct
 eq('Alle 32 Kartenbilder existieren im cards/-Ordner', missing, []);
 var missingBacks = E.CARD_BACKS.filter(function (f) { return !onDisk.has(f); });
 eq('Beide Kartenrückseiten liegen bereit', missingBacks, []);
-// 32 Vorderseiten + genau zwei Rückseiten, sonst schleicht sich unbenutztes Material ein.
-eq('Keine überzähligen Dateien im cards/-Ordner', onDisk.size, 34);
+// 32 Vorderseiten + zwei Raster-Rückseiten + die zwei SVG-Vorlagen dazu.
+eq('Keine überzähligen Dateien im cards/-Ordner', onDisk.size, 36);
 eq('cardImage nutzt cards/ als Standardpfad', E.cardImage('H7'), 'cards/7_of_hearts.webp');
 eq('Pik-Ass hat die 2-Endung', E.cardImage('SA', ''), 'ace_of_spades2.webp');
 eq('Herz-Ass hat keine 2-Endung', E.cardImage('HA', ''), 'ace_of_hearts.webp');
@@ -116,26 +116,33 @@ var f1 = E.evaluateRound({
 });
 eq('Feuer-Modus', f1.mode, 'fire');
 eq('Feuer: Feuer-Sitz wird gemeldet', f1.fireSeats, [0]);
-eq('Feuer: alle unter 12 zahlen', f1.payingSeats, [1, 3]);
-eq('Feuer: kein einzelner Verlierer', f1.loserSeat, null);
-check('Feuer: kein Tie-Break', f1.tieBreak === false);
+eq('Feuer: alle unter 11 zahlen', f1.payingSeats, [1, 3]);
+// Sitz 1 und 3 haben beide 9; Tie-Break: Pik 9 schlägt Kreuz 9, also verliert Sitz 3.
+eq('Feuer: der Schwächste wird per Tie-Break bestimmt', f1.loserSeat, 3);
 
-// Feuer, bei dem niemand unter 12 liegt → 0 Zahlende ist erlaubt
+// Liegt niemand unter 11, zahlt trotzdem der Schwächste - neue Nutzer-Vorgabe.
 var f2 = E.evaluateRound({
-    0: ['SA', 'S10', 'SK'],  // Feuer
-    1: ['DA', 'D10', 'C8']   // 21
+    0: ['SA', 'S10', 'SK'],  // Feuer, 31
+    1: ['DA', 'D10', 'C8']   // 21 → schwächster, zahlt trotzdem
 });
-eq('Feuer ohne Zahlende ist zulässig', f2.payingSeats, []);
+eq('Feuer: der Schwächste zahlt auch über 11', f2.payingSeats, [1]);
 
-// Grenzwert: exakt 12 Punkte zahlt NICHT, 11 zahlt
+// Grenzwert: exakt 11 Punkte zahlt NICHT mehr (Grenze von 12 auf 11 gesenkt),
+// aber als Schwächster kann man trotzdem drankommen.
 var f3 = E.evaluateRound({
     0: ['HJ', 'HQ', 'HA'],   // Feuer
-    1: ['C7', 'D8', 'S9'],   //  9 → zahlt
-    2: ['SA', 'H7', 'D8']    // 11 → zahlt
+    1: ['C7', 'D8', 'S9'],   //  9 → unter 11, zahlt
+    2: ['SA', 'H7', 'D8']    // 11 → nicht unter 11 und nicht schwächster
 });
-eq('Feuer-Grenzwert: 11 Punkte zahlen', f3.payingSeats, [1, 2]);
-var f4 = E.evaluateRound({ 0: ['HJ', 'HQ', 'HA'], 1: ['S7', 'S8', 'D9'] }); // 15 → zahlt nicht
-eq('Feuer-Grenzwert: 15 Punkte zahlen nicht', f4.payingSeats, []);
+eq('Feuer-Grenzwert: 11 Punkte zahlen nicht mehr', f3.payingSeats, [1]);
+
+var f5 = E.evaluateRound({
+    0: ['HJ', 'HQ', 'HA'],   // Feuer
+    1: ['C7', 'D8', 'H9'],   //  9 → unter 11
+    2: ['S7', 'D8', 'C9'],   //  9 → unter 11
+    3: ['DA', 'D10', 'C8']   // 21
+});
+eq('Feuer: mehrere unter 11 zahlen gemeinsam', f5.payingSeats, [1, 2]);
 
 // ---------- Austeilen ----------
 [2, 3, 4, 5, 6].forEach(function (n) {
@@ -173,10 +180,12 @@ for (var i = 0; i < 20000; i++) {
         if (res.loserSeat === null || res.payingSeats.length !== 1) uniquenessBroken++;
     } else {
         fireRounds++;
-        if (res.loserSeat !== null) uniquenessBroken++;
+        // Neue Regel: auch bei Feuer wird der Schwächste eindeutig benannt und
+        // zahlt in jedem Fall mit.
+        if (res.loserSeat === null || res.payingSeats.indexOf(res.loserSeat) === -1) uniquenessBroken++;
     }
 }
-eq('20000 Zufallsrunden liefern immer genau einen Verlierer (bzw. Feuer)', uniquenessBroken, 0);
+eq('20000 Zufallsrunden liefern immer einen eindeutigen Schwächsten', uniquenessBroken, 0);
 check('Testlauf enthielt echte Feuer-Runden', fireRounds > 0, fireRounds + ' Feuer / ' + normalRounds + ' normal');
 
 // ---------- Alle 4960 möglichen Hände ----------
@@ -207,9 +216,9 @@ eq('Unvollstaendige Mitte erlaubt keinen Rundumtausch', E.middleWorthTakingAll([
 // ---------- Kartenrueckseiten ----------
 eq('Zwei Rueckseiten-Motive vorhanden', E.CARD_BACKS.length, 2);
 eq('Rueckseite mit Basispfad', E.cardBackImage('cards/', function () { return 0; }),
-   'cards/player_card_back_design_2_lightblue.svg');
+   'cards/back_lightblue.webp');
 eq('Zweite Rueckseite wird auch gezogen', E.cardBackImage('cards/', function () { return 0.99; }),
-   'cards/player_card_back_design_2_red.svg');
+   'cards/back_red.webp');
 var backsSeen = {};
 for (var bi = 0; bi < 400; bi++) backsSeen[E.cardBackImage('cards/')] = true;
 eq('Ueber viele Ziehungen kommen beide Motive vor', Object.keys(backsSeen).length, 2);
@@ -277,6 +286,36 @@ for (var kb = 0; kb < 2000; kb++) {
     if (mk.type === 'knock' && E.scoreHand(hk).score < E.BOT_KNOCK_SOLID) knockLow++;
 }
 eq('Computer klopft nie mit schwacher Hand', knockLow, 0);
+
+// ---------- Alle oder keine ----------
+/*
+ * Liegt in der Mitte ein Drilling oder drei gleiche Farben, ist der
+ * Einzeltausch gesperrt - auch für den Computer. Er darf dann nur alles
+ * nehmen, klopfen oder weitergeben.
+ */
+var drillingMid = ['H9', 'S9', 'D9'];
+var flushMid = ['H7', 'HK', 'HA'];
+[drillingMid, flushMid].forEach(function (mid, idx) {
+    var label = idx === 0 ? 'Drilling' : 'drei gleiche Farben';
+    var seen = {};
+    for (var t = 0; t < 400; t++) {
+        var d = E.deal(2);
+        var mv = E.botDecide(d.hands[0], mid.slice(), {
+            canKnock: t % 2 === 0, canPass: true, turnsPlayed: t % 9, playerCount: 3
+        });
+        seen[mv.type] = true;
+    }
+    check('Bei ' + label + ' kein Einzeltausch durch den Computer', !seen.single,
+        JSON.stringify(Object.keys(seen)));
+    check('Bei ' + label + ' bleibt "alles nehmen" möglich', !!seen.all,
+        JSON.stringify(Object.keys(seen)));
+});
+
+// Ein lohnender Satz wird genommen, ein schlechter nicht.
+var takeIt = E.botDecide(['C7', 'S8', 'D9'], flushMid.slice(), { canKnock: false, canPass: true });
+eq('Computer nimmt einen starken Satz', takeIt.type, 'all');
+var leaveIt = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S7', 'D7'], { canKnock: false, canPass: true });
+check('Computer lässt einen schwächeren Satz liegen', leaveIt.type !== 'all', leaveIt.type);
 
 // ---------- Rundenbegrenzung: keine Endlosrunde ----------
 /*

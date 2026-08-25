@@ -1,19 +1,19 @@
 /*
  * ============================================================================
- *  KARTENTAUSCH — ZENTRALE KONFIGURATION
+ *  HOSN_OBE — ZENTRALE KONFIGURATION
  *
  *  Die einzige Datei, in der du etwas eintragen musst. Sie wird sowohl vom
- *  Dashboard (index.html, TV) als auch von der Handy-Seite (kartentausch.html)
+ *  Dashboard (index.html, TV) als auch von der Handy-Seite (hosn-obe.html)
  *  geladen — dadurch stehen die Firebase-Zugangsdaten nur an einer Stelle.
  *
- *  Anleitung Schritt für Schritt: siehe KARTENTAUSCH-SETUP.md
+ *  Anleitung Schritt für Schritt: siehe HOSN-OBE-SETUP.md
  *
- *  Solange "databaseURL" leer ist, bleibt das Kartentausch-Widget komplett
+ *  Solange "databaseURL" leer ist, bleibt das Hos’n Obe-Widget komplett
  *  abgeschaltet: der QR-Code wird nicht eingeblendet und die Rotation läuft
  *  unverändert weiter. Das Dashboard funktioniert also auch ohne Firebase.
  * ============================================================================
  */
-window.KARTENTAUSCH_CONFIG = {
+window.HOSN_OBE_CONFIG = {
 
     // --- Aus der Firebase-Konsole: Projekt-Einstellungen -> Deine Apps -> Web-App ---
     firebase: {
@@ -26,20 +26,20 @@ window.KARTENTAUSCH_CONFIG = {
 
     // Adresse der Handy-Seite. Steht im QR-Code auf dem TV.
     // Muss öffentlich erreichbar sein (GitHub Pages reicht).
-    mobileUrl: 'https://motte025.github.io/City-cafe/kartentausch.html',
+    mobileUrl: 'https://motte025.github.io/City-cafe/hosn-obe.html',
 
     // --- Zeiten in Sekunden (gefahrlos anpassbar) ---
     hostSelectSeconds: 20,   // so lange wartet der TV auf die Spieleranzahl, sonst zurück in die Rotation
     lobbySeconds: 60,        // Countdown, in dem die übrigen Gäste scannen können
     turnTimeoutSeconds: 120, // wer zwei Minuten nicht zieht, wird übersprungen
-    revealSeconds: 12,       // wie lange das Ergebnis am TV stehen bleibt
+    revealSeconds: 30,       // wie lange das Ergebnis am TV stehen bleibt
 
     // --- Computer-Runde (Vorführmodus) ---
-    botPlayerCount: 3,       // so viele Plätze besetzt der Computer
+    botPlayerCount: 6,       // so viele Plätze besetzt der Computer
     botMoveSeconds: 8,       // Denkpause zwischen zwei Computer-Zügen (Gäste sollen mitkommen)
-    botIdleStartSeconds: 60, // so lange bleibt es still, bevor der Computer von selbst spielt
+    botIdleStartSeconds: 60, // Countdown im Zyklus; danach spielt der Computer von selbst
 
-    // Zum Testen: Kartentausch läuft als ERSTES Widget im Rotationszyklus an.
+    // Zum Testen: Hos’n Obe läuft als ERSTES Widget im Rotationszyklus an.
     // Auf false stellen, sobald nur noch der permanente QR-Code auslösen soll.
     testFirstInCycle: true
 };
