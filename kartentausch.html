@@ -11,100 +11,120 @@
 <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+    html, body { height: 100%; }
+
+    /* Ganzer Bildschirm im Hochformat: die Seite scrollt nicht, sondern teilt
+       die verfuegbare Hoehe auf Hand, Mitte, Status und Aktionen auf. Die Hand
+       bekommt den groessten Anteil, damit die Karten so gross wie moeglich sind. */
     body {
         margin: 0;
+        height: 100dvh;
         min-height: 100vh;
         background: linear-gradient(180deg, #0b1526 0%, #060e1c 55%, #040914 100%);
         color: #f8fafc;
         font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
         display: flex;
         flex-direction: column;
-        padding: env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 14px);
-        overflow-x: hidden;
+        gap: 8px;
+        padding: calc(env(safe-area-inset-top) + 6px) 6px calc(env(safe-area-inset-bottom) + 8px);
+        overflow: hidden;
     }
 
     .kt-head {
+        flex: 0 0 auto;
         display: flex; align-items: center; justify-content: space-between;
-        gap: 10px; padding: 12px 2px 8px;
+        gap: 10px; padding: 2px 4px;
     }
     .kt-brand {
         font-family: 'Orbitron', sans-serif; font-weight: 900;
-        font-size: 14px; letter-spacing: 1.2px; color: #00f2fe;
+        font-size: 15px; letter-spacing: 1.2px; color: #00f2fe;
         text-shadow: 0 0 14px rgba(0,242,254,0.45);
     }
     .kt-seat-badge {
-        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 13px;
-        padding: 5px 11px; border-radius: 999px;
+        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 15px;
+        padding: 6px 13px; border-radius: 999px;
         background: rgba(0,242,254,0.12); border: 1px solid rgba(0,242,254,0.45);
         color: #00f2fe; white-space: nowrap;
     }
 
-    /* Eigene Hand bewusst GANZ OBEN: so lässt sich das Display mit einer Hand
+    /* Eigene Hand bewusst GANZ OBEN: so laesst sich das Display mit einer Hand
        abschirmen oder wegkippen, ohne dass Nachbarn mitlesen. */
     .kt-hand-panel {
+        flex: 0 0 auto;
         background: rgba(10,20,38,0.82);
         border: 1px solid rgba(0,242,254,0.28);
         border-radius: 20px;
-        padding: 12px 12px 14px;
+        padding: 10px 6px 12px;
         box-shadow: 0 14px 40px rgba(0,0,0,0.55), inset 0 1px 1px rgba(255,255,255,0.09);
     }
     .kt-panel-label {
-        font-size: 11px; font-weight: 800; text-transform: uppercase;
-        letter-spacing: 1.4px; color: #94a3b8; margin-bottom: 9px; text-align: center;
+        font-size: 12px; font-weight: 800; text-transform: uppercase;
+        letter-spacing: 1.4px; color: #94a3b8; margin-bottom: 8px; text-align: center;
     }
     .kt-privacy-hint {
-        font-size: 11px; color: #64748b; text-align: center; margin-top: 9px;
+        font-size: 12px; color: #64748b; text-align: center; margin-top: 8px;
     }
 
-    .kt-cards { display: flex; justify-content: center; gap: 9px; }
+    .kt-cards { display: flex; justify-content: center; align-items: flex-start; gap: 6px; }
+
+    /* flex:1 statt fester Breite - dadurch nutzen die Karten auf Handy UND
+       Tablet die volle Zeilenbreite. Die vh-Grenze verhindert nur, dass sie auf
+       sehr hohen Displays absurd gross werden. */
     .kt-card {
-        position: relative; flex: 0 1 32%; max-width: 116px;
+        position: relative;
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 32vh;
         aspect-ratio: 2 / 3;
-        border-radius: 10px; overflow: hidden;
-        border: 2px solid transparent;
+        border-radius: 12px; overflow: hidden;
+        border: 3px solid transparent;
         background: #0a1426;
         transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
+    .kt-middle-panel .kt-card { max-width: 26vh; }
+
     .kt-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .kt-card.is-pickable { cursor: pointer; border-color: rgba(0,242,254,0.35); }
     .kt-card.is-selected {
         border-color: #00f2fe;
-        box-shadow: 0 0 0 3px rgba(0,242,254,0.28), 0 0 22px rgba(0,242,254,0.55);
-        transform: translateY(-7px);
+        box-shadow: 0 0 0 4px rgba(0,242,254,0.28), 0 0 26px rgba(0,242,254,0.6);
+        transform: translateY(-9px);
     }
-    .kt-card.is-middle.is-selected { border-color: #f355da; box-shadow: 0 0 0 3px rgba(243,85,218,0.28), 0 0 22px rgba(243,85,218,0.55); }
+    .kt-card.is-middle.is-selected { border-color: #f355da; box-shadow: 0 0 0 4px rgba(243,85,218,0.28), 0 0 26px rgba(243,85,218,0.6); }
 
     .kt-score-line {
-        text-align: center; margin-top: 10px;
-        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px;
+        text-align: center; margin-top: 9px;
+        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px;
         color: #f8fafc;
     }
-    .kt-score-line .kt-score-suit { color: #00f2fe; font-size: 15px; }
+    .kt-score-line .kt-score-suit { color: #00f2fe; font-size: 19px; }
     .kt-score-line.is-fire { color: #ff8a3d; text-shadow: 0 0 18px rgba(255,138,61,0.6); }
 
     .kt-middle-panel {
-        margin-top: 14px;
+        flex: 0 0 auto;
         background: rgba(10,20,38,0.62);
         border: 1px solid rgba(255,255,255,0.14);
-        border-radius: 20px; padding: 12px;
+        border-radius: 20px; padding: 10px 6px;
     }
 
+    /* Nimmt den Rest der Hoehe auf und scrollt nur im Notfall (lange Aufdeck-Liste). */
     .kt-status {
-        margin-top: 14px; text-align: center;
+        flex: 1 1 auto; min-height: 0; overflow-y: auto;
+        text-align: center;
         background: rgba(10,20,38,0.62);
         border: 1px solid rgba(255,255,255,0.12);
-        border-radius: 16px; padding: 13px 14px;
+        border-radius: 16px; padding: 12px 12px;
     }
-    .kt-status-main { font-weight: 800; font-size: 15px; }
-    .kt-status-sub { font-size: 12px; color: #94a3b8; margin-top: 5px; line-height: 1.45; }
+    .kt-status-main { font-weight: 800; font-size: 18px; }
+    .kt-status-sub { font-size: 14px; color: #94a3b8; margin-top: 5px; line-height: 1.45; }
     .kt-status.is-myturn { border-color: rgba(0,242,254,0.5); background: rgba(0,242,254,0.09); }
     .kt-status.is-myturn .kt-status-main { color: #00f2fe; }
     .kt-status.is-error { border-color: rgba(255,51,68,0.5); background: rgba(255,51,68,0.1); }
 
-    .kt-actions { margin-top: 14px; display: flex; flex-direction: column; gap: 9px; }
+    .kt-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
     .kt-btn {
-        width: 100%; padding: 16px 14px; border-radius: 14px;
-        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800;
+        width: 100%; padding: 18px 14px; border-radius: 15px;
+        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 19px; font-weight: 800;
         border: 1px solid rgba(0,242,254,0.45);
         background: rgba(0,242,254,0.12); color: #e6fbff;
         transition: transform 0.12s ease, opacity 0.15s ease;
@@ -114,22 +134,28 @@
     .kt-btn.kt-btn-knock { border-color: rgba(255,51,68,0.55); background: rgba(255,51,68,0.14); color: #ffd9dd; }
     .kt-btn.kt-btn-confirm { border-color: rgba(46,204,113,0.6); background: rgba(46,204,113,0.16); color: #d8ffe9; }
     .kt-btn.kt-btn-ghost { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.06); color: #cbd5e1; }
+    .kt-btn.kt-btn-bot { border-color: rgba(244,163,0,0.55); background: rgba(244,163,0,0.14); color: #ffe4b3; }
 
     .kt-seat-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 11px; }
     .kt-seat-pill {
-        font-size: 12px; font-weight: 700; padding: 7px 12px; border-radius: 999px;
+        font-size: 14px; font-weight: 700; padding: 8px 14px; border-radius: 999px;
         border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.05); color: #94a3b8;
     }
     .kt-seat-pill.is-taken { border-color: rgba(46,204,113,0.5); color: #6ee7a8; background: rgba(46,204,113,0.1); }
     .kt-seat-pill.is-me { border-color: #00f2fe; color: #00f2fe; background: rgba(0,242,254,0.14); }
 
-    .kt-count-grid { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; margin-top: 12px; }
+    /* Host-Auswahl: bewusst grossflaechig, das ist der erste Kontakt mit dem Spiel. */
+    .kt-count-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
     .kt-count-btn {
-        flex: 1 1 28%; min-width: 84px; padding: 20px 8px; border-radius: 16px;
-        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px;
-        border: 1px solid rgba(0,242,254,0.4); background: rgba(0,242,254,0.1); color: #e6fbff;
+        flex: 1 1 30%; min-width: 96px; padding: 26px 8px; border-radius: 18px;
+        font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 44px;
+        border: 2px solid rgba(0,242,254,0.45); background: rgba(0,242,254,0.12); color: #e6fbff;
     }
     .kt-count-btn:active { transform: scale(0.96); }
+    .kt-count-caption {
+        font-size: 14px; font-weight: 700; color: #94a3b8;
+        text-align: center; margin-bottom: 10px;
+    }
 
     .kt-reveal-row {
         display: flex; align-items: center; gap: 10px;
@@ -138,10 +164,10 @@
     }
     .kt-reveal-row.is-paying { border-color: #ff3344; background: rgba(255,51,68,0.14); }
     .kt-reveal-row.is-fire { border-color: #ff8a3d; background: rgba(255,138,61,0.14); }
-    .kt-reveal-name { font-weight: 800; font-size: 13px; min-width: 74px; }
-    .kt-reveal-cards { display: flex; gap: 4px; flex: 1; }
-    .kt-reveal-cards img { width: 30px; border-radius: 4px; display: block; }
-    .kt-reveal-score { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 17px; }
+    .kt-reveal-name { font-weight: 800; font-size: 14px; min-width: 78px; text-align: left; }
+    .kt-reveal-cards { display: flex; gap: 4px; flex: 1; justify-content: center; }
+    .kt-reveal-cards img { width: 38px; border-radius: 5px; display: block; }
+    .kt-reveal-score { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 19px; }
 
     .kt-hidden { display: none !important; }
 </style>
@@ -208,7 +234,6 @@
     var isHost = false;
     var myHand = [];
     var pub = {};
-    var swapMode = null;      // null | 'single'
     var pickedHand = null;
     var pickedMiddle = null;
     var busy = false;
@@ -271,6 +296,19 @@
                Number(pub.currentTurnSeat) === mySeat && myHand.length === 3;
     }
 
+    // Geklopft werden darf erst, wenn jeder einmal am Zug war - also ab der
+    // zweiten Runde. Davor waere die Runde vorbei, bevor sie begonnen hat.
+    function canKnockNow() {
+        if (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined) return false;
+        var count = Number(pub.playerCount) || 2;
+        return (Number(pub.turnsPlayed) || 0) >= count;
+    }
+
+    function knockRoundsLeft() {
+        var count = Number(pub.playerCount) || 2;
+        return Math.max(0, count - (Number(pub.turnsPlayed) || 0));
+    }
+
     // Gemeinsamer Abschluss jedes Zuges: Mitte + nächster Sitz + ggf. Schluss-Countdown.
     function commitTurn(newMiddle, move) {
         var count = Number(pub.playerCount) || 2;
@@ -278,6 +316,7 @@
             middleCards: newMiddle,
             currentTurnSeat: E.nextSeat(mySeat, count),
             lastMove: move,
+            turnsPlayed: (Number(pub.turnsPlayed) || 0) + 1,
             turnStartedAt: firebase.database.ServerValue.TIMESTAMP
         };
 
@@ -300,6 +339,26 @@
         return KtNet.privateRef(db, sessionId, mySeat).set({ hand: hand });
     }
 
+    /*
+     * Schrittweises Aufdecken: Wer klopft, legt seine Karten sofort offen hin.
+     * Jeder danach spielt noch einen Zug und deckt dann ebenfalls auf. Am Ende
+     * liegen alle Haende offen - der TV zeigt jede Hand in dem Moment, in dem
+     * sie veroeffentlicht wird.
+     */
+    function publishMyHand(hand) {
+        if (mySeat < 0) return Promise.resolve();
+        var cards = hand || myHand;
+        if (!cards || cards.length !== 3) return Promise.resolve();
+        return KtNet.publicRef(db, sessionId, 'revealedHands/' + mySeat).set(cards)
+            .catch(function (err) { console.warn('[Kartentausch] Aufdecken fehlgeschlagen:', err); });
+    }
+
+    // Nach dem Klopfen deckt jeder direkt nach seinem Zug auf.
+    function revealAfterMoveIfNeeded(hand) {
+        if (pub.knockedBySeat === null || pub.knockedBySeat === undefined) return Promise.resolve();
+        return publishMyHand(hand);
+    }
+
     function doSingleSwap() {
         if (busy || pickedHand === null || pickedMiddle === null) return;
         busy = true;
@@ -311,6 +370,7 @@
         middle[pickedMiddle] = given;
 
         writeHand(hand)
+            .then(function () { return revealAfterMoveIfNeeded(hand); })
             .then(function () { return commitTurn(middle, { type: 'single', seat: mySeat, gave: given, took: taken }); })
             .then(resetSwapMode)
             .catch(handleWriteError)
@@ -324,6 +384,7 @@
         var hand = myHand.slice();
 
         writeHand(middle)
+            .then(function () { return revealAfterMoveIfNeeded(middle); })
             .then(function () { return commitTurn(hand, { type: 'all', seat: mySeat }); })
             .then(resetSwapMode)
             .catch(handleWriteError)
@@ -333,7 +394,9 @@
     function doKnock() {
         if (busy) return;
         busy = true;
-        commitTurn((pub.middleCards || []).slice(), { type: 'knock', seat: mySeat })
+        // Der Klopfer deckt sofort auf - das ist der Sinn des Klopfens.
+        publishMyHand()
+            .then(function () { return commitTurn((pub.middleCards || []).slice(), { type: 'knock', seat: mySeat }); })
             .then(resetSwapMode)
             .catch(handleWriteError)
             .then(function () { busy = false; });
@@ -345,7 +408,6 @@
     }
 
     function resetSwapMode() {
-        swapMode = null;
         pickedHand = null;
         pickedMiddle = null;
         render();
@@ -357,6 +419,11 @@
         els.actions.innerHTML = '';
 
         if (pub.phase === 'hostSelect' && isHost) {
+            var caption = document.createElement('div');
+            caption.className = 'kt-count-caption';
+            caption.textContent = 'Wie viele spielen mit?';
+            els.actions.appendChild(caption);
+
             var grid = document.createElement('div');
             grid.className = 'kt-count-grid';
             [2, 3, 4, 5, 6].forEach(function (n) {
@@ -367,27 +434,32 @@
                 grid.appendChild(b);
             });
             els.actions.appendChild(grid);
+            els.actions.appendChild(button('🤖 Nur zuschauen — Computer spielt', 'kt-btn-bot', startBotRound));
             return;
         }
 
         if (!isMyTurn()) return;
 
-        if (swapMode === 'single') {
+        // Einzeltausch braucht keinen eigenen Knopf mehr: Karten sind am Zug
+        // direkt antippbar, der Bestaetigen-Knopf erscheint, sobald beide
+        // Karten gewaehlt sind.
+        if (pickedHand !== null || pickedMiddle !== null) {
             var ready = pickedHand !== null && pickedMiddle !== null;
-            els.actions.appendChild(button(ready ? 'Tausch bestätigen' : 'Karten auswählen…',
+            els.actions.appendChild(button(ready ? 'Tausch bestätigen' : 'Karte aus der Mitte wählen…',
                 'kt-btn-confirm', doSingleSwap, !ready));
             els.actions.appendChild(button('Abbrechen', 'kt-btn-ghost', resetSwapMode));
             return;
         }
 
-        els.actions.appendChild(button('1 Karte tauschen', '', function () {
-            swapMode = 'single';
-            pickedHand = null;
-            pickedMiddle = null;
-            render();
-        }));
-        els.actions.appendChild(button('Alle 3 tauschen', '', doSwapAll));
-        els.actions.appendChild(button('Schließen / Klopfen', 'kt-btn-knock', doKnock));
+        // Rundumtausch nur, wenn die Mitte ihn wert ist (Drilling oder drei
+        // gleiche Farben) - sonst bleibt der Knopf weg.
+        if (E.middleWorthTakingAll(pub.middleCards || [])) {
+            els.actions.appendChild(button('Alle 3 tauschen', '', doSwapAll));
+        }
+
+        if (canKnockNow()) {
+            els.actions.appendChild(button('Klopfen', 'kt-btn-knock', doKnock));
+        }
     }
 
     function renderReveal() {
@@ -433,17 +505,17 @@
 
         var showCards = myHand.length === 3 && phase !== 'idle' && phase !== 'hostSelect';
         show(els.handPanel, showCards);
-        show(els.middlePanel, (pub.middleCards || []).length === 3 && phase !== 'idle');
+        show(els.middlePanel, (pub.middleCards || []).length === 3 && phase !== 'idle' && phase !== 'hostSelect');
 
         var myTurn = isMyTurn();
         renderCards(els.handCards, myHand, {
-            pickable: myTurn && swapMode === 'single',
+            pickable: myTurn,
             selected: pickedHand,
             onPick: function (i) { pickedHand = (pickedHand === i ? null : i); render(); }
         });
         renderCards(els.middleCards, pub.middleCards || [], {
             middle: true,
-            pickable: myTurn && swapMode === 'single',
+            pickable: myTurn,
             selected: pickedMiddle,
             onPick: function (i) { pickedMiddle = (pickedMiddle === i ? null : i); render(); }
         });
@@ -451,7 +523,7 @@
         els.statusExtra.innerHTML = '';
 
         if (phase === 'hostSelect') {
-            if (isHost) setStatus('Wie viele spielen mit?', 'Du bist der Host dieser Runde. Tippe die Spieleranzahl an — danach können die anderen scannen.');
+            if (isHost) setStatus('Du bist der Host', 'Tippe die Spieleranzahl an — danach können die anderen scannen.');
             else setStatus('Runde wird gestartet…', 'Jemand anderes wählt gerade die Spieleranzahl.');
 
         } else if (phase === 'lobby') {
@@ -472,18 +544,25 @@
 
         } else if (phase === 'playing' || phase === 'knocked') {
             var knockNote = (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined)
-                ? ' · ' + (Number(pub.knockedBySeat) === mySeat ? 'Du hast' : seatName(pub.knockedBySeat) + ' hat') + ' geschlossen'
+                ? ' · ' + (Number(pub.knockedBySeat) === mySeat ? 'Du hast' : seatName(pub.knockedBySeat) + ' hat') + ' geklopft'
                 : '';
             if (myTurn) {
-                setStatus('Du bist dran!',
-                    (swapMode === 'single'
-                        ? 'Eigene Karte antippen, dann Karte aus der Mitte, dann bestätigen.'
-                        : 'Tausche eine Karte, alle drei — oder schließe die Runde.') + knockNote,
-                    'is-myturn');
+                var hint;
+                if (pickedHand !== null || pickedMiddle !== null) {
+                    hint = 'Jetzt die Karte aus der Mitte antippen, dann bestätigen.';
+                } else if (canKnockNow()) {
+                    hint = 'Eigene Karte antippen und tauschen — oder klopfen.';
+                } else {
+                    var left = knockRoundsLeft();
+                    hint = 'Eigene Karte antippen und tauschen. Klopfen geht erst ab der zweiten Runde' +
+                           (left > 0 ? ' (noch ' + left + (left === 1 ? ' Zug' : ' Züge') + ').' : '.');
+                }
+                setStatus('Du bist dran!', hint + knockNote, 'is-myturn');
             } else {
                 setStatus(seatName(pub.currentTurnSeat) + ' ist dran',
                     'Warte, bis du dran bist.' + knockNote);
             }
+            if (Object.keys(pub.revealedHands || {}).length) renderReveal();
 
         } else if (phase === 'reveal') {
             var paying = pub.payingSeats || [];
@@ -523,8 +602,22 @@
         }).then(function () { busy = false; });
     }
 
+    // Vorfuehrrunde: der TV besetzt alle Plaetze selbst und spielt sie aus.
+    function startBotRound() {
+        if (busy) return;
+        busy = true;
+        KtNet.publicRef(db, sessionId).update({
+            botGame: true,
+            playerCount: CFG.botPlayerCount || 3,
+            phase: 'botRound',
+            hostUid: null
+        }).catch(function (err) {
+            console.warn('[Kartentausch] Computer-Runde konnte nicht gestartet werden:', err);
+        }).then(function () { busy = false; });
+    }
+
     function tryJoin() {
-        if (mySeat >= 0 || busy) return;
+        if (mySeat >= 0 || busy || pub.botGame) return;
         var count = Number(pub.playerCount) || 0;
         if (!count) return;
         busy = true;
@@ -553,14 +646,13 @@
         });
     }
 
-    // Beim Aufdecken veröffentlicht jedes Handy seine eigene Hand. Der TV kennt
-    // sie dadurch, ohne jemals Leserechte auf fremde Hände zu brauchen.
+    // Sicherheitsnetz: wer bis zur Auswertung noch nicht aufgedeckt hat
+    // (z. B. weil sein Zug uebersprungen wurde), tut es hier nach.
     var publishedReveal = false;
     function maybePublishHand() {
         if (pub.phase !== 'reveal' || publishedReveal || mySeat < 0 || myHand.length !== 3) return;
         publishedReveal = true;
-        KtNet.publicRef(db, sessionId, 'revealedHands/' + mySeat).set(myHand)
-            .catch(function (err) { console.warn('[Kartentausch] Aufdecken fehlgeschlagen:', err); });
+        publishMyHand();
     }
 
     function onPublic(snap) {

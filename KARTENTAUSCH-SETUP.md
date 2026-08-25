@@ -186,5 +186,5 @@ Runden darauf, dass immer genau ein Verlierer feststeht.
 | `kartentausch-engine.test.js` | Regel-Checks (`node kartentausch-engine.test.js`) |
 | `kartentausch-net.js` | Firebase-Anbindung, anonyme Anmeldung, Sitzplatzvergabe |
 | `kartentausch.html` | Handy-Seite (Ziel des QR-Codes) |
-| `cards/back.webp` | Kartenrückseite (City-Cafe-Logo, neu erzeugt) |
+| `cards/player_card_back_design_2_*.svg` | Zwei Kartenrückseiten, pro Karte zufällig gewählt |
 | `index.html` | TV-Widget, Pause/Fortsetzen der Rotation, QR-Overlay |
