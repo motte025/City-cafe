@@ -17,11 +17,11 @@ window.KARTENTAUSCH_CONFIG = {
 
     // --- Aus der Firebase-Konsole: Projekt-Einstellungen -> Deine Apps -> Web-App ---
     firebase: {
-        apiKey: '',
-        authDomain: '',
-        databaseURL: '',
-        projectId: '',
-        appId: ''
+        apiKey: 'AIzaSyD7iT2ACRTEmcwO5T2j1dUtFWEK04v5-rk',
+        authDomain: 'hosen-obe.firebaseapp.com',
+        databaseURL: 'https://hosen-obe-default-rtdb.europe-west1.firebasedatabase.app',
+        projectId: 'hosen-obe',
+        appId: '1:996060003217:web:a4ea0ee16dacb24386f830'
     },
 
     // Adresse der Handy-Seite. Steht im QR-Code auf dem TV.
