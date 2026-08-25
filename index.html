@@ -880,9 +880,18 @@
            und legt sich ueber den ganzen Bildschirm. Damit die Grafik dabei
            EXAKT gleich bleibt, wird die 1280x815-Buehne nur skaliert - alle
            absoluten Koordinaten darin behalten ihre Gueltigkeit. */
+        /* WICHTIG: #dashboard-scaler traegt ein transform:scale(), um das
+           1920x1080-Layout auf den Fernseher zu passen. Ein transformierter
+           Vorfahre wird zum Bezugsrahmen fuer position:fixed - "100vw/100vh"
+           beziehen sich dann auf das Browserfenster, die Position aber auf den
+           Scaler. Bei einem Fernseher, dessen Fenster kleiner als 1920x1080 ist,
+           ergab das ein zu kleines Kaestchen oben links statt Vollbild.
+           Deshalb hier fest die Entwurfsgroesse: sie deckt den Scaler exakt ab. */
         #media-view-kartentausch.kt-fullscreen {
-            position: fixed; inset: 0; z-index: 9000;
-            width: 100vw; height: 100vh;
+            position: fixed;
+            left: 0; top: 0;
+            width: 1920px; height: 1080px;
+            z-index: 9000;
             border-radius: 0;
         }
         #media-view-kartentausch.kt-fullscreen .kt-stage {
@@ -894,27 +903,36 @@
         }
         /* Der Starter-QR gehoert zur Media-Zone und wuerde sonst darunter liegen. */
         body.kt-fullscreen-on .kt-launcher { display: none !important; }
-        /* Abdunklung ueber dem Holz: ohne sie verschwinden weisse Karten und
-           heller Text im Maserungs-Kontrast. Liegt bewusst NEBEN der Buehne
-           statt darin - sonst blieben im Vollbild die Raender links und rechts
-           der skalierten Buehne ungetoent und das Holz dort deutlich heller. */
+        /* Kein Abdunkeln des Holzes: stattdessen ein warmer Lichtkegel ueber der
+           Tischmitte, wie eine Lampe ueber dem Spieltisch. Liegt neben der
+           Buehne, damit er im Vollbild die ganze Flaeche erreicht. */
         .kt-felt-tint {
             position: absolute; inset: 0; z-index: 1; pointer-events: none;
-            background: radial-gradient(ellipse at 50% 45%, rgba(6,16,30,0.62) 0%, rgba(4,10,20,0.82) 62%, rgba(2,6,14,0.94) 100%);
+            background: radial-gradient(ellipse 640px 430px at 50% 52%,
+                        rgba(255,244,214,0.26) 0%,
+                        rgba(255,236,196,0.13) 42%,
+                        rgba(255,230,190,0.04) 66%,
+                        rgba(0,0,0,0) 78%);
         }
 
+
+        /* Kein dunkler Balken mehr: der endete im Vollbild an der Buehnenkante
+           und zeichnete ein sichtbares Rechteck aufs helle Holz. Lesbar bleibt
+           die Schrift ueber ihren Schatten. */
         .kt-banner {
             position: absolute; top: 0; left: 0; right: 0; z-index: 20;
             display: flex; flex-direction: column; align-items: center;
             padding: 16px 0 12px;
-            background: linear-gradient(180deg, rgba(4,10,20,0.9) 0%, rgba(4,10,20,0) 100%);
         }
         .kt-banner-title {
             font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
             color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px;
-            text-shadow: 0 3px 10px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 4px 16px rgba(0,0,0,0.85), 0 0 30px rgba(0,0,0,0.7);
         }
-        .kt-banner-sub { margin-top: 5px; font-size: 16px; font-weight: 700; color: #94a3b8; }
+        .kt-banner-sub {
+            margin-top: 5px; font-size: 17px; font-weight: 800; color: #f1f5f9;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 3px 12px rgba(0,0,0,0.8);
+        }
         .kt-banner-timer {
             font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900;
             color: #00f2fe; text-shadow: 0 0 20px rgba(0,242,254,0.6); line-height: 1.05;
@@ -938,8 +956,8 @@
         .kt-seat-name {
             margin-top: 6px; text-align: center;
             font-family: 'Orbitron', sans-serif; font-size: 25px; font-weight: 900;
-            color: rgba(255,255,255,0.72); letter-spacing: 0.6px;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            color: #ffffff; letter-spacing: 0.6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 4px 14px rgba(0,0,0,0.85);
         }
         .kt-seat-score {
             margin-top: 3px; text-align: center;
@@ -952,7 +970,7 @@
         }
 
         .kt-seat.is-empty .kt-fan-card { opacity: 0.2; }
-        .kt-seat.is-empty .kt-seat-name { color: rgba(255,255,255,0.3); }
+        .kt-seat.is-empty .kt-seat-name { color: rgba(255,255,255,0.45); }
         .kt-seat.is-active .kt-fan-card { box-shadow: 0 0 0 4px #00f2fe, 0 0 26px rgba(0,242,254,0.75), 0 12px 26px rgba(0,0,0,0.55); }
         .kt-seat.is-active .kt-seat-name { color: #00f2fe; text-shadow: 0 0 16px rgba(0,242,254,0.7); }
         .kt-seat.is-loser .kt-fan-card { box-shadow: 0 0 0 5px #ff3344, 0 0 26px rgba(255,51,68,0.75), 0 12px 26px rgba(0,0,0,0.5); }
@@ -4276,11 +4294,14 @@
 
         // Buehne so skalieren, dass sie den Bildschirm fuellt, ohne das
         // Seitenverhaeltnis zu veraendern.
+        // Die Buehne fuellt den 1920x1080-Rahmen des Scalers; um das Fenster
+        // kuemmert sich autoScaleDashboard(). Feste Zahlen statt Fenstermassen -
+        // sonst haengt die Groesse doppelt am Bildschirm.
+        const KT_STAGE_SCALE = Math.min(1920 / 1280, 1080 / 815);
         function ktFitFullscreen() {
             const view = ktEl('media-view-kartentausch');
             if (!view || !view.classList.contains('kt-fullscreen')) return;
-            const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 815);
-            view.style.setProperty('--kt-scale', String(scale));
+            view.style.setProperty('--kt-scale', String(KT_STAGE_SCALE));
         }
         window.addEventListener('resize', ktFitFullscreen);
 
@@ -4431,7 +4452,12 @@
             if (!hand || hand.length !== 3 || middle.length !== 3) return;
 
             const canKnock = !ktHasKnocked() && (Number(ktPub.turnsPlayed) || 0) >= count;
-            const move = KtEngine.botDecide(hand, middle, { canKnock: canKnock });
+            // Der Computer bekommt NUR seine eigene Hand und die offene Mitte -
+            // dieselben Informationen wie ein Gast am Handy.
+            const move = KtEngine.botDecide(hand, middle, {
+                canKnock: canKnock, canPass: true,
+                turnsPlayed: Number(ktPub.turnsPlayed) || 0, playerCount: count
+            });
 
             const updates = {
                 currentTurnSeat: KtEngine.nextSeat(seat, count),
@@ -4466,13 +4492,19 @@
                     ktMirrorHands[seat] = newHand;
                     updates.middleCards = middle;
                 } else {
+                    // 'pass': nichts tauschen, nur weitergeben.
                     updates.middleCards = middle;
+                    updates.lastMove = { type: 'pass', seat: seat };
                 }
                 if (ktHasKnocked()) {
                     reveals[seat] = ktMirrorHands[seat];    // nach dem Klopfen deckt jeder nach seinem Zug auf
                     const left = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
                     updates.finalTurnsRemaining = left;
                     if (left <= 0) updates.phase = 'reveal';
+                } else if (KtEngine.roundShouldEnd(updates.turnsPlayed, count)) {
+                    // Notbremse: geben alle nur noch weiter, endet die Runde nie
+                    // von selbst. Nach vier Durchgaengen wird aufgedeckt.
+                    updates.phase = 'reveal';
                 }
             }
 
@@ -4509,6 +4541,8 @@
                 const left = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
                 updates.finalTurnsRemaining = left;
                 if (left <= 0) updates.phase = 'reveal';
+            } else if (KtEngine.roundShouldEnd(updates.turnsPlayed, count)) {
+                updates.phase = 'reveal';
             }
             KtNet.publicRef(ktDb, ktSessionId).update(updates).catch(() => {});
         }

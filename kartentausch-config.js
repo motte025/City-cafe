@@ -36,7 +36,7 @@ window.KARTENTAUSCH_CONFIG = {
 
     // --- Computer-Runde (Vorführmodus) ---
     botPlayerCount: 3,       // so viele Plätze besetzt der Computer
-    botMoveSeconds: 3,       // Denkpause zwischen zwei Computer-Zügen
+    botMoveSeconds: 8,       // Denkpause zwischen zwei Computer-Zügen (Gäste sollen mitkommen)
     botIdleStartSeconds: 60, // so lange bleibt es still, bevor der Computer von selbst spielt
 
     // Zum Testen: Kartentausch läuft als ERSTES Widget im Rotationszyklus an.

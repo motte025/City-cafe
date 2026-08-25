@@ -227,20 +227,72 @@
         return !!(r.threeOfAKind || r.flush);
     }
 
-    var BOT_KNOCK_FROM = 27;      // ab dieser Punktzahl klopft der Computer
-    var BOT_MIN_GAIN = 0.5;       // darunter lohnt ein Tausch nicht
+    /*
+     * ---------- Computer-Spieler ----------
+     *
+     * FAIRNESS: botDecide() bekommt ausschliesslich die EIGENE Hand und die
+     * offene Mitte - dieselben Informationen, die auch ein Gast am Handy sieht.
+     * Die Funktion hat gar keinen Zugang zu fremden Haenden oder zum Reststapel,
+     * kann also strukturell nicht schummeln. Ausgeteilt wird mit einem
+     * gleichverteilten Fisher-Yates-Shuffle ueber das volle 32er-Blatt.
+     */
+    var BOT_KNOCK_STRONG = 29;      // damit endet die Runde sofort
+    var BOT_KNOCK_SOLID = 24;       // solide Hand und nichts mehr zu holen
+    var BOT_MIN_GAIN = 1;           // darunter lohnt kein Tausch
+    var BOT_GIVEAWAY_WEIGHT = 0.18; // wie stark eine verschenkte hohe Karte zaehlt
+
+    // Was die abgegebene Karte dem naechsten Spieler wert sein koennte. Der
+    // Computer weiss nicht, was der braucht - aber eine hohe Karte hilft
+    // statistisch mehr als eine niedrige, und eine, die zur vorherrschenden
+    // Farbe der Mitte passt, besonders.
+    function giveawayCost(code, middleCards) {
+        var card = parseCard(code);
+        var cost = card.value;
+        var sameSuit = 0;
+        for (var i = 0; i < middleCards.length; i++) {
+            if (parseCard(middleCards[i]).suit === card.suit) sameSuit++;
+        }
+        if (sameSuit >= 1) cost += 3;
+        return cost;
+    }
 
     /*
-     * Zugentscheidung des Computers.
+     * Zugentscheidung.
      *
-     * Bewusst simpel und nachvollziehbar: alle neun Einzeltausche durchrechnen,
-     * den besten nehmen, den Rundumtausch nur pruefen wenn er ueberhaupt
-     * erlaubt ist. Klopfen, sobald die Hand gut genug ist - aber nur, wenn die
-     * Regel es an dieser Stelle zulaesst.
+     * options: { canKnock: bool, canPass: bool }
+     * Rueckgabe: { type: 'single', handIndex, middleIndex } | { type: 'all' }
+     *            | { type: 'knock' } | { type: 'pass' } | { type: 'skip' }
      *
-     * Gibt { type: 'single', handIndex, middleIndex } | { type: 'all' } |
-     * { type: 'knock' } | { type: 'skip' } zurueck.
+     * Reihenfolge:
+     *   1. Hand praktisch unschlagbar -> klopfen.
+     *   2. Bester echt verbessernder Tausch, abzueglich dessen, was man dem
+     *      naechsten Spieler hinlegt.
+     *   3. Nichts zu verbessern, Hand solide -> klopfen.
+     *   4. Sonst weitergeben, statt sich selbst zu verschlechtern.
      */
+    /*
+     * Harte Obergrenze fuer eine Runde.
+     *
+     * Seit es den Zug "Weiter" gibt, kann eine Runde theoretisch ewig laufen:
+     * geben alle nur noch weiter, aendert sich die Mitte nie und niemand muss
+     * klopfen. Nach so vielen Zuegen wird deshalb aufgedeckt, egal was ist.
+     */
+    var MAX_ROUNDS = 4;
+    function roundShouldEnd(turnsPlayed, playerCount) {
+        var count = Number(playerCount) || 2;
+        return (Number(turnsPlayed) || 0) >= count * MAX_ROUNDS;
+    }
+
+    // Je laenger die Runde dauert, desto eher gibt sich der Computer zufrieden -
+    // sonst warten die Gaeste ewig auf ein Klopfen, das nie kommt.
+    function botKnockThreshold(turnsPlayed, playerCount) {
+        var count = Number(playerCount) || 2;
+        var rounds = (Number(turnsPlayed) || 0) / count;
+        if (rounds < 2) return BOT_KNOCK_SOLID;              // 24
+        if (rounds < 3) return BOT_KNOCK_SOLID - 3;          // 21
+        return BOT_KNOCK_SOLID - 7;                          // 17
+    }
+
     function botDecide(hand, middleCards, options) {
         var opts = options || {};
         if (!hand || hand.length !== 3 || !middleCards || middleCards.length !== 3) {
@@ -248,6 +300,9 @@
         }
 
         var current = scoreHand(hand).score;
+        var knockAt = botKnockThreshold(opts.turnsPlayed, opts.playerCount);
+
+        if (opts.canKnock && current >= BOT_KNOCK_STRONG) return { type: 'knock' };
 
         var best = null;
         for (var h = 0; h < 3; h++) {
@@ -255,21 +310,18 @@
                 var trial = hand.slice();
                 trial[h] = middleCards[m];
                 var value = scoreHand(trial).score;
-                if (!best || value > best.value) {
-                    best = { type: 'single', handIndex: h, middleIndex: m, value: value };
+                var utility = value - BOT_GIVEAWAY_WEIGHT * giveawayCost(hand[h], middleCards);
+                if (!best || utility > best.utility) {
+                    best = { type: 'single', handIndex: h, middleIndex: m, value: value, utility: utility };
                 }
             }
         }
 
         if (middleWorthTakingAll(middleCards)) {
             var allValue = scoreHand(middleCards).score;
-            if (!best || allValue > best.value) best = { type: 'all', value: allValue };
-        }
-
-        // Hand ist bereits stark und Klopfen erlaubt: Runde beenden, statt sie
-        // durch sinnlose Tausche in die Laenge zu ziehen.
-        if (opts.canKnock && current >= BOT_KNOCK_FROM && (!best || best.value <= current)) {
-            return { type: 'knock' };
+            if (allValue > (best ? best.value : 0)) {
+                best = { type: 'all', value: allValue, utility: allValue };
+            }
         }
 
         if (best && best.value >= current + BOT_MIN_GAIN) {
@@ -278,12 +330,14 @@
                 : { type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex };
         }
 
-        if (opts.canKnock && current >= BOT_KNOCK_FROM) return { type: 'knock' };
+        if (opts.canKnock && current >= knockAt) return { type: 'knock' };
 
-        // Nichts zu gewinnen: lieber die schwaechste Karte gegen die staerkste
-        // Mittenkarte tauschen, damit sich ueberhaupt etwas bewegt.
-        return best ? { type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex }
-                    : { type: 'skip' };
+        // Lieber weitergeben als die eigene Hand verschlechtern.
+        if (opts.canPass) return { type: 'pass' };
+
+        return best && best.type === 'single'
+            ? { type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex }
+            : { type: 'pass' };
     }
 
     return {
@@ -309,7 +363,12 @@
         CARD_BACKS: CARD_BACKS,
         cardBackImage: cardBackImage,
         middleWorthTakingAll: middleWorthTakingAll,
-        BOT_KNOCK_FROM: BOT_KNOCK_FROM,
+        BOT_KNOCK_STRONG: BOT_KNOCK_STRONG,
+        BOT_KNOCK_SOLID: BOT_KNOCK_SOLID,
+        MAX_ROUNDS: MAX_ROUNDS,
+        roundShouldEnd: roundShouldEnd,
+        botKnockThreshold: botKnockThreshold,
+        giveawayCost: giveawayCost,
         botDecide: botDecide
     };
 });
