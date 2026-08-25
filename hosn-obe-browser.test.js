@@ -16,8 +16,10 @@
  *   CHROMIUM_PATH=/pfad/zu/chrome node hosn-obe-browser.test.js
  *
  * Geprueft werden vor allem die Regeln, die man beim Umbauen leicht
- * kaputtmacht: Klopfen erst ab der zweiten Runde, schrittweises Aufdecken
- * nach dem Klopfen, "Alle 3 tauschen" nur bei Drilling oder gleicher Farbe.
+ * kaputtmacht: Geber-Ermittlung vor der Runde, Aufgehen erst ab der zweiten
+ * Runde und nur nach einem Tausch (Sechs-Sekunden-Fenster) oder mit bereits
+ * genutztem "Weiter", schrittweises Aufdecken danach, "Alle 3 tauschen" nur bei
+ * Drilling oder gleicher Farbe.
  */
 const { chromium } = require('playwright');
 const http = require('http');
@@ -154,6 +156,11 @@ function ktRef(path) {
                 });
             });
         },
+        once: function () {
+            return window.__ktOp(JSON.stringify({ kind: 'read', path: path })).then(function (v) {
+                return { val: function () { return v === undefined ? null : v; } };
+            });
+        },
         on: function (ev, cb) {
             var entry = { path: path, cb: cb, last: null };
             window.__ktListeners.push(entry);
@@ -212,8 +219,11 @@ async function run() {
         await page.addInitScript(`
             window.addEventListener('DOMContentLoaded', function () {
                 if (window.HOSN_OBE_CONFIG) {
-                    window.HOSN_OBE_CONFIG.botMoveSeconds = 0.5;
+                    window.HOSN_OBE_CONFIG.botMoveSeconds = 0.9;
                     window.HOSN_OBE_CONFIG.revealSeconds = 3;
+                    window.HOSN_OBE_CONFIG.starterSeconds = 1;
+                    window.HOSN_OBE_CONFIG.swapWindowSeconds = 3;
+                    window.HOSN_OBE_CONFIG.roundTargetSeconds = 90;
                 }
             });
         `);
@@ -273,7 +283,23 @@ async function run() {
     });
     await sleep(800);
     const phone2 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-2');
-    await sleep(2500);
+    await sleep(2200);
+
+    // ---------- Geber ermitteln ----------
+    console.log('\n--- Geber wird ausgespielt ---');
+    const starterPub = pubNow();
+    const starterCards = starterPub.starterCards || {};
+    check('Jeder Platz hat eine Geberkarte gezogen',
+        Object.keys(starterCards).length === 2, JSON.stringify(starterCards));
+    const E = require('./hosn-obe-engine.js');
+    const expectedStarter =
+        E.compareCards(starterCards[0], starterCards[1]) > 0 ? 0 : 1;
+    check('Höchste Geberkarte beginnt', starterPub.starterSeat === expectedStarter,
+        JSON.stringify(starterCards) + ' -> ' + starterPub.starterSeat);
+    check('Der Geber ist auch am Zug', starterPub.currentTurnSeat === starterPub.starterSeat,
+        String(starterPub.currentTurnSeat));
+
+    await sleep(1600);   // Geber-Anzeige laeuft ab (starterSeconds = 1)
 
     const pubAfterDeal = pubNow();
     check('Ausgeteilt, Phase playing', pubAfterDeal.phase === 'playing', pubAfterDeal.phase);
@@ -284,19 +310,77 @@ async function run() {
         (await tv.evaluate(() => document.getElementById('kt-banner-timer').textContent)) === '',
         JSON.stringify(await tv.evaluate(() => document.getElementById('kt-banner-timer').textContent)));
 
+    /*
+     * Vollbild-Regression.
+     *
+     * #dashboard-scaler traegt ein transform:scale(); ein transformierter
+     * Vorfahre wird zum Bezugsrahmen fuer position:fixed. Genau daran ist das
+     * Vollbild am echten Fernseher frueher gescheitert - und ein Test bei
+     * exakt 1920x1080 (Massstab 1:1) haette es NICHT gesehen. Dieser Testlauf
+     * arbeitet bewusst mit 1500x900.
+     */
+    const fsState = await tv.evaluate(() => {
+        const view = document.getElementById('media-view-hosnobe');
+        const stage = view.querySelector('.kt-stage');
+        const scaler = document.getElementById('dashboard-scaler');
+        const vr = view.getBoundingClientRect();
+        const sr = scaler.getBoundingClientRect();
+        const st = stage.getBoundingClientRect();
+        return {
+            fullscreen: view.classList.contains('kt-fullscreen'),
+            scale: view.style.getPropertyValue('--kt-scale'),
+            coversScaler: vr.width >= sr.width - 2 && vr.height >= sr.height - 2,
+            stageShare: sr.width ? st.width / sr.width : 0,
+            centered: Math.abs((st.left + st.width / 2) - (sr.left + sr.width / 2)) < 3
+        };
+    });
+    check('TV schaltet auf Vollbild', fsState.fullscreen && parseFloat(fsState.scale) > 1,
+        JSON.stringify(fsState));
+    check('Vollbild deckt den ganzen Dashboard-Rahmen ab', fsState.coversScaler, JSON.stringify(fsState));
+    check('Bühne bleibt zentriert und im Seitenverhältnis',
+        fsState.centered && fsState.stageShare > 0.85 && fsState.stageShare <= 1.001,
+        JSON.stringify(fsState));
+
+    // Wer am Zug ist, muss am TV deutlich markiert sein.
+    const turnMark = await tv.evaluate(() => {
+        const seat = document.querySelector('.kt-seat.is-active');
+        if (!seat) return null;
+        const ring = getComputedStyle(seat.querySelector('.kt-fan'), '::after');
+        const tag = seat.querySelector('.kt-seat-tag');
+        return {
+            ringAnim: ring.animationName,
+            ringWidth: ring.borderTopWidth,
+            tag: tag ? tag.textContent : '',
+            tagSize: tag ? getComputedStyle(tag).fontSize : ''
+        };
+    });
+    check('TV markiert den aktiven Platz mit pulsierendem Rahmen',
+        !!turnMark && turnMark.ringAnim === 'ktTurnPulse', JSON.stringify(turnMark));
+    check('Aktiver Platz trägt ein großes "am Zug"-Band',
+        !!turnMark && turnMark.tag === 'am Zug' && parseFloat(turnMark.tagSize) >= 20,
+        JSON.stringify(turnMark));
+
     // ---------- Regeln am Handy ----------
     console.log('\n--- Regeln am Zug-Handy ---');
     const turnSeat = pubAfterDeal.currentTurnSeat;
-    const active = await (async () => {
+    const atTurn = async () => {
         const s1 = await phone1.evaluate(() => document.getElementById('kt-status-main').textContent);
         return s1.includes('dran!') ? phone1 : phone2;
-    })();
-
-    const labels = await active.evaluate(() =>
+    };
+    const buttonsOf = p => p.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    const swapFirstCard = async p => {
+        await p.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
+        await sleep(150);
+        await p.evaluate(() => { document.querySelector('#kt-middle-cards .kt-card').click(); });
+        await sleep(600);
+    };
+
+    const active = await atTurn();
+    const labels = await buttonsOf(active);
     check('Kein "1 Karte tauschen"-Knopf mehr', !labels.some(l => /1 Karte tauschen/.test(l)),
         JSON.stringify(labels));
-    check('Kein Klopfen in der ersten Runde', !labels.some(l => l === 'KLOPFEN'), JSON.stringify(labels));
+    check('Kein Aufgehen in der ersten Runde', !labels.some(l => l === 'AUFGEHEN'), JSON.stringify(labels));
     check('"Weiter" steht immer zur Verfügung', labels.includes('WEITER'), JSON.stringify(labels));
 
     const middleWorth = await active.evaluate(
@@ -305,14 +389,13 @@ async function run() {
     check('"Alle 3 tauschen" genau dann, wenn die Mitte es hergibt', hasAll === middleWorth,
         'Knopf=' + hasAll + ' Mitte=' + middleWorth);
 
-    // Regressionsschutz: frueher verschwanden "Alle 3 tauschen" und "Klopfen",
+    // Regressionsschutz: frueher verschwanden "Alle 3 tauschen" und "Aufgehen",
     // sobald man eine Karte antippte.
     await active.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
     await sleep(200);
-    const whileSelected = await active.evaluate(() =>
-        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
-    const stillThere = JSON.stringify(whileSelected) === JSON.stringify(labels);
-    check('Knöpfe bleiben nach dem Antippen einer Karte stehen', stillThere,
+    const whileSelected = await buttonsOf(active);
+    check('Knöpfe bleiben nach dem Antippen einer Karte stehen',
+        JSON.stringify(whileSelected) === JSON.stringify(labels),
         JSON.stringify(labels) + ' -> ' + JSON.stringify(whileSelected));
     await active.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
     await sleep(200);
@@ -323,65 +406,98 @@ async function run() {
     });
     check('Handkarten sind groß (>=220px auf 1500px-Viewport)', handCardH >= 220, handCardH + 'px');
 
-    // ---------- Einen Tausch durchspielen ----------
+    // ---------- Zug 1 und 2: je ein Tausch ----------
     console.log('\n--- Tausch per Antippen ---');
-    await active.evaluate(() => {
-        document.querySelector('#kt-hand-cards .kt-card').click();
-    });
-    await sleep(200);
-    await active.evaluate(() => {
-        document.querySelector('#kt-middle-cards .kt-card').click();
-    });
-    await sleep(200);
+    await swapFirstCard(active);
     check('Kein Bestätigen-Schritt mehr',
         !(await active.evaluate(() =>
             Array.from(document.querySelectorAll('.kt-btn')).some(b => /bestätigen/i.test(b.textContent)))));
-    await sleep(900);
     const afterSwap = pubNow();
     check('turnsPlayed hochgezählt', afterSwap.turnsPlayed === 1, String(afterSwap.turnsPlayed));
     check('Zug ist beim anderen Spieler', afterSwap.currentTurnSeat !== turnSeat);
+    check('Vor der zweiten Runde kein Aufgeh-Fenster',
+        afterSwap.swapWindowSeat === undefined || afterSwap.swapWindowSeat === null,
+        JSON.stringify(afterSwap.swapWindowSeat));
 
-    console.log('\n--- Klopfen ab der zweiten Runde ---');
-    const active2 = await (async () => {
-        const s1 = await phone1.evaluate(() => document.getElementById('kt-status-main').textContent);
-        return s1.includes('dran!') ? phone1 : phone2;
-    })();
-    // Zweiter Spieler zieht ebenfalls -> danach war jeder einmal dran
-    await active2.evaluate(() => {
-        document.querySelector('#kt-hand-cards .kt-card').click();
-    });
-    await sleep(150);
-    await active2.evaluate(() => {
-        document.querySelector('#kt-middle-cards .kt-card').click();
-    });
-    await sleep(150);
-    await sleep(900);
+    const active2 = await atTurn();
+    await swapFirstCard(active2);
+    check('Nach zwei Zügen war jeder einmal dran', pubNow().turnsPlayed === 2,
+        String(pubNow().turnsPlayed));
 
-    const active3 = await (async () => {
-        const s1 = await phone1.evaluate(() => document.getElementById('kt-status-main').textContent);
-        return s1.includes('dran!') ? phone1 : phone2;
-    })();
-    const labels3 = await active3.evaluate(() =>
-        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
-    check('Ab der zweiten Runde erscheint "Klopfen"', labels3.some(l => l === 'KLOPFEN'),
-        JSON.stringify(labels3));
-
-    console.log('\n--- Klopfen deckt sofort auf ---');
+    // ---------- "Weiter" schaltet das Aufgehen ohne Tausch frei ----------
+    console.log('\n--- Weiter und danach Aufgehen ohne Tausch ---');
+    const active3 = await atTurn();
+    const labels3 = await buttonsOf(active3);
+    check('Aufgehen erscheint nicht ohne Tausch und ohne genutztes Weiter',
+        !labels3.some(l => l === 'AUFGEHEN'), JSON.stringify(labels3));
     await active3.evaluate(() => {
-        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'KLOPFEN').click();
+        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'WEITER').click();
     });
-    await sleep(1000);
+    await sleep(700);
+    check('Weiter zählt als Zug', pubNow().turnsPlayed === 3, String(pubNow().turnsPlayed));
+
+    // ---------- Sechs-Sekunden-Fenster nach dem Tausch ----------
+    console.log('\n--- Aufgeh-Fenster nach dem Tausch ---');
+    const active4 = await atTurn();
+    await swapFirstCard(active4);
+    const windowPub = pubNow();
+    check('Nach dem Tausch bleibt der Zug beim Spieler',
+        windowPub.swapWindowSeat !== undefined && windowPub.swapWindowSeat !== null,
+        JSON.stringify(windowPub.swapWindowSeat));
+    const windowUi = await active4.evaluate(() => ({
+        buttons: Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent),
+        count: (document.querySelector('.kt-window-count') || {}).textContent || '',
+        pickable: document.querySelectorAll('.kt-card.is-pickable').length
+    }));
+    check('Im Fenster stehen Aufgehen und Weitergeben bereit',
+        windowUi.buttons.includes('AUFGEHEN') && windowUi.buttons.includes('WEITERGEBEN'),
+        JSON.stringify(windowUi.buttons));
+    check('Der Countdown läuft', Number(windowUi.count) > 0, windowUi.count);
+    check('Im Fenster ist der Tausch gesperrt', windowUi.pickable === 0, String(windowUi.pickable));
+    const tvWindow = await tv.evaluate(() => {
+        const seat = document.querySelector('.kt-seat.is-window');
+        return seat ? seat.querySelector('.kt-seat-tag').textContent : null;
+    });
+    check('TV zeigt das Fenster am richtigen Platz', tvWindow === 'aufgehen?', String(tvWindow));
+
+    await active4.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'WEITERGEBEN').click();
+    });
+    await sleep(700);
+    const afterWindow = pubNow();
+    check('Weitergeben schließt das Fenster',
+        afterWindow.swapWindowSeat === null || afterWindow.swapWindowSeat === undefined,
+        JSON.stringify(afterWindow.swapWindowSeat));
+    check('Der Tausch im Fenster zählt nur einen Zug', afterWindow.turnsPlayed === 4,
+        String(afterWindow.turnsPlayed));
+
+    // ---------- Aufgehen ohne Tausch (Weiter wurde genutzt) ----------
+    console.log('\n--- Aufgehen deckt sofort auf ---');
+    const active5 = await atTurn();
+    const labels5 = await buttonsOf(active5);
+    check('Nach genutztem Weiter darf man ohne Tausch aufgehen',
+        labels5.some(l => l === 'AUFGEHEN'), JSON.stringify(labels5));
+    await active5.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'AUFGEHEN').click();
+    });
+    await sleep(900);
     const afterKnock = pubNow();
     const knocker = afterKnock.knockedBySeat;
     check('Phase ist knocked', afterKnock.phase === 'knocked', afterKnock.phase);
-    check('Klopfer liegt sofort offen',
+    check('Wer aufgeht, liegt sofort offen',
         !!(afterKnock.revealedHands && afterKnock.revealedHands[knocker]),
         JSON.stringify(afterKnock.revealedHands || null));
 
     const facesUp = await tv.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-fan-card img'))
             .filter(i => !/back_(lightblue|red)\.webp/.test(i.getAttribute('src'))).length);
-    check('TV zeigt die offenen Karten des Klopfers', facesUp === 3, String(facesUp));
+    check('TV zeigt die offenen Karten', facesUp === 3, String(facesUp));
+
+    const tvTag = await tv.evaluate(() => {
+        const el = document.querySelector('.kt-seat.is-knocker .kt-seat-tag');
+        return el ? el.textContent : null;
+    });
+    check('TV nennt es "aufgegangen"', tvTag === 'aufgegangen', String(tvTag));
 
     const backsUsed = await tv.evaluate(() => {
         const s = new Set(Array.from(document.querySelectorAll('.kt-fan-card img'))
@@ -406,18 +522,8 @@ async function run() {
         JSON.stringify(skews));
 
     console.log('\n--- Letzter Zug, dann Auswertung ---');
-    const last = await (async () => {
-        const s1 = await phone1.evaluate(() => document.getElementById('kt-status-main').textContent);
-        return s1.includes('dran!') ? phone1 : phone2;
-    })();
-    await last.evaluate(() => {
-        document.querySelector('#kt-hand-cards .kt-card').click();
-    });
-    await sleep(150);
-    await last.evaluate(() => {
-        document.querySelector('#kt-middle-cards .kt-card').click();
-    });
-    await sleep(150);
+    const last = await atTurn();
+    await swapFirstCard(last);
     await sleep(6000);
 
     const finalPub = pubNow();
@@ -447,18 +553,63 @@ async function run() {
     const phone3 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-1');
     await sleep(1200);
 
+    const botButtons = await phone3.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent).filter(t => /Computer/.test(t)));
+    check('Beide Computer-Spielarten stehen zur Wahl',
+        botButtons.length === 2 && botButtons.some(t => /Gäste bekommen Karten/.test(t)) &&
+        botButtons.some(t => /allein/.test(t)), JSON.stringify(botButtons));
+
     await phone3.evaluate(() => {
-        Array.from(document.querySelectorAll('.kt-btn')).find(b => /Computer/.test(b.textContent)).click();
+        Array.from(document.querySelectorAll('.kt-btn'))
+            .find(b => /Gäste bekommen Karten/.test(b.textContent)).click();
     });
-    await sleep(2000);
+    // Kurz warten: Geber-Anzeige (starterSeconds = 1) ist dann durch und die
+    // Runde laeuft - genau der Moment, in dem ein Gast dazukommen koennte.
+    await sleep(1500);
 
     const started = pubNow2();
     check('Computer-Runde markiert', started.botGame === true, JSON.stringify(started.botGame));
-    check('Sechs Plätze vom Computer besetzt',
-        Object.keys(started.seats || {}).length === 6, JSON.stringify(Object.keys(started.seats || {})));
-    check('Alle Plätze sind Computer',
-        Object.values(started.seats || {}).every(s => s && s.bot === true),
-        JSON.stringify(started.seats));
+    check('Deckvergabe ist eingeschaltet', started.botSeats === true, JSON.stringify(started.botSeats));
+    check('Sechs Plätze im Spiel', Number(started.playerCount) === 6, String(started.playerCount));
+    check('Die Plätze bleiben für Gäste frei',
+        Object.keys(started.seats || {}).length <= 1, JSON.stringify(Object.keys(started.seats || {})));
+
+    // Im Vollbild ist der Starter-QR der Media-Zone verdeckt - waehrend einer
+    // Computer-Runde mit Deckvergabe muss die Buehne einen eigenen QR zeigen,
+    // sonst koennte niemand mehr dazukommen.
+    const joinQr = await tv2.evaluate(() => {
+        const el = document.getElementById('kt-joinqr');
+        if (!el || getComputedStyle(el).display === 'none') return null;
+        const img = document.getElementById('kt-joinqr-img');
+        return { src: img ? img.getAttribute('src') : '', label: el.textContent.trim() };
+    });
+    check('TV zeigt einen Mitspiel-QR während der Computer-Runde',
+        !!joinQr && /create-qr-code/.test(joinQr.src), JSON.stringify(joinQr));
+
+    /*
+     * Ein Gast scannt mitten in der laufenden Computer-Runde. Er darf die Runde
+     * NICHT abwuergen (kein Host werden), bekommt aber einen freien Platz samt
+     * eigenem Blatt zum Mitschauen.
+     */
+    const phaseBeforeGuest = pubNow2().phase;
+    console.log('  (Sessions: ' + JSON.stringify(Object.keys(tree.games || {})) +
+                ' | Ziel: ' + sessionId2 + ' | Phase: ' + phaseBeforeGuest + ')');
+    const phone4 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-4');
+    await sleep(1500);
+    const guest = await phone4.evaluate(() => ({
+        seatBadge: document.getElementById('kt-seat-badge').textContent,
+        cards: document.querySelectorAll('#kt-hand-cards .kt-card').length,
+        buttons: Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent),
+        status: document.getElementById('kt-status-main').textContent
+    }));
+    const phaseAfterGuest = pubNow2().phase;
+    console.log('  (Phase vor dem Scan: ' + phaseBeforeGuest + ', danach: ' + phaseAfterGuest + ')');
+    check('Die Runde läuft weiter (kein Neustart durch den Scan)',
+        phaseAfterGuest !== 'hostSelect', phaseBeforeGuest + ' -> ' + phaseAfterGuest);
+    check('Gast bekommt trotz Computer-Runde einen Platz', /Spieler \d/.test(guest.seatBadge), guest.seatBadge);
+    check('Gast sieht seine drei Karten', guest.cards === 3, String(guest.cards));
+    check('Gast darf nicht eingreifen', guest.buttons.length === 0, JSON.stringify(guest.buttons));
+    check('Gast weiß, dass der Computer spielt', /Computer/.test(guest.status), guest.status);
 
     // Runde durchlaufen lassen
     let sawKnock = false, sawProgressiveReveal = false, maxRevealDuringPlay = 0;
@@ -479,18 +630,18 @@ async function run() {
     check('Runde läuft von allein bis zum Ende',
         done.phase === 'reveal' || done.phase === 'idle', done.phase);
     /*
-     * Eine Runde endet auf zwei Wegen: jemand klopft, oder es gibt Feuer -
-     * dann ist sofort Schluss und alle decken auf, ohne Klopfen. Mit sechs
+     * Eine Runde endet auf zwei Wegen: jemand geht auf, oder es gibt Feuer -
+     * dann ist sofort Schluss und alle decken auf, ohne Aufgehen. Mit sechs
      * Spielern ist Feuer haeufig genug, dass der Test beides zulassen muss.
      */
     const endedByFire = done.fireBySeat !== undefined && done.fireBySeat !== null;
-    check('Runde endet durch Klopfen oder Feuer', sawKnock || endedByFire,
-        'geklopft=' + sawKnock + ' feuer=' + endedByFire);
+    check('Runde endet durch Aufgehen oder Feuer', sawKnock || endedByFire,
+        'aufgegangen=' + sawKnock + ' feuer=' + endedByFire);
     if (sawKnock && !endedByFire) {
-        check('Nach dem Klopfen wird schrittweise aufgedeckt',
+        check('Nach dem Aufgehen wird schrittweise aufgedeckt',
             sawProgressiveReveal, 'max. gleichzeitig offen während knocked: ' + maxRevealDuringPlay);
     } else {
-        console.log('  (übersprungen: Runde endete durch Feuer, nicht durch Klopfen)');
+        console.log('  (übersprungen: Runde endete durch Feuer, nicht durch Aufgehen)');
     }
 
     if (done.scores) {
@@ -506,7 +657,8 @@ async function run() {
 
     // ---------- Fehlerfreiheit ----------
     console.log('\n--- Konsolenfehler ---');
-    for (const [name, p] of [['TV', tv], ['Handy 1', phone1], ['Handy 2', phone2], ['TV (Computer)', tv2], ['Handy (Computer)', phone3]]) {
+    for (const [name, p] of [['TV', tv], ['Handy 1', phone1], ['Handy 2', phone2],
+                             ['TV (Computer)', tv2], ['Handy (Computer)', phone3], ['Gast (Computer)', phone4]]) {
         const real = p.__errors.filter(e => !/gstatic|net::ERR|Failed to load resource|favicon/i.test(e));
         check(name + ' ohne JS-Fehler', real.length === 0, real.slice(0, 3).join(' | '));
     }

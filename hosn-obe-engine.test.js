@@ -227,11 +227,30 @@ eq('Ueber viele Ziehungen kommen beide Motive vor', Object.keys(backsSeen).lengt
 var botAll = E.botDecide(['C7', 'S8', 'D9'], ['H7', 'HK', 'HA'], { canKnock: false, canPass: true });
 eq('Computer nimmt einen lohnenden Rundumtausch', botAll.type, 'all');
 
-var botKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'], { canKnock: true, canPass: true });
-eq('Computer klopft mit starker Hand', botKnock.type, 'knock');
+/*
+ * Aufgehen haengt am Tausch: ohne Tausch geht es nur, wenn in dieser Runde
+ * schon einmal weitergegeben wurde (canKnockDirect). Sonst haengt der Computer
+ * das Aufgehen an seinen Zug (knock: true) - genau wie ein Gast im
+ * Sechs-Sekunden-Fenster.
+ */
+var botKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'],
+    { canKnock: true, canKnockDirect: true, canPass: false });
+eq('Computer geht mit starker Hand auf', botKnock.type, 'knock');
 
-var botNoKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'], { canKnock: false, canPass: true });
-eq('Ohne Klopf-Erlaubnis wird nicht geklopft', botNoKnock.type !== 'knock', true);
+var botNoDirect = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'],
+    { canKnock: true, canKnockDirect: false, canPass: true });
+check('Ohne genutztes Weiter kein Aufgehen ohne Tausch', botNoDirect.type !== 'knock', botNoDirect.type);
+
+var botNoKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'],
+    { canKnock: false, canKnockDirect: true, canPass: true });
+eq('Ohne Aufgeh-Erlaubnis wird nicht aufgegangen', botNoKnock.type !== 'knock', true);
+
+// Tausch, der die Hand ueber die Schwelle hebt: der Computer haengt das
+// Aufgehen direkt an den Zug.
+var botSwapKnock = E.botDecide(['HK', 'HQ', 'C7'], ['HA', 'S8', 'D9'],
+    { canKnock: true, canKnockDirect: false, canPass: true });
+eq('Tausch auf 31 wird gemacht', botSwapKnock.type, 'single');
+check('Nach dem Tausch wird aufgegangen', botSwapKnock.knock === true, JSON.stringify(botSwapKnock));
 
 eq('Computer ohne Hand zieht nicht', E.botDecide([], ['HA', 'S9', 'D7'], {}).type, 'skip');
 
@@ -245,10 +264,13 @@ for (var bt = 0; bt < 4000; bt++) {
     var d = E.deal(2);
     var h = d.hands[0], mid = d.middleCards;
     var before = E.scoreHand(h).score;
-    var mv = E.botDecide(h, mid, { canKnock: bt % 2 === 0, canPass: true });
+    var mv = E.botDecide(h, mid, {
+        canKnock: bt % 2 === 0, canKnockDirect: bt % 4 === 0, canPass: bt % 4 !== 0
+    });
 
     if (mv.type === 'pass') { passes++; continue; }
     if (mv.type === 'knock') { knocks++; continue; }
+    if (mv.knock) knocks++;
     swaps++;
 
     var after;
@@ -274,18 +296,25 @@ for (var bt = 0; bt < 4000; bt++) {
 }
 eq('Computer verschlechtert seine Hand nie', worse, 0);
 eq('Computer übersieht keine echte Verbesserung', suboptimal, 0);
-check('Computer nutzt alle drei Zugarten', passes > 0 && knocks > 0 && swaps > 0);
-console.log('Computer-Statistik: ' + swaps + ' Tausche, ' + knocks + ' Klopfer, ' + passes + ' mal weitergegeben.');
+check('Computer nutzt alle drei Zugarten', passes > 0 && knocks > 0 && swaps > 0,
+    'weiter=' + passes + ' aufgehen=' + knocks + ' tausch=' + swaps);
+console.log('Computer-Statistik: ' + swaps + ' Tausche, ' + knocks + ' mal aufgegangen, ' + passes + ' mal weitergegeben.');
 
-// Klopfen nur mit brauchbarer Hand
+// Aufgehen nur mit brauchbarer Hand - direkt wie auch nach einem Tausch
 var knockLow = 0;
 for (var kb = 0; kb < 2000; kb++) {
     var dk = E.deal(2);
     var hk = dk.hands[0];
-    var mk = E.botDecide(hk, dk.middleCards, { canKnock: true, canPass: true });
+    var mk = E.botDecide(hk, dk.middleCards, { canKnock: true, canKnockDirect: true, canPass: true });
     if (mk.type === 'knock' && E.scoreHand(hk).score < E.BOT_KNOCK_SOLID) knockLow++;
+    if (mk.knock) {
+        var afterK = hk.slice();
+        if (mk.type === 'single') afterK[mk.handIndex] = dk.middleCards[mk.middleIndex];
+        else if (mk.type === 'all') afterK = dk.middleCards.slice();
+        if (E.scoreHand(afterK).score < E.BOT_KNOCK_SOLID) knockLow++;
+    }
 }
-eq('Computer klopft nie mit schwacher Hand', knockLow, 0);
+eq('Computer geht nie mit schwacher Hand auf', knockLow, 0);
 
 // ---------- Alle oder keine ----------
 /*
@@ -301,7 +330,8 @@ var flushMid = ['H7', 'HK', 'HA'];
     for (var t = 0; t < 400; t++) {
         var d = E.deal(2);
         var mv = E.botDecide(d.hands[0], mid.slice(), {
-            canKnock: t % 2 === 0, canPass: true, turnsPlayed: t % 9, playerCount: 3
+            canKnock: t % 2 === 0, canKnockDirect: t % 3 === 0, canPass: t % 3 !== 0,
+            turnsPlayed: t % 9, playerCount: 3
         });
         seen[mv.type] = true;
     }
@@ -328,35 +358,64 @@ eq('Runde endet nach vier Durchgängen', E.roundShouldEnd(12, 3), true);
 eq('Obergrenze skaliert mit der Spieleranzahl', E.roundShouldEnd(23, 6), false);
 eq('Obergrenze bei sechs Spielern', E.roundShouldEnd(24, 6), true);
 
-check('Klopfschwelle sinkt mit der Rundenzahl',
+/*
+ * Zweite Bremse: die Zeit. Vorgabe ist eine Rundendauer von rund 1:30 bis
+ * 2:00 - danach wird aufgedeckt, egal wie viele Züge gespielt wurden.
+ */
+eq('Zeitbudget noch nicht aufgebraucht', E.roundShouldEnd(2, 6, 40, 95), false);
+eq('Zeitbudget aufgebraucht beendet die Runde', E.roundShouldEnd(2, 6, 96, 95), true);
+check('Fortschritt zählt Züge und Zeit',
+    E.roundProgress(0, 6, 48, 96) === 0.5 && E.roundProgress(12, 6, 0, 96) === 0.5);
+check('Aufgeh-Schwelle sinkt auch mit der Zeit',
+    E.botKnockThreshold(0, 6, 10, 95) > E.botKnockThreshold(0, 6, 90, 95));
+
+check('Aufgeh-Schwelle sinkt mit der Rundenzahl',
     E.botKnockThreshold(0, 3) > E.botKnockThreshold(7, 3) &&
     E.botKnockThreshold(7, 3) > E.botKnockThreshold(11, 3));
 
 // Vollständige Computer-Runden durchsimulieren: jede muss enden.
 var maxTurnsSeen = 0, endless = 0;
+var simKnocks = 0;
 for (var sim = 0; sim < 600; sim++) {
     var count = 2 + (sim % 5);
     var d = E.deal(count);
     var hands = d.hands, middle = d.middleCards.slice();
-    var turns = 0, knockedBy = null, finalLeft = null, seat = 0, done = false;
+    var turns = 0, knockedBy = null, finalLeft = null, seat = d.starterSeat, done = false;
+    var passUsedBySeat = {};
 
     for (var step = 0; step < 500 && !done; step++) {
         var canKnock = knockedBy === null && turns >= count;
         var mv = E.botDecide(hands[seat], middle, {
-            canKnock: canKnock, canPass: true, turnsPlayed: turns, playerCount: count
+            canKnock: canKnock,
+            canKnockDirect: !!passUsedBySeat[seat],
+            canPass: !passUsedBySeat[seat],
+            turnsPlayed: turns, playerCount: count
         });
-        if (mv.type === 'knock') { knockedBy = seat; finalLeft = count - 1; }
-        else if (mv.type === 'single') {
-            var give = hands[seat][mv.handIndex];
-            hands[seat][mv.handIndex] = middle[mv.middleIndex];
-            middle[mv.middleIndex] = give;
-        } else if (mv.type === 'all') {
-            var tmpH = hands[seat].slice();
-            hands[seat] = middle.slice();
-            middle = tmpH;
+
+        var wentOut = false;
+        if (mv.type === 'knock') {
+            knockedBy = seat; finalLeft = count - 1; wentOut = true;
+        } else {
+            if (mv.type === 'single') {
+                var give = hands[seat][mv.handIndex];
+                hands[seat][mv.handIndex] = middle[mv.middleIndex];
+                middle[mv.middleIndex] = give;
+            } else if (mv.type === 'all') {
+                var tmpH = hands[seat].slice();
+                hands[seat] = middle.slice();
+                middle = tmpH;
+            } else {
+                passUsedBySeat[seat] = true;      // "Weiter" ist verbraucht
+            }
+            // Aufgehen im Sechs-Sekunden-Fenster nach dem eigenen Tausch
+            if (mv.knock && canKnock && mv.type !== 'pass') {
+                knockedBy = seat; finalLeft = count - 1; wentOut = true;
+            }
         }
+        if (wentOut) simKnocks++;
+
         turns++;
-        if (knockedBy !== null && mv.type !== 'knock') {
+        if (knockedBy !== null && !wentOut) {
             finalLeft--;
             if (finalLeft <= 0) done = true;
         }
@@ -366,6 +425,7 @@ for (var sim = 0; sim < 600; sim++) {
     if (!done) endless++;
     maxTurnsSeen = Math.max(maxTurnsSeen, turns);
 }
+check('In den meisten Runden geht jemand auf', simKnocks > 300, 'Aufgeher: ' + simKnocks + ' von 600');
 eq('Jede Computer-Runde endet', endless, 0);
 check('Runden bleiben kurz genug (höchstens 30 Züge)', maxTurnsSeen <= 30, 'längste: ' + maxTurnsSeen);
 console.log('Rundenlänge: längste simulierte Computer-Runde ' + maxTurnsSeen + ' Züge.');
@@ -408,10 +468,44 @@ var dupes = 0;
 for (var dz = 0; dz < 2000; dz++) {
     var dd = E.deal(6);
     var all = dd.middleCards.slice();
-    for (var sx = 0; sx < 6; sx++) all = all.concat(dd.hands[sx]);
+    for (var sx = 0; sx < 6; sx++) all = all.concat(dd.hands[sx], [dd.starterCards[sx]]);
     if (new Set(all).size !== all.length) dupes++;
 }
 eq('Keine doppelten Karten im Spiel', dupes, 0);
+
+// ---------- Geber ermitteln ----------
+/*
+ * Vor jeder Runde zieht jeder Platz eine offene Karte; die höchste beginnt.
+ * Damit fängt nicht immer Platz 1 an.
+ */
+var starterMissing = 0, starterWrong = 0, starterSeen = {};
+for (var st = 0; st < 3000; st++) {
+    var players = 2 + (st % 5);
+    var ds = E.deal(players);
+    var drawn = ds.starterCards;
+    if (Object.keys(drawn).length !== players) starterMissing++;
+    var bestSeat = 0;
+    for (var ss = 1; ss < players; ss++) {
+        if (E.compareCards(drawn[ss], drawn[bestSeat]) > 0) bestSeat = ss;
+    }
+    if (ds.starterSeat !== bestSeat) starterWrong++;
+    starterSeen[ds.starterSeat] = true;
+}
+eq('Jeder Platz zieht eine Geberkarte', starterMissing, 0);
+eq('Die höchste Geberkarte beginnt', starterWrong, 0);
+check('Der Anfang wechselt zwischen den Plätzen', Object.keys(starterSeen).length >= 5,
+    JSON.stringify(Object.keys(starterSeen)));
+
+var starterFair = [0, 0, 0, 0, 0, 0];
+var STARTER_ROUNDS = 6000;
+for (var sf = 0; sf < STARTER_ROUNDS; sf++) starterFair[E.deal(6).starterSeat]++;
+var starterExpected = STARTER_ROUNDS / 6;
+var starterDev = 0;
+starterFair.forEach(function (n) {
+    starterDev = Math.max(starterDev, Math.abs(n - starterExpected) / starterExpected);
+});
+check('Kein Platz ist beim Anfangen bevorzugt (Abweichung unter 15%)', starterDev < 0.15,
+    JSON.stringify(starterFair));
 
 // ---------- Ergebnis ----------
 console.log('\n' + passed + ' Checks bestanden.');

@@ -65,15 +65,43 @@
         return out;
     }
 
+    /*
+     * Austeilen samt Geber-Ermittlung.
+     *
+     * Wer anfaengt, wird ausgespielt statt festgelegt: jeder Platz zieht eine
+     * offene Karte, die hoechste beginnt mit dem Tauschen. Sonst faenge immer
+     * Platz 1 an, und der hat einen echten Vorteil - er sieht die Mitte als
+     * Erster und darf als Erster zugreifen.
+     *
+     * Verbrauch bei sechs Spielern: 18 Handkarten + 3 Mitte + 6 Geberkarten =
+     * 27 von 32 - passt also in jeder Besetzung.
+     */
     function deal(playerCount, rng) {
         if (playerCount < 2 || playerCount > 6) throw new Error('Spieleranzahl muss 2-6 sein, war: ' + playerCount);
         var deck = shuffle(buildDeck(), rng);
         var hands = {};
         var at = 0;
-        for (var seat = 0; seat < playerCount; seat++) {
+        var seat;
+        for (seat = 0; seat < playerCount; seat++) {
             hands[seat] = [deck[at++], deck[at++], deck[at++]];
         }
-        return { hands: hands, middleCards: [deck[at++], deck[at++], deck[at++]] };
+        var middleCards = [deck[at++], deck[at++], deck[at++]];
+
+        var starterCards = {};
+        var starterSeat = 0;
+        for (seat = 0; seat < playerCount; seat++) {
+            starterCards[seat] = deck[at++];
+            if (seat > 0 && compareCards(starterCards[seat], starterCards[starterSeat]) > 0) {
+                starterSeat = seat;
+            }
+        }
+
+        return {
+            hands: hands,
+            middleCards: middleCards,
+            starterCards: starterCards,
+            starterSeat: starterSeat
+        };
     }
 
     /*
@@ -137,7 +165,7 @@
      * niedrigste davon hat, verliert. Ergebnis ist immer genau ein Verlierer.
      *
      * Feuer: die Ein-Verlierer-Regel fällt weg, stattdessen zahlt jeder Spieler
-     * unter 12 Punkten. Das können 0, 1 oder mehrere sein.
+     * unter FIRE_PAY_BELOW Punkten — und der Schwächste in jedem Fall.
      */
     function evaluateRound(hands) {
         var seats = Object.keys(hands).map(Number).sort(function (a, b) { return a - b; });
@@ -277,10 +305,10 @@
      *            | { type: 'knock' } | { type: 'pass' } | { type: 'skip' }
      *
      * Reihenfolge:
-     *   1. Hand praktisch unschlagbar -> klopfen.
+     *   1. Hand praktisch unschlagbar -> aufgehen.
      *   2. Bester echt verbessernder Tausch, abzueglich dessen, was man dem
      *      naechsten Spieler hinlegt.
-     *   3. Nichts zu verbessern, Hand solide -> klopfen.
+     *   3. Nichts zu verbessern, Hand solide -> aufgehen.
      *   4. Sonst weitergeben, statt sich selbst zu verschlechtern.
      */
     /*
@@ -288,24 +316,49 @@
      *
      * Seit es den Zug "Weiter" gibt, kann eine Runde theoretisch ewig laufen:
      * geben alle nur noch weiter, aendert sich die Mitte nie und niemand muss
-     * klopfen. Nach so vielen Zuegen wird deshalb aufgedeckt, egal was ist.
+     * aufgehen. Nach so vielen Zuegen wird deshalb aufgedeckt, egal was ist.
      */
     var MAX_ROUNDS = 4;
-    function roundShouldEnd(turnsPlayed, playerCount) {
+    var ROUND_TARGET_SECONDS = 95;   // Vorgabe: eine Runde dauert rund 1:30 bis 2:00
+
+    /*
+     * Wie weit ist die Runde? 0 = gerade ausgeteilt, 1 = Schluss.
+     *
+     * Zwei Massstaebe, es zaehlt der weiter fortgeschrittene: die gespielten
+     * Zuege und die verstrichene Zeit. Am Handy dauert ein Zug laenger als beim
+     * Computer - ueber die Zeit bleibt die Runde trotzdem im Rahmen.
+     */
+    function roundProgress(turnsPlayed, playerCount, elapsedSeconds, targetSeconds) {
         var count = Number(playerCount) || 2;
-        return (Number(turnsPlayed) || 0) >= count * MAX_ROUNDS;
+        var byTurns = ((Number(turnsPlayed) || 0) / count) / MAX_ROUNDS;
+        var target = Number(targetSeconds) || ROUND_TARGET_SECONDS;
+        var elapsed = Number(elapsedSeconds);
+        var byTime = (isFinite(elapsed) && elapsed > 0) ? elapsed / target : 0;
+        return Math.max(byTurns, byTime);
+    }
+
+    function roundShouldEnd(turnsPlayed, playerCount, elapsedSeconds, targetSeconds) {
+        return roundProgress(turnsPlayed, playerCount, elapsedSeconds, targetSeconds) >= 1;
     }
 
     // Je laenger die Runde dauert, desto eher gibt sich der Computer zufrieden -
-    // sonst warten die Gaeste ewig auf ein Klopfen, das nie kommt.
-    function botKnockThreshold(turnsPlayed, playerCount) {
-        var count = Number(playerCount) || 2;
-        var rounds = (Number(turnsPlayed) || 0) / count;
-        if (rounds < 2) return BOT_KNOCK_SOLID;              // 24
-        if (rounds < 3) return BOT_KNOCK_SOLID - 3;          // 21
+    // sonst warten die Gaeste ewig auf ein Aufgehen, das nie kommt.
+    function botKnockThreshold(turnsPlayed, playerCount, elapsedSeconds, targetSeconds) {
+        var progress = roundProgress(turnsPlayed, playerCount, elapsedSeconds, targetSeconds);
+        if (progress < 0.5) return BOT_KNOCK_SOLID;          // 24
+        if (progress < 0.75) return BOT_KNOCK_SOLID - 3;     // 21
         return BOT_KNOCK_SOLID - 7;                          // 17
     }
 
+    /*
+     * Aufgehen ist an einen Tausch gebunden.
+     *
+     * Nutzer-Vorgabe: man tauscht und hat danach sechs Sekunden Zeit, das
+     * Aufgehen zu erklaeren. Ohne Tausch geht das nur, wenn man in dieser Runde
+     * schon einmal "Weiter" gedrueckt hat - das ist die einzige Ausnahme.
+     * Fuer den Computer gilt genau dasselbe: er haengt das Aufgehen an seinen
+     * Zug (knock: true) oder geht direkt auf, wenn er vorher weitergegeben hat.
+     */
     function botDecide(hand, middleCards, options) {
         var opts = options || {};
         if (!hand || hand.length !== 3 || !middleCards || middleCards.length !== 3) {
@@ -313,9 +366,13 @@
         }
 
         var current = scoreHand(hand).score;
-        var knockAt = botKnockThreshold(opts.turnsPlayed, opts.playerCount);
+        var knockAt = botKnockThreshold(opts.turnsPlayed, opts.playerCount,
+                                        opts.elapsedSeconds, opts.targetSeconds);
+        var canKnock = !!opts.canKnock;
+        var canKnockDirect = canKnock && !!opts.canKnockDirect;   // hat schon weitergegeben
 
-        if (opts.canKnock && current >= BOT_KNOCK_STRONG) return { type: 'knock' };
+        // Hand praktisch unschlagbar - und Aufgehen ohne Tausch erlaubt.
+        if (canKnockDirect && current >= BOT_KNOCK_STRONG) return { type: 'knock' };
 
         /*
          * Liegt in der Mitte ein Drilling oder drei gleiche Farben, gilt
@@ -323,15 +380,20 @@
          * ist deshalb gesperrt - fuer den Computer genauso wie fuer die Gaeste.
          */
         var allOrNothing = middleWorthTakingAll(middleCards);
-        var best = null;
 
         if (allOrNothing) {
             var setValue = scoreHand(middleCards).score;
-            if (setValue >= current + BOT_MIN_GAIN) return { type: 'all' };
-            if (opts.canKnock && current >= knockAt) return { type: 'knock' };
-            return { type: 'pass' };
+            if (setValue >= current + BOT_MIN_GAIN) {
+                return { type: 'all', knock: canKnock && setValue >= knockAt };
+            }
+            if (canKnockDirect && current >= knockAt) return { type: 'knock' };
+            if (opts.canPass) return { type: 'pass' };
+            // Weiter ist verbraucht: es bleibt nur, den Satz zu nehmen.
+            return { type: 'all', knock: canKnock && setValue >= knockAt };
         }
 
+        var best = null;        // bester Tausch nach Nutzen (inkl. verschenkter Karte)
+        var strongest = null;   // hoechster Wert - zaehlt, wenn getauscht werden MUSS
         for (var h = 0; h < 3; h++) {
             for (var m = 0; m < 3; m++) {
                 var trial = hand.slice();
@@ -339,25 +401,34 @@
                 var value = scoreHand(trial).score;
                 var utility = value - BOT_GIVEAWAY_WEIGHT * giveawayCost(hand[h], middleCards);
                 if (!best || utility > best.utility) {
-                    best = { type: 'single', handIndex: h, middleIndex: m, value: value, utility: utility };
+                    best = { handIndex: h, middleIndex: m, value: value, utility: utility };
+                }
+                if (!strongest || value > strongest.value) {
+                    strongest = { handIndex: h, middleIndex: m, value: value };
                 }
             }
         }
 
         if (best && best.value >= current + BOT_MIN_GAIN) {
-            return best.type === 'all'
-                ? { type: 'all' }
-                : { type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex };
+            return {
+                type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex,
+                knock: canKnock && best.value >= knockAt
+            };
         }
 
-        if (opts.canKnock && current >= knockAt) return { type: 'knock' };
+        // Nichts zu verbessern. Mit verbrauchtem "Weiter" darf direkt aufgegangen werden.
+        if (canKnockDirect && current >= knockAt) return { type: 'knock' };
 
-        // Lieber weitergeben als die eigene Hand verschlechtern.
+        // Sonst lieber weitergeben, als die eigene Hand zu verschlechtern - das
+        // schaltet zugleich das Aufgehen ohne Tausch frei.
         if (opts.canPass) return { type: 'pass' };
 
-        return best && best.type === 'single'
-            ? { type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex }
-            : { type: 'pass' };
+        // Weiter ist verbraucht: der am wenigsten schaedliche Tausch, bei guter
+        // Hand gleich mit Aufgehen.
+        return {
+            type: 'single', handIndex: strongest.handIndex, middleIndex: strongest.middleIndex,
+            knock: canKnock && strongest.value >= knockAt
+        };
     }
 
     return {
@@ -386,6 +457,8 @@
         BOT_KNOCK_STRONG: BOT_KNOCK_STRONG,
         BOT_KNOCK_SOLID: BOT_KNOCK_SOLID,
         MAX_ROUNDS: MAX_ROUNDS,
+        ROUND_TARGET_SECONDS: ROUND_TARGET_SECONDS,
+        roundProgress: roundProgress,
         roundShouldEnd: roundShouldEnd,
         botKnockThreshold: botKnockThreshold,
         giveawayCost: giveawayCost,

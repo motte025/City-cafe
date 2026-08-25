@@ -109,7 +109,8 @@ Nach dem Eintragen der Daten und einem Push:
    Handy fragt nach der Spieleranzahl.
 3. Spieleranzahl antippen → am TV läuft der Lobby-Countdown, weitere Gäste
    scannen denselben QR-Code.
-4. Nach dem Countdown wird ausgeteilt. Jedes Handy sieht nur die eigenen drei
+4. Nach dem Countdown wird ausgeteilt. Zuerst zieht jeder Platz eine offene
+   Karte — die höchste beginnt. Danach sieht jedes Handy nur die eigenen drei
    Karten, der TV zeigt verdeckte Fächer und die offene Mitte.
 
 Wählt niemand innerhalb von 20 Sekunden eine Spieleranzahl, läuft die Rotation
@@ -136,9 +137,13 @@ Alles Weitere steht in `hosn-obe-config.js`:
 | `lobbySeconds` | Countdown, in dem die übrigen Gäste scannen können | 60 |
 | `turnTimeoutSeconds` | Nach dieser Zeit wird ein Zug übersprungen | 120 |
 | `revealSeconds` | Wie lange das Ergebnis am TV stehen bleibt | 30 |
+| `starterSeconds` | Anzeige „wer beginnt“ (jeder zieht eine Karte, die höchste fängt an) | 7 |
+| `swapWindowSeconds` | Zeit zum **Aufgehen** nach dem eigenen Tausch | 6 |
+| `roundTargetSeconds` | Ziel-Spieldauer einer Runde; danach wird aufgedeckt | 95 |
 | `botIdleStartSeconds` | Countdown, sobald das Widget im Zyklus erscheint; danach spielt der Computer allein | 60 |
 | `botPlayerCount` | So viele Plätze besetzt der Computer beim Start aus dem Zyklus | 6 |
-| `botMoveSeconds` | Denkpause zwischen zwei Computer-Zügen | 8 |
+| `botMoveSeconds` | Denkpause zwischen zwei Computer-Zügen | 6 |
+| `botSeatsDefault` | Computer-Runde startet **mit** Deckvergabe: Gäste dürfen scannen und mitschauen | `true` |
 | `testFirstInCycle` | Hos’n Obe läuft als **erstes** Widget im Zyklus | `true` |
 | `mobileUrl` | Adresse der Handy-Seite (steckt im QR-Code) | GitHub Pages |
 
@@ -152,8 +157,18 @@ welches Widget gerade läuft.
 ## Spielregeln, wie sie umgesetzt sind
 
 - 32er-Skat-Blatt, 2–6 Spieler, je 3 Handkarten, 3 offene Karten in der Mitte.
-- Ein Zug: **eine** Karte tauschen, **alle drei** tauschen, oder **schließen**.
-  Nach dem Schließen hat jeder andere Spieler noch genau einen Zug.
+- **Wer beginnt, wird ausgespielt:** vor jeder Runde zieht jeder Platz eine
+  offene Karte, die **höchste** tauscht als Erste. So fängt nicht immer
+  derselbe an — unabhängig von der Spieleranzahl.
+- Ein Zug: **eine** Karte tauschen, **alle drei** tauschen, oder **weitergeben**.
+- **Aufgehen** (früher „Klopfen") beendet die Runde: jeder andere Spieler hat
+  danach noch genau einen Zug, dann wird aufgedeckt. Aufgehen geht nur
+  **nach einem Tausch** — dafür bleiben nach dem Tausch **6 Sekunden** Zeit,
+  in denen der Zug beim Spieler bleibt. Einzige Ausnahme: wer in dieser Runde
+  schon einmal **„Weiter"** genutzt hat, darf beim nächsten eigenen Zug auch
+  **ohne Tausch** aufgehen.
+- Eine Runde dauert rund **1:30 bis 2:00**. Läuft die Zeit ab
+  (`roundTargetSeconds`), wird aufgedeckt, egal wie weit gespielt wurde.
 - Wertung: gleiche Farbe wird addiert (Bube/Dame/König = 10, Ass = 11).
 - **Drei gleiche Ränge** (z. B. drei Asse) = **31 Punkte**, aber ausdrücklich
   *kein* Feuer — es wird ganz normal weitergespielt.
@@ -167,10 +182,16 @@ welches Widget gerade läuft.
   **Schwächste in jedem Fall**, auch wenn er darüber liegt.
 - Liegt in der Mitte ein **Drilling oder drei gleiche Farben**, ist der
   Einzeltausch gesperrt: es gilt **alles oder nichts**. Man nimmt alle drei,
-  klopft oder gibt weiter.
-- **„Weiter"** (abgeben ohne Tausch) darf jeder **einmal pro Runde** nutzen.
+  geht auf oder gibt weiter.
+- **„Weiter"** (abgeben ohne Tausch) darf jeder **einmal pro Runde** nutzen —
+  und schaltet damit das Aufgehen ohne Tausch frei.
 - Sind nach dem Lobby-Countdown weniger Gäste verbunden als gewählt, wird ab
   **zwei** Spielern trotzdem gespielt; darunter bricht die Runde ab.
+- **Computer-Runde, zwei Spielarten:** *mit Deckvergabe* dürfen Gäste weiter
+  scannen und bekommen ein eigenes Blatt zum Mitschauen (gezogen wird trotzdem
+  vom Computer, gezahlt wird am Ende ganz normal); *allein* spielt der Computer
+  ohne Deckvergabe. Aus dem Zyklus heraus startet er mit sechs Plätzen und
+  Deckvergabe.
 
 Die Regeln stecken vollständig in `hosn-obe-engine.js` und sind mit
 Regel-Checks abgesichert:

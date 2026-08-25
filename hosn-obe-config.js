@@ -33,11 +33,15 @@ window.HOSN_OBE_CONFIG = {
     lobbySeconds: 60,        // Countdown, in dem die übrigen Gäste scannen können
     turnTimeoutSeconds: 120, // wer zwei Minuten nicht zieht, wird übersprungen
     revealSeconds: 30,       // wie lange das Ergebnis am TV stehen bleibt
+    starterSeconds: 7,       // Anzeige „wer beginnt“: jeder zieht eine Karte, die höchste fängt an
+    swapWindowSeconds: 6,    // nach dem Tausch bleibt so lange Zeit zum Aufgehen
+    roundTargetSeconds: 95,  // Ziel-Spieldauer einer Runde; danach wird aufgedeckt
 
     // --- Computer-Runde (Vorführmodus) ---
     botPlayerCount: 6,       // so viele Plätze besetzt der Computer
-    botMoveSeconds: 8,       // Denkpause zwischen zwei Computer-Zügen (Gäste sollen mitkommen)
+    botMoveSeconds: 6,       // Denkpause zwischen zwei Computer-Zügen (Gäste sollen mitkommen)
     botIdleStartSeconds: 60, // Countdown im Zyklus; danach spielt der Computer von selbst
+    botSeatsDefault: true,   // Computer-Runde standardmäßig MIT Deckvergabe: Gäste dürfen scannen und mitschauen
 
     // Zum Testen: Hos’n Obe läuft als ERSTES Widget im Rotationszyklus an.
     // Auf false stellen, sobald nur noch der permanente QR-Code auslösen soll.
