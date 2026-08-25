@@ -874,11 +874,33 @@
         #media-view-kartentausch.active { z-index: 24; }
 
         .kt-stage { position: absolute; inset: 0; }
+
+        /* ---------- Vollbild ----------
+           Beim Start ueber den QR-Code loest sich das Widget aus der Media-Zone
+           und legt sich ueber den ganzen Bildschirm. Damit die Grafik dabei
+           EXAKT gleich bleibt, wird die 1280x815-Buehne nur skaliert - alle
+           absoluten Koordinaten darin behalten ihre Gueltigkeit. */
+        #media-view-kartentausch.kt-fullscreen {
+            position: fixed; inset: 0; z-index: 9000;
+            width: 100vw; height: 100vh;
+            border-radius: 0;
+        }
+        #media-view-kartentausch.kt-fullscreen .kt-stage {
+            inset: auto;
+            left: 50%; top: 50%;
+            width: 1280px; height: 815px;
+            transform: translate(-50%, -50%) scale(var(--kt-scale, 1));
+            transform-origin: center center;
+        }
+        /* Der Starter-QR gehoert zur Media-Zone und wuerde sonst darunter liegen. */
+        body.kt-fullscreen-on .kt-launcher { display: none !important; }
         /* Abdunklung ueber dem Holz: ohne sie verschwinden weisse Karten und
-           heller Text im Maserungs-Kontrast. */
+           heller Text im Maserungs-Kontrast. Liegt bewusst NEBEN der Buehne
+           statt darin - sonst blieben im Vollbild die Raender links und rechts
+           der skalierten Buehne ungetoent und das Holz dort deutlich heller. */
         .kt-felt-tint {
             position: absolute; inset: 0; z-index: 1; pointer-events: none;
-            background: radial-gradient(ellipse at 50% 45%, rgba(6,16,30,0.62) 0%, rgba(4,10,20,0.82) 62%, rgba(2,6,14,0.92) 100%);
+            background: radial-gradient(ellipse at 50% 45%, rgba(6,16,30,0.62) 0%, rgba(4,10,20,0.82) 62%, rgba(2,6,14,0.94) 100%);
         }
 
         .kt-banner {
@@ -915,7 +937,7 @@
         .kt-fan-card.is-back { background: #ffffff; }
         .kt-seat-name {
             margin-top: 6px; text-align: center;
-            font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 25px; font-weight: 900;
             color: rgba(255,255,255,0.72); letter-spacing: 0.6px;
             text-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
@@ -924,8 +946,8 @@
             font-family: 'Orbitron', sans-serif; font-size: 25px; font-weight: 900; color: #7dd3fc;
         }
         .kt-seat-tag {
-            margin: 5px auto 0; width: fit-content; padding: 3px 11px; border-radius: 8px;
-            font-size: 12px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
+            margin: 5px auto 0; width: fit-content; padding: 4px 13px; border-radius: 8px;
+            font-size: 15px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
             background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); color: #cbd5e1;
         }
 
@@ -950,6 +972,16 @@
             transition: transform 0.45s ease;
         }
         .kt-middle-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        /* Fliegende Karte beim Tausch: liegt ueber allem und wird per
+           Web Animations API von A nach B bewegt. */
+        .kt-flyer {
+            position: absolute; z-index: 40; width: 130px; height: 195px;
+            border-radius: 11px; overflow: hidden; background: #fff;
+            box-shadow: 0 20px 44px rgba(0,0,0,0.8), 0 0 0 2px rgba(255,255,255,0.2);
+            pointer-events: none;
+        }
+        .kt-flyer img { width: 100%; height: 100%; object-fit: cover; display: block; }
         /* Kein Schriftzug ueber der Mitte: bei sechs Spielern reicht die obere
            Reihe mit Name und "am Zug"-Abzeichen bis dicht an die Mitte heran,
            die Beschriftung lag dann hinter dem Spielernamen. Die offenen Karten
@@ -1264,10 +1296,10 @@
                 <!-- Trinkspiel V3 "Kartentausch": TV zeigt nur den oeffentlichen Stand,
                      die Haende liegen privat auf den Handys der Gaeste. -->
                 <div class="media-inner-view" id="media-view-kartentausch">
+                    <div class="kt-felt-tint"></div>
                     <div class="kt-stage">
-                        <div class="kt-felt-tint"></div>
                         <div class="kt-banner">
-                            <div class="kt-banner-title" id="kt-banner-title">🍻 City Cafe Kartentausch</div>
+                            <div class="kt-banner-title" id="kt-banner-title">🍻 City Cafe Hosen Obe</div>
                             <div class="kt-banner-sub" id="kt-banner-sub">Schwimmen · 31 · Hosn Obe</div>
                             <div class="kt-banner-timer" id="kt-banner-timer"></div>
                         </div>
@@ -1293,8 +1325,8 @@
                 <!-- Dauerhaft sichtbarer Starter-QR: liegt ausserhalb der .media-inner-view,
                      bleibt also in jedem Rotationszustand stehen. -->
                 <div class="kt-launcher" id="kt-launcher" style="display: none;">
-                    <img id="kt-launcher-img" src="" alt="QR-Code Kartentausch">
-                    <div class="kt-launcher-label">Kartentausch spielen</div>
+                    <img id="kt-launcher-img" src="" alt="QR-Code Hosen Obe">
+                    <div class="kt-launcher-label">Hosen Obe spielen</div>
                 </div>
 
             </div>
@@ -4135,7 +4167,7 @@
                 phase === 'playing' ? ktName(ktPub.currentTurnSeat || 0) + ' ist am Zug' :
                 phase === 'knocked' ? 'Geschlossen — die letzten Züge laufen' :
                 phase === 'reveal' ? 'Aufgedeckt' :
-                'Schwimmen · 31 · Hosn Obe';
+                'Schwimmen · 31 · Kartentausch';
         }
 
         function ktRenderResult() {
@@ -4156,24 +4188,114 @@
             }
         }
 
+        /* ---------- Karten fliegen lassen ----------
+         *
+         * Beim Tausch soll sichtbar werden, WER getauscht hat: die abgegebene
+         * Karte fliegt vom Faecher des Spielers in die Mitte, die genommene
+         * denselben Weg zurueck. Gerechnet wird in Buehnen-Koordinaten
+         * (1280x815), damit es im Vollbild genauso stimmt.
+         */
+        const KT_FLY_MS = 620;
+
+        function ktSeatPoint(seat) {
+            const count = Number(ktPub.playerCount) || 0;
+            const layout = KT_LAYOUT[count] || KT_LAYOUT[6];
+            const pos = KT_SEAT_POSITIONS[layout[seat]];
+            if (!pos) return null;
+            return { x: pos.x, y: pos.y + 100 };      // Mitte des Faechers
+        }
+
+        function ktMiddlePoint(index) {
+            const total = 3 * 130 + 2 * 22;           // Kartenbreite + Abstaende
+            const left = 640 - total / 2;
+            return { x: left + index * (130 + 22) + 65, y: 336 + 97 };
+        }
+
+        function ktFly(code, from, to, delay) {
+            const stage = document.querySelector('#media-view-kartentausch .kt-stage');
+            if (!stage || !from || !to || !code) return;
+            const el = document.createElement('div');
+            el.className = 'kt-flyer';
+            const img = document.createElement('img');
+            img.src = KtEngine.cardImage(code, 'cards/');
+            el.appendChild(img);
+            el.style.left = (from.x - 65) + 'px';
+            el.style.top = (from.y - 97) + 'px';
+            stage.appendChild(el);
+
+            const dx = to.x - from.x, dy = to.y - from.y;
+            const anim = el.animate([
+                { transform: 'translate(0px, 0px) rotate(0deg) scale(1)', opacity: 1, offset: 0 },
+                { transform: 'translate(' + (dx / 2) + 'px, ' + (dy / 2 - 40) + 'px) rotate(180deg) scale(1.15)', opacity: 1, offset: 0.55 },
+                { transform: 'translate(' + dx + 'px, ' + dy + 'px) rotate(360deg) scale(1)', opacity: 1, offset: 1 }
+            ], { duration: KT_FLY_MS, delay: delay || 0, easing: 'cubic-bezier(0.34, 0.8, 0.3, 1)', fill: 'forwards' });
+            anim.onfinish = () => el.remove();
+            // Sicherheitsnetz: haengt die Animation (WebView), raeumt der Timer auf.
+            later(() => { if (el.parentNode) el.remove(); }, KT_FLY_MS + (delay || 0) + 900);
+        }
+
+        let ktLastAnimatedMove = null;
+        function ktAnimateLastMove() {
+            const move = ktPub.lastMove;
+            if (!move || !ktActive) return;
+            const stamp = JSON.stringify(move) + ':' + (ktPub.turnsPlayed || 0);
+            if (stamp === ktLastAnimatedMove) return;
+            ktLastAnimatedMove = stamp;
+
+            const seatPoint = ktSeatPoint(Number(move.seat));
+            if (!seatPoint) return;
+
+            if (move.type === 'single') {
+                const idx = Number(move.middleIndex);
+                const mid = ktMiddlePoint(isNaN(idx) ? 1 : idx);
+                if (move.gave) ktFly(move.gave, seatPoint, mid, 0);
+                if (move.took) ktFly(move.took, mid, seatPoint, 120);
+
+            } else if (move.type === 'all') {
+                // Beim Rundumtausch kreuzen sich alle drei Paare.
+                const gave = move.gave || [];
+                const took = move.took || [];
+                for (let i = 0; i < 3; i++) {
+                    const mid = ktMiddlePoint(i);
+                    if (gave[i]) ktFly(gave[i], seatPoint, mid, i * 90);
+                    if (took[i]) ktFly(took[i], mid, seatPoint, i * 90 + 120);
+                }
+            }
+        }
+
         function ktRender() {
             ktRenderBanner();
             ktRenderSeats();
             ktRenderMiddle();
             ktRenderLobby();
             ktRenderResult();
+            ktAnimateLastMove();
         }
 
         // ---------- Ein-/Ausblenden samt Pause der Rotation ----------
+
+        // Buehne so skalieren, dass sie den Bildschirm fuellt, ohne das
+        // Seitenverhaeltnis zu veraendern.
+        function ktFitFullscreen() {
+            const view = ktEl('media-view-kartentausch');
+            if (!view || !view.classList.contains('kt-fullscreen')) return;
+            const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 815);
+            view.style.setProperty('--kt-scale', String(scale));
+        }
+        window.addEventListener('resize', ktFitFullscreen);
 
         function ktEnterGame() {
             if (ktActive) return;
             ktActive = true;
             // Die laufende Ansicht behaelt ihre .active-Klasse und friert ein -
-            // das Kartentausch-Overlay legt sich per z-index darueber.
+            // das Hosen-Obe-Overlay legt sich per z-index darueber.
             pauseRotation();
             ktEl('kt-launcher').style.display = 'none';
-            ktEl('media-view-kartentausch').classList.add('active');
+            const view = ktEl('media-view-kartentausch');
+            view.classList.add('active');
+            view.classList.add('kt-fullscreen');
+            document.body.classList.add('kt-fullscreen-on');
+            ktFitFullscreen();
         }
 
         function ktExitGame() {
@@ -4181,6 +4303,10 @@
             ktSetTimer(null);
             if (!ktActive) return;
             ktActive = false;
+            const view = ktEl('media-view-kartentausch');
+            view.classList.remove('kt-fullscreen');
+            view.style.removeProperty('--kt-scale');
+            document.body.classList.remove('kt-fullscreen-on');
             ktEl('kt-launcher').style.display = '';
             resumeRotation();
 
@@ -4231,7 +4357,7 @@
                 fireSeats: null,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
             })).catch(err => {
-                console.warn('[Kartentausch] Austeilen fehlgeschlagen:', err);
+                console.warn('[Hosen Obe] Austeilen fehlgeschlagen:', err);
                 ktResetSession();
             }).then(() => { ktDealing = false; });
         }
@@ -4288,7 +4414,7 @@
                 fireSeats: null,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
             })).catch(err => {
-                console.warn('[Kartentausch] Computer-Runde fehlgeschlagen:', err);
+                console.warn('[Hosen Obe] Computer-Runde fehlgeschlagen:', err);
                 ktResetSession();
             }).then(() => { ktDealing = false; });
         }
@@ -4322,10 +4448,19 @@
                 reveals[seat] = hand;                       // Klopfer deckt sofort auf
             } else {
                 if (move.type === 'all') {
+                    updates.lastMove = {
+                        type: 'all', seat: seat,
+                        gave: hand.slice(), took: middle.slice()
+                    };
                     ktMirrorHands[seat] = middle.slice();
                     updates.middleCards = hand.slice();
                 } else if (move.type === 'single') {
                     const newHand = hand.slice();
+                    updates.lastMove = {
+                        type: 'single', seat: seat,
+                        gave: hand[move.handIndex], took: middle[move.middleIndex],
+                        middleIndex: move.middleIndex
+                    };
                     newHand[move.handIndex] = middle[move.middleIndex];
                     middle[move.middleIndex] = hand[move.handIndex];
                     ktMirrorHands[seat] = newHand;
@@ -4344,7 +4479,7 @@
             Object.keys(reveals).forEach(s => { updates['revealedHands/' + s] = reveals[s]; });
             KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: ktMirrorHands[seat] }).catch(() => {});
             KtNet.publicRef(ktDb, ktSessionId).update(updates)
-                .catch(err => console.warn('[Kartentausch] Computer-Zug fehlgeschlagen:', err));
+                .catch(err => console.warn('[Hosen Obe] Computer-Zug fehlgeschlagen:', err));
         }
 
         function ktArmBotTurn() {
@@ -4401,7 +4536,7 @@
                     loserSeat: outcome.loserSeat,
                     payingSeats: outcome.payingSeats,
                     fireSeats: outcome.fireSeats
-                }).catch(err => console.warn('[Kartentausch] Ergebnis nicht schreibbar:', err))
+                }).catch(err => console.warn('[Hosen Obe] Ergebnis nicht schreibbar:', err))
                   .then(() => {
                       ktRender();
                       ktPhaseTimer = setTimeout(() => {
@@ -4417,6 +4552,7 @@
             ktSetTimer(null);
             ktMirrorHands = {};
             ktLastTurnSeat = null;
+            ktLastAnimatedMove = null;
             ktDealing = false;
             ktResolving = false;
             if (!ktReady()) return Promise.resolve();
@@ -4446,10 +4582,11 @@
                     payingSeats: null,
                     fireSeats: null,
                     lastMove: null,
+                    endRequestedBy: null,
                     turnStartedAt: null,
                     dealerUid: ktUid
                 }))
-                .catch(err => console.warn('[Kartentausch] Zuruecksetzen fehlgeschlagen:', err));
+                .catch(err => console.warn('[Hosen Obe] Zuruecksetzen fehlgeschlagen:', err));
         }
 
         function ktOnPhaseChange(phase) {
@@ -4508,6 +4645,13 @@
                 }
             }
 
+            // Notausstieg vom Handy des Hosts: Runde sofort abraeumen.
+            if (ktPub.endRequestedBy) {
+                ktResetSession();
+                ktRender();
+                return;
+            }
+
             // Lobby vorzeitig schliessen, sobald alle Plaetze belegt sind.
             if (phase === 'lobby' && Number(ktPub.playerCount) > 0 &&
                 ktSeatsTaken() >= Number(ktPub.playerCount)) {
@@ -4519,7 +4663,7 @@
 
         function ktInit() {
             if (!window.KtNet || !KtNet.isConfigured() || !KtEngine) {
-                console.info('[Kartentausch] Nicht eingerichtet — Widget bleibt aus.');
+                console.info('[Hosen Obe] Nicht eingerichtet — Widget bleibt aus.');
                 return;
             }
             KtNet.ready().then(conn => {
@@ -4537,9 +4681,9 @@
                     createdAt: firebase.database.ServerValue.TIMESTAMP
                 }).then(() => {
                     KtNet.publicRef(ktDb, ktSessionId).on('value', ktOnPublic,
-                        err => console.warn('[Kartentausch] Abo fehlgeschlagen:', err));
+                        err => console.warn('[Hosen Obe] Abo fehlgeschlagen:', err));
                 });
-            }).catch(err => console.warn('[Kartentausch] Start fehlgeschlagen:', err));
+            }).catch(err => console.warn('[Hosen Obe] Start fehlgeschlagen:', err));
         }
         ktInit();
 

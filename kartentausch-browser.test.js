@@ -223,6 +223,13 @@ async function run() {
     const pubNow = () => (tree.games[sessionId] || {}).public || {};
     check('Startphase ist idle', pubNow().phase === 'idle', pubNow().phase);
 
+    const names = await tv.evaluate(() => ({
+        banner: document.getElementById('kt-banner-title').textContent,
+        launcher: document.querySelector('.kt-launcher-label').textContent
+    }));
+    check('TV nennt das Spiel "Hosen Obe"',
+        /Hosen Obe/.test(names.banner) && /Hosen Obe/.test(names.launcher), JSON.stringify(names));
+
     const launcherVisible = await tv.evaluate(() => {
         const el = document.getElementById('kt-launcher');
         return el && getComputedStyle(el).display !== 'none';
@@ -287,6 +294,18 @@ async function run() {
     check('"Alle 3 tauschen" genau dann, wenn die Mitte es hergibt', hasAll === middleWorth,
         'Knopf=' + hasAll + ' Mitte=' + middleWorth);
 
+    // Regressionsschutz: frueher verschwanden "Alle 3 tauschen" und "Klopfen",
+    // sobald man eine Karte antippte.
+    await active.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
+    await sleep(200);
+    const whileSelected = await active.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    const stillThere = JSON.stringify(whileSelected) === JSON.stringify(labels);
+    check('Knöpfe bleiben nach dem Antippen einer Karte stehen', stillThere,
+        JSON.stringify(labels) + ' -> ' + JSON.stringify(whileSelected));
+    await active.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
+    await sleep(200);
+
     const handCardH = await active.evaluate(() => {
         const c = document.querySelector('#kt-hand-cards .kt-card');
         return c ? Math.round(c.getBoundingClientRect().height) : 0;
@@ -303,14 +322,9 @@ async function run() {
         document.querySelector('#kt-middle-cards .kt-card').click();
     });
     await sleep(200);
-    const confirmLabels = await active.evaluate(() =>
-        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
-    check('Bestätigen-Knopf erscheint nach zwei Antippern',
-        confirmLabels.some(l => /Tausch bestätigen/.test(l)), JSON.stringify(confirmLabels));
-
-    await active.evaluate(() => {
-        Array.from(document.querySelectorAll('.kt-btn')).find(b => /Tausch bestätigen/.test(b.textContent)).click();
-    });
+    check('Kein Bestätigen-Schritt mehr',
+        !(await active.evaluate(() =>
+            Array.from(document.querySelectorAll('.kt-btn')).some(b => /bestätigen/i.test(b.textContent)))));
     await sleep(900);
     const afterSwap = pubNow();
     check('turnsPlayed hochgezählt', afterSwap.turnsPlayed === 1, String(afterSwap.turnsPlayed));
@@ -330,10 +344,6 @@ async function run() {
         document.querySelector('#kt-middle-cards .kt-card').click();
     });
     await sleep(150);
-    await active2.evaluate(() => {
-        const b = Array.from(document.querySelectorAll('.kt-btn')).find(x => /Tausch bestätigen/.test(x.textContent));
-        if (b) b.click();
-    });
     await sleep(900);
 
     const active3 = await (async () => {
@@ -397,10 +407,6 @@ async function run() {
         document.querySelector('#kt-middle-cards .kt-card').click();
     });
     await sleep(150);
-    await last.evaluate(() => {
-        const b = Array.from(document.querySelectorAll('.kt-btn')).find(x => /Tausch bestätigen/.test(x.textContent));
-        if (b) b.click();
-    });
     await sleep(6000);
 
     const finalPub = pubNow();
