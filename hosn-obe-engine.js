@@ -293,10 +293,19 @@
      * kann also strukturell nicht schummeln. Ausgeteilt wird mit einem
      * gleichverteilten Fisher-Yates-Shuffle ueber das volle 32er-Blatt.
      */
-    var BOT_KNOCK_STRONG = 29;      // damit endet die Runde sofort
+    var BOT_KNOCK_STRONG = 27;      // damit endet die Runde sofort
     var BOT_KNOCK_SOLID = 24;       // solide Hand und nichts mehr zu holen
     var BOT_MIN_GAIN = 1;           // darunter lohnt kein Tausch
     var BOT_GIVEAWAY_WEIGHT = 0.18; // wie stark eine verschenkte hohe Karte zaehlt
+    /*
+     * Feuer kam viel zu oft, weil der Computer stur den hoechsten Wert suchte
+     * und damit zielsicher auf die 31 zusteuerte. Er spielt jetzt auf eine
+     * solide Hand statt auf den Jackpot: ein Zug, der genau in Feuer endet,
+     * wird um diesen Betrag abgewertet - genommen wird er nur noch, wenn es
+     * keine vernuenftige Alternative gibt. Zusammen mit der frueheren
+     * Aufgeh-Schwelle (27 statt 29) endet die Runde meist vorher.
+     */
+    var BOT_FIRE_AVOID = 12;
 
     // Was die abgegebene Karte dem naechsten Spieler wert sein koennte. Der
     // Computer weiss nicht, was der braucht - aber eine hohe Karte hilft
@@ -393,11 +402,12 @@
         var allOrNothing = middleWorthTakingAll(middleCards);
 
         if (allOrNothing) {
-            var setValue = scoreHand(middleCards).score;
-            if (setValue >= current + BOT_MIN_GAIN) {
+            var set = scoreHand(middleCards);
+            var setValue = set.score;
+            // Ein Satz, der sofort Feuer waere, ist fuer den Computer kein Ziel.
+            if (!set.fire && setValue >= current + BOT_MIN_GAIN) {
                 return { type: 'all', knock: canKnock && setValue >= knockAt };
             }
-            if (canKnock && current >= knockAt) return { type: 'knock' };
             if (opts.canPass) return { type: 'pass' };
             // Weiter ist nicht (mehr) sinnvoll: es bleibt nur, den Satz zu nehmen.
             return { type: 'all', knock: canKnock && setValue >= knockAt };
@@ -409,13 +419,17 @@
             for (var m = 0; m < 3; m++) {
                 var trial = hand.slice();
                 trial[h] = middleCards[m];
-                var value = scoreHand(trial).score;
+                var trialScore = scoreHand(trial);
+                var value = trialScore.score;
                 var utility = value - BOT_GIVEAWAY_WEIGHT * giveawayCost(hand[h], middleCards);
+                // Feuer wird abgewertet, statt es anzusteuern - siehe BOT_FIRE_AVOID.
+                var rank = trialScore.fire ? value - BOT_FIRE_AVOID : value;
+                if (trialScore.fire) utility -= BOT_FIRE_AVOID;
                 if (!best || utility > best.utility) {
                     best = { handIndex: h, middleIndex: m, value: value, utility: utility };
                 }
-                if (!strongest || value > strongest.value) {
-                    strongest = { handIndex: h, middleIndex: m, value: value };
+                if (!strongest || rank > strongest.rank) {
+                    strongest = { handIndex: h, middleIndex: m, value: value, rank: rank };
                 }
             }
         }
@@ -427,18 +441,31 @@
             };
         }
 
-        // Nichts zu verbessern, Hand aber solide - direkt aufgehen.
-        if (canKnock && current >= knockAt) return { type: 'knock' };
+        /*
+         * Frueher ging der Computer hier auf, sobald er ausgerechnet hatte,
+         * dass kein Tausch mehr etwas bringt. Das wirkte am Tisch, als wuerde
+         * "das System" die Runde von selbst beenden - genau das soll nie
+         * passieren. Aufgehen bleibt eine echte Entscheidung mit starker Hand
+         * (BOT_KNOCK_STRONG oben) oder haengt an einem Tausch. Endet die Runde
+         * sonst nicht, greifen weiterhin Zuglimit und Zeitbudget.
+         */
 
-        // Sonst lieber weitergeben, als die eigene Hand zu verschlechtern.
+        // Lieber weitergeben, als die eigene Hand zu verschlechtern.
         if (opts.canPass) return { type: 'pass' };
 
-        // Weiter ist nicht (mehr) sinnvoll: der am wenigsten schaedliche Tausch,
-        // bei guter Hand gleich mit Aufgehen.
-        return {
-            type: 'single', handIndex: strongest.handIndex, middleIndex: strongest.middleIndex,
-            knock: canKnock && strongest.value >= knockAt
-        };
+        /*
+         * "Weiter" ist verbraucht. Dann der beste verbleibende Tausch - aber
+         * nur, wenn er die Hand nicht verschlechtert. Sonst wird trotzdem
+         * weitergegeben: eine Runde absichtlich schlechter zu spielen, nur um
+         * irgendetwas zu tun, waere der schlechteste aller Zuege.
+         */
+        if (strongest && strongest.value >= current) {
+            return {
+                type: 'single', handIndex: strongest.handIndex, middleIndex: strongest.middleIndex,
+                knock: canKnock && strongest.value >= knockAt
+            };
+        }
+        return { type: 'pass' };
     }
 
     return {

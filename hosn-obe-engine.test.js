@@ -255,10 +255,19 @@ eq('Ohne Aufgeh-Erlaubnis wird nicht aufgegangen', botNoKnock.type !== 'knock', 
 
 // Tausch, der die Hand ueber die Schwelle hebt: der Computer haengt das
 // Aufgehen direkt an den Zug.
-var botSwapKnock = E.botDecide(['HK', 'HQ', 'C7'], ['HA', 'S8', 'D9'],
+var botSwapKnock = E.botDecide(['HK', 'HQ', 'C7'], ['H9', 'S8', 'D9'],
     { canKnock: true, canPass: true });
-eq('Tausch auf 31 wird gemacht', botSwapKnock.type, 'single');
+eq('Tausch auf 29 wird gemacht', botSwapKnock.type, 'single');
 check('Nach dem Tausch wird aufgegangen', botSwapKnock.knock === true, JSON.stringify(botSwapKnock));
+
+/*
+ * Feuer ist kein Spielziel: derselbe Tausch, der genau auf 31 fuehrt, wird
+ * liegengelassen, solange es eine Alternative gibt. Sonst steuerte der
+ * Computer zielsicher ins Feuer und die Runde endete staendig damit.
+ */
+var botFire = E.botDecide(['HK', 'HQ', 'C7'], ['HA', 'S8', 'D9'],
+    { canKnock: true, canPass: true });
+check('Computer steuert nicht ins Feuer', botFire.type === 'pass', JSON.stringify(botFire));
 
 eq('Computer ohne Hand zieht nicht', E.botDecide([], ['HA', 'S9', 'D7'], {}).type, 'skip');
 
@@ -296,7 +305,11 @@ for (var bt = 0; bt < 4000; bt++) {
             for (var qm = 0; qm < 3; qm++) {
                 var t2 = h.slice();
                 t2[qh] = mid[qm];
-                bestPossible = Math.max(bestPossible, E.scoreHand(t2).score);
+                var s2 = E.scoreHand(t2);
+                // Feuer zaehlt fuer den Computer nicht als Verbesserung - er
+                // spielt bewusst daran vorbei, siehe BOT_FIRE_AVOID.
+                if (s2.fire) continue;
+                bestPossible = Math.max(bestPossible, s2.score);
             }
         }
         if (after < before + 1 && bestPossible >= before + 1) suboptimal++;
