@@ -4568,6 +4568,12 @@
          *   3.2 s  ist am Faecher angekommen
          * Das passt in die Denkpause des Computers (botMoveSeconds).
          */
+        // Hohe Karten kommen seltener ins Spiel - siehe aceDrawChance in der
+        // Konfiguration. Punkte und Regeln bleiben davon unberuehrt.
+        function ktDrawChances() {
+            return { ace: KT.aceDrawChance, high: KT.highCardDrawChance };
+        }
+
         const KT_FLY_MS = 1500;        // Flugdauer einer einzelnen Karte
         const KT_FLY_GAP = 200;        // Pause zwischen Abgeben und Nehmen
 
@@ -4786,7 +4792,7 @@
             ktBackImage = null;
             ktSetFelt();
 
-            const dealt = KtEngine.deal(count);
+            const dealt = KtEngine.deal(count, null, ktDrawChances());
             ktMirrorHands = dealt.hands;
 
             const writes = [];
@@ -4851,7 +4857,7 @@
             ktBackImage = null;
             ktSetFelt();
 
-            const dealt = KtEngine.deal(players);
+            const dealt = KtEngine.deal(players, null, ktDrawChances());
             ktMirrorHands = dealt.hands;
             ktBotPassUsed = {};
 

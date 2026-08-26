@@ -66,6 +66,48 @@
     }
 
     /*
+     * ---------- Wie oft kommt eine hohe Karte ins Spiel? ----------
+     *
+     * Feuer (gleiche Farbe, exakt 31) braucht ein Ass UND zwei Zehner-Karten
+     * derselben Farbe. Bei gleicher Ziehungschance fuer alle 32 Karten endete
+     * rund jede dritte Computer-Runde mit Feuer - viel zu oft.
+     *
+     * Statt Punkte oder Regeln zu aendern, kommen hohe Karten seltener ins
+     * Spiel: pro Runde werden ohnehin nur 11 bis 27 der 32 Karten ausgeteilt,
+     * der Rest bleibt liegen. Ein Gewicht unter 1 schiebt eine Karte im Stapel
+     * nach hinten - sie landet oefter im ungenutzten Rest.
+     *
+     * Die Punktwerte bleiben unangetastet, die Regeln ebenso. Auch der
+     * Durchschnitts-Handwert bleibt praktisch gleich (15,8 statt 15,5) - nur
+     * das Zusammentreffen Ass + zwei Zehner wird seltener, weil es von beiden
+     * Dichten zugleich abhaengt.
+     */
+    var DRAW_CHANCE = { ace: 0.5, high: 0.5 };      // 1 = wie bisher, alle gleich oft
+
+    function drawWeight(code, chances) {
+        var rank = code.slice(1);
+        if (rank === 'A') return Number(chances.ace);
+        if (CARD_VALUE[rank] === 10) return Number(chances.high);
+        return 1;                                   // 7, 8, 9 bleiben unveraendert
+    }
+
+    /*
+     * Gewichtetes Ziehen ohne Zuruecklegen nach Efraimidis-Spirakis:
+     * Schluessel = Zufall hoch (1/Gewicht), absteigend sortiert. Bei Gewicht 1
+     * ist das mathematisch derselbe gleichverteilte Stapel wie bisher.
+     */
+    function weightedShuffle(deck, rng, chances) {
+        var random = rng || Math.random;
+        var keyed = deck.map(function (code) {
+            var w = drawWeight(code, chances);
+            if (!isFinite(w) || w <= 0) w = 1;
+            return { code: code, key: Math.pow(random(), 1 / w) };
+        });
+        keyed.sort(function (a, b) { return b.key - a.key; });
+        return keyed.map(function (x) { return x.code; });
+    }
+
+    /*
      * Austeilen samt Geber-Ermittlung.
      *
      * Wer anfaengt, wird ausgespielt statt festgelegt: jeder Platz zieht eine
@@ -76,9 +118,27 @@
      * Verbrauch bei sechs Spielern: 18 Handkarten + 3 Mitte + 6 Geberkarten =
      * 27 von 32 - passt also in jeder Besetzung.
      */
-    function deal(playerCount, rng) {
+    function deal(playerCount, rng, chances) {
         if (playerCount < 2 || playerCount > 6) throw new Error('Spieleranzahl muss 2-6 sein, war: ' + playerCount);
-        var deck = shuffle(buildDeck(), rng);
+        var draw = {
+            ace: chances && isFinite(chances.ace) ? Number(chances.ace) : DRAW_CHANCE.ace,
+            high: chances && isFinite(chances.high) ? Number(chances.high) : DRAW_CHANCE.high
+        };
+        /*
+         * Zwei Schritte, und die Reihenfolge ist wichtig:
+         *
+         * 1. Gewichtet ziehen bestimmt, WELCHE Karten diese Runde ueberhaupt
+         *    mitspielen - hohe Karten bleiben oefter draussen.
+         * 2. Danach werden genau diese Karten nochmal gleichverteilt gemischt.
+         *
+         * Ohne Schritt 2 waere das Austeilen unfair: die Gewichtung sortiert
+         * hohe Karten ans Ende des Stapels, und da positionsweise ausgeteilt
+         * wird, bekaeme Platz 1 systematisch die schwaechsten und die Mitte die
+         * staerksten Karten. Gemessen waren das bei Chance 0,5 schon 15,3 zu
+         * 15,8 Punkte im Schnitt - mit staerkerer Gewichtung noch mehr.
+         */
+        var inPlay = weightedShuffle(buildDeck(), rng, draw).slice(0, 4 * playerCount + 3);
+        var deck = shuffle(inPlay, rng);
         var hands = {};
         var at = 0;
         var seat;
@@ -297,15 +357,6 @@
     var BOT_KNOCK_SOLID = 24;       // solide Hand und nichts mehr zu holen
     var BOT_MIN_GAIN = 1;           // darunter lohnt kein Tausch
     var BOT_GIVEAWAY_WEIGHT = 0.18; // wie stark eine verschenkte hohe Karte zaehlt
-    /*
-     * Feuer kam viel zu oft, weil der Computer stur den hoechsten Wert suchte
-     * und damit zielsicher auf die 31 zusteuerte. Er spielt jetzt auf eine
-     * solide Hand statt auf den Jackpot: ein Zug, der genau in Feuer endet,
-     * wird um diesen Betrag abgewertet - genommen wird er nur noch, wenn es
-     * keine vernuenftige Alternative gibt. Zusammen mit der frueheren
-     * Aufgeh-Schwelle (27 statt 29) endet die Runde meist vorher.
-     */
-    var BOT_FIRE_AVOID = 12;
 
     // Was die abgegebene Karte dem naechsten Spieler wert sein koennte. Der
     // Computer weiss nicht, was der braucht - aber eine hohe Karte hilft
@@ -402,10 +453,8 @@
         var allOrNothing = middleWorthTakingAll(middleCards);
 
         if (allOrNothing) {
-            var set = scoreHand(middleCards);
-            var setValue = set.score;
-            // Ein Satz, der sofort Feuer waere, ist fuer den Computer kein Ziel.
-            if (!set.fire && setValue >= current + BOT_MIN_GAIN) {
+            var setValue = scoreHand(middleCards).score;
+            if (setValue >= current + BOT_MIN_GAIN) {
                 return { type: 'all', knock: canKnock && setValue >= knockAt };
             }
             if (opts.canPass) return { type: 'pass' };
@@ -419,17 +468,13 @@
             for (var m = 0; m < 3; m++) {
                 var trial = hand.slice();
                 trial[h] = middleCards[m];
-                var trialScore = scoreHand(trial);
-                var value = trialScore.score;
+                var value = scoreHand(trial).score;
                 var utility = value - BOT_GIVEAWAY_WEIGHT * giveawayCost(hand[h], middleCards);
-                // Feuer wird abgewertet, statt es anzusteuern - siehe BOT_FIRE_AVOID.
-                var rank = trialScore.fire ? value - BOT_FIRE_AVOID : value;
-                if (trialScore.fire) utility -= BOT_FIRE_AVOID;
                 if (!best || utility > best.utility) {
                     best = { handIndex: h, middleIndex: m, value: value, utility: utility };
                 }
-                if (!strongest || rank > strongest.rank) {
-                    strongest = { handIndex: h, middleIndex: m, value: value, rank: rank };
+                if (!strongest || value > strongest.value) {
+                    strongest = { handIndex: h, middleIndex: m, value: value };
                 }
             }
         }
@@ -482,6 +527,8 @@
         parseCard: parseCard,
         buildDeck: buildDeck,
         shuffle: shuffle,
+        weightedShuffle: weightedShuffle,
+        DRAW_CHANCE: DRAW_CHANCE,
         deal: deal,
         scoreHand: scoreHand,
         compareCards: compareCards,
