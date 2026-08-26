@@ -80,15 +80,32 @@ function setAt(obj, parts, value) {
     else cur[last] = value;
 }
 
+/*
+ * Jede Aktualisierung bekommt eine laufende Nummer.
+ *
+ * Ohne die kann der Testaufbau Zustaende in FALSCHER Reihenfolge zustellen:
+ * broadcast() haelt seinen Schnappschuss fest und schickt ihn dann an alle
+ * Seiten; ist eine Seite gerade beschaeftigt, kann ein aelterer Schnappschuss
+ * nach einem neueren ankommen und die Seite auf einen alten Spielstand
+ * zuruecksetzen. Echtes Firebase garantiert die Reihenfolge - der Ersatz hier
+ * muss das ebenfalls tun, sonst meldet der Test Fehler, die es gar nicht gibt.
+ */
+let broadcastSeq = 0;
+
 async function broadcast() {
+    const seq = ++broadcastSeq;
     const snapshot = JSON.stringify(tree);
     await Promise.all(pages.map(p =>
-        p.evaluate(s => window.__ktPush && window.__ktPush(s), snapshot).catch(() => {})
+        p.evaluate(([s, n]) => window.__ktPush && window.__ktPush(s, n), [snapshot, seq]).catch(() => {})
     ));
 }
 
 async function dbOp(op) {
     const parts = op.path.split('/').filter(Boolean);
+    if (process.env.KT_TRACE && JSON.stringify(op).indexOf('hostSelect') !== -1) {
+        console.log('  [db] ' + op.kind + ' ' + op.path + ' -> ' +
+                    JSON.stringify(op.value).slice(0, 200));
+    }
     if (op.kind === 'set') {
         setAt(tree, parts, op.value);
     } else if (op.kind === 'remove') {
@@ -100,7 +117,7 @@ async function dbOp(op) {
     } else if (op.kind === 'read') {
         return getAt(tree, parts);
     } else if (op.kind === 'snapshot') {
-        return tree;
+        return { seq: broadcastSeq, tree: tree };
     } else if (op.kind === 'transaction') {
         // Der Aufrufer hat den neuen Wert bereits berechnet; hier nur schreiben,
         // wenn sich der Ausgangswert nicht veraendert hat (Serialisierung durch
@@ -119,7 +136,13 @@ async function dbOp(op) {
 const STUB = `
 window.__ktListeners = [];
 window.__ktTree = {};
-window.__ktPush = function (json) {
+window.__ktSeq = 0;
+window.__ktPush = function (json, seq) {
+    // Veraltete Zustellung verwerfen - siehe broadcast() im Testtreiber.
+    if (seq !== undefined && seq !== null) {
+        if (seq < window.__ktSeq) return;
+        window.__ktSeq = seq;
+    }
     window.__ktTree = JSON.parse(json);
     window.__ktListeners.forEach(function (l) {
         var parts = l.path.split('/').filter(Boolean);
@@ -164,8 +187,8 @@ function ktRef(path) {
         on: function (ev, cb) {
             var entry = { path: path, cb: cb, last: null };
             window.__ktListeners.push(entry);
-            window.__ktOp(JSON.stringify({ kind: 'snapshot', path: '' })).then(function (full) {
-                window.__ktPush(JSON.stringify(full || {}));
+            window.__ktOp(JSON.stringify({ kind: 'snapshot', path: '' })).then(function (res) {
+                window.__ktPush(JSON.stringify((res && res.tree) || {}), (res && res.seq) || 0);
             });
             return cb;
         },
@@ -203,7 +226,12 @@ async function run() {
     const server = await serve();
     const browser = await chromium.launch(launchOptions());
 
-    async function open(url, uid) {
+    /*
+     * cfg: zusaetzliche Einstellungen NUR fuer diese Seite. Der Computer-TV
+     * bekommt damit eine laengere Geber-Anzeige und mehr Bedenkzeit - sonst ist
+     * die Vorfuehrrunde vorbei, bevor der Gast ueberhaupt gescannt hat.
+     */
+    async function open(url, uid, cfg) {
         const ctx = await browser.newContext({ viewport: { width: 1500, height: 900 } });
         const page = await ctx.newPage();
         const errors = [];
@@ -216,15 +244,18 @@ async function run() {
         await page.addInitScript(STUB);
         // Im Test denkt der Computer schneller als im Cafe (dort 8s pro Zug),
         // sonst laeuft der Testlauf minutenlang.
+        const cfgOverrides = Object.assign({
+            botMoveSeconds: 0.9,
+            revealSeconds: 3,
+            starterSeconds: 1,
+            swapWindowSeconds: 3,
+            roundTargetSeconds: 90
+        }, cfg || {});
         await page.addInitScript(`
             window.addEventListener('DOMContentLoaded', function () {
-                if (window.HOSN_OBE_CONFIG) {
-                    window.HOSN_OBE_CONFIG.botMoveSeconds = 0.9;
-                    window.HOSN_OBE_CONFIG.revealSeconds = 3;
-                    window.HOSN_OBE_CONFIG.starterSeconds = 1;
-                    window.HOSN_OBE_CONFIG.swapWindowSeconds = 3;
-                    window.HOSN_OBE_CONFIG.roundTargetSeconds = 90;
-                }
+                if (!window.HOSN_OBE_CONFIG) return;
+                var over = ${JSON.stringify(cfgOverrides)};
+                for (var key in over) window.HOSN_OBE_CONFIG[key] = over[key];
             });
         `);
         page.__errors = errors;
@@ -369,7 +400,29 @@ async function run() {
     };
     const buttonsOf = p => p.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    const clickButton = async (p, label) => {
+        const hit = await p.evaluate(text => {
+            const b = Array.from(document.querySelectorAll('.kt-btn')).find(x => x.textContent === text);
+            if (!b) return false;
+            b.click();
+            return true;
+        }, label);
+        if (!hit) throw new Error('Knopf "' + label + '" nicht gefunden');
+        await sleep(600);
+    };
+
+    /*
+     * Einen Zug tauschen - egal wie die Mitte gerade aussieht.
+     *
+     * Liegt dort ein Drilling oder liegen drei gleiche Farben, ist der
+     * Einzeltausch regelkonform gesperrt; dann bleibt nur "alle 3 nehmen".
+     * Ohne diese Fallunterscheidung war der Test von der Zufallsmitte abhaengig
+     * und schlug gelegentlich fehl, obwohl alles stimmte.
+     */
     const swapFirstCard = async p => {
+        const canPick = await p.evaluate(() =>
+            document.querySelectorAll('#kt-hand-cards .kt-card.is-pickable').length > 0);
+        if (!canPick) { await clickButton(p, 'ALLE 3 NEHMEN'); return; }
         await p.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
         await sleep(150);
         await p.evaluate(() => { document.querySelector('#kt-middle-cards .kt-card').click(); });
@@ -430,10 +483,7 @@ async function run() {
     const labels3 = await buttonsOf(active3);
     check('Aufgehen erscheint nicht ohne Tausch und ohne genutztes Weiter',
         !labels3.some(l => l === 'AUFGEHEN'), JSON.stringify(labels3));
-    await active3.evaluate(() => {
-        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'WEITER').click();
-    });
-    await sleep(700);
+    await clickButton(active3, 'WEITER');
     check('Weiter zählt als Zug', pubNow().turnsPlayed === 3, String(pubNow().turnsPlayed));
 
     // ---------- Sechs-Sekunden-Fenster nach dem Tausch ----------
@@ -460,10 +510,7 @@ async function run() {
     });
     check('TV zeigt das Fenster am richtigen Platz', tvWindow === 'aufgehen?', String(tvWindow));
 
-    await active4.evaluate(() => {
-        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'WEITERGEBEN').click();
-    });
-    await sleep(700);
+    await clickButton(active4, 'WEITERGEBEN');
     const afterWindow = pubNow();
     check('Weitergeben schließt das Fenster',
         afterWindow.swapWindowSeat === null || afterWindow.swapWindowSeat === undefined,
@@ -477,10 +524,8 @@ async function run() {
     const labels5 = await buttonsOf(active5);
     check('Nach genutztem Weiter darf man ohne Tausch aufgehen',
         labels5.some(l => l === 'AUFGEHEN'), JSON.stringify(labels5));
-    await active5.evaluate(() => {
-        Array.from(document.querySelectorAll('.kt-btn')).find(b => b.textContent === 'AUFGEHEN').click();
-    });
-    await sleep(900);
+    await clickButton(active5, 'AUFGEHEN');
+    await sleep(400);
     const afterKnock = pubNow();
     const knocker = afterKnock.knockedBySeat;
     check('Phase ist knocked', afterKnock.phase === 'knocked', afterKnock.phase);
@@ -544,7 +589,8 @@ async function run() {
 
     // ---------- Computer-Runde im selben Browser ----------
     console.log('\n--- Computer-Runde ---');
-    const tv2 = await open(`http://localhost:${PORT}/index.html`, 'tv-uid');
+    const tv2 = await open(`http://localhost:${PORT}/index.html`, 'tv-uid',
+        { starterSeconds: 5, botMoveSeconds: 1.4 });
     await sleep(2500);
     const sessionId2 = Object.keys(tree.games || {}).filter(k => k !== sessionId)[0] || sessionId;
     const pubNow2 = () => (tree.games[sessionId2] || {}).public || {};
@@ -563,9 +609,7 @@ async function run() {
         Array.from(document.querySelectorAll('.kt-btn'))
             .find(b => /Gäste bekommen Karten/.test(b.textContent)).click();
     });
-    // Kurz warten: Geber-Anzeige (starterSeconds = 1) ist dann durch und die
-    // Runde laeuft - genau der Moment, in dem ein Gast dazukommen koennte.
-    await sleep(1500);
+    await sleep(900);
 
     const started = pubNow2();
     check('Computer-Runde markiert', started.botGame === true, JSON.stringify(started.botGame));
@@ -592,8 +636,6 @@ async function run() {
      * eigenem Blatt zum Mitschauen.
      */
     const phaseBeforeGuest = pubNow2().phase;
-    console.log('  (Sessions: ' + JSON.stringify(Object.keys(tree.games || {})) +
-                ' | Ziel: ' + sessionId2 + ' | Phase: ' + phaseBeforeGuest + ')');
     const phone4 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-4');
     await sleep(1500);
     const guest = await phone4.evaluate(() => ({
