@@ -6002,6 +6002,38 @@
 
         const googleScriptUrl = "https://script.google.com/macros/s/AKfycbwDpgEQ6-daPRkqDc_IEMobTEv5W13hFBdLzEJ3tQJaOlsJLZNgC7-QPcHBrB4oaoxJ/exec";
 
+        /*
+         * Karaoke-Fotos kommen roh aus dem Drive-Ordner - anders als die
+         * kuratierte Besuchergalerie haben sie keinen Titel, nur den
+         * Dateinamen vom Handy (z. B. "IMG_2451.jpg" oder eine
+         * WhatsApp-Bezeichnung). Seit Karaoke-Fotos viel oefter drankommen
+         * (jedes zweite Bild statt selten im grossen Pool), fiel das erst
+         * richtig auf. Erkennbare Dateinamen werden hier abgefangen und durch
+         * einen der kurzen Sprueche ersetzt statt sie roh anzuzeigen.
+         */
+        function schautWieDateiname(t) {
+            const s = (t || '').trim();
+            if (!s) return true;
+            if (/\.(jpe?g|png|heic|heif|webp|gif|bmp)$/i.test(s)) return true;               // Endet auf Bild-Endung
+            if (/^(IMG|DSC|DCIM|PXL|VID|WA)[_-]?\d/i.test(s)) return true;                   // Kamera-/Messenger-Namensmuster
+            if (!/\s/.test(s) && /\d{3,}/.test(s)) return true;                              // Kein Leerzeichen, viele Ziffern - kein Satz
+            return false;
+        }
+        const GALERIE_SPRUECHE = [
+            "Beste Stimmung im Café!", "Da geht die Post ab! 🎉", "Mikro an, Party an! 🎤",
+            "Volle Kanne gute Laune", "Bühne frei fürs City Café", "Karaoke-Helden am Werk",
+            "Hier wird gefeiert!", "Stimmung pur im Fischl", "Ohrwurm-Alarm! 🎶",
+            "Applaus für diese Performance", "Nächster Song, nächster Star", "Sing, tanz, lach!"
+        ];
+        let letzterSpruch = -1;
+        function zufaelligerSpruch() {
+            if (GALERIE_SPRUECHE.length === 1) return GALERIE_SPRUECHE[0];
+            let i;
+            do { i = Math.floor(Math.random() * GALERIE_SPRUECHE.length); } while (i === letzterSpruch);
+            letzterSpruch = i;
+            return GALERIE_SPRUECHE[i];
+        }
+
         async function loadDriveFolderImages() {
             try {
                 const response = await fetch(googleScriptUrl);
@@ -6094,9 +6126,9 @@
             if (!imagePlaylist || imagePlaylist.length === 0) return;
             const data = imagePlaylist[currentPlaylistIndex]; 
             currentPlaylistIndex = (currentPlaylistIndex + 1) % imagePlaylist.length;
-            document.getElementById('gallery-current-badge').textContent = data.badge || "Zu Besuch"; 
+            document.getElementById('gallery-current-badge').textContent = data.badge || "Zu Besuch";
             document.getElementById('gallery-current-date').textContent = data.date || "";
-            setCrumblingTitle(data.title || "Beste Stimmung im Cafe!");
+            setCrumblingTitle(schautWieDateiname(data.title) ? zufaelligerSpruch() : data.title);
             const gImg1 = document.getElementById('gallery-img1'), gImg2 = document.getElementById('gallery-img2');
             if (isGalleryImg1Active) { gImg2.src = data.src; gImg1.classList.remove('active'); gImg2.classList.add('active'); isGalleryImg1Active = false; } 
             else { gImg1.src = data.src; gImg2.classList.remove('active'); gImg1.classList.add('active'); isGalleryImg1Active = true; }
