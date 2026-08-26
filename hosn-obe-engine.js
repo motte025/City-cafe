@@ -293,10 +293,19 @@
      * kann also strukturell nicht schummeln. Ausgeteilt wird mit einem
      * gleichverteilten Fisher-Yates-Shuffle ueber das volle 32er-Blatt.
      */
-    var BOT_KNOCK_STRONG = 29;      // damit endet die Runde sofort
+    var BOT_KNOCK_STRONG = 27;      // damit endet die Runde sofort
     var BOT_KNOCK_SOLID = 24;       // solide Hand und nichts mehr zu holen
     var BOT_MIN_GAIN = 1;           // darunter lohnt kein Tausch
     var BOT_GIVEAWAY_WEIGHT = 0.18; // wie stark eine verschenkte hohe Karte zaehlt
+    /*
+     * Feuer kam viel zu oft, weil der Computer stur den hoechsten Wert suchte
+     * und damit zielsicher auf die 31 zusteuerte. Er spielt jetzt auf eine
+     * solide Hand statt auf den Jackpot: ein Zug, der genau in Feuer endet,
+     * wird um diesen Betrag abgewertet - genommen wird er nur noch, wenn es
+     * keine vernuenftige Alternative gibt. Zusammen mit der frueheren
+     * Aufgeh-Schwelle (27 statt 29) endet die Runde meist vorher.
+     */
+    var BOT_FIRE_AVOID = 12;
 
     // Was die abgegebene Karte dem naechsten Spieler wert sein koennte. Der
     // Computer weiss nicht, was der braucht - aber eine hohe Karte hilft
@@ -393,8 +402,10 @@
         var allOrNothing = middleWorthTakingAll(middleCards);
 
         if (allOrNothing) {
-            var setValue = scoreHand(middleCards).score;
-            if (setValue >= current + BOT_MIN_GAIN) {
+            var set = scoreHand(middleCards);
+            var setValue = set.score;
+            // Ein Satz, der sofort Feuer waere, ist fuer den Computer kein Ziel.
+            if (!set.fire && setValue >= current + BOT_MIN_GAIN) {
                 return { type: 'all', knock: canKnock && setValue >= knockAt };
             }
             if (opts.canPass) return { type: 'pass' };
@@ -408,13 +419,17 @@
             for (var m = 0; m < 3; m++) {
                 var trial = hand.slice();
                 trial[h] = middleCards[m];
-                var value = scoreHand(trial).score;
+                var trialScore = scoreHand(trial);
+                var value = trialScore.score;
                 var utility = value - BOT_GIVEAWAY_WEIGHT * giveawayCost(hand[h], middleCards);
+                // Feuer wird abgewertet, statt es anzusteuern - siehe BOT_FIRE_AVOID.
+                var rank = trialScore.fire ? value - BOT_FIRE_AVOID : value;
+                if (trialScore.fire) utility -= BOT_FIRE_AVOID;
                 if (!best || utility > best.utility) {
                     best = { handIndex: h, middleIndex: m, value: value, utility: utility };
                 }
-                if (!strongest || value > strongest.value) {
-                    strongest = { handIndex: h, middleIndex: m, value: value };
+                if (!strongest || rank > strongest.rank) {
+                    strongest = { handIndex: h, middleIndex: m, value: value, rank: rank };
                 }
             }
         }
