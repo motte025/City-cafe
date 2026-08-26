@@ -6002,17 +6002,53 @@
 
         const googleScriptUrl = "https://script.google.com/macros/s/AKfycbwDpgEQ6-daPRkqDc_IEMobTEv5W13hFBdLzEJ3tQJaOlsJLZNgC7-QPcHBrB4oaoxJ/exec";
 
-        async function loadDriveFolderImages() { 
-            try { 
-                const response = await fetch(googleScriptUrl); 
-                const data = await response.json(); 
-                if(data && data.length > 0) visitorGalleryData = data; 
-            } catch (e) {} 
+        async function loadDriveFolderImages() {
+            try {
+                const response = await fetch(googleScriptUrl);
+                const data = await response.json();
+                if(data && data.length > 0) {
+                    const bekannteSrcs = new Set(visitorGalleryData.map(d => d.src));
+                    const neueKaraokeBilder = data.filter(d => d.isKaraoke && !bekannteSrcs.has(d.src));
+                    visitorGalleryData = data;
+                    // Neue Karaoke-Fotos nicht erst beim naechsten Voll-Shuffle
+                    // einreihen, sondern sofort direkt nach dem aktuellen Bild
+                    // in die laufende Playlist einfuegen.
+                    if (neueKaraokeBilder.length > 0 && imagePlaylist && imagePlaylist.length > 0) {
+                        imagePlaylist.splice(currentPlaylistIndex, 0, ...neueKaraokeBilder);
+                    }
+                }
+            } catch (e) {}
         }
+        loadDriveFolderImages();
+        setInterval(loadDriveFolderImages, 60 * 1000); // eigenstaendiger Foto-Refresh, unabhaengig vom Sidebar-Rotationszyklus
+
+        const KARAOKE_MAX_PRO_DURCHLAUF = 30; // pro Galerie-Durchlauf max. so viele Karaoke-Fotos (bei mehr: zufaellige Auswahl, naechster Durchlauf zeigt wieder andere)
+        const ANDERE_MAX_PRO_DURCHLAUF = 30;  // "die letzten 30 Bilder" fuer alle Fotos ausserhalb des Karaoke-Ordners
 
         function preparePlaylist() {
             if (!visitorGalleryData || visitorGalleryData.length === 0) { imagePlaylist = []; return; }
-            imagePlaylist = shuffleArray(visitorGalleryData);
+
+            // visitorGalleryData kommt von galerie.gs bereits neueste-zuerst sortiert.
+            const karaokeBilder = visitorGalleryData.filter(d => d.isKaraoke);
+            const andereBilder = visitorGalleryData.filter(d => !d.isKaraoke).slice(0, ANDERE_MAX_PRO_DURCHLAUF);
+
+            const andereShuffled = shuffleArray(andereBilder);
+            const karaokeShuffled = shuffleArray(karaokeBilder).slice(0, KARAOKE_MAX_PRO_DURCHLAUF);
+
+            if (karaokeShuffled.length === 0) {
+                imagePlaylist = andereShuffled;
+            } else if (andereShuffled.length === 0) {
+                imagePlaylist = karaokeShuffled;
+            } else {
+                // Karaoke-Fotos immer und haeufiger zeigen: abwechselnd ein
+                // Karaoke-Foto und ein "anderes" Foto (Karaoke-Pool wird bei
+                // Bedarf zyklisch wiederholt, wenn er kleiner ist).
+                imagePlaylist = [];
+                andereShuffled.forEach((bild, i) => {
+                    imagePlaylist.push(karaokeShuffled[i % karaokeShuffled.length]);
+                    imagePlaylist.push(bild);
+                });
+            }
             currentPlaylistIndex = 0;
         }
 
