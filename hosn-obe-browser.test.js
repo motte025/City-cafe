@@ -765,6 +765,40 @@ async function run() {
     check('Gast darf nicht eingreifen', guest.buttons.length === 0, JSON.stringify(guest.buttons));
     check('Gast weiß, dass der Computer spielt', /Computer/.test(guest.status), guest.status);
 
+    /*
+     * Die Mitte darf beim Tausch nie aufklaffen.
+     *
+     * Frueher lief ein Tausch in zwei Schritten: die genommene Karte flog weg,
+     * die Mitte zeigte solange nur zwei Karten, und erst danach fiel die eigene
+     * Karte in die Luecke. Das las sich wie zwei getrennte Zuege. Jetzt legt
+     * man seine Karte auf die Zielkarte, erst dann hebt die ab - waehrend der
+     * ganzen Runde liegen also durchgehend drei Karten in der Mitte.
+     *
+     * Gemessen wird per requestAnimationFrame, damit auch ein Aussetzer von
+     * wenigen Frames auffaellt.
+     */
+    await tv2.evaluate(() => {
+        window.__midMin = 3;
+        const tick = () => {
+            const view = document.getElementById('media-view-hosnobe');
+            if (view && view.classList.contains('active')) {
+                const slots = document.querySelectorAll('#kt-middle .kt-middle-card');
+                const wrap = document.getElementById('kt-middle');
+                const shown = wrap && getComputedStyle(wrap).display !== 'none';
+                if (shown && slots.length === 3) {
+                    let visible = 0;
+                    slots.forEach(el => {
+                        const img = el.querySelector('img');
+                        if (getComputedStyle(el).visibility !== 'hidden' && img && img.getAttribute('src')) visible++;
+                    });
+                    if (visible < window.__midMin) window.__midMin = visible;
+                }
+            }
+            requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    });
+
     // Runde durchlaufen lassen
     let sawKnock = false, sawProgressiveReveal = false, maxRevealDuringPlay = 0;
     for (let i = 0; i < 900; i++) {
@@ -779,6 +813,10 @@ async function run() {
         if (p.phase === 'idle' && i > 150) break;
         await sleep(60);
     }
+
+    const midMin = await tv2.evaluate(() => window.__midMin);
+    check('Mitte klafft beim Tausch nie auf', midMin === 3,
+        'wenigste sichtbare Mittenkarten: ' + midMin);
 
     const done = pubNow2();
     check('Runde läuft von allein bis zum Ende',
