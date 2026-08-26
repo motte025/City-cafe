@@ -4171,13 +4171,19 @@
          * Update herum - eine neu eingetauschte Karte bekommt aber automatisch
          * eine andere Lage.
          */
-        function ktMiddleSkew(code, index) {
+        function ktMiddleSkewParts(code, index) {
             let hash = index * 2654435761;
             for (let i = 0; i < code.length; i++) hash = (hash * 31 + code.charCodeAt(i)) >>> 0;
-            const rotate = ((hash % 17) - 8) * 1.15;          // rund -9 bis +9 Grad
-            const dx = (((hash >> 5) % 13) - 6);              // -6 bis +6 px
-            const dy = (((hash >> 9) % 19) - 9);              // -9 bis +9 px
-            return 'translate(' + dx + 'px, ' + dy + 'px) rotate(' + rotate.toFixed(2) + 'deg)';
+            return {
+                rotate: ((hash % 17) - 8) * 1.15,             // rund -9 bis +9 Grad
+                dx: (((hash >> 5) % 13) - 6),                 // -6 bis +6 px
+                dy: (((hash >> 9) % 19) - 9)                  // -9 bis +9 px
+            };
+        }
+
+        function ktMiddleSkew(code, index) {
+            const s = ktMiddleSkewParts(code, index);
+            return 'translate(' + s.dx + 'px, ' + s.dy + 'px) rotate(' + s.rotate.toFixed(2) + 'deg)';
         }
 
         function ktQrUrl(size) {
@@ -4357,9 +4363,13 @@
 
         // Auch die Mitte wird nur noch aktualisiert, nicht neu gebaut.
         let ktMiddleEls = null;
-        // Welche Plaetze gerade leer bleiben, weil ihre Karte noch fliegt -
-        // Schluessel: Mitten-Index bzw. "sitz:index". Siehe ktAnimateLastMove().
-        let ktMiddleHide = {};
+        /*
+         * ktMiddleHold: solange getauscht wird, zeigt der Mitten-Platz weiter
+         * die ALTE Karte - man legt seine Karte ja obendrauf, die Mitte klafft
+         * nie auf. ktSeatHide: das eigene Deck zeigt zwei Karten, solange die
+         * abgegebene unterwegs ist. Siehe ktAnimateLastMove().
+         */
+        let ktMiddleHold = {};
         let ktSeatHide = {};
 
         function ktBuildMiddle() {
@@ -4390,14 +4400,13 @@
             cards.forEach((code, index) => {
                 const slot = ktMiddleEls[index];
                 if (!slot) return;
-                // Ist die Karte dieses Platzes noch unterwegs, bleibt er leer -
-                // der Wechsel auf die neue Karte passiert dann unsichtbar.
-                const want = ktMiddleHide[index] ? 'hidden' : '';
-                if (slot.el.style.visibility !== want) slot.el.style.visibility = want;
-                if (slot.code === code) return;                // unveraendert: nichts anfassen
-                slot.code = code;
-                slot.img.src = KtEngine.cardImage(code, 'cards/');
-                slot.el.style.transform = ktMiddleSkew(code, index);
+                // Waehrend des Tauschs bleibt die alte Karte liegen, bis die
+                // eigene Karte darauf gelandet ist - siehe ktAnimateLastMove().
+                const showCode = ktMiddleHold.hasOwnProperty(index) ? ktMiddleHold[index] : code;
+                if (slot.code === showCode) return;            // unveraendert: nichts anfassen
+                slot.code = showCode;
+                slot.img.src = KtEngine.cardImage(showCode, 'cards/');
+                slot.el.style.transform = ktMiddleSkew(showCode, index);
             });
 
             // Hinweis "Alle 3 nehmen" liegt ueber der Mitte, sobald sie einen
@@ -4630,9 +4639,27 @@
             return el && el.cards[index] ? ktStageGeom(el.cards[index]) : null;
         }
 
-        function ktMiddleGeom(index) {
+        /*
+         * Die Ruhelage eines Mitten-Platzes OHNE Schraeglauf. Der Platz traegt
+         * gerade die alte Karte und damit deren Drehung - fuer die Zielpose der
+         * eigenen Karte brauchen wir die nackte Mitte des Elements.
+         */
+        function ktMiddleBase(index) {
             const slot = ktMiddleEls && ktMiddleEls[index];
-            return slot ? ktStageGeom(slot.el) : null;
+            if (!slot) return null;
+            const prev = slot.el.style.transform;
+            slot.el.style.transform = 'none';
+            const g = ktStageGeom(slot.el);
+            slot.el.style.transform = prev;
+            return g;
+        }
+
+        // Wo und wie schraeg eine bestimmte Karte auf diesem Platz liegen wird.
+        function ktMiddlePose(code, index) {
+            const base = ktMiddleBase(index);
+            if (!base || !code) return base;
+            const sk = ktMiddleSkewParts(code, index);
+            return { x: base.x + sk.dx, y: base.y + sk.dy, w: base.w, h: base.h, angle: sk.rotate };
         }
 
         /*
@@ -4642,9 +4669,9 @@
          * sichtbar und der Flieger im naechsten Frame entfernt. So ist nie
          * ein Frame lang keine oder eine doppelte Karte zu sehen.
          */
-        function ktFly(code, from, to, delay, onLand) {
+        function ktFly(code, from, to, delay, onLand, keepAfterLanding) {
             const stage = document.querySelector('#media-view-hosnobe .kt-stage');
-            if (!stage || !from || !to || !code) { if (onLand) onLand(); return; }
+            if (!stage || !from || !to || !code) { if (onLand) onLand(); return null; }
 
             const el = document.createElement('div');
             el.className = 'kt-flyer';
@@ -4662,8 +4689,11 @@
                 if (landed) return;
                 landed = true;
                 if (onLand) onLand();
-                // Erst im naechsten Frame raeumen: die echte Karte steht dann
-                // schon, der Tausch faellt nicht auf.
+                // keepAfterLanding: die abgelegte Karte bleibt liegen, bis die
+                // Karte darunter abhebt - der Aufrufer raeumt sie dann weg.
+                if (keepAfterLanding) return;
+                // Sonst erst im naechsten Frame raeumen: die echte Karte steht
+                // dann schon, der Tausch faellt nicht auf.
                 requestAnimationFrame(() => { if (el.parentNode) el.remove(); });
             };
 
@@ -4688,6 +4718,7 @@
             anim.onfinish = land;
             // Sicherheitsnetz: haengt die Animation (WebView), greift der Timer.
             later(land, KT_FLY_MS + (delay || 0) + 400);
+            return el;
         }
 
         let ktLastAnimatedMove = null;
@@ -4714,49 +4745,66 @@
              * echte Karte erst, wenn die Animation fertig ist (onLand) - nicht
              * ueber einen nebenherlaufenden Timer.
              */
-            const showMiddle = (i) => { delete ktMiddleHide[i]; ktRenderMiddle(); };
             const showSeatCard = (i) => { delete ktSeatHide[seat + ':' + i]; ktRenderSeats(); };
+            const cards = ktPub.middleCards || [];
+
+            /*
+             * Ein Tausch ist EINE Bewegung, kein Loch und kein Nachruecken:
+             * die eigene Karte wandert hinueber und legt sich GENAU auf die
+             * Karte, die man haben will - erst dann hebt die ab und kommt
+             * zurueck. Die Mitte zeigt deshalb durchgehend drei Karten (bis zur
+             * Uebergabe die alte, danach die neue), das eigene Deck zwei,
+             * solange die abgegebene Karte unterwegs ist.
+             *
+             * Vorher lief es andersherum: die Mitte klaffte zuerst auf, die
+             * genommene Karte flog weg und die eigene fiel in die Luecke - das
+             * las sich wie zwei getrennte Zuege statt wie ein Tausch.
+             */
+            const swapAt = (i, gaveCode, tookCode, cardIndex, delay) => {
+                if (!tookCode || !gaveCode) return;
+                ktMiddleHold[i] = tookCode;                  // Mitte behaelt die alte Karte
+                ktSeatHide[seat + ':' + cardIndex] = true;   // Deck zeigt zwei
+            };
+
+            const runSwap = (i, gaveCode, tookCode, cardIndex, delay) => {
+                if (!tookCode || !gaveCode) return;
+                const hand = ktSeatCardGeom(seat, cardIndex);
+                const oldPose = ktMiddlePose(tookCode, i);   // wo die alte Karte liegt
+                const newPose = ktMiddlePose(cards[i], i);   // wo die eigene liegen wird
+
+                // Hinlegen: die eigene Karte landet auf der Zielkarte.
+                const giveEl = ktFly(gaveCode, hand, newPose, delay, null, true);
+                // Uebergabe: die Zielkarte hebt ab, darunter liegt die eigene.
+                later(() => {
+                    delete ktMiddleHold[i];
+                    ktRenderMiddle();
+                    requestAnimationFrame(() => { if (giveEl && giveEl.parentNode) giveEl.remove(); });
+                    ktFly(tookCode, oldPose, hand, 0, () => showSeatCard(cardIndex));
+                }, delay + KT_FLY_MS + KT_FLY_GAP);
+            };
 
             if (move.type === 'single') {
                 const idx = isNaN(Number(move.middleIndex)) ? 1 : Number(move.middleIndex);
-                if (move.took) { ktMiddleHide[idx] = true; ktSeatHide[seat + ':2'] = true; }
+                swapAt(idx, move.gave, move.took, 2, 0);
                 ktRenderMiddle();
                 ktRenderSeats();
-
-                const mid = ktMiddleGeom(idx);
-                const hand = ktSeatCardGeom(seat, 2);
-                /*
-                 * Erst nehmen, dann hinlegen - nie beides gleichzeitig, sonst
-                 * weiss niemand, welche Karte in welche Richtung unterwegs war.
-                 * Diese Reihenfolge haelt zusaetzlich beide Stapel ehrlich:
-                 * die Mitte gibt ab, bevor sie neu bekommt.
-                 */
-                if (move.took) ktFly(move.took, mid, hand, 0, () => showSeatCard(2));
-                if (move.gave) ktFly(move.gave, hand, mid, KT_FLY_MS + KT_FLY_GAP, () => showMiddle(idx));
+                runSwap(idx, move.gave, move.took, 2, 0);
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP;
 
             } else if (move.type === 'all') {
                 /*
-                 * Rundumtausch: erst kommen die drei Mittenkarten versetzt zum
-                 * Spieler, danach wandern seine drei hinaus. Der Versatz ist
-                 * klein genug, dass es zusammenhaengt, und gross genug, dass
-                 * die einzelne Karte lesbar bleibt.
+                 * Rundumtausch: dreimal derselbe Ablauf, nur versetzt. Der
+                 * Versatz ist klein genug, dass es zusammenhaengt, und gross
+                 * genug, dass die einzelne Karte lesbar bleibt.
                  */
                 const gave = move.gave || [];
                 const took = move.took || [];
                 const step = 260;
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP + 2 * step;
-                for (let i = 0; i < 3; i++) {
-                    if (took[i]) { ktMiddleHide[i] = true; ktSeatHide[seat + ':' + i] = true; }
-                }
+                for (let i = 0; i < 3; i++) swapAt(i, gave[i], took[i], i, i * step);
                 ktRenderMiddle();
                 ktRenderSeats();
-                for (let i = 0; i < 3; i++) {
-                    const mid = ktMiddleGeom(i);
-                    const hand = ktSeatCardGeom(seat, i);
-                    if (took[i]) ktFly(took[i], mid, hand, i * step, () => showSeatCard(i));
-                    if (gave[i]) ktFly(gave[i], hand, mid, KT_FLY_MS + KT_FLY_GAP + i * step, () => showMiddle(i));
-                }
+                for (let i = 0; i < 3; i++) runSwap(i, gave[i], took[i], i, i * step);
             }
 
             /*
@@ -5298,7 +5346,7 @@
             ktTurnDisplaySeat = null;
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
-            ktMiddleHide = {};
+            ktMiddleHold = {};
             ktSeatHide = {};
             ktStarterKey = '';
             ktBotPassUsed = {};
