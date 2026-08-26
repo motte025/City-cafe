@@ -520,7 +520,7 @@
         var suffix = r.fire ? ' 🔥 FEUER'
             : r.threeOfAKind ? ' <span class="kt-score-suit">Drilling</span>'
             : r.suit ? ' <span class="kt-score-suit">' + E.SUIT_SYMBOL[r.suit] + '</span>' : '';
-        els.handScore.innerHTML = r.score + suffix;
+        els.handScore.innerHTML = E.formatScore(r.score) + suffix;
     }
 
     function button(label, cls, onClick, disabled) {
@@ -973,7 +973,7 @@
 
             var score = document.createElement('div');
             score.className = 'kt-reveal-score';
-            score.textContent = scores[seat] !== undefined ? scores[seat] : '–';
+            score.textContent = scores[seat] !== undefined ? E.formatScore(scores[seat]) : '–';
             row.appendChild(score);
 
             els.statusExtra.appendChild(row);
@@ -1087,11 +1087,13 @@
 
         } else if (phase === 'reveal') {
             var paying = pub.payingSeats || [];
-            var fire = (pub.fireSeats || []).length > 0;
+            var fire = (pub.fireSeats || []).length > 0 || !!pub.tableFire;
             var iPay = paying.indexOf(mySeat) !== -1;
             setStatus(
-                fire ? '🔥 FEUER!' : (iPay ? 'Du zahlst die Runde!' : 'Aufgedeckt'),
-                fire ? 'Alle unter ' + E.FIRE_PAY_BELOW + ' Punkten zahlen — und der Schwächste sowieso.' +
+                pub.tableFire ? '🔥 TISCHFEUER!' : fire ? '🔥 FEUER!' : (iPay ? 'Du zahlst die Runde!' : 'Aufgedeckt'),
+                pub.tableFire ? 'Die Mitte stand bei 31. Alle unter ' + E.FIRE_PAY_BELOW +
+                       ' Punkten zahlen — und der Schwächste sowieso.' + (iPay ? ' Du bist dabei.' : ' Du bist raus.')
+                     : fire ? 'Alle unter ' + E.FIRE_PAY_BELOW + ' Punkten zahlen — und der Schwächste sowieso.' +
                        (iPay ? ' Du bist dabei.' : ' Du bist raus.')
                      : (iPay ? 'Niedrigste Hand — Prost!' : 'Diesmal nicht du.'),
                 iPay ? 'is-error' : '');

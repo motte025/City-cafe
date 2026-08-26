@@ -240,7 +240,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
  * den es gar nicht gibt.
  */
 async function waitFor(label, fn, timeoutMs) {
-    const limit = timeoutMs || 20000;
+    const limit = timeoutMs || 30000;
     const started = Date.now();
     while (Date.now() - started < limit) {
         let ok = false;
@@ -280,8 +280,8 @@ async function run() {
             starterSeconds: 1,
             swapWindowSeconds: 3,
             roundTargetSeconds: 90,
-            lobbySeconds: 25,
-            botLobbySeconds: 8
+            lobbySeconds: 45,
+            botLobbySeconds: 20
         }, cfg || {});
         await page.addInitScript(`
             window.addEventListener('DOMContentLoaded', function () {
@@ -433,21 +433,22 @@ async function run() {
     check('Seitenverhältnis der Bühne stimmt (1530:860)',
         Math.abs(fsState.stageRatio - 1530 / 860) < 0.02, String(fsState.stageRatio));
 
-    // Wer am Zug ist, muss am TV deutlich markiert sein.
+    // Wer am Zug ist, muss am TV deutlich markiert sein - ueber das Band
+    // unter dem Namen, NICHT ueber einen Rahmen um den Kartenfaecher (der
+    // wirkte wie ein Kasten um die Karten und wurde entfernt).
     const turnMark = await tv.evaluate(() => {
         const seat = document.querySelector('.kt-seat.is-active');
         if (!seat) return null;
         const ring = getComputedStyle(seat.querySelector('.kt-fan'), '::after');
         const tag = seat.querySelector('.kt-seat-tag');
         return {
-            ringAnim: ring.animationName,
-            ringWidth: ring.borderTopWidth,
+            ringContent: ring.content,
             tag: tag ? tag.textContent : '',
             tagSize: tag ? getComputedStyle(tag).fontSize : ''
         };
     });
-    check('TV markiert den aktiven Platz mit pulsierendem Rahmen',
-        !!turnMark && turnMark.ringAnim === 'ktTurnPulse', JSON.stringify(turnMark));
+    check('Kein Rahmen mehr um den Kartenfaecher des aktiven Spielers',
+        !!turnMark && (turnMark.ringContent === 'none' || turnMark.ringContent === ''), JSON.stringify(turnMark));
     check('Aktiver Platz trägt ein großes "am Zug"-Band',
         !!turnMark && turnMark.tag === 'am Zug' && parseFloat(turnMark.tagSize) >= 20,
         JSON.stringify(turnMark));

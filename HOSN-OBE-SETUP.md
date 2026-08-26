@@ -170,16 +170,21 @@ welches Widget gerade läuft.
 - Eine Runde dauert rund **1:30 bis 2:00**. Läuft die Zeit ab
   (`roundTargetSeconds`), wird aufgedeckt, egal wie weit gespielt wurde.
 - Wertung: gleiche Farbe wird addiert (Bube/Dame/König = 10, Ass = 11).
-- **Drei gleiche Ränge** (z. B. drei Asse) = **31 Punkte**, aber ausdrücklich
-  *kein* Feuer — es wird ganz normal weitergespielt.
+- **Drei gleiche Ränge** (z. B. drei Asse) = **30,5 Punkte** — knapp unter
+  einem echten Feuer-Flush, aber ausdrücklich *kein* Feuer: es wird ganz
+  normal weitergespielt.
 - **Feuer** = drei Karten **derselben Farbe** mit genau 31 Punkten
   (Ass + zwei Zehner-Karten, in jeder Farbe möglich). Feuer **beendet die
   Runde sofort**: es wird nicht mehr getauscht, alle decken auf.
+- **Tischfeuer**: stehen die **drei Karten in der Mitte** selbst bei 31
+  (derselbe Flush-Fall), gilt dasselbe — egal wessen Zug es gerade ist, alle
+  decken sofort auf. Das gilt auch dann, wenn die Mitte erst durch einen
+  Tausch auf 31 kommt, nicht nur beim Austeilen.
 - **Normalfall:** die niedrigste Hand zahlt. Bei Gleichstand entscheidet die
   höchste Einzelkarte, danach die Farbrangfolge **Herz > Pik > Karo > Kreuz**.
   Da jede Karte im Deck einmalig ist, gibt es immer genau einen Verlierer.
-- **Bei Feuer** zahlen **alle unter 11 Punkten** — und zusätzlich der
-  **Schwächste in jedem Fall**, auch wenn er darüber liegt.
+- **Bei Feuer oder Tischfeuer** zahlen **alle unter 11 Punkten** — und
+  zusätzlich der **Schwächste in jedem Fall**, auch wenn er darüber liegt.
 - Liegt in der Mitte ein **Drilling oder drei gleiche Farben**, ist der
   Einzeltausch gesperrt: es gilt **alles oder nichts**. Man nimmt alle drei,
   geht auf oder gibt weiter.
@@ -220,6 +225,6 @@ Runden darauf, dass immer genau ein Verlierer feststeht.
 | `hosn-obe-engine.test.js` | Regel-Checks (`node hosn-obe-engine.test.js`) |
 | `hosn-obe-net.js` | Firebase-Anbindung, anonyme Anmeldung, Sitzplatzvergabe |
 | `hosn-obe.html` | Handy-Seite (Ziel des QR-Codes) |
-| `cards/back_lightblue.webp`, `cards/back_red.webp` | Zwei Kartenrückseiten, pro Runde eine davon |
+| `cards/back_red.webp` | Kartenrückseite für alle verdeckten Karten |
 | `hosn-obe-browser.test.js` | Browsertests (Handy + TV, `node hosn-obe-browser.test.js`) |
 | `index.html` | TV-Widget, Pause/Fortsetzen der Rotation, QR-Overlay |
