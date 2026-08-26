@@ -213,6 +213,26 @@ check('Halbe Chance zieht deutlich weniger Zehner-Karten',
 check('Dafuer kommen mehr niedrige Karten ins Spiel',
     fewHigh.low > evenDraw.low + 0.04, fewHigh.low.toFixed(3) + ' vs ' + evenDraw.low.toFixed(3));
 
+/*
+ * Regressionsschutz: die Gewichtung darf NICHT bestimmen, wer welche Karte
+ * bekommt. Sie sortiert hohe Karten ans Stapelende - wird danach nicht noch
+ * einmal gleichverteilt gemischt, bekommt Platz 1 systematisch die
+ * schwaechsten und die Mitte die staerksten Karten.
+ */
+function seatAverages(chances, rounds) {
+    var sums = [0, 0, 0, 0, 0, 0], midSum = 0;
+    for (var q = 0; q < rounds; q++) {
+        var dd = E.deal(6, null, chances);
+        for (var s4 = 0; s4 < 6; s4++) sums[s4] += E.scoreHand(dd.hands[s4]).score;
+        midSum += E.scoreHand(dd.middleCards).score;
+    }
+    return sums.map(function (v) { return v / rounds; }).concat([midSum / rounds]);
+}
+var spread = seatAverages({ ace: 0.35, high: 0.35 }, 12000);
+var lo = Math.min.apply(null, spread), hi = Math.max.apply(null, spread);
+check('Kein Platz wird durch die Gewichtung bevorzugt', hi - lo < 0.35,
+    'Spanne ' + lo.toFixed(2) + ' bis ' + hi.toFixed(2));
+
 // Der gewichtete Stapel bleibt ein vollstaendiges, duplikatfreies Deck.
 var wShuf = E.weightedShuffle(E.buildDeck(), null, { ace: 0.3, high: 0.4 });
 eq('Gewichteter Stapel hat alle 32 Karten', wShuf.length, 32);

@@ -178,9 +178,12 @@ welches Widget gerade läuft.
   *Wie oft Feuer vorkommt, lässt sich einstellen* — siehe `aceDrawChance`
   und `highCardDrawChance` in `hosn-obe-config.js`. Die Punkte und Regeln
   bleiben dabei unangetastet; hohe Karten bleiben nur öfter im ungenutzten
-  Rest des Stapels liegen (pro Runde werden je nach Spieleranzahl ohnehin
-  nur 11 bis 27 der 32 Karten ausgeteilt). Mit der Voreinstellung `0.5`
-  endet rund jede fünfte Computer-Runde mit Feuer statt jeder dritten.
+  Rest des Stapels liegen (im Spiel sind je nach Spieleranzahl ohnehin nur
+  9 bis 21 der 32 Karten). Mit der Voreinstellung `0.5` endet rund jede
+  vierte Computer-Runde mit Feuer statt jeder dritten — bei zwei Spielern
+  nur jede vierzehnte, bei sechs Spielern noch jede zweite. Das Deck hat
+  nur zwölf niedrige Karten (7/8/9), bei sechs Spielern sind aber 21 Karten
+  im Spiel; mindestens neun hohe müssen also dabei sein.
 - **Tischfeuer**: stehen die **drei Karten in der Mitte** selbst bei 31
   (derselbe Flush-Fall), gilt dasselbe — egal wessen Zug es gerade ist, alle
   decken sofort auf. Das gilt auch dann, wenn die Mitte erst durch einen

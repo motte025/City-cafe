@@ -42,10 +42,14 @@ window.HOSN_OBE_CONFIG = {
     // 10 Punkten (Zehn, Bube, Dame, König) derselben Farbe. Bei gleicher
     // Chance für alle 32 Karten endete rund jede dritte Runde mit Feuer.
     // Punkte und Regeln bleiben unverändert — hohe Karten bleiben nur öfter
-    // im ungenutzten Rest des Stapels liegen (pro Runde werden je nach
-    // Spieleranzahl nur 11 bis 27 der 32 Karten überhaupt ausgeteilt).
+    // im ungenutzten Rest des Stapels liegen (im Spiel sind je nach
+    // Spieleranzahl nur 9 bis 21 der 32 Karten).
     //   1.0 = wie ein normales Deck, jede Karte gleich oft  → ~35 % Feuer
-    //   0.7 = ~27 % Feuer     0.5 = ~20 % Feuer     0.35 = ~15 % Feuer
+    //   0.7 = ~29 % Feuer     0.5 = ~24 % Feuer     0.35 = ~19 % Feuer
+    // Die Wirkung hängt stark an der Spieleranzahl: bei 0.5 sind es 7 % bei
+    // zwei Spielern, aber 42 % bei sechs. Grund: das Deck hat nur 12 niedrige
+    // Karten (7/8/9), bei sechs Spielern sind aber 21 Karten im Spiel — also
+    // müssen mindestens 9 hohe dabei sein, egal wie stark gewichtet wird.
     // Kleiner heißt seltener Feuer; der Durchschnitts-Handwert bleibt dabei
     // fast gleich, das Spiel wird also nicht flacher.
     aceDrawChance: 0.5,      // Asse
