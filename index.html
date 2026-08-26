@@ -980,23 +980,8 @@
         .kt-seat.is-active .kt-seat-name { color: #00f2fe; text-shadow: 0 0 16px rgba(0,242,254,0.7); }
 
         /* ---------- Wer ist am Zug ----------
-           Muss quer durch das Lokal erkennbar sein: ein atmender Leuchtrahmen um
-           den Faecher und ein kraeftiges Band unter dem Namen. Animiert werden
-           ausschliesslich transform und opacity - Rahmen- oder Schattenanimationen
-           zwingen den Browser zum Neuzeichnen und kosten auf der Odroid-Box
-           spuerbar Bildrate. Der Rahmen ist genau EIN zusaetzliches Element. */
-        .kt-seat.is-active .kt-fan::after {
-            content: '';
-            position: absolute; left: -16px; right: -16px; top: -12px; bottom: -4px;
-            border: 4px solid #00f2fe; border-radius: 24px;
-            box-shadow: 0 0 30px rgba(0,242,254,0.75), inset 0 0 22px rgba(0,242,254,0.22);
-            animation: ktTurnPulse 1.15s ease-in-out infinite alternate;
-            pointer-events: none;
-        }
-        @keyframes ktTurnPulse {
-            from { transform: scale(1);     opacity: 0.65; }
-            to   { transform: scale(1.035); opacity: 1; }
-        }
+           Nur das Band unter dem Namen zeigt es - keine Umrandung um den
+           Faecher mehr, die wirkte wie ein Kasten um die Karten. */
         .kt-seat.is-active .kt-seat-tag {
             font-size: 20px; padding: 5px 18px; letter-spacing: 1.2px;
             background: #00f2fe; border-color: #00f2fe; color: #04222c;
@@ -1007,7 +992,6 @@
             background: #f4a300; border-color: #f4a300; color: #241600;
             box-shadow: 0 0 24px rgba(244,163,0,0.65);
         }
-        .kt-seat.is-window .kt-fan::after { border-color: #f4a300; box-shadow: 0 0 30px rgba(244,163,0,0.7); }
         .kt-seat.is-loser .kt-fan-card { box-shadow: 0 0 0 5px #ff3344, 0 6px 12px rgba(0,0,0,0.5); }
         .kt-seat.is-loser .kt-seat-name, .kt-seat.is-loser .kt-seat-score { color: #ff3344; }
         .kt-seat.is-fire .kt-fan-card { box-shadow: 0 0 0 5px #ff8a3d, 0 6px 12px rgba(0,0,0,0.5); }
@@ -4055,6 +4039,11 @@
         let ktTestSlotDone = null;   // Testmodus: so geht die Rotation weiter
         let ktBotPassUsed = {};      // welcher Computer-Platz sein "Weiter" verbraucht hat
         let ktRestarting = false;    // laeuft gerade ein "Neues Spiel starten"?
+        // Solange eine Karte noch fliegt, bleibt hier der VORHERIGE Sitz aktiv -
+        // sonst zeigt Banner/Rahmen "X ist am Zug", waehrend man noch sieht, wie
+        // der vorherige Spieler tauscht. null = ganz normal ktPub.currentTurnSeat anzeigen.
+        let ktTurnDisplaySeat = null;
+        let ktTurnDisplayTimer = null;
         let ktSwapWindowTimer = null;
         let ktLastSwapWindowSeat = null;
 
@@ -4285,6 +4274,15 @@
             const paying = ktPub.payingSeats || [];
             const fireSeats = ktPub.fireSeats || [];
             const back = ktCurrentBack();
+            // "Computer spielt allein": niemand hat eine private Hand zu
+            // schuetzen, also duerfen alle Karten die ganze Runde ueber offen
+            // liegen statt erst beim Aufdecken.
+            const allFacesUp = ktIsBotGame() && !ktPub.botSeats;
+            // Wer optisch als "dran" gilt: normalerweise der aktuelle Sitz,
+            // aber waehrend eine Karte noch fliegt bleibt der VORHERIGE Sitz
+            // markiert - sonst wechselt die Anzeige, bevor die Animation zeigt,
+            // wer eigentlich getauscht hat.
+            const displaySeat = ktTurnDisplaySeat !== null ? ktTurnDisplaySeat : Number(ktPub.currentTurnSeat);
 
             for (let seat = 0; seat < count; seat++) {
                 const el = ktSeatEls[seat];
@@ -4293,8 +4291,7 @@
                 // In der Computer-Runde spielt der TV jeden Platz - auch die, auf
                 // denen (noch) kein Gast sitzt. Ausgegraut wird dort nichts.
                 const occupied = ktIsBotGame() || !!(seats[seat] && seats[seat].uid);
-                const isTurn = phase !== 'reveal' && phase !== 'starter' &&
-                               Number(ktPub.currentTurnSeat) === seat;
+                const isTurn = phase !== 'reveal' && phase !== 'starter' && displaySeat === seat;
                 const inWindow = isTurn && Number(ktPub.swapWindowSeat) === seat;
                 ktSetClass(el.wrap, 'is-empty', !occupied);
                 ktSetClass(el.wrap, 'is-active', isTurn);
@@ -4303,7 +4300,7 @@
                 ktSetClass(el.wrap, 'is-fire', fireSeats.indexOf(seat) !== -1);
                 ktSetClass(el.wrap, 'is-knocker', Number(ktPub.knockedBySeat) === seat);
 
-                const hand = revealed[seat];
+                const hand = allFacesUp ? ktMirrorHands[seat] : revealed[seat];
                 for (let i = 0; i < 3; i++) {
                     const faceUp = !!(hand && hand[i]);
                     ktSetClass(el.cards[i], 'is-back', !faceUp);
@@ -4313,7 +4310,7 @@
                 const hasScore = phase === 'reveal' && scores[seat] !== undefined;
                 ktSetShown(el.score, hasScore);
                 if (hasScore) {
-                    ktSetText(el.score, scores[seat] + (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : ''));
+                    ktSetText(el.score, KtEngine.formatScore(scores[seat]) + (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : ''));
                 }
 
                 // Beim Aufdecken entfaellt das Abzeichen: dort steht unter dem
@@ -4419,6 +4416,9 @@
         function ktRenderBanner() {
             const phase = ktPub.phase || 'idle';
             const inWindow = ktPub.swapWindowSeat !== null && ktPub.swapWindowSeat !== undefined;
+            // Siehe ktRenderSeats: waehrend eine Karte noch fliegt, bleibt hier
+            // ebenfalls der vorherige Spieler stehen statt sofort umzuschalten.
+            const displaySeat = ktTurnDisplaySeat !== null ? ktTurnDisplaySeat : Number(ktPub.currentTurnSeat || 0);
             ktEl('kt-banner-sub').textContent =
                 phase === 'hostSelect' ? 'Spielmodus wird gewählt…' :
                 phase === 'countSelect' ? 'Spieleranzahl wird gewählt…' :
@@ -4428,7 +4428,7 @@
                 phase === 'starter' ? 'Höchste Karte beginnt' :
                 phase === 'playing' ? (inWindow
                     ? ktName(ktPub.swapWindowSeat) + ' — aufgehen oder weitergeben?'
-                    : ktName(ktPub.currentTurnSeat || 0) + ' ist am Zug') :
+                    : ktName(displaySeat) + ' ist am Zug') :
                 phase === 'knocked' ? 'Aufgegangen — die letzten Züge laufen' :
                 phase === 'reveal' ? (ktPub.fireBySeat !== null && ktPub.fireBySeat !== undefined
                     ? '🔥 FEUER — alle decken auf!' : 'Aufgedeckt') :
@@ -4493,10 +4493,17 @@
             const box = ktEl('kt-result');
             if (ktPub.phase !== 'reveal' || !ktPub.scores) { box.style.display = 'none'; return; }
             const paying = ktPub.payingSeats || [];
-            const fire = (ktPub.fireSeats || []).length > 0;
+            const fire = (ktPub.fireSeats || []).length > 0 || !!ktPub.tableFire;
             box.style.display = '';
             box.className = 'kt-result' + (fire ? ' is-fire' : '');
-            if (fire) {
+            if (ktPub.tableFire) {
+                ktEl('kt-result-main').textContent = '🔥 TISCHFEUER!';
+                ktEl('kt-result-sub').textContent = 'Die Mitte stand bei 31 — alle decken auf. ' +
+                    (paying.length
+                        ? ktNameList(paying) + (paying.length > 1 ? ' zahlen' : ' zahlt') +
+                          ' (unter ' + KtEngine.FIRE_PAY_BELOW + ' Punkte und der Schwächste)'
+                        : 'Niemand unter ' + KtEngine.FIRE_PAY_BELOW + ' Punkten — diesmal kommen alle davon!');
+            } else if (fire) {
                 ktEl('kt-result-main').textContent = '🔥 FEUER!';
                 ktEl('kt-result-sub').textContent = paying.length
                     ? ktNameList(paying) + (paying.length > 1 ? ' zahlen' : ' zahlt') +
@@ -4585,6 +4592,8 @@
             const seatPoint = ktSeatPoint(Number(move.seat));
             if (!seatPoint) return;
 
+            let totalMs = 0;
+
             if (move.type === 'single') {
                 // Erst hin, dann zurueck - nie beides gleichzeitig, sonst weiss
                 // niemand, welche Karte in welche Richtung unterwegs war.
@@ -4592,6 +4601,7 @@
                 const mid = ktMiddlePoint(isNaN(idx) ? 1 : idx);
                 if (move.gave) ktFly(move.gave, seatPoint, mid, 0);
                 if (move.took) ktFly(move.took, mid, seatPoint, KT_FLY_MS + KT_FLY_GAP);
+                totalMs = KT_FLY_MS * 2 + KT_FLY_GAP;
 
             } else if (move.type === 'all') {
                 /*
@@ -4608,6 +4618,25 @@
                     if (gave[i]) ktFly(gave[i], seatPoint, mid, i * step);
                     if (took[i]) ktFly(took[i], mid, seatPoint, KT_FLY_MS + KT_FLY_GAP + i * step);
                 }
+                totalMs = KT_FLY_MS * 2 + KT_FLY_GAP + 2 * step;
+            }
+
+            /*
+             * "X ist am Zug" schaltete frueher sofort auf den naechsten Spieler
+             * um, waehrend am Tisch noch die Karten des VORHERIGEN Zugs flogen -
+             * das wirkte, als wuerde der Zug ueberspringen. Jetzt bleibt der
+             * ziehende Spieler optisch aktiv (Banner + Namensfarbe), bis die
+             * Animation fertig ist, danach erst springt die Anzeige weiter.
+             */
+            if (totalMs > 0) {
+                ktTurnDisplaySeat = Number(move.seat);
+                if (ktTurnDisplayTimer) clearTimeout(ktTurnDisplayTimer);
+                ktTurnDisplayTimer = setTimeout(() => {
+                    ktTurnDisplayTimer = null;
+                    ktTurnDisplaySeat = null;
+                    ktRenderBanner();
+                    ktRenderSeats();
+                }, totalMs);
             }
         }
 
@@ -4713,6 +4742,7 @@
                 loserSeat: null,
                 payingSeats: null,
                 fireSeats: null,
+                tableFire: null,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
             })).catch(err => {
                 console.warn('[Hos’n Obe] Austeilen fehlgeschlagen:', err);
@@ -4787,6 +4817,7 @@
                 loserSeat: null,
                 payingSeats: null,
                 fireSeats: null,
+                tableFire: null,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
             };
             // Kommt die Runde aus einer Lobby (Gaeste haben Plaetze belegt und
@@ -4806,8 +4837,37 @@
          * auch das Zeitbudget der Runde - die Vorgabe sind rund 1:30 bis 2:00.
          */
         let ktPendingFireSeat = -1;
+
+        /*
+         * Tischfeuer: die MITTE selbst steht bei 31 (Flush) - unabhaengig davon,
+         * ob irgendjemandes Hand fuer sich Feuer ist. Die Mitte ist oeffentlich,
+         * der TV kennt sie also immer, egal ob Gaeste oder der Computer spielen.
+         */
+        let ktTableFireTriggered = false;
+        function ktMiddleIsFire() {
+            const m = ktPub.middleCards;
+            return !!(m && m.length === 3 && KtEngine.scoreHand(m).fire);
+        }
+        function ktTriggerTableFire() {
+            if (ktTableFireTriggered) return;
+            ktTableFireTriggered = true;
+            const updates = { phase: 'reveal', tableFire: true, lastMove: { type: 'tablefire' } };
+            // Bei einer Computer-Runde kennt der TV ohnehin alle Haende (er hat
+            // sie ausgeteilt) und deckt sie sofort auf. Bei Gaesten mit privaten
+            // Haenden uebernimmt das der bestehende Sicherheitsnetz jedes Handys
+            // (maybePublishHand), sobald die Phase hier auf "reveal" springt.
+            if (ktIsBotGame()) {
+                const count = Number(ktPub.playerCount) || 0;
+                for (let seat = 0; seat < count; seat++) {
+                    if (ktMirrorHands[seat]) updates['revealedHands/' + seat] = ktMirrorHands[seat];
+                }
+            }
+            KtNet.publicRef(ktDb, ktSessionId).update(updates).catch(() => {});
+        }
+
         function ktBeginPlaying() {
             if (!ktReady() || ktPub.phase !== 'starter') return;
+            if (ktMiddleIsFire()) { ktTriggerTableFire(); return; }
             if (ktPendingFireSeat >= 0) {
                 const seat = ktPendingFireSeat;
                 ktPendingFireSeat = -1;
@@ -5026,13 +5086,14 @@
                 }
                 if (!Object.keys(hands).length) { ktResolving = false; ktResetSession(); return; }
 
-                const outcome = KtEngine.evaluateRound(hands);
+                const outcome = KtEngine.evaluateRound(hands, ktPub.tableFire);
                 KtNet.publicRef(ktDb, ktSessionId).update({
                     revealedHands: hands,
                     scores: outcome.scores,
                     loserSeat: outcome.loserSeat,
                     payingSeats: outcome.payingSeats,
-                    fireSeats: outcome.fireSeats
+                    fireSeats: outcome.fireSeats,
+                    tableFire: outcome.tableFire
                 }).catch(err => console.warn('[Hos’n Obe] Ergebnis nicht schreibbar:', err))
                   .then(() => {
                       ktRender();
@@ -5092,11 +5153,14 @@
             ktLastTurnSeat = null;
             ktLastAnimatedMove = null;
             ktLastSwapWindowSeat = null;
+            if (ktTurnDisplayTimer) { clearTimeout(ktTurnDisplayTimer); ktTurnDisplayTimer = null; }
+            ktTurnDisplaySeat = null;
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
             ktStarterKey = '';
             ktBotPassUsed = {};
             ktPendingFireSeat = -1;
+            ktTableFireTriggered = false;
             ktDealing = false;
             ktResolving = false;
             if (!ktReady()) return Promise.resolve();
@@ -5131,6 +5195,7 @@
                     payingSeats: null,
                     fireSeats: null,
                     fireBySeat: null,
+                    tableFire: null,
                     lastMove: null,
                     endRequestedBy: null,
                     newGameRequestedBy: null,
@@ -5194,7 +5259,11 @@
                 ktOnPhaseChange(phase);
             }
 
-            if (phase === 'playing' || phase === 'knocked') {
+            if ((phase === 'playing' || phase === 'knocked') && ktMiddleIsFire()) {
+                // Die Mitte aendert sich mit jedem Tausch - egal ob ein Gast
+                // oder der Computer gezogen hat, der TV sieht es hier zuerst.
+                ktTriggerTableFire();
+            } else if (phase === 'playing' || phase === 'knocked') {
                 const seat = Number(ktPub.currentTurnSeat) || 0;
                 if (seat !== ktLastTurnSeat) {
                     ktLastTurnSeat = seat;

@@ -104,10 +104,14 @@
         };
     }
 
+    // Ein Drilling zaehlt knapp unter dem Feuer-Flush, damit ein reiner
+    // Flush mit 31 immer die staerkere Hand bleibt.
+    var THREE_OF_A_KIND_SCORE = 30.5;
+
     /*
      * Wertung einer 3-Karten-Hand:
      *   - gleiche Farbe: Punktwerte addieren (bester Farb-Teilstapel zählt)
-     *   - drei gleiche Ränge: 31 Punkte, aber ausdrücklich KEIN Feuer
+     *   - drei gleiche Ränge: 30,5 Punkte, aber ausdrücklich KEIN Feuer
      *   - "Feuer": alle drei gleiche Farbe UND Summe exakt 31 (Ass + zwei Zehner-Karten)
      */
     function scoreHand(cards) {
@@ -130,7 +134,7 @@
         var isThreeOfAKind = parsed[0].rank === parsed[1].rank && parsed[1].rank === parsed[2].rank;
         var isFire = isFlush && bestSuitTotal === FIRE_TOTAL;
 
-        var score = isThreeOfAKind ? FIRE_TOTAL : bestSuitTotal;
+        var score = isThreeOfAKind ? THREE_OF_A_KIND_SCORE : bestSuitTotal;
 
         return {
             score: score,
@@ -139,6 +143,13 @@
             threeOfAKind: isThreeOfAKind,
             flush: isFlush
         };
+    }
+
+    // Punktzahl fuer die Anzeige: 30.5 -> "30,5", ganze Zahlen ohne Nachkommastelle.
+    function formatScore(score) {
+        var rounded = Math.round(score * 10) / 10;
+        var text = String(rounded);
+        return text.indexOf('.') === -1 ? text : text.replace('.', ',');
     }
 
     // >0 wenn a stärker als b. Zwei verschiedene Karten sind nie gleich stark.
@@ -166,8 +177,11 @@
      *
      * Feuer: die Ein-Verlierer-Regel fällt weg, stattdessen zahlt jeder Spieler
      * unter FIRE_PAY_BELOW Punkten — und der Schwächste in jedem Fall.
+     *
+     * tableFire: die Mitte selbst stand bei 31 (Flush) - dann gilt fuer alle
+     * dieselbe Feuer-Zahlung, auch wenn keine einzelne Hand fuer sich Feuer ist.
      */
-    function evaluateRound(hands) {
+    function evaluateRound(hands, tableFire) {
         var seats = Object.keys(hands).map(Number).sort(function (a, b) { return a - b; });
         if (!seats.length) throw new Error('Keine Hände zum Auswerten');
 
@@ -193,11 +207,12 @@
             }
         }
 
-        if (fireSeats.length) {
+        if (fireSeats.length || tableFire) {
             /*
              * Feuer: es wird nicht mehr getauscht, alle decken auf.
              * Zahlen muss jeder unter 11 Punkten - UND der Schwaechste in
-             * jedem Fall, auch wenn der ueber 11 liegt.
+             * jedem Fall, auch wenn der ueber 11 liegt. Gilt genauso, wenn die
+             * MITTE bei 31 stand (Tischfeuer) statt einer einzelnen Hand.
              */
             var firePaying = seats.filter(function (seat) { return scores[seat] < FIRE_PAY_BELOW; });
             if (firePaying.indexOf(loserSeat) === -1) firePaying.push(loserSeat);
@@ -207,6 +222,7 @@
                 scores: scores,
                 results: results,
                 fireSeats: fireSeats,
+                tableFire: !!tableFire,
                 payingSeats: firePaying,
                 loserSeat: loserSeat,
                 tieBreak: tied.length > 1
@@ -218,6 +234,7 @@
             scores: scores,
             results: results,
             fireSeats: [],
+            tableFire: false,
             payingSeats: [loserSeat],
             loserSeat: loserSeat,
             tieBreak: tied.length > 1
@@ -242,12 +259,11 @@
         return SUIT_SYMBOL[p.suit] + ' ' + RANK_NAME[p.rank];
     }
 
-    // Zwei Rueckseiten-Motive, pro Karte zufaellig gemischt - dadurch sieht ein
-    // verdeckter Faecher aus wie ein echtes Blatt und nicht wie eine Kachel.
+    // Einheitliche rote Rueckseite fuer alle verdeckten Karten.
     // Raster statt SVG: die SVG-Rueckseiten enthalten ein Linienmuster, das der
     // Browser bei jeder Groessenaenderung neu zeichnen muss - 18-mal gleichzeitig
     // auf der Odroid-Box war das der teuerste Posten im Bild.
-    var CARD_BACKS = ['back_lightblue.webp', 'back_red.webp'];
+    var CARD_BACKS = ['back_red.webp'];
 
     function cardBackImage(basePath, rng) {
         var random = rng || Math.random;
@@ -440,6 +456,8 @@
         RANK_NAME: RANK_NAME,
         FIRE_TOTAL: FIRE_TOTAL,
         FIRE_PAY_BELOW: FIRE_PAY_BELOW,
+        THREE_OF_A_KIND_SCORE: THREE_OF_A_KIND_SCORE,
+        formatScore: formatScore,
         parseCard: parseCard,
         buildDeck: buildDeck,
         shuffle: shuffle,

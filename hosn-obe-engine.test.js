@@ -51,10 +51,11 @@ check('Feuer wird als Feuer erkannt', E.scoreHand(['HJ', 'HQ', 'HA']).fire === t
 check('Feuer geht in jeder Farbe', E.scoreHand(['CA', 'C10', 'CK']).fire === true);
 eq('Kreuz-Feuer zählt 31', E.scoreHand(['CA', 'C10', 'CK']).score, 31);
 
-eq('Drei Asse zählen 31 Punkte', E.scoreHand(['HA', 'SA', 'DA']).score, 31);
+eq('Drei Asse zählen 30,5 Punkte', E.scoreHand(['HA', 'SA', 'DA']).score, 30.5);
 check('Drei Asse sind KEIN Feuer', E.scoreHand(['HA', 'SA', 'DA']).fire === false);
 check('Drei Asse werden als Drilling markiert', E.scoreHand(['HA', 'SA', 'DA']).threeOfAKind === true);
-eq('Drei Siebener zählen ebenfalls 31', E.scoreHand(['H7', 'S7', 'D7']).score, 31);
+check('Drilling zaehlt knapp unter einem Feuer-Flush', E.THREE_OF_A_KIND_SCORE < 31 && E.THREE_OF_A_KIND_SCORE > 30);
+eq('Drei Siebener zählen ebenfalls 30,5', E.scoreHand(['H7', 'S7', 'D7']).score, 30.5);
 check('Drei Siebener sind kein Feuer', E.scoreHand(['H7', 'S7', 'D7']).fire === false);
 
 eq('Flush unter 31 ist kein Feuer-Wert', E.scoreHand(['H10', 'HJ', 'HQ']).score, 30);
@@ -144,6 +145,23 @@ var f5 = E.evaluateRound({
 });
 eq('Feuer: mehrere unter 11 zahlen gemeinsam', f5.payingSeats, [1, 2]);
 
+// ---------- Tischfeuer: die Mitte stand bei 31, keine Hand ist fuer sich Feuer ----------
+var tf = E.evaluateRound({
+    0: ['H7', 'S8', 'D9'],    //  9
+    1: ['C7', 'D8', 'H9']     //  9
+}, true);
+eq('Tischfeuer erzwingt den Feuer-Modus', tf.mode, 'fire');
+eq('Tischfeuer wird im Ergebnis markiert', tf.tableFire, true);
+eq('Tischfeuer: keine Hand ist individuell Feuer', tf.fireSeats, []);
+eq('Tischfeuer zahlt trotzdem der Schwaechste', tf.payingSeats.length > 0, true);
+
+var noTf = E.evaluateRound({ 0: ['HA', 'HK', 'S7'], 1: ['C7', 'D8', 'S9'] });
+eq('Ohne Tischfeuer bleibt das Feld leer', noTf.tableFire, false);
+
+// ---------- Punktzahl-Anzeige ----------
+eq('Ganze Zahl bleibt ganz', E.formatScore(21), '21');
+eq('Drilling-Wert bekommt ein Komma', E.formatScore(30.5), '30,5');
+
 // ---------- Austeilen ----------
 [2, 3, 4, 5, 6].forEach(function (n) {
     var d = E.deal(n);
@@ -214,14 +232,9 @@ eq('Zwei gleiche Farben reichen nicht', E.middleWorthTakingAll(['H7', 'H8', 'D9'
 eq('Unvollstaendige Mitte erlaubt keinen Rundumtausch', E.middleWorthTakingAll(['H7', 'H8']), false);
 
 // ---------- Kartenrueckseiten ----------
-eq('Zwei Rueckseiten-Motive vorhanden', E.CARD_BACKS.length, 2);
+eq('Genau eine (rote) Rueckseite', E.CARD_BACKS, ['back_red.webp']);
 eq('Rueckseite mit Basispfad', E.cardBackImage('cards/', function () { return 0; }),
-   'cards/back_lightblue.webp');
-eq('Zweite Rueckseite wird auch gezogen', E.cardBackImage('cards/', function () { return 0.99; }),
    'cards/back_red.webp');
-var backsSeen = {};
-for (var bi = 0; bi < 400; bi++) backsSeen[E.cardBackImage('cards/')] = true;
-eq('Ueber viele Ziehungen kommen beide Motive vor', Object.keys(backsSeen).length, 2);
 
 // ---------- Computer-Spieler ----------
 var botAll = E.botDecide(['C7', 'S8', 'D9'], ['H7', 'HK', 'HA'], { canKnock: false, canPass: true });
