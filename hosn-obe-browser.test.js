@@ -102,10 +102,6 @@ async function broadcast() {
 
 async function dbOp(op) {
     const parts = op.path.split('/').filter(Boolean);
-    if (process.env.KT_TRACE && JSON.stringify(op).indexOf('hostSelect') !== -1) {
-        console.log('  [db] ' + op.kind + ' ' + op.path + ' -> ' +
-                    JSON.stringify(op.value).slice(0, 200));
-    }
     if (op.kind === 'set') {
         setAt(tree, parts, op.value);
     } else if (op.kind === 'remove') {
@@ -137,6 +133,22 @@ const STUB = `
 window.__ktListeners = [];
 window.__ktTree = {};
 window.__ktSeq = 0;
+// Einen einzelnen Zuhoerer mit dem aktuellen Stand versorgen.
+window.__ktNotify = function (l) {
+    var parts = l.path.split('/').filter(Boolean);
+    var cur = window.__ktTree;
+    for (var i = 0; i < parts.length; i++) {
+        if (cur === null || typeof cur !== 'object') { cur = null; break; }
+        cur = cur[parts[i]];
+        if (cur === undefined) { cur = null; break; }
+    }
+    var val = cur === undefined ? null : cur;
+    var key = JSON.stringify(val);
+    if (key === l.last) return;
+    l.last = key;
+    l.cb({ val: function () { return val; } });
+};
+
 window.__ktPush = function (json, seq) {
     // Veraltete Zustellung verwerfen - siehe broadcast() im Testtreiber.
     if (seq !== undefined && seq !== null) {
@@ -144,20 +156,7 @@ window.__ktPush = function (json, seq) {
         window.__ktSeq = seq;
     }
     window.__ktTree = JSON.parse(json);
-    window.__ktListeners.forEach(function (l) {
-        var parts = l.path.split('/').filter(Boolean);
-        var cur = window.__ktTree;
-        for (var i = 0; i < parts.length; i++) {
-            if (cur === null || typeof cur !== 'object') { cur = null; break; }
-            cur = cur[parts[i]];
-            if (cur === undefined) { cur = null; break; }
-        }
-        var val = cur === undefined ? null : cur;
-        var key = JSON.stringify(val);
-        if (key === l.last) return;
-        l.last = key;
-        l.cb({ val: function () { return val; } });
-    });
+    window.__ktListeners.forEach(window.__ktNotify);
 };
 
 function ktRef(path) {
@@ -188,7 +187,17 @@ function ktRef(path) {
             var entry = { path: path, cb: cb, last: null };
             window.__ktListeners.push(entry);
             window.__ktOp(JSON.stringify({ kind: 'snapshot', path: '' })).then(function (res) {
-                window.__ktPush(JSON.stringify((res && res.tree) || {}), (res && res.seq) || 0);
+                var full = (res && res.tree) ? res.tree : (res || {});
+                var seq = res ? res.seq : undefined;
+                window.__ktPush(JSON.stringify(full), seq);
+                /*
+                 * Wichtig: __ktPush verwirft einen Schnappschuss, der aelter ist
+                 * als der zuletzt zugestellte Stand - dieser Zuhoerer hat aber
+                 * noch NIE einen Wert bekommen. Ohne diesen Nachschlag bliebe
+                 * eine frisch geoeffnete Seite dauerhaft ohne Spielstand
+                 * (echtes Firebase liefert beim Anmelden immer einen Wert).
+                 */
+                window.__ktNotify(entry);
             });
             return cb;
         },
@@ -222,6 +231,27 @@ function check(name, ok, detail) {
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+/*
+ * Auf einen Zustand warten statt blind zu schlafen.
+ *
+ * Eine neue Browser-Seite zu oeffnen dauert auf einer ausgelasteten Maschine
+ * ohne Weiteres zehn Sekunden - mit festen Pausen laeuft dann die Lobby ab,
+ * bevor das zweite Handy ueberhaupt da ist, und der Test meldet einen Fehler,
+ * den es gar nicht gibt.
+ */
+async function waitFor(label, fn, timeoutMs) {
+    const limit = timeoutMs || 20000;
+    const started = Date.now();
+    while (Date.now() - started < limit) {
+        let ok = false;
+        try { ok = !!(await fn()); } catch (e) { ok = false; }
+        if (ok) return true;
+        await sleep(120);
+    }
+    console.log('  (Zeitueberschreitung beim Warten auf: ' + label + ')');
+    return false;
+}
+
 async function run() {
     const server = await serve();
     const browser = await chromium.launch(launchOptions());
@@ -249,7 +279,9 @@ async function run() {
             revealSeconds: 3,
             starterSeconds: 1,
             swapWindowSeconds: 3,
-            roundTargetSeconds: 90
+            roundTargetSeconds: 90,
+            lobbySeconds: 25,
+            botLobbySeconds: 8
         }, cfg || {});
         await page.addInitScript(`
             window.addEventListener('DOMContentLoaded', function () {
@@ -289,18 +321,37 @@ async function run() {
 
     console.log('\n--- Handy 1 scannt (wird Host) ---');
     const phone1 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-1');
-    await sleep(1200);
+    await waitFor('hostSelect', () => pubNow().phase === 'hostSelect');
+    // Handy 2 gleich mitoeffnen: es wartet, bis die Lobby aufmacht. Eine Seite
+    // erst mitten in der Lobby zu oeffnen kostet mehr Zeit, als die Lobby hat.
+    const phone2 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-2');
+    await sleep(400);
 
     check('Phase wechselt auf hostSelect', pubNow().phase === 'hostSelect', pubNow().phase);
+
+    // Schritt 1: der Spielmodus - erst danach die Spieleranzahl.
+    const modeButtons = await phone1.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    check('Host sieht zuerst die drei Spielmodi',
+        modeButtons.length === 3 &&
+        modeButtons.some(t => /Gäste spielen selbst/.test(t)) &&
+        modeButtons.some(t => /Gäste bekommen Karten/.test(t)) &&
+        modeButtons.some(t => /allein/.test(t)), JSON.stringify(modeButtons));
+    check('Vor dem Modus keine Spieleranzahl',
+        (await phone1.evaluate(() => document.querySelectorAll('.kt-count-btn').length)) === 0);
+
+    console.log('\n--- Modus "Gäste spielen selbst", danach 2 Spieler ---');
+    await phone1.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-btn')).find(b => /Gäste spielen selbst/.test(b.textContent)).click();
+    });
+    await sleep(700);
+    check('Phase wechselt auf countSelect', pubNow().phase === 'countSelect', pubNow().phase);
+    check('Modus ist gespeichert', pubNow().mode === 'humans', String(pubNow().mode));
 
     const countButtons = await phone1.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-count-btn')).map(b => b.textContent));
     check('Host sieht Spieleranzahl 2-6', JSON.stringify(countButtons) === '["2","3","4","5","6"]',
         JSON.stringify(countButtons));
-
-    const botBtn = await phone1.evaluate(() =>
-        Array.from(document.querySelectorAll('.kt-btn')).some(b => /Computer/.test(b.textContent)));
-    check('Computer-Knopf ist da', botBtn);
 
     const countBtnSize = await phone1.evaluate(() => {
         const b = document.querySelector('.kt-count-btn');
@@ -308,20 +359,27 @@ async function run() {
     });
     check('Spieleranzahl-Knöpfe sind groß (>=90px hoch)', countBtnSize >= 90, countBtnSize + 'px');
 
-    console.log('\n--- Host wählt 2 Spieler, Handy 2 tritt bei ---');
     await phone1.evaluate(() => {
         Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '2').click();
     });
     await sleep(800);
-    const phone2 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-2');
-    await sleep(2200);
+    await waitFor('beide Plätze belegt',
+        () => Object.keys(pubNow().seats || {}).length === 2);
+    await waitFor('Geber-Ermittlung', () => pubNow().phase === 'starter');
 
     // ---------- Geber ermitteln ----------
     console.log('\n--- Geber wird ausgespielt ---');
     const starterPub = pubNow();
     const starterCards = starterPub.starterCards || {};
     check('Jeder Platz hat eine Geberkarte gezogen',
-        Object.keys(starterCards).length === 2, JSON.stringify(starterCards));
+        Object.keys(starterCards).length === 2,
+        'Phase=' + starterPub.phase + ' Plätze=' + JSON.stringify(starterPub.seats || {}) +
+        ' Karten=' + JSON.stringify(starterCards));
+    if (Object.keys(starterCards).length !== 2) {
+        // Ohne Geberkarten hat der weitere Ablauf keinen Sinn - lieber hier
+        // abbrechen als zwanzig Folgefehler zu melden.
+        throw new Error('Geber-Ermittlung fehlt — Phase ' + starterPub.phase);
+    }
     const E = require('./hosn-obe-engine.js');
     const expectedStarter =
         E.compareCards(starterCards[0], starterCards[1]) > 0 ? 0 : 1;
@@ -330,7 +388,7 @@ async function run() {
     check('Der Geber ist auch am Zug', starterPub.currentTurnSeat === starterPub.starterSeat,
         String(starterPub.currentTurnSeat));
 
-    await sleep(1600);   // Geber-Anzeige laeuft ab (starterSeconds = 1)
+    await waitFor('Spielbeginn nach der Geber-Anzeige', () => pubNow().phase === 'playing');
 
     const pubAfterDeal = pubNow();
     check('Ausgeteilt, Phase playing', pubAfterDeal.phase === 'playing', pubAfterDeal.phase);
@@ -362,15 +420,18 @@ async function run() {
             scale: view.style.getPropertyValue('--kt-scale'),
             coversScaler: vr.width >= sr.width - 2 && vr.height >= sr.height - 2,
             stageShare: sr.width ? st.width / sr.width : 0,
+            stageRatio: st.height ? +(st.width / st.height).toFixed(3) : 0,
             centered: Math.abs((st.left + st.width / 2) - (sr.left + sr.width / 2)) < 3
         };
     });
     check('TV schaltet auf Vollbild', fsState.fullscreen && parseFloat(fsState.scale) > 1,
         JSON.stringify(fsState));
     check('Vollbild deckt den ganzen Dashboard-Rahmen ab', fsState.coversScaler, JSON.stringify(fsState));
-    check('Bühne bleibt zentriert und im Seitenverhältnis',
-        fsState.centered && fsState.stageShare > 0.85 && fsState.stageShare <= 1.001,
+    check('Bühne bleibt zentriert und füllt den Rahmen',
+        fsState.centered && fsState.stageShare > 0.98 && fsState.stageShare <= 1.001,
         JSON.stringify(fsState));
+    check('Seitenverhältnis der Bühne stimmt (1530:860)',
+        Math.abs(fsState.stageRatio - 1530 / 860) < 0.02, String(fsState.stageRatio));
 
     // Wer am Zug ist, muss am TV deutlich markiert sein.
     const turnMark = await tv.evaluate(() => {
@@ -394,9 +455,29 @@ async function run() {
     // ---------- Regeln am Handy ----------
     console.log('\n--- Regeln am Zug-Handy ---');
     const turnSeat = pubAfterDeal.currentTurnSeat;
+    /*
+     * Welches Handy ist am Zug?
+     *
+     * Ueber den Sitzplatz statt ueber den Statustext: der Text haengt am
+     * Neuzeichnen und kann kurz hinterherhinken - dann haetten wir das falsche
+     * Handy erwischt und der Test waere an einer Stelle gescheitert, an der
+     * gar nichts kaputt ist.
+     */
+    const seatOf = async p => {
+        const t = await p.evaluate(() => (document.getElementById('kt-seat-badge') || {}).textContent || '');
+        const m = /Spieler (\d)/.exec(t);
+        return m ? Number(m[1]) - 1 : -1;
+    };
     const atTurn = async () => {
-        const s1 = await phone1.evaluate(() => document.getElementById('kt-status-main').textContent);
-        return s1.includes('dran!') ? phone1 : phone2;
+        await waitFor('laufendes Spiel', () => ['playing', 'knocked'].includes(pubNow().phase));
+        const seat = Number(pubNow().currentTurnSeat);
+        const s1 = await seatOf(phone1);
+        const p = s1 === seat ? phone1 : phone2;
+        // Warten, bis das Handy den Zug auch anzeigt.
+        await waitFor('Zug-Ansicht bereit', () => p.evaluate(() =>
+            document.querySelectorAll('#kt-hand-cards .kt-card.is-pickable').length > 0 ||
+            Array.from(document.querySelectorAll('.kt-btn')).some(b => b.textContent === 'ALLE 3 NEHMEN')));
+        return p;
     };
     const buttonsOf = p => p.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
@@ -569,7 +650,8 @@ async function run() {
     console.log('\n--- Letzter Zug, dann Auswertung ---');
     const last = await atTurn();
     await swapFirstCard(last);
-    await sleep(6000);
+    await waitFor('Auswertung', () => ['reveal', 'idle'].includes(pubNow().phase), 25000);
+    await sleep(1200);
 
     const finalPub = pubNow();
     check('Runde endet in reveal oder idle',
@@ -597,7 +679,11 @@ async function run() {
     check('Zweite Session vorhanden', !!sessionId2, String(sessionId2));
 
     const phone3 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-1');
-    await sleep(1200);
+    await waitFor('hostSelect (Computer-Session)', () => pubNow2().phase === 'hostSelect');
+    // Der zweite Gast wartet von Anfang an mit - so ist er da, wenn die Lobby
+    // aufmacht, statt erst mitten in der Wartezeit zu erscheinen.
+    const phone4 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-4');
+    await sleep(400);
 
     const botButtons = await phone3.evaluate(() =>
         Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent).filter(t => /Computer/.test(t)));
@@ -605,50 +691,75 @@ async function run() {
         botButtons.length === 2 && botButtons.some(t => /Gäste bekommen Karten/.test(t)) &&
         botButtons.some(t => /allein/.test(t)), JSON.stringify(botButtons));
 
+    /*
+     * Computer mit Deckvergabe: es muessen ALLE Decks vergeben werden. Erst
+     * der Fehlversuch - drei Decks, aber nur ein Gast - dann der echte Lauf.
+     */
+    console.log('\n--- Computer mit Deckvergabe: unvollständig -> zurück zur Anzahl ---');
     await phone3.evaluate(() => {
         Array.from(document.querySelectorAll('.kt-btn'))
             .find(b => /Gäste bekommen Karten/.test(b.textContent)).click();
     });
-    await sleep(900);
+    await sleep(800);
+    check('Modus botDecks gespeichert', pubNow2().mode === 'botDecks', String(pubNow2().mode));
+    check('Erst der Modus, dann die Anzahl', pubNow2().phase === 'countSelect', pubNow2().phase);
+
+    await phone3.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '3').click();
+    });
+    await sleep(700);
+    check('Lobby wartet auf drei Decks',
+        pubNow2().phase === 'lobby' && Number(pubNow2().playerCount) === 3,
+        pubNow2().phase + '/' + pubNow2().playerCount);
+    // Zwei Gaeste sind da, das dritte Deck bleibt liegen.
+    await waitFor('zwei von drei Decks vergeben',
+        () => Object.keys(pubNow2().seats || {}).length === 2);
+
+    await waitFor('Rückschritt zur Spieleranzahl',
+        () => pubNow2().phase === 'countSelect', 20000);
+    check('Unvollständige Deckvergabe führt zurück zur Spieleranzahl',
+        pubNow2().phase === 'countSelect', pubNow2().phase);
+    check('Plätze sind dabei freigeräumt',
+        Object.keys(pubNow2().seats || {}).length === 0, JSON.stringify(pubNow2().seats || {}));
+
+    console.log('\n--- Computer mit Deckvergabe: zwei Decks, zwei Gäste ---');
+    // Warten, bis die Anzahl-Knoepfe wirklich stehen - sonst geht der Klick ins
+    // Leere und der Test scheitert an etwas, das gar nicht kaputt ist.
+    await waitFor('Anzahl-Auswahl steht', () => phone3.evaluate(() =>
+        document.querySelectorAll('.kt-count-btn').length === 5));
+    await phone3.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '2').click();
+    });
+    await waitFor('beide Decks vergeben',
+        () => Object.keys(pubNow2().seats || {}).length === 2);
+    await waitFor('Computer-Runde läuft',
+        () => ['starter', 'playing', 'knocked', 'reveal'].includes(pubNow2().phase));
+    await sleep(1500);
 
     const started = pubNow2();
     check('Computer-Runde markiert', started.botGame === true, JSON.stringify(started.botGame));
     check('Deckvergabe ist eingeschaltet', started.botSeats === true, JSON.stringify(started.botSeats));
-    check('Sechs Plätze im Spiel', Number(started.playerCount) === 6, String(started.playerCount));
-    check('Die Plätze bleiben für Gäste frei',
-        Object.keys(started.seats || {}).length <= 1, JSON.stringify(Object.keys(started.seats || {})));
+    check('Zwei Plätze im Spiel', Number(started.playerCount) === 2, String(started.playerCount));
+    check('Beide Plätze sind an Gäste vergeben',
+        Object.keys(started.seats || {}).length === 2, JSON.stringify(started.seats || {}));
+    check('Runde läuft (Geber oder Spiel)',
+        ['starter', 'playing', 'knocked', 'reveal'].includes(started.phase), started.phase);
 
-    // Im Vollbild ist der Starter-QR der Media-Zone verdeckt - waehrend einer
-    // Computer-Runde mit Deckvergabe muss die Buehne einen eigenen QR zeigen,
-    // sonst koennte niemand mehr dazukommen.
-    const joinQr = await tv2.evaluate(() => {
-        const el = document.getElementById('kt-joinqr');
-        if (!el || getComputedStyle(el).display === 'none') return null;
-        const img = document.getElementById('kt-joinqr-img');
-        return { src: img ? img.getAttribute('src') : '', label: el.textContent.trim() };
-    });
-    check('TV zeigt einen Mitspiel-QR während der Computer-Runde',
-        !!joinQr && /create-qr-code/.test(joinQr.src), JSON.stringify(joinQr));
+    // Der QR im laufenden Spiel ist ersatzlos weg - gescannt wird in der Lobby.
+    const noQr = await tv2.evaluate(() => !document.getElementById('kt-joinqr'));
+    check('Kein QR-Code im laufenden Spiel', noQr);
 
-    /*
-     * Ein Gast scannt mitten in der laufenden Computer-Runde. Er darf die Runde
-     * NICHT abwuergen (kein Host werden), bekommt aber einen freien Platz samt
-     * eigenem Blatt zum Mitschauen.
-     */
-    const phaseBeforeGuest = pubNow2().phase;
-    const phone4 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-4');
-    await sleep(1500);
+    // Erst wenn wirklich gespielt wird - waehrend der Geber-Ermittlung steht am
+    // Handy noch "Spieler X beginnt".
+    await waitFor('Computer zieht', () => ['playing', 'knocked'].includes(pubNow2().phase));
+    await sleep(400);
     const guest = await phone4.evaluate(() => ({
         seatBadge: document.getElementById('kt-seat-badge').textContent,
         cards: document.querySelectorAll('#kt-hand-cards .kt-card').length,
         buttons: Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent),
         status: document.getElementById('kt-status-main').textContent
     }));
-    const phaseAfterGuest = pubNow2().phase;
-    console.log('  (Phase vor dem Scan: ' + phaseBeforeGuest + ', danach: ' + phaseAfterGuest + ')');
-    check('Die Runde läuft weiter (kein Neustart durch den Scan)',
-        phaseAfterGuest !== 'hostSelect', phaseBeforeGuest + ' -> ' + phaseAfterGuest);
-    check('Gast bekommt trotz Computer-Runde einen Platz', /Spieler \d/.test(guest.seatBadge), guest.seatBadge);
+    check('Gast hat einen Platz', /Spieler \d/.test(guest.seatBadge), guest.seatBadge);
     check('Gast sieht seine drei Karten', guest.cards === 3, String(guest.cards));
     check('Gast darf nicht eingreifen', guest.buttons.length === 0, JSON.stringify(guest.buttons));
     check('Gast weiß, dass der Computer spielt', /Computer/.test(guest.status), guest.status);
@@ -687,7 +798,7 @@ async function run() {
     }
 
     if (done.scores) {
-        check('Sechs Ergebnisse', Object.keys(done.scores).length === 6, JSON.stringify(done.scores));
+        check('Für beide Plätze ein Ergebnis', Object.keys(done.scores).length === 2, JSON.stringify(done.scores));
         const fire = (done.fireSeats || []).length > 0;
         check('Genau ein Verlierer (oder Feuer)',
             fire || (done.payingSeats || []).length === 1, JSON.stringify(done.payingSeats));
@@ -696,6 +807,27 @@ async function run() {
             scores.every(s => s >= 7 && s <= 31), JSON.stringify(scores));
     }
 
+
+    // ---------- Neues Spiel starten ----------
+    console.log('\n--- Neues Spiel starten ---');
+    const restartLabels = await phone3.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    check('Nach dem Spiel steht "Neues Spiel starten" bereit',
+        restartLabels.some(t => /NEUES SPIEL STARTEN/.test(t)), JSON.stringify(restartLabels));
+
+    await phone3.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-btn'))
+            .find(b => /NEUES SPIEL STARTEN/.test(b.textContent)).click();
+    });
+    await sleep(2000);
+    check('Neues Spiel führt zurück zur Modus-Auswahl',
+        pubNow2().phase === 'hostSelect', pubNow2().phase);
+    check('Alte Rundendaten sind abgeräumt',
+        !pubNow2().revealedHands && !pubNow2().scores && !pubNow2().middleCards,
+        JSON.stringify({ h: !!pubNow2().revealedHands, s: !!pubNow2().scores, m: !!pubNow2().middleCards }));
+    const restartModes = await phone3.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    check('Die drei Modi stehen wieder zur Wahl', restartModes.length === 3, JSON.stringify(restartModes));
 
     // ---------- Fehlerfreiheit ----------
     console.log('\n--- Konsolenfehler ---');

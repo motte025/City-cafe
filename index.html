@@ -897,7 +897,13 @@
         #media-view-hosnobe.kt-fullscreen .kt-stage {
             inset: auto;
             left: 50%; top: 50%;
-            width: 1280px; height: 815px;
+            /* 1530x860 statt 1280x815: die alte Buehne war vertikal zu knapp -
+               das Hinweisband lag auf den Mittenkarten und das Abzeichen der
+               unteren Reihe lief unten aus dem Bild. Das Seitenverhaeltnis ist
+               jetzt so gewaehlt, dass die Buehne den 1920x1080-Rahmen exakt
+               ausfuellt (1920/1530 = 1080/860 = 1,255) - es bleiben also auch
+               keine schwarzen Raender mehr. */
+            width: 1530px; height: 860px;
             transform: translate(-50%, -50%) scale(var(--kt-scale, 1));
             transform-origin: center center;
         }
@@ -1012,7 +1018,7 @@
            Die Karten liegen bewusst schief und leicht versetzt - wie echte Karten,
            die jemand auf den Tisch geworfen hat, nicht wie ein Raster. Rotation und
            Versatz kommen per Zufall aus ktRenderMiddle(). */
-        .kt-middle { position: absolute; left: 50%; top: 342px; transform: translateX(-50%); z-index: 12; display: flex; gap: 20px; }
+        .kt-middle { position: absolute; left: 50%; top: 376px; transform: translateX(-50%); z-index: 12; display: flex; gap: 20px; }
         .kt-middle-card {
             width: 122px; height: 183px; border-radius: 11px; overflow: hidden;
             background: #0a1426; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
@@ -1031,7 +1037,7 @@
         /* Hinweis ueber der Mitte - erscheint nur, wenn dort ein Drilling oder
            drei gleiche Farben liegen und deshalb nur "alle oder keine" gilt. */
         .kt-middle-hint {
-            position: absolute; left: 50%; top: 312px; transform: translateX(-50%); z-index: 14;
+            position: absolute; left: 50%; top: 332px; transform: translateX(-50%); z-index: 14;
             padding: 7px 20px; border-radius: 10px; white-space: nowrap;
             font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
             letter-spacing: 1.4px; color: #ffe9a8;
@@ -1089,25 +1095,8 @@
             text-shadow: 0 0 18px rgba(0,242,254,0.6);
         }
 
-        /* ---------- Mitspiel-QR in der Computer-Runde ----------
-           Im Vollbild liegt der Starter-QR der Media-Zone unter dem Spiel und
-           ist ausgeblendet. Spielt der Computer MIT Deckvergabe, sollen Gaeste
-           aber weiterhin scannen und ein eigenes Blatt bekommen - also braucht
-           es hier einen eigenen, kleinen QR auf der Buehne. */
-        .kt-joinqr {
-            position: absolute; left: 16px; bottom: 14px; z-index: 22;
-            width: 150px; padding: 8px 8px 6px; border-radius: 14px;
-            background: rgba(6,14,28,0.86); border: 2px solid rgba(0,242,254,0.55);
-            box-shadow: 0 10px 26px rgba(0,0,0,0.6);
-        }
-        .kt-joinqr img { width: 100%; height: 134px; display: block; background: #fff; border-radius: 8px; padding: 5px; }
-        .kt-joinqr-label {
-            margin-top: 5px; text-align: center; font-size: 11px; font-weight: 800;
-            letter-spacing: 0.6px; text-transform: uppercase; color: #00f2fe; line-height: 1.3;
-        }
-
         .kt-result {
-            position: absolute; left: 50%; top: 352px; transform: translateX(-50%); z-index: 30;
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 30;
             padding: 16px 40px; border-radius: 18px; text-align: center;
             background: rgba(4,10,20,0.9); border: 3px solid #ff3344;
             box-shadow: 0 0 46px rgba(255,51,68,0.55);
@@ -1420,10 +1409,6 @@
 
                         <div class="kt-starter" id="kt-starter" style="display: none;"></div>
 
-                        <div class="kt-joinqr" id="kt-joinqr" style="display: none;">
-                            <img id="kt-joinqr-img" src="" alt="QR-Code zum Mitspielen">
-                            <div class="kt-joinqr-label">Scannen und<br>eigene Karten sehen</div>
-                        </div>
 
                         <div class="kt-result" id="kt-result" style="display: none;">
                             <div class="kt-result-main" id="kt-result-main"></div>
@@ -4019,20 +4004,29 @@
         const KT = window.HOSN_OBE_CONFIG || {};
         const KtEngine = window.HosnObeEngine;
 
-        /* Hoehen-Rechnung fuer die 815px hohe Buehne (sechs Spieler, Aufdecken):
-         *   Banner        0 .. 57
-         *   obere Reihe   62 + Faecher 192 + Name 29 + Abzeichen 26  -> endet 309
-         *   offene Mitte  342 + Karte 183                            -> endet 525
-         *   untere Reihe 532 + Faecher 192 + Name 29 + Punkte 28 + Abzeichen 25 -> endet 806
-         * Der Abstand oben war zu knapp: "am Zug" beruehrte die Mittenkarten. */
-        const KT_ROW_TOP = 62, KT_ROW_BOTTOM = 532;
+        /* ---------- Hoehen-Rechnung fuer die 1530x860-Buehne ----------
+         *
+         * Die alte Buehne (1280x815) war vertikal zu knapp gerechnet: das
+         * Hinweisband lag auf den Mittenkarten, und beim Aufdecken lief das
+         * Abzeichen der unteren Reihe unten aus dem Bild. Jetzt mit Reserve:
+         *
+         *   Banner          0 ..  50
+         *   obere Reihe    54 + Faecher 202 + Name 33 + Abzeichen 38 -> endet 327
+         *   Hinweisband   332 ..  368
+         *   offene Mitte  376 + Karte 183                            -> endet 559
+         *   untere Reihe  566 + Faecher 202 + Name 33 + Punkte 29    -> endet 830
+         *
+         * Beim Aufdecken entfaellt das Abzeichen (siehe ktRenderSeats), sonst
+         * waere die untere Reihe wieder zu hoch. 30px bleiben als Reserve.
+         */
+        const KT_ROW_TOP = 54, KT_ROW_BOTTOM = 566;
         const KT_SEAT_POSITIONS = {
-            LO: { x: 232,  y: KT_ROW_TOP },
-            MO: { x: 640,  y: KT_ROW_TOP },
-            RO: { x: 1048, y: KT_ROW_TOP },
-            LU: { x: 232,  y: KT_ROW_BOTTOM },
-            MU: { x: 640,  y: KT_ROW_BOTTOM },
-            RU: { x: 1048, y: KT_ROW_BOTTOM }
+            LO: { x: 260,  y: KT_ROW_TOP },
+            MO: { x: 765,  y: KT_ROW_TOP },
+            RO: { x: 1270, y: KT_ROW_TOP },
+            LU: { x: 260,  y: KT_ROW_BOTTOM },
+            MU: { x: 765,  y: KT_ROW_BOTTOM },
+            RU: { x: 1270, y: KT_ROW_BOTTOM }
         };
         // Symmetrische Standardbelegung, Sitzreihenfolge = Zugreihenfolge im
         // Uhrzeigersinn. Reine Tabellenwerte - falls beim Testen eine andere
@@ -4060,6 +4054,7 @@
         let ktDealing = false, ktResolving = false;
         let ktTestSlotDone = null;   // Testmodus: so geht die Rotation weiter
         let ktBotPassUsed = {};      // welcher Computer-Platz sein "Weiter" verbraucht hat
+        let ktRestarting = false;    // laeuft gerade ein "Neues Spiel starten"?
         let ktSwapWindowTimer = null;
         let ktLastSwapWindowSeat = null;
 
@@ -4100,10 +4095,22 @@
         function ktNameList(seats) {
             return (seats || []).map(s => ktName(s)).join(' & ') || '—';
         }
+        // Nur Plaetze innerhalb der gewaehlten Spieleranzahl zaehlen: nach einem
+        // Rueckschritt zur Spieleranzahl koennten sonst Reste einer groesseren
+        // Besetzung mitgezaehlt werden.
         function ktSeatsTaken() {
             const seats = ktPub.seats || {};
-            return Object.keys(seats).filter(k => seats[k] && seats[k].uid).length;
+            const count = Number(ktPub.playerCount) || 6;
+            let taken = 0;
+            for (let seat = 0; seat < count; seat++) {
+                if (seats[seat] && seats[seat].uid) taken++;
+            }
+            return taken;
         }
+
+        // Spielmodus: 'humans' = Gaeste spielen selbst, 'botDecks' = Computer
+        // spielt, Gaeste bekommen eigene Karten, 'botOnly' = Computer allein.
+        function ktMode() { return ktPub.mode || (ktPub.botGame ? 'botOnly' : 'humans'); }
         function ktHasKnocked() {
             return ktPub.knockedBySeat !== null && ktPub.knockedBySeat !== undefined;
         }
@@ -4309,7 +4316,11 @@
                     ktSetText(el.score, scores[seat] + (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : ''));
                 }
 
-                const tagText = Number(ktPub.knockedBySeat) === seat ? 'aufgegangen'
+                // Beim Aufdecken entfaellt das Abzeichen: dort steht unter dem
+                // Namen die Punktzahl, und beides zusammen liefe unten aus dem
+                // Bild. Wer aufgegangen ist, steht ohnehin im Banner.
+                const tagText = phase === 'reveal' ? ''
+                    : Number(ktPub.knockedBySeat) === seat ? 'aufgegangen'
                     : !occupied ? 'frei'
                     : inWindow ? 'aufgehen?'
                     : isTurn ? 'am Zug' : '';
@@ -4370,7 +4381,8 @@
             const lobby = ktEl('kt-lobby');
             const phase = ktPub.phase || 'idle';
             const waitingForScan = !!ktTestSlotDone && phase === 'idle';
-            const show = phase === 'hostSelect' || phase === 'lobby' || waitingForScan;
+            const show = phase === 'hostSelect' || phase === 'countSelect' ||
+                         phase === 'lobby' || waitingForScan;
             lobby.style.display = show ? '' : 'none';
             if (!show) return;
 
@@ -4396,40 +4408,23 @@
             }
 
             ktEl('kt-lobby-hint').textContent =
-                phase === 'hostSelect' ? 'Warte auf Spieleranzahl-Auswahl…' :
-                phase === 'lobby' ? ktSeatsTaken() + ' von ' + count + ' Spielern bereit' :
+                phase === 'hostSelect' ? 'Spielmodus wird gewählt…' :
+                phase === 'countSelect' ? 'Wie viele spielen mit?' :
+                phase === 'lobby' ? (ktMode() === 'botDecks'
+                    ? ktSeatsTaken() + ' von ' + count + ' Karten vergeben — alle müssen scannen'
+                    : ktSeatsTaken() + ' von ' + count + ' Spielern bereit') :
                 'Mit dem Handy scannen und mitspielen';
-        }
-
-        /*
-         * Mitspiel-QR waehrend der Computer-Runde.
-         *
-         * Nur wenn mit Deckvergabe gespielt wird UND noch ein Platz frei ist -
-         * sonst waere es ein Angebot, das ins Leere laeuft.
-         */
-        function ktRenderJoinQr() {
-            const box = ktEl('kt-joinqr');
-            const phase = ktPub.phase;
-            const running = phase === 'starter' || phase === 'playing' || phase === 'knocked';
-            const free = (Number(ktPub.playerCount) || 0) - ktSeatsTaken();
-            const show = !!(ktIsBotGame() && ktPub.botSeats && running && free > 0);
-            ktSetShown(box, show);
-            if (!show) return;
-
-            const img = ktEl('kt-joinqr-img');
-            const wanted = ktQrUrl(300);
-            if (img.getAttribute('data-src') !== wanted) {
-                img.src = wanted;
-                img.setAttribute('data-src', wanted);
-            }
         }
 
         function ktRenderBanner() {
             const phase = ktPub.phase || 'idle';
             const inWindow = ktPub.swapWindowSeat !== null && ktPub.swapWindowSeat !== undefined;
             ktEl('kt-banner-sub').textContent =
-                phase === 'hostSelect' ? 'Host wählt die Spieleranzahl…' :
-                phase === 'lobby' ? 'Scannen und mitspielen' :
+                phase === 'hostSelect' ? 'Spielmodus wird gewählt…' :
+                phase === 'countSelect' ? 'Spieleranzahl wird gewählt…' :
+                phase === 'lobby' ? (ktMode() === 'botDecks'
+                    ? 'Jetzt scannen — jeder bekommt eigene Karten'
+                    : 'Scannen und mitspielen') :
                 phase === 'starter' ? 'Höchste Karte beginnt' :
                 phase === 'playing' ? (inWindow
                     ? ktName(ktPub.swapWindowSeat) + ' — aufgehen oder weitergeben?'
@@ -4541,9 +4536,9 @@
         }
 
         function ktMiddlePoint(index) {
-            const total = 3 * 130 + 2 * 22;           // Kartenbreite + Abstaende
-            const left = 640 - total / 2;
-            return { x: left + index * (130 + 22) + 65, y: 336 + 97 };
+            const total = 3 * 122 + 2 * 20;           // Kartenbreite + Abstaende (siehe .kt-middle)
+            const left = 765 - total / 2;             // Buehnenmitte
+            return { x: left + index * (122 + 20) + 61, y: 376 + 91 };
         }
 
         function ktFly(code, from, to, delay) {
@@ -4621,7 +4616,6 @@
             ktRenderSeats();
             ktRenderMiddle();
             ktRenderLobby();
-            ktRenderJoinQr();
             ktRenderStarter();
             ktRenderResult();
             ktAnimateLastMove();
@@ -4634,7 +4628,7 @@
         // Die Buehne fuellt den 1920x1080-Rahmen des Scalers; um das Fenster
         // kuemmert sich autoScaleDashboard(). Feste Zahlen statt Fenstermassen -
         // sonst haengt die Groesse doppelt am Bildschirm.
-        const KT_STAGE_SCALE = Math.min(1920 / 1280, 1080 / 815);
+        const KT_STAGE_SCALE = Math.min(1920 / 1530, 1080 / 860);
         function ktFitFullscreen() {
             const view = ktEl('media-view-hosnobe');
             if (!view || !view.classList.contains('kt-fullscreen')) return;
@@ -4749,10 +4743,10 @@
          * trotzdem vom Computer - der Gast sieht nur seine Karten und am Ende,
          * ob er zahlt. Genau das war die Vorgabe: mit Deckvergabe oder ohne.
          */
-        function ktStartBotRound(count, withSeats) {
+        function ktStartBotRound(count, withSeats, keepSeats) {
             if (!ktReady() || ktDealing) return;
             const players = Math.min(6, Math.max(2, Number(count) || KT.botPlayerCount || 3));
-            const seatsOpen = withSeats === undefined ? (KT.botSeatsDefault !== false) : !!withSeats;
+            const seatsOpen = !!withSeats;
             ktDealing = true;
             ktBackImage = null;
             ktSetFelt();
@@ -4774,11 +4768,11 @@
                 if (KtEngine.scoreHand(dealt.hands[seat]).fire) { ktPendingFireSeat = seat; break; }
             }
 
-            Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update({
+            const update = {
                 botGame: true,
                 botSeats: seatsOpen,
+                mode: seatsOpen ? 'botDecks' : 'botOnly',
                 playerCount: players,
-                seats: null,
                 middleCards: dealt.middleCards,
                 phase: 'starter',
                 starterCards: dealt.starterCards,
@@ -4794,7 +4788,14 @@
                 payingSeats: null,
                 fireSeats: null,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
-            })).catch(err => {
+            };
+            // Kommt die Runde aus einer Lobby (Gaeste haben Plaetze belegt und
+            // bekommen eigene Karten), bleiben die Plaetze stehen. Sonst spielt
+            // der Computer auf leerem Tisch.
+            if (!keepSeats) update.seats = null;
+
+            Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update(update))
+            .catch(err => {
                 console.warn('[Hos’n Obe] Computer-Runde fehlgeschlagen:', err);
                 ktResetSession();
             }).then(() => { ktDealing = false; });
@@ -5043,6 +5044,46 @@
             }, 3500);
         }
 
+        /* ---------- Lobby ----------
+         *
+         * Zwei Spielarten mit unterschiedlicher Erwartung:
+         *
+         *  - "Gaeste spielen selbst": wer bis zum Ablauf da ist, spielt mit; ab
+         *    zwei Spielern wird ausgeteilt.
+         *  - "Computer spielt, Gaeste bekommen Karten": hier braucht es GENAU so
+         *    viele Gaeste wie Decks. Fehlt jemand, geht es zurueck zur
+         *    Spieleranzahl, statt mit halb leerem Tisch zu starten.
+         */
+        function ktLobbySeconds() {
+            return ktMode() === 'botDecks' ? (KT.botLobbySeconds || 45) : (KT.lobbySeconds || 60);
+        }
+
+        function ktLobbyExpired() {
+            if (ktMode() !== 'botDecks') { ktDealIfPossible(); return; }
+            const count = Number(ktPub.playerCount) || 0;
+            if (count >= 2 && ktSeatsTaken() >= count) ktStartBotRound(count, true, true);
+            else ktBackToCountSelect();
+        }
+
+        // Nicht alle Decks vergeben: zurueck zur Spieleranzahl. Die Plaetze
+        // werden freigegeben, damit die Gaeste beim naechsten Anlauf sauber neu
+        // verteilt werden.
+        function ktBackToCountSelect() {
+            if (!ktReady()) return;
+            KtNet.publicRef(ktDb, ktSessionId).update({
+                phase: 'countSelect',
+                seats: null,
+                lobbyStartedAt: null
+            }).catch(err => console.warn('[Hos’n Obe] Zurueck zur Spieleranzahl fehlgeschlagen:', err));
+        }
+
+        // Alle Plaetze belegt: die Lobby muss nicht auslaufen.
+        function ktLobbyFull() {
+            const count = Number(ktPub.playerCount) || 0;
+            if (ktMode() === 'botDecks') ktStartBotRound(count, true, true);
+            else ktDealIfPossible();
+        }
+
         function ktResetSession() {
             ktClearTimers();
             ktClearRoundBudget();
@@ -5072,6 +5113,7 @@
                     phase: 'idle',
                     playerCount: null,
                     hostUid: null,
+                    mode: null,
                     botGame: null,
                     botSeats: null,
                     seats: null,
@@ -5091,6 +5133,7 @@
                     fireBySeat: null,
                     lastMove: null,
                     endRequestedBy: null,
+                    newGameRequestedBy: null,
                     turnStartedAt: null,
                     dealerUid: ktUid
                 }))
@@ -5104,15 +5147,15 @@
             // sonst waehrend des ganzen Spiels am Bildschirm stehen.
             ktSetTimer(null);
 
-            if (phase === 'hostSelect') {
+            if (phase === 'hostSelect' || phase === 'countSelect') {
                 ktEnterGame();
-                // Bestaetigt niemand die Spieleranzahl, laeuft die Rotation exakt
-                // an der pausierten Stelle weiter - kein Neustart, kein Sprung.
+                // Waehlt niemand Modus bzw. Spieleranzahl, laeuft die Rotation
+                // exakt an der pausierten Stelle weiter - kein Neustart, kein Sprung.
                 ktStartCountdown(KT.hostSelectSeconds || 20, ktResetSession);
 
             } else if (phase === 'lobby') {
                 ktEnterGame();
-                ktStartCountdown(KT.lobbySeconds || 60, ktDealIfPossible);
+                ktStartCountdown(ktLobbySeconds(), ktLobbyExpired);
 
             } else if (phase === 'botRound') {
                 // Vom Handy angefordert: der TV uebernimmt alle Plaetze selbst.
@@ -5182,10 +5225,29 @@
                 return;
             }
 
+            /*
+             * "Neues Spiel starten" vom Handy: aufraeumen und zurueck an den
+             * Anfang, also zur Modus-Auswahl. Das Abraeumen macht bewusst der TV
+             * - er kennt alle Felder und darf als Geber auch die verdeckten
+             * Haende loeschen.
+             */
+            if (ktPub.newGameRequestedBy && !ktRestarting) {
+                const starter = ktPub.newGameRequestedBy;
+                ktRestarting = true;
+                ktResetSession().then(() => KtNet.publicRef(ktDb, ktSessionId).update({
+                    phase: 'hostSelect',
+                    hostUid: starter,
+                    hostRequestedAt: firebase.database.ServerValue.TIMESTAMP
+                })).catch(err => console.warn('[Hos’n Obe] Neustart fehlgeschlagen:', err))
+                  .then(() => { ktRestarting = false; });
+                ktRender();
+                return;
+            }
+
             // Lobby vorzeitig schliessen, sobald alle Plaetze belegt sind.
             if (phase === 'lobby' && Number(ktPub.playerCount) > 0 &&
                 ktSeatsTaken() >= Number(ktPub.playerCount)) {
-                ktDealIfPossible();
+                ktLobbyFull();
             }
 
             ktRender();
@@ -5246,7 +5308,9 @@
              * mit voller Besetzung vor, statt einen toten QR-Code zu zeigen.
              * Erst danach geht die Rotation weiter (ueber ktExitGame -> advance). */
             ktStartCountdown(KT.botIdleStartSeconds || 60, () => {
-                if ((ktPub.phase || 'idle') === 'idle') ktStartBotRound(KT.botPlayerCount || 6);
+                // Aus dem Zyklus heraus spielt der Computer allein - es hat ja
+                // niemand gescannt, also gibt es auch keine Decks zu vergeben.
+                if ((ktPub.phase || 'idle') === 'idle') ktStartBotRound(KT.botPlayerCount || 6, false);
                 else advance();
             });
             // Sicherheitsnetz, falls der Countdown durch einen Phasenwechsel

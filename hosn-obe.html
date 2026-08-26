@@ -838,10 +838,36 @@
     function renderActions() {
         els.actions.innerHTML = '';
 
+        /*
+         * Schritt 1: der Spielmodus. Erst danach die Spieleranzahl - die haengt
+         * schliesslich vom Modus ab (beim Computer mit Deckvergabe ist sie die
+         * Zahl der Decks, die vergeben werden muessen).
+         */
         if (pub.phase === 'hostSelect' && isHost) {
+            var modeCaption = document.createElement('div');
+            modeCaption.className = 'kt-count-caption';
+            modeCaption.textContent = 'Wie soll gespielt werden?';
+            els.actions.appendChild(modeCaption);
+
+            els.actions.appendChild(button('👥 Gäste spielen selbst', 'kt-btn-big', function () {
+                chooseMode('humans');
+            }));
+            els.actions.appendChild(button('🤖 Computer spielt — Gäste bekommen Karten', 'kt-btn-bot kt-btn-big', function () {
+                chooseMode('botDecks');
+            }));
+            els.actions.appendChild(button('🤖 Computer spielt allein', 'kt-btn-ghost kt-btn-big', function () {
+                chooseMode('botOnly');
+            }));
+            return;
+        }
+
+        // Schritt 2: die Spieleranzahl.
+        if (pub.phase === 'countSelect' && isHost) {
             var caption = document.createElement('div');
             caption.className = 'kt-count-caption';
-            caption.textContent = 'Wie viele spielen mit?';
+            caption.textContent = pub.mode === 'botDecks' ? 'Wie viele Decks werden gebraucht?'
+                : pub.mode === 'botOnly' ? 'Wie viele Computer-Spieler?'
+                : 'Wie viele spielen mit?';
             els.actions.appendChild(caption);
 
             var grid = document.createElement('div');
@@ -854,27 +880,13 @@
                 grid.appendChild(b);
             });
             els.actions.appendChild(grid);
-            // Computer-Modus, zwei Spielarten: mit Deckvergabe duerfen die
-            // Gaeste weiter scannen und bekommen ein eigenes Blatt zum
-            // Mitschauen, auch wenn der Computer zieht.
-            els.actions.appendChild(button('🤖 Computer spielt — Gäste bekommen Karten', 'kt-btn-bot', function () {
-                startBotRound(CFG.botPlayerCount || 6, true);
-            }));
-            els.actions.appendChild(button('🤖 Computer spielt allein', 'kt-btn-ghost', function () {
-                startBotRound(CFG.botPlayerCount || 6, false);
-            }));
+            els.actions.appendChild(button('← Modus ändern', 'kt-btn-ghost', backToMode));
             return;
         }
 
-        // In der Lobby darf der Host jederzeit an den Computer uebergeben.
-        if (pub.phase === 'lobby' && isHost && !pub.botGame) {
-            var lobbyCount = Number(pub.playerCount) || CFG.botPlayerCount || 6;
-            els.actions.appendChild(button('🤖 Computer übernimmt — Karten bleiben verteilt', 'kt-btn-bot', function () {
-                startBotRound(lobbyCount, true);
-            }));
-            els.actions.appendChild(button('🤖 Computer spielt allein', 'kt-btn-ghost', function () {
-                startBotRound(lobbyCount, false);
-            }));
+        // Nach dem Aufdecken: von vorne beginnen, ohne auf den TV zu warten.
+        if (pub.phase === 'reveal' || pub.phase === 'idle') {
+            els.actions.appendChild(button('NEUES SPIEL STARTEN', 'kt-btn-confirm kt-btn-big', startNewGame));
             return;
         }
 
@@ -985,9 +997,10 @@
         show(els.dangerZone, mayEnd);
         show(els.scrollHint, mayEnd);
 
-        var showCards = myHand.length === 3 && phase !== 'idle' && phase !== 'hostSelect';
+        var lobbyish = phase === 'idle' || phase === 'hostSelect' || phase === 'countSelect';
+        var showCards = myHand.length === 3 && !lobbyish;
         show(els.handPanel, showCards);
-        show(els.middlePanel, (pub.middleCards || []).length === 3 && phase !== 'idle' && phase !== 'hostSelect');
+        show(els.middlePanel, (pub.middleCards || []).length === 3 && !lobbyish);
 
         var myTurn = isMyTurn();
         var pickable = myTurn && !singleSwapBlocked() && !swapWindowActive();
@@ -1017,14 +1030,21 @@
         els.statusExtra.innerHTML = '';
 
         if (phase === 'hostSelect') {
-            if (isHost) setStatus('Du bist der Host', 'Tippe die Spieleranzahl an — danach können die anderen scannen.');
-            else setStatus('Runde wird gestartet…', 'Jemand anderes wählt gerade die Spieleranzahl.');
+            if (isHost) setStatus('Du bist der Host', 'Wähle zuerst den Spielmodus.');
+            else setStatus('Runde wird gestartet…', 'Jemand anderes wählt gerade den Spielmodus.');
+
+        } else if (phase === 'countSelect') {
+            if (isHost) setStatus('Fast fertig', 'Jetzt noch die Anzahl — danach können alle scannen.');
+            else setStatus('Runde wird gestartet…', 'Der Host wählt gerade die Spieleranzahl.');
 
         } else if (phase === 'lobby') {
             var taken = Object.keys(seats).filter(function (k) { return seats[k] && seats[k].uid; }).length;
+            var deckMode = pub.mode === 'botDecks';
             setStatus(mySeat >= 0 ? 'Du bist dabei!' : 'Kein Platz mehr frei',
-                mySeat >= 0 ? taken + ' von ' + count + ' Plätzen belegt. Gleich geht es los.'
-                            : 'Diese Runde ist voll. Warte auf die nächste.');
+                mySeat >= 0
+                    ? taken + ' von ' + count + (deckMode ? ' Karten vergeben. Es müssen alle scannen, sonst geht es zurück zur Auswahl.'
+                                                          : ' Plätzen belegt. Gleich geht es los.')
+                    : 'Diese Runde ist voll. Warte auf die nächste.');
             var grid = document.createElement('div');
             grid.className = 'kt-seat-grid';
             for (var i = 0; i < count; i++) {
@@ -1078,7 +1098,7 @@
             renderReveal();
 
         } else {
-            setStatus('Warte auf die nächste Runde', 'Der TV startet gleich eine neue Runde.');
+            setStatus('Bereit', 'Tippe unten auf „Neues Spiel starten“, wenn es weitergehen soll.');
         }
 
         // Am eigenen Zug verschwindet die Statusbox zugunsten grosser Knoepfe.
@@ -1089,12 +1109,61 @@
 
     // ---------- Ablauf ----------
 
-    function choosePlayerCount(n) {
+    // Schritt 1: Modus merken und zur Spieleranzahl weitergehen.
+    function chooseMode(mode) {
         if (busy) return;
         busy = true;
         KtNet.publicRef(db, sessionId).update({
+            mode: mode,
+            phase: 'countSelect'
+        }).catch(function (err) {
+            console.warn('[Hos’n Obe] Modus konnte nicht gesetzt werden:', err);
+        }).then(function () { busy = false; });
+    }
+
+    function backToMode() {
+        if (busy) return;
+        busy = true;
+        KtNet.publicRef(db, sessionId).update({
+            mode: null,
+            phase: 'hostSelect'
+        }).catch(function (err) {
+            console.warn('[Hos’n Obe] Zurueck zum Modus fehlgeschlagen:', err);
+        }).then(function () { busy = false; });
+    }
+
+    /*
+     * Schritt 2: die Spieleranzahl - und damit der eigentliche Start.
+     *
+     * "Computer allein" braucht keine Lobby und startet sofort. Die beiden
+     * anderen Spielarten oeffnen die Lobby: dort scannen die Gaeste. Beim
+     * Computer mit Deckvergabe muessen alle Plaetze belegt werden, sonst geht
+     * es nach Ablauf zurueck zur Spieleranzahl (das entscheidet der TV).
+     */
+    function choosePlayerCount(n) {
+        if (busy) return;
+        busy = true;
+        var mode = pub.mode || 'humans';
+
+        if (mode === 'botOnly') {
+            KtNet.publicRef(db, sessionId).update({
+                playerCount: n,
+                phase: 'botRound',
+                botGame: true,
+                botSeats: false,
+                seats: null
+            }).catch(function (err) {
+                console.warn('[Hos’n Obe] Computer-Runde konnte nicht gestartet werden:', err);
+            }).then(function () { busy = false; });
+            return;
+        }
+
+        KtNet.publicRef(db, sessionId).update({
             playerCount: n,
             phase: 'lobby',
+            botGame: mode === 'botDecks',
+            botSeats: mode === 'botDecks',
+            seats: null,
             lobbyStartedAt: firebase.database.ServerValue.TIMESTAMP
         }).then(function () {
             return KtNet.claimSeat(db, sessionId, uid, n);
@@ -1108,29 +1177,17 @@
         }).then(function () { busy = false; });
     }
 
-    /*
-     * Vorfuehrrunde: der TV spielt alle Plaetze selbst.
-     *
-     * withSeats = true: die Plaetze bleiben frei, damit Gaeste weiterhin
-     * scannen und ein eigenes Deck bekommen koennen - sie schauen dann bei
-     * ihren eigenen Karten zu, waehrend der Computer zieht. Genau das war die
-     * Vorgabe: mit Deckvergabe oder ohne.
-     */
-    function startBotRound(count, withSeats) {
+    // Nach dem Aufdecken zurueck an den Anfang. Aufgeraeumt wird am TV - er ist
+    // der Geber und darf auch die verdeckten Haende loeschen.
+    function startNewGame() {
         if (busy) return;
         busy = true;
-        var players = Math.min(6, Math.max(2, Number(count) || CFG.botPlayerCount || 6));
-        var open = withSeats === undefined ? (CFG.botSeatsDefault !== false) : !!withSeats;
-        KtNet.publicRef(db, sessionId).update({
-            botGame: true,
-            botSeats: open,
-            playerCount: players,
-            phase: 'botRound',
-            hostUid: null,
-            seats: null
-        }).catch(function (err) {
-            console.warn('[Hos’n Obe] Computer-Runde konnte nicht gestartet werden:', err);
-        }).then(function () { busy = false; });
+        hostChecked = true;          // wir sind gleich Host, kein zweiter Anlauf noetig
+        isHost = true;
+        KtNet.publicRef(db, sessionId).update({ newGameRequestedBy: uid })
+            .catch(function (err) {
+                console.warn('[Hos’n Obe] Neues Spiel konnte nicht gestartet werden:', err);
+            }).then(function () { busy = false; });
     }
 
     // Notausstieg des Hosts: Runde fuer alle beenden, TV zurueck ins Programm.
@@ -1144,17 +1201,14 @@
     }
 
     /*
-     * Sitzplatz belegen.
+     * Sitzplatz belegen - ausschliesslich in der Lobby.
      *
-     * Auch waehrend einer Computer-Runde - sofern sie mit Deckvergabe laeuft:
-     * dann bekommt der Gast ein eigenes Blatt und sieht es auf seinem Handy,
-     * gezogen wird trotzdem vom Computer.
+     * Auch die Computer-Runde mit Deckvergabe laeuft ueber die Lobby: dort
+     * scannen alle, jeder bekommt einen Platz mit eigenem Blatt, und erst wenn
+     * alle Decks vergeben sind, wird ausgeteilt.
      */
     function joinAllowed() {
-        var phase = pub.phase || 'idle';
-        if (phase === 'lobby') return true;
-        if (!pub.botGame || !pub.botSeats) return false;
-        return phase === 'starter' || phase === 'playing' || phase === 'knocked';
+        return (pub.phase || 'idle') === 'lobby';
     }
 
     function tryJoin() {
