@@ -4357,7 +4357,6 @@
         // Schluessel: Mitten-Index bzw. "sitz:index". Siehe ktAnimateLastMove().
         let ktMiddleHide = {};
         let ktSeatHide = {};
-        let ktHideTimers = {};
 
         function ktBuildMiddle() {
             const wrap = ktEl('kt-middle');
@@ -4577,51 +4576,114 @@
         const KT_FLY_MS = 1500;        // Flugdauer einer einzelnen Karte
         const KT_FLY_GAP = 200;        // Pause zwischen Abgeben und Nehmen
 
-        function ktSeatPoint(seat) {
-            const count = Number(ktPub.playerCount) || 0;
-            const layout = KT_LAYOUT[count] || KT_LAYOUT[6];
-            const pos = KT_SEAT_POSITIONS[layout[seat]];
-            if (!pos) return null;
-            return { x: pos.x, y: pos.y + 100 };      // Mitte des Faechers
-        }
+        /*
+         * ---------- Warum die Landung frueher zuckte ----------
+         *
+         * Trinkspiel V2 legt seine Karten ruckelfrei ab, weil es nur EIN
+         * Element gibt: die Karte wird an ihrem Endplatz erzeugt und per
+         * transform von der Mitte dorthin animiert. Die Animation endet also
+         * exakt auf dem Ruhezustand, es gibt keine Uebergabe.
+         *
+         * V3 hatte stattdessen zwei Elemente - einen Flieger, der entfernt
+         * wurde, und die echte Karte, die auftauchte. Dabei sprangen vier
+         * Dinge gleichzeitig: die Groesse (Flieger 130x195 gegen Mitte 122x183
+         * bzw. Faecher 116x174), die Drehung (Flieger 0 Grad gegen den
+         * zufaelligen Schraeglauf der Mitte), die Position (feste Rechenwerte
+         * statt der echten Elementmitte) und der Zeitpunkt (ein setTimeout,
+         * der neben der Animationsuhr lief und um Frames driftete).
+         *
+         * Jetzt nach V2-Vorbild: der Flieger bekommt Groesse, Position UND
+         * Drehung seines Ziels, liegt von Anfang an dort und wird nur vom
+         * Startpunkt herangeholt. Die Uebergabe haengt an der Animation selbst,
+         * nicht an einem Timer.
+         */
 
-        function ktMiddlePoint(index) {
-            const total = 3 * 122 + 2 * 20;           // Kartenbreite + Abstaende (siehe .kt-middle)
-            const left = 765 - total / 2;             // Buehnenmitte
-            return { x: left + index * (122 + 20) + 61, y: 376 + 91 };
-        }
-
-        function ktFly(code, from, to, delay) {
+        // Mitte, Groesse und Drehung eines Elements in Buehnenkoordinaten -
+        // unabhaengig davon, wie stark die Buehne gerade skaliert ist.
+        function ktStageGeom(el) {
             const stage = document.querySelector('#media-view-hosnobe .kt-stage');
-            if (!stage || !from || !to || !code) return;
+            if (!stage || !el || !el.offsetWidth) return null;
+            const sr = stage.getBoundingClientRect();
+            const scale = (sr.width / (stage.offsetWidth || 1)) || 1;
+            const r = el.getBoundingClientRect();
+            let angle = 0;
+            const t = getComputedStyle(el).transform;
+            if (t && t !== 'none' && typeof DOMMatrixReadOnly === 'function') {
+                try {
+                    const m = new DOMMatrixReadOnly(t);
+                    angle = Math.atan2(m.b, m.a) * 180 / Math.PI;
+                } catch (e) { angle = 0; }
+            }
+            return {
+                x: (r.left + r.width / 2 - sr.left) / scale,
+                y: (r.top + r.height / 2 - sr.top) / scale,
+                w: el.offsetWidth, h: el.offsetHeight, angle: angle
+            };
+        }
+
+        function ktSeatCardGeom(seat, index) {
+            const el = ktSeatEls[seat];
+            return el && el.cards[index] ? ktStageGeom(el.cards[index]) : null;
+        }
+
+        function ktMiddleGeom(index) {
+            const slot = ktMiddleEls && ktMiddleEls[index];
+            return slot ? ktStageGeom(slot.el) : null;
+        }
+
+        /*
+         * Der Flieger liegt bereits auf dem Zielplatz und wird nur vom
+         * Startpunkt herangeholt - genau wie in V2. onLand feuert, wenn die
+         * Animation wirklich fertig ist; erst dann wird die echte Karte
+         * sichtbar und der Flieger im naechsten Frame entfernt. So ist nie
+         * ein Frame lang keine oder eine doppelte Karte zu sehen.
+         */
+        function ktFly(code, from, to, delay, onLand) {
+            const stage = document.querySelector('#media-view-hosnobe .kt-stage');
+            if (!stage || !from || !to || !code) { if (onLand) onLand(); return; }
+
             const el = document.createElement('div');
             el.className = 'kt-flyer';
+            el.style.width = to.w + 'px';
+            el.style.height = to.h + 'px';
+            el.style.left = (to.x - to.w / 2) + 'px';
+            el.style.top = (to.y - to.h / 2) + 'px';
             const img = document.createElement('img');
             img.src = KtEngine.cardImage(code, 'cards/');
             el.appendChild(img);
-            el.style.left = (from.x - 65) + 'px';
-            el.style.top = (from.y - 97) + 'px';
             stage.appendChild(el);
 
+            let landed = false;
+            const land = () => {
+                if (landed) return;
+                landed = true;
+                if (onLand) onLand();
+                // Erst im naechsten Frame raeumen: die echte Karte steht dann
+                // schon, der Tausch faellt nicht auf.
+                requestAnimationFrame(() => { if (el.parentNode) el.remove(); });
+            };
+
             /*
-             * Kein Ueberschlag mehr: eine sich drehende Karte kann man nicht
-             * lesen. Stattdessen ein ruhiger Bogen mit einer Haltepause auf
-             * halbem Weg, in der die Karte vergroessert und leicht gekippt
-             * offen liegt - da sieht jeder, welche Karte gerade wandert.
+             * Ruhiger Bogen mit einer Haltepause auf halbem Weg, in der die
+             * Karte vergroessert offen liegt - da sieht jeder, welche Karte
+             * gerade wandert. Kein Ueberschlag: eine sich drehende Karte kann
+             * man nicht lesen.
              */
-            const dx = to.x - from.x, dy = to.y - from.y;
+            const dx = from.x - to.x, dy = from.y - to.y;
+            const startScale = to.w ? (from.w || to.w) / to.w : 1;
             const midX = dx * 0.5, midY = dy * 0.5 - 46;
+            const a0 = from.angle || 0, a1 = to.angle || 0;
             const anim = el.animate([
-                { transform: 'translate(0px, 0px) scale(1) rotate(0deg)', opacity: 0.9, offset: 0 },
-                { transform: 'translate(' + (dx * 0.24) + 'px, ' + (dy * 0.24 - 30) + 'px) scale(1.22) rotate(-3deg)', opacity: 1, offset: 0.2 },
-                { transform: 'translate(' + midX + 'px, ' + midY + 'px) scale(1.42) rotate(-4deg)', opacity: 1, offset: 0.33 },
-                { transform: 'translate(' + midX + 'px, ' + midY + 'px) scale(1.42) rotate(-4deg)', opacity: 1, offset: 0.7 },
-                { transform: 'translate(' + (dx * 0.86) + 'px, ' + (dy * 0.86 - 12) + 'px) scale(1.12) rotate(-1deg)', opacity: 1, offset: 0.9 },
-                { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(1) rotate(0deg)', opacity: 1, offset: 1 }
+                { transform: `translate(${dx}px, ${dy}px) scale(${startScale}) rotate(${a0}deg)`, opacity: 0.9, offset: 0 },
+                { transform: `translate(${dx * 0.76}px, ${dy * 0.76 - 30}px) scale(${startScale * 1.22}) rotate(${a0 - 3}deg)`, opacity: 1, offset: 0.2 },
+                { transform: `translate(${midX}px, ${midY}px) scale(1.42) rotate(-4deg)`, opacity: 1, offset: 0.33 },
+                { transform: `translate(${midX}px, ${midY}px) scale(1.42) rotate(-4deg)`, opacity: 1, offset: 0.7 },
+                { transform: `translate(${dx * 0.14}px, ${dy * 0.14 - 12}px) scale(1.12) rotate(${a1 - 1}deg)`, opacity: 1, offset: 0.9 },
+                { transform: `translate(0px, 0px) scale(1) rotate(${a1}deg)`, opacity: 1, offset: 1 }
             ], { duration: KT_FLY_MS, delay: delay || 0, easing: 'ease-in-out', fill: 'forwards' });
-            anim.onfinish = () => el.remove();
-            // Sicherheitsnetz: haengt die Animation (WebView), raeumt der Timer auf.
-            later(() => { if (el.parentNode) el.remove(); }, KT_FLY_MS + (delay || 0) + 900);
+            anim.onfinish = land;
+            // Sicherheitsnetz: haengt die Animation (WebView), greift der Timer.
+            later(land, KT_FLY_MS + (delay || 0) + 400);
         }
 
         let ktLastAnimatedMove = null;
@@ -4632,46 +4694,42 @@
             if (stamp === ktLastAnimatedMove) return;
             ktLastAnimatedMove = stamp;
 
-            const seatPoint = ktSeatPoint(Number(move.seat));
-            if (!seatPoint) return;
-
+            const seat = Number(move.seat);
             let totalMs = 0;
 
             /*
              * Solange eine Karte fliegt, gehoert sie NIRGENDWO hin: der Platz,
              * von dem sie stammt, bleibt leer, bis die Gegenkarte dort ankommt.
              * Am Deck liegen also nur zwei Karten, bis die dritte aus der Mitte
-             * eintrifft - und in der Mitte genauso. Frueher lagen an beiden
-             * Stellen durchgehend drei Karten, obwohl eine noch unterwegs war.
+             * eintrifft - und in der Mitte genauso.
+             *
+             * Wichtig fuer die ruckelfreie Landung: erst werden alle Plaetze
+             * versteckt und die Mitte auf den ENDSTAND gezeichnet, dann wird
+             * gemessen. Der Flieger kennt damit Groesse, Lage und Drehung
+             * seines Ziels exakt und endet genau darauf. Sichtbar wird die
+             * echte Karte erst, wenn die Animation fertig ist (onLand) - nicht
+             * ueber einen nebenherlaufenden Timer.
              */
-            const hideUntil = (map, key, ms, redraw) => {
-                map[key] = true;
-                if (ktHideTimers[key] !== undefined && ktHideTimers[key] !== null) clearTimeout(ktHideTimers[key]);
-                ktHideTimers[key] = setTimeout(() => {
-                    ktHideTimers[key] = null;
-                    delete map[key];
-                    redraw();
-                }, ms);
-            };
-            const hideMiddle = (i, ms) => hideUntil(ktMiddleHide, i, ms, ktRenderMiddle);
-            const hideSeatCard = (i, ms) => hideUntil(ktSeatHide, move.seat + ':' + i, ms, ktRenderSeats);
+            const showMiddle = (i) => { delete ktMiddleHide[i]; ktRenderMiddle(); };
+            const showSeatCard = (i) => { delete ktSeatHide[seat + ':' + i]; ktRenderSeats(); };
 
             if (move.type === 'single') {
+                const idx = isNaN(Number(move.middleIndex)) ? 1 : Number(move.middleIndex);
+                if (move.took) { ktMiddleHide[idx] = true; ktSeatHide[seat + ':2'] = true; }
+                ktRenderMiddle();
+                ktRenderSeats();
+
+                const mid = ktMiddleGeom(idx);
+                const hand = ktSeatCardGeom(seat, 2);
                 /*
                  * Erst nehmen, dann hinlegen - nie beides gleichzeitig, sonst
                  * weiss niemand, welche Karte in welche Richtung unterwegs war.
                  * Diese Reihenfolge haelt zusaetzlich beide Stapel ehrlich:
                  * die Mitte gibt ab, bevor sie neu bekommt.
                  */
-                const idx = Number(move.middleIndex);
-                const mid = ktMiddlePoint(isNaN(idx) ? 1 : idx);
-                if (move.took) ktFly(move.took, mid, seatPoint, 0);
-                if (move.gave) ktFly(move.gave, seatPoint, mid, KT_FLY_MS + KT_FLY_GAP);
+                if (move.took) ktFly(move.took, mid, hand, 0, () => showSeatCard(2));
+                if (move.gave) ktFly(move.gave, hand, mid, KT_FLY_MS + KT_FLY_GAP, () => showMiddle(idx));
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP;
-                // Mitte: Platz bleibt leer, bis die Karte des Spielers landet.
-                if (move.took && !isNaN(idx)) hideMiddle(idx, totalMs);
-                // Deck: eine Karte weniger, bis die genommene Karte ankommt.
-                if (move.took) hideSeatCard(2, KT_FLY_MS);
 
             } else if (move.type === 'all') {
                 /*
@@ -4685,11 +4743,15 @@
                 const step = 260;
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP + 2 * step;
                 for (let i = 0; i < 3; i++) {
-                    const mid = ktMiddlePoint(i);
-                    if (took[i]) ktFly(took[i], mid, seatPoint, i * step);
-                    if (gave[i]) ktFly(gave[i], seatPoint, mid, KT_FLY_MS + KT_FLY_GAP + i * step);
-                    if (took[i]) hideMiddle(i, KT_FLY_MS * 2 + KT_FLY_GAP + i * step);
-                    if (took[i]) hideSeatCard(i, KT_FLY_MS + i * step);
+                    if (took[i]) { ktMiddleHide[i] = true; ktSeatHide[seat + ':' + i] = true; }
+                }
+                ktRenderMiddle();
+                ktRenderSeats();
+                for (let i = 0; i < 3; i++) {
+                    const mid = ktMiddleGeom(i);
+                    const hand = ktSeatCardGeom(seat, i);
+                    if (took[i]) ktFly(took[i], mid, hand, i * step, () => showSeatCard(i));
+                    if (gave[i]) ktFly(gave[i], hand, mid, KT_FLY_MS + KT_FLY_GAP + i * step, () => showMiddle(i));
                 }
             }
 
@@ -5232,10 +5294,8 @@
             ktTurnDisplaySeat = null;
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
-            Object.keys(ktHideTimers).forEach(k => { if (ktHideTimers[k]) clearTimeout(ktHideTimers[k]); });
             ktMiddleHide = {};
             ktSeatHide = {};
-            ktHideTimers = {};
             ktStarterKey = '';
             ktBotPassUsed = {};
             ktPendingFireSeat = -1;
