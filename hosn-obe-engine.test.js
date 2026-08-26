@@ -174,6 +174,67 @@ eq('Drilling-Wert bekommt ein Komma', E.formatScore(30.5), '30,5');
     }
     eq('Deal ' + n + ' Spieler: keine Karte doppelt', new Set(all).size, all.length);
 });
+/*
+ * ---------- Ziehungschance hoher Karten ----------
+ *
+ * Punkte und Regeln bleiben unveraendert - hohe Karten kommen nur seltener
+ * ins Spiel, damit Feuer (Ass + zwei Zehner-Karten derselben Farbe) nicht
+ * mehr jede dritte Runde auftritt.
+ */
+check('Standard laesst hohe Karten seltener ziehen',
+    E.DRAW_CHANCE.ace < 1 && E.DRAW_CHANCE.high < 1,
+    JSON.stringify(E.DRAW_CHANCE));
+
+function dealtRanks(chances, rounds) {
+    var aces = 0, high = 0, low = 0;
+    for (var q = 0; q < rounds; q++) {
+        var dd = E.deal(4, null, chances);
+        var cards = dd.middleCards.slice();
+        for (var s2 = 0; s2 < 4; s2++) cards = cards.concat(dd.hands[s2]);
+        cards.forEach(function (c) {
+            var rk = c.slice(1);
+            if (rk === 'A') aces++;
+            else if (['10', 'J', 'Q', 'K'].indexOf(rk) !== -1) high++;
+            else low++;
+        });
+    }
+    var total = aces + high + low;
+    return { ace: aces / total, high: high / total, low: low / total };
+}
+
+var evenDraw = dealtRanks({ ace: 1, high: 1 }, 4000);
+var fewHigh = dealtRanks({ ace: 0.5, high: 0.5 }, 4000);
+check('Bei Chance 1 entspricht der Ass-Anteil dem Deck (4 von 32)',
+    Math.abs(evenDraw.ace - 4 / 32) < 0.02, evenDraw.ace.toFixed(3));
+check('Halbe Chance zieht deutlich weniger Asse',
+    fewHigh.ace < evenDraw.ace - 0.01, fewHigh.ace.toFixed(3) + ' vs ' + evenDraw.ace.toFixed(3));
+check('Halbe Chance zieht deutlich weniger Zehner-Karten',
+    fewHigh.high < evenDraw.high - 0.03, fewHigh.high.toFixed(3) + ' vs ' + evenDraw.high.toFixed(3));
+check('Dafuer kommen mehr niedrige Karten ins Spiel',
+    fewHigh.low > evenDraw.low + 0.04, fewHigh.low.toFixed(3) + ' vs ' + evenDraw.low.toFixed(3));
+
+// Der gewichtete Stapel bleibt ein vollstaendiges, duplikatfreies Deck.
+var wShuf = E.weightedShuffle(E.buildDeck(), null, { ace: 0.3, high: 0.4 });
+eq('Gewichteter Stapel hat alle 32 Karten', wShuf.length, 32);
+eq('Gewichteter Stapel ist duplikatfrei', new Set(wShuf).size, 32);
+
+// Feuer muss seltener werden - das ist der ganze Zweck.
+function fireAtDeal(chances, rounds) {
+    var hits = 0;
+    for (var q = 0; q < rounds; q++) {
+        var dd = E.deal(4, null, chances);
+        var f = E.scoreHand(dd.middleCards).fire;
+        for (var s3 = 0; s3 < 4 && !f; s3++) f = E.scoreHand(dd.hands[s3]).fire;
+        if (f) hits++;
+    }
+    return hits / rounds;
+}
+var fireEven = fireAtDeal({ ace: 1, high: 1 }, 8000);
+var fireFew = fireAtDeal({ ace: 0.5, high: 0.5 }, 8000);
+check('Seltenere hohe Karten heissen seltener Feuer',
+    fireFew < fireEven * 0.75,
+    (fireFew * 100).toFixed(1) + '% statt ' + (fireEven * 100).toFixed(1) + '%');
+
 check('Deal lehnt 1 Spieler ab', (function () { try { E.deal(1); return false; } catch (e) { return true; } })());
 check('Deal lehnt 7 Spieler ab', (function () { try { E.deal(7); return false; } catch (e) { return true; } })());
 
@@ -272,9 +333,8 @@ for (var bt = 0; bt < 4000; bt++) {
     var d = E.deal(2);
     var h = d.hands[0], mid = d.middleCards;
     var before = E.scoreHand(h).score;
-    var mv = E.botDecide(h, mid, {
-        canKnock: bt % 2 === 0, canKnockDirect: bt % 4 === 0, canPass: bt % 4 !== 0
-    });
+    var canPassNow = bt % 4 !== 0;
+    var mv = E.botDecide(h, mid, { canKnock: bt % 2 === 0, canPass: canPassNow });
 
     if (mv.type === 'pass') { passes++; continue; }
     if (mv.type === 'knock') { knocks++; continue; }
@@ -288,7 +348,14 @@ for (var bt = 0; bt < 4000; bt++) {
         probe[mv.handIndex] = mid[mv.middleIndex];
         after = E.scoreHand(probe).score;
     }
-    if (after < before) worse++;
+    /*
+     * Ausnahme: liegt in der Mitte ein Drilling oder ein Farbsatz, ist der
+     * Einzeltausch gesperrt - und ohne "Weiter" bleibt nur "alle 3 nehmen".
+     * Dieser Zug MUSS gemacht werden, auch wenn er verschlechtert. Ein Gast
+     * steckt an der Stelle in genau derselben Zwangslage.
+     */
+    var forced = !canPassNow && E.middleWorthTakingAll(mid);
+    if (after < before && !forced) worse++;
 
     if (mv.type === 'single') {
         var bestPossible = -1;

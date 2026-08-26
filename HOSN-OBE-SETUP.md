@@ -175,6 +175,12 @@ welches Widget gerade läuft.
 - **Feuer** = drei Karten **derselben Farbe** mit genau 31 Punkten
   (Ass + zwei Zehner-Karten, in jeder Farbe möglich). Feuer **beendet die
   Runde sofort**: es wird nicht mehr getauscht, alle decken auf.
+  *Wie oft Feuer vorkommt, lässt sich einstellen* — siehe `aceDrawChance`
+  und `highCardDrawChance` in `hosn-obe-config.js`. Die Punkte und Regeln
+  bleiben dabei unangetastet; hohe Karten bleiben nur öfter im ungenutzten
+  Rest des Stapels liegen (pro Runde werden je nach Spieleranzahl ohnehin
+  nur 11 bis 27 der 32 Karten ausgeteilt). Mit der Voreinstellung `0.5`
+  endet rund jede fünfte Computer-Runde mit Feuer statt jeder dritten.
 - **Tischfeuer**: stehen die **drei Karten in der Mitte** selbst bei 31
   (derselbe Flush-Fall), gilt dasselbe — egal wessen Zug es gerade ist, alle
   decken sofort auf. Das gilt auch dann, wenn die Mitte erst durch einen

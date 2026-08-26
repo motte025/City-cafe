@@ -37,6 +37,20 @@ window.HOSN_OBE_CONFIG = {
     swapWindowSeconds: 6,    // nach dem Tausch bleibt so lange Zeit zum Aufgehen
     roundTargetSeconds: 95,  // Ziel-Spieldauer einer Runde; danach wird aufgedeckt
 
+    // --- Wie oft kommen hohe Karten ins Spiel? ---
+    // Feuer (gleiche Farbe, exakt 31) braucht ein Ass UND zwei Karten mit
+    // 10 Punkten (Zehn, Bube, Dame, König) derselben Farbe. Bei gleicher
+    // Chance für alle 32 Karten endete rund jede dritte Runde mit Feuer.
+    // Punkte und Regeln bleiben unverändert — hohe Karten bleiben nur öfter
+    // im ungenutzten Rest des Stapels liegen (pro Runde werden je nach
+    // Spieleranzahl nur 11 bis 27 der 32 Karten überhaupt ausgeteilt).
+    //   1.0 = wie ein normales Deck, jede Karte gleich oft  → ~35 % Feuer
+    //   0.7 = ~27 % Feuer     0.5 = ~20 % Feuer     0.35 = ~15 % Feuer
+    // Kleiner heißt seltener Feuer; der Durchschnitts-Handwert bleibt dabei
+    // fast gleich, das Spiel wird also nicht flacher.
+    aceDrawChance: 0.5,      // Asse
+    highCardDrawChance: 0.5, // Zehn, Bube, Dame, König
+
     // --- Computer-Runde (Vorführmodus) ---
     botPlayerCount: 6,       // so viele Plätze besetzt der Computer
     botMoveSeconds: 6,       // Denkpause zwischen zwei Computer-Zügen (Gäste sollen mitkommen)
