@@ -49,6 +49,17 @@
         background: rgba(0,242,254,0.12); border: 1px solid rgba(0,242,254,0.45);
         color: #00f2fe; white-space: nowrap;
     }
+    /* Bleibt auch am eigenen Zug sichtbar - anders als die grosse Statusbox,
+       die dort den Knoepfen weicht. So sieht man immer, wer dran ist. */
+    .kt-turn-banner {
+        flex: 0 0 auto; text-align: center;
+        font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 16px;
+        padding: 7px 10px; border-radius: 12px;
+        border: 1px solid rgba(244,163,0,0.5); background: rgba(244,163,0,0.1); color: #f4a300;
+    }
+    .kt-turn-banner.is-myturn {
+        border-color: rgba(0,242,254,0.5); background: rgba(0,242,254,0.1); color: #00f2fe;
+    }
 
     /* Eigene Hand bewusst GANZ OBEN: so laesst sich das Display mit einer Hand
        abschirmen oder wegkippen, ohne dass Nachbarn mitlesen. */
@@ -286,6 +297,8 @@
     <div class="kt-seat-badge kt-hidden" id="kt-seat-badge">—</div>
 </div>
 
+<div class="kt-turn-banner kt-hidden" id="kt-turn-banner">—</div>
+
 <!-- Eigene Hand ganz oben im Viewport (Sichtschutz beim Halten des Handys) -->
 <div class="kt-hand-panel kt-hidden" id="kt-hand-panel">
     <div class="kt-panel-label">Deine Karten — nicht herzeigen</div>
@@ -331,6 +344,7 @@
 
     var els = {
         seatBadge: document.getElementById('kt-seat-badge'),
+        turnBanner: document.getElementById('kt-turn-banner'),
         handPanel: document.getElementById('kt-hand-panel'),
         handCards: document.getElementById('kt-hand-cards'),
         handScore: document.getElementById('kt-hand-score'),
@@ -794,12 +808,12 @@
      * Aufgehen. Zwei Wege dorthin:
      *   - im Sechs-Sekunden-Fenster direkt nach dem eigenen Tausch
      *     (afterSwap = true, der Zug ist dann schon gezaehlt), oder
-     *   - ohne Tausch, wenn man in dieser Runde bereits "Weiter" genutzt hat.
+     *   - direkt am eigenen Zug, ganz ohne zu tauschen.
      * Wer aufgeht, deckt sofort auf - das ist der Sinn der Sache.
      */
     function doKnock(afterSwap) {
         if (busy || !canKnockNow()) return;
-        if (!afterSwap && (!isMyTurn() || !passUsed)) return;
+        if (!afterSwap && !isMyTurn()) return;
         busy = true;
         stopSwapWindow();
 
@@ -921,11 +935,9 @@
          */
         var hint = document.createElement('div');
         hint.className = 'kt-turn-hint';
-        if (passUsed && canKnockNow()) {
-            hint.innerHTML = 'Karte tauschen — oder <b>direkt aufgehen</b>, weil du schon weitergegeben hast.';
-        } else if (canKnockNow()) {
-            hint.innerHTML = 'Karte tauschen — danach hast du <b>' +
-                (Number(CFG.swapWindowSeconds) || 6) + ' Sekunden</b> Zeit zum Aufgehen.';
+        if (canKnockNow()) {
+            hint.innerHTML = 'Karte tauschen oder <b>direkt aufgehen</b>. Nach einem Tausch bleiben ' +
+                'zusätzlich <b>' + (Number(CFG.swapWindowSeconds) || 6) + ' Sekunden</b> Zeit dafür.';
         } else {
             var left = knockRoundsLeft();
             hint.textContent = 'Karte antippen oder ziehen. Aufgehen geht erst ab der zweiten Runde' +
@@ -937,8 +949,8 @@
             els.actions.appendChild(button('ALLE 3 NEHMEN', 'kt-btn-big', doSwapAll));
         }
 
-        // Aufgehen ohne Tausch: nur mit bereits genutztem "Weiter".
-        if (canKnockNow() && passUsed) {
+        // Aufgehen direkt am eigenen Zug, ganz ohne zu tauschen.
+        if (canKnockNow()) {
             els.actions.appendChild(button('AUFGEHEN', 'kt-btn-knock kt-btn-big', function () { doKnock(false); }));
         }
 
@@ -1102,6 +1114,15 @@
         } else {
             setStatus('Bereit', 'Tippe unten auf „Neues Spiel starten“, wenn es weitergehen soll.');
         }
+
+        // Am eigenen Zug verschwindet die Statusbox zugunsten grosser Knoepfe -
+        // dieses schmale Band bleibt trotzdem stehen, damit man immer sieht, wer dran ist.
+        var showTurnBanner = (phase === 'playing' || phase === 'knocked') && !pub.botGame;
+        if (showTurnBanner) {
+            els.turnBanner.textContent = myTurn ? 'Du bist dran' : seatName(pub.currentTurnSeat) + ' ist dran';
+            els.turnBanner.classList.toggle('is-myturn', myTurn);
+        }
+        show(els.turnBanner, showTurnBanner);
 
         // Am eigenen Zug verschwindet die Statusbox zugunsten grosser Knoepfe.
         show(els.status, !isMyTurn());
