@@ -367,13 +367,9 @@
     }
 
     /*
-     * Aufgehen ist an einen Tausch gebunden.
-     *
-     * Nutzer-Vorgabe: man tauscht und hat danach sechs Sekunden Zeit, das
-     * Aufgehen zu erklaeren. Ohne Tausch geht das nur, wenn man in dieser Runde
-     * schon einmal "Weiter" gedrueckt hat - das ist die einzige Ausnahme.
-     * Fuer den Computer gilt genau dasselbe: er haengt das Aufgehen an seinen
-     * Zug (knock: true) oder geht direkt auf, wenn er vorher weitergegeben hat.
+     * Aufgehen ist ab der zweiten Runde jederzeit am eigenen Zug moeglich -
+     * mit oder ohne Tausch. Fuer den Computer gilt dasselbe: er geht direkt
+     * auf (type: 'knock') oder haengt es an seinen Tausch (knock: true).
      */
     function botDecide(hand, middleCards, options) {
         var opts = options || {};
@@ -385,10 +381,9 @@
         var knockAt = botKnockThreshold(opts.turnsPlayed, opts.playerCount,
                                         opts.elapsedSeconds, opts.targetSeconds);
         var canKnock = !!opts.canKnock;
-        var canKnockDirect = canKnock && !!opts.canKnockDirect;   // hat schon weitergegeben
 
-        // Hand praktisch unschlagbar - und Aufgehen ohne Tausch erlaubt.
-        if (canKnockDirect && current >= BOT_KNOCK_STRONG) return { type: 'knock' };
+        // Hand praktisch unschlagbar - direkt aufgehen, ganz ohne Tausch.
+        if (canKnock && current >= BOT_KNOCK_STRONG) return { type: 'knock' };
 
         /*
          * Liegt in der Mitte ein Drilling oder drei gleiche Farben, gilt
@@ -402,9 +397,9 @@
             if (setValue >= current + BOT_MIN_GAIN) {
                 return { type: 'all', knock: canKnock && setValue >= knockAt };
             }
-            if (canKnockDirect && current >= knockAt) return { type: 'knock' };
+            if (canKnock && current >= knockAt) return { type: 'knock' };
             if (opts.canPass) return { type: 'pass' };
-            // Weiter ist verbraucht: es bleibt nur, den Satz zu nehmen.
+            // Weiter ist nicht (mehr) sinnvoll: es bleibt nur, den Satz zu nehmen.
             return { type: 'all', knock: canKnock && setValue >= knockAt };
         }
 
@@ -432,15 +427,14 @@
             };
         }
 
-        // Nichts zu verbessern. Mit verbrauchtem "Weiter" darf direkt aufgegangen werden.
-        if (canKnockDirect && current >= knockAt) return { type: 'knock' };
+        // Nichts zu verbessern, Hand aber solide - direkt aufgehen.
+        if (canKnock && current >= knockAt) return { type: 'knock' };
 
-        // Sonst lieber weitergeben, als die eigene Hand zu verschlechtern - das
-        // schaltet zugleich das Aufgehen ohne Tausch frei.
+        // Sonst lieber weitergeben, als die eigene Hand zu verschlechtern.
         if (opts.canPass) return { type: 'pass' };
 
-        // Weiter ist verbraucht: der am wenigsten schaedliche Tausch, bei guter
-        // Hand gleich mit Aufgehen.
+        // Weiter ist nicht (mehr) sinnvoll: der am wenigsten schaedliche Tausch,
+        // bei guter Hand gleich mit Aufgehen.
         return {
             type: 'single', handIndex: strongest.handIndex, middleIndex: strongest.middleIndex,
             knock: canKnock && strongest.value >= knockAt

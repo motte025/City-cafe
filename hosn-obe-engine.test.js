@@ -241,27 +241,22 @@ var botAll = E.botDecide(['C7', 'S8', 'D9'], ['H7', 'HK', 'HA'], { canKnock: fal
 eq('Computer nimmt einen lohnenden Rundumtausch', botAll.type, 'all');
 
 /*
- * Aufgehen haengt am Tausch: ohne Tausch geht es nur, wenn in dieser Runde
- * schon einmal weitergegeben wurde (canKnockDirect). Sonst haengt der Computer
- * das Aufgehen an seinen Zug (knock: true) - genau wie ein Gast im
- * Sechs-Sekunden-Fenster.
+ * Aufgehen ist ab der zweiten Runde jederzeit am eigenen Zug moeglich - mit
+ * oder ohne vorherigen Tausch. Der Computer geht mit einer starken Hand
+ * direkt auf, sobald canKnock gesetzt ist.
  */
 var botKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'],
-    { canKnock: true, canKnockDirect: true, canPass: false });
+    { canKnock: true, canPass: false });
 eq('Computer geht mit starker Hand auf', botKnock.type, 'knock');
 
-var botNoDirect = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'],
-    { canKnock: true, canKnockDirect: false, canPass: true });
-check('Ohne genutztes Weiter kein Aufgehen ohne Tausch', botNoDirect.type !== 'knock', botNoDirect.type);
-
 var botNoKnock = E.botDecide(['HK', 'HQ', 'HA'], ['C7', 'S8', 'D9'],
-    { canKnock: false, canKnockDirect: true, canPass: true });
+    { canKnock: false, canPass: true });
 eq('Ohne Aufgeh-Erlaubnis wird nicht aufgegangen', botNoKnock.type !== 'knock', true);
 
 // Tausch, der die Hand ueber die Schwelle hebt: der Computer haengt das
 // Aufgehen direkt an den Zug.
 var botSwapKnock = E.botDecide(['HK', 'HQ', 'C7'], ['HA', 'S8', 'D9'],
-    { canKnock: true, canKnockDirect: false, canPass: true });
+    { canKnock: true, canPass: true });
 eq('Tausch auf 31 wird gemacht', botSwapKnock.type, 'single');
 check('Nach dem Tausch wird aufgegangen', botSwapKnock.knock === true, JSON.stringify(botSwapKnock));
 

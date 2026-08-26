@@ -559,12 +559,12 @@ async function run() {
     check('Nach zwei Zügen war jeder einmal dran', pubNow().turnsPlayed === 2,
         String(pubNow().turnsPlayed));
 
-    // ---------- "Weiter" schaltet das Aufgehen ohne Tausch frei ----------
-    console.log('\n--- Weiter und danach Aufgehen ohne Tausch ---');
+    // ---------- Ab der zweiten Runde: Aufgehen auch direkt ohne Tausch ----------
+    console.log('\n--- Aufgehen ohne Tausch ab Runde 2 ---');
     const active3 = await atTurn();
     const labels3 = await buttonsOf(active3);
-    check('Aufgehen erscheint nicht ohne Tausch und ohne genutztes Weiter',
-        !labels3.some(l => l === 'AUFGEHEN'), JSON.stringify(labels3));
+    check('Aufgehen steht ab der zweiten Runde auch ohne Tausch zur Verfügung',
+        labels3.some(l => l === 'AUFGEHEN'), JSON.stringify(labels3));
     await clickButton(active3, 'WEITER');
     check('Weiter zählt als Zug', pubNow().turnsPlayed === 3, String(pubNow().turnsPlayed));
 
@@ -600,11 +600,11 @@ async function run() {
     check('Der Tausch im Fenster zählt nur einen Zug', afterWindow.turnsPlayed === 4,
         String(afterWindow.turnsPlayed));
 
-    // ---------- Aufgehen ohne Tausch (Weiter wurde genutzt) ----------
+    // ---------- Aufgehen ohne Tausch ----------
     console.log('\n--- Aufgehen deckt sofort auf ---');
     const active5 = await atTurn();
     const labels5 = await buttonsOf(active5);
-    check('Nach genutztem Weiter darf man ohne Tausch aufgehen',
+    check('Aufgehen ohne Tausch weiterhin verfügbar',
         labels5.some(l => l === 'AUFGEHEN'), JSON.stringify(labels5));
     await clickButton(active5, 'AUFGEHEN');
     await sleep(400);

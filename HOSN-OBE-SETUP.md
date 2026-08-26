@@ -162,11 +162,10 @@ welches Widget gerade läuft.
   derselbe an — unabhängig von der Spieleranzahl.
 - Ein Zug: **eine** Karte tauschen, **alle drei** tauschen, oder **weitergeben**.
 - **Aufgehen** (früher „Klopfen") beendet die Runde: jeder andere Spieler hat
-  danach noch genau einen Zug, dann wird aufgedeckt. Aufgehen geht nur
-  **nach einem Tausch** — dafür bleiben nach dem Tausch **6 Sekunden** Zeit,
-  in denen der Zug beim Spieler bleibt. Einzige Ausnahme: wer in dieser Runde
-  schon einmal **„Weiter"** genutzt hat, darf beim nächsten eigenen Zug auch
-  **ohne Tausch** aufgehen.
+  danach noch genau einen Zug, dann wird aufgedeckt. **Ab der zweiten Runde**
+  geht Aufgehen jederzeit am eigenen Zug — mit oder ohne Tausch. Nach einem
+  Tausch bleiben zusätzlich **6 Sekunden** Zeit, in denen der Zug beim
+  Spieler bleibt, um doch noch aufzugehen.
 - Eine Runde dauert rund **1:30 bis 2:00**. Läuft die Zeit ab
   (`roundTargetSeconds`), wird aufgedeckt, egal wie weit gespielt wurde.
 - Wertung: gleiche Farbe wird addiert (Bube/Dame/König = 10, Ass = 11).
@@ -188,8 +187,7 @@ welches Widget gerade läuft.
 - Liegt in der Mitte ein **Drilling oder drei gleiche Farben**, ist der
   Einzeltausch gesperrt: es gilt **alles oder nichts**. Man nimmt alle drei,
   geht auf oder gibt weiter.
-- **„Weiter"** (abgeben ohne Tausch) darf jeder **einmal pro Runde** nutzen —
-  und schaltet damit das Aufgehen ohne Tausch frei.
+- **„Weiter"** (abgeben ohne Tausch) darf jeder **einmal pro Runde** nutzen.
 - Sind nach dem Lobby-Countdown weniger Gäste verbunden als gewählt, wird ab
   **zwei** Spielern trotzdem gespielt; darunter bricht die Runde ab.
 - **Ablauf am Handy:** erst der **Spielmodus**, dann die **Spieleranzahl**.

@@ -1055,13 +1055,28 @@
             z-index: 30; padding: 20px 34px 24px; border-radius: 22px; text-align: center;
             background: rgba(4,10,20,0.9); border: 3px solid rgba(0,242,254,0.6);
             box-shadow: 0 0 46px rgba(0,242,254,0.35);
+            animation: ktStarterFadeIn 0.35s ease-out;
         }
+        @keyframes ktStarterFadeIn { from { opacity: 0; } to { opacity: 1; } }
         .kt-starter-title {
             font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
             letter-spacing: 1.6px; color: #ffffff; text-transform: uppercase;
+            opacity: 0; animation: ktStarterSlideIn 0.4s ease-out forwards;
+        }
+        @keyframes ktStarterSlideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .kt-starter-row { margin-top: 16px; display: flex; gap: 16px; justify-content: center; align-items: flex-end; }
-        .kt-starter-item { width: 104px; text-align: center; }
+        .kt-starter-item {
+            width: 104px; text-align: center;
+            opacity: 0; animation: ktStarterCardIn 0.5s cubic-bezier(.22,.85,.32,1.2) forwards;
+        }
+        @keyframes ktStarterCardIn {
+            0% { opacity: 0; transform: translateY(30px) scale(0.78) rotate(-8deg); }
+            65% { opacity: 1; transform: translateY(-5px) scale(1.06) rotate(2deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+        }
         .kt-starter-card {
             width: 104px; height: 156px; border-radius: 10px; overflow: hidden;
             background: #0a1426; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
@@ -1071,12 +1086,19 @@
             margin-top: 6px; font-family: 'Orbitron', sans-serif; font-size: 16px;
             font-weight: 900; color: #cbd5e1; letter-spacing: 0.6px;
         }
-        .kt-starter-item.is-winner .kt-starter-card { box-shadow: 0 0 0 4px #00f2fe, 0 0 26px rgba(0,242,254,0.7); }
+        .kt-starter-item.is-winner .kt-starter-card {
+            animation: ktStarterGlow 1.15s ease-in-out 0.5s infinite;
+        }
+        @keyframes ktStarterGlow {
+            0%, 100% { box-shadow: 0 0 0 4px #00f2fe, 0 0 26px rgba(0,242,254,0.7); }
+            50% { box-shadow: 0 0 0 7px #00f2fe, 0 0 44px rgba(0,242,254,0.95); }
+        }
         .kt-starter-item.is-winner .kt-starter-name { color: #00f2fe; }
         .kt-starter-sub {
             margin-top: 16px; font-family: 'Orbitron', sans-serif; font-size: 22px;
             font-weight: 900; color: #00f2fe; letter-spacing: 1.2px;
             text-shadow: 0 0 18px rgba(0,242,254,0.6);
+            opacity: 0; animation: ktStarterSlideIn 0.4s ease-out forwards;
         }
 
         .kt-result {
@@ -4328,6 +4350,10 @@
 
         // Auch die Mitte wird nur noch aktualisiert, nicht neu gebaut.
         let ktMiddleEls = null;
+        // Haelt einen Mitten-Slot optisch auf der ALTEN Karte, solange die
+        // fliegende Karte noch unterwegs ist - siehe ktAnimateLastMove().
+        let ktMiddleHold = {};
+        let ktMiddleHoldTimers = {};
 
         function ktBuildMiddle() {
             const wrap = ktEl('kt-middle');
@@ -4355,11 +4381,14 @@
 
             if (!ktMiddleEls) ktBuildMiddle();
             cards.forEach((code, index) => {
+                // Fliegt gerade eine Karte dorthin, zeigt der Slot bis zur
+                // Ankunft weiter die alte Karte statt schon das Endergebnis.
+                const showCode = ktMiddleHold.hasOwnProperty(index) ? ktMiddleHold[index] : code;
                 const slot = ktMiddleEls[index];
-                if (!slot || slot.code === code) return;      // unveraendert: nichts anfassen
-                slot.code = code;
-                slot.img.src = KtEngine.cardImage(code, 'cards/');
-                slot.el.style.transform = ktMiddleSkew(code, index);
+                if (!slot || slot.code === showCode) return;   // unveraendert: nichts anfassen
+                slot.code = showCode;
+                slot.img.src = KtEngine.cardImage(showCode, 'cards/');
+                slot.el.style.transform = ktMiddleSkew(showCode, index);
             });
 
             // Hinweis "Alle 3 nehmen" liegt ueber der Mitte, sobald sie einen
@@ -4463,9 +4492,10 @@
 
             const row = document.createElement('div');
             row.className = 'kt-starter-row';
-            seats.forEach(seat => {
+            seats.forEach((seat, i) => {
                 const item = document.createElement('div');
                 item.className = 'kt-starter-item' + (seat === winner ? ' is-winner' : '');
+                item.style.animationDelay = (i * 110) + 'ms';
 
                 const card = document.createElement('div');
                 card.className = 'kt-starter-card';
@@ -4485,6 +4515,7 @@
 
             const sub = document.createElement('div');
             sub.className = 'kt-starter-sub';
+            sub.style.animationDelay = (seats.length * 110 + 150) + 'ms';
             sub.textContent = ktName(winner) + ' tauscht als Erster';
             box.appendChild(sub);
         }
@@ -4594,6 +4625,24 @@
 
             let totalMs = 0;
 
+            /*
+             * Die Mitte wechselt in Firebase sofort auf den Endzustand, waehrend
+             * die abgegebene Karte optisch noch zum Tisch unterwegs ist - ohne
+             * Bremse waere die Karte also schon "im Deck", bevor ihre eigene
+             * Fluganimation ankommt. Der Hold haelt den betroffenen Slot bei der
+             * ALTEN Karte, bis die ankommende Fluganimation dort landet.
+             */
+            const holdMiddleSlot = (index, oldCode, arriveMs) => {
+                if (!oldCode || isNaN(index)) return;
+                ktMiddleHold[index] = oldCode;
+                if (ktMiddleHoldTimers[index]) clearTimeout(ktMiddleHoldTimers[index]);
+                ktMiddleHoldTimers[index] = setTimeout(() => {
+                    ktMiddleHoldTimers[index] = null;
+                    delete ktMiddleHold[index];
+                    ktRenderMiddle();
+                }, arriveMs);
+            };
+
             if (move.type === 'single') {
                 // Erst hin, dann zurueck - nie beides gleichzeitig, sonst weiss
                 // niemand, welche Karte in welche Richtung unterwegs war.
@@ -4601,6 +4650,7 @@
                 const mid = ktMiddlePoint(isNaN(idx) ? 1 : idx);
                 if (move.gave) ktFly(move.gave, seatPoint, mid, 0);
                 if (move.took) ktFly(move.took, mid, seatPoint, KT_FLY_MS + KT_FLY_GAP);
+                holdMiddleSlot(idx, move.took, KT_FLY_MS);
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP;
 
             } else if (move.type === 'all') {
@@ -4617,6 +4667,7 @@
                     const mid = ktMiddlePoint(i);
                     if (gave[i]) ktFly(gave[i], seatPoint, mid, i * step);
                     if (took[i]) ktFly(took[i], mid, seatPoint, KT_FLY_MS + KT_FLY_GAP + i * step);
+                    holdMiddleSlot(i, took[i], KT_FLY_MS + i * step);
                 }
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP + 2 * step;
             }
@@ -4641,13 +4692,17 @@
         }
 
         function ktRender() {
+            // Muss zuerst laufen: setzt ktTurnDisplaySeat/ktMiddleHold, bevor
+            // die folgenden Funktionen sie zum Zeichnen lesen. Sonst zeigt der
+            // erste Frame nach einem Zug schon das Endergebnis, waehrend die
+            // Fluganimation gerade erst startet.
+            ktAnimateLastMove();
             ktRenderBanner();
             ktRenderSeats();
             ktRenderMiddle();
             ktRenderLobby();
             ktRenderStarter();
             ktRenderResult();
-            ktAnimateLastMove();
         }
 
         // ---------- Ein-/Ausblenden samt Pause der Rotation ----------
@@ -4901,9 +4956,8 @@
             // dieselben Informationen wie ein Gast am Handy.
             const move = KtEngine.botDecide(hand, middle, {
                 canKnock: canKnock,
-                // Aufgehen ohne Tausch nur, wenn dieser Platz vorher schon einmal
-                // weitergegeben hat - dieselbe Regel wie am Handy.
-                canKnockDirect: !!ktBotPassUsed[seat],
+                // "Weiter" bleibt einmal pro Runde begrenzt - Aufgehen selbst
+                // braucht dafuer keine Voraussetzung mehr, siehe canKnock oben.
                 canPass: !ktBotPassUsed[seat],
                 turnsPlayed: Number(ktPub.turnsPlayed) || 0, playerCount: count,
                 elapsedSeconds: ktRoundElapsed(), targetSeconds: KT.roundTargetSeconds
@@ -5157,6 +5211,9 @@
             ktTurnDisplaySeat = null;
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
+            Object.keys(ktMiddleHoldTimers).forEach(i => { if (ktMiddleHoldTimers[i]) clearTimeout(ktMiddleHoldTimers[i]); });
+            ktMiddleHold = {};
+            ktMiddleHoldTimers = {};
             ktStarterKey = '';
             ktBotPassUsed = {};
             ktPendingFireSeat = -1;
