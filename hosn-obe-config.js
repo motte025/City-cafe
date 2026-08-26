@@ -41,7 +41,7 @@ window.HOSN_OBE_CONFIG = {
     botPlayerCount: 6,       // so viele Plätze besetzt der Computer
     botMoveSeconds: 6,       // Denkpause zwischen zwei Computer-Zügen (Gäste sollen mitkommen)
     botIdleStartSeconds: 60, // Countdown im Zyklus; danach spielt der Computer von selbst
-    botSeatsDefault: true,   // Computer-Runde standardmäßig MIT Deckvergabe: Gäste dürfen scannen und mitschauen
+    botLobbySeconds: 45,     // „Computer spielt, Gäste bekommen Karten“: so lange kann gescannt werden
 
     // Zum Testen: Hos’n Obe läuft als ERSTES Widget im Rotationszyklus an.
     // Auf false stellen, sobald nur noch der permanente QR-Code auslösen soll.

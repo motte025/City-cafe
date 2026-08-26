@@ -106,15 +106,15 @@ Nach dem Eintragen der Daten und einem Push:
    ("Hos’n Obe spielen").
 2. Mit dem ersten Handy scannen → die laufende Rotation **hält sofort an**
    (sie springt nicht weiter, sondern friert an genau der Stelle ein). Das
-   Handy fragt nach der Spieleranzahl.
-3. Spieleranzahl antippen → am TV läuft der Lobby-Countdown, weitere Gäste
-   scannen denselben QR-Code.
+   Handy fragt zuerst nach dem **Spielmodus**.
+3. Modus antippen, dann die **Spieleranzahl** → am TV läuft der
+   Lobby-Countdown, weitere Gäste scannen denselben QR-Code.
 4. Nach dem Countdown wird ausgeteilt. Zuerst zieht jeder Platz eine offene
    Karte — die höchste beginnt. Danach sieht jedes Handy nur die eigenen drei
    Karten, der TV zeigt verdeckte Fächer und die offene Mitte.
 
-Wählt niemand innerhalb von 20 Sekunden eine Spieleranzahl, läuft die Rotation
-exakt dort weiter, wo sie angehalten wurde.
+Wählt niemand innerhalb von 20 Sekunden Modus bzw. Spieleranzahl, läuft die
+Rotation exakt dort weiter, wo sie angehalten wurde.
 
 ### Was du beim Testen im Blick behalten solltest
 
@@ -143,7 +143,7 @@ Alles Weitere steht in `hosn-obe-config.js`:
 | `botIdleStartSeconds` | Countdown, sobald das Widget im Zyklus erscheint; danach spielt der Computer allein | 60 |
 | `botPlayerCount` | So viele Plätze besetzt der Computer beim Start aus dem Zyklus | 6 |
 | `botMoveSeconds` | Denkpause zwischen zwei Computer-Zügen | 6 |
-| `botSeatsDefault` | Computer-Runde startet **mit** Deckvergabe: Gäste dürfen scannen und mitschauen | `true` |
+| `botLobbySeconds` | „Computer spielt, Gäste bekommen Karten“: so lange kann gescannt werden | 45 |
 | `testFirstInCycle` | Hos’n Obe läuft als **erstes** Widget im Zyklus | `true` |
 | `mobileUrl` | Adresse der Handy-Seite (steckt im QR-Code) | GitHub Pages |
 
@@ -187,11 +187,17 @@ welches Widget gerade läuft.
   und schaltet damit das Aufgehen ohne Tausch frei.
 - Sind nach dem Lobby-Countdown weniger Gäste verbunden als gewählt, wird ab
   **zwei** Spielern trotzdem gespielt; darunter bricht die Runde ab.
-- **Computer-Runde, zwei Spielarten:** *mit Deckvergabe* dürfen Gäste weiter
-  scannen und bekommen ein eigenes Blatt zum Mitschauen (gezogen wird trotzdem
-  vom Computer, gezahlt wird am Ende ganz normal); *allein* spielt der Computer
-  ohne Deckvergabe. Aus dem Zyklus heraus startet er mit sechs Plätzen und
-  Deckvergabe.
+- **Ablauf am Handy:** erst der **Spielmodus**, dann die **Spieleranzahl**.
+  Drei Modi:
+  1. *Gäste spielen selbst* — Lobby, wer bis zum Ablauf gescannt hat, spielt mit
+     (ab zwei Spielern).
+  2. *Computer spielt, Gäste bekommen Karten* — es müssen **alle** Decks vergeben
+     werden: 45 Sekunden Zeit zum Scannen; fehlt jemand, geht es zurück zur
+     Spieleranzahl. Gezogen wird vom Computer, gezahlt wird am Ende ganz normal.
+  3. *Computer spielt allein* — startet sofort, ohne Lobby. Das ist auch die
+     Spielart, die im Rotationszyklus von selbst anläuft.
+- Nach dem Aufdecken steht am Handy **„Neues Spiel starten"** — damit geht es
+  direkt zurück zur Modus-Auswahl.
 
 Die Regeln stecken vollständig in `hosn-obe-engine.js` und sind mit
 Regel-Checks abgesichert:
