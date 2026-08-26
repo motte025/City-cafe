@@ -397,7 +397,6 @@
             if (setValue >= current + BOT_MIN_GAIN) {
                 return { type: 'all', knock: canKnock && setValue >= knockAt };
             }
-            if (canKnock && current >= knockAt) return { type: 'knock' };
             if (opts.canPass) return { type: 'pass' };
             // Weiter ist nicht (mehr) sinnvoll: es bleibt nur, den Satz zu nehmen.
             return { type: 'all', knock: canKnock && setValue >= knockAt };
@@ -427,18 +426,31 @@
             };
         }
 
-        // Nichts zu verbessern, Hand aber solide - direkt aufgehen.
-        if (canKnock && current >= knockAt) return { type: 'knock' };
+        /*
+         * Frueher ging der Computer hier auf, sobald er ausgerechnet hatte,
+         * dass kein Tausch mehr etwas bringt. Das wirkte am Tisch, als wuerde
+         * "das System" die Runde von selbst beenden - genau das soll nie
+         * passieren. Aufgehen bleibt eine echte Entscheidung mit starker Hand
+         * (BOT_KNOCK_STRONG oben) oder haengt an einem Tausch. Endet die Runde
+         * sonst nicht, greifen weiterhin Zuglimit und Zeitbudget.
+         */
 
-        // Sonst lieber weitergeben, als die eigene Hand zu verschlechtern.
+        // Lieber weitergeben, als die eigene Hand zu verschlechtern.
         if (opts.canPass) return { type: 'pass' };
 
-        // Weiter ist nicht (mehr) sinnvoll: der am wenigsten schaedliche Tausch,
-        // bei guter Hand gleich mit Aufgehen.
-        return {
-            type: 'single', handIndex: strongest.handIndex, middleIndex: strongest.middleIndex,
-            knock: canKnock && strongest.value >= knockAt
-        };
+        /*
+         * "Weiter" ist verbraucht. Dann der beste verbleibende Tausch - aber
+         * nur, wenn er die Hand nicht verschlechtert. Sonst wird trotzdem
+         * weitergegeben: eine Runde absichtlich schlechter zu spielen, nur um
+         * irgendetwas zu tun, waere der schlechteste aller Zuege.
+         */
+        if (strongest && strongest.value >= current) {
+            return {
+                type: 'single', handIndex: strongest.handIndex, middleIndex: strongest.middleIndex,
+                knock: canKnock && strongest.value >= knockAt
+            };
+        }
+        return { type: 'pass' };
     }
 
     return {

@@ -4327,6 +4327,9 @@
                     const faceUp = !!(hand && hand[i]);
                     ktSetClass(el.cards[i], 'is-back', !faceUp);
                     ktSetSrc(el.imgs[i], faceUp ? KtEngine.cardImage(hand[i], 'cards/') : back);
+                    // Fliegt diese Karte gerade, liegt sie nicht mehr am Deck.
+                    const want = ktSeatHide[seat + ':' + i] ? 'hidden' : '';
+                    if (el.cards[i].style.visibility !== want) el.cards[i].style.visibility = want;
                 }
 
                 const hasScore = phase === 'reveal' && scores[seat] !== undefined;
@@ -4350,10 +4353,11 @@
 
         // Auch die Mitte wird nur noch aktualisiert, nicht neu gebaut.
         let ktMiddleEls = null;
-        // Haelt einen Mitten-Slot optisch auf der ALTEN Karte, solange die
-        // fliegende Karte noch unterwegs ist - siehe ktAnimateLastMove().
-        let ktMiddleHold = {};
-        let ktMiddleHoldTimers = {};
+        // Welche Plaetze gerade leer bleiben, weil ihre Karte noch fliegt -
+        // Schluessel: Mitten-Index bzw. "sitz:index". Siehe ktAnimateLastMove().
+        let ktMiddleHide = {};
+        let ktSeatHide = {};
+        let ktHideTimers = {};
 
         function ktBuildMiddle() {
             const wrap = ktEl('kt-middle');
@@ -4381,14 +4385,16 @@
 
             if (!ktMiddleEls) ktBuildMiddle();
             cards.forEach((code, index) => {
-                // Fliegt gerade eine Karte dorthin, zeigt der Slot bis zur
-                // Ankunft weiter die alte Karte statt schon das Endergebnis.
-                const showCode = ktMiddleHold.hasOwnProperty(index) ? ktMiddleHold[index] : code;
                 const slot = ktMiddleEls[index];
-                if (!slot || slot.code === showCode) return;   // unveraendert: nichts anfassen
-                slot.code = showCode;
-                slot.img.src = KtEngine.cardImage(showCode, 'cards/');
-                slot.el.style.transform = ktMiddleSkew(showCode, index);
+                if (!slot) return;
+                // Ist die Karte dieses Platzes noch unterwegs, bleibt er leer -
+                // der Wechsel auf die neue Karte passiert dann unsichtbar.
+                const want = ktMiddleHide[index] ? 'hidden' : '';
+                if (slot.el.style.visibility !== want) slot.el.style.visibility = want;
+                if (slot.code === code) return;                // unveraendert: nichts anfassen
+                slot.code = code;
+                slot.img.src = KtEngine.cardImage(code, 'cards/');
+                slot.el.style.transform = ktMiddleSkew(code, index);
             });
 
             // Hinweis "Alle 3 nehmen" liegt ueber der Mitte, sobald sie einen
@@ -4626,50 +4632,59 @@
             let totalMs = 0;
 
             /*
-             * Die Mitte wechselt in Firebase sofort auf den Endzustand, waehrend
-             * die abgegebene Karte optisch noch zum Tisch unterwegs ist - ohne
-             * Bremse waere die Karte also schon "im Deck", bevor ihre eigene
-             * Fluganimation ankommt. Der Hold haelt den betroffenen Slot bei der
-             * ALTEN Karte, bis die ankommende Fluganimation dort landet.
+             * Solange eine Karte fliegt, gehoert sie NIRGENDWO hin: der Platz,
+             * von dem sie stammt, bleibt leer, bis die Gegenkarte dort ankommt.
+             * Am Deck liegen also nur zwei Karten, bis die dritte aus der Mitte
+             * eintrifft - und in der Mitte genauso. Frueher lagen an beiden
+             * Stellen durchgehend drei Karten, obwohl eine noch unterwegs war.
              */
-            const holdMiddleSlot = (index, oldCode, arriveMs) => {
-                if (!oldCode || isNaN(index)) return;
-                ktMiddleHold[index] = oldCode;
-                if (ktMiddleHoldTimers[index]) clearTimeout(ktMiddleHoldTimers[index]);
-                ktMiddleHoldTimers[index] = setTimeout(() => {
-                    ktMiddleHoldTimers[index] = null;
-                    delete ktMiddleHold[index];
-                    ktRenderMiddle();
-                }, arriveMs);
+            const hideUntil = (map, key, ms, redraw) => {
+                map[key] = true;
+                if (ktHideTimers[key] !== undefined && ktHideTimers[key] !== null) clearTimeout(ktHideTimers[key]);
+                ktHideTimers[key] = setTimeout(() => {
+                    ktHideTimers[key] = null;
+                    delete map[key];
+                    redraw();
+                }, ms);
             };
+            const hideMiddle = (i, ms) => hideUntil(ktMiddleHide, i, ms, ktRenderMiddle);
+            const hideSeatCard = (i, ms) => hideUntil(ktSeatHide, move.seat + ':' + i, ms, ktRenderSeats);
 
             if (move.type === 'single') {
-                // Erst hin, dann zurueck - nie beides gleichzeitig, sonst weiss
-                // niemand, welche Karte in welche Richtung unterwegs war.
+                /*
+                 * Erst nehmen, dann hinlegen - nie beides gleichzeitig, sonst
+                 * weiss niemand, welche Karte in welche Richtung unterwegs war.
+                 * Diese Reihenfolge haelt zusaetzlich beide Stapel ehrlich:
+                 * die Mitte gibt ab, bevor sie neu bekommt.
+                 */
                 const idx = Number(move.middleIndex);
                 const mid = ktMiddlePoint(isNaN(idx) ? 1 : idx);
-                if (move.gave) ktFly(move.gave, seatPoint, mid, 0);
-                if (move.took) ktFly(move.took, mid, seatPoint, KT_FLY_MS + KT_FLY_GAP);
-                holdMiddleSlot(idx, move.took, KT_FLY_MS);
+                if (move.took) ktFly(move.took, mid, seatPoint, 0);
+                if (move.gave) ktFly(move.gave, seatPoint, mid, KT_FLY_MS + KT_FLY_GAP);
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP;
+                // Mitte: Platz bleibt leer, bis die Karte des Spielers landet.
+                if (move.took && !isNaN(idx)) hideMiddle(idx, totalMs);
+                // Deck: eine Karte weniger, bis die genommene Karte ankommt.
+                if (move.took) hideSeatCard(2, KT_FLY_MS);
 
             } else if (move.type === 'all') {
                 /*
-                 * Rundumtausch: alle drei abgegebenen Karten fliegen versetzt
-                 * hinaus, danach kommen die drei genommenen zurueck. Der Versatz
-                 * ist klein genug, dass es zusammenhaengt, und gross genug, dass
+                 * Rundumtausch: erst kommen die drei Mittenkarten versetzt zum
+                 * Spieler, danach wandern seine drei hinaus. Der Versatz ist
+                 * klein genug, dass es zusammenhaengt, und gross genug, dass
                  * die einzelne Karte lesbar bleibt.
                  */
                 const gave = move.gave || [];
                 const took = move.took || [];
                 const step = 260;
+                totalMs = KT_FLY_MS * 2 + KT_FLY_GAP + 2 * step;
                 for (let i = 0; i < 3; i++) {
                     const mid = ktMiddlePoint(i);
-                    if (gave[i]) ktFly(gave[i], seatPoint, mid, i * step);
-                    if (took[i]) ktFly(took[i], mid, seatPoint, KT_FLY_MS + KT_FLY_GAP + i * step);
-                    holdMiddleSlot(i, took[i], KT_FLY_MS + i * step);
+                    if (took[i]) ktFly(took[i], mid, seatPoint, i * step);
+                    if (gave[i]) ktFly(gave[i], seatPoint, mid, KT_FLY_MS + KT_FLY_GAP + i * step);
+                    if (took[i]) hideMiddle(i, KT_FLY_MS * 2 + KT_FLY_GAP + i * step);
+                    if (took[i]) hideSeatCard(i, KT_FLY_MS + i * step);
                 }
-                totalMs = KT_FLY_MS * 2 + KT_FLY_GAP + 2 * step;
             }
 
             /*
@@ -5211,9 +5226,10 @@
             ktTurnDisplaySeat = null;
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
-            Object.keys(ktMiddleHoldTimers).forEach(i => { if (ktMiddleHoldTimers[i]) clearTimeout(ktMiddleHoldTimers[i]); });
-            ktMiddleHold = {};
-            ktMiddleHoldTimers = {};
+            Object.keys(ktHideTimers).forEach(k => { if (ktHideTimers[k]) clearTimeout(ktHideTimers[k]); });
+            ktMiddleHide = {};
+            ktSeatHide = {};
+            ktHideTimers = {};
             ktStarterKey = '';
             ktBotPassUsed = {};
             ktPendingFireSeat = -1;
