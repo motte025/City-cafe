@@ -152,11 +152,19 @@
         border: 1px solid rgba(255,255,255,0.12);
         border-radius: 16px; padding: 12px 12px;
     }
-    .kt-status-main { font-weight: 800; font-size: 23px; }
+    .kt-status-main { font-weight: 800; font-size: 26px; }
     .kt-status-sub { font-size: 17px; color: #a8b8c8; margin-top: 7px; line-height: 1.5; }
     .kt-status.is-myturn { border-color: rgba(0,242,254,0.5); background: rgba(0,242,254,0.09); }
     .kt-status.is-myturn .kt-status-main { color: #00f2fe; }
     .kt-status.is-error { border-color: rgba(255,51,68,0.5); background: rgba(255,51,68,0.1); }
+    /* Wer gerade dran ist, soll man im Halbdunkel und mit einem Bier in der
+       Hand erkennen - deshalb deutlich groesser als der uebrige Text. */
+    .kt-status.is-turnof { border-color: rgba(244,163,0,0.5); background: rgba(244,163,0,0.09); }
+    .kt-status.is-turnof .kt-status-main {
+        font-family: 'Orbitron', sans-serif; font-weight: 900;
+        font-size: 34px; line-height: 1.15; color: #f4a300;
+        text-shadow: 0 0 18px rgba(244,163,0,0.45);
+    }
 
     /* Die Knoepfe fuellen den Rest der Hoehe und sitzen unten - dort, wo der
        Daumen beim Halten des Handys ohnehin liegt. */
@@ -189,6 +197,24 @@
         border-radius: 20px;
     }
     .kt-btn.kt-btn-knock.kt-btn-big { border-color: #ff3344; background: rgba(255,51,68,0.2); color: #ffe3e6; }
+
+    /* Kurze Regel-Erinnerung ueber den Knoepfen - am eigenen Zug gibt es keine
+       Statusbox mehr, die das erklaeren koennte. */
+    .kt-turn-hint {
+        text-align: center; font-size: 17px; font-weight: 700; line-height: 1.45;
+        color: #a8b8c8; padding: 0 6px 2px;
+    }
+    .kt-turn-hint b { color: #00f2fe; }
+
+    /* Sechs-Sekunden-Fenster nach dem Tausch */
+    .kt-window-count {
+        text-align: center; font-family: 'Orbitron', sans-serif; font-weight: 900;
+        font-size: 46px; line-height: 1.05; color: #f4a300;
+        text-shadow: 0 0 22px rgba(244,163,0,0.5);
+    }
+    .kt-window-label {
+        text-align: center; font-size: 17px; font-weight: 700; color: #a8b8c8; margin-top: 2px;
+    }
 
     .kt-seat-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 11px; }
     .kt-seat-pill {
@@ -509,11 +535,14 @@
     // ---------- Züge ----------
 
     function isMyTurn() {
+        // In der Computer-Runde spielt der TV alle Plaetze - ein Gast mit
+        // eigenem Deck schaut nur zu und darf nicht eingreifen.
+        if (pub.botGame) return false;
         return pub.phase && (pub.phase === 'playing' || pub.phase === 'knocked') &&
                Number(pub.currentTurnSeat) === mySeat && myHand.length === 3;
     }
 
-    // Geklopft werden darf erst, wenn jeder einmal am Zug war - also ab der
+    // Aufgehen darf man erst, wenn jeder einmal am Zug war - also ab der
     // zweiten Runde. Davor waere die Runde vorbei, bevor sie begonnen hat.
     function canKnockNow() {
         if (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined) return false;
@@ -526,31 +555,105 @@
         return Math.max(0, count - (Number(pub.turnsPlayed) || 0));
     }
 
-    // Gemeinsamer Abschluss jedes Zuges: Mitte + nächster Sitz + ggf. Schluss-Countdown.
-    function commitTurn(newMiddle, move) {
-        var count = Number(pub.playerCount) || 2;
-        var updates = {
-            middleCards: newMiddle,
-            currentTurnSeat: E.nextSeat(mySeat, count),
-            lastMove: move,
-            turnsPlayed: (Number(pub.turnsPlayed) || 0) + 1,
-            turnStartedAt: firebase.database.ServerValue.TIMESTAMP
-        };
+    /*
+     * ---------- Das Sechs-Sekunden-Fenster ----------
+     *
+     * Nutzer-Vorgabe: man tauscht und hat danach sechs Sekunden Zeit
+     * aufzugehen, bevor der naechste Spieler dran ist. Der Zug bleibt in dieser
+     * Zeit bei uns - erst danach wandert er weiter. Ohne Tausch aufgehen darf
+     * nur, wer in dieser Runde schon einmal "Weiter" gedrueckt hat.
+     *
+     * Gefuehrt wird das Fenster hier am Handy; der TV zeigt den Countdown mit
+     * und springt ein, falls dieses Handy in den sechs Sekunden ausfaellt.
+     */
+    var swapWindowLeft = 0;
+    var swapWindowTimer = null;
+    var lastCommittedTurns = 0;
 
-        if (move.type === 'knock') {
-            updates.knockedBySeat = mySeat;
-            updates.finalTurnsRemaining = count - 1;
-            updates.phase = 'knocked';
-        } else if (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined) {
-            var left = (Number(pub.finalTurnsRemaining) || 0) - 1;
-            updates.finalTurnsRemaining = left;
-            if (left <= 0) updates.phase = 'reveal';
-        } else if (E.roundShouldEnd(updates.turnsPlayed, count)) {
-            // Notbremse gegen endloses Weitergeben - siehe Engine.
-            updates.phase = 'reveal';
+    function swapWindowActive() { return swapWindowLeft > 0 && Number(pub.swapWindowSeat) === mySeat; }
+
+    function stopSwapWindow() {
+        if (swapWindowTimer) { clearInterval(swapWindowTimer); swapWindowTimer = null; }
+        swapWindowLeft = 0;
+    }
+
+    function startSwapWindow() {
+        stopSwapWindow();
+        swapWindowLeft = Number(CFG.swapWindowSeconds) || 6;
+        render();
+        swapWindowTimer = setInterval(function () {
+            swapWindowLeft--;
+            if (swapWindowLeft <= 0) {
+                stopSwapWindow();
+                finishSwapWindow();
+                return;
+            }
+            render();
+        }, 1000);
+    }
+
+    // Fenster vorbei (oder vorzeitig beendet): der Zug wandert weiter.
+    function finishSwapWindow() {
+        stopSwapWindow();
+        if (Number(pub.swapWindowSeat) !== mySeat) { render(); return; }
+        busy = true;
+        advanceTurn({})
+            .catch(handleWriteError)
+            .then(function () { busy = false; resetSwapMode(); });
+    }
+
+    /*
+     * Zug weitergeben. Zaehlt den Zug NICHT hoch - das hat der Tausch selbst
+     * schon getan; hier wird nur der naechste Sitz gesetzt und geprueft, ob die
+     * Runde damit endet.
+     */
+    function advanceTurn(extra) {
+        var count = Number(pub.playerCount) || 2;
+        var updates = extra || {};
+        updates.swapWindowSeat = null;
+        updates.currentTurnSeat = E.nextSeat(mySeat, count);
+        updates.turnStartedAt = firebase.database.ServerValue.TIMESTAMP;
+
+        var turns = Math.max(Number(pub.turnsPlayed) || 0, lastCommittedTurns);
+        if (updates.turnsPlayed !== undefined) turns = updates.turnsPlayed;
+
+        if (updates.phase !== 'knocked') {
+            if (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined) {
+                var left = (Number(pub.finalTurnsRemaining) || 0) - 1;
+                updates.finalTurnsRemaining = left;
+                if (left <= 0) updates.phase = 'reveal';
+            } else if (E.roundShouldEnd(turns, count)) {
+                // Notbremse gegen endloses Weitergeben - siehe Engine.
+                updates.phase = 'reveal';
+            }
         }
 
         return KtNet.publicRef(db, sessionId).update(updates);
+    }
+
+    /*
+     * Einen Tausch veroeffentlichen. Danach entweder das Aufgeh-Fenster oeffnen
+     * (wenn Aufgehen ueberhaupt schon erlaubt ist) oder direkt weitergeben.
+     */
+    function playSwap(newMiddle, move) {
+        var turns = (Number(pub.turnsPlayed) || 0) + 1;
+        lastCommittedTurns = turns;
+        var updates = {
+            middleCards: newMiddle,
+            lastMove: move,
+            turnsPlayed: turns,
+            turnStartedAt: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        if (canKnockNow()) {
+            updates.swapWindowSeat = mySeat;
+            return KtNet.publicRef(db, sessionId).update(updates)
+                .then(function () { startSwapWindow(); });
+        }
+
+        // Aufgehen ist noch nicht moeglich - der Zug wandert sofort weiter.
+        return KtNet.publicRef(db, sessionId).update(updates)
+            .then(function () { return advanceTurn({}); });
     }
 
     function writeHand(hand) {
@@ -589,7 +692,7 @@
     }
 
     /*
-     * Schrittweises Aufdecken: Wer klopft, legt seine Karten sofort offen hin.
+     * Schrittweises Aufdecken: Wer aufgeht, legt seine Karten sofort offen hin.
      * Jeder danach spielt noch einen Zug und deckt dann ebenfalls auf. Am Ende
      * liegen alle Haende offen - der TV zeigt jede Hand in dem Moment, in dem
      * sie veroeffentlicht wird.
@@ -602,7 +705,7 @@
             .catch(function (err) { console.warn('[Hos’n Obe] Aufdecken fehlgeschlagen:', err); });
     }
 
-    // Nach dem Klopfen deckt jeder direkt nach seinem Zug auf.
+    // Nach dem Aufgehen deckt jeder direkt nach seinem Zug auf.
     function revealAfterMoveIfNeeded(hand) {
         if (pub.knockedBySeat === null || pub.knockedBySeat === undefined) return Promise.resolve();
         return publishMyHand(hand);
@@ -618,6 +721,9 @@
 
     function swapNow(handIndex, middleIndex) {
         if (busy || !isMyTurn()) return;
+        // Im Aufgeh-Fenster ist der Tausch vorbei - jetzt gilt nur noch
+        // aufgehen oder weitergeben.
+        if (swapWindowActive()) return;
         if (singleSwapBlocked()) { resetSwapMode(); return; }
         if (handIndex === null || middleIndex === null) return;
         var middle = (pub.middleCards || []).slice();
@@ -633,7 +739,7 @@
         writeHand(hand)
             .then(function () { return revealAfterMoveIfNeeded(hand); })
             .then(function () {
-                return commitTurn(middle, {
+                return playSwap(middle, {
                     type: 'single', seat: mySeat,
                     gave: given, took: taken, middleIndex: middleIndex
                 });
@@ -652,7 +758,7 @@
         writeHand(middle)
             .then(function () { return revealAfterMoveIfNeeded(middle); })
             .then(function () {
-                return commitTurn(hand, {
+                return playSwap(hand, {
                     type: 'all', seat: mySeat,
                     gave: hand.slice(), took: middle.slice()
                 });
@@ -662,27 +768,55 @@
             .then(function () { busy = false; });
     }
 
-    // Weitergeben, ohne zu tauschen. Ohne diesen Zug sass ein Spieler fest,
-    // wenn ihm kein Tausch passte und Klopfen noch nicht erlaubt war.
+    /*
+     * Weitergeben, ohne zu tauschen - einmal pro Runde. Zwei Zwecke: man sitzt
+     * nicht fest, wenn kein Tausch passt, und man schaltet damit das Aufgehen
+     * OHNE Tausch frei (Nutzer-Vorgabe).
+     */
     function doPass() {
-        if (busy || !isMyTurn() || passUsed) return;
+        if (busy || !isMyTurn() || passUsed || swapWindowActive()) return;
         busy = true;
         passUsed = true;
         revealAfterMoveIfNeeded(myHand)
             .then(function () {
-                return commitTurn((pub.middleCards || []).slice(), { type: 'pass', seat: mySeat });
+                return advanceTurn({
+                    middleCards: (pub.middleCards || []).slice(),
+                    lastMove: { type: 'pass', seat: mySeat },
+                    turnsPlayed: (Number(pub.turnsPlayed) || 0) + 1
+                });
             })
             .then(resetSwapMode)
             .catch(handleWriteError)
             .then(function () { busy = false; });
     }
 
-    function doKnock() {
-        if (busy) return;
+    /*
+     * Aufgehen. Zwei Wege dorthin:
+     *   - im Sechs-Sekunden-Fenster direkt nach dem eigenen Tausch
+     *     (afterSwap = true, der Zug ist dann schon gezaehlt), oder
+     *   - ohne Tausch, wenn man in dieser Runde bereits "Weiter" genutzt hat.
+     * Wer aufgeht, deckt sofort auf - das ist der Sinn der Sache.
+     */
+    function doKnock(afterSwap) {
+        if (busy || !canKnockNow()) return;
+        if (!afterSwap && (!isMyTurn() || !passUsed)) return;
         busy = true;
-        // Der Klopfer deckt sofort auf - das ist der Sinn des Klopfens.
+        stopSwapWindow();
+
+        var count = Number(pub.playerCount) || 2;
+        var extra = {
+            knockedBySeat: mySeat,
+            finalTurnsRemaining: count - 1,
+            phase: 'knocked',
+            lastMove: { type: 'knock', seat: mySeat }
+        };
+        if (!afterSwap) {
+            extra.middleCards = (pub.middleCards || []).slice();
+            extra.turnsPlayed = (Number(pub.turnsPlayed) || 0) + 1;
+        }
+
         publishMyHand()
-            .then(function () { return commitTurn((pub.middleCards || []).slice(), { type: 'knock', seat: mySeat }); })
+            .then(function () { return advanceTurn(extra); })
             .then(resetSwapMode)
             .catch(handleWriteError)
             .then(function () { busy = false; });
@@ -720,17 +854,50 @@
                 grid.appendChild(b);
             });
             els.actions.appendChild(grid);
-            els.actions.appendChild(button('🤖 Nur zuschauen — Computer spielt', 'kt-btn-bot', function () {
-                startBotRound(CFG.botPlayerCount || 3);
+            // Computer-Modus, zwei Spielarten: mit Deckvergabe duerfen die
+            // Gaeste weiter scannen und bekommen ein eigenes Blatt zum
+            // Mitschauen, auch wenn der Computer zieht.
+            els.actions.appendChild(button('🤖 Computer spielt — Gäste bekommen Karten', 'kt-btn-bot', function () {
+                startBotRound(CFG.botPlayerCount || 6, true);
+            }));
+            els.actions.appendChild(button('🤖 Computer spielt allein', 'kt-btn-ghost', function () {
+                startBotRound(CFG.botPlayerCount || 6, false);
             }));
             return;
         }
 
         // In der Lobby darf der Host jederzeit an den Computer uebergeben.
         if (pub.phase === 'lobby' && isHost && !pub.botGame) {
-            els.actions.appendChild(button('🤖 Computer übernimmt', 'kt-btn-bot', function () {
-                startBotRound(Number(pub.playerCount) || CFG.botPlayerCount || 3);
+            var lobbyCount = Number(pub.playerCount) || CFG.botPlayerCount || 6;
+            els.actions.appendChild(button('🤖 Computer übernimmt — Karten bleiben verteilt', 'kt-btn-bot', function () {
+                startBotRound(lobbyCount, true);
             }));
+            els.actions.appendChild(button('🤖 Computer spielt allein', 'kt-btn-ghost', function () {
+                startBotRound(lobbyCount, false);
+            }));
+            return;
+        }
+
+        // Computer-Runde: der Gast schaut nur zu, auch mit eigenem Deck.
+        if (pub.botGame) return;
+
+        /*
+         * Sechs-Sekunden-Fenster: getauscht ist getauscht, jetzt entscheidet
+         * sich nur noch, ob man aufgeht.
+         */
+        if (swapWindowActive()) {
+            var countEl = document.createElement('div');
+            countEl.className = 'kt-window-count';
+            countEl.textContent = swapWindowLeft;
+            els.actions.appendChild(countEl);
+
+            var label = document.createElement('div');
+            label.className = 'kt-window-label';
+            label.textContent = 'Sekunden Zeit zum Aufgehen';
+            els.actions.appendChild(label);
+
+            els.actions.appendChild(button('AUFGEHEN', 'kt-btn-knock kt-btn-big', function () { doKnock(true); }));
+            els.actions.appendChild(button('WEITERGEBEN', 'kt-btn-ghost kt-btn-big', finishSwapWindow));
             return;
         }
 
@@ -738,15 +905,29 @@
 
         /*
          * Getauscht wird ohne Bestaetigung - zweites Antippen oder Ziehen
-         * genuegt. Genau deshalb bleiben "Alle 3 tauschen" und "Klopfen" hier
-         * stehen: frueher verschwanden beide, sobald man eine Karte antippte.
+         * genuegt. Deshalb steht hier nur, was nicht ueber die Karten geht.
          */
+        var hint = document.createElement('div');
+        hint.className = 'kt-turn-hint';
+        if (passUsed && canKnockNow()) {
+            hint.innerHTML = 'Karte tauschen — oder <b>direkt aufgehen</b>, weil du schon weitergegeben hast.';
+        } else if (canKnockNow()) {
+            hint.innerHTML = 'Karte tauschen — danach hast du <b>' +
+                (Number(CFG.swapWindowSeconds) || 6) + ' Sekunden</b> Zeit zum Aufgehen.';
+        } else {
+            var left = knockRoundsLeft();
+            hint.textContent = 'Karte antippen oder ziehen. Aufgehen geht erst ab der zweiten Runde' +
+                (left > 0 ? ' (noch ' + left + (left === 1 ? ' Zug' : ' Züge') + ').' : '.');
+        }
+        els.actions.appendChild(hint);
+
         if (E.middleWorthTakingAll(pub.middleCards || [])) {
             els.actions.appendChild(button('ALLE 3 NEHMEN', 'kt-btn-big', doSwapAll));
         }
 
-        if (canKnockNow()) {
-            els.actions.appendChild(button('KLOPFEN', 'kt-btn-knock kt-btn-big', doKnock));
+        // Aufgehen ohne Tausch: nur mit bereits genutztem "Weiter".
+        if (canKnockNow() && passUsed) {
+            els.actions.appendChild(button('AUFGEHEN', 'kt-btn-knock kt-btn-big', function () { doKnock(false); }));
         }
 
         // Weitergeben, ohne zu tauschen - einmal pro Runde.
@@ -809,7 +990,7 @@
         show(els.middlePanel, (pub.middleCards || []).length === 3 && phase !== 'idle' && phase !== 'hostSelect');
 
         var myTurn = isMyTurn();
-        var pickable = myTurn && !singleSwapBlocked();
+        var pickable = myTurn && !singleSwapBlocked() && !swapWindowActive();
         renderCards(els.handCards, myHand, {
             pickable: pickable,
             selected: pickedHand,
@@ -855,30 +1036,26 @@
             }
             els.statusExtra.appendChild(grid);
 
+        } else if (phase === 'starter') {
+            var starter = Number(pub.starterSeat) || 0;
+            setStatus(starter === mySeat ? 'Du beginnst!' : seatName(starter) + ' beginnt',
+                'Höchste gezogene Karte fängt an — schau auf den Fernseher.',
+                starter === mySeat ? 'is-myturn' : 'is-turnof');
+
         } else if (phase === 'playing' || phase === 'knocked') {
             var knockNote = (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined)
-                ? ' · ' + (Number(pub.knockedBySeat) === mySeat ? 'Du hast' : seatName(pub.knockedBySeat) + ' hat') + ' geklopft'
+                ? ' · ' + (Number(pub.knockedBySeat) === mySeat ? 'Du bist' : seatName(pub.knockedBySeat) + ' ist') + ' aufgegangen'
                 : '';
-            if (myTurn) {
+            if (pub.botGame) {
+                setStatus('Der Computer spielt',
+                    (mySeat >= 0 ? 'Das sind deine Karten — zuschauen genügt.' : 'Schau am Fernseher zu.') + knockNote);
+            } else if (myTurn) {
                 // Am eigenen Zug braucht es keine Statusbox - die Knoepfe darunter
                 // sagen alles, und der Platz gehoert den Karten.
-                var hint;
-                if (pickedHand !== null || pickedMiddle !== null) {
-                    hint = 'Jetzt die Karte aus der Mitte antippen, dann bestätigen.';
-                } else if (canKnockNow()) {
-                    hint = 'Karte antippen oder ziehen — oder klopfen. Mit „Weiter“ gibst du ab.';
-                } else if (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined) {
-                    // Es wurde bereits geklopft: hier ist Klopfen kein Thema mehr.
-                    hint = 'Letzter Zug vor dem Aufdecken. Karte tauschen oder „Weiter“.';
-                } else {
-                    var left = knockRoundsLeft();
-                    hint = 'Karte antippen oder ziehen. Klopfen geht erst ab der zweiten Runde' +
-                           (left > 0 ? ' (noch ' + left + (left === 1 ? ' Zug' : ' Züge') + ').' : '.');
-                }
-                setStatus('Du bist dran!', hint + knockNote, 'is-myturn');
+                setStatus('Du bist dran!', '', 'is-myturn');
             } else {
                 setStatus(seatName(pub.currentTurnSeat) + ' ist dran',
-                    'Warte, bis du dran bist.' + knockNote);
+                    'Warte, bis du dran bist.' + knockNote, 'is-turnof');
             }
             if (Object.keys(pub.revealedHands || {}).length) {
                 var caption = document.createElement('div');
@@ -894,7 +1071,8 @@
             var iPay = paying.indexOf(mySeat) !== -1;
             setStatus(
                 fire ? '🔥 FEUER!' : (iPay ? 'Du zahlst die Runde!' : 'Aufgedeckt'),
-                fire ? 'Alle unter 12 Punkten zahlen.' + (iPay ? ' Du bist dabei.' : ' Du bist raus.')
+                fire ? 'Alle unter ' + E.FIRE_PAY_BELOW + ' Punkten zahlen — und der Schwächste sowieso.' +
+                       (iPay ? ' Du bist dabei.' : ' Du bist raus.')
                      : (iPay ? 'Niedrigste Hand — Prost!' : 'Diesmal nicht du.'),
                 iPay ? 'is-error' : '');
             renderReveal();
@@ -930,13 +1108,22 @@
         }).then(function () { busy = false; });
     }
 
-    // Vorfuehrrunde: der TV besetzt alle Plaetze selbst und spielt sie aus.
-    function startBotRound(count) {
+    /*
+     * Vorfuehrrunde: der TV spielt alle Plaetze selbst.
+     *
+     * withSeats = true: die Plaetze bleiben frei, damit Gaeste weiterhin
+     * scannen und ein eigenes Deck bekommen koennen - sie schauen dann bei
+     * ihren eigenen Karten zu, waehrend der Computer zieht. Genau das war die
+     * Vorgabe: mit Deckvergabe oder ohne.
+     */
+    function startBotRound(count, withSeats) {
         if (busy) return;
         busy = true;
-        var players = Math.min(6, Math.max(2, Number(count) || CFG.botPlayerCount || 3));
+        var players = Math.min(6, Math.max(2, Number(count) || CFG.botPlayerCount || 6));
+        var open = withSeats === undefined ? (CFG.botSeatsDefault !== false) : !!withSeats;
         KtNet.publicRef(db, sessionId).update({
             botGame: true,
+            botSeats: open,
             playerCount: players,
             phase: 'botRound',
             hostUid: null,
@@ -956,8 +1143,22 @@
             }).then(function () { busy = false; });
     }
 
+    /*
+     * Sitzplatz belegen.
+     *
+     * Auch waehrend einer Computer-Runde - sofern sie mit Deckvergabe laeuft:
+     * dann bekommt der Gast ein eigenes Blatt und sieht es auf seinem Handy,
+     * gezogen wird trotzdem vom Computer.
+     */
+    function joinAllowed() {
+        var phase = pub.phase || 'idle';
+        if (phase === 'lobby') return true;
+        if (!pub.botGame || !pub.botSeats) return false;
+        return phase === 'starter' || phase === 'playing' || phase === 'knocked';
+    }
+
     function tryJoin() {
-        if (mySeat >= 0 || busy || pub.botGame) return;
+        if (mySeat >= 0 || busy || !joinAllowed()) return;
         var count = Number(pub.playerCount) || 0;
         if (!count) return;
         busy = true;
@@ -1004,8 +1205,11 @@
         handWatcher.on('value', function (snap) {
             var val = snap.val();
             myHand = (val && val.hand) || [];
-            // Auch eine bereits ausgeteilte Feuer-Hand beendet die Runde sofort.
-            if (pub.phase === 'playing' || pub.phase === 'knocked') checkFire(myHand);
+            // Auch eine bereits ausgeteilte Feuer-Hand beendet die Runde sofort -
+            // schon waehrend der Geber-Ermittlung.
+            if (pub.phase === 'starter' || pub.phase === 'playing' || pub.phase === 'knocked') {
+                checkFire(myHand);
+            }
             render();
         }, function (err) {
             console.warn('[Hos’n Obe] Hand nicht lesbar:', err);
@@ -1021,6 +1225,29 @@
         publishMyHand();
     }
 
+    /*
+     * Einmal pro Seitenaufruf, beim ersten empfangenen Spielstand: laeuft
+     * gerade nichts, wird dieses Handy zum Host und startet die Runde. Laeuft
+     * schon eine Runde, bleibt es Zuschauer (und bekommt ueber tryJoin() ggf.
+     * trotzdem einen Platz).
+     */
+    var hostChecked = false;
+    function maybeClaimHost() {
+        if (hostChecked || !db) return;
+        hostChecked = true;
+        if ((pub.phase || 'idle') !== 'idle') return;
+
+        // Host werden UND die Runde oeffnen passiert in einer Transaktion -
+        // sonst koennte zwischen Pruefen und Schreiben laengst eine Runde
+        // gestartet sein, die wir dann abwuergen wuerden.
+        KtNet.claimHostAndOpen(db, sessionId, uid).then(function (gotHost) {
+            isHost = gotHost;
+            render();
+        }).catch(function (err) {
+            console.warn('[Hos’n Obe] Host-Anmeldung fehlgeschlagen:', err);
+        });
+    }
+
     function onPublic(snap) {
         var prevPhase = pub.phase;
         pub = snap.val() || {};
@@ -1031,15 +1258,27 @@
             mySeat = -1;
             myHand = [];
             passUsed = false;
+            stopSwapWindow();
             if (handWatcher) { handWatcher.off(); handWatcher = null; }
             localStorage.removeItem('kt_seat_' + sessionId);
         }
 
+        // Frisch ausgeteilt: "Weiter" steht wieder zur Verfuegung.
+        if (prevPhase !== 'starter' && pub.phase === 'starter') {
+            passUsed = false;
+            lastCommittedTurns = 0;
+            stopSwapWindow();
+        }
+
+        // Das Fenster gehoert uns nicht (mehr) - z. B. weil der TV eingesprungen ist.
+        if (swapWindowLeft > 0 && Number(pub.swapWindowSeat) !== mySeat) stopSwapWindow();
+
         // Host bleibt Host, auch nach einem Neuladen des Handys.
         if (pub.hostUid && pub.hostUid === uid) isHost = true;
 
+        maybeClaimHost();
         verifySeat();
-        if (pub.phase === 'lobby') tryJoin();
+        tryJoin();
         if (mySeat >= 0) watchMyHand();
         maybePublishHand();
         render();
@@ -1070,21 +1309,20 @@
             try { stored = localStorage.getItem('kt_seat_' + sessionId); } catch (e) { /* egal */ }
             if (stored !== null && stored !== '') mySeat = Number(stored);
 
-            return KtNet.claimHost(db, sessionId, uid).then(function (gotHost) {
-                isHost = gotHost;
-                if (gotHost) {
-                    // Erster Scan der Runde: TV pausiert die Rotation und wartet
-                    // auf die Spieleranzahl.
-                    return KtNet.publicRef(db, sessionId).update({
-                        phase: 'hostSelect',
-                        hostRequestedAt: firebase.database.ServerValue.TIMESTAMP
-                    });
-                }
-            }).then(function () {
-                KtNet.publicRef(db, sessionId).on('value', onPublic, function (err) {
-                    console.warn('[Hos’n Obe] Spielstand nicht lesbar:', err);
-                    setStatus('Verbindung verloren', 'Bitte neu laden.', 'is-error');
-                });
+            /*
+             * Erst zuhoeren, dann entscheiden.
+             *
+             * Host wird nur, wer scannt, waehrend NICHTS laeuft - sonst wuerde
+             * ein spaeter Scanner eine bereits laufende Runde (etwa eine
+             * Computer-Runde mit Deckvergabe) abwuergen und die Spieleranzahl
+             * neu abfragen. Die Entscheidung faellt bewusst im ERSTEN
+             * Spielstand aus dem laufenden Abo statt in einer eigenen Abfrage:
+             * ein zweiter Weg zu denselben Daten waere nur eine weitere
+             * Fehlerquelle.
+             */
+            KtNet.publicRef(db, sessionId).on('value', onPublic, function (err) {
+                console.warn('[Hos’n Obe] Spielstand nicht lesbar:', err);
+                setStatus('Verbindung verloren', 'Bitte neu laden.', 'is-error');
             });
         }).catch(function (err) {
             console.warn('[Hos’n Obe] Start fehlgeschlagen:', err);

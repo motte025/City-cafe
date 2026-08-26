@@ -104,14 +104,32 @@
         });
     }
 
-    // Host wird, wer zuerst da ist. Ebenfalls als Transaktion, damit bei zwei
-    // gleichzeitigen Scans nicht beide Handys die Spieleranzahl wählen dürfen.
-    function claimHost(db, sessionId, uid) {
-        return publicRef(db, sessionId, 'hostUid').transaction(function (current) {
-            if (current === null) return uid;
-            return undefined;
+    /*
+     * Host werden und die Runde öffnen — in EINEM Schritt.
+     *
+     * Beides gehört zusammen und muss atomar sein: erst lesen, ob gerade nichts
+     * läuft, und dann schreiben, wäre ein Rennen. Genau daran ist ein Gast
+     * gescheitert, der mitten in einer laufenden Computer-Runde gescannt hat:
+     * sein Handy hat sich zum Host erklärt und die Runde zurückgesetzt.
+     *
+     * Die Transaktion bricht ab (und liefert false), wenn
+     *   - die Session noch gar nicht existiert,
+     *   - schon eine Runde läuft (Phase ist nicht "idle"), oder
+     *   - ein anderes Handy schneller war.
+     */
+    function claimHostAndOpen(db, sessionId, uid) {
+        return publicRef(db, sessionId).transaction(function (current) {
+            if (!current) return undefined;
+            if ((current.phase || 'idle') !== 'idle') return undefined;
+            if (current.hostUid) return undefined;
+            current.hostUid = uid;
+            current.phase = 'hostSelect';
+            // Bewusst die Gerätezeit: Server-Platzhalter sind in Transaktionen
+            // heikel, und der Wert ist ohnehin nur informativ.
+            current.hostRequestedAt = Date.now();
+            return current;
         }).then(function (result) {
-            return result.snapshot.val() === uid;
+            return !!result.committed;
         });
     }
 
@@ -122,6 +140,6 @@
         privateRef: privateRef,
         newSessionId: newSessionId,
         claimSeat: claimSeat,
-        claimHost: claimHost
+        claimHostAndOpen: claimHostAndOpen
     };
 })(window);

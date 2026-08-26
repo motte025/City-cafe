@@ -972,6 +972,36 @@
         .kt-seat.is-empty .kt-seat-name { color: rgba(255,255,255,0.45); }
         .kt-seat.is-active .kt-fan-card { box-shadow: 0 0 0 4px #00f2fe, 0 6px 12px rgba(0,0,0,0.55); }
         .kt-seat.is-active .kt-seat-name { color: #00f2fe; text-shadow: 0 0 16px rgba(0,242,254,0.7); }
+
+        /* ---------- Wer ist am Zug ----------
+           Muss quer durch das Lokal erkennbar sein: ein atmender Leuchtrahmen um
+           den Faecher und ein kraeftiges Band unter dem Namen. Animiert werden
+           ausschliesslich transform und opacity - Rahmen- oder Schattenanimationen
+           zwingen den Browser zum Neuzeichnen und kosten auf der Odroid-Box
+           spuerbar Bildrate. Der Rahmen ist genau EIN zusaetzliches Element. */
+        .kt-seat.is-active .kt-fan::after {
+            content: '';
+            position: absolute; left: -16px; right: -16px; top: -12px; bottom: -4px;
+            border: 4px solid #00f2fe; border-radius: 24px;
+            box-shadow: 0 0 30px rgba(0,242,254,0.75), inset 0 0 22px rgba(0,242,254,0.22);
+            animation: ktTurnPulse 1.15s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+        @keyframes ktTurnPulse {
+            from { transform: scale(1);     opacity: 0.65; }
+            to   { transform: scale(1.035); opacity: 1; }
+        }
+        .kt-seat.is-active .kt-seat-tag {
+            font-size: 20px; padding: 5px 18px; letter-spacing: 1.2px;
+            background: #00f2fe; border-color: #00f2fe; color: #04222c;
+            box-shadow: 0 0 24px rgba(0,242,254,0.6);
+        }
+        /* Sechs-Sekunden-Fenster nach dem Tausch: derselbe Platz darf noch aufgehen. */
+        .kt-seat.is-window .kt-seat-tag {
+            background: #f4a300; border-color: #f4a300; color: #241600;
+            box-shadow: 0 0 24px rgba(244,163,0,0.65);
+        }
+        .kt-seat.is-window .kt-fan::after { border-color: #f4a300; box-shadow: 0 0 30px rgba(244,163,0,0.7); }
         .kt-seat.is-loser .kt-fan-card { box-shadow: 0 0 0 5px #ff3344, 0 6px 12px rgba(0,0,0,0.5); }
         .kt-seat.is-loser .kt-seat-name, .kt-seat.is-loser .kt-seat-score { color: #ff3344; }
         .kt-seat.is-fire .kt-fan-card { box-shadow: 0 0 0 5px #ff8a3d, 0 6px 12px rgba(0,0,0,0.5); }
@@ -1026,6 +1056,55 @@
             border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #94a3b8;
         }
         .kt-lobby-pill.is-taken { border-color: rgba(46,204,113,0.6); color: #6ee7a8; background: rgba(46,204,113,0.12); }
+
+        /* ---------- Geber ermitteln ----------
+           Vor jeder Runde zieht jeder Platz eine offene Karte; die hoechste
+           beginnt mit dem Tauschen. Sonst faenge immer Platz 1 an. */
+        .kt-starter {
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            z-index: 30; padding: 20px 34px 24px; border-radius: 22px; text-align: center;
+            background: rgba(4,10,20,0.9); border: 3px solid rgba(0,242,254,0.6);
+            box-shadow: 0 0 46px rgba(0,242,254,0.35);
+        }
+        .kt-starter-title {
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            letter-spacing: 1.6px; color: #ffffff; text-transform: uppercase;
+        }
+        .kt-starter-row { margin-top: 16px; display: flex; gap: 16px; justify-content: center; align-items: flex-end; }
+        .kt-starter-item { width: 104px; text-align: center; }
+        .kt-starter-card {
+            width: 104px; height: 156px; border-radius: 10px; overflow: hidden;
+            background: #0a1426; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
+        }
+        .kt-starter-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .kt-starter-name {
+            margin-top: 6px; font-family: 'Orbitron', sans-serif; font-size: 16px;
+            font-weight: 900; color: #cbd5e1; letter-spacing: 0.6px;
+        }
+        .kt-starter-item.is-winner .kt-starter-card { box-shadow: 0 0 0 4px #00f2fe, 0 0 26px rgba(0,242,254,0.7); }
+        .kt-starter-item.is-winner .kt-starter-name { color: #00f2fe; }
+        .kt-starter-sub {
+            margin-top: 16px; font-family: 'Orbitron', sans-serif; font-size: 22px;
+            font-weight: 900; color: #00f2fe; letter-spacing: 1.2px;
+            text-shadow: 0 0 18px rgba(0,242,254,0.6);
+        }
+
+        /* ---------- Mitspiel-QR in der Computer-Runde ----------
+           Im Vollbild liegt der Starter-QR der Media-Zone unter dem Spiel und
+           ist ausgeblendet. Spielt der Computer MIT Deckvergabe, sollen Gaeste
+           aber weiterhin scannen und ein eigenes Blatt bekommen - also braucht
+           es hier einen eigenen, kleinen QR auf der Buehne. */
+        .kt-joinqr {
+            position: absolute; left: 16px; bottom: 14px; z-index: 22;
+            width: 150px; padding: 8px 8px 6px; border-radius: 14px;
+            background: rgba(6,14,28,0.86); border: 2px solid rgba(0,242,254,0.55);
+            box-shadow: 0 10px 26px rgba(0,0,0,0.6);
+        }
+        .kt-joinqr img { width: 100%; height: 134px; display: block; background: #fff; border-radius: 8px; padding: 5px; }
+        .kt-joinqr-label {
+            margin-top: 5px; text-align: center; font-size: 11px; font-weight: 800;
+            letter-spacing: 0.6px; text-transform: uppercase; color: #00f2fe; line-height: 1.3;
+        }
 
         .kt-result {
             position: absolute; left: 50%; top: 352px; transform: translateX(-50%); z-index: 30;
@@ -1337,6 +1416,13 @@
                             <div class="kt-lobby-qr"><img id="kt-lobby-qr-img" src="" alt="QR-Code zum Mitspielen"></div>
                             <div class="kt-lobby-hint" id="kt-lobby-hint">Mit dem Handy scannen und mitspielen</div>
                             <div class="kt-lobby-seats" id="kt-lobby-seats"></div>
+                        </div>
+
+                        <div class="kt-starter" id="kt-starter" style="display: none;"></div>
+
+                        <div class="kt-joinqr" id="kt-joinqr" style="display: none;">
+                            <img id="kt-joinqr-img" src="" alt="QR-Code zum Mitspielen">
+                            <div class="kt-joinqr-label">Scannen und<br>eigene Karten sehen</div>
                         </div>
 
                         <div class="kt-result" id="kt-result" style="display: none;">
@@ -3973,6 +4059,40 @@
         let ktLastTurnSeat = null;
         let ktDealing = false, ktResolving = false;
         let ktTestSlotDone = null;   // Testmodus: so geht die Rotation weiter
+        let ktBotPassUsed = {};      // welcher Computer-Platz sein "Weiter" verbraucht hat
+        let ktSwapWindowTimer = null;
+        let ktLastSwapWindowSeat = null;
+
+        /*
+         * Zeitbudget einer Runde.
+         *
+         * Vorgabe: eine Spielrunde soll rund 1:30 bis 2:00 dauern. Gerechnet wird
+         * ab dem ersten echten Zug (also nach der Geber-Ermittlung). Der TV ist
+         * die einzige Instanz, die das zuverlaessig kann - die Handys wissen
+         * nicht, wann ausgeteilt wurde, und Serverzeit gegen Handyzeit zu
+         * rechnen waere unnoetig fehleranfaellig.
+         */
+        let ktRoundStartMs = 0;
+        let ktRoundBudgetTimer = null;
+        function ktRoundElapsed() {
+            return ktRoundStartMs ? (Date.now() - ktRoundStartMs) / 1000 : 0;
+        }
+        function ktClearRoundBudget() {
+            if (ktRoundBudgetTimer) { clearTimeout(ktRoundBudgetTimer); ktRoundBudgetTimer = null; }
+            ktRoundStartMs = 0;
+        }
+        function ktArmRoundBudget() {
+            if (ktRoundBudgetTimer) return;          // laeuft schon fuer diese Runde
+            ktRoundStartMs = Date.now();
+            ktRoundBudgetTimer = setTimeout(() => {
+                ktRoundBudgetTimer = null;
+                const phase = ktPub.phase;
+                if (phase !== 'playing' && phase !== 'knocked') return;
+                KtNet.publicRef(ktDb, ktSessionId).update({
+                    phase: 'reveal', swapWindowSeat: null
+                }).catch(() => {});
+            }, (KT.roundTargetSeconds || 95) * 1000);
+        }
 
         function ktEl(id) { return document.getElementById(id); }
         function ktReady() { return !!(ktDb && ktSessionId && KtEngine); }
@@ -3991,7 +4111,12 @@
         function ktClearTimers() {
             if (ktPhaseTimer) { clearTimeout(ktPhaseTimer); ktPhaseTimer = null; }
             if (ktTickTimer) { clearInterval(ktTickTimer); ktTickTimer = null; }
+            ktClearSwapWindowTimer();
             ktClearBotTimer();
+        }
+
+        function ktClearSwapWindowTimer() {
+            if (ktSwapWindowTimer) { clearInterval(ktSwapWindowTimer); ktSwapWindowTimer = null; }
         }
 
         // Rueckseiten-Motiv je Karte, einmal pro Runde ausgewuerfelt und dann
@@ -4140,7 +4265,8 @@
             const host = ktEl('kt-seats');
             const phase = ktPub.phase;
             const count = Number(ktPub.playerCount) || 0;
-            const show = count >= 2 && (phase === 'playing' || phase === 'knocked' || phase === 'reveal');
+            const show = count >= 2 && (phase === 'starter' || phase === 'playing' ||
+                                        phase === 'knocked' || phase === 'reveal');
             ktSetShown(host, show);
             if (!show) return;
 
@@ -4157,10 +4283,15 @@
                 const el = ktSeatEls[seat];
                 if (!el) continue;
 
-                const occupied = !!(seats[seat] && seats[seat].uid);
-                const isTurn = phase !== 'reveal' && Number(ktPub.currentTurnSeat) === seat;
+                // In der Computer-Runde spielt der TV jeden Platz - auch die, auf
+                // denen (noch) kein Gast sitzt. Ausgegraut wird dort nichts.
+                const occupied = ktIsBotGame() || !!(seats[seat] && seats[seat].uid);
+                const isTurn = phase !== 'reveal' && phase !== 'starter' &&
+                               Number(ktPub.currentTurnSeat) === seat;
+                const inWindow = isTurn && Number(ktPub.swapWindowSeat) === seat;
                 ktSetClass(el.wrap, 'is-empty', !occupied);
                 ktSetClass(el.wrap, 'is-active', isTurn);
+                ktSetClass(el.wrap, 'is-window', inWindow);
                 ktSetClass(el.wrap, 'is-loser', phase === 'reveal' && paying.indexOf(seat) !== -1);
                 ktSetClass(el.wrap, 'is-fire', fireSeats.indexOf(seat) !== -1);
                 ktSetClass(el.wrap, 'is-knocker', Number(ktPub.knockedBySeat) === seat);
@@ -4178,8 +4309,9 @@
                     ktSetText(el.score, scores[seat] + (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : ''));
                 }
 
-                const tagText = Number(ktPub.knockedBySeat) === seat ? 'geklopft'
+                const tagText = Number(ktPub.knockedBySeat) === seat ? 'aufgegangen'
                     : !occupied ? 'frei'
+                    : inWindow ? 'aufgehen?'
                     : isTurn ? 'am Zug' : '';
                 ktSetShown(el.tag, !!tagText);
                 if (tagText) ktSetText(el.tag, tagText);
@@ -4269,16 +4401,97 @@
                 'Mit dem Handy scannen und mitspielen';
         }
 
+        /*
+         * Mitspiel-QR waehrend der Computer-Runde.
+         *
+         * Nur wenn mit Deckvergabe gespielt wird UND noch ein Platz frei ist -
+         * sonst waere es ein Angebot, das ins Leere laeuft.
+         */
+        function ktRenderJoinQr() {
+            const box = ktEl('kt-joinqr');
+            const phase = ktPub.phase;
+            const running = phase === 'starter' || phase === 'playing' || phase === 'knocked';
+            const free = (Number(ktPub.playerCount) || 0) - ktSeatsTaken();
+            const show = !!(ktIsBotGame() && ktPub.botSeats && running && free > 0);
+            ktSetShown(box, show);
+            if (!show) return;
+
+            const img = ktEl('kt-joinqr-img');
+            const wanted = ktQrUrl(300);
+            if (img.getAttribute('data-src') !== wanted) {
+                img.src = wanted;
+                img.setAttribute('data-src', wanted);
+            }
+        }
+
         function ktRenderBanner() {
             const phase = ktPub.phase || 'idle';
+            const inWindow = ktPub.swapWindowSeat !== null && ktPub.swapWindowSeat !== undefined;
             ktEl('kt-banner-sub').textContent =
                 phase === 'hostSelect' ? 'Host wählt die Spieleranzahl…' :
                 phase === 'lobby' ? 'Scannen und mitspielen' :
-                phase === 'playing' ? ktName(ktPub.currentTurnSeat || 0) + ' ist am Zug' :
-                phase === 'knocked' ? 'Geschlossen — die letzten Züge laufen' :
+                phase === 'starter' ? 'Höchste Karte beginnt' :
+                phase === 'playing' ? (inWindow
+                    ? ktName(ktPub.swapWindowSeat) + ' — aufgehen oder weitergeben?'
+                    : ktName(ktPub.currentTurnSeat || 0) + ' ist am Zug') :
+                phase === 'knocked' ? 'Aufgegangen — die letzten Züge laufen' :
                 phase === 'reveal' ? (ktPub.fireBySeat !== null && ktPub.fireBySeat !== undefined
                     ? '🔥 FEUER — alle decken auf!' : 'Aufgedeckt') :
                 'Schwimmen · 31 · Hos’n Obe';
+        }
+
+        /*
+         * Geber ermitteln: jeder Platz zieht eine offene Karte, die hoechste
+         * beginnt mit dem Tauschen. Wird einmal pro Runde gebaut (die Karten
+         * aendern sich waehrend der Phase nicht mehr) und danach nur noch
+         * ein- und ausgeblendet.
+         */
+        let ktStarterKey = '';
+        function ktRenderStarter() {
+            const box = ktEl('kt-starter');
+            const cards = ktPub.starterCards || null;
+            const show = ktPub.phase === 'starter' && !!cards;
+            ktSetShown(box, show);
+            if (!show) return;
+
+            const seats = Object.keys(cards).map(Number).sort((a, b) => a - b);
+            const winner = Number(ktPub.starterSeat) || 0;
+            const key = seats.map(s => s + ':' + cards[s]).join('|') + '>' + winner;
+            if (key === ktStarterKey) return;
+            ktStarterKey = key;
+
+            box.innerHTML = '';
+            const title = document.createElement('div');
+            title.className = 'kt-starter-title';
+            title.textContent = 'Wer beginnt? Höchste Karte!';
+            box.appendChild(title);
+
+            const row = document.createElement('div');
+            row.className = 'kt-starter-row';
+            seats.forEach(seat => {
+                const item = document.createElement('div');
+                item.className = 'kt-starter-item' + (seat === winner ? ' is-winner' : '');
+
+                const card = document.createElement('div');
+                card.className = 'kt-starter-card';
+                const img = document.createElement('img');
+                img.src = KtEngine.cardImage(cards[seat], 'cards/');
+                card.appendChild(img);
+                item.appendChild(card);
+
+                const name = document.createElement('div');
+                name.className = 'kt-starter-name';
+                name.textContent = ktName(seat);
+                item.appendChild(name);
+
+                row.appendChild(item);
+            });
+            box.appendChild(row);
+
+            const sub = document.createElement('div');
+            sub.className = 'kt-starter-sub';
+            sub.textContent = ktName(winner) + ' tauscht als Erster';
+            box.appendChild(sub);
         }
 
         function ktRenderResult() {
@@ -4291,8 +4504,9 @@
             if (fire) {
                 ktEl('kt-result-main').textContent = '🔥 FEUER!';
                 ktEl('kt-result-sub').textContent = paying.length
-                    ? ktNameList(paying) + (paying.length > 1 ? ' zahlen' : ' zahlt') + ' die Runde (unter 12 Punkte)'
-                    : 'Niemand unter 12 Punkten — diesmal kommen alle davon!';
+                    ? ktNameList(paying) + (paying.length > 1 ? ' zahlen' : ' zahlt') +
+                      ' die Runde (unter ' + KtEngine.FIRE_PAY_BELOW + ' Punkte und der Schwächste)'
+                    : 'Niemand unter ' + KtEngine.FIRE_PAY_BELOW + ' Punkten — diesmal kommen alle davon!';
             } else {
                 ktEl('kt-result-main').textContent = ktNameList(paying) + ' zahlt die Runde!';
                 ktEl('kt-result-sub').textContent = 'Niedrigste Hand';
@@ -4301,12 +4515,22 @@
 
         /* ---------- Karten fliegen lassen ----------
          *
-         * Beim Tausch soll sichtbar werden, WER getauscht hat: die abgegebene
-         * Karte fliegt vom Faecher des Spielers in die Mitte, die genommene
-         * denselben Weg zurueck. Gerechnet wird in Buehnen-Koordinaten
+         * Beim Tausch soll sichtbar werden, WAS der Spieler abgibt und WAS er
+         * nimmt. Deshalb fliegen die beiden Karten NACHEINANDER statt
+         * gleichzeitig, jede mit einer kurzen Pause auf halbem Weg, in der sie
+         * vergroessert offen liegt. Gerechnet wird in Buehnen-Koordinaten
          * (1280x815), damit es im Vollbild genauso stimmt.
+         *
+         * Zeitplan eines Einzeltauschs:
+         *   0.0 s  abgegebene Karte startet am Faecher
+         *   0.6 s  liegt gross in der Mitte des Weges  (Haltepause 0.55 s)
+         *   1.5 s  ist in der Mitte angekommen
+         *   1.7 s  genommene Karte startet in der Mitte
+         *   3.2 s  ist am Faecher angekommen
+         * Das passt in die Denkpause des Computers (botMoveSeconds).
          */
-        const KT_FLY_MS = 620;
+        const KT_FLY_MS = 1500;        // Flugdauer einer einzelnen Karte
+        const KT_FLY_GAP = 200;        // Pause zwischen Abgeben und Nehmen
 
         function ktSeatPoint(seat) {
             const count = Number(ktPub.playerCount) || 0;
@@ -4334,12 +4558,22 @@
             el.style.top = (from.y - 97) + 'px';
             stage.appendChild(el);
 
+            /*
+             * Kein Ueberschlag mehr: eine sich drehende Karte kann man nicht
+             * lesen. Stattdessen ein ruhiger Bogen mit einer Haltepause auf
+             * halbem Weg, in der die Karte vergroessert und leicht gekippt
+             * offen liegt - da sieht jeder, welche Karte gerade wandert.
+             */
             const dx = to.x - from.x, dy = to.y - from.y;
+            const midX = dx * 0.5, midY = dy * 0.5 - 46;
             const anim = el.animate([
-                { transform: 'translate(0px, 0px) rotate(0deg) scale(1)', opacity: 1, offset: 0 },
-                { transform: 'translate(' + (dx / 2) + 'px, ' + (dy / 2 - 40) + 'px) rotate(180deg) scale(1.15)', opacity: 1, offset: 0.55 },
-                { transform: 'translate(' + dx + 'px, ' + dy + 'px) rotate(360deg) scale(1)', opacity: 1, offset: 1 }
-            ], { duration: KT_FLY_MS, delay: delay || 0, easing: 'cubic-bezier(0.34, 0.8, 0.3, 1)', fill: 'forwards' });
+                { transform: 'translate(0px, 0px) scale(1) rotate(0deg)', opacity: 0.9, offset: 0 },
+                { transform: 'translate(' + (dx * 0.24) + 'px, ' + (dy * 0.24 - 30) + 'px) scale(1.22) rotate(-3deg)', opacity: 1, offset: 0.2 },
+                { transform: 'translate(' + midX + 'px, ' + midY + 'px) scale(1.42) rotate(-4deg)', opacity: 1, offset: 0.33 },
+                { transform: 'translate(' + midX + 'px, ' + midY + 'px) scale(1.42) rotate(-4deg)', opacity: 1, offset: 0.7 },
+                { transform: 'translate(' + (dx * 0.86) + 'px, ' + (dy * 0.86 - 12) + 'px) scale(1.12) rotate(-1deg)', opacity: 1, offset: 0.9 },
+                { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(1) rotate(0deg)', opacity: 1, offset: 1 }
+            ], { duration: KT_FLY_MS, delay: delay || 0, easing: 'ease-in-out', fill: 'forwards' });
             anim.onfinish = () => el.remove();
             // Sicherheitsnetz: haengt die Animation (WebView), raeumt der Timer auf.
             later(() => { if (el.parentNode) el.remove(); }, KT_FLY_MS + (delay || 0) + 900);
@@ -4357,19 +4591,27 @@
             if (!seatPoint) return;
 
             if (move.type === 'single') {
+                // Erst hin, dann zurueck - nie beides gleichzeitig, sonst weiss
+                // niemand, welche Karte in welche Richtung unterwegs war.
                 const idx = Number(move.middleIndex);
                 const mid = ktMiddlePoint(isNaN(idx) ? 1 : idx);
                 if (move.gave) ktFly(move.gave, seatPoint, mid, 0);
-                if (move.took) ktFly(move.took, mid, seatPoint, 120);
+                if (move.took) ktFly(move.took, mid, seatPoint, KT_FLY_MS + KT_FLY_GAP);
 
             } else if (move.type === 'all') {
-                // Beim Rundumtausch kreuzen sich alle drei Paare.
+                /*
+                 * Rundumtausch: alle drei abgegebenen Karten fliegen versetzt
+                 * hinaus, danach kommen die drei genommenen zurueck. Der Versatz
+                 * ist klein genug, dass es zusammenhaengt, und gross genug, dass
+                 * die einzelne Karte lesbar bleibt.
+                 */
                 const gave = move.gave || [];
                 const took = move.took || [];
+                const step = 260;
                 for (let i = 0; i < 3; i++) {
                     const mid = ktMiddlePoint(i);
-                    if (gave[i]) ktFly(gave[i], seatPoint, mid, i * 90);
-                    if (took[i]) ktFly(took[i], mid, seatPoint, i * 90 + 120);
+                    if (gave[i]) ktFly(gave[i], seatPoint, mid, i * step);
+                    if (took[i]) ktFly(took[i], mid, seatPoint, KT_FLY_MS + KT_FLY_GAP + i * step);
                 }
             }
         }
@@ -4379,6 +4621,8 @@
             ktRenderSeats();
             ktRenderMiddle();
             ktRenderLobby();
+            ktRenderJoinQr();
+            ktRenderStarter();
             ktRenderResult();
             ktAnimateLastMove();
         }
@@ -4414,6 +4658,7 @@
 
         function ktExitGame() {
             ktClearTimers();
+            ktClearRoundBudget();
             ktSetTimer(null);
             if (!ktActive) return;
             ktActive = false;
@@ -4459,11 +4704,16 @@
             Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update({
                 playerCount: count,
                 middleCards: dealt.middleCards,
-                phase: 'playing',
-                currentTurnSeat: 0,
+                // Erst die Geber-Ermittlung zeigen, danach schaltet der TV auf
+                // 'playing' um (siehe ktOnPhaseChange).
+                phase: 'starter',
+                starterCards: dealt.starterCards,
+                starterSeat: dealt.starterSeat,
+                currentTurnSeat: dealt.starterSeat,
                 turnsPlayed: 0,
                 knockedBySeat: null,
                 finalTurnsRemaining: null,
+                swapWindowSeat: null,
                 revealedHands: null,
                 scores: null,
                 loserSeat: null,
@@ -4491,61 +4741,87 @@
             if (ktBotTimer) { clearTimeout(ktBotTimer); ktBotTimer = null; }
         }
 
-        function ktStartBotRound(count) {
+        /*
+         * Computer-Runde starten.
+         *
+         * withSeats = true: die Plaetze bleiben FREI, damit Gaeste weiterhin den
+         * QR-Code scannen und ein eigenes Deck bekommen koennen. Gespielt wird
+         * trotzdem vom Computer - der Gast sieht nur seine Karten und am Ende,
+         * ob er zahlt. Genau das war die Vorgabe: mit Deckvergabe oder ohne.
+         */
+        function ktStartBotRound(count, withSeats) {
             if (!ktReady() || ktDealing) return;
             const players = Math.min(6, Math.max(2, Number(count) || KT.botPlayerCount || 3));
+            const seatsOpen = withSeats === undefined ? (KT.botSeatsDefault !== false) : !!withSeats;
             ktDealing = true;
             ktBackImage = null;
             ktSetFelt();
 
             const dealt = KtEngine.deal(players);
             ktMirrorHands = dealt.hands;
-
-            const seats = {};
-            for (let seat = 0; seat < players; seat++) {
-                seats[seat] = { uid: 'bot:' + seat, joined: true, bot: true };
-            }
+            ktBotPassUsed = {};
 
             const writes = [];
             for (let seat = 0; seat < players; seat++) {
                 writes.push(KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: dealt.hands[seat] }));
             }
 
-            // Schon beim Austeilen kann ein Feuer dabei sein.
-            let dealtFire = -1;
+            // Schon beim Austeilen kann ein Feuer dabei sein - es wird aber erst
+            // nach der Geber-Ermittlung ausgespielt, sonst waere die Runde vorbei,
+            // bevor man gesehen hat, wer ueberhaupt beginnt.
+            ktPendingFireSeat = -1;
             for (let seat = 0; seat < players; seat++) {
-                if (KtEngine.scoreHand(dealt.hands[seat]).fire) { dealtFire = seat; break; }
+                if (KtEngine.scoreHand(dealt.hands[seat]).fire) { ktPendingFireSeat = seat; break; }
             }
 
             Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update({
                 botGame: true,
+                botSeats: seatsOpen,
                 playerCount: players,
-                seats: seats,
+                seats: null,
                 middleCards: dealt.middleCards,
-                phase: 'playing',
-                currentTurnSeat: 0,
+                phase: 'starter',
+                starterCards: dealt.starterCards,
+                starterSeat: dealt.starterSeat,
+                currentTurnSeat: dealt.starterSeat,
                 turnsPlayed: 0,
                 knockedBySeat: null,
                 finalTurnsRemaining: null,
+                swapWindowSeat: null,
                 revealedHands: null,
                 scores: null,
                 loserSeat: null,
                 payingSeats: null,
                 fireSeats: null,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
-            })).then(() => {
-                if (dealtFire >= 0) {
-                    return KtNet.publicRef(ktDb, ktSessionId).update({
-                        phase: 'reveal',
-                        fireBySeat: dealtFire,
-                        ['revealedHands/' + dealtFire]: dealt.hands[dealtFire],
-                        lastMove: { type: 'fire', seat: dealtFire }
-                    });
-                }
-            }).catch(err => {
+            })).catch(err => {
                 console.warn('[Hos’n Obe] Computer-Runde fehlgeschlagen:', err);
                 ktResetSession();
             }).then(() => { ktDealing = false; });
+        }
+
+        /*
+         * Ende der Geber-Ermittlung: jetzt wird wirklich gespielt. Hier startet
+         * auch das Zeitbudget der Runde - die Vorgabe sind rund 1:30 bis 2:00.
+         */
+        let ktPendingFireSeat = -1;
+        function ktBeginPlaying() {
+            if (!ktReady() || ktPub.phase !== 'starter') return;
+            if (ktPendingFireSeat >= 0) {
+                const seat = ktPendingFireSeat;
+                ktPendingFireSeat = -1;
+                KtNet.publicRef(ktDb, ktSessionId).update({
+                    phase: 'reveal',
+                    fireBySeat: seat,
+                    ['revealedHands/' + seat]: ktMirrorHands[seat],
+                    lastMove: { type: 'fire', seat: seat }
+                }).catch(() => {});
+                return;
+            }
+            KtNet.publicRef(ktDb, ktSessionId).update({
+                phase: 'playing',
+                turnStartedAt: firebase.database.ServerValue.TIMESTAMP
+            }).catch(err => console.warn('[Hos’n Obe] Rundenstart fehlgeschlagen:', err));
         }
 
         function ktBotPlayTurn() {
@@ -4563,23 +4839,32 @@
             // Der Computer bekommt NUR seine eigene Hand und die offene Mitte -
             // dieselben Informationen wie ein Gast am Handy.
             const move = KtEngine.botDecide(hand, middle, {
-                canKnock: canKnock, canPass: true,
-                turnsPlayed: Number(ktPub.turnsPlayed) || 0, playerCount: count
+                canKnock: canKnock,
+                // Aufgehen ohne Tausch nur, wenn dieser Platz vorher schon einmal
+                // weitergegeben hat - dieselbe Regel wie am Handy.
+                canKnockDirect: !!ktBotPassUsed[seat],
+                canPass: !ktBotPassUsed[seat],
+                turnsPlayed: Number(ktPub.turnsPlayed) || 0, playerCount: count,
+                elapsedSeconds: ktRoundElapsed(), targetSeconds: KT.roundTargetSeconds
             });
 
             const updates = {
                 currentTurnSeat: KtEngine.nextSeat(seat, count),
                 turnsPlayed: (Number(ktPub.turnsPlayed) || 0) + 1,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP,
+                swapWindowSeat: null,
                 lastMove: { type: move.type, seat: seat }
             };
             const reveals = {};
-
+            // Aufgehen haengt jetzt am Tausch: der Computer spielt das
+            // Sechs-Sekunden-Fenster nicht nach, sondern erklaert das Aufgehen
+            // direkt mit seinem Zug (move.knock) - fuer die Gaeste sieht es
+            // genauso aus, nur ohne Wartezeit.
             if (move.type === 'knock') {
                 updates.knockedBySeat = seat;
                 updates.finalTurnsRemaining = count - 1;
                 updates.phase = 'knocked';
-                reveals[seat] = hand;                       // Klopfer deckt sofort auf
+                reveals[seat] = hand;                       // wer aufgeht, deckt sofort auf
             } else {
                 if (move.type === 'all') {
                     updates.lastMove = {
@@ -4600,18 +4885,30 @@
                     ktMirrorHands[seat] = newHand;
                     updates.middleCards = middle;
                 } else {
-                    // 'pass': nichts tauschen, nur weitergeben.
+                    // 'pass': nichts tauschen, nur weitergeben. Damit ist das
+                    // Aufgehen ohne Tausch fuer diesen Platz freigeschaltet.
+                    ktBotPassUsed[seat] = true;
                     updates.middleCards = middle;
                     updates.lastMove = { type: 'pass', seat: seat };
                 }
-                if (ktHasKnocked()) {
-                    reveals[seat] = ktMirrorHands[seat];    // nach dem Klopfen deckt jeder nach seinem Zug auf
+
+                if (move.knock && canKnock && move.type !== 'pass') {
+                    // Getauscht UND aufgegangen - genau der Zug, den ein Gast im
+                    // Sechs-Sekunden-Fenster machen wuerde.
+                    updates.knockedBySeat = seat;
+                    updates.finalTurnsRemaining = count - 1;
+                    updates.phase = 'knocked';
+                    updates.lastMove.knock = true;
+                    reveals[seat] = ktMirrorHands[seat];
+                } else if (ktHasKnocked()) {
+                    reveals[seat] = ktMirrorHands[seat];    // nach dem Aufgehen deckt jeder nach seinem Zug auf
                     const left = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
                     updates.finalTurnsRemaining = left;
                     if (left <= 0) updates.phase = 'reveal';
-                } else if (KtEngine.roundShouldEnd(updates.turnsPlayed, count)) {
+                } else if (KtEngine.roundShouldEnd(updates.turnsPlayed, count,
+                                                   ktRoundElapsed(), KT.roundTargetSeconds)) {
                     // Notbremse: geben alle nur noch weiter, endet die Runde nie
-                    // von selbst. Nach vier Durchgaengen wird aufgedeckt.
+                    // von selbst. Auch das Zeitbudget der Runde greift hier.
                     updates.phase = 'reveal';
                 }
             }
@@ -4639,7 +4936,53 @@
 
         function ktArmTurnTimeout() {
             if (ktPhaseTimer) { clearTimeout(ktPhaseTimer); ktPhaseTimer = null; }
-            ktPhaseTimer = setTimeout(ktSkipTurn, (KT.turnTimeoutSeconds || 20) * 1000);
+            // Zwei Minuten Bedenkzeit, aber nie laenger als das, was von der
+            // Runde noch uebrig ist - sonst wuerde ein weggelegtes Handy die
+            // Rundendauer sprengen.
+            const target = KT.roundTargetSeconds || 95;
+            const rest = Math.max(8, target - ktRoundElapsed());
+            const wait = Math.min(KT.turnTimeoutSeconds || 20, rest);
+            ktPhaseTimer = setTimeout(ktSkipTurn, wait * 1000);
+        }
+
+        /* ---------- Sechs Sekunden zum Aufgehen ----------
+         *
+         * Nutzer-Vorgabe: wer getauscht hat, darf danach noch aufgehen, bevor
+         * der naechste Spieler dran ist. Das Fenster fuehrt das Handy des
+         * Spielers selbst - der TV zeigt nur den Countdown und springt ein,
+         * falls das Handy in dieser Zeit ausfaellt.
+         */
+        function ktStartSwapWindow(seat) {
+            const total = KT.swapWindowSeconds || 6;
+            let left = total;
+            ktSetTimer(left);
+            ktSwapWindowTimer = setInterval(() => {
+                left--;
+                ktSetTimer(left > 0 ? left : null);
+                if (left <= -5) {                       // Handy meldet sich nicht mehr
+                    ktClearSwapWindowTimer();
+                    ktCloseSwapWindow(seat);
+                }
+            }, 1000);
+        }
+
+        function ktCloseSwapWindow(seat) {
+            if (!ktReady() || Number(ktPub.swapWindowSeat) !== seat) return;
+            const count = Number(ktPub.playerCount) || 2;
+            const updates = {
+                swapWindowSeat: null,
+                currentTurnSeat: KtEngine.nextSeat(seat, count),
+                turnStartedAt: firebase.database.ServerValue.TIMESTAMP
+            };
+            if (ktHasKnocked()) {
+                const rest = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
+                updates.finalTurnsRemaining = rest;
+                if (rest <= 0) updates.phase = 'reveal';
+            } else if (KtEngine.roundShouldEnd(Number(ktPub.turnsPlayed) || 0, count,
+                                               ktRoundElapsed(), KT.roundTargetSeconds)) {
+                updates.phase = 'reveal';
+            }
+            KtNet.publicRef(ktDb, ktSessionId).update(updates).catch(() => {});
         }
 
         // Handy zugeklappt oder weggelegt: nach Ablauf wird der Zug uebersprungen,
@@ -4652,13 +4995,15 @@
                 currentTurnSeat: KtEngine.nextSeat(seat, count),
                 turnsPlayed: (Number(ktPub.turnsPlayed) || 0) + 1,
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP,
+                swapWindowSeat: null,
                 lastMove: { type: 'skip', seat: seat }
             };
             if (ktHasKnocked()) {
                 const left = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
                 updates.finalTurnsRemaining = left;
                 if (left <= 0) updates.phase = 'reveal';
-            } else if (KtEngine.roundShouldEnd(updates.turnsPlayed, count)) {
+            } else if (KtEngine.roundShouldEnd(updates.turnsPlayed, count,
+                                               ktRoundElapsed(), KT.roundTargetSeconds)) {
                 updates.phase = 'reveal';
             }
             KtNet.publicRef(ktDb, ktSessionId).update(updates).catch(() => {});
@@ -4700,12 +5045,17 @@
 
         function ktResetSession() {
             ktClearTimers();
+            ktClearRoundBudget();
             ktSetTimer(null);
             ktMirrorHands = {};
             ktLastTurnSeat = null;
             ktLastAnimatedMove = null;
+            ktLastSwapWindowSeat = null;
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
+            ktStarterKey = '';
+            ktBotPassUsed = {};
+            ktPendingFireSeat = -1;
             ktDealing = false;
             ktResolving = false;
             if (!ktReady()) return Promise.resolve();
@@ -4723,12 +5073,16 @@
                     playerCount: null,
                     hostUid: null,
                     botGame: null,
+                    botSeats: null,
                     seats: null,
                     middleCards: null,
                     currentTurnSeat: null,
                     turnsPlayed: null,
                     knockedBySeat: null,
                     finalTurnsRemaining: null,
+                    swapWindowSeat: null,
+                    starterCards: null,
+                    starterSeat: null,
                     revealedHands: null,
                     scores: null,
                     loserSeat: null,
@@ -4763,10 +5117,18 @@
             } else if (phase === 'botRound') {
                 // Vom Handy angefordert: der TV uebernimmt alle Plaetze selbst.
                 ktEnterGame();
-                ktStartBotRound(ktPub.playerCount);
+                ktStartBotRound(ktPub.playerCount, ktPub.botSeats);
+
+            } else if (phase === 'starter') {
+                // Geber ermitteln: die gezogenen Karten stehen kurz gross am
+                // Bildschirm, danach beginnt der Spieler mit der hoechsten.
+                ktEnterGame();
+                ktClearRoundBudget();
+                ktStartCountdown(KT.starterSeconds || 7, ktBeginPlaying);
 
             } else if (phase === 'playing' || phase === 'knocked') {
                 ktEnterGame();
+                ktArmRoundBudget();
                 if (ktIsBotGame()) ktArmBotTurn();
                 else ktArmTurnTimeout();
 
@@ -4797,6 +5159,20 @@
                     if (ktIsBotGame()) ktArmBotTurn();
                     else ktArmTurnTimeout();
                 }
+
+                // Aufgeh-Fenster: hat ein Handy gerade getauscht, laeuft am TV
+                // der Sechs-Sekunden-Countdown mit.
+                const raw = ktPub.swapWindowSeat;
+                const winSeat = (raw === null || raw === undefined) ? null : Number(raw);
+                if (winSeat !== ktLastSwapWindowSeat) {
+                    ktLastSwapWindowSeat = winSeat;
+                    ktClearSwapWindowTimer();
+                    if (winSeat === null) ktSetTimer(null);
+                    else ktStartSwapWindow(winSeat);
+                }
+            } else if (ktLastSwapWindowSeat !== null) {
+                ktLastSwapWindowSeat = null;
+                ktClearSwapWindowTimer();
             }
 
             // Notausstieg vom Handy des Hosts: Runde sofort abraeumen.
