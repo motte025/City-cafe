@@ -755,7 +755,10 @@
             .then(function () {
                 return playSwap(middle, {
                     type: 'single', seat: mySeat,
-                    gave: given, took: taken, middleIndex: middleIndex
+                    gave: given, took: taken,
+                    // handIndex MUSS mit, sonst animiert der Fernseher den
+                    // falschen Platz im Kartenfaecher.
+                    handIndex: handIndex, middleIndex: middleIndex
                 });
             })
             .then(resetSwapMode)

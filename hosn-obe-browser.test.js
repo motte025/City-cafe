@@ -548,6 +548,21 @@ async function run() {
         !(await active.evaluate(() =>
             Array.from(document.querySelectorAll('.kt-btn')).some(b => /bestätigen/i.test(b.textContent)))));
     const afterSwap = pubNow();
+    /*
+     * Ein Tausch ist 1:1 und ortsfest: die genommene Karte landet GENAU auf dem
+     * Platz, den die abgegebene hatte. Der Fernseher animiert nach handIndex -
+     * fehlt der, blendet er den falschen Platz aus und der richtige zeigt die
+     * neue Karte sofort. Am Tisch sah das aus, als wuerde gezaubert.
+     */
+    if (afterSwap.lastMove && afterSwap.lastMove.type === 'single') {
+        const lm = afterSwap.lastMove;
+        check('Handy meldet den getauschten Platz mit',
+            Number.isInteger(lm.handIndex) && lm.handIndex >= 0 && lm.handIndex <= 2,
+            JSON.stringify(lm));
+        check('Mitte traegt die abgegebene Karte am gemeldeten Platz',
+            (afterSwap.middleCards || [])[lm.middleIndex] === lm.gave,
+            JSON.stringify(afterSwap.middleCards) + ' vs ' + JSON.stringify(lm));
+    }
     check('turnsPlayed hochgezählt', afterSwap.turnsPlayed === 1, String(afterSwap.turnsPlayed));
     check('Zug ist beim anderen Spieler', afterSwap.currentTurnSeat !== turnSeat);
     check('Vor der zweiten Runde kein Aufgeh-Fenster',
@@ -801,8 +816,31 @@ async function run() {
 
     // Runde durchlaufen lassen
     let sawKnock = false, sawProgressiveReveal = false, maxRevealDuringPlay = 0;
+    let swapsGeprueft = 0, swapsFalsch = 0, letzterZug = null;
     for (let i = 0; i < 900; i++) {
         const p = pubNow2();
+        /*
+         * Jeden Einzeltausch des Computers auf Ortstreue pruefen: die genommene
+         * Karte muss an genau dem Platz liegen, den lastMove nennt, und die
+         * abgegebene an ihrem Platz in der Mitte. Kein Umsortieren im Faecher.
+         */
+        if (p.lastMove && p.lastMove.type === 'single' && JSON.stringify(p.lastMove) !== letzterZug) {
+            letzterZug = JSON.stringify(p.lastMove);
+            const lm = p.lastMove;
+            // ktMirrorHands ist ein top-level `let` - das legt KEINE
+            // window-Eigenschaft an, der blanke Name greift aber.
+            const handPasst = await tv2.evaluate((m) => {
+                if (typeof ktMirrorHands === 'undefined') return null;
+                const h = ktMirrorHands[m.seat];
+                return !!(h && h[m.handIndex] === m.took);
+            }, lm).catch(() => null);
+            swapsGeprueft++;
+            const mittePasst = (p.middleCards || [])[lm.middleIndex] === lm.gave;
+            if (!Number.isInteger(lm.handIndex) || handPasst === false || !mittePasst) {
+                swapsFalsch++;
+                if (swapsFalsch === 1) console.log('   (erster fehlerhafter Tausch: ' + JSON.stringify(lm) + ')');
+            }
+        }
         if (p.knockedBySeat !== undefined && p.knockedBySeat !== null) sawKnock = true;
         if (p.phase === 'knocked') {
             const n = Object.keys(p.revealedHands || {}).length;
@@ -813,6 +851,10 @@ async function run() {
         if (p.phase === 'idle' && i > 150) break;
         await sleep(60);
     }
+
+    check('Computer tauscht ortstreu 1:1 (kein Verschieben im Fächer)',
+        swapsGeprueft > 0 && swapsFalsch === 0,
+        swapsGeprueft + ' Tausche geprüft, ' + swapsFalsch + ' fehlerhaft');
 
     const midMin = await tv2.evaluate(() => window.__midMin);
     check('Mitte klafft beim Tausch nie auf', midMin === 3,

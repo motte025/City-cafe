@@ -4785,10 +4785,21 @@
 
             if (move.type === 'single') {
                 const idx = isNaN(Number(move.middleIndex)) ? 1 : Number(move.middleIndex);
-                swapAt(idx, move.gave, move.took, 2, 0);
+                /*
+                 * Der Platz im Faecher, der sich aendert. Steht er nicht im Zug
+                 * (aeltere Daten), wird die genommene Karte in der Hand gesucht -
+                 * getauscht wird immer an Ort und Stelle, nie umsortiert.
+                 */
+                let hIdx = Number(move.handIndex);
+                if (isNaN(hIdx) || hIdx < 0 || hIdx > 2) {
+                    const mine = ktMirrorHands[seat] || [];
+                    hIdx = mine.indexOf(move.took);
+                    if (hIdx < 0) hIdx = 2;
+                }
+                swapAt(idx, move.gave, move.took, hIdx, 0);
                 ktRenderMiddle();
                 ktRenderSeats();
-                runSwap(idx, move.gave, move.took, 2, 0);
+                runSwap(idx, move.gave, move.took, hIdx, 0);
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP;
 
             } else if (move.type === 'all') {
@@ -5128,6 +5139,11 @@
                     updates.lastMove = {
                         type: 'single', seat: seat,
                         gave: hand[move.handIndex], took: middle[move.middleIndex],
+                        // handIndex MUSS mit: nur so weiss der Fernseher, welcher
+                        // Platz im Faecher sich aendert. Ohne ihn zeigte der
+                        // falsche Platz sofort die neue Karte - das sah aus, als
+                        // wuerde der Computer die Karte herbeizaubern.
+                        handIndex: move.handIndex,
                         middleIndex: move.middleIndex
                     };
                     newHand[move.handIndex] = middle[move.middleIndex];
