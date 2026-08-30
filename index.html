@@ -2613,10 +2613,18 @@
         const UCL_TABLE_SLOT_MS = 60000;
 
         // Wappen liegen als PNG im Repo (wappen/<teamId>.png), damit nicht bei jedem
-        // Seitenaufruf gegen Wikimedia/imgur gehotlinkt wird. Faellt ein Bild aus,
-        // springt onerror auf die Original-URL aus der API zurueck. Gilt nur fuer
-        // die 18 deutschen Vereine - Champions-League-Wappen kommen direkt von der API.
-        const BL_LOCAL_CRESTS = new Set([6, 7, 9, 16, 31, 40, 65, 80, 81, 87, 91, 95, 100, 112, 134, 175, 198, 1635]);
+        // Seitenaufruf gegen Wikimedia/imgur/UEFA gehotlinkt wird. Faellt ein Bild aus,
+        // springt onerror auf die Original-URL aus der API zurueck.
+        // Die 18 deutschen Bundesliga-Vereine, dazu alle Champions-League-Teilnehmer der
+        // Saison 2026/27 ohne eigenes Bundesliga-Wappen: bei denen schlugen Live-URLs
+        // regelmaessig fehl - ein Teil lief nur ueber http:// (von HTTPS aus als Mixed
+        // Content geblockt), ein Teil traf Wikimedias Rate-Limit (HTTP 429) bei
+        // wiederholten Seitenaufrufen.
+        const BL_LOCAL_CRESTS = new Set([
+            6, 7, 9, 16, 31, 40, 65, 80, 81, 87, 91, 95, 100, 112, 134, 175, 198, 1635,
+            356, 366, 370, 376, 378, 382, 733, 1133, 1204, 1205, 1210, 1217, 1484, 1770,
+            1804, 2281, 2331, 2554, 2556, 4241, 4244, 4578, 5139, 5699, 5707, 5962, 8787, 8798
+        ]);
 
         // Eine Liga-"Instanz" buendelt Saison-Rahmendaten, aktuellen Spieltag und
         // Tabelle. bl1 und ucl laufen komplett unabhaengig nebeneinander her -
@@ -2808,7 +2816,11 @@
 
         function blCrestImg(team, cls) {
             const id = blTeamId(team);
-            const remote = blField(team, 'teamIconUrl') || '';
+            // OpenLigaDB liefert bei manchen Teams (v.a. internationale Vereine) noch
+            // http:// -Links. Von der per HTTPS ausgelieferten Seite aus blockt der
+            // Browser das als Mixed Content - deshalb hier hart auf https hochstufen.
+            let remote = blField(team, 'teamIconUrl') || '';
+            if (remote.startsWith('http://')) remote = 'https://' + remote.slice('http://'.length);
             const local = (id != null && BL_LOCAL_CRESTS.has(Number(id))) ? 'wappen/' + id + '.png' : remote;
             const name = blField(team, 'teamName') || '';
             return `<img class="${cls}" src="${blEsc(local)}" data-bl-remote="${blEsc(remote)}" alt="${blEsc(name)}" onerror="blCrestFallback(this)">`;
