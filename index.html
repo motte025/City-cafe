@@ -581,6 +581,74 @@
             color: rgba(255,255,255,0.65); font-size: 24px; font-weight: 700; line-height: 1.5;
         }
 
+        /* ---------- Champions-League-Tabelle (Vollbild, 3 Spalten) ---------- */
+        .ucl-fullscreen-table {
+            display: none; position: absolute; inset: 0; z-index: 500;
+            background: linear-gradient(160deg, #0b0f2e 0%, #0a1426 55%, #1a0a2e 100%);
+            padding: 40px 48px; box-sizing: border-box; flex-direction: column;
+        }
+        .ucl-fullscreen-table.active { display: flex; }
+        .ucl-fs-header { display: flex; justify-content: space-between; align-items: flex-end; height: 70px; margin-bottom: 20px; flex-shrink: 0; }
+        .ucl-fs-header h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900; color: #ffffff;
+            text-transform: uppercase; letter-spacing: 1px; margin: 0;
+        }
+        .ucl-fs-header p { font-size: 18px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; margin: 6px 0 0; }
+        .ucl-fs-header-right { display: flex; align-items: center; gap: 16px; }
+
+        .ucl-fs-columns { display: flex; gap: 28px; flex: 1; min-height: 0; }
+        .ucl-fs-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .ucl-fs-col-head, .ucl-fs-row {
+            display: grid; grid-template-columns: 46px 70px 1fr 50px 70px 62px;
+            align-items: center; gap: 12px; padding: 0 16px; box-sizing: border-box;
+        }
+        .ucl-fs-col-head {
+            height: 30px; margin-bottom: 10px; font-size: 14px; font-weight: 800; color: #94a3b8;
+            text-transform: uppercase; letter-spacing: 1.4px;
+        }
+        .ucl-fs-col-body { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .ucl-fs-row {
+            height: 64px; border-radius: 10px; border: 1px solid transparent;
+            background: rgba(255,255,255,0.035); position: relative;
+        }
+        .ucl-fs-row::before {
+            content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 5px;
+            border-radius: 0 3px 3px 0; background: transparent;
+        }
+        .ucl-fs-row.zone-direct { background: rgba(0, 242, 254, 0.09); }
+        .ucl-fs-row.zone-direct::before { background: #00f2fe; box-shadow: 0 0 9px rgba(0, 242, 254, 0.85); }
+        .ucl-fs-row.zone-playoff { background: rgba(251, 191, 36, 0.085); }
+        .ucl-fs-row.zone-playoff::before { background: #fbbf24; box-shadow: 0 0 9px rgba(251, 191, 36, 0.8); }
+        .ucl-fs-row.zone-out { background: rgba(255, 51, 85, 0.06); }
+        .ucl-fs-row.zone-out::before { background: #ff3355; box-shadow: 0 0 9px rgba(255, 51, 85, 0.6); opacity: 0.65; }
+        .ucl-fs-row.is-live::after {
+            content: ''; position: absolute; inset: 0; border-radius: 10px; pointer-events: none;
+            border: 1px solid rgba(255, 51, 51, 0.85); box-shadow: 0 0 14px rgba(255, 51, 51, 0.3);
+            animation: blRowLivePulse 1.6s ease-in-out infinite;
+        }
+        .ucl-fs-rank {
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff;
+            text-align: center; font-variant-numeric: tabular-nums;
+        }
+        .ucl-fs-crest { width: 56px; height: 36px; object-fit: contain; justify-self: center; filter: drop-shadow(0 0 3px rgba(255,255,255,0.8)); }
+        .ucl-fs-name {
+            font-size: 22px; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 10px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+        }
+        .ucl-fs-name .bl-live-dot { width: 11px; height: 11px; }
+        .ucl-fs-num { font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.82); text-align: center; font-variant-numeric: tabular-nums; }
+        .ucl-fs-diff.is-pos { color: #34d399; }
+        .ucl-fs-diff.is-neg { color: #ff6b6b; }
+        .ucl-fs-pts {
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #00f2fe;
+            text-align: center; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+        }
+
+        .ucl-fs-legend { display: flex; align-items: center; gap: 26px; height: 36px; margin-top: 16px; flex-shrink: 0; }
+        .ucl-fs-legend-item { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .ucl-fs-legend-swatch { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
+        .ucl-fs-legend-note { margin-left: auto; font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: none; letter-spacing: 0.5px; }
+
         .event-row {
             display: flex; align-items: center; gap: 24px;
             background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1192,6 +1260,14 @@
            Luecke zwischen Hinweistext und Live-Ticker-Zeile. */
         #media-view-bl-matchday.active ~ .kt-launcher { left: 565px; top: 500px; bottom: auto; }
         #media-view-bl-matchday.active ~ .kt-launcher.kt-pos-preview { top: 555px; }
+        /* Champions-League-Spieltag nutzt dieselbe Buehne/denselben Platzbedarf -
+           gleiche Loesung wie bei der Bundesliga. */
+        #media-view-ucl-matchday.active ~ .kt-launcher { left: 565px; top: 500px; bottom: auto; }
+        #media-view-ucl-matchday.active ~ .kt-launcher.kt-pos-preview { top: 555px; }
+        /* Die Vollbild-CL-Tabelle haengt NICHT unter .media-zone, sondern direkt
+           unter #dashboard-scaler (siehe .ucl-fullscreen-table) - sie deckt den
+           kompletten Bildschirm samt Starter-QR per z-index einfach ab, ganz ohne
+           Geschwisterselektor-Trick. */
 
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
@@ -1337,6 +1413,27 @@
                         <div class="bl-spotlight" id="bl-md-spotlight"></div>
                         <div class="bl-ticker-bar">
                             <div class="bl-ticker-wrap"><div class="bl-ticker-move" id="bl-md-ticker"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Champions-League-Spieltag: gleiche Buehne/Rendering wie die Bundesliga
+                     (runUclMatchdayState statt runBlMatchdayState), eigene Karten im DOM. -->
+                <div class="media-inner-view" id="media-view-ucl-matchday">
+                    <div class="bl-stage">
+                        <div class="bl-header">
+                            <div>
+                                <h2 id="ucl-md-title">🏆 Champions League · –</h2>
+                                <p id="ucl-md-sub">Ergebnisse &amp; Anstoßzeiten</p>
+                            </div>
+                            <div class="bl-header-right">
+                                <div class="bl-source-chip" id="ucl-md-stand">Stand --:--</div>
+                                <div class="bl-live-badge" id="ucl-md-live" style="display: none;"><span class="bl-live-dot"></span>Live</div>
+                            </div>
+                        </div>
+                        <div class="bl-spotlight" id="ucl-md-spotlight"></div>
+                        <div class="bl-ticker-bar">
+                            <div class="bl-ticker-wrap"><div class="bl-ticker-move" id="ucl-md-ticker"></div></div>
                         </div>
                     </div>
                 </div>
@@ -1585,6 +1682,53 @@
         </div>
 
         <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-24 · v6.1</div>
+
+        <!-- Champions-League-Tabelle im Vollbild: eigenes Element direkt unter
+             #dashboard-scaler (nicht unter .media-zone), damit sie per z-index
+             wirklich den kompletten 1920x1080-Bildschirm abdeckt statt vom
+             overflow:hidden der Medienbuehne beschnitten zu werden. Sidebar/Uhr/
+             Ticker laufen darunter unveraendert weiter, sie werden nur ueberdeckt. -->
+        <div class="ucl-fullscreen-table" id="ucl-fullscreen-table">
+            <div class="ucl-fs-header">
+                <div>
+                    <h2>🏆 Champions League · Tabelle</h2>
+                    <p id="ucl-fs-sub">Ligaphase</p>
+                </div>
+                <div class="ucl-fs-header-right">
+                    <div class="bl-source-chip" id="ucl-fs-stand">Stand --:--</div>
+                    <div class="bl-live-badge" id="ucl-fs-live" style="display: none;"><span class="bl-live-dot"></span>Live</div>
+                </div>
+            </div>
+            <div class="ucl-fs-columns">
+                <div class="ucl-fs-col">
+                    <div class="ucl-fs-col-head">
+                        <span style="text-align: center;">#</span><span></span><span>Verein</span>
+                        <span style="text-align: center;">Sp</span><span style="text-align: center;">Diff</span><span style="text-align: center;">Pkt</span>
+                    </div>
+                    <div class="ucl-fs-col-body" id="ucl-fs-body-1"></div>
+                </div>
+                <div class="ucl-fs-col">
+                    <div class="ucl-fs-col-head">
+                        <span style="text-align: center;">#</span><span></span><span>Verein</span>
+                        <span style="text-align: center;">Sp</span><span style="text-align: center;">Diff</span><span style="text-align: center;">Pkt</span>
+                    </div>
+                    <div class="ucl-fs-col-body" id="ucl-fs-body-2"></div>
+                </div>
+                <div class="ucl-fs-col">
+                    <div class="ucl-fs-col-head">
+                        <span style="text-align: center;">#</span><span></span><span>Verein</span>
+                        <span style="text-align: center;">Sp</span><span style="text-align: center;">Diff</span><span style="text-align: center;">Pkt</span>
+                    </div>
+                    <div class="ucl-fs-col-body" id="ucl-fs-body-3"></div>
+                </div>
+            </div>
+            <div class="ucl-fs-legend">
+                <span class="ucl-fs-legend-item"><span class="ucl-fs-legend-swatch" style="background: #00f2fe; box-shadow: 0 0 8px rgba(0,242,254,0.8);"></span>Direkt Achtelfinale (1-8)</span>
+                <span class="ucl-fs-legend-item"><span class="ucl-fs-legend-swatch" style="background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.8);"></span>Playoff Achtelfinale (9-24)</span>
+                <span class="ucl-fs-legend-item"><span class="ucl-fs-legend-swatch" style="background: #ff3355; box-shadow: 0 0 8px rgba(255,51,85,0.8);"></span>Ausgeschieden (25-36)</span>
+                <span class="ucl-fs-legend-note">Daten: OpenLigaDB</span>
+            </div>
+        </div>
 
     </div>
 
@@ -2449,6 +2593,7 @@
         // nachhinken. Das ist eine Eigenschaft der Quelle, kein Fehler im Widget.
         const BL_API = 'https://api.openligadb.de';
         const BL_LEAGUE = 'bl1';
+        const UCL_LEAGUE = 'ucl';
         const VIENNA_TZ = 'Europe/Vienna';
 
         const BL_SPOTLIGHT_MS = 6500;            // Wechsel der Spotlight-Karte
@@ -2461,17 +2606,36 @@
         const BL_LIVE_WINDOW_MS = 3 * 60 * 60 * 1000; // Sicherheitsnetz: nach 3h nie mehr "live"
         const BL_PAUSE_DAYS = 14;                // laenger als das bis zum Anstoss = Slots aussetzen
 
+        // Champions League: eigener Spotlight-Slot, danach die Tabelle im Vollbild
+        // (36 Teams passen nicht ins kompakte 2-Spalten-Layout der Bundesliga-Tabelle).
+        const UCL_SPOTLIGHT_MS = 6500;
+        const UCL_MATCHDAY_SLOT_MS = 45000;
+        const UCL_TABLE_SLOT_MS = 60000;
+
         // Wappen liegen als PNG im Repo (wappen/<teamId>.png), damit nicht bei jedem
         // Seitenaufruf gegen Wikimedia/imgur gehotlinkt wird. Faellt ein Bild aus,
-        // springt onerror auf die Original-URL aus der API zurueck.
+        // springt onerror auf die Original-URL aus der API zurueck. Gilt nur fuer
+        // die 18 deutschen Vereine - Champions-League-Wappen kommen direkt von der API.
         const BL_LOCAL_CRESTS = new Set([6, 7, 9, 16, 31, 40, 65, 80, 81, 87, 91, 95, 100, 112, 134, 175, 198, 1635]);
 
-        let blSeasonSchedule = { season: null, matchdays: [], fetchedAt: 0 };
-        let blMatchdayData = { order: null, label: '', matches: [], fetchedAt: 0 };
-        let blTableData = { rows: [], fetchedAt: 0 };
-        let blPollTimer = null;
+        // Eine Liga-"Instanz" buendelt Saison-Rahmendaten, aktuellen Spieltag und
+        // Tabelle. bl1 und ucl laufen komplett unabhaengig nebeneinander her -
+        // eigener Puffer, eigener Poll-Rhythmus, eigener Fehlerfall.
+        function blMakeLeagueState(shortcut) {
+            return {
+                shortcut,
+                seasonSchedule: { season: null, matchdays: [], fetchedAt: 0 },
+                matchdayData: { order: null, label: '', matches: [], fetchedAt: 0 },
+                tableData: { rows: [], fetchedAt: 0 },
+                pollTimer: null
+            };
+        }
+        const BL_STATE = blMakeLeagueState(BL_LEAGUE);
+        const UCL_STATE = blMakeLeagueState(UCL_LEAGUE);
         let blSpotlightTimer = null;
         let blSpotlightIndex = 0;
+        let uclSpotlightTimer = null;
+        let uclSpotlightIndex = 0;
 
         const blTimeFmt = new Intl.DateTimeFormat('de-AT', { timeZone: VIENNA_TZ, hour: '2-digit', minute: '2-digit' });
         const blWeekdayFmt = new Intl.DateTimeFormat('de-AT', { timeZone: VIENNA_TZ, weekday: 'short' });
@@ -2571,9 +2735,9 @@
             return elapsed >= 0 && elapsed < BL_LIVE_WINDOW_MS;
         }
 
-        function blAnyLive(nowMs) {
+        function blAnyLive(state, nowMs) {
             const now = nowMs || Date.now();
-            return (blMatchdayData.matches || []).some(m => blIsLive(m, now));
+            return (state.matchdayData.matches || []).some(m => blIsLive(m, now));
         }
 
         // OpenLigaDB kennt keine laufende Spielminute - sie wird aus dem Anstoss
@@ -2668,14 +2832,17 @@
 
         // Ganze Saison einmal (bzw. taeglich) laden, um pro Spieltag den Datumsbereich
         // zu kennen. Nur daraus laesst sich lokal bestimmen, was "jetzt" dran ist.
-        async function blLoadSeasonSchedule() {
+        // Funktioniert unveraendert fuer die Champions League: "Spieltag" heisst dort
+        // je nach Phase Ligaphase-Spieltag, Playoff oder K.-o.-Runde - OpenLigaDB
+        // liefert das als dieselbe group/groupOrderID-Struktur wie bei bl1.
+        async function blLoadSeasonSchedule(state) {
             const season = blSeasonYear();
-            const fresh = blSeasonSchedule.season === season &&
-                          blSeasonSchedule.matchdays.length > 0 &&
-                          (Date.now() - blSeasonSchedule.fetchedAt) < BL_SCHEDULE_TTL_MS;
-            if (fresh) return blSeasonSchedule;
+            const fresh = state.seasonSchedule.season === season &&
+                          state.seasonSchedule.matchdays.length > 0 &&
+                          (Date.now() - state.seasonSchedule.fetchedAt) < BL_SCHEDULE_TTL_MS;
+            if (fresh) return state.seasonSchedule;
 
-            const all = await blFetchJson(`/getmatchdata/${BL_LEAGUE}/${season}`);
+            const all = await blFetchJson(`/getmatchdata/${state.shortcut}/${season}`);
             const byOrder = new Map();
             (all || []).forEach(m => {
                 const group = blField(m, 'group');
@@ -2691,18 +2858,20 @@
                 if (kickoff > entry.last) entry.last = kickoff;
             });
             const matchdays = [...byOrder.values()].sort((a, b) => a.first - b.first);
-            if (matchdays.length) blSeasonSchedule = { season, matchdays, fetchedAt: Date.now() };
-            return blSeasonSchedule;
+            if (matchdays.length) state.seasonSchedule = { season, matchdays, fetchedAt: Date.now() };
+            return state.seasonSchedule;
         }
 
         // Eigene Regel statt OpenLigaDBs "aktueller Gruppe":
         // Spieltag N laeuft ab seinem ersten Anstoss bis einschliesslich Montag.
         // Ab Dienstag 08:00 Wiener Zeit uebernimmt N+1 (dann nur Anstosszeiten).
         // In einer englischen Woche greift der frueher eintretende Fall: schon der
-        // erste Anpfiff von N+1 schaltet um.
-        function blCurrentMatchday(nowDate) {
+        // erste Anpfiff von N+1 schaltet um. Bei der Champions League liegen zwischen
+        // zwei Runden oft mehrere Wochen - das schadet nicht, chosen bleibt einfach
+        // laenger stehen, bis die naechste Runde tatsaechlich beginnt.
+        function blCurrentMatchday(state, nowDate) {
             const now = (nowDate || new Date()).getTime();
-            const mds = blSeasonSchedule.matchdays;
+            const mds = state.seasonSchedule.matchdays;
             if (!mds.length) return null;
             let chosen = mds[0];
             for (let i = 0; i < mds.length - 1; i++) {
@@ -2744,10 +2913,10 @@
         // Abruftakt: waehrend Spiele laufen (oder kurz davor/danach) alle 75s,
         // sonst stuendlich. Die Zeiten kommen aus den echten Anstossdaten statt aus
         // fest verdrahteten "Fr 20:30 / Sa 15:30" - das deckt englische Wochen mit ab.
-        function blPollIntervalMs() {
+        function blPollIntervalMs(state) {
             const now = Date.now();
-            const matches = blMatchdayData.matches || [];
-            if (!matches.length) return blSeasonSchedule.matchdays.length ? BL_POLL_IDLE_MS : BL_POLL_RETRY_MS;
+            const matches = state.matchdayData.matches || [];
+            if (!matches.length) return state.seasonSchedule.matchdays.length ? BL_POLL_IDLE_MS : BL_POLL_RETRY_MS;
             let nextKickoff = Infinity;
             let recentlyFinished = false;
             for (const m of matches) {
@@ -2763,38 +2932,41 @@
             return BL_POLL_IDLE_MS;
         }
 
-        async function blRefresh() {
+        // onRefreshed wird nach jedem erfolgreichen Abruf aufgerufen (nicht nur beim
+        // ersten) - so kann jede Liga ihr eigenes sichtbares Widget nachziehen lassen.
+        async function blRefresh(state, onRefreshed) {
             let retry = false;
             try {
-                await blLoadSeasonSchedule();
-                const md = blCurrentMatchday();
+                await blLoadSeasonSchedule(state);
+                const md = blCurrentMatchday(state);
                 if (md) {
-                    const matches = await blFetchJson(`/getmatchdata/${BL_LEAGUE}/${blSeasonSchedule.season}/${md.order}`);
+                    const matches = await blFetchJson(`/getmatchdata/${state.shortcut}/${state.seasonSchedule.season}/${md.order}`);
                     if (Array.isArray(matches)) {
-                        blMatchdayData = { order: md.order, label: md.label, matches, fetchedAt: Date.now() };
+                        state.matchdayData = { order: md.order, label: md.label, matches, fetchedAt: Date.now() };
                     }
                 }
-                const table = await blFetchJson(`/getbltable/${BL_LEAGUE}/${blSeasonSchedule.season}`);
+                const table = await blFetchJson(`/getbltable/${state.shortcut}/${state.seasonSchedule.season}`);
                 if (Array.isArray(table) && table.length) {
-                    blTableData = { rows: blRankTable(table), fetchedAt: Date.now() };
+                    state.tableData = { rows: blRankTable(table), fetchedAt: Date.now() };
                 }
-                blRefreshVisibleWidget();
+                if (onRefreshed) onRefreshed();
             } catch (e) {
                 retry = true;
-                console.log('OpenLigaDB-Abruf fehlgeschlagen: ' + e.message);
+                console.log('OpenLigaDB-Abruf (' + state.shortcut + ') fehlgeschlagen: ' + e.message);
             } finally {
                 // Der Poller haengt bewusst NICHT an sequenceTimers: er laeuft weiter,
                 // waehrend ein ganz anderer Slot zu sehen ist - sonst waere die Tabelle
                 // beim naechsten Einblenden jedes Mal veraltet.
-                clearTimeout(blPollTimer);
-                blPollTimer = setTimeout(blRefresh, retry ? BL_POLL_RETRY_MS : blPollIntervalMs());
+                clearTimeout(state.pollTimer);
+                state.pollTimer = setTimeout(() => blRefresh(state, onRefreshed), retry ? BL_POLL_RETRY_MS : blPollIntervalMs(state));
             }
         }
 
         // Slots aussetzen, wenn nichts Sinnvolles anzuzeigen ist: kein Abruf geglueckt
-        // oder Sommer-/Winterpause (naechster Anstoss mehr als 14 Tage entfernt).
-        function blSlotsAvailable() {
-            const matches = blMatchdayData.matches || [];
+        // oder Sommer-/Winterpause bzw. bei der Champions League die Pause zwischen
+        // zwei Runden (naechster Anstoss mehr als 14 Tage entfernt).
+        function blSlotsAvailable(state) {
+            const matches = state.matchdayData.matches || [];
             if (!matches.length) return false;
             const kicks = matches.map(blKickoff).filter(Boolean).map(d => d.getTime());
             if (!kicks.length) return false;
@@ -2839,10 +3011,14 @@
             return `<div class="bl-scorer-col${isAway ? ' is-away' : ''}">${lines.join('')}</div>`;
         }
 
-        function blRenderSpotlight(match) {
-            const box = document.getElementById('bl-md-spotlight');
+        // boxId: welche Spotlight-Karte (bl-md-spotlight oder ucl-md-spotlight).
+        // withKtLauncher: nur bei der Bundesliga true - der Starter-QR haengt per
+        // CSS-Geschwisterselektor an #media-view-bl-matchday, ein Champions-League-
+        // Rendering soll seine Position also nicht mit beeinflussen.
+        function blRenderSpotlight(boxId, match, withKtLauncher) {
+            const box = document.getElementById(boxId);
             if (!box) return;
-            const ktLauncher = document.getElementById('kt-launcher');
+            const ktLauncher = withKtLauncher ? document.getElementById('kt-launcher') : null;
             if (!match) {
                 box.innerHTML = `<div class="bl-empty-msg">Aktuell keine Spieldaten verfügbar.<br>Nächster Spieltag folgt in Kürze ⚽</div>`;
                 if (ktLauncher) ktLauncher.classList.add('kt-pos-preview');
@@ -2901,11 +3077,11 @@
             </div>`;
         }
 
-        function blRenderTicker() {
-            const el = document.getElementById('bl-md-ticker');
+        function blRenderTicker(elId, state) {
+            const el = document.getElementById(elId);
             if (!el) return;
             const now = Date.now();
-            const matches = (blMatchdayData.matches || []).slice()
+            const matches = (state.matchdayData.matches || []).slice()
                 .sort((a, b) => {
                     const ka = blKickoff(a), kb = blKickoff(b);
                     return (ka ? ka.getTime() : Infinity) - (kb ? kb.getTime() : Infinity);
@@ -2952,7 +3128,7 @@
         let blTopPhase = 0; // 0 = Spiel, 1..N = Torschuetzen-Seite N (statt zu verkleinern)
 
         function blTopOrderedMatches() {
-            return (blMatchdayData.matches || []).slice().sort((a, b) => {
+            return (BL_STATE.matchdayData.matches || []).slice().sort((a, b) => {
                 const ka = blKickoff(a), kb = blKickoff(b);
                 return (ka ? ka.getTime() : Infinity) - (kb ? kb.getTime() : Infinity);
             });
@@ -3032,7 +3208,7 @@
             const el = document.getElementById('bl-top-ticker');
             const label = document.getElementById('bl-top-label');
             if (!el) return;
-            if (label) label.textContent = blMatchdayData.order ? `⚽ Bundesliga · Spieltag ${blMatchdayData.order}` : '⚽ Bundesliga';
+            if (label) label.textContent = BL_STATE.matchdayData.order ? `⚽ Bundesliga · Spieltag ${BL_STATE.matchdayData.order}` : '⚽ Bundesliga';
 
             const matches = blTopOrderedMatches();
             if (!matches.length) {
@@ -3080,22 +3256,27 @@
             blTopCycleTimer = setInterval(blAdvanceTopCycle, BL_TOP_PHASE_MS);
         }
 
-        function blRenderMatchdayChrome() {
-            const now = Date.now();
-            const title = document.getElementById('bl-md-title');
-            const sub = document.getElementById('bl-md-sub');
-            const stand = document.getElementById('bl-md-stand');
-            const live = document.getElementById('bl-md-live');
-            const md = blSeasonSchedule.matchdays.find(m => m.order === blMatchdayData.order);
+        // Element-IDs je Liga - dieselbe Chrome-/Ticker-/Spotlight-Rendering-Logik
+        // fuellt zwei komplett getrennte Kartensaetze im DOM (siehe HTML weiter unten).
+        const BL_MD_IDS = { title: 'bl-md-title', sub: 'bl-md-sub', stand: 'bl-md-stand', live: 'bl-md-live', spotlight: 'bl-md-spotlight', ticker: 'bl-md-ticker' };
+        const UCL_MD_IDS = { title: 'ucl-md-title', sub: 'ucl-md-sub', stand: 'ucl-md-stand', live: 'ucl-md-live', spotlight: 'ucl-md-spotlight', ticker: 'ucl-md-ticker' };
 
-            if (title) title.textContent = '⚽ 1. Bundesliga · Spieltag ' + (blMatchdayData.order || '–');
+        function blRenderMatchdayChrome(ids, state, titleText) {
+            const now = Date.now();
+            const title = document.getElementById(ids.title);
+            const sub = document.getElementById(ids.sub);
+            const stand = document.getElementById(ids.stand);
+            const live = document.getElementById(ids.live);
+            const md = state.seasonSchedule.matchdays.find(m => m.order === state.matchdayData.order);
+
+            if (title) title.textContent = titleText;
             if (sub) {
                 sub.textContent = md
-                    ? `${blDayLabel(md.first)} – ${blDayLabel(md.last)} · Saison ${blSeasonSchedule.season}/${String((blSeasonSchedule.season || 0) + 1).slice(-2)}`
+                    ? `${blDayLabel(md.first)} – ${blDayLabel(md.last)} · Saison ${state.seasonSchedule.season}/${String((state.seasonSchedule.season || 0) + 1).slice(-2)}`
                     : 'Ergebnisse & Anstoßzeiten';
             }
-            if (stand) stand.textContent = blStandText(blMatchdayData.fetchedAt);
-            if (live) live.style.display = blAnyLive(now) ? 'flex' : 'none';
+            if (stand) stand.textContent = blStandText(state.matchdayData.fetchedAt);
+            if (live) live.style.display = blAnyLive(state, now) ? 'flex' : 'none';
         }
 
         function blStopSpotlight() {
@@ -3105,26 +3286,59 @@
         function runBlMatchdayState(nextStateIndex) {
             document.getElementById('media-view-bl-matchday').classList.add('active');
             blStopSpotlight();
-            blRenderMatchdayChrome();
-            blRenderTicker();
-            retriggerAnim(document.getElementById('bl-md-ticker'));
+            const titleText = () => '⚽ 1. Bundesliga · Spieltag ' + (BL_STATE.matchdayData.order || '–');
+            blRenderMatchdayChrome(BL_MD_IDS, BL_STATE, titleText());
+            blRenderTicker(BL_MD_IDS.ticker, BL_STATE);
+            retriggerAnim(document.getElementById(BL_MD_IDS.ticker));
 
-            let order = blSpotlightOrder(blMatchdayData.matches || [], Date.now());
+            let order = blSpotlightOrder(BL_STATE.matchdayData.matches || [], Date.now());
             blSpotlightIndex = 0;
-            blRenderSpotlight(order[0] || null);
+            blRenderSpotlight(BL_MD_IDS.spotlight, order[0] || null, true);
 
             // repeat() haengt am zentralen Timer-Set und wird beim naechsten Slot
             // automatisch mit abgeraeumt.
             blSpotlightTimer = repeat(() => {
-                order = blSpotlightOrder(blMatchdayData.matches || [], Date.now());
+                order = blSpotlightOrder(BL_STATE.matchdayData.matches || [], Date.now());
                 if (!order.length) return;
                 blSpotlightIndex = (blSpotlightIndex + 1) % order.length;
-                blRenderSpotlight(order[blSpotlightIndex]);
-                blRenderMatchdayChrome();
+                blRenderSpotlight(BL_MD_IDS.spotlight, order[blSpotlightIndex], true);
+                blRenderMatchdayChrome(BL_MD_IDS, BL_STATE, titleText());
             }, BL_SPOTLIGHT_MS);
 
             mediaStateIndex = nextStateIndex;
             globalMasterTimer = later(runMasterSequence, BL_MATCHDAY_SLOT_MS);
+        }
+
+        function uclStopSpotlight() {
+            if (uclSpotlightTimer) { cancelTimer(uclSpotlightTimer); uclSpotlightTimer = null; }
+        }
+
+        // Champions-League-Pendant zu runBlMatchdayState - eigener Spotlight-Timer/
+        // -Index, eigene Karten im DOM, sonst dieselbe Rendering-Logik. Der Titel
+        // nutzt das Spieltag-Label direkt statt "Spieltag N": bei der Champions
+        // League heisst eine Runde auch mal "Playoffs" oder "Achtelfinale Hinspiele".
+        function runUclMatchdayState(nextStateIndex) {
+            document.getElementById('media-view-ucl-matchday').classList.add('active');
+            uclStopSpotlight();
+            const titleText = () => '🏆 Champions League · ' + (UCL_STATE.matchdayData.label || '–');
+            blRenderMatchdayChrome(UCL_MD_IDS, UCL_STATE, titleText());
+            blRenderTicker(UCL_MD_IDS.ticker, UCL_STATE);
+            retriggerAnim(document.getElementById(UCL_MD_IDS.ticker));
+
+            let order = blSpotlightOrder(UCL_STATE.matchdayData.matches || [], Date.now());
+            uclSpotlightIndex = 0;
+            blRenderSpotlight(UCL_MD_IDS.spotlight, order[0] || null, true);
+
+            uclSpotlightTimer = repeat(() => {
+                order = blSpotlightOrder(UCL_STATE.matchdayData.matches || [], Date.now());
+                if (!order.length) return;
+                uclSpotlightIndex = (uclSpotlightIndex + 1) % order.length;
+                blRenderSpotlight(UCL_MD_IDS.spotlight, order[uclSpotlightIndex], true);
+                blRenderMatchdayChrome(UCL_MD_IDS, UCL_STATE, titleText());
+            }, UCL_SPOTLIGHT_MS);
+
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = later(runMasterSequence, UCL_MATCHDAY_SLOT_MS);
         }
 
         // ---------- Slot 2: Tabelle ----------
@@ -3139,9 +3353,9 @@
 
         // Teams, die gerade auf dem Platz stehen - dieselbe Bedingung wie im Spotlight:
         // nicht beendet und Anstoss liegt bereits zurueck.
-        function blLiveTeamIds(nowMs) {
+        function blLiveTeamIds(state, nowMs) {
             const ids = new Set();
-            (blMatchdayData.matches || []).forEach(m => {
+            (state.matchdayData.matches || []).forEach(m => {
                 if (!blIsLive(m, nowMs)) return;
                 [blField(m, 'team1'), blField(m, 'team2')].forEach(t => {
                     const id = blTeamId(t);
@@ -3177,29 +3391,29 @@
             if (!bodyLeft || !bodyRight) return;
 
             const now = Date.now();
-            const liveIds = blLiveTeamIds(now);
+            const liveIds = blLiveTeamIds(BL_STATE, now);
             if (sub) {
-                const md = blMatchdayData.order || '–';
-                const started = (blMatchdayData.matches || []).some(m => {
+                const md = BL_STATE.matchdayData.order || '–';
+                const started = (BL_STATE.matchdayData.matches || []).some(m => {
                     const k = blKickoff(m);
                     return k && k.getTime() <= now;
                 });
-                sub.textContent = blAnyLive(now) ? `Spieltag ${md} läuft · live berechnet`
+                sub.textContent = blAnyLive(BL_STATE, now) ? `Spieltag ${md} läuft · live berechnet`
                     : (started ? `Nach Spieltag ${md}` : `Vor Spieltag ${md}`);
             }
-            if (stand) stand.textContent = blStandText(blTableData.fetchedAt);
+            if (stand) stand.textContent = blStandText(BL_STATE.tableData.fetchedAt);
             if (liveBadge) liveBadge.style.display = liveIds.size ? 'flex' : 'none';
 
-            if (!blTableData.rows.length) {
+            if (!BL_STATE.tableData.rows.length) {
                 bodyLeft.innerHTML = `<div class="bl-empty-msg">Tabelle wird geladen …</div>`;
                 bodyRight.innerHTML = '';
                 return;
             }
 
             // Rang 1-9 links, 10-18 rechts.
-            const half = Math.ceil(blTableData.rows.length / 2);
-            bodyLeft.innerHTML = blRenderTableRows(blTableData.rows.slice(0, half), liveIds);
-            bodyRight.innerHTML = blRenderTableRows(blTableData.rows.slice(half), liveIds);
+            const half = Math.ceil(BL_STATE.tableData.rows.length / 2);
+            bodyLeft.innerHTML = blRenderTableRows(BL_STATE.tableData.rows.slice(0, half), liveIds);
+            bodyRight.innerHTML = blRenderTableRows(BL_STATE.tableData.rows.slice(half), liveIds);
         }
 
         function runBlTableState(nextStateIndex) {
@@ -3212,21 +3426,104 @@
             globalMasterTimer = later(runMasterSequence, BL_TABLE_SLOT_MS);
         }
 
+        // ---------- Champions-League-Tabelle (Vollbild, 3 Spalten) ----------
+        // 36 Teams (Ligaphase im Schweizer Modus seit 2024/25) passen nicht ins
+        // kompakte 2-Spalten-Layout der Bundesliga-Tabelle, ohne wieder auf winzige
+        // Zeilen zurueckzufallen - deshalb eigene Vollbild-Ansicht ueber dem ganzen
+        // Dashboard (Sidebar/Ticker/Uhr werden dafuer schlicht ueberdeckt, nicht
+        // ausgeblendet - ihre Timer laufen unbeeinflusst im Hintergrund weiter).
+        // Plaetze 1-8: direkt im Achtelfinale. 9-24: Playoff-Runde. 25-36: raus.
+        function uclZoneClass(rank) {
+            if (rank <= 8) return 'zone-direct';
+            if (rank <= 24) return 'zone-playoff';
+            return 'zone-out';
+        }
+
+        function uclRenderTable() {
+            const bodies = [1, 2, 3].map(n => document.getElementById('ucl-fs-body-' + n));
+            const sub = document.getElementById('ucl-fs-sub');
+            const stand = document.getElementById('ucl-fs-stand');
+            const liveBadge = document.getElementById('ucl-fs-live');
+            if (bodies.some(b => !b)) return;
+
+            const now = Date.now();
+            const liveIds = blLiveTeamIds(UCL_STATE, now);
+            if (sub) {
+                sub.textContent = UCL_STATE.matchdayData.label
+                    ? `Nach ${UCL_STATE.matchdayData.label}`
+                    : 'Ligaphase';
+            }
+            if (stand) stand.textContent = blStandText(UCL_STATE.tableData.fetchedAt);
+            if (liveBadge) liveBadge.style.display = liveIds.size ? 'flex' : 'none';
+
+            const rows = UCL_STATE.tableData.rows;
+            if (!rows.length) {
+                bodies[0].innerHTML = `<div class="bl-empty-msg">Tabelle wird geladen …</div>`;
+                bodies[1].innerHTML = '';
+                bodies[2].innerHTML = '';
+                return;
+            }
+
+            // Je 12 Plaetze pro Spalte (36 / 3) - bei einer kuerzeren Liste (z.B.
+            // Testdaten) verteilt sich der Rest trotzdem gleichmaessig auf 3 Spalten.
+            const perCol = Math.ceil(rows.length / 3);
+            [0, 1, 2].forEach(i => {
+                const slice = rows.slice(i * perCol, (i + 1) * perCol);
+                bodies[i].innerHTML = slice.map(r => {
+                    const isLive = liveIds.has(Number(r.teamInfoId));
+                    const diff = (r.goalDiff > 0 ? '+' : '') + r.goalDiff;
+                    const diffCls = r.goalDiff > 0 ? ' is-pos' : (r.goalDiff < 0 ? ' is-neg' : '');
+                    return `<div class="ucl-fs-row ${uclZoneClass(r.rank)}${isLive ? ' is-live' : ''}">
+                        <span class="ucl-fs-rank">${r.rank}</span>
+                        ${blCrestImg(r, 'ucl-fs-crest')}
+                        <span class="ucl-fs-name">${blEsc(r.shortName)}${isLive ? '<span class="bl-live-dot"></span>' : ''}</span>
+                        <span class="ucl-fs-num">${r.matches}</span>
+                        <span class="ucl-fs-num ucl-fs-diff${diffCls}">${diff}</span>
+                        <span class="ucl-fs-pts">${r.points}</span>
+                    </div>`;
+                }).join('');
+            });
+        }
+
+        function runUclFullscreenTableState(nextStateIndex) {
+            document.getElementById('ucl-fullscreen-table').classList.add('active');
+            uclRenderTable();
+            repeat(uclRenderTable, 15000);
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = later(runUclFullscreenTableExit, UCL_TABLE_SLOT_MS);
+        }
+
+        // Eigener Ausstieg statt direkt runMasterSequence(): die Vollbild-Tabelle
+        // haengt ausserhalb von .media-inner-view und wird von deren Sammel-
+        // classList.remove('active') in runMasterSequence() nicht mit erfasst.
+        function runUclFullscreenTableExit() {
+            document.getElementById('ucl-fullscreen-table').classList.remove('active');
+            runMasterSequence();
+        }
+
         // Nach einem erfolgreichen Abruf sofort nachziehen, falls gerade einer der
-        // beiden Slots sichtbar ist.
+        // Slots sichtbar ist. Wird sowohl fuer bl1 als auch fuer ucl als
+        // onRefreshed-Callback an blRefresh() uebergeben.
         function blRefreshVisibleWidget() {
             const mdView = document.getElementById('media-view-bl-matchday');
             const tblView = document.getElementById('media-view-bl-table');
+            const uclMdView = document.getElementById('media-view-ucl-matchday');
             if (mdView && mdView.classList.contains('active')) {
-                blRenderMatchdayChrome();
-                blRenderTicker();
+                blRenderMatchdayChrome(BL_MD_IDS, BL_STATE, '⚽ 1. Bundesliga · Spieltag ' + (BL_STATE.matchdayData.order || '–'));
+                blRenderTicker(BL_MD_IDS.ticker, BL_STATE);
             }
             if (tblView && tblView.classList.contains('active')) blRenderTable();
+            if (uclMdView && uclMdView.classList.contains('active')) {
+                blRenderMatchdayChrome(UCL_MD_IDS, UCL_STATE, '🏆 Champions League · ' + (UCL_STATE.matchdayData.label || '–'));
+                blRenderTicker(UCL_MD_IDS.ticker, UCL_STATE);
+            }
+            if (document.getElementById('ucl-fullscreen-table').classList.contains('active')) uclRenderTable();
             blRenderTopWidget(); // laeuft immer, unabhaengig vom aktiven Media-Slide - Phase/Index bleiben unberuehrt
         }
 
         blStartTopCycle();
-        blRefresh();
+        blRefresh(BL_STATE, blRefreshVisibleWidget);
+        blRefresh(UCL_STATE, blRefreshVisibleWidget);
 
         // ---------- Getränke-Highlights ----------
         // Alle Clips: 1280x720, 10s, ohne Tonspur (das <video> ist muted - die Tonspur war reiner Ballast).
@@ -5705,18 +6002,34 @@
                 runEventsState(7.25); // -> Bundesliga-Spieltag
 
             } else if (mediaStateIndex === 7.25) {
-                // Beide Fußball-Slots setzen in der Sommer-/Winterpause und bei
+                // Alle Fußball-Slots setzen in der Sommer-/Winterpause und bei
                 // fehlgeschlagenem Abruf automatisch aus - dann geht es direkt weiter.
-                if (blSlotsAvailable()) {
+                if (blSlotsAvailable(BL_STATE)) {
                     runBlMatchdayState(7.5); // -> Bundesliga-Tabelle
+                } else {
+                    mediaStateIndex = 7.6;
+                    runMasterSequence();
+                }
+
+            } else if (mediaStateIndex === 7.5) {
+                if (blSlotsAvailable(BL_STATE) && BL_STATE.tableData.rows.length) {
+                    runBlTableState(7.6); // -> Champions-League-Spieltag
+                } else {
+                    mediaStateIndex = 7.6;
+                    runMasterSequence();
+                }
+
+            } else if (mediaStateIndex === 7.6) {
+                if (blSlotsAvailable(UCL_STATE)) {
+                    runUclMatchdayState(7.75); // -> Champions-League-Tabelle (Vollbild)
                 } else {
                     mediaStateIndex = 8;
                     runMasterSequence();
                 }
 
-            } else if (mediaStateIndex === 7.5) {
-                if (blSlotsAvailable() && blTableData.rows.length) {
-                    runBlTableState(8); // -> Wetter-Übersicht
+            } else if (mediaStateIndex === 7.75) {
+                if (blSlotsAvailable(UCL_STATE) && UCL_STATE.tableData.rows.length) {
+                    runUclFullscreenTableState(8); // -> Wetter-Übersicht
                 } else {
                     mediaStateIndex = 8;
                     runMasterSequence();
