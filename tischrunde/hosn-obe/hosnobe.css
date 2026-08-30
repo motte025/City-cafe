@@ -1,0 +1,686 @@
+/*
+ * Tischrunde — Hos'n Obe: Spieltisch.
+ *
+ * Alles haengt unter #tr-hosnobe, damit sich nichts mit den Stilen der
+ * Spielauswahl beisst. Die Schriften laedt die Huelle bereits:
+ * Big Shoulders Display (Ueberschriften), Inter (Fliesstext),
+ * IBM Plex Mono (Zahlen und Kuerzel).
+ */
+
+#tr-hosnobe {
+    --felt-950: #071410;
+    --felt-900: #0b2218;
+    --felt-850: #0e2b1e;
+    --felt-800: #123322;
+    --felt-700: #1a4630;
+    --felt-600: #235c3e;
+
+    --brass-300: #f0dda0;
+    --brass-400: #e3c46a;
+    --brass-500: #c9a227;
+    --brass-600: #a5811c;
+    --brass-700: #6f5613;
+
+    --cream-100: #faf6ec;
+    --cream-200: #f1e8d5;
+    --cream-300: #dbcdb0;
+    --cream-400: #b6a684;
+
+    --ink: #16130d;
+    --card-red: #b3242b;
+    --card-black: #1d1a15;
+    --alarm: #d9573f;
+
+    --head: 'Big Shoulders Display', 'Inter', system-ui, sans-serif;
+    --body: 'Inter', system-ui, -apple-system, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+    --edge: 14px;
+
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--body);
+    color: var(--cream-200);
+    background:
+        radial-gradient(120% 80% at 50% 0%, var(--felt-700) 0%, var(--felt-900) 55%, var(--felt-950) 100%);
+    overscroll-behavior: contain;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#tr-hosnobe[hidden] { display: none; }
+
+#tr-hosnobe *,
+#tr-hosnobe *::before,
+#tr-hosnobe *::after { box-sizing: border-box; }
+
+/* Feiner Filzflaum ueber dem ganzen Tisch. */
+#tr-hosnobe::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .5;
+    background-image:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, .012) 0 2px, transparent 2px 4px),
+        repeating-linear-gradient(-45deg, rgba(0, 0, 0, .022) 0 2px, transparent 2px 4px);
+}
+
+/* --- Kopfzeile ---------------------------------------------------------- */
+
+.tr-head {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) var(--edge) 12px;
+    border-bottom: 1px solid rgba(201, 162, 39, .22);
+    background: linear-gradient(180deg, rgba(7, 20, 16, .72), rgba(7, 20, 16, .3));
+}
+
+.tr-back {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    color: var(--brass-400);
+    background: rgba(201, 162, 39, .08);
+    border: 1px solid rgba(201, 162, 39, .3);
+    border-radius: 11px;
+    cursor: pointer;
+}
+
+.tr-back:active { background: rgba(201, 162, 39, .2); }
+
+.tr-title {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--head);
+    font-weight: 700;
+    font-size: 27px;
+    line-height: 1;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--cream-100);
+}
+
+.tr-title small {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--brass-400);
+}
+
+.tr-codechip {
+    flex: none;
+    padding: 6px 11px;
+    font-family: var(--mono);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    color: var(--felt-950);
+    background: linear-gradient(160deg, var(--brass-300), var(--brass-500));
+    border-radius: 9px;
+}
+
+/* --- Bildflaeche --------------------------------------------------------- */
+
+.tr-body {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 18px var(--edge) 20px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tr-panel {
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.tr-lead {
+    margin: 0 0 18px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--cream-300);
+}
+
+.tr-section {
+    margin: 0 0 9px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: .19em;
+    text-transform: uppercase;
+    color: var(--brass-400);
+}
+
+.tr-section span { color: var(--cream-400); }
+
+/* --- Eingaben und Schalter ----------------------------------------------- */
+
+.tr-field { margin-bottom: 14px; }
+
+.tr-label {
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: var(--brass-400);
+}
+
+.tr-input {
+    width: 100%;
+    padding: 13px 14px;
+    font-family: var(--body);
+    font-size: 16px;
+    color: var(--cream-100);
+    background: rgba(7, 20, 16, .5);
+    border: 1px solid rgba(201, 162, 39, .28);
+    border-radius: 12px;
+    outline: none;
+}
+
+.tr-input:focus { border-color: var(--brass-500); }
+.tr-input::placeholder { color: rgba(219, 205, 176, .38); }
+
+.tr-input--code {
+    font-family: var(--mono);
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: .34em;
+    text-align: center;
+    text-indent: .34em;
+    padding: 15px 14px;
+}
+
+.tr-btn {
+    display: block;
+    width: 100%;
+    padding: 15px 18px;
+    font-family: var(--head);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--felt-950);
+    background: linear-gradient(160deg, var(--brass-300), var(--brass-500));
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+}
+
+.tr-btn:active { transform: translateY(1px); }
+
+.tr-btn--ghost {
+    color: var(--brass-300);
+    background: rgba(201, 162, 39, .07);
+    border: 1px solid rgba(201, 162, 39, .34);
+}
+
+.tr-btn--quiet {
+    padding: 11px 16px;
+    font-size: 16px;
+    color: var(--cream-300);
+    background: rgba(250, 246, 236, .05);
+    border: 1px solid rgba(250, 246, 236, .16);
+}
+
+.tr-btn[disabled] {
+    opacity: .38;
+    cursor: default;
+    transform: none;
+}
+
+.tr-btnrow {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.tr-btnrow .tr-btn { margin: 0; }
+
+.tr-or {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .19em;
+    text-transform: uppercase;
+    color: var(--cream-400);
+}
+
+.tr-or::before,
+.tr-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201, 162, 39, .24);
+}
+
+.tr-note {
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--cream-400);
+}
+
+.tr-alert {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #ffd9cf;
+    background: rgba(217, 87, 63, .14);
+    border: 1px solid rgba(217, 87, 63, .42);
+    border-radius: 11px;
+}
+
+/* --- Karten -------------------------------------------------------------- */
+
+.tr-cards {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.tr-card {
+    position: relative;
+    flex: 1 1 0;
+    max-width: 108px;
+    aspect-ratio: 5 / 7;
+    padding: 7px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+    background: linear-gradient(158deg, var(--cream-100) 0%, var(--cream-200) 62%, var(--cream-300) 100%);
+    border: 1px solid rgba(22, 19, 13, .2);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .75);
+    user-select: none;
+}
+
+.tr-card[data-suit="H"],
+.tr-card[data-suit="D"] { color: var(--card-red); }
+
+.tr-card[data-suit="S"],
+.tr-card[data-suit="C"] { color: var(--card-black); }
+
+.tr-card__corner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: .95;
+    font-family: var(--mono);
+    font-size: clamp(12px, 3.6vw, 16px);
+    font-weight: 600;
+}
+
+.tr-card__corner i {
+    font-style: normal;
+    font-size: 1.05em;
+}
+
+.tr-card__corner--br {
+    align-self: flex-end;
+    transform: rotate(180deg);
+}
+
+.tr-card__pip {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: clamp(28px, 9vw, 42px);
+    opacity: .9;
+    pointer-events: none;
+}
+
+/* Rueckseite im selben Kartenkorpus wie die Spielauswahl. */
+.tr-card--back {
+    background:
+        repeating-linear-gradient(45deg, rgba(201, 162, 39, .17) 0 4px, transparent 4px 8px),
+        repeating-linear-gradient(-45deg, rgba(201, 162, 39, .17) 0 4px, transparent 4px 8px),
+        linear-gradient(158deg, var(--felt-700), var(--felt-900));
+    border: 1px solid rgba(201, 162, 39, .4);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, .4), inset 0 0 0 3px rgba(201, 162, 39, .16);
+}
+
+.tr-card--back::after {
+    content: '';
+    position: absolute;
+    inset: 9px;
+    border: 1px solid rgba(201, 162, 39, .34);
+    border-radius: 5px;
+}
+
+.tr-card--empty {
+    background: rgba(7, 20, 16, .32);
+    border: 1px dashed rgba(201, 162, 39, .3);
+    box-shadow: none;
+}
+
+.tr-card--pick { cursor: pointer; }
+
+.tr-card--pick.is-selected {
+    outline: 3px solid var(--brass-400);
+    outline-offset: 2px;
+    transform: translateY(-8px);
+}
+
+.tr-card--pick.is-target {
+    outline: 3px dashed var(--brass-300);
+    outline-offset: 2px;
+}
+
+.tr-card.is-fire {
+    outline: 3px solid var(--alarm);
+    outline-offset: 2px;
+}
+
+/* --- Tisch ---------------------------------------------------------------- */
+
+.tr-zone {
+    margin-bottom: 20px;
+    padding: 14px;
+    background: rgba(7, 20, 16, .34);
+    border: 1px solid rgba(201, 162, 39, .18);
+    border-radius: 16px;
+}
+
+.tr-zone--mine { border-color: rgba(201, 162, 39, .42); }
+
+.tr-zonehead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 11px;
+}
+
+.tr-zonehead .tr-section { margin: 0; }
+
+.tr-score {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .1em;
+    color: var(--cream-200);
+}
+
+.tr-score b {
+    font-size: 17px;
+    color: var(--brass-300);
+}
+
+/* --- Spielerleiste --------------------------------------------------------- */
+
+/* Gleich breite Kacheln statt einer ausgefransten Reihe. */
+.tr-seats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.tr-seat {
+    min-width: 0;
+    padding: 9px 11px;
+    background: rgba(7, 20, 16, .38);
+    border: 1px solid rgba(201, 162, 39, .16);
+    border-radius: 11px;
+}
+
+.tr-seat.is-turn {
+    border-color: var(--brass-500);
+    background: rgba(201, 162, 39, .13);
+}
+
+.tr-seat.is-out { opacity: .45; }
+
+.tr-seat__name {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cream-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tr-seat__meta {
+    display: block;
+    margin-top: 3px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--brass-400);
+}
+
+.tr-seat.is-loser {
+    border-color: var(--alarm);
+    background: rgba(217, 87, 63, .16);
+}
+
+.tr-seat.is-loser .tr-seat__meta { color: #ffb9a8; }
+
+/* --- Statusband ------------------------------------------------------------ */
+
+.tr-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 11px 14px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--cream-100);
+    background: rgba(201, 162, 39, .1);
+    border: 1px solid rgba(201, 162, 39, .28);
+    border-radius: 12px;
+}
+
+.tr-status.is-mine {
+    background: linear-gradient(160deg, rgba(227, 196, 106, .22), rgba(201, 162, 39, .12));
+    border-color: var(--brass-500);
+}
+
+.tr-status.is-alarm {
+    color: #ffd9cf;
+    background: rgba(217, 87, 63, .16);
+    border-color: rgba(217, 87, 63, .5);
+}
+
+.tr-status__dot {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--brass-400);
+}
+
+.tr-status.is-mine .tr-status__dot { animation: tr-pulse 1.3s ease-in-out infinite; }
+.tr-status.is-alarm .tr-status__dot { background: var(--alarm); }
+
+@keyframes tr-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .45; transform: scale(.72); }
+}
+
+/* --- Aktionsleiste ---------------------------------------------------------- */
+
+.tr-actions {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    padding: 12px var(--edge) calc(env(safe-area-inset-bottom, 0px) + 12px);
+    border-top: 1px solid rgba(201, 162, 39, .22);
+    background: linear-gradient(0deg, rgba(7, 20, 16, .85), rgba(7, 20, 16, .5));
+}
+
+.tr-actions .tr-btn {
+    padding: 13px 10px;
+    font-size: 17px;
+}
+
+.tr-actions .tr-btn--wide { grid-column: 1 / -1; }
+
+.tr-hint {
+    grid-column: 1 / -1;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--brass-400);
+}
+
+/* --- Aufdecken --------------------------------------------------------------- */
+
+.tr-banner {
+    margin-bottom: 18px;
+    padding: 16px;
+    text-align: center;
+    border-radius: 14px;
+    background: rgba(7, 20, 16, .45);
+    border: 1px solid rgba(201, 162, 39, .3);
+}
+
+.tr-banner h2 {
+    margin: 0 0 6px;
+    font-family: var(--head);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--brass-300);
+}
+
+.tr-banner p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--cream-300);
+}
+
+.tr-banner--fire {
+    background: rgba(217, 87, 63, .16);
+    border-color: rgba(217, 87, 63, .5);
+}
+
+.tr-banner--fire h2 { color: #ffb9a8; }
+
+.tr-reveal {
+    margin-bottom: 13px;
+    padding: 12px;
+    background: rgba(7, 20, 16, .34);
+    border: 1px solid rgba(201, 162, 39, .16);
+    border-radius: 14px;
+}
+
+.tr-reveal.is-loser {
+    border-color: rgba(217, 87, 63, .55);
+    background: rgba(217, 87, 63, .1);
+}
+
+.tr-reveal.is-fire { border-color: var(--alarm); }
+
+.tr-reveal__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tr-reveal__name {
+    font-family: var(--head);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--cream-100);
+}
+
+.tr-reveal__tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--brass-400);
+}
+
+.tr-reveal.is-loser .tr-reveal__tag { color: #ffb9a8; }
+
+.tr-reveal .tr-cards { justify-content: flex-start; }
+.tr-reveal .tr-card { max-width: 74px; }
+
+.tr-waiting {
+    padding: 22px 14px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--cream-400);
+}
+
+/* --- Regeln als Aufklapper ------------------------------------------------ */
+
+.tr-rules {
+    margin-top: 20px;
+    border-top: 1px solid rgba(201, 162, 39, .18);
+    padding-top: 14px;
+}
+
+.tr-rules summary {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--brass-400);
+    cursor: pointer;
+    list-style: none;
+}
+
+.tr-rules summary::-webkit-details-marker { display: none; }
+.tr-rules summary::before { content: '▸ '; }
+.tr-rules[open] summary::before { content: '▾ '; }
+
+.tr-rules ul {
+    margin: 12px 0 0;
+    padding-left: 18px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--cream-300);
+}
+
+.tr-rules li { margin-bottom: 7px; }
+
+.tr-rules b { color: var(--brass-300); }
+
+/* Der Weg vom Tisch — bewusst unten und unaufdringlich. */
+.tr-leaverow {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(201, 162, 39, .18);
+}
+
+@media (max-width: 360px) {
+    #tr-hosnobe { --edge: 11px; }
+    .tr-title { font-size: 23px; }
+}

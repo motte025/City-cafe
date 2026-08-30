@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tischrunde — Probetisch</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="hosn-obe/hosnobe.css">
+
+<style>
+/*
+ * Nachbau der Spielauswahl — nur zum Ausprobieren. Die echte Huelle liegt in
+ * deinem Tischrunde-Projekt unter www/index.html; diese Datei wird dort nicht
+ * gebraucht und nicht mitkopiert.
+ */
+:root {
+    --felt-950: #071410; --felt-900: #0b2218; --felt-700: #1a4630;
+    --brass-300: #f0dda0; --brass-400: #e3c46a; --brass-500: #c9a227;
+    --cream-100: #faf6ec; --cream-200: #f1e8d5; --cream-300: #dbcdb0; --cream-400: #b6a684;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0; min-height: 100vh; padding: 0 0 40px;
+    font-family: 'Inter', system-ui, sans-serif; color: var(--cream-200);
+    background: radial-gradient(120% 80% at 50% 0%, var(--felt-700) 0%, var(--felt-900) 55%, var(--felt-950) 100%);
+}
+.shell { max-width: 560px; margin: 0 auto; padding: 34px 16px 0; }
+h1 {
+    margin: 0; font-family: 'Big Shoulders Display', sans-serif; font-weight: 700;
+    font-size: 46px; line-height: 1; letter-spacing: .04em; text-transform: uppercase; color: var(--cream-100);
+}
+.sub {
+    margin: 6px 0 26px; font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--brass-400);
+}
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.game {
+    position: relative; padding: 16px 14px; min-height: 132px; display: flex;
+    flex-direction: column; justify-content: flex-end; text-align: left; cursor: pointer;
+    border-radius: 14px; border: 1px solid rgba(22,19,13,.2);
+    background: linear-gradient(158deg, var(--cream-100) 0%, var(--cream-200) 62%, #ded0b4 100%);
+    box-shadow: 0 6px 16px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.75);
+    font: inherit; color: #16130d;
+}
+.game:active { transform: translateY(1px); }
+.game[disabled] { opacity: .45; cursor: default; }
+.game__pip {
+    position: absolute; top: 12px; left: 14px; font-size: 26px; color: #b3242b;
+}
+.game__name {
+    font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 25px;
+    line-height: 1; letter-spacing: .03em; text-transform: uppercase;
+}
+.game__meta {
+    margin-top: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px;
+    letter-spacing: .15em; text-transform: uppercase; color: #6f5613;
+}
+.demo-note {
+    margin-top: 26px; padding: 13px 15px; font-size: 13px; line-height: 1.55; color: var(--cream-300);
+    background: rgba(7,20,16,.4); border: 1px solid rgba(201,162,39,.25); border-radius: 12px;
+}
+.demo-note b { color: var(--brass-300); }
+.demo-note button {
+    margin-top: 10px; padding: 8px 13px; font: inherit; font-size: 12px; color: var(--cream-300);
+    background: rgba(250,246,236,.05); border: 1px solid rgba(250,246,236,.18);
+    border-radius: 9px; cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="shell" id="auswahl">
+    <h1>Tischrunde</h1>
+    <p class="sub">Spielauswahl</p>
+
+    <div class="grid">
+        <button class="game" onclick="openGame('hosn-obe')">
+            <span class="game__pip">&hearts;</span>
+            <span class="game__name">Hos'n Obe</span>
+            <span class="game__meta">2–6 · Schwimmen</span>
+        </button>
+        <button class="game" disabled>
+            <span class="game__pip">&spades;</span>
+            <span class="game__name">Bald mehr</span>
+            <span class="game__meta">in Arbeit</span>
+        </button>
+    </div>
+
+    <div class="demo-note">
+        <b>Probetisch.</b> Diese Seite ersetzt beim Ausprobieren die Spielauswahl.
+        Ohne Firebase-Zugangsdaten läuft alles über eine Testhilfe im
+        <b>localStorage</b> — mehrere Tabs auf demselben Gerät sind dann die
+        Mitspieler. Trägst du in <b>hosn-obe/hosnobe-config.js</b> echte Werte ein,
+        spielt dieselbe Seite übers Netz.
+        <br>
+        <button onclick="TischrundeStub &amp;&amp; TischrundeStub.reset(); location.reload();">
+            Testtisch zurücksetzen
+        </button>
+    </div>
+</div>
+
+<script src="hosn-obe/hosnobe-config.js"></script>
+<script>
+// Ohne echte Zugangsdaten die Testhilfe laden, sonst das richtige Firebase-SDK.
+(function () {
+    var configured = !!(window.HosnObeConfig.firebase && window.HosnObeConfig.firebase.databaseURL);
+    if (configured) {
+        document.write('<scr' + 'ipt src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"><\/scr' + 'ipt>');
+        document.write('<scr' + 'ipt src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"><\/scr' + 'ipt>');
+        document.write('<scr' + 'ipt src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"><\/scr' + 'ipt>');
+    } else {
+        document.write('<scr' + 'ipt src="test/firebase-localstorage-stub.js"><\/scr' + 'ipt>');
+        // Platzhalter, damit der Spieltisch nicht auf fehlende Daten schimpft.
+        window.HosnObeConfig.firebase = {
+            apiKey: 'stub', authDomain: 'stub', databaseURL: 'stub', projectId: 'stub', appId: 'stub'
+        };
+    }
+})();
+</script>
+
+<script src="hosn-obe/hosnobe-engine.js"></script>
+<script src="hosn-obe/hosnobe-net.js"></script>
+<script src="hosn-obe/hosnobe-view.js"></script>
+
+<script>
+/*
+ * Genau diese Weiterleitung kommt in deine www/index.html — an die Stelle,
+ * wo bisher der Platzhalter-Kommentar steht.
+ */
+function openGame(id) {
+    if (id === 'hosn-obe') {
+        document.getElementById('auswahl').hidden = true;
+        Tischrunde.HosnObe.open({
+            onExit: function () { document.getElementById('auswahl').hidden = false; }
+        });
+        return;
+    }
+    console.log('Noch kein Spiel hinterlegt:', id);
+}
+</script>
+
+</body>
+</html>
