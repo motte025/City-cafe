@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -134,14 +134,17 @@
             letter-spacing: 1.2px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); white-space: nowrap;
             box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
         }
-        .bl-top-ticker-wrap { flex: 1; height: 100%; overflow: hidden; display: flex; align-items: center; }
+        /* Statische Anzeige statt Dauerlauf-Ticker: pro Spiel erst das Spiel (6s),
+           dann - nur falls schon Tore gefallen sind - die Torschuetzen (6s), dann
+           das naechste Spiel. Noch nicht angepfiffene Spiele ueberspringen die
+           Torschuetzen-Phase automatisch (siehe blAdvanceTopCycle). */
+        .bl-top-ticker-wrap { flex: 1; height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .bl-top-ticker-move {
-            display: flex; align-items: center; width: max-content;
-            animation: blTickerScroll 45s linear infinite; will-change: transform;
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; height: 100%; transform-origin: center;
         }
-        .bl-top-item {
-            display: flex; align-items: center; gap: 16px; padding: 0 36px; flex-shrink: 0;
-            height: 100px; border-right: 1px solid rgba(255, 255, 255, 0.12);
+        .bl-top-match {
+            display: flex; align-items: center; justify-content: center; gap: 20px; height: 100%; padding: 0 30px;
         }
         /* Wappen so gross wie im 100px hohen Widget moeglich - Object-fit haelt
            schmale Schriftzug-Wappen (Union Berlin, HSV, Leipzig) proportional. */
@@ -159,6 +162,18 @@
         .bl-top-time {
             font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #94a3b8;
             padding: 0 8px; font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+        /* Torschuetzen-Phase: kleines Wappen je Tor zeigt, welches Team getroffen hat. */
+        .bl-top-scorers { display: flex; align-items: center; justify-content: center; gap: 30px; height: 100%; padding: 0 30px; white-space: nowrap; }
+        .bl-top-scorer { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+        .bl-top-scorer-crest {
+            height: 46px; width: auto; max-width: 80px; object-fit: contain; flex-shrink: 0;
+            filter: drop-shadow(0 0 4px rgba(255,255,255,0.75));
+        }
+        .bl-top-scorer-name { font-size: 24px; font-weight: 800; color: #ffffff; white-space: nowrap; text-shadow: 0 2px 6px rgba(0,0,0,0.85); }
+        .bl-top-scorer-min {
+            font-family: 'Orbitron', sans-serif; font-size: 21px; font-weight: 900; color: #00f2fe;
+            font-variant-numeric: tabular-nums; white-space: nowrap;
         }
 
         .media-zone {
@@ -485,17 +500,25 @@
         }
 
         /* ---------- Slot 2: Tabelle ---------- */
+        /* Zwei Spalten (Rang 1-9 links, 10-18 rechts) statt einer langen Liste:
+           bei gleicher Buehnenhoehe verdoppelt sich dadurch die Zeilenhoehe -
+           Wappen und Schrift werden deutlich groesser/lesbarer. S-U-N (Siege
+           Unentschieden Niederlagen) faellt dafuer weg, da bei zwei schmaleren
+           Spalten kein Platz mehr fuer sie waere - fuer den Blick aufs Ranking
+           zaehlen Rang/Diff/Punkte ohnehin mehr. */
+        .bl-tbl-columns { display: flex; gap: 24px; flex: 1; min-height: 0; }
+        .bl-tbl-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
         .bl-tbl-head, .bl-tbl-row {
-            display: grid; grid-template-columns: 46px 46px 1fr 68px 132px 86px 78px;
-            align-items: center; gap: 12px; padding: 0 18px; box-sizing: border-box;
+            display: grid; grid-template-columns: 40px 64px 1fr 44px 64px 58px;
+            align-items: center; gap: 10px; padding: 0 14px; box-sizing: border-box;
         }
         .bl-tbl-head {
-            height: 24px; margin-bottom: 6px; font-size: 13px; font-weight: 800; color: #94a3b8;
+            height: 26px; margin-bottom: 8px; font-size: 13px; font-weight: 800; color: #94a3b8;
             text-transform: uppercase; letter-spacing: 1.4px;
         }
-        .bl-tbl-body { display: flex; flex-direction: column; gap: 2px; }
+        .bl-tbl-body { display: flex; flex-direction: column; gap: 6px; }
         .bl-tbl-row {
-            height: 31px; border-radius: 8px; border: 1px solid transparent;
+            height: 58px; border-radius: 10px; border: 1px solid transparent;
             background: rgba(255,255,255,0.035); position: relative;
         }
         /* Der farbige Zonenbalken sitzt als ::before im Zeilenrand - so verschiebt er
@@ -526,27 +549,26 @@
         }
         @keyframes blRowLivePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.22; } }
         .bl-tbl-rank {
-            font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff;
             text-align: center; font-variant-numeric: tabular-nums;
         }
         .bl-tbl-crest {
-            width: 46px; height: 26px; object-fit: contain; justify-self: center;
+            width: 64px; height: 40px; object-fit: contain; justify-self: center;
             filter: drop-shadow(0 0 3px rgba(255,255,255,0.8));
         }
         .bl-tbl-name {
-            font-size: 19px; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 10px;
+            font-size: 25px; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 12px;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
         }
-        .bl-tbl-name .bl-live-dot { width: 9px; height: 9px; }
+        .bl-tbl-name .bl-live-dot { width: 12px; height: 12px; }
         .bl-tbl-num {
-            font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.82);
+            font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.82);
             text-align: center; font-variant-numeric: tabular-nums;
         }
-        .bl-tbl-sun { letter-spacing: 1px; }
         .bl-tbl-diff.is-pos { color: #34d399; }
         .bl-tbl-diff.is-neg { color: #ff6b6b; }
         .bl-tbl-pts {
-            font-family: 'Orbitron', sans-serif; font-size: 21px; font-weight: 900; color: #00f2fe;
+            font-family: 'Orbitron', sans-serif; font-size: 29px; font-weight: 900; color: #00f2fe;
             text-align: center; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
         }
         .bl-legend { display: flex; align-items: center; gap: 22px; height: 30px; margin-top: 10px; flex-shrink: 0; }
@@ -850,7 +872,15 @@
             opacity: 0;
         }
         .polaroid-card img { width: 100%; height: 176px; object-fit: cover; display: block; background: #ccc; }
-        .polaroid-card.hr-pair-loser { box-shadow: 0 0 0 6px #ff3344, 0 18px 40px rgba(255,30,30,0.7); }
+        /* Spotlight statt "Verlierer": letztes gelandetes Foto bekommt einen
+           warmen Schein in den Marken-Akzentfarben statt der alten Alarm-Rot-Optik. */
+        .polaroid-card.hr-pair-highlight { box-shadow: 0 0 0 6px #f355da, 0 0 40px rgba(243, 85, 218, 0.55), 0 18px 40px rgba(0,0,0,0.5); }
+        /* Hochladedatum im weissen Rand unten, wie handschriftlich vermerkt. */
+        .polaroid-date {
+            position: absolute; left: 0; right: 0; bottom: 2px; text-align: center;
+            font-family: 'Caveat', cursive; font-weight: 700; font-size: 26px;
+            color: #1a1a1a; line-height: 1; pointer-events: none;
+        }
 
         .tg-card { position: absolute; opacity: 0; }
         .tg-card img { width: 100%; height: auto; display: block; border-radius: 9px; box-shadow: 0 12px 26px rgba(0,0,0,0.65); }
@@ -1265,8 +1295,8 @@
                         <div id="tg-version-badge" style="position: absolute; top: 18px; right: 22px; z-index: 20; font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 900; color: rgba(255,255,255,0.55); letter-spacing: 1px; background: rgba(0,0,0,0.35); padding: 5px 12px; border-radius: 8px;">V1</div>
                         <div id="hype-countdown-overlay" style="position: absolute; top: 0; left: 0; right: 0; z-index: 15; display: none; flex-direction: column; align-items: center; padding: 20px 0 12px; background: linear-gradient(180deg, rgba(10,10,18,0.85) 0%, rgba(10,10,18,0) 100%);">
                             <div style="position: relative; height: 42px; display: flex; align-items: center; justify-content: center;">
-                                <div id="hype-countdown-label-a" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); transition: opacity 0.6s ease;">🍻 City Cafe Trinkspiel V1</div>
-                                <div id="hype-countdown-label-b" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); opacity: 0; transition: opacity 0.6s ease;">Trinkspiel V1</div>
+                                <div id="hype-countdown-label-a" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); transition: opacity 0.6s ease;">📸 City Cafe Polaroid-Momente</div>
+                                <div id="hype-countdown-label-b" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); opacity: 0; transition: opacity 0.6s ease;">Polaroid-Momente</div>
                             </div>
                             <div id="hype-countdown-timer" style="font-family: 'Orbitron', sans-serif; font-size: 48px; font-weight: 900; color: #00f2fe; text-shadow: 0 0 20px rgba(0,242,254,0.6); margin-top: 2px;">60</div>
                         </div>
@@ -1315,16 +1345,32 @@
                                 <div class="bl-live-badge" id="bl-tbl-live" style="display: none;"><span class="bl-live-dot"></span>Live</div>
                             </div>
                         </div>
-                        <div class="bl-tbl-head">
-                            <span style="text-align: center;">#</span>
-                            <span></span>
-                            <span>Verein</span>
-                            <span style="text-align: center;">Sp</span>
-                            <span style="text-align: center;">S · U · N</span>
-                            <span style="text-align: center;">Diff</span>
-                            <span style="text-align: center;">Pkt</span>
+                        <!-- Zwei Spalten (Rang 1-9 links, 10-18 rechts) statt einer 18-Zeilen-Liste -
+                             siehe CSS-Kommentar bei .bl-tbl-columns. -->
+                        <div class="bl-tbl-columns">
+                            <div class="bl-tbl-col">
+                                <div class="bl-tbl-head">
+                                    <span style="text-align: center;">#</span>
+                                    <span></span>
+                                    <span>Verein</span>
+                                    <span style="text-align: center;">Sp</span>
+                                    <span style="text-align: center;">Diff</span>
+                                    <span style="text-align: center;">Pkt</span>
+                                </div>
+                                <div class="bl-tbl-body" id="bl-tbl-body-left"></div>
+                            </div>
+                            <div class="bl-tbl-col">
+                                <div class="bl-tbl-head">
+                                    <span style="text-align: center;">#</span>
+                                    <span></span>
+                                    <span>Verein</span>
+                                    <span style="text-align: center;">Sp</span>
+                                    <span style="text-align: center;">Diff</span>
+                                    <span style="text-align: center;">Pkt</span>
+                                </div>
+                                <div class="bl-tbl-body" id="bl-tbl-body-right"></div>
+                            </div>
                         </div>
-                        <div class="bl-tbl-body" id="bl-tbl-body"></div>
                         <div class="bl-legend" id="bl-tbl-legend">
                             <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #00f2fe; box-shadow: 0 0 8px rgba(0,242,254,0.8);"></span>Champions League</span>
                             <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #4facfe; box-shadow: 0 0 8px rgba(79,172,254,0.8);"></span>Europa League</span>
@@ -2877,52 +2923,140 @@
             el.innerHTML = items + items;
         }
 
-        // ---------- Top-Widget: staendig sichtbarer Bundesliga-Ticker ----------
-        // Anders als der Ticker im Spieltag-Slot laeuft dieser immer, unabhaengig
-        // davon, welcher Media-Slide gerade aktiv ist - daher eigenes Rendering.
-        const BL_TOP_TICKER_PX_PRO_SEKUNDE = 90;
-        function blRenderTopTicker() {
+        // ---------- Top-Widget: Bundesliga im Standbild-Wechsel ----------
+        // Anders als der Ticker im Spieltag-Slot laeuft das hier immer, unabhaengig
+        // davon, welcher Media-Slide gerade aktiv ist. Pro Spiel: erst das Spiel
+        // selbst (6s), danach - nur wenn schon Tore gefallen sind - die Torschuetzen
+        // (6s), dann das naechste Spiel. Noch nicht angepfiffene Spiele ueberspringen
+        // die Torschuetzen-Phase automatisch, weil es dafuer noch nichts zu zeigen gibt.
+        // Karten liefert OpenLigaDB nicht (siehe Hinweis oben bei den Bundesliga-Widgets)
+        // - deshalb bewusst nur Torschuetzen, keine Gelb/Rot-Spalte.
+        const BL_TOP_PHASE_MS = 6000;
+        let blTopCycleTimer = null;
+        let blTopMatchIdx = 0;
+        let blTopPhase = 0; // 0 = Spiel, 1 = Torschuetzen
+
+        function blTopOrderedMatches() {
+            return (blMatchdayData.matches || []).slice().sort((a, b) => {
+                const ka = blKickoff(a), kb = blKickoff(b);
+                return (ka ? ka.getTime() : Infinity) - (kb ? kb.getTime() : Infinity);
+            });
+        }
+
+        function blTopScorersCombined(m) {
+            const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
+            const s = blScorers(m);
+            const combined = s.home.map(e => Object.assign({ team: t1 }, e))
+                .concat(s.away.map(e => Object.assign({ team: t2 }, e)));
+            combined.sort((a, b) => (parseInt(a.minute) || 0) - (parseInt(b.minute) || 0));
+            return combined;
+        }
+
+        function blTopRenderMatch(m) {
+            const now = Date.now();
+            const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
+            const live = blIsLive(m, now), finished = blIsFinished(m);
+            let middle;
+            if (live || finished) {
+                const s = blReadScore(m);
+                middle = `<span class="bl-top-score ${live ? 'is-live' : 'is-final'}">${s.t1}:${s.t2}</span>`;
+            } else {
+                const k = blKickoff(m);
+                middle = `<span class="bl-top-time">${k ? blEsc(blTimeFmt.format(k)) : '--:--'}</span>`;
+            }
+            return `<div class="bl-top-match">
+                ${blCrestImg(t1, 'bl-top-crest')}
+                <span class="bl-top-team">${blEsc(blField(t1, 'shortName') || blField(t1, 'teamName') || '')}</span>
+                ${middle}
+                <span class="bl-top-team">${blEsc(blField(t2, 'shortName') || blField(t2, 'teamName') || '')}</span>
+                ${blCrestImg(t2, 'bl-top-crest')}
+            </div>`;
+        }
+
+        // Ab 6 Torschuetzen wird's im 1280px breiten Balken eng, selbst mit
+        // Verkleinerung (siehe blFitTopWidget). Ab dann lieber sauber abschneiden
+        // und mit "+N weitere" zusammenfassen, statt Namen aus dem Rahmen laufen
+        // zu lassen - gleiches Muster wie bei den Torschuetzen im Spieltag-Slot.
+        const BL_TOP_SCORERS_MAX = 5;
+        function blTopRenderScorers(m) {
+            const list = blTopScorersCombined(m);
+            if (!list.length) return blTopRenderMatch(m);
+            const shown = list.length <= BL_TOP_SCORERS_MAX ? list : list.slice(0, BL_TOP_SCORERS_MAX - 1);
+            const rest = list.length - shown.length;
+            const items = shown.map(e => `
+                <span class="bl-top-scorer">
+                    ${blCrestImg(e.team, 'bl-top-scorer-crest')}
+                    <span class="bl-top-scorer-name">${blEsc(e.name)}</span>
+                    <span class="bl-top-scorer-min">${blEsc(e.minute)}</span>
+                </span>`).join('')
+                + (rest > 0 ? `<span class="bl-top-scorer"><span class="bl-top-scorer-name">+${rest} weitere</span></span>` : '');
+            return `<div class="bl-top-scorers">${items}</div>`;
+        }
+
+        // Schrumpft die gerade angezeigte Phase per Skalierung, statt sie im
+        // 100px-hohen Balken abzuschneiden - greift nur bei Torfestspielen mit
+        // vielen Torschuetzen, die sonst ueber die 1280px hinausragen wuerden.
+        function blFitTopWidget() {
+            const el = document.getElementById('bl-top-ticker');
+            const wrap = el && el.parentElement;
+            if (!el || !wrap) return;
+            el.style.transform = 'scale(1)';
+            const child = el.firstElementChild;
+            if (!child) return;
+            let scale = 1;
+            while (child.scrollWidth * scale > wrap.clientWidth && scale > 0.65) {
+                scale -= 0.05;
+                el.style.transform = `scale(${scale.toFixed(2)})`;
+            }
+        }
+
+        function blRenderTopWidget() {
             const el = document.getElementById('bl-top-ticker');
             const label = document.getElementById('bl-top-label');
             if (!el) return;
             if (label) label.textContent = blMatchdayData.order ? `⚽ Bundesliga · Spieltag ${blMatchdayData.order}` : '⚽ Bundesliga';
 
-            const now = Date.now();
-            const matches = (blMatchdayData.matches || []).slice()
-                .sort((a, b) => {
-                    const ka = blKickoff(a), kb = blKickoff(b);
-                    return (ka ? ka.getTime() : Infinity) - (kb ? kb.getTime() : Infinity);
-                });
+            const matches = blTopOrderedMatches();
             if (!matches.length) {
-                el.innerHTML = `<span class="bl-top-item"><span class="bl-top-team">Bundesliga-Daten werden geladen …</span></span>`;
+                el.style.transform = 'scale(1)';
+                el.innerHTML = `<div class="bl-top-match"><span class="bl-top-team">Bundesliga-Daten werden geladen …</span></div>`;
                 return;
             }
+            if (blTopMatchIdx >= matches.length) blTopMatchIdx = 0;
+            const m = matches[blTopMatchIdx];
+            const now = Date.now();
+            const started = blIsLive(m, now) || blIsFinished(m);
 
-            const items = matches.map(m => {
-                const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
-                const live = blIsLive(m, now), finished = blIsFinished(m);
-                let middle;
-                if (live || finished) {
-                    const s = blReadScore(m);
-                    middle = `<span class="bl-top-score ${live ? 'is-live' : 'is-final'}">${s.t1}:${s.t2}</span>`;
-                } else {
-                    const k = blKickoff(m);
-                    middle = `<span class="bl-top-time">${k ? blEsc(blTimeFmt.format(k)) : '--:--'}</span>`;
-                }
-                return `<span class="bl-top-item">
-                    ${blCrestImg(t1, 'bl-top-crest')}
-                    <span class="bl-top-team">${blEsc(blField(t1, 'shortName') || blField(t1, 'teamName') || '')}</span>
-                    ${middle}
-                    <span class="bl-top-team">${blEsc(blField(t2, 'shortName') || blField(t2, 'teamName') || '')}</span>
-                    ${blCrestImg(t2, 'bl-top-crest')}
-                </span>`;
-            }).join('');
+            el.innerHTML = (blTopPhase === 1 && started) ? blTopRenderScorers(m) : blTopRenderMatch(m);
+            blFitTopWidget();
+        }
 
-            // Zweimal derselbe Inhalt - die Animation laeuft genau eine Kopienbreite weit
-            // und springt am Ende nahtlos zurueck.
-            el.innerHTML = items + items;
-            const width = el.scrollWidth / 2;
-            if (width) el.style.animationDuration = Math.round(width / BL_TOP_TICKER_PX_PRO_SEKUNDE) + 's';
+        // Wechselt alle 6s zur naechsten Phase bzw. zum naechsten Spiel. Laeuft
+        // bewusst als eigener setInterval statt ueber cancelSequenceTimers - genau
+        // wie der OpenLigaDB-Poller soll das Widget weiterlaufen, egal welcher
+        // Media-Slide gerade zu sehen ist.
+        function blAdvanceTopCycle() {
+            const matches = blTopOrderedMatches();
+            if (!matches.length) { blRenderTopWidget(); return; }
+            if (blTopMatchIdx >= matches.length) blTopMatchIdx = 0;
+            const m = matches[blTopMatchIdx];
+            const now = Date.now();
+            const started = blIsLive(m, now) || blIsFinished(m);
+            const hasScorers = started && blTopScorersCombined(m).length > 0;
+
+            if (blTopPhase === 0 && hasScorers) {
+                blTopPhase = 1;
+            } else {
+                blTopPhase = 0;
+                blTopMatchIdx = (blTopMatchIdx + 1) % matches.length;
+            }
+            blRenderTopWidget();
+        }
+
+        function blStartTopCycle() {
+            if (blTopCycleTimer) clearInterval(blTopCycleTimer);
+            blRenderTopWidget();
+            blTopCycleTimer = setInterval(blAdvanceTopCycle, BL_TOP_PHASE_MS);
         }
 
         function blRenderMatchdayChrome() {
@@ -2996,12 +3130,30 @@
             return ids;
         }
 
+        // Rendert eine Haelfte der Tabelle (9 Zeilen) fuer eine der beiden Spalten.
+        function blRenderTableRows(rows, liveIds) {
+            return rows.map(r => {
+                const isLive = liveIds.has(Number(r.teamInfoId));
+                const diff = (r.goalDiff > 0 ? '+' : '') + r.goalDiff;
+                const diffCls = r.goalDiff > 0 ? ' is-pos' : (r.goalDiff < 0 ? ' is-neg' : '');
+                return `<div class="bl-tbl-row ${blZoneClass(r.rank)}${isLive ? ' is-live' : ''}">
+                    <span class="bl-tbl-rank">${r.rank}</span>
+                    ${blCrestImg(r, 'bl-tbl-crest')}
+                    <span class="bl-tbl-name">${blEsc(r.shortName)}${isLive ? '<span class="bl-live-dot"></span>' : ''}</span>
+                    <span class="bl-tbl-num">${r.matches}</span>
+                    <span class="bl-tbl-num bl-tbl-diff${diffCls}">${diff}</span>
+                    <span class="bl-tbl-pts">${r.points}</span>
+                </div>`;
+            }).join('');
+        }
+
         function blRenderTable() {
-            const body = document.getElementById('bl-tbl-body');
+            const bodyLeft = document.getElementById('bl-tbl-body-left');
+            const bodyRight = document.getElementById('bl-tbl-body-right');
             const sub = document.getElementById('bl-tbl-sub');
             const stand = document.getElementById('bl-tbl-stand');
             const liveBadge = document.getElementById('bl-tbl-live');
-            if (!body) return;
+            if (!bodyLeft || !bodyRight) return;
 
             const now = Date.now();
             const liveIds = blLiveTeamIds(now);
@@ -3018,24 +3170,15 @@
             if (liveBadge) liveBadge.style.display = liveIds.size ? 'flex' : 'none';
 
             if (!blTableData.rows.length) {
-                body.innerHTML = `<div class="bl-empty-msg">Tabelle wird geladen …</div>`;
+                bodyLeft.innerHTML = `<div class="bl-empty-msg">Tabelle wird geladen …</div>`;
+                bodyRight.innerHTML = '';
                 return;
             }
 
-            body.innerHTML = blTableData.rows.map(r => {
-                const isLive = liveIds.has(Number(r.teamInfoId));
-                const diff = (r.goalDiff > 0 ? '+' : '') + r.goalDiff;
-                const diffCls = r.goalDiff > 0 ? ' is-pos' : (r.goalDiff < 0 ? ' is-neg' : '');
-                return `<div class="bl-tbl-row ${blZoneClass(r.rank)}${isLive ? ' is-live' : ''}">
-                    <span class="bl-tbl-rank">${r.rank}</span>
-                    ${blCrestImg(r, 'bl-tbl-crest')}
-                    <span class="bl-tbl-name">${blEsc(r.shortName)}${isLive ? '<span class="bl-live-dot"></span>' : ''}</span>
-                    <span class="bl-tbl-num">${r.matches}</span>
-                    <span class="bl-tbl-num bl-tbl-sun">${r.won} · ${r.draw} · ${r.lost}</span>
-                    <span class="bl-tbl-num bl-tbl-diff${diffCls}">${diff}</span>
-                    <span class="bl-tbl-pts">${r.points}</span>
-                </div>`;
-            }).join('');
+            // Rang 1-9 links, 10-18 rechts.
+            const half = Math.ceil(blTableData.rows.length / 2);
+            bodyLeft.innerHTML = blRenderTableRows(blTableData.rows.slice(0, half), liveIds);
+            bodyRight.innerHTML = blRenderTableRows(blTableData.rows.slice(half), liveIds);
         }
 
         function runBlTableState(nextStateIndex) {
@@ -3058,10 +3201,10 @@
                 blRenderTicker();
             }
             if (tblView && tblView.classList.contains('active')) blRenderTable();
-            blRenderTopTicker(); // laeuft immer, unabhaengig vom aktiven Media-Slide
+            blRenderTopWidget(); // laeuft immer, unabhaengig vom aktiven Media-Slide - Phase/Index bleiben unberuehrt
         }
 
-        blRenderTopTicker();
+        blStartTopCycle();
         blRefresh();
 
         // ---------- Getränke-Highlights ----------
@@ -3166,14 +3309,13 @@
 
         // ---------- Hype-Reel: schneller Foto-Schnitt zwischendurch ----------
         const HYPE_REEL_TEXTS = [
-            "🍹 DRINKS · GENUSS · PARTY",
-            "🎶 MUSIK, DRINKS & GUTE LAUNE",
-            "🍻 PROST AUF EINEN GEILEN ABEND",
-            "🎊 PARTY-MODUS: AN",
-            "🥂 ANSTOSSEN · LACHEN · FEIERN",
-            "🎧 GUTE BEATS, GUTE LEUTE",
-            "🍸 EIN DRINK, TAUSEND GESCHICHTEN",
-            "🔊 LAUTER SPASS, VOLLE BAR",
+            "📸 MOMENTE, DIE BLEIBEN",
+            "🖼️ JEDES FOTO ERZÄHLT EINE GESCHICHTE",
+            "✨ UNSERE GÄSTE, UNSERE MOMENTE",
+            "📷 LÄCHELN, KLICK, ERINNERUNG",
+            "🎞️ DEINE MOMENTE IM CITY CAFE",
+            "💫 FESTGEHALTEN FÜR IMMER",
+            "📌 SCHNAPPSCHÜSSE AUS DEM CITY CAFE",
             "☕ KAFFEE, LEUTE, GUTE LAUNE",
             "🌞 JEDE TAGESZEIT HAT IHREN CHARME",
             "🤝 TREFFPUNKT FÜR ALLE",
@@ -3238,10 +3380,10 @@
         ];
         let hypeReelBgIndex = 0;
 
-        // ---------- Hype-Reel = 5-Spieler-Trinkspiel ----------
-        // 5 Spalten (Pärchen), 60s Countdown zum Nummer-Aussuchen, dann landen 10 Fotos in
-        // zufälliger Reihenfolge - wessen Spalte als letztes komplett wird, zahlt die Runde.
-        // Gemeinsame Vorbereitungsphase für beide Trinkspiel-Varianten: Hintergrund wechseln,
+        // ---------- Hype-Reel: City Cafe Polaroid (V1) + Hos'n Obe (V2) ----------
+        // 5 Spalten (Pärchen), 60s Countdown, dann landen 10 Fotos in zufälliger
+        // Reihenfolge - die zuletzt komplette Spalte bekommt am Ende ein Spotlight.
+        // Gemeinsame Vorbereitungsphase für beide Varianten: Hintergrund wechseln,
         // V1/V2-Abzeichen setzen, 60s-Countdown mit alle 10s wechselndem Label (Fade)
         function startTrinkspielCountdown(version, onComplete) {
             document.getElementById('hypereel-card').style.backgroundImage = `url('${HYPEREEL_BACKGROUNDS[hypeReelBgIndex]}')`;
@@ -3254,10 +3396,17 @@
 
             const countdownOverlay = document.getElementById('hype-countdown-overlay');
             const countdownTimer = document.getElementById('hype-countdown-timer');
+            // V1 ist kein Trinkspiel mehr, sondern die Foto-Wand "City Cafe Polaroid" -
+            // V2 (Hos'n Obe, Kartenspiel) behaelt seine bisherige Trinkspiel-Beschriftung.
             const labelA = document.getElementById('hype-countdown-label-a');
             const labelB = document.getElementById('hype-countdown-label-b');
-            labelA.textContent = '🍻 City Cafe Trinkspiel ' + version;
-            labelB.textContent = 'Trinkspiel ' + version;
+            if (version === 'V1') {
+                labelA.textContent = '📸 City Cafe Polaroid-Momente';
+                labelB.textContent = 'Polaroid-Momente';
+            } else {
+                labelA.textContent = '🍻 City Cafe Trinkspiel ' + version;
+                labelB.textContent = 'Trinkspiel ' + version;
+            }
             labelA.style.opacity = '1';
             labelB.style.opacity = '0';
             countdownOverlay.style.display = 'flex';
@@ -3284,7 +3433,7 @@
             }, 1000);
         }
 
-        // ---------- Trinkspiel V1 (Foto-Pärchen) ----------
+        // ---------- City Cafe Polaroid (V1, vormals "Trinkspiel V1") ----------
         function runPhotoTrinkspielV1(nextStateIndex) {
             document.getElementById('media-view-hypereel').classList.add('active');
             document.getElementById('card-game-container').innerHTML = ''; // Reste von V2 entfernen
@@ -3292,9 +3441,12 @@
             scoresRow.style.display = 'none'; // Punktezähler von V2 darf hier nicht mehr sichtbar sein
             scoresRow.innerHTML = '';
 
+            // date kommt direkt aus galerie.gs (Drive-Aenderungsdatum, dd.MM.yyyy) und
+            // landet handschriftlich im weissen Rand jedes Polaroids. Die Poster-Bilder
+            // im Notfall-Pool sind keine Gaeste-Fotos - dafuer gibt's kein Datum.
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
-                ? visitorGalleryData.map(d => d.src)
-                : [POSTER_TAG_URL, POSTER_NACHT_URL, CALAMARI_EVENT_URL];
+                ? visitorGalleryData.map(d => ({ src: d.src, date: d.date }))
+                : [POSTER_TAG_URL, POSTER_NACHT_URL, CALAMARI_EVENT_URL].map(src => ({ src, date: null }));
             // Immer genau 10 Fotos fürs Spiel - bei kleiner Galerie notfalls mit Wiederholung auffüllen
             let shots = shuffleArray(pool);
             while (shots.length < 10) shots = shots.concat(shuffleArray(pool));
@@ -3332,7 +3484,8 @@
                 function landNext() {
                     if (idx >= 10) return;
                     const slot = slots[arrivalOrder[idx]];
-                    const src = shots[idx]; // kein Cache-Busting: Galeriefotos aendern sich nicht innerhalb einer Runde
+                    const shot = shots[idx]; // kein Cache-Busting: Galeriefotos aendern sich nicht innerhalb einer Runde
+                    const src = shot.src;
                     const zIndex = idx + 1;
                     const isLast = idx === 9;
                     idx++;
@@ -3354,6 +3507,12 @@
                         const img = document.createElement('img');
                         img.src = src;
                         card.appendChild(img);
+                        if (shot.date) {
+                            const dateEl = document.createElement('div');
+                            dateEl.className = 'polaroid-date';
+                            dateEl.textContent = shot.date;
+                            card.appendChild(dateEl);
+                        }
                         container.appendChild(card);
 
                         const finalRotation = Math.random() * 24 - 12; // leichte Schräglage, nicht perfekt gerade
@@ -3362,7 +3521,7 @@
                             y: CENTER_Y - (slot.top + CARD_H / 2)
                         };
                         animateLanding(card, centerOffset, finalRotation, isLast ? () => {
-                            announceLoserPair(card, nextStateIndex);
+                            announcePolaroidHighlight(card, nextStateIndex);
                         } : null);
 
                         if (!isLast) later(landNext, 5500);
@@ -3402,8 +3561,8 @@
             }, JAEGER_PUNTIGAMER_SECONDS * 1000);
         }
 
-        function announceLoserPair(lastCard, nextStateIndex) {
-            lastCard.classList.add('hr-pair-loser');
+        function announcePolaroidHighlight(lastCard, nextStateIndex) {
+            lastCard.classList.add('hr-pair-highlight');
 
             later(() => {
                 runJaegerPuntigamerState(nextStateIndex); // -> 30s Jäger/Puntigamer, dann erst wieder Plakat
