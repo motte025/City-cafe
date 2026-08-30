@@ -500,17 +500,25 @@
         }
 
         /* ---------- Slot 2: Tabelle ---------- */
+        /* Zwei Spalten (Rang 1-9 links, 10-18 rechts) statt einer langen Liste:
+           bei gleicher Buehnenhoehe verdoppelt sich dadurch die Zeilenhoehe -
+           Wappen und Schrift werden deutlich groesser/lesbarer. S-U-N (Siege
+           Unentschieden Niederlagen) faellt dafuer weg, da bei zwei schmaleren
+           Spalten kein Platz mehr fuer sie waere - fuer den Blick aufs Ranking
+           zaehlen Rang/Diff/Punkte ohnehin mehr. */
+        .bl-tbl-columns { display: flex; gap: 24px; flex: 1; min-height: 0; }
+        .bl-tbl-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
         .bl-tbl-head, .bl-tbl-row {
-            display: grid; grid-template-columns: 46px 46px 1fr 68px 132px 86px 78px;
-            align-items: center; gap: 12px; padding: 0 18px; box-sizing: border-box;
+            display: grid; grid-template-columns: 40px 64px 1fr 44px 64px 58px;
+            align-items: center; gap: 10px; padding: 0 14px; box-sizing: border-box;
         }
         .bl-tbl-head {
-            height: 24px; margin-bottom: 6px; font-size: 13px; font-weight: 800; color: #94a3b8;
+            height: 26px; margin-bottom: 8px; font-size: 13px; font-weight: 800; color: #94a3b8;
             text-transform: uppercase; letter-spacing: 1.4px;
         }
-        .bl-tbl-body { display: flex; flex-direction: column; gap: 2px; }
+        .bl-tbl-body { display: flex; flex-direction: column; gap: 6px; }
         .bl-tbl-row {
-            height: 31px; border-radius: 8px; border: 1px solid transparent;
+            height: 58px; border-radius: 10px; border: 1px solid transparent;
             background: rgba(255,255,255,0.035); position: relative;
         }
         /* Der farbige Zonenbalken sitzt als ::before im Zeilenrand - so verschiebt er
@@ -541,27 +549,26 @@
         }
         @keyframes blRowLivePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.22; } }
         .bl-tbl-rank {
-            font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff;
             text-align: center; font-variant-numeric: tabular-nums;
         }
         .bl-tbl-crest {
-            width: 46px; height: 26px; object-fit: contain; justify-self: center;
+            width: 64px; height: 40px; object-fit: contain; justify-self: center;
             filter: drop-shadow(0 0 3px rgba(255,255,255,0.8));
         }
         .bl-tbl-name {
-            font-size: 19px; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 10px;
+            font-size: 25px; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 12px;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
         }
-        .bl-tbl-name .bl-live-dot { width: 9px; height: 9px; }
+        .bl-tbl-name .bl-live-dot { width: 12px; height: 12px; }
         .bl-tbl-num {
-            font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.82);
+            font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.82);
             text-align: center; font-variant-numeric: tabular-nums;
         }
-        .bl-tbl-sun { letter-spacing: 1px; }
         .bl-tbl-diff.is-pos { color: #34d399; }
         .bl-tbl-diff.is-neg { color: #ff6b6b; }
         .bl-tbl-pts {
-            font-family: 'Orbitron', sans-serif; font-size: 21px; font-weight: 900; color: #00f2fe;
+            font-family: 'Orbitron', sans-serif; font-size: 29px; font-weight: 900; color: #00f2fe;
             text-align: center; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
         }
         .bl-legend { display: flex; align-items: center; gap: 22px; height: 30px; margin-top: 10px; flex-shrink: 0; }
@@ -1338,16 +1345,32 @@
                                 <div class="bl-live-badge" id="bl-tbl-live" style="display: none;"><span class="bl-live-dot"></span>Live</div>
                             </div>
                         </div>
-                        <div class="bl-tbl-head">
-                            <span style="text-align: center;">#</span>
-                            <span></span>
-                            <span>Verein</span>
-                            <span style="text-align: center;">Sp</span>
-                            <span style="text-align: center;">S · U · N</span>
-                            <span style="text-align: center;">Diff</span>
-                            <span style="text-align: center;">Pkt</span>
+                        <!-- Zwei Spalten (Rang 1-9 links, 10-18 rechts) statt einer 18-Zeilen-Liste -
+                             siehe CSS-Kommentar bei .bl-tbl-columns. -->
+                        <div class="bl-tbl-columns">
+                            <div class="bl-tbl-col">
+                                <div class="bl-tbl-head">
+                                    <span style="text-align: center;">#</span>
+                                    <span></span>
+                                    <span>Verein</span>
+                                    <span style="text-align: center;">Sp</span>
+                                    <span style="text-align: center;">Diff</span>
+                                    <span style="text-align: center;">Pkt</span>
+                                </div>
+                                <div class="bl-tbl-body" id="bl-tbl-body-left"></div>
+                            </div>
+                            <div class="bl-tbl-col">
+                                <div class="bl-tbl-head">
+                                    <span style="text-align: center;">#</span>
+                                    <span></span>
+                                    <span>Verein</span>
+                                    <span style="text-align: center;">Sp</span>
+                                    <span style="text-align: center;">Diff</span>
+                                    <span style="text-align: center;">Pkt</span>
+                                </div>
+                                <div class="bl-tbl-body" id="bl-tbl-body-right"></div>
+                            </div>
                         </div>
-                        <div class="bl-tbl-body" id="bl-tbl-body"></div>
                         <div class="bl-legend" id="bl-tbl-legend">
                             <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #00f2fe; box-shadow: 0 0 8px rgba(0,242,254,0.8);"></span>Champions League</span>
                             <span class="bl-legend-item"><span class="bl-legend-swatch" style="background: #4facfe; box-shadow: 0 0 8px rgba(79,172,254,0.8);"></span>Europa League</span>
@@ -3107,12 +3130,30 @@
             return ids;
         }
 
+        // Rendert eine Haelfte der Tabelle (9 Zeilen) fuer eine der beiden Spalten.
+        function blRenderTableRows(rows, liveIds) {
+            return rows.map(r => {
+                const isLive = liveIds.has(Number(r.teamInfoId));
+                const diff = (r.goalDiff > 0 ? '+' : '') + r.goalDiff;
+                const diffCls = r.goalDiff > 0 ? ' is-pos' : (r.goalDiff < 0 ? ' is-neg' : '');
+                return `<div class="bl-tbl-row ${blZoneClass(r.rank)}${isLive ? ' is-live' : ''}">
+                    <span class="bl-tbl-rank">${r.rank}</span>
+                    ${blCrestImg(r, 'bl-tbl-crest')}
+                    <span class="bl-tbl-name">${blEsc(r.shortName)}${isLive ? '<span class="bl-live-dot"></span>' : ''}</span>
+                    <span class="bl-tbl-num">${r.matches}</span>
+                    <span class="bl-tbl-num bl-tbl-diff${diffCls}">${diff}</span>
+                    <span class="bl-tbl-pts">${r.points}</span>
+                </div>`;
+            }).join('');
+        }
+
         function blRenderTable() {
-            const body = document.getElementById('bl-tbl-body');
+            const bodyLeft = document.getElementById('bl-tbl-body-left');
+            const bodyRight = document.getElementById('bl-tbl-body-right');
             const sub = document.getElementById('bl-tbl-sub');
             const stand = document.getElementById('bl-tbl-stand');
             const liveBadge = document.getElementById('bl-tbl-live');
-            if (!body) return;
+            if (!bodyLeft || !bodyRight) return;
 
             const now = Date.now();
             const liveIds = blLiveTeamIds(now);
@@ -3129,24 +3170,15 @@
             if (liveBadge) liveBadge.style.display = liveIds.size ? 'flex' : 'none';
 
             if (!blTableData.rows.length) {
-                body.innerHTML = `<div class="bl-empty-msg">Tabelle wird geladen …</div>`;
+                bodyLeft.innerHTML = `<div class="bl-empty-msg">Tabelle wird geladen …</div>`;
+                bodyRight.innerHTML = '';
                 return;
             }
 
-            body.innerHTML = blTableData.rows.map(r => {
-                const isLive = liveIds.has(Number(r.teamInfoId));
-                const diff = (r.goalDiff > 0 ? '+' : '') + r.goalDiff;
-                const diffCls = r.goalDiff > 0 ? ' is-pos' : (r.goalDiff < 0 ? ' is-neg' : '');
-                return `<div class="bl-tbl-row ${blZoneClass(r.rank)}${isLive ? ' is-live' : ''}">
-                    <span class="bl-tbl-rank">${r.rank}</span>
-                    ${blCrestImg(r, 'bl-tbl-crest')}
-                    <span class="bl-tbl-name">${blEsc(r.shortName)}${isLive ? '<span class="bl-live-dot"></span>' : ''}</span>
-                    <span class="bl-tbl-num">${r.matches}</span>
-                    <span class="bl-tbl-num bl-tbl-sun">${r.won} · ${r.draw} · ${r.lost}</span>
-                    <span class="bl-tbl-num bl-tbl-diff${diffCls}">${diff}</span>
-                    <span class="bl-tbl-pts">${r.points}</span>
-                </div>`;
-            }).join('');
+            // Rang 1-9 links, 10-18 rechts.
+            const half = Math.ceil(blTableData.rows.length / 2);
+            bodyLeft.innerHTML = blRenderTableRows(blTableData.rows.slice(0, half), liveIds);
+            bodyRight.innerHTML = blRenderTableRows(blTableData.rows.slice(half), liveIds);
         }
 
         function runBlTableState(nextStateIndex) {
