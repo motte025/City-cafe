@@ -134,14 +134,17 @@
             letter-spacing: 1.2px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); white-space: nowrap;
             box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
         }
-        .bl-top-ticker-wrap { flex: 1; height: 100%; overflow: hidden; display: flex; align-items: center; }
+        /* Statische Anzeige statt Dauerlauf-Ticker: pro Spiel erst das Spiel (6s),
+           dann - nur falls schon Tore gefallen sind - die Torschuetzen (6s), dann
+           das naechste Spiel. Noch nicht angepfiffene Spiele ueberspringen die
+           Torschuetzen-Phase automatisch (siehe blAdvanceTopCycle). */
+        .bl-top-ticker-wrap { flex: 1; height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .bl-top-ticker-move {
-            display: flex; align-items: center; width: max-content;
-            animation: blTickerScroll 45s linear infinite; will-change: transform;
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; height: 100%; transform-origin: center;
         }
-        .bl-top-item {
-            display: flex; align-items: center; gap: 16px; padding: 0 36px; flex-shrink: 0;
-            height: 100px; border-right: 1px solid rgba(255, 255, 255, 0.12);
+        .bl-top-match {
+            display: flex; align-items: center; justify-content: center; gap: 20px; height: 100%; padding: 0 30px;
         }
         /* Wappen so gross wie im 100px hohen Widget moeglich - Object-fit haelt
            schmale Schriftzug-Wappen (Union Berlin, HSV, Leipzig) proportional. */
@@ -159,6 +162,18 @@
         .bl-top-time {
             font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #94a3b8;
             padding: 0 8px; font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+        /* Torschuetzen-Phase: kleines Wappen je Tor zeigt, welches Team getroffen hat. */
+        .bl-top-scorers { display: flex; align-items: center; justify-content: center; gap: 30px; height: 100%; padding: 0 30px; white-space: nowrap; }
+        .bl-top-scorer { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+        .bl-top-scorer-crest {
+            height: 46px; width: auto; max-width: 80px; object-fit: contain; flex-shrink: 0;
+            filter: drop-shadow(0 0 4px rgba(255,255,255,0.75));
+        }
+        .bl-top-scorer-name { font-size: 24px; font-weight: 800; color: #ffffff; white-space: nowrap; text-shadow: 0 2px 6px rgba(0,0,0,0.85); }
+        .bl-top-scorer-min {
+            font-family: 'Orbitron', sans-serif; font-size: 21px; font-weight: 900; color: #00f2fe;
+            font-variant-numeric: tabular-nums; white-space: nowrap;
         }
 
         .media-zone {
@@ -2877,52 +2892,140 @@
             el.innerHTML = items + items;
         }
 
-        // ---------- Top-Widget: staendig sichtbarer Bundesliga-Ticker ----------
-        // Anders als der Ticker im Spieltag-Slot laeuft dieser immer, unabhaengig
-        // davon, welcher Media-Slide gerade aktiv ist - daher eigenes Rendering.
-        const BL_TOP_TICKER_PX_PRO_SEKUNDE = 90;
-        function blRenderTopTicker() {
+        // ---------- Top-Widget: Bundesliga im Standbild-Wechsel ----------
+        // Anders als der Ticker im Spieltag-Slot laeuft das hier immer, unabhaengig
+        // davon, welcher Media-Slide gerade aktiv ist. Pro Spiel: erst das Spiel
+        // selbst (6s), danach - nur wenn schon Tore gefallen sind - die Torschuetzen
+        // (6s), dann das naechste Spiel. Noch nicht angepfiffene Spiele ueberspringen
+        // die Torschuetzen-Phase automatisch, weil es dafuer noch nichts zu zeigen gibt.
+        // Karten liefert OpenLigaDB nicht (siehe Hinweis oben bei den Bundesliga-Widgets)
+        // - deshalb bewusst nur Torschuetzen, keine Gelb/Rot-Spalte.
+        const BL_TOP_PHASE_MS = 6000;
+        let blTopCycleTimer = null;
+        let blTopMatchIdx = 0;
+        let blTopPhase = 0; // 0 = Spiel, 1 = Torschuetzen
+
+        function blTopOrderedMatches() {
+            return (blMatchdayData.matches || []).slice().sort((a, b) => {
+                const ka = blKickoff(a), kb = blKickoff(b);
+                return (ka ? ka.getTime() : Infinity) - (kb ? kb.getTime() : Infinity);
+            });
+        }
+
+        function blTopScorersCombined(m) {
+            const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
+            const s = blScorers(m);
+            const combined = s.home.map(e => Object.assign({ team: t1 }, e))
+                .concat(s.away.map(e => Object.assign({ team: t2 }, e)));
+            combined.sort((a, b) => (parseInt(a.minute) || 0) - (parseInt(b.minute) || 0));
+            return combined;
+        }
+
+        function blTopRenderMatch(m) {
+            const now = Date.now();
+            const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
+            const live = blIsLive(m, now), finished = blIsFinished(m);
+            let middle;
+            if (live || finished) {
+                const s = blReadScore(m);
+                middle = `<span class="bl-top-score ${live ? 'is-live' : 'is-final'}">${s.t1}:${s.t2}</span>`;
+            } else {
+                const k = blKickoff(m);
+                middle = `<span class="bl-top-time">${k ? blEsc(blTimeFmt.format(k)) : '--:--'}</span>`;
+            }
+            return `<div class="bl-top-match">
+                ${blCrestImg(t1, 'bl-top-crest')}
+                <span class="bl-top-team">${blEsc(blField(t1, 'shortName') || blField(t1, 'teamName') || '')}</span>
+                ${middle}
+                <span class="bl-top-team">${blEsc(blField(t2, 'shortName') || blField(t2, 'teamName') || '')}</span>
+                ${blCrestImg(t2, 'bl-top-crest')}
+            </div>`;
+        }
+
+        // Ab 6 Torschuetzen wird's im 1280px breiten Balken eng, selbst mit
+        // Verkleinerung (siehe blFitTopWidget). Ab dann lieber sauber abschneiden
+        // und mit "+N weitere" zusammenfassen, statt Namen aus dem Rahmen laufen
+        // zu lassen - gleiches Muster wie bei den Torschuetzen im Spieltag-Slot.
+        const BL_TOP_SCORERS_MAX = 5;
+        function blTopRenderScorers(m) {
+            const list = blTopScorersCombined(m);
+            if (!list.length) return blTopRenderMatch(m);
+            const shown = list.length <= BL_TOP_SCORERS_MAX ? list : list.slice(0, BL_TOP_SCORERS_MAX - 1);
+            const rest = list.length - shown.length;
+            const items = shown.map(e => `
+                <span class="bl-top-scorer">
+                    ${blCrestImg(e.team, 'bl-top-scorer-crest')}
+                    <span class="bl-top-scorer-name">${blEsc(e.name)}</span>
+                    <span class="bl-top-scorer-min">${blEsc(e.minute)}</span>
+                </span>`).join('')
+                + (rest > 0 ? `<span class="bl-top-scorer"><span class="bl-top-scorer-name">+${rest} weitere</span></span>` : '');
+            return `<div class="bl-top-scorers">${items}</div>`;
+        }
+
+        // Schrumpft die gerade angezeigte Phase per Skalierung, statt sie im
+        // 100px-hohen Balken abzuschneiden - greift nur bei Torfestspielen mit
+        // vielen Torschuetzen, die sonst ueber die 1280px hinausragen wuerden.
+        function blFitTopWidget() {
+            const el = document.getElementById('bl-top-ticker');
+            const wrap = el && el.parentElement;
+            if (!el || !wrap) return;
+            el.style.transform = 'scale(1)';
+            const child = el.firstElementChild;
+            if (!child) return;
+            let scale = 1;
+            while (child.scrollWidth * scale > wrap.clientWidth && scale > 0.65) {
+                scale -= 0.05;
+                el.style.transform = `scale(${scale.toFixed(2)})`;
+            }
+        }
+
+        function blRenderTopWidget() {
             const el = document.getElementById('bl-top-ticker');
             const label = document.getElementById('bl-top-label');
             if (!el) return;
             if (label) label.textContent = blMatchdayData.order ? `⚽ Bundesliga · Spieltag ${blMatchdayData.order}` : '⚽ Bundesliga';
 
-            const now = Date.now();
-            const matches = (blMatchdayData.matches || []).slice()
-                .sort((a, b) => {
-                    const ka = blKickoff(a), kb = blKickoff(b);
-                    return (ka ? ka.getTime() : Infinity) - (kb ? kb.getTime() : Infinity);
-                });
+            const matches = blTopOrderedMatches();
             if (!matches.length) {
-                el.innerHTML = `<span class="bl-top-item"><span class="bl-top-team">Bundesliga-Daten werden geladen …</span></span>`;
+                el.style.transform = 'scale(1)';
+                el.innerHTML = `<div class="bl-top-match"><span class="bl-top-team">Bundesliga-Daten werden geladen …</span></div>`;
                 return;
             }
+            if (blTopMatchIdx >= matches.length) blTopMatchIdx = 0;
+            const m = matches[blTopMatchIdx];
+            const now = Date.now();
+            const started = blIsLive(m, now) || blIsFinished(m);
 
-            const items = matches.map(m => {
-                const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
-                const live = blIsLive(m, now), finished = blIsFinished(m);
-                let middle;
-                if (live || finished) {
-                    const s = blReadScore(m);
-                    middle = `<span class="bl-top-score ${live ? 'is-live' : 'is-final'}">${s.t1}:${s.t2}</span>`;
-                } else {
-                    const k = blKickoff(m);
-                    middle = `<span class="bl-top-time">${k ? blEsc(blTimeFmt.format(k)) : '--:--'}</span>`;
-                }
-                return `<span class="bl-top-item">
-                    ${blCrestImg(t1, 'bl-top-crest')}
-                    <span class="bl-top-team">${blEsc(blField(t1, 'shortName') || blField(t1, 'teamName') || '')}</span>
-                    ${middle}
-                    <span class="bl-top-team">${blEsc(blField(t2, 'shortName') || blField(t2, 'teamName') || '')}</span>
-                    ${blCrestImg(t2, 'bl-top-crest')}
-                </span>`;
-            }).join('');
+            el.innerHTML = (blTopPhase === 1 && started) ? blTopRenderScorers(m) : blTopRenderMatch(m);
+            blFitTopWidget();
+        }
 
-            // Zweimal derselbe Inhalt - die Animation laeuft genau eine Kopienbreite weit
-            // und springt am Ende nahtlos zurueck.
-            el.innerHTML = items + items;
-            const width = el.scrollWidth / 2;
-            if (width) el.style.animationDuration = Math.round(width / BL_TOP_TICKER_PX_PRO_SEKUNDE) + 's';
+        // Wechselt alle 6s zur naechsten Phase bzw. zum naechsten Spiel. Laeuft
+        // bewusst als eigener setInterval statt ueber cancelSequenceTimers - genau
+        // wie der OpenLigaDB-Poller soll das Widget weiterlaufen, egal welcher
+        // Media-Slide gerade zu sehen ist.
+        function blAdvanceTopCycle() {
+            const matches = blTopOrderedMatches();
+            if (!matches.length) { blRenderTopWidget(); return; }
+            if (blTopMatchIdx >= matches.length) blTopMatchIdx = 0;
+            const m = matches[blTopMatchIdx];
+            const now = Date.now();
+            const started = blIsLive(m, now) || blIsFinished(m);
+            const hasScorers = started && blTopScorersCombined(m).length > 0;
+
+            if (blTopPhase === 0 && hasScorers) {
+                blTopPhase = 1;
+            } else {
+                blTopPhase = 0;
+                blTopMatchIdx = (blTopMatchIdx + 1) % matches.length;
+            }
+            blRenderTopWidget();
+        }
+
+        function blStartTopCycle() {
+            if (blTopCycleTimer) clearInterval(blTopCycleTimer);
+            blRenderTopWidget();
+            blTopCycleTimer = setInterval(blAdvanceTopCycle, BL_TOP_PHASE_MS);
         }
 
         function blRenderMatchdayChrome() {
@@ -3058,10 +3161,10 @@
                 blRenderTicker();
             }
             if (tblView && tblView.classList.contains('active')) blRenderTable();
-            blRenderTopTicker(); // laeuft immer, unabhaengig vom aktiven Media-Slide
+            blRenderTopWidget(); // laeuft immer, unabhaengig vom aktiven Media-Slide - Phase/Index bleiben unberuehrt
         }
 
-        blRenderTopTicker();
+        blStartTopCycle();
         blRefresh();
 
         // ---------- Getränke-Highlights ----------
