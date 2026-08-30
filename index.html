@@ -119,28 +119,46 @@
 
         .top-custom-widget {
             width: 1280px; height: 100px;
-            display: flex; align-items: center; justify-content: center; text-align: center;
-            background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            border: none !important; box-shadow: none !important;
-            border-radius: 24px; padding: 10px 30px; overflow: hidden; position: relative;
+            display: flex; align-items: center; justify-content: flex-start;
+            background: rgba(0, 0, 0, 0.32) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+            border: 1px solid rgba(255, 255, 255, 0.13); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+            border-radius: 24px; padding: 0; overflow: hidden; position: relative;
         }
 
-        .greeting-display-title {
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            font-size: 34px; 
-            font-weight: 800; 
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 16px rgba(0,0,0,0.6);
-            letter-spacing: 1px; 
-            text-transform: uppercase; 
-            width: 100%;
-            display: inline-block;
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap !important;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            transition: opacity 0.5s ease-in-out;
-            animation: textRevealSlide 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+        /* ---------- Top-Widget: Bundesliga-Info-Ticker ---------- */
+        .bl-top-label {
+            height: 100px; padding: 0 32px; flex-shrink: 0;
+            background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%);
+            display: flex; align-items: center; gap: 12px; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px;
+            letter-spacing: 1.2px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); white-space: nowrap;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
+        }
+        .bl-top-ticker-wrap { flex: 1; height: 100%; overflow: hidden; display: flex; align-items: center; }
+        .bl-top-ticker-move {
+            display: flex; align-items: center; width: max-content;
+            animation: blTickerScroll 45s linear infinite; will-change: transform;
+        }
+        .bl-top-item {
+            display: flex; align-items: center; gap: 16px; padding: 0 36px; flex-shrink: 0;
+            height: 100px; border-right: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        /* Wappen so gross wie im 100px hohen Widget moeglich - Object-fit haelt
+           schmale Schriftzug-Wappen (Union Berlin, HSV, Leipzig) proportional. */
+        .bl-top-crest {
+            height: 84px; width: auto; max-width: 150px; object-fit: contain; flex-shrink: 0;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.8)) drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+        }
+        .bl-top-team { font-size: 26px; font-weight: 800; color: #ffffff; white-space: nowrap; text-shadow: 0 2px 6px rgba(0,0,0,0.85); }
+        .bl-top-score {
+            font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff;
+            padding: 0 8px; font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+        .bl-top-score.is-live { color: #ff6b6b; text-shadow: 0 0 14px rgba(255, 51, 51, 0.6); }
+        .bl-top-score.is-final { color: #00f2fe; }
+        .bl-top-time {
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #94a3b8;
+            padding: 0 8px; font-variant-numeric: tabular-nums; white-space: nowrap;
         }
 
         .media-zone {
@@ -644,7 +662,7 @@
             background: rgba(10, 15, 30, 0.35); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
             border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px;
             /* Links Platz fuer den Hos’n Obe-Starter-QR (150px + Rand), sonst
-               liegt er auf der Karaoke-Zeile. */
+               liegt er auf der Footer-Zeile. */
             padding: 15px 30px 15px 185px;
             font-size: 16px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
@@ -1165,7 +1183,10 @@
         <!-- LINKE SPALTE -->
         <div class="left-main-column">
             <div class="top-custom-widget" id="card-top-custom">
-                <div class="greeting-display-title" id="greeting-title">Willkommen im City Cafe Klagenfurt Fischl</div>
+                <div class="bl-top-label" id="bl-top-label">⚽ BUNDESLIGA</div>
+                <div class="bl-top-ticker-wrap">
+                    <div class="bl-top-ticker-move" id="bl-top-ticker"></div>
+                </div>
             </div>
 
             <div class="card media-zone" id="card-media">
@@ -1201,8 +1222,8 @@
                         <div class="schlager-content-layer">
                             <div class="schlager-top-header">
                                 <div class="schlager-title-group">
-                                    <h2 id="media-main-category-title">Karaoke-Kandidat für den 29.08.</h2>
-                                    <p id="media-main-category-sub">Bist du dabei? • Wunschsong abgeben</p>
+                                    <h2 id="media-main-category-title">🎵 Nächster Titel empfohlen</h2>
+                                    <p id="media-main-category-sub">Musik-Tipp aus unserer Playlist</p>
                                 </div>
                                 <div class="schlager-chart-badge" id="schlager-chart-badge">Titel 1 von 3</div>
                             </div>
@@ -1210,7 +1231,7 @@
                             <div class="schlager-artist-card">
                                 <div class="schlager-artist-left">
                                     <div class="schlager-badges-row">
-                                        <span class="schlager-rank-tag" id="schlager-rank" style="background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%); color: #ffffff;">🎤 Vorgeschmack auf den 29.08.</span>
+                                        <span class="schlager-rank-tag" id="schlager-rank" style="background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%); color: #ffffff;">🎵 Empfehlung</span>
                                         <span class="schlager-release-tag" id="schlager-release-badge">📅 2026</span>
                                         <span class="schlager-release-tag" id="schlager-genre-badge">🎵 Genre</span>
                                     </div>
@@ -1226,37 +1247,9 @@
                             </div>
 
                             <div class="schlager-bottom-footer">
-                                <span>🎤 Großer Karaoke-Abend am Samstag, 29. August ab 20:00 Uhr!</span>
+                                <span>🎶 Gute Musik, jeden Tag im City Cafe!</span>
                                 <span>City Cafe Klagenfurt Fischl</span>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="media-inner-view" id="media-view-webcam">
-                    <div class="webcam-widget-box" style="width: 1280px; height: 815px; position: relative; background-color: #000; border-radius: 22px; overflow: hidden;">
-                        <div style="position: absolute; top: 20px; left: 30px; right: 30px; z-index: 10; display: flex; justify-content: space-between; align-items: center; background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0, 242, 254, 0.5); border-radius: 16px; padding: 12px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-                            <div>
-                                <h2 id="lignano-cam-title" style="font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px;">🔴 LIVE WEBCAM • Lignano Sabbiadoro</h2>
-                                <p id="lignano-cam-sub" style="font-size: 13px; color: #00f2fe; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px;">Ansicht 1/2 • Live-Bild</p>
-                            </div>
-                            
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <div style="background: rgba(0, 242, 254, 0.15); border: 1px solid rgba(0, 242, 254, 0.6); border-radius: 12px; padding: 8px 16px; color: #ffffff; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);">
-                                    <span>☀️ Lignano:</span> <span id="lignano-live-temp">--°C</span>
-                                </div>
-                                <div id="lignano-cam-badge" style="background: linear-gradient(135deg, #ff3333 0%, #f355da 100%); color: #ffffff; font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 900; padding: 8px 18px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 0 20px rgba(255, 51, 51, 0.6);">
-                                    LIVE FOTO 1
-                                </div>
-                            </div>
-                        </div>
-
-                        <img id="lignano-live-img" src="https://www.lignanosabbiadoro.com/images/webcam3.jpg" alt="Lignano Live Webcam" style="width: 1280px; height: 815px; object-fit: cover; display: block; position: absolute; top: 0; left: 0; z-index: 2; transition: opacity 1s ease-in-out; animation: kenBurnsPan 20s ease-in-out infinite alternate;">
-
-                        <!-- padding-left haelt die Fusszeile frei vom Starter-QR unten links. -->
-                        <div style="position: absolute; bottom: 0; left: 0; width: 1280px; background: linear-gradient(0deg, rgba(7, 11, 20, 0.95) 0%, rgba(7, 11, 20, 0) 100%); padding: 22px 35px 22px 185px; z-index: 10; display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 800; color: #00f2fe; text-transform: uppercase; letter-spacing: 1px;">
-                            <span id="lignano-cam-footer">🌊 Offizielle Live-Ansicht von lignanosabbiadoro.com</span>
-                            <span>City Cafe Klagenfurt Fischl</span>
                         </div>
                     </div>
                 </div>
@@ -1528,10 +1521,10 @@
         </div>
 
         <div class="card ticker-zone" id="card-ticker">
-            <div class="ticker-label-left">🎤 KARAOKE</div>
+            <div class="ticker-label-left">☕ CITY CAFE</div>
             <div class="ticker-wrap">
                 <div class="ticker-move" id="ticker-dynamic-content">
-                    <!-- Befüllung erfolgt dynamisch aus refrains.json -->
+                    <!-- Befüllung erfolgt aus dynamicPartyMessages -->
                 </div>
             </div>
         </div>
@@ -1567,7 +1560,7 @@
         window.addEventListener('orientationchange', autoScaleDashboard);
         window.addEventListener('load', () => {
             autoScaleDashboard();
-            loadRefrainsFromGitHub();
+            generateDynamicPartyTicker();
             loadSongsFromGitHub();
         });
         autoScaleDashboard();
@@ -1714,7 +1707,6 @@
         }
 
         const BILD_WECHSEL_SEKUNDEN = 16;
-        let dynamicRefrainsPool = [];
 
         function shuffleArray(array) {
             let arr = [...array];
@@ -1725,18 +1717,19 @@
             return arr;
         }
 
-        async function loadRefrainsFromGitHub() {
-            try {
-                const response = await fetch('refrains.json?v=' + Date.now());
-                const data = await response.json();
-                if (data && data.length > 0) {
-                    dynamicRefrainsPool = data;
-                    generateDynamicPartyTicker();
-                }
-            } catch (error) {
-                console.log("Fehler beim Laden von refrains.json.");
-            }
-        }
+        // Allgemeine City-Cafe-Infos fuer das untere Ticker-Band (kein Karaoke-Bezug mehr).
+        const dynamicPartyMessages = [
+            "☕ City Cafe Klagenfurt Fischl – dein gemütlicher Treffpunkt",
+            "🍹 Täglich frische Cocktails & kühles Bier",
+            "🎉 Beste Stimmung, gute Musik, tolle Gäste",
+            "📍 Mitten in Klagenfurt – immer einen Besuch wert",
+            "🍕 Kleine Snacks, große Gaumenfreuden",
+            "☀️ Sonnige Terrasse bei schönem Wetter",
+            "🎶 Wechselnde Playlist – für jeden Geschmack etwas dabei",
+            "🥂 Feiere deine Momente mit uns",
+            "📅 Immer aktuelle Events – schau vorbei!",
+            "🤝 Wir freuen uns auf deinen Besuch"
+        ];
 
         // Frueher: alle 252 Refrains auf einmal im DOM - ein rund 350.000 px breites
         // Element mit will-change:transform, also eine riesige Compositor-Ebene.
@@ -1747,14 +1740,13 @@
 
         function generateDynamicPartyTicker() {
             const container = document.getElementById('ticker-dynamic-content');
-            if (!container || dynamicRefrainsPool.length === 0) return;
+            if (!container || dynamicPartyMessages.length === 0) return;
 
-            const auswahl = shuffleArray(dynamicRefrainsPool).slice(0, TICKER_ITEMS_PRO_DURCHLAUF);
+            const auswahl = shuffleArray(dynamicPartyMessages).slice(0, TICKER_ITEMS_PRO_DURCHLAUF);
             let htmlString = "";
 
-            auswahl.forEach(item => {
-                const isSongZitat = item.includes("„") && item.includes("“");
-                const cssClass = isSongZitat ? "ticker-highlight-yellow" : "ticker-highlight-pink";
+            auswahl.forEach((item, i) => {
+                const cssClass = (i % 2 === 0) ? "ticker-highlight-yellow" : "ticker-highlight-pink";
                 htmlString += `<span class="ticker-item ${cssClass}">${item}</span><span class="ticker-separator">•</span>`;
             });
 
@@ -1773,52 +1765,6 @@
         document.getElementById('ticker-dynamic-content')
             .addEventListener('animationiteration', generateDynamicPartyTicker);
 
-        const topInfoMessages = [
-            "Willkommen im City Cafe Klagenfurt Fischl",
-            "Ihr gemütlicher Treffpunkt für Drinks, Genuss & beste Stimmung",
-            "🌊 Live-Webcam aus Lignano Sabbiadoro direkt auf unserem Bildschirm",
-            "☕ Täglich frischer Kaffee, kühles Bier & tolle Angebote"
-        ];
-
-        let topInfoIndex = 0;
-        let isCountdownActiveMode = false;
-        let countdownTimerInterval = null;
-        let countdownSizeFixed = false;
-
-        function updateTopBarText() {
-            const greetingElement = document.getElementById('greeting-title');
-            if (!greetingElement) return;
-
-            if (isCountdownActiveMode) {
-                const eventDate = new Date("2026-08-29T20:00:00").getTime();
-                const now = new Date().getTime();
-                const diff = eventDate - now;
-
-                if (diff > 0) {
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                    greetingElement.textContent = `⏳ NOCH ${days}D ${hours}H ${minutes}M ${seconds}S BIS ZUM KARAOKE-ABEND!`;
-                } else {
-                    greetingElement.textContent = "🎤 JETZT LIVE: KARAOKE ABEND IM CAFE! 🎤";
-                }
-                // Im Countdown aendert sich nur die Zahl, und die Ziffern sind dank
-                // tabular-nums gleich breit. Frueher wurde hier sekuendlich 60x in Folge
-                // die Schriftgroesse neu vermessen - bis zu 15 erzwungene Reflows pro Tick.
-                if (!countdownSizeFixed) {
-                    fitGreetingText(greetingElement);
-                    countdownSizeFixed = true;
-                }
-                return;
-            }
-
-            greetingElement.textContent = topInfoMessages[topInfoIndex % topInfoMessages.length];
-            retriggerAnim(greetingElement); // nur bei echtem Nachrichtenwechsel
-            fitGreetingText(greetingElement);
-        }
-
         // Startet eine CSS-Animation neu, auch wenn sie schon lief (z.B. bei jedem Textwechsel)
         function retriggerAnim(el) {
             if (!el) return;
@@ -1826,52 +1772,6 @@
             void el.offsetWidth;
             el.style.animation = '';
         }
-
-        // Verkleinert die Schrift automatisch, statt lange Texte mit "..." abzuschneiden
-        function fitGreetingText(el) {
-            const maxFontSize = 34;
-            const minFontSize = 19;
-            let fontSize = maxFontSize;
-            el.style.fontSize = fontSize + 'px';
-            while (el.scrollWidth > el.clientWidth && fontSize > minFontSize) {
-                fontSize -= 1;
-                el.style.fontSize = fontSize + 'px';
-            }
-        }
-
-        setInterval(() => {
-            if (!isCountdownActiveMode) {
-                topInfoIndex++;
-                updateTopBarText();
-            }
-        }, 25000);
-
-        function startTopBarCycle() {
-            isCountdownActiveMode = false;
-            updateTopBarText();
-
-            setTimeout(() => {
-                isCountdownActiveMode = true;
-                countdownSizeFixed = false;
-                if (countdownTimerInterval) clearInterval(countdownTimerInterval);
-                countdownTimerInterval = setInterval(updateTopBarText, 1000);
-
-                setTimeout(() => {
-                    clearInterval(countdownTimerInterval);
-                    startTopBarCycle();
-                }, 60000);
-
-            }, 540000);
-        }
-        // Erst messen, wenn die Google-Schriften wirklich da sind - sonst rechnet
-        // fitGreetingText beim Kaltstart mit der Fallback-Schrift und setzt die falsche Groesse.
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(() => {
-                countdownSizeFixed = false;
-                updateTopBarText();
-            });
-        }
-        startTopBarCycle();
 
         function updateClock() {
             const now = new Date();
@@ -1885,9 +1785,6 @@
         const POSTER_NACHT_URL = 'plakat_nacht.webp';
         const JAEGER_PUNTIGAMER_URL = 'jaeger.webp';
         const JAEGER_PUNTIGAMER_SECONDS = 30;
-        const KARAOKE_POSTER_URL = 'karaoke.webp';
-        const KARAOKE_DRINKS_URL = 'karaoke_drinks.webp';
-        const KARAOKE_DRINKS_SECONDS = 30;
         const CALAMARI_EVENT_URL = 'calamari.webp';
         const CALAMARI_EVENT_SECONDS = 35;
 
@@ -2051,7 +1948,7 @@
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 2500);
-                const searchQuery = encodeURIComponent(`${artist} ${title} karaoke`);
+                const searchQuery = encodeURIComponent(`${artist} ${title}`);
                 const response = await fetch(`https://inv.tux.im/api/v1/search?q=${searchQuery}&type=video`, { signal: controller.signal });
                 clearTimeout(timeoutId);
                 if (!response.ok) throw new Error('HTTP ' + response.status);
@@ -2233,8 +2130,8 @@
 
             // ---- SOFORT: alles, was ohne Netz auskommt ----
             updateYoutubeQr(data);
-            document.getElementById('media-main-category-title').textContent = "Karaoke-Kandidat für den 29.08.";
-            document.getElementById('schlager-rank').textContent = "🎤 Vorgeschmack auf den 29.08.";
+            document.getElementById('media-main-category-title').textContent = "🎵 Nächster Titel empfohlen";
+            document.getElementById('schlager-rank').textContent = "🎵 Empfehlung";
             document.getElementById('schlager-artist').textContent = artist || "Interpret";
             document.getElementById('schlager-song').textContent = `"${title || "Unbekannt"}"`;
             retriggerAnim(document.getElementById('schlager-artist'));
@@ -2285,70 +2182,6 @@
                 releaseTag.textContent = `📅 ${itunesInfo.year}`;
             }
         }
-
-        const lignanoWebcamFeeds = [
-            {
-                url: "https://www.lignanosabbiadoro.com/images/webcam3.jpg",
-                title: "🔴 Lignano Strand & Terrazza a Mare",
-                sub: "Offizielle Strandansicht • Live-Bild",
-                footer: "🌊 Strand & Meerblick live aus Lignano Sabbiadoro"
-            },
-            {
-                url: "https://www.lignanosabbiadoro.com/images/webcam4.jpg",
-                title: "🔴 Lignano Hauptplatz & Zentrum",
-                sub: "Blick auf den Hauptplatz im historischen Zentrum von Lignano Sabbiadoro",
-                footer: "🌴 Historisches Zentrum & Leben in Lignano live"
-            }
-        ];
-
-        // Tagsüber Strand-Cam, abends/nachts Zentrum-Cam. Nutzt dieselbe 9/19-Uhr-Grenze
-        // und denselben ?testtransition=day/night Test-Parameter wie die Plakat-Videos.
-        function isDaytimeNow() {
-            const testParam = new URLSearchParams(location.search).get('testtransition');
-            if (testParam === 'day') return true;
-            if (testParam === 'night') return false;
-            const h = new Date().getHours();
-            return h >= DAY_START_HOUR && h < NIGHT_START_HOUR;
-        }
-
-        function getActiveLignanoFeeds() {
-            const feed = isDaytimeNow() ? lignanoWebcamFeeds[0] : lignanoWebcamFeeds[1];
-            return [feed]; // nur 1x 30 Sekunden
-        }
-
-        let lignanoSubIndex = 0;
-        function startLignanoWebcamSequence(onCompleteCallback) {
-            lignanoSubIndex = 0;
-            const activeFeeds = getActiveLignanoFeeds();
-            function showNextCamImage() {
-                if (lignanoSubIndex >= activeFeeds.length) {
-                    if (onCompleteCallback) onCompleteCallback();
-                    return;
-                }
-                const camData = activeFeeds[lignanoSubIndex];
-                const imgElement = document.getElementById('lignano-live-img');
-                if (imgElement) imgElement.src = camData.url + "?t=" + new Date().getTime();
-                document.getElementById('lignano-cam-title').textContent = camData.title;
-                document.getElementById('lignano-cam-sub').textContent = camData.sub;
-                document.getElementById('lignano-cam-footer').textContent = camData.footer;
-                document.getElementById('lignano-cam-badge').textContent = `LIVE FOTO ${lignanoSubIndex + 1}`;
-                lignanoSubIndex++;
-                later(showNextCamImage, 30000);
-            }
-            showNextCamImage();
-        }
-
-        async function fetchLignanoLiveWeather() {
-            try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=45.6865&longitude=13.1255&current=temperature_2m');
-                const data = await res.json();
-                document.getElementById('lignano-live-temp').textContent = `${Math.round(data.current.temperature_2m)}°C`;
-            } catch (e) {
-                document.getElementById('lignano-live-temp').textContent = `28°C`;
-            }
-        }
-        fetchLignanoLiveWeather();
-        setInterval(fetchLignanoLiveWeather, 600000);
 
         // ---------- Fußball-Widget ----------
         // Nur Österreich Bundesliga (api-football, Liga-ID 218, bestätigt aus eurem Dashboard).
@@ -3044,6 +2877,54 @@
             el.innerHTML = items + items;
         }
 
+        // ---------- Top-Widget: staendig sichtbarer Bundesliga-Ticker ----------
+        // Anders als der Ticker im Spieltag-Slot laeuft dieser immer, unabhaengig
+        // davon, welcher Media-Slide gerade aktiv ist - daher eigenes Rendering.
+        const BL_TOP_TICKER_PX_PRO_SEKUNDE = 90;
+        function blRenderTopTicker() {
+            const el = document.getElementById('bl-top-ticker');
+            const label = document.getElementById('bl-top-label');
+            if (!el) return;
+            if (label) label.textContent = blMatchdayData.order ? `⚽ Bundesliga · Spieltag ${blMatchdayData.order}` : '⚽ Bundesliga';
+
+            const now = Date.now();
+            const matches = (blMatchdayData.matches || []).slice()
+                .sort((a, b) => {
+                    const ka = blKickoff(a), kb = blKickoff(b);
+                    return (ka ? ka.getTime() : Infinity) - (kb ? kb.getTime() : Infinity);
+                });
+            if (!matches.length) {
+                el.innerHTML = `<span class="bl-top-item"><span class="bl-top-team">Bundesliga-Daten werden geladen …</span></span>`;
+                return;
+            }
+
+            const items = matches.map(m => {
+                const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
+                const live = blIsLive(m, now), finished = blIsFinished(m);
+                let middle;
+                if (live || finished) {
+                    const s = blReadScore(m);
+                    middle = `<span class="bl-top-score ${live ? 'is-live' : 'is-final'}">${s.t1}:${s.t2}</span>`;
+                } else {
+                    const k = blKickoff(m);
+                    middle = `<span class="bl-top-time">${k ? blEsc(blTimeFmt.format(k)) : '--:--'}</span>`;
+                }
+                return `<span class="bl-top-item">
+                    ${blCrestImg(t1, 'bl-top-crest')}
+                    <span class="bl-top-team">${blEsc(blField(t1, 'shortName') || blField(t1, 'teamName') || '')}</span>
+                    ${middle}
+                    <span class="bl-top-team">${blEsc(blField(t2, 'shortName') || blField(t2, 'teamName') || '')}</span>
+                    ${blCrestImg(t2, 'bl-top-crest')}
+                </span>`;
+            }).join('');
+
+            // Zweimal derselbe Inhalt - die Animation laeuft genau eine Kopienbreite weit
+            // und springt am Ende nahtlos zurueck.
+            el.innerHTML = items + items;
+            const width = el.scrollWidth / 2;
+            if (width) el.style.animationDuration = Math.round(width / BL_TOP_TICKER_PX_PRO_SEKUNDE) + 's';
+        }
+
         function blRenderMatchdayChrome() {
             const now = Date.now();
             const title = document.getElementById('bl-md-title');
@@ -3177,8 +3058,10 @@
                 blRenderTicker();
             }
             if (tblView && tblView.classList.contains('active')) blRenderTable();
+            blRenderTopTicker(); // laeuft immer, unabhaengig vom aktiven Media-Slide
         }
 
+        blRenderTopTicker();
         blRefresh();
 
         // ---------- Getränke-Highlights ----------
@@ -3411,7 +3294,7 @@
 
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
                 ? visitorGalleryData.map(d => d.src)
-                : [POSTER_TAG_URL, KARAOKE_POSTER_URL, POSTER_NACHT_URL];
+                : [POSTER_TAG_URL, POSTER_NACHT_URL, CALAMARI_EVENT_URL];
             // Immer genau 10 Fotos fürs Spiel - bei kleiner Galerie notfalls mit Wiederholung auffüllen
             let shots = shuffleArray(pool);
             while (shots.length < 10) shots = shots.concat(shuffleArray(pool));
@@ -3496,12 +3379,12 @@
 
         // Restliche Zykluszeit bis das jeweils ANDERE Trinkspiel drankommt:
         // Nach V1 (Foto) kommt als nächstes V2: Jäger/Puntigamer(30s)+Tag/Nacht-Plakat(35s)+
-        // Karaoke-Plakat(35s)+Karaoke-Getränke(30s)+Calamari-Event(35s)+Musik(90s)+Getränke(20s) = 275s
-        // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Webcam(30s)+Musik(90s)+
-        // Veranstaltungen(36s)+Musik-Slides(30s) = 206s, +25s Wetter-Übersicht, aber nur wenn die
+        // Calamari-Event(35s)+Musik(90s)+Getränke(20s) = 210s
+        // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Musik(90s)+
+        // Veranstaltungen(36s)+Musik-Slides(30s) = 176s, +25s Wetter-Übersicht, aber nur wenn die
         // zwischen 8-18 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
-        const GAP_AFTER_V1_TO_V2 = 275;
-        const GAP_AFTER_V2_TO_V1_BASE = 206;
+        const GAP_AFTER_V1_TO_V2 = 210;
+        const GAP_AFTER_V2_TO_V1_BASE = 176;
         function getGapAfterV2ToV1() {
             return GAP_AFTER_V2_TO_V1_BASE + (isWeatherWidgetHour() ? 25 : 0);
         }
@@ -5607,28 +5490,13 @@
                 runHosnObeTestSlot(0); // -> Tag/Nacht-Plakat
 
             } else if (mediaStateIndex === 0) {
-                // Tag/Nacht-Plakat und Karaoke-Plakat laufen jetzt nacheinander in JEDEM
-                // Zyklus (vorher wechselten sie sich ab - Karaoke kam nur alle zwei Zyklen).
                 showPosterImage(getDayNightPoster());
 
-                mediaStateIndex = 0.5;
-                globalMasterTimer = later(runMasterSequence, 35000);
-
-            } else if (mediaStateIndex === 0.5) {
-                showPosterImage(KARAOKE_POSTER_URL);
-
-                mediaStateIndex = 0.75;
-                globalMasterTimer = later(runMasterSequence, 35000);
-
-            } else if (mediaStateIndex === 0.75) {
-                // Getränke-Angebot für den Karaoke-Abend, direkt nach dem Karaoke-Plakat
-                showPosterImage(KARAOKE_DRINKS_URL);
-
                 mediaStateIndex = 0.85;
-                globalMasterTimer = later(runMasterSequence, KARAOKE_DRINKS_SECONDS * 1000);
+                globalMasterTimer = later(runMasterSequence, 35000);
 
             } else if (mediaStateIndex === 0.85) {
-                // Calamari-Grill-Event (12.09., Dartverein City Flyers), direkt nach dem Karaoke-Angebot
+                // Calamari-Grill-Event (12.09., Dartverein City Flyers), direkt nach dem Tag/Nacht-Plakat
                 showPosterImage(CALAMARI_EVENT_URL);
 
                 mediaStateIndex = 1;
@@ -5644,14 +5512,7 @@
                 runCardTrinkspielV2(4); // -> Getränke (nach Trinkspiel V2)
 
             } else if (mediaStateIndex === 4) {
-                runDrinksState(5); // -> Webcam
-
-            } else if (mediaStateIndex === 5) {
-                document.getElementById('media-view-webcam').classList.add('active');
-                startLignanoWebcamSequence(() => {
-                    mediaStateIndex = 6; 
-                    runMasterSequence();
-                });
+                runDrinksState(6); // -> Musik
 
             } else if (mediaStateIndex === 6) {
                 runMusicState(7); // -> Veranstaltungen
@@ -6177,12 +6038,12 @@
                 activeSidebarWidgetIndex = 2; 
                 sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), Math.max(30000, klagenfurtNewsData.length * 10000));
             } else {
-                musicView.classList.add('active'); 
-                document.getElementById('music-artist-title').textContent = "Karaoke Highlight";
-                document.getElementById('music-artist-name-display').textContent = "Großer Karaoke-Abend";
-                document.getElementById('music-song-text').textContent = "Zeige dein Talent am Mikrofon! Live-Gesang, gute Stimmung und Musik für jeden Geschmack.";
-                document.getElementById('music-release-text').textContent = "📅 Samstag, 29. August 2026 • ab 20:00 Uhr";
-                document.getElementById('music-event-text').textContent = "City Cafe Klagenfurt Fischl";
+                musicView.classList.add('active');
+                document.getElementById('music-artist-title').textContent = "Live Events & Kultur";
+                document.getElementById('music-artist-name-display').textContent = "City Cafe Klagenfurt Fischl";
+                document.getElementById('music-song-text').textContent = "Dein gemütlicher Treffpunkt für Drinks, gute Musik und beste Stimmung – täglich für dich geöffnet.";
+                document.getElementById('music-release-text').textContent = "📅 Täglich für dich da";
+                document.getElementById('music-event-text').textContent = "Café & Bar";
                 activeSidebarWidgetIndex = 0; 
                 sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), 30000);
             }
