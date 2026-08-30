@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -865,7 +865,15 @@
             opacity: 0;
         }
         .polaroid-card img { width: 100%; height: 176px; object-fit: cover; display: block; background: #ccc; }
-        .polaroid-card.hr-pair-loser { box-shadow: 0 0 0 6px #ff3344, 0 18px 40px rgba(255,30,30,0.7); }
+        /* Spotlight statt "Verlierer": letztes gelandetes Foto bekommt einen
+           warmen Schein in den Marken-Akzentfarben statt der alten Alarm-Rot-Optik. */
+        .polaroid-card.hr-pair-highlight { box-shadow: 0 0 0 6px #f355da, 0 0 40px rgba(243, 85, 218, 0.55), 0 18px 40px rgba(0,0,0,0.5); }
+        /* Hochladedatum im weissen Rand unten, wie handschriftlich vermerkt. */
+        .polaroid-date {
+            position: absolute; left: 0; right: 0; bottom: 2px; text-align: center;
+            font-family: 'Caveat', cursive; font-weight: 700; font-size: 26px;
+            color: #1a1a1a; line-height: 1; pointer-events: none;
+        }
 
         .tg-card { position: absolute; opacity: 0; }
         .tg-card img { width: 100%; height: auto; display: block; border-radius: 9px; box-shadow: 0 12px 26px rgba(0,0,0,0.65); }
@@ -1280,8 +1288,8 @@
                         <div id="tg-version-badge" style="position: absolute; top: 18px; right: 22px; z-index: 20; font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 900; color: rgba(255,255,255,0.55); letter-spacing: 1px; background: rgba(0,0,0,0.35); padding: 5px 12px; border-radius: 8px;">V1</div>
                         <div id="hype-countdown-overlay" style="position: absolute; top: 0; left: 0; right: 0; z-index: 15; display: none; flex-direction: column; align-items: center; padding: 20px 0 12px; background: linear-gradient(180deg, rgba(10,10,18,0.85) 0%, rgba(10,10,18,0) 100%);">
                             <div style="position: relative; height: 42px; display: flex; align-items: center; justify-content: center;">
-                                <div id="hype-countdown-label-a" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); transition: opacity 0.6s ease;">🍻 City Cafe Trinkspiel V1</div>
-                                <div id="hype-countdown-label-b" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); opacity: 0; transition: opacity 0.6s ease;">Trinkspiel V1</div>
+                                <div id="hype-countdown-label-a" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); transition: opacity 0.6s ease;">📸 City Cafe Polaroid-Momente</div>
+                                <div id="hype-countdown-label-b" style="position: absolute; white-space: nowrap; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 3px 10px rgba(0,0,0,0.8); opacity: 0; transition: opacity 0.6s ease;">Polaroid-Momente</div>
                             </div>
                             <div id="hype-countdown-timer" style="font-family: 'Orbitron', sans-serif; font-size: 48px; font-weight: 900; color: #00f2fe; text-shadow: 0 0 20px rgba(0,242,254,0.6); margin-top: 2px;">60</div>
                         </div>
@@ -3341,10 +3349,10 @@
         ];
         let hypeReelBgIndex = 0;
 
-        // ---------- Hype-Reel = 5-Spieler-Trinkspiel ----------
-        // 5 Spalten (Pärchen), 60s Countdown zum Nummer-Aussuchen, dann landen 10 Fotos in
-        // zufälliger Reihenfolge - wessen Spalte als letztes komplett wird, zahlt die Runde.
-        // Gemeinsame Vorbereitungsphase für beide Trinkspiel-Varianten: Hintergrund wechseln,
+        // ---------- Hype-Reel: City Cafe Polaroid (V1) + Hos'n Obe (V2) ----------
+        // 5 Spalten (Pärchen), 60s Countdown, dann landen 10 Fotos in zufälliger
+        // Reihenfolge - die zuletzt komplette Spalte bekommt am Ende ein Spotlight.
+        // Gemeinsame Vorbereitungsphase für beide Varianten: Hintergrund wechseln,
         // V1/V2-Abzeichen setzen, 60s-Countdown mit alle 10s wechselndem Label (Fade)
         function startTrinkspielCountdown(version, onComplete) {
             document.getElementById('hypereel-card').style.backgroundImage = `url('${HYPEREEL_BACKGROUNDS[hypeReelBgIndex]}')`;
@@ -3357,10 +3365,17 @@
 
             const countdownOverlay = document.getElementById('hype-countdown-overlay');
             const countdownTimer = document.getElementById('hype-countdown-timer');
+            // V1 ist kein Trinkspiel mehr, sondern die Foto-Wand "City Cafe Polaroid" -
+            // V2 (Hos'n Obe, Kartenspiel) behaelt seine bisherige Trinkspiel-Beschriftung.
             const labelA = document.getElementById('hype-countdown-label-a');
             const labelB = document.getElementById('hype-countdown-label-b');
-            labelA.textContent = '🍻 City Cafe Trinkspiel ' + version;
-            labelB.textContent = 'Trinkspiel ' + version;
+            if (version === 'V1') {
+                labelA.textContent = '📸 City Cafe Polaroid-Momente';
+                labelB.textContent = 'Polaroid-Momente';
+            } else {
+                labelA.textContent = '🍻 City Cafe Trinkspiel ' + version;
+                labelB.textContent = 'Trinkspiel ' + version;
+            }
             labelA.style.opacity = '1';
             labelB.style.opacity = '0';
             countdownOverlay.style.display = 'flex';
@@ -3387,7 +3402,7 @@
             }, 1000);
         }
 
-        // ---------- Trinkspiel V1 (Foto-Pärchen) ----------
+        // ---------- City Cafe Polaroid (V1, vormals "Trinkspiel V1") ----------
         function runPhotoTrinkspielV1(nextStateIndex) {
             document.getElementById('media-view-hypereel').classList.add('active');
             document.getElementById('card-game-container').innerHTML = ''; // Reste von V2 entfernen
@@ -3395,9 +3410,12 @@
             scoresRow.style.display = 'none'; // Punktezähler von V2 darf hier nicht mehr sichtbar sein
             scoresRow.innerHTML = '';
 
+            // date kommt direkt aus galerie.gs (Drive-Aenderungsdatum, dd.MM.yyyy) und
+            // landet handschriftlich im weissen Rand jedes Polaroids. Die Poster-Bilder
+            // im Notfall-Pool sind keine Gaeste-Fotos - dafuer gibt's kein Datum.
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
-                ? visitorGalleryData.map(d => d.src)
-                : [POSTER_TAG_URL, POSTER_NACHT_URL, CALAMARI_EVENT_URL];
+                ? visitorGalleryData.map(d => ({ src: d.src, date: d.date }))
+                : [POSTER_TAG_URL, POSTER_NACHT_URL, CALAMARI_EVENT_URL].map(src => ({ src, date: null }));
             // Immer genau 10 Fotos fürs Spiel - bei kleiner Galerie notfalls mit Wiederholung auffüllen
             let shots = shuffleArray(pool);
             while (shots.length < 10) shots = shots.concat(shuffleArray(pool));
@@ -3435,7 +3453,8 @@
                 function landNext() {
                     if (idx >= 10) return;
                     const slot = slots[arrivalOrder[idx]];
-                    const src = shots[idx]; // kein Cache-Busting: Galeriefotos aendern sich nicht innerhalb einer Runde
+                    const shot = shots[idx]; // kein Cache-Busting: Galeriefotos aendern sich nicht innerhalb einer Runde
+                    const src = shot.src;
                     const zIndex = idx + 1;
                     const isLast = idx === 9;
                     idx++;
@@ -3457,6 +3476,12 @@
                         const img = document.createElement('img');
                         img.src = src;
                         card.appendChild(img);
+                        if (shot.date) {
+                            const dateEl = document.createElement('div');
+                            dateEl.className = 'polaroid-date';
+                            dateEl.textContent = shot.date;
+                            card.appendChild(dateEl);
+                        }
                         container.appendChild(card);
 
                         const finalRotation = Math.random() * 24 - 12; // leichte Schräglage, nicht perfekt gerade
@@ -3465,7 +3490,7 @@
                             y: CENTER_Y - (slot.top + CARD_H / 2)
                         };
                         animateLanding(card, centerOffset, finalRotation, isLast ? () => {
-                            announceLoserPair(card, nextStateIndex);
+                            announcePolaroidHighlight(card, nextStateIndex);
                         } : null);
 
                         if (!isLast) later(landNext, 5500);
@@ -3505,8 +3530,8 @@
             }, JAEGER_PUNTIGAMER_SECONDS * 1000);
         }
 
-        function announceLoserPair(lastCard, nextStateIndex) {
-            lastCard.classList.add('hr-pair-loser');
+        function announcePolaroidHighlight(lastCard, nextStateIndex) {
+            lastCard.classList.add('hr-pair-highlight');
 
             later(() => {
                 runJaegerPuntigamerState(nextStateIndex); // -> 30s Jäger/Puntigamer, dann erst wieder Plakat
