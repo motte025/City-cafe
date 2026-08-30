@@ -1183,6 +1183,15 @@
         /* Auch in den beiden alten Trinkspielen bleibt der Starter-QR weg -
            dort laeuft bereits ein Spiel, ein zweiter Aufruf stiftet nur Verwirrung. */
         #media-view-hypereel.active ~ .kt-launcher { display: none !important; }
+        /* Im Spieltag-Slot ueberlappte der Starter-QR unten links bisher die
+           Live-Ticker-Zeile darunter - hier bekommt er stattdessen den
+           ungenutzten Platz in der Kartenmitte neben den Torschuetzen-Spalten.
+           Vor Anpfiff steht dort stattdessen der Hinweistext "Torschuetzen
+           erscheinen ab Anpfiff" - die Klasse kt-pos-preview (von
+           blRenderSpotlight gesetzt) schiebt den QR dann tiefer, in die
+           Luecke zwischen Hinweistext und Live-Ticker-Zeile. */
+        #media-view-bl-matchday.active ~ .kt-launcher { left: 565px; top: 500px; bottom: auto; }
+        #media-view-bl-matchday.active ~ .kt-launcher.kt-pos-preview { top: 555px; }
 
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
@@ -2833,8 +2842,10 @@
         function blRenderSpotlight(match) {
             const box = document.getElementById('bl-md-spotlight');
             if (!box) return;
+            const ktLauncher = document.getElementById('kt-launcher');
             if (!match) {
                 box.innerHTML = `<div class="bl-empty-msg">Aktuell keine Spieldaten verfügbar.<br>Nächster Spieltag folgt in Kürze ⚽</div>`;
+                if (ktLauncher) ktLauncher.classList.add('kt-pos-preview');
                 return;
             }
             const now = Date.now();
@@ -2844,6 +2855,9 @@
             const live = blIsLive(match, now);
             const finished = blIsFinished(match);
             const started = live || finished;
+            // Vor Anpfiff steht in der Kartenmitte nur der Torschuetzen-Hinweistext -
+            // der QR bekommt dann die tiefere Position (siehe kt-pos-preview im CSS).
+            if (ktLauncher) ktLauncher.classList.toggle('kt-pos-preview', !started);
 
             let center;
             if (started) {
@@ -2926,15 +2940,16 @@
         // ---------- Top-Widget: Bundesliga im Standbild-Wechsel ----------
         // Anders als der Ticker im Spieltag-Slot laeuft das hier immer, unabhaengig
         // davon, welcher Media-Slide gerade aktiv ist. Pro Spiel: erst das Spiel
-        // selbst (6s), danach - nur wenn schon Tore gefallen sind - die Torschuetzen
-        // (6s), dann das naechste Spiel. Noch nicht angepfiffene Spiele ueberspringen
-        // die Torschuetzen-Phase automatisch, weil es dafuer noch nichts zu zeigen gibt.
+        // selbst (6s), danach - nur wenn schon Tore gefallen sind - die Torschuetzen,
+        // seitenweise zu je BL_TOP_SCORERS_PER_PAGE (je 6s), dann das naechste Spiel.
+        // Noch nicht angepfiffene Spiele ueberspringen die Torschuetzen-Phase
+        // automatisch, weil es dafuer noch nichts zu zeigen gibt.
         // Karten liefert OpenLigaDB nicht (siehe Hinweis oben bei den Bundesliga-Widgets)
         // - deshalb bewusst nur Torschuetzen, keine Gelb/Rot-Spalte.
         const BL_TOP_PHASE_MS = 6000;
         let blTopCycleTimer = null;
         let blTopMatchIdx = 0;
-        let blTopPhase = 0; // 0 = Spiel, 1 = Torschuetzen
+        let blTopPhase = 0; // 0 = Spiel, 1..N = Torschuetzen-Seite N (statt zu verkleinern)
 
         function blTopOrderedMatches() {
             return (blMatchdayData.matches || []).slice().sort((a, b) => {
@@ -2973,29 +2988,32 @@
             </div>`;
         }
 
-        // Ab 6 Torschuetzen wird's im 1280px breiten Balken eng, selbst mit
-        // Verkleinerung (siehe blFitTopWidget). Ab dann lieber sauber abschneiden
-        // und mit "+N weitere" zusammenfassen, statt Namen aus dem Rahmen laufen
-        // zu lassen - gleiches Muster wie bei den Torschuetzen im Spieltag-Slot.
-        const BL_TOP_SCORERS_MAX = 5;
-        function blTopRenderScorers(m) {
+        // War frueher eine einzige Zeile mit Not-Verkleinerung ab 6 Torschuetzen -
+        // bei mehreren Toren wurde das schnell winzig und schwer lesbar. Jetzt
+        // lieber seitenweise in Originalgroesse: je BL_TOP_SCORERS_PER_PAGE
+        // Torschuetzen eine eigene 6s-Seite, bevor das naechste Spiel drankommt.
+        const BL_TOP_SCORERS_PER_PAGE = 3;
+        function blTopScorerPages(m) {
             const list = blTopScorersCombined(m);
-            if (!list.length) return blTopRenderMatch(m);
-            const shown = list.length <= BL_TOP_SCORERS_MAX ? list : list.slice(0, BL_TOP_SCORERS_MAX - 1);
-            const rest = list.length - shown.length;
-            const items = shown.map(e => `
+            const pages = [];
+            for (let i = 0; i < list.length; i += BL_TOP_SCORERS_PER_PAGE) {
+                pages.push(list.slice(i, i + BL_TOP_SCORERS_PER_PAGE));
+            }
+            return pages;
+        }
+
+        function blTopRenderScorerPage(page) {
+            const items = page.map(e => `
                 <span class="bl-top-scorer">
                     ${blCrestImg(e.team, 'bl-top-scorer-crest')}
                     <span class="bl-top-scorer-name">${blEsc(e.name)}</span>
                     <span class="bl-top-scorer-min">${blEsc(e.minute)}</span>
-                </span>`).join('')
-                + (rest > 0 ? `<span class="bl-top-scorer"><span class="bl-top-scorer-name">+${rest} weitere</span></span>` : '');
+                </span>`).join('');
             return `<div class="bl-top-scorers">${items}</div>`;
         }
 
-        // Schrumpft die gerade angezeigte Phase per Skalierung, statt sie im
-        // 100px-hohen Balken abzuschneiden - greift nur bei Torfestspielen mit
-        // vielen Torschuetzen, die sonst ueber die 1280px hinausragen wuerden.
+        // Sicherheitsnetz fuer sehr lange einzelne Namen - greift dank der
+        // Seitenaufteilung nur noch in seltenen Ausnahmefaellen.
         function blFitTopWidget() {
             const el = document.getElementById('bl-top-ticker');
             const wrap = el && el.parentElement;
@@ -3026,8 +3044,11 @@
             const m = matches[blTopMatchIdx];
             const now = Date.now();
             const started = blIsLive(m, now) || blIsFinished(m);
+            const pages = started ? blTopScorerPages(m) : [];
 
-            el.innerHTML = (blTopPhase === 1 && started) ? blTopRenderScorers(m) : blTopRenderMatch(m);
+            el.innerHTML = (blTopPhase > 0 && pages[blTopPhase - 1])
+                ? blTopRenderScorerPage(pages[blTopPhase - 1])
+                : blTopRenderMatch(m);
             blFitTopWidget();
         }
 
@@ -3042,10 +3063,10 @@
             const m = matches[blTopMatchIdx];
             const now = Date.now();
             const started = blIsLive(m, now) || blIsFinished(m);
-            const hasScorers = started && blTopScorersCombined(m).length > 0;
+            const totalPages = started ? blTopScorerPages(m).length : 0;
 
-            if (blTopPhase === 0 && hasScorers) {
-                blTopPhase = 1;
+            if (blTopPhase < totalPages) {
+                blTopPhase++;
             } else {
                 blTopPhase = 0;
                 blTopMatchIdx = (blTopMatchIdx + 1) % matches.length;
