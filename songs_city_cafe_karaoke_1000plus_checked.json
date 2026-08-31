@@ -40045,14 +40045,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Testkünstler",
-    "title": "Testsong",
+    "artist": "Dean Martin",
+    "title": "Ain't That a Kick in the Head",
     "album": "",
-    "category": "Test",
+    "category": "Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Test"
+      "Karaoke",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
