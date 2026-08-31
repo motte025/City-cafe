@@ -1348,7 +1348,16 @@
             font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
             letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.32);
         }
-        .dj-player iframe { position: relative; z-index: 2; width: 100%; height: 100%; border: 0; display: block; }
+        /* Alle Player liegen uebereinander und laufen gleichzeitig - sichtbar ist
+           immer nur einer. Das Umschalten kostet so keine Ladezeit, und der erste
+           Stream kann schon im Slot davor anlaufen. */
+        .dj-player-frame {
+            position: absolute; inset: 0; z-index: 2;
+            width: 100%; height: 100%; border: 0; display: block;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .dj-player-frame.is-visible { opacity: 1; pointer-events: auto; z-index: 3; }
 
         /* Liegt bewusst ausserhalb von #dashboard-scaler und damit ausserhalb der
            Skalierung - der Text soll auf dem Screen lesbar sein, egal wie stark
@@ -4511,7 +4520,7 @@
             // Notnagel, falls raw nicht erreichbar ist (und fuer lokale Kopien des
             // Dashboards ohne Netz-Zugriff auf GitHub): dieselbe Datei nebenan.
             statusFallbackUrl: 'live_status.json',
-            sekundenProKanal: 30,        // Standzeit je Live-Kanal, dann der naechste
+            sekundenProKanal: 180,       // Standzeit je Live-Kanal, dann der naechste
             maxStatusAlterMinuten: 45,   // aelterer Stand = Checker haengt -> Slot aus
             abrufTaktSekunden: 180,      // Hintergrund-Refresh, unabhaengig von der Rotation
             abrufTimeoutMs: 8000,
@@ -4521,6 +4530,11 @@
             showOriginDebug: false
         };
 
+        // Position des DJ-Slots in der Rotation. Steht als Konstante hier, weil
+        // sowohl runMasterSequence als auch djStopPlayer sie kennen muessen.
+        const DJ_SLOT_INDEX = 0.9;
+
+        let djGepuffert = [];        // Eintraege, fuer die gerade Player im DOM stehen
         let djLiveEntries = [];      // zuletzt gemeldete Live-Kanaele
         let djLiveCheckedAt = null;  // Date des Checker-Laufs, oder null
         let djStatusGeladen = false; // erst nach dem ersten erfolgreichen Abruf true
@@ -4598,20 +4612,19 @@
         // Ein <iframe> laesst sich nicht wie ein <video> pausieren - es muss aus dem
         // DOM, sonst streamt der Player im Hintergrund weiter und kostet die
         // Odroid-Box dauerhaft Bandbreite und CPU.
+        // Ausnahme: waehrend der Vorpufferphase und im Slot selbst bleiben die
+        // Player stehen, sonst waere das Vorpuffern sinnlos. mediaStateIndex zeigt
+        // an dieser Stelle bereits auf den kommenden Zustand.
         function djStopPlayer() {
+            if (mediaStateIndex === DJ_SLOT_INDEX) return;
             const buehne = document.getElementById('dj-live-player');
-            if (buehne && buehne.firstChild) buehne.innerHTML = '';
+            if (buehne && buehne.firstChild) {
+                buehne.innerHTML = '';
+                djGepuffert = [];
+            }
         }
 
-        function djRenderEntry(entry, index, gesamt) {
-            const buehne = document.getElementById('dj-live-player');
-            buehne.innerHTML = '';   // beendet zugleich den Stream des Vorgaengers
-
-            const hinweis = document.createElement('div');
-            hinweis.className = 'dj-player-hint';
-            hinweis.textContent = 'Stream wird geladen …';
-            buehne.appendChild(hinweis);
-
+        function djBaueRahmen(entry) {
             const rahmen = document.createElement('iframe');
             rahmen.src = djEmbedUrl(entry);
             // Cross-Origin-Player von player.twitch.tv / youtube.com brauchen die
@@ -4623,7 +4636,48 @@
             rahmen.setAttribute('frameborder', '0');
             rahmen.setAttribute('scrolling', 'no');
             rahmen.setAttribute('title', djAnzeigeName(entry));
-            buehne.appendChild(rahmen);
+            return rahmen;
+        }
+
+        // Legt alle Player gleichzeitig an, aber uebereinandergestapelt und bis auf
+        // einen unsichtbar. Zwei Gruende: der Wechsel von Kanal zu Kanal braucht dann
+        // keine Ladezeit mehr, und - wichtiger - der erste Stream bekommt Vorlauf,
+        // weil das schon waehrend des vorherigen Slots passiert. Twitch startete
+        // sonst haeufig gar nicht, weil der Player die Autoplay-Entscheidung faellt,
+        // bevor er ueberhaupt Daten hat.
+        function djVorpuffern() {
+            const eintraege = djUsableEntries();
+            const buehne = document.getElementById('dj-live-player');
+            if (!buehne || !eintraege.length) return;
+
+            // Schon passend gepuffert? Dann nicht neu starten - ein Neuaufbau wuerde
+            // den bereits laufenden Stream abwuergen.
+            if (djGepuffert.length === eintraege.length &&
+                djGepuffert.every((e, i) => djEmbedUrl(e) === djEmbedUrl(eintraege[i]))) return;
+
+            buehne.innerHTML = '';
+            djGepuffert = eintraege.slice();
+
+            const hinweis = document.createElement('div');
+            hinweis.className = 'dj-player-hint';
+            hinweis.textContent = 'Stream wird geladen …';
+            buehne.appendChild(hinweis);
+
+            eintraege.forEach((entry, i) => {
+                const rahmen = djBaueRahmen(entry);
+                rahmen.className = 'dj-player-frame' + (i === 0 ? ' is-visible' : '');
+                buehne.appendChild(rahmen);
+            });
+        }
+
+        // Schaltet nur die Sichtbarkeit um - die Player laufen alle bereits.
+        function djZeigeEintrag(index) {
+            const entry = djGepuffert[index];
+            if (!entry) return;
+
+            document.querySelectorAll('#dj-live-player .dj-player-frame').forEach((el, i) => {
+                el.classList.toggle('is-visible', i === index);
+            });
 
             // Kanal- und Streamtitel kommen ueber Twitch/YouTube von fremden Nutzern -
             // deshalb ausschliesslich per textContent ins DOM, nie per innerHTML.
@@ -4638,8 +4692,8 @@
             chip.classList.toggle('is-youtube', !istTwitch);
 
             const zaehler = document.getElementById('dj-live-counter');
-            zaehler.textContent = (index + 1) + '/' + gesamt;
-            zaehler.style.display = gesamt > 1 ? '' : 'none';
+            zaehler.textContent = (index + 1) + '/' + djGepuffert.length;
+            zaehler.style.display = djGepuffert.length > 1 ? '' : 'none';
         }
 
         function runDjLiveState(nextStateIndex) {
@@ -4648,8 +4702,11 @@
             // damit ein haengender Abruf nie die ganze Rotation aufhaelt.
             loadDjLiveStatus();
 
-            const eintraege = djUsableEntries();
-            if (!eintraege.length) {
+            // Falls das Vorpuffern nicht lief (z. B. Status kam erst danach herein),
+            // hier nachholen - dann eben ohne Vorlauf.
+            djVorpuffern();
+
+            if (!djGepuffert.length) {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
                 return;
@@ -4659,12 +4716,12 @@
             let idx = 0;
 
             const zeigeNaechsten = () => {
-                if (idx >= eintraege.length) {
+                if (idx >= djGepuffert.length) {
                     mediaStateIndex = nextStateIndex;
                     runMasterSequence();   // raeumt den Player ueber djStopPlayer ab
                     return;
                 }
-                djRenderEntry(eintraege[idx], idx, eintraege.length);
+                djZeigeEintrag(idx);
                 idx++;
                 later(zeigeNaechsten, DJ_LIVE_CONFIG.sekundenProKanal * 1000);
             };
@@ -6313,10 +6370,15 @@
                 // Calamari-Grill-Event (12.09., Dartverein City Flyers), direkt nach dem Tag/Nacht-Plakat
                 showPosterImage(CALAMARI_EVENT_URL);
 
-                mediaStateIndex = 0.9;
+                // Die Streams schon hier anwerfen: der DJ-Slot kommt als naechstes,
+                // und die 35 Sekunden Plakat geben den Playern genug Vorlauf, um
+                // beim Einblenden bereits zu laufen statt erst zu puffern.
+                djVorpuffern();
+
+                mediaStateIndex = DJ_SLOT_INDEX;
                 globalMasterTimer = later(runMasterSequence, CALAMARI_EVENT_SECONDS * 1000);
 
-            } else if (mediaStateIndex === 0.9) {
+            } else if (mediaStateIndex === DJ_SLOT_INDEX) {
                 // DJ-Live liegt bewusst weit vorne im Zyklus: geht jemand live, soll
                 // es nicht erst nach der halben Rotation auf dem Screen ankommen.
                 // Ist niemand live (der Normalfall), ueberspringt runDjLiveState den
