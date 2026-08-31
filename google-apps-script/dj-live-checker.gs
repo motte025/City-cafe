@@ -464,16 +464,41 @@ function djYoutubeDebug(kanal) {
   Logger.log('HTTP-Status: ' + res.getResponseCode());
   Logger.log('HTML-Laenge: ' + html.length + ' Zeichen');
 
+  const titel = djFeld(html, /<title>([^<]*)<\/title>/);
+  Logger.log('Seitentitel: ' + (titel || '(kein <title>)'));
+  // Kanalseite ohne Live-Video hat i.d.R. nur den Kanalnamen im Titel, die
+  // eigentliche Stream-Seite den Stream-Titel. Zeigt, WAS UrlFetchApp bekommen hat.
+
   const canonical = djFeld(html, /<link\s+rel="canonical"\s+href="([^"]+)"/);
   Logger.log('canonical-Link: ' + (canonical || '(nicht gefunden)'));
 
   const videoId = djVideoIdAusSeite(html);
-  Logger.log('videoId ermittelt: ' + (videoId || '(keine)'));
+  Logger.log('videoId (bisherige Logik): ' + (videoId || '(keine)'));
+
+  // Fallback unabhaengig vom canonical-Link pruefen, falls die bisherige Logik
+  // wegen eines vorhandenen (aber nicht auf /watch zeigenden) canonical-Links
+  // gar nicht bis hierher kommt.
+  const jsonVideoId = html.match(/"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"/);
+  Logger.log('erste "videoId" im Seiten-JSON: ' + (jsonVideoId ? jsonVideoId[1] : '(keine)'));
+  const anzahlVideoIds = (html.match(/"videoId"\s*:\s*"/g) || []).length;
+  Logger.log('Anzahl "videoId"-Vorkommen gesamt: ' + anzahlVideoIds);
+  if (jsonVideoId) {
+    const idx = html.indexOf(jsonVideoId[0]);
+    Logger.log('Kontext um erste videoId (+-150 Zeichen): ' + html.slice(Math.max(0, idx - 150), idx + 150));
+  }
 
   Logger.log('Treffer isLiveNow:true    -> ' + /"isLiveNow"\s*:\s*true/.test(html));
   Logger.log('Treffer isLive:true       -> ' + /"isLive"\s*:\s*true/.test(html));
   Logger.log('Treffer hlsManifestUrl    -> ' + /hlsManifestUrl/.test(html));
   Logger.log('=> djSeiteIstLive() sagt: ' + djSeiteIstLive(html));
+
+  // Weitere gaengige Live-Marker aus YouTubes Badge-/Metadaten-JSON, unabhaengig
+  // von der bisherigen djSeiteIstLive()-Logik - zeigt, ob EINER davon greifen wuerde.
+  Logger.log('Treffer style":"LIVE"     -> ' + /"style"\s*:\s*"LIVE"/.test(html));
+  Logger.log('Treffer LIVE_NOW-Badge    -> ' + /BADGE_STYLE_TYPE_LIVE_NOW/.test(html));
+  Logger.log('Treffer isLiveContent:true-> ' + /"isLiveContent"\s*:\s*true/.test(html));
+  Logger.log('Treffer liveBroadcastDetails -> ' + /liveBroadcastDetails/.test(html));
+  Logger.log('Treffer "label":"LIVE"    -> ' + /"label"\s*:\s*"LIVE"/.test(html));
 
   // Enthaelt die Seite ueberhaupt ein Consent-/Cookie-Formular statt der
   // eigentlichen Kanalseite? Dann kommt UrlFetchApp gar nicht bis zum Inhalt durch.
