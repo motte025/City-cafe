@@ -439,6 +439,47 @@ function djTriggerEntfernen() {
   Logger.log(anzahl + ' Trigger entfernt.');
 }
 
+// Diagnose fuer einen einzelnen YouTube-Kanal: zeigt Schritt fuer Schritt, woran
+// die Live-Erkennung haengt, statt nur "live" oder "nicht live" zu melden.
+// Aufruf z.B. djYoutubeDebug({ handle: 'wingcamlive' }) oder mit channelId.
+function djYoutubeDebug(kanal) {
+  kanal = kanal || { handle: 'wingcamlive' };
+  const url = kanal.channelId
+    ? 'https://www.youtube.com/channel/' + encodeURIComponent(kanal.channelId) + '/live'
+    : 'https://www.youtube.com/@' + encodeURIComponent(String(kanal.handle).replace(/^@/, '')) + '/live';
+  Logger.log('URL: ' + url);
+
+  const res = UrlFetchApp.fetch(url, {
+    method: 'get',
+    followRedirects: true,
+    muteHttpExceptions: true,
+    headers: {
+      'Cookie': 'CONSENT=YES+cb',
+      'Accept-Language': 'de-DE,de;q=0.9,en;q=0.8',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36'
+    }
+  });
+
+  const html = res.getContentText();
+  Logger.log('HTTP-Status: ' + res.getResponseCode());
+  Logger.log('HTML-Laenge: ' + html.length + ' Zeichen');
+
+  const canonical = djFeld(html, /<link\s+rel="canonical"\s+href="([^"]+)"/);
+  Logger.log('canonical-Link: ' + (canonical || '(nicht gefunden)'));
+
+  const videoId = djVideoIdAusSeite(html);
+  Logger.log('videoId ermittelt: ' + (videoId || '(keine)'));
+
+  Logger.log('Treffer isLiveNow:true    -> ' + /"isLiveNow"\s*:\s*true/.test(html));
+  Logger.log('Treffer isLive:true       -> ' + /"isLive"\s*:\s*true/.test(html));
+  Logger.log('Treffer hlsManifestUrl    -> ' + /hlsManifestUrl/.test(html));
+  Logger.log('=> djSeiteIstLive() sagt: ' + djSeiteIstLive(html));
+
+  // Enthaelt die Seite ueberhaupt ein Consent-/Cookie-Formular statt der
+  // eigentlichen Kanalseite? Dann kommt UrlFetchApp gar nicht bis zum Inhalt durch.
+  Logger.log('Consent-Seite statt Inhalt? -> ' + /consent\.youtube\.com|Before you continue to YouTube/i.test(html));
+}
+
 // Zeigt, was der Checker gerade sehen wuerde - ohne irgendetwas zu committen.
 function djTestLauf() {
   const props = PropertiesService.getScriptProperties();
