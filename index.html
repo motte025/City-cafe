@@ -1268,6 +1268,98 @@
            unter #dashboard-scaler (siehe .ucl-fullscreen-table) - sie deckt den
            kompletten Bildschirm samt Starter-QR per z-index einfach ab, ganz ohne
            Geschwisterselektor-Trick. */
+        /* Der DJ-Player fuellt die Buehne bis unten aus - der Starter-QR laege
+           mitten im Bild. */
+        #media-view-djlive.active ~ .kt-launcher { display: none !important; }
+
+        /* ---------- DJ-Live-Widget (Twitch / YouTube Live) ---------- */
+        /* Gleiche Buehnen-Handschrift wie die Bundesliga-Slots, nur in Club-Farben
+           (Twitch-Violett statt Stadion-Blau). */
+        .dj-stage {
+            width: 1280px; height: 815px; position: relative; box-sizing: border-box;
+            background: linear-gradient(160deg, #1b0b31 0%, #0c0a1f 55%, #210a26 100%);
+            border-radius: 22px; overflow: hidden; padding: 24px 40px;
+            display: flex; flex-direction: column;
+        }
+        .dj-stage::before {
+            content: ''; position: absolute; top: -180px; left: -120px; width: 720px; height: 460px;
+            background: radial-gradient(ellipse at center, rgba(145, 70, 255, 0.22) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+        .dj-stage::after {
+            content: ''; position: absolute; bottom: -220px; right: -140px; width: 760px; height: 520px;
+            background: radial-gradient(ellipse at center, rgba(243, 85, 218, 0.16) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+        .dj-stage > * { position: relative; z-index: 2; }
+
+        .dj-header { display: flex; justify-content: space-between; align-items: flex-end; height: 62px; margin-bottom: 14px; }
+        .dj-header h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 31px; font-weight: 900; color: #ffffff;
+            text-transform: uppercase; letter-spacing: 1px; margin: 0;
+            /* Stream-/Kanalnamen sind beliebig lang - lieber abschneiden als die
+               Kopfzeile umbrechen und den Player nach unten schieben. */
+            max-width: 760px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .dj-header p {
+            font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.4px; margin: 5px 0 0;
+            max-width: 760px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .dj-header-right { display: flex; align-items: center; gap: 14px; }
+        .dj-counter {
+            background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5); color: #f355da;
+            font-size: 15px; font-weight: 900; padding: 8px 16px; border-radius: 11px; white-space: nowrap;
+        }
+        .dj-platform-chip {
+            font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+            padding: 7px 15px; border-radius: 11px; white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.35); color: #ffffff;
+        }
+        .dj-platform-chip.is-twitch  { background: rgba(145, 70, 255, 0.20); border-color: rgba(145, 70, 255, 0.65); color: #c9adff; }
+        .dj-platform-chip.is-youtube { background: rgba(255, 0, 0, 0.16);   border-color: rgba(255, 0, 0, 0.55);   color: #ff9090; }
+        .dj-live-badge {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255, 51, 51, 0.16); border: 1px solid rgba(255, 51, 51, 0.65);
+            color: #ff6b6b; font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900;
+            letter-spacing: 1.5px; text-transform: uppercase; padding: 7px 17px; border-radius: 11px;
+            box-shadow: 0 0 18px rgba(255, 51, 51, 0.28); white-space: nowrap;
+        }
+        /* gleiche Puls-Animation wie im Fussball-Widget - nur transform/opacity,
+           damit der Compositor die Arbeit macht und nicht die schwache CPU */
+        .dj-live-dot {
+            width: 11px; height: 11px; border-radius: 50%; background: var(--live-red); flex-shrink: 0;
+            animation: blLivePulse 1.4s ease-in-out infinite;
+        }
+        /* 1200x675 = exakt 16:9 und genau die Breite zwischen den Buehnen-Raendern.
+           box-sizing zwingend: ohne das legt der 1px-Rahmen 2px drauf, und die
+           Buehne (overflow: hidden) schneidet sie rechts wieder ab. */
+        .dj-player {
+            width: 1200px; height: 675px; box-sizing: border-box; position: relative;
+            border-radius: 16px; overflow: hidden;
+            background: #000; border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 18px 44px rgba(0,0,0,0.55);
+        }
+        /* Liegt UNTER dem Player und ueberbrueckt die paar Sekunden, die ein
+           Livestream zum Puffern braucht - sonst steht dort ein schwarzes Loch. */
+        .dj-player-hint {
+            position: absolute; inset: 0; z-index: 1;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
+            letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.32);
+        }
+        .dj-player iframe { position: relative; z-index: 2; width: 100%; height: 100%; border: 0; display: block; }
+
+        /* Liegt bewusst ausserhalb von #dashboard-scaler und damit ausserhalb der
+           Skalierung - der Text soll auf dem Screen lesbar sein, egal wie stark
+           das Dashboard gerade herunterskaliert wird. */
+        #dj-origin-debug {
+            display: none; position: fixed; top: 14px; left: 14px; z-index: 99999;
+            max-width: 900px; padding: 14px 18px; border-radius: 12px;
+            background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(0, 242, 254, 0.55);
+            color: #00f2fe; font-family: 'Courier New', monospace; font-size: 16px;
+            line-height: 1.55; white-space: pre-wrap; word-break: break-all;
+        }
 
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
@@ -1540,6 +1632,28 @@
                     </div>
                 </div>
 
+                <!-- DJ-Live (Twitch / YouTube Live). Diese Ansicht wird nur aktiv,
+                     wenn live_status.json wirklich jemanden als live meldet -
+                     sonst ueberspringt runDjLiveState den Slot ersatzlos.
+                     Der Player wird pro Kanal frisch erzeugt und beim Verlassen
+                     wieder aus dem DOM genommen (djStopPlayer). -->
+                <div class="media-inner-view" id="media-view-djlive">
+                    <div class="dj-stage">
+                        <div class="dj-header">
+                            <div>
+                                <h2 id="dj-live-name">🎧 DJ Live</h2>
+                                <p id="dj-live-title">Live aus dem Netz</p>
+                            </div>
+                            <div class="dj-header-right">
+                                <div class="dj-counter" id="dj-live-counter" style="display: none;">1/1</div>
+                                <div class="dj-platform-chip is-twitch" id="dj-live-platform">Twitch</div>
+                                <div class="dj-live-badge"><span class="dj-live-dot"></span>Live</div>
+                            </div>
+                        </div>
+                        <div class="dj-player" id="dj-live-player"></div>
+                    </div>
+                </div>
+
                 <!-- Trinkspiel V3 "Hos’n Obe": TV zeigt nur den oeffentlichen Stand,
                      die Haende liegen privat auf den Handys der Gaeste. -->
                 <div class="media-inner-view" id="media-view-hosnobe">
@@ -1731,6 +1845,15 @@
         </div>
 
     </div>
+
+    <!-- Origin-Diagnose fuer die Embed-Einrichtung: Twitch prueft den
+         parent-Parameter gegen den Hostnamen dieser Seite, YouTube verweigert die
+         Einbettung bei Origin "null" (z. B. ueber file://). Welche Adresse der
+         Lumify-WebView auf der Odroid-Box tatsaechlich laedt, sieht man nur auf dem
+         Geraet selbst - dafuer blendet diese Box href/hostname/protocol ein.
+         Einschalten: DJ_LIVE_CONFIG.showOriginDebug = true oder ?origincheck=1 an
+         die Dashboard-URL haengen. Standardmaessig unsichtbar. -->
+    <div id="dj-origin-debug"></div>
 
     <!-- Hos’n Obe (Trinkspiel V3): Konfiguration, Spiel-Logik und Firebase.
          Das "compat"-SDK statt der ES-Module, weil der WebView der Odroid-Box alt
@@ -4366,9 +4489,208 @@
                 else cancelTimer(musicCycleTimer); 
             }, 18000);
             
-            mediaStateIndex = nextStateIndex; 
+            mediaStateIndex = nextStateIndex;
             globalMasterTimer = later(runMasterSequence, MUSIC_BATCH_SIZE * 18000);
         }
+
+        // ==================================================================
+        //  DJ-Live-Slot (Twitch / YouTube Live)
+        // ==================================================================
+        // Das Dashboard prueft selbst gar nichts - es liest nur live_status.json.
+        // Geschrieben wird die Datei von google-apps-script/dj-live-checker.gs, das
+        // alle paar Minuten die Kanaele aus dj_channels.json abfragt und das
+        // Ergebnis ins Repo committet (siehe DJ-LIVESTREAM-SETUP.md).
+        // Ist niemand live, faellt der Slot ersatzlos aus - genau wie die
+        // Fussball-Slots ausserhalb der Saison.
+
+        const DJ_LIVE_CONFIG = {
+            // raw.githubusercontent.com statt relativem Pfad: GitHub Pages liefert
+            // eigene Dateien ueber einen CDN-Cache aus, der laenger haelt als der
+            // Checker-Takt - ein gerade gestarteter Stream kaeme dann verspaetet an.
+            statusUrl: 'https://raw.githubusercontent.com/motte025/City-cafe/main/live_status.json',
+            // Notnagel, falls raw nicht erreichbar ist (und fuer lokale Kopien des
+            // Dashboards ohne Netz-Zugriff auf GitHub): dieselbe Datei nebenan.
+            statusFallbackUrl: 'live_status.json',
+            sekundenProKanal: 30,        // Standzeit je Live-Kanal, dann der naechste
+            maxStatusAlterMinuten: 45,   // aelterer Stand = Checker haengt -> Slot aus
+            abrufTaktSekunden: 180,      // Hintergrund-Refresh, unabhaengig von der Rotation
+            abrufTimeoutMs: 8000,
+            // Auf true stellen, um auf dem echten Screen abzulesen, unter welcher
+            // Adresse das Dashboard dort laeuft (Lumify-WebView!). Danach wieder
+            // auf false. Alternativ ?origincheck=1 an die URL haengen.
+            showOriginDebug: false
+        };
+
+        let djLiveEntries = [];      // zuletzt gemeldete Live-Kanaele
+        let djLiveCheckedAt = null;  // Date des Checker-Laufs, oder null
+        let djStatusGeladen = false; // erst nach dem ersten erfolgreichen Abruf true
+
+        // Twitch prueft den parent-Parameter gegen den Hostnamen der einbettenden
+        // Seite, YouTube verweigert die Einbettung bei Origin "null". Ueber file://
+        // gibt es beides nicht - dann bleibt der Slot komplett aus, statt eine
+        // halbe Minute lang einen schwarzen Player zu zeigen. Bewusst dynamisch
+        // aus location.hostname statt fest verdrahtet: Test (127.0.0.1/localhost)
+        // und Produktivbetrieb (motte025.github.io) sollen beide funktionieren.
+        function djEmbedHost() {
+            const httpArtig = location.protocol === 'https:' || location.protocol === 'http:';
+            return (httpArtig && location.hostname) ? location.hostname : '';
+        }
+
+        function djEmbedUrl(entry) {
+            const host = djEmbedHost();
+            if (!host || !entry) return '';
+            if (entry.platform === 'twitch' && entry.channel) {
+                return 'https://player.twitch.tv/?channel=' + encodeURIComponent(entry.channel) +
+                       '&parent=' + encodeURIComponent(host) + '&muted=true&autoplay=true';
+            }
+            // videoId liefert der Checker gleich mit - kein zweiter Lookup noetig.
+            if (entry.platform === 'youtube' && entry.videoId) {
+                return 'https://www.youtube.com/embed/' + encodeURIComponent(entry.videoId) +
+                       '?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1';
+            }
+            return '';
+        }
+
+        function djAnzeigeName(entry) {
+            return entry.name || entry.channel || entry.handle || entry.channelId || 'DJ';
+        }
+
+        async function djFetchStatus(url) {
+            const controller = new AbortController();
+            const abbruch = setTimeout(() => controller.abort(), DJ_LIVE_CONFIG.abrufTimeoutMs);
+            try {
+                const res = await fetch(url + '?v=' + Date.now(), { signal: controller.signal, cache: 'no-store' });
+                if (!res.ok) return null;
+                return await res.json();
+            } catch (e) {
+                return null;
+            } finally {
+                clearTimeout(abbruch);
+            }
+        }
+
+        // Schlaegt der Abruf fehl, bleibt der alte Stand stehen - checked_at wandert
+        // dann nicht mit, und nach maxStatusAlterMinuten faellt der Slot von selbst aus.
+        async function loadDjLiveStatus() {
+            let daten = await djFetchStatus(DJ_LIVE_CONFIG.statusUrl);
+            if (!daten && DJ_LIVE_CONFIG.statusFallbackUrl) {
+                daten = await djFetchStatus(DJ_LIVE_CONFIG.statusFallbackUrl);
+            }
+            if (!daten) return;
+            djLiveEntries = Array.isArray(daten.live) ? daten.live : [];
+            const gemessen = daten.checked_at ? new Date(daten.checked_at) : null;
+            djLiveCheckedAt = (gemessen && !isNaN(gemessen.getTime())) ? gemessen : null;
+            djStatusGeladen = true;
+        }
+
+        function djUsableEntries() {
+            if (!djStatusGeladen) return [];
+            // Ein stehengebliebener Stand (Checker haengt, Trigger geloescht, Netz weg)
+            // wuerde sonst stundenlang einen laengst beendeten Stream einblenden.
+            if (djLiveCheckedAt) {
+                const alterMinuten = (Date.now() - djLiveCheckedAt.getTime()) / 60000;
+                if (alterMinuten > DJ_LIVE_CONFIG.maxStatusAlterMinuten) return [];
+            }
+            // Nur Eintraege behalten, aus denen sich ueberhaupt ein Player bauen laesst.
+            return djLiveEntries.filter(e => djEmbedUrl(e));
+        }
+
+        // Ein <iframe> laesst sich nicht wie ein <video> pausieren - es muss aus dem
+        // DOM, sonst streamt der Player im Hintergrund weiter und kostet die
+        // Odroid-Box dauerhaft Bandbreite und CPU.
+        function djStopPlayer() {
+            const buehne = document.getElementById('dj-live-player');
+            if (buehne && buehne.firstChild) buehne.innerHTML = '';
+        }
+
+        function djRenderEntry(entry, index, gesamt) {
+            const buehne = document.getElementById('dj-live-player');
+            buehne.innerHTML = '';   // beendet zugleich den Stream des Vorgaengers
+
+            const hinweis = document.createElement('div');
+            hinweis.className = 'dj-player-hint';
+            hinweis.textContent = 'Stream wird geladen …';
+            buehne.appendChild(hinweis);
+
+            const rahmen = document.createElement('iframe');
+            rahmen.src = djEmbedUrl(entry);
+            // Cross-Origin-Player von player.twitch.tv / youtube.com brauchen die
+            // Autoplay-Freigabe ausdruecklich: ohne allow="autoplay" blockiert der
+            // Browser den Start im iframe eigenstaendig - auch dann, wenn stummes
+            // Autoplay auf der Dashboard-Seite selbst laengst funktioniert.
+            rahmen.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+            rahmen.setAttribute('allowfullscreen', 'true');
+            rahmen.setAttribute('frameborder', '0');
+            rahmen.setAttribute('scrolling', 'no');
+            rahmen.setAttribute('title', djAnzeigeName(entry));
+            buehne.appendChild(rahmen);
+
+            // Kanal- und Streamtitel kommen ueber Twitch/YouTube von fremden Nutzern -
+            // deshalb ausschliesslich per textContent ins DOM, nie per innerHTML.
+            document.getElementById('dj-live-name').textContent = '🎧 ' + djAnzeigeName(entry);
+            document.getElementById('dj-live-title').textContent =
+                entry.title || 'Live aus dem Netz · City Cafe Klagenfurt Fischl';
+
+            const chip = document.getElementById('dj-live-platform');
+            const istTwitch = entry.platform === 'twitch';
+            chip.textContent = istTwitch ? 'Twitch' : 'YouTube';
+            chip.classList.toggle('is-twitch', istTwitch);
+            chip.classList.toggle('is-youtube', !istTwitch);
+
+            const zaehler = document.getElementById('dj-live-counter');
+            zaehler.textContent = (index + 1) + '/' + gesamt;
+            zaehler.style.display = gesamt > 1 ? '' : 'none';
+        }
+
+        function runDjLiveState(nextStateIndex) {
+            // Fuer den naechsten Durchlauf frisch machen; blockiert diesen hier nicht.
+            // Die Entscheidung faellt bewusst synchron auf dem zuletzt geholten Stand,
+            // damit ein haengender Abruf nie die ganze Rotation aufhaelt.
+            loadDjLiveStatus();
+
+            const eintraege = djUsableEntries();
+            if (!eintraege.length) {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
+
+            document.getElementById('media-view-djlive').classList.add('active');
+            let idx = 0;
+
+            const zeigeNaechsten = () => {
+                if (idx >= eintraege.length) {
+                    mediaStateIndex = nextStateIndex;
+                    runMasterSequence();   // raeumt den Player ueber djStopPlayer ab
+                    return;
+                }
+                djRenderEntry(eintraege[idx], idx, eintraege.length);
+                idx++;
+                later(zeigeNaechsten, DJ_LIVE_CONFIG.sekundenProKanal * 1000);
+            };
+            zeigeNaechsten();
+        }
+
+        loadDjLiveStatus();
+        setInterval(loadDjLiveStatus, DJ_LIVE_CONFIG.abrufTaktSekunden * 1000); // eigenstaendig, wird von cancelSequenceTimers nicht angefasst
+
+        // Zeigt auf Wunsch, unter welcher Adresse das Dashboard tatsaechlich laeuft.
+        // Genau davon haengen der Twitch-parent-Parameter und die YouTube-Einbettung
+        // ab - im Lumify-WebView der Odroid-Box ist das nicht zwangslaeufig die
+        // GitHub-Pages-Adresse, und ueber file:// funktioniert gar kein Embed.
+        (function djOriginDebug() {
+            const perUrl = /(?:^|[?&])origincheck=1(?:&|$)/.test(location.search);
+            if (!DJ_LIVE_CONFIG.showOriginDebug && !perUrl) return;
+            const box = document.getElementById('dj-origin-debug');
+            if (!box) return;
+            box.textContent =
+                'href:          ' + location.href +
+                '\nhostname:      ' + (location.hostname || '(leer)') +
+                '\nprotocol:      ' + location.protocol +
+                '\norigin:        ' + (location.origin || 'null') +
+                '\nTwitch-parent: ' + (djEmbedHost() || '(nicht moeglich - Embeds bleiben aus)');
+            box.style.display = 'block';
+        })();
 
         // ==================================================================
         //  Trinkspiel V3 "Hos’n Obe" (Schwimmen / 31 / Hosn Obe)
@@ -5974,6 +6296,9 @@
             cancelSequenceTimers();
 
             document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
+            // Ein ausgeblendetes iframe streamt weiter - der DJ-Player muss deshalb
+            // bei jedem Ansichtswechsel wirklich aus dem DOM.
+            djStopPlayer();
 
             if (mediaStateIndex === -1) {
                 runHosnObeTestSlot(0); // -> Tag/Nacht-Plakat
@@ -5988,8 +6313,16 @@
                 // Calamari-Grill-Event (12.09., Dartverein City Flyers), direkt nach dem Tag/Nacht-Plakat
                 showPosterImage(CALAMARI_EVENT_URL);
 
-                mediaStateIndex = 1;
+                mediaStateIndex = 0.9;
                 globalMasterTimer = later(runMasterSequence, CALAMARI_EVENT_SECONDS * 1000);
+
+            } else if (mediaStateIndex === 0.9) {
+                // DJ-Live liegt bewusst weit vorne im Zyklus: geht jemand live, soll
+                // es nicht erst nach der halben Rotation auf dem Screen ankommen.
+                // Ist niemand live (der Normalfall), ueberspringt runDjLiveState den
+                // Slot selbst und schaltet sofort weiter - wie die Fussball-Slots
+                // ausserhalb der Saison.
+                runDjLiveState(1); // -> Musik
 
             } else if (mediaStateIndex === 1) {
                 runMusicState(2); // -> Getränke (vor Hype-Reel)
