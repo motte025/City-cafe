@@ -40,7 +40,8 @@ Was der Checker je Plattform braucht:
 
 ```json
 [
-  { "platform": "twitch",  "channel": "kanalname",  "name": "DJ Nitewave" },
+  { "platform": "youtube", "videoId": "abcdefghijk", "name": "Palma Hafen", "zeigen": "tag" },
+  { "platform": "twitch",  "channel": "kanalname",   "name": "DJ Nitewave", "zeigen": "nacht" },
   { "platform": "youtube", "channelId": "UCxxxxxxxxxxxxxxxxxxxxxx", "name": "DJ Tube" }
 ]
 ```
@@ -48,15 +49,47 @@ Was der Checker je Plattform braucht:
 * `platform` — `"twitch"` oder `"youtube"`
 * `channel` — bei Twitch der Kanalname aus der URL
   (`twitch.tv/**kanalname**`), Groß-/Kleinschreibung egal
+* `videoId` — bei YouTube die ID **eines bestimmten Streams**, aus der URL
+  `youtube.com/watch?v=**abcdefghijk**` oder `youtube.com/live/**abcdefghijk**`.
+  **Für feste Cams der richtige Weg** (siehe Kasten unten).
 * `channelId` — bei YouTube die Kanal-ID, beginnt mit `UC…`.
   Zu finden über die Kanalseite → *Teilen* → *Kanal-ID kopieren*, oder in der
-  URL `youtube.com/channel/**UC…**`
-* `handle` — Alternative zu `channelId`, falls die ID nicht auffindbar ist:
-  das `@handle` aus der URL (`youtube.com/**@djtube**`). Eins von beiden reicht.
+  URL `youtube.com/channel/**UC…**`. Zeigt, was der Kanal *gerade* sendet.
+* `handle` — Alternative zu `channelId`: das `@handle` aus der URL
+  (`youtube.com/**@djtube**`). Eins der drei Felder reicht.
 * `name` — **optional**, aber empfohlen: der Anzeigename im Widget. Ohne ihn
   steht dort bei Twitch der Kanalname und bei YouTube die kryptische `UC…`-ID.
+* `zeigen` — **optional**: `"tag"`, `"nacht"` oder weglassen (dann rund um die
+  Uhr). Siehe Abschnitt *Tageszeit* unten.
 
-Änderungen wirken ab dem nächsten Checker-Lauf, also nach spätestens 5 Minuten.
+> **`videoId` oder `channelId`/`handle`?**
+> Über Kanal-ID oder Handle bekommst du das, was der Kanal **gerade** sendet.
+> Bei Kanälen mit mehreren parallelen Livestreams — Hafen-Cams zum Beispiel —
+> ist das mal die eine und mal die andere Kamera, nicht steuerbar. Willst du
+> eine **bestimmte** Cam, trag deren `videoId` ein. Der Checker prüft dann nur
+> noch, ob genau dieser Stream läuft, und spart sich sogar einen Abruf.
+
+### Tageszeit
+
+Mit `"zeigen"` lässt sich pro Eintrag festlegen, wann er überhaupt in Frage
+kommt — gedacht für Urlaubs-Cams tagsüber und DJ-Streams am Abend:
+
+| Wert | wann |
+|---|---|
+| `"tag"` | 8:00 – 19:59 |
+| `"nacht"` | 20:00 – 7:59 |
+| weggelassen | immer |
+
+Die Grenzen stehen in `index.html` unter `DJ_LIVE_CONFIG` als `tagVonStunde`
+und `tagBisStunde`. Maßgeblich ist die Uhrzeit des Geräts, auf dem das
+Dashboard läuft.
+
+Gefiltert wird im Dashboard, nicht im Checker: `live_status.json` enthält immer
+alle Kanäle, die tatsächlich senden. So lässt sich die Zeitsteuerung ändern,
+ohne auf den nächsten Checker-Lauf zu warten.
+
+Änderungen an `dj_channels.json` wirken ab dem nächsten Checker-Lauf, also nach
+spätestens 5 Minuten.
 
 ---
 

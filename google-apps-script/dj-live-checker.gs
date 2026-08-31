@@ -83,7 +83,7 @@ function djPruefeLiveStatus() {
   }
 
   const twitchKanaele = kanaele.filter(k => k && k.platform === 'twitch' && k.channel);
-  const youtubeKanaele = kanaele.filter(k => k && k.platform === 'youtube' && (k.channelId || k.handle));
+  const youtubeKanaele = kanaele.filter(k => k && k.platform === 'youtube' && (k.channelId || k.handle || k.videoId));
 
   // Ein Ausfall auf einer Plattform darf nicht als "alle offline" durchgehen -
   // sonst reisst eine kurze API-Stoerung einen laufenden Stream vom Screen.
@@ -201,6 +201,8 @@ function djPruefeTwitch(kanaele, props) {
       if (name) eintrag.name = name;
       if (stream.title) eintrag.title = stream.title;
       if (stream.game_name) eintrag.game = stream.game_name;
+      // Tageszeit-Wunsch unveraendert durchreichen - siehe djPruefeYoutube.
+      if (quelle.zeigen) eintrag.zeigen = quelle.zeigen;
       live.push(eintrag);
     });
   }
@@ -314,22 +316,30 @@ function djPruefeYoutube(kanaele) {
   let letzterFehler = '';
 
   kanaele.forEach(kanal => {
-    const liveUrl = kanal.channelId
-      ? 'https://www.youtube.com/channel/' + encodeURIComponent(kanal.channelId) + '/live'
-      : 'https://www.youtube.com/@' + encodeURIComponent(String(kanal.handle).replace(/^@/, '')) + '/live';
+    // Schritt 1: videoId bestimmen.
+    // Steht in dj_channels.json bereits eine feste videoId, wird sie direkt
+    // genommen - das ist der richtige Weg fuer eine BESTIMMTE Cam. Ueber
+    // Kanal/Handle laesst sich das naemlich nicht steuern: betreibt ein Kanal
+    // mehrere Livestreams gleichzeitig (WingCam z. B. mehrere Hafen-Cams),
+    // liefert /live mal den einen und mal den anderen.
+    let videoId = kanal.videoId || '';
 
-    // Schritt 1: videoId aus der Vanity-URL holen (kostenlos, ohne Quota).
-    let schmalHtml;
-    try {
-      schmalHtml = djYoutubeHolen(liveUrl);
-    } catch (fehler) {
-      fehlerZaehler++;
-      letzterFehler = String(fehler);
-      return;
+    if (!videoId) {
+      const liveUrl = kanal.channelId
+        ? 'https://www.youtube.com/channel/' + encodeURIComponent(kanal.channelId) + '/live'
+        : 'https://www.youtube.com/@' + encodeURIComponent(String(kanal.handle).replace(/^@/, '')) + '/live';
+
+      let schmalHtml;
+      try {
+        schmalHtml = djYoutubeHolen(liveUrl);
+      } catch (fehler) {
+        fehlerZaehler++;
+        letzterFehler = String(fehler);
+        return;
+      }
+      videoId = djVideoIdAusSeite(schmalHtml);
+      if (!videoId) return;   // /live zeigt auf keine konkrete videoId -> nicht live
     }
-
-    const videoId = djVideoIdAusSeite(schmalHtml);
-    if (!videoId) return;   // /live zeigt auf keine konkrete videoId -> nicht live
 
     // Schritt 2: Live-Status offiziell bestaetigen lassen (1 Quota-Einheit).
     let status;
@@ -350,6 +360,9 @@ function djPruefeYoutube(kanaele) {
     const name = kanal.name || status.kanalName;
     if (name) eintrag.name = name;
     if (status.titel) eintrag.title = status.titel;
+    // Tageszeit-Wunsch unveraendert durchreichen - entschieden wird im
+    // Dashboard, der Checker meldet nur, was ueberhaupt sendet.
+    if (kanal.zeigen) eintrag.zeigen = kanal.zeigen;
     live.push(eintrag);
   });
 
@@ -588,6 +601,6 @@ function djTestLauf() {
   const twitch = djPruefeTwitch(kanaele.filter(k => k && k.platform === 'twitch' && k.channel), props);
   Logger.log('Twitch -> ' + JSON.stringify(twitch));
 
-  const youtube = djPruefeYoutube(kanaele.filter(k => k && k.platform === 'youtube' && (k.channelId || k.handle)));
+  const youtube = djPruefeYoutube(kanaele.filter(k => k && k.platform === 'youtube' && (k.channelId || k.handle || k.videoId)));
   Logger.log('YouTube -> ' + JSON.stringify(youtube));
 }

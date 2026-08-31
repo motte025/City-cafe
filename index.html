@@ -4521,6 +4521,12 @@
             // Dashboards ohne Netz-Zugriff auf GitHub): dieselbe Datei nebenan.
             statusFallbackUrl: 'live_status.json',
             sekundenProKanal: 180,       // Standzeit je Live-Kanal, dann der naechste
+            // Tageszeit-Steuerung: Eintraege in dj_channels.json koennen
+            // "zeigen": "tag" oder "zeigen": "nacht" tragen. Ohne Angabe laeuft
+            // ein Kanal rund um die Uhr. Gedacht fuer Urlaubs-Cams am Tag und
+            // DJ-Streams am Abend.
+            tagVonStunde: 8,             // ab hier gilt "tag"  (8:00)
+            tagBisStunde: 20,            // ab hier gilt "nacht" (20:00)
             maxStatusAlterMinuten: 45,   // aelterer Stand = Checker haengt -> Slot aus
             abrufTaktSekunden: 180,      // Hintergrund-Refresh, unabhaengig von der Rotation
             abrufTimeoutMs: 8000,
@@ -4558,9 +4564,14 @@
                        '&parent=' + encodeURIComponent(host) + '&muted=true&autoplay=true';
             }
             // videoId liefert der Checker gleich mit - kein zweiter Lookup noetig.
+            // enablejsapi: erlaubt es, den Player spaeter per postMessage wieder
+            // anzuwerfen. Noetig, weil YouTube einen vorgepufferten Player im
+            // Hintergrund pausiert - beim Sichtbarwerden stand sonst das
+            // Pause-Symbol im Bild (siehe djZeigeEintrag).
             if (entry.platform === 'youtube' && entry.videoId) {
                 return 'https://www.youtube.com/embed/' + encodeURIComponent(entry.videoId) +
-                       '?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1';
+                       '?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1' +
+                       '&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
             }
             return '';
         }
@@ -4605,8 +4616,20 @@
                 const alterMinuten = (Date.now() - djLiveCheckedAt.getTime()) / 60000;
                 if (alterMinuten > DJ_LIVE_CONFIG.maxStatusAlterMinuten) return [];
             }
-            // Nur Eintraege behalten, aus denen sich ueberhaupt ein Player bauen laesst.
-            return djLiveEntries.filter(e => djEmbedUrl(e));
+            // Nur Eintraege behalten, aus denen sich ueberhaupt ein Player bauen
+            // laesst und die zur aktuellen Tageszeit passen.
+            return djLiveEntries.filter(e => djEmbedUrl(e) && djZeitfensterPasst(e));
+        }
+
+        // "zeigen": "tag" laeuft zwischen tagVonStunde und tagBisStunde,
+        // "nacht" ausserhalb davon. Alles andere (auch fehlend) laeuft immer.
+        function djZeitfensterPasst(entry) {
+            const wunsch = entry && entry.zeigen;
+            if (wunsch !== 'tag' && wunsch !== 'nacht') return true;
+            const stunde = new Date().getHours();
+            const istTag = stunde >= DJ_LIVE_CONFIG.tagVonStunde &&
+                           stunde < DJ_LIVE_CONFIG.tagBisStunde;
+            return wunsch === 'tag' ? istTag : !istTag;
         }
 
         // Ein <iframe> laesst sich nicht wie ein <video> pausieren - es muss aus dem
@@ -4676,7 +4699,18 @@
             if (!entry) return;
 
             document.querySelectorAll('#dj-live-player .dj-player-frame').forEach((el, i) => {
-                el.classList.toggle('is-visible', i === index);
+                const aktiv = i === index;
+                el.classList.toggle('is-visible', aktiv);
+                // YouTube pausiert einen vorgepufferten Player im Hintergrund.
+                // Beim Sichtbarschalten deshalb ausdruecklich wieder starten,
+                // sonst steht das Pause-Symbol im Bild. Braucht enablejsapi=1
+                // in der Embed-URL; bei Twitch tut der Aufruf schlicht nichts.
+                if (aktiv && el.contentWindow) {
+                    try {
+                        el.contentWindow.postMessage(
+                            '{"event":"command","func":"playVideo","args":""}', '*');
+                    } catch (e) {}
+                }
             });
 
             // Kanal- und Streamtitel kommen ueber Twitch/YouTube von fremden Nutzern -
