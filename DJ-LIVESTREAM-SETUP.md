@@ -143,24 +143,37 @@ also nicht auf eine bestimmte Adresse festgenagelt:
 Gibt es keinen brauchbaren Hostnamen, wird der DJ-Slot komplett übersprungen —
 es steht also nie ein schwarzer, kaputter Player auf dem Screen.
 
-### Offen: was lädt Lumify auf der Odroid-Box?
+### Geklärt: Lumify lädt die GitHub-Pages-Adresse
 
-Auf der Odroid-Box läuft das Dashboard über die Digital-Signage-App
-**Lumify** (sign.lumifysignage.co.uk), Playlist *„ODROID-N2Plus Player
-Playlist“*. Welche URL dort hinterlegt ist, ist bislang **ungeklärt** — steht
-dort nicht die GitHub-Pages-Adresse, funktionieren die Embeds auf dem echten
-Screen möglicherweise nicht.
+Am 31.08.2026 direkt auf der Odroid-Box abgelesen:
 
-**So lässt sich das direkt auf dem Screen ablesen:**
+```
+href:          https://motte025.github.io/City-cafe/
+hostname:      motte025.github.io
+protocol:      https:
+origin:        https://motte025.github.io
+Twitch-parent: motte025.github.io
+```
+
+Lumify rendert die Seite also **nicht** in einem eigenen Container mit
+abweichender Origin, sondern lädt schlicht die GitHub-Pages-URL. Damit ist die
+Embed-Frage erledigt: Twitch bekommt einen gültigen `parent`, YouTube eine echte
+https-Origin statt `null`. **Beide Player funktionieren auf der Box.**
+
+### Später nochmal nachsehen
+
+Falls die Playlist in Lumify einmal umgestellt wird oder die Embeds plötzlich
+schwarz bleiben, lässt sich der Wert jederzeit erneut ablesen:
 
 1. In `index.html` in `DJ_LIVE_CONFIG` `showOriginDebug` auf `true` setzen,
-   committen und pushen
-2. Am Screen erscheint oben links eine Box mit `href`, `hostname`, `protocol`,
-   `origin` und dem daraus abgeleiteten Twitch-`parent`
-3. Werte notieren, `showOriginDebug` wieder auf `false` setzen und pushen
+   committen und nach `main` bringen (GitHub Pages liefert `main` — im Branch
+   erscheint die Box am Screen nicht)
+2. Am Screen oben links stehen `href`, `hostname`, `protocol`, `origin` und der
+   daraus abgeleitete Twitch-`parent`
+3. Werte notieren, `showOriginDebug` wieder auf `false` setzen und erneut nach
+   `main` bringen — die Box ist sonst für Gäste sichtbar
 
-Alternativ, ohne Code-Änderung: `?origincheck=1` an die Dashboard-URL hängen —
-das setzt aber voraus, dass die URL in Lumify bereits bekannt und änderbar ist.
+Ohne Code-Änderung geht es auch mit `?origincheck=1` an der Dashboard-URL.
 
 **Ergebnis auswerten:**
 
@@ -171,7 +184,7 @@ das setzt aber voraus, dass die URL in Lumify bereits bekannt und änderbar ist.
 * ein anderer Hostname → funktioniert bei Twitch automatisch (`parent` wird
   dynamisch gesetzt); bei YouTube nur, wenn es eine echte http/https-Adresse ist
 
-In der Lumify-Oberfläche steht die URL unter
+Die URL steht in der Lumify-Oberfläche unter
 *Inhalte → Wiedergabelisten → „ODROID-N2Plus Player Playlist“ → Edit →
 das Inhalts-Element* (ggf. auch unter *Bibliothek*).
 
