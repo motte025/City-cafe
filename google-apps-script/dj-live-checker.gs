@@ -212,14 +212,46 @@ function djPruefeTwitch(kanaele, props) {
 //  YouTube
 // ===========================================================================
 //
-// Bewusst ohne API-Key: die Kanalseite /live wird serverseitig abgerufen und
-// ausgewertet. Sendet der Kanal, zeigt der canonical-Link der Seite auf eine
-// /watch?v=...-URL; sonst auf die normale Kanalseite. Das ist die gaengige,
-// aber inoffizielle Methode - sie kann sich jederzeit aendern. Faellt sie aus,
-// waere die YouTube Data API v3 (search.list mit eventType=live) der Ersatz;
-// die kostet allerdings 100 Quota-Einheiten pro Aufruf bei 10.000 pro Tag, ein
-// 5-Minuten-Trigger mit einem Kanal liegt damit schon bei 28.800/Tag. Dann
-// muesste der Takt deutlich groeber werden (oder ein eigener Key pro Kanal her).
+// Bewusst ohne API-Key, zweistufig:
+// 1. Die Kanalseite .../live abrufen. UrlFetchApp bekommt hier von YouTube nur
+//    eine schlanke "App-Shell"-Antwort (Titel bloss "YouTube", keine
+//    Live-Merkmale im HTML) - anders als ein echter Browser, der die volle,
+//    serverseitig gerenderte Seite laedt. Diese Schmalspur-Antwort enthaelt
+//    aber trotzdem verlaesslich die videoId, auf die die Vanity-URL zeigt
+//    (Navigations-Metadaten der Form watchEndpoint":{"videoId":"..."}).
+// 2. Mit dieser videoId gezielt https://www.youtube.com/watch?v=ID abrufen -
+//    DAS ist die Seite, die YouTube voll ausliefert, inklusive der
+//    Live-Merkmale (isLiveNow/hlsManifestUrl). Erst wenn die das bestaetigt,
+//    gilt der Kanal als live. Ein Kanal, der gerade nicht sendet, aber ueber
+//    /live auf sein letztes Video verweist, faellt hier korrekt raus, weil
+//    dessen Watch-Seite keine Live-Merkmale traegt.
+// Das ist die gaengige, aber inoffizielle Methode - sie kann sich jederzeit
+// aendern. Faellt sie aus, waere die YouTube Data API v3 (search.list mit
+// eventType=live) der Ersatz; die kostet allerdings 100 Quota-Einheiten pro
+// Aufruf bei 10.000 pro Tag, ein 5-Minuten-Trigger mit einem Kanal liegt damit
+// schon bei 28.800/Tag. Dann muesste der Takt deutlich groeber werden (oder
+// ein eigener Key pro Kanal her).
+
+const DJ_YOUTUBE_HEADERS = {
+  // Ohne gesetztes CONSENT-Cookie liefert YouTube aus der EU heraus die
+  // Einwilligungs-Zwischenseite statt der eigentlichen Seite.
+  'Cookie': 'CONSENT=YES+cb',
+  'Accept-Language': 'de-DE,de;q=0.9,en;q=0.8',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36'
+};
+
+function djYoutubeHolen(url) {
+  const res = UrlFetchApp.fetch(url, {
+    method: 'get',
+    followRedirects: true,
+    muteHttpExceptions: true,
+    headers: DJ_YOUTUBE_HEADERS
+  });
+  if (res.getResponseCode() !== 200) {
+    throw new Error('HTTP ' + res.getResponseCode());
+  }
+  return res.getContentText();
+}
 
 function djPruefeYoutube(kanaele) {
   if (!kanaele.length) return { live: [], fehler: null };
@@ -229,46 +261,42 @@ function djPruefeYoutube(kanaele) {
   let letzterFehler = '';
 
   kanaele.forEach(kanal => {
-    const url = kanal.channelId
+    const liveUrl = kanal.channelId
       ? 'https://www.youtube.com/channel/' + encodeURIComponent(kanal.channelId) + '/live'
       : 'https://www.youtube.com/@' + encodeURIComponent(String(kanal.handle).replace(/^@/, '')) + '/live';
 
-    let html;
+    let schmalHtml;
     try {
-      const res = UrlFetchApp.fetch(url, {
-        method: 'get',
-        followRedirects: true,
-        muteHttpExceptions: true,
-        headers: {
-          // Ohne gesetztes CONSENT-Cookie liefert YouTube aus der EU heraus die
-          // Einwilligungs-Zwischenseite statt der Kanalseite.
-          'Cookie': 'CONSENT=YES+cb',
-          'Accept-Language': 'de-DE,de;q=0.9,en;q=0.8',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36'
-        }
-      });
-      if (res.getResponseCode() !== 200) {
-        fehlerZaehler++;
-        letzterFehler = 'HTTP ' + res.getResponseCode();
-        return;
-      }
-      html = res.getContentText();
+      schmalHtml = djYoutubeHolen(liveUrl);
     } catch (fehler) {
       fehlerZaehler++;
       letzterFehler = String(fehler);
       return;
     }
 
-    const videoId = djVideoIdAusSeite(html);
-    if (!videoId) return;                    // nicht live - Kanalseite statt Video
-    if (!djSeiteIstLive(html)) return;  // /live kann auch auf eine Aufzeichnung zeigen
+    const videoId = djVideoIdAusSeite(schmalHtml);
+    if (!videoId) return;   // /live zeigt auf keine konkrete videoId -> nicht live
+
+    // Zweiter, gezielter Abruf der echten Watch-Seite: nur dort stehen die
+    // tatsaechlichen Live-Merkmale, die Schmalspur-Antwort von .../live traegt
+    // sie nicht.
+    let watchHtml;
+    try {
+      watchHtml = djYoutubeHolen('https://www.youtube.com/watch?v=' + encodeURIComponent(videoId));
+    } catch (fehler) {
+      fehlerZaehler++;
+      letzterFehler = String(fehler);
+      return;
+    }
+
+    if (!djSeiteIstLive(watchHtml)) return;  // Video existiert, laeuft aber nicht (mehr)
 
     const eintrag = { platform: 'youtube', videoId: videoId };
     if (kanal.channelId) eintrag.channelId = kanal.channelId;
     if (kanal.handle) eintrag.handle = kanal.handle;
-    const name = kanal.name || djFeld(html, /"author"\s*:\s*"([^"]+)"/);
+    const name = kanal.name || djFeld(watchHtml, /"author"\s*:\s*"([^"]+)"/);
     if (name) eintrag.name = name;
-    const titel = djFeld(html, /<meta\s+property="og:title"\s+content="([^"]*)"/);
+    const titel = djFeld(watchHtml, /<meta\s+property="og:title"\s+content="([^"]*)"/);
     if (titel) eintrag.title = djEntkommeHtml(titel);
     live.push(eintrag);
   });
@@ -282,14 +310,23 @@ function djPruefeYoutube(kanaele) {
   return { live: live, fehler: null };
 }
 
+// Sucht die videoId, auf die eine .../live-Vanity-URL zeigt. Probiert mehrere
+// Muster, weil YouTube je nach Kanal und Antworttyp unterschiedliche
+// Strukturen liefert - siehe Kommentar oben zur Schmalspur-Antwort.
 function djVideoIdAusSeite(html) {
   const canonical = djFeld(html, /<link\s+rel="canonical"\s+href="([^"]+)"/);
   if (canonical) {
-    const treffer = canonical.match(/[?&]v=([A-Za-z0-9_-]{11})/);
-    if (treffer) return treffer[1];
-    return '';   // canonical zeigt auf die Kanalseite -> nicht live
+    const ausCanonical = canonical.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+    if (ausCanonical) return ausCanonical[1];
+    // canonical bleibt auf der Vanity-URL selbst stehen (kein Redirect auf
+    // /watch) - das ist bei der Schmalspur-Antwort der Normalfall, auch
+    // waehrend eines laufenden Streams. NICHT hier abbrechen.
   }
-  // Notfall-Muster, falls YouTube den canonical-Link einmal weglaesst.
+  // Navigations-Metadaten der Schmalspur-Antwort: die Vanity-URL loest auf
+  // einen konkreten watchEndpoint mit videoId auf.
+  const watchEndpoint = html.match(/"watchEndpoint"\s*:\s*\{\s*"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"/);
+  if (watchEndpoint) return watchEndpoint[1];
+  // Letzter Notnagel, falls beide obigen Muster einmal fehlen.
   const alternativ = html.match(/"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"/);
   return alternativ ? alternativ[1] : '';
 }
@@ -439,70 +476,50 @@ function djTriggerEntfernen() {
   Logger.log(anzahl + ' Trigger entfernt.');
 }
 
-// Diagnose fuer einen einzelnen YouTube-Kanal: zeigt Schritt fuer Schritt, woran
-// die Live-Erkennung haengt, statt nur "live" oder "nicht live" zu melden.
+// Diagnose fuer einen einzelnen YouTube-Kanal: zeigt Schritt fuer Schritt, was
+// djPruefeYoutube tatsaechlich tut - erster Abruf der .../live-Vanity-URL,
+// daraus ermittelte videoId, zweiter Abruf der echten Watch-Seite fuer diese
+// videoId, und die Live-Marker auf DIESER Seite (nicht auf der Vanity-URL -
+// die traegt sie nicht, siehe Kommentar bei djPruefeYoutube).
 // Aufruf z.B. djYoutubeDebug({ handle: 'wingcamlive' }) oder mit channelId.
 function djYoutubeDebug(kanal) {
   kanal = kanal || { handle: 'wingcamlive' };
-  const url = kanal.channelId
+  const liveUrl = kanal.channelId
     ? 'https://www.youtube.com/channel/' + encodeURIComponent(kanal.channelId) + '/live'
     : 'https://www.youtube.com/@' + encodeURIComponent(String(kanal.handle).replace(/^@/, '')) + '/live';
-  Logger.log('URL: ' + url);
+  Logger.log('Schritt 1 - Vanity-URL: ' + liveUrl);
 
-  const res = UrlFetchApp.fetch(url, {
-    method: 'get',
-    followRedirects: true,
-    muteHttpExceptions: true,
-    headers: {
-      'Cookie': 'CONSENT=YES+cb',
-      'Accept-Language': 'de-DE,de;q=0.9,en;q=0.8',
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36'
-    }
-  });
-
-  const html = res.getContentText();
-  Logger.log('HTTP-Status: ' + res.getResponseCode());
-  Logger.log('HTML-Laenge: ' + html.length + ' Zeichen');
-
-  const titel = djFeld(html, /<title>([^<]*)<\/title>/);
-  Logger.log('Seitentitel: ' + (titel || '(kein <title>)'));
-  // Kanalseite ohne Live-Video hat i.d.R. nur den Kanalnamen im Titel, die
-  // eigentliche Stream-Seite den Stream-Titel. Zeigt, WAS UrlFetchApp bekommen hat.
-
-  const canonical = djFeld(html, /<link\s+rel="canonical"\s+href="([^"]+)"/);
-  Logger.log('canonical-Link: ' + (canonical || '(nicht gefunden)'));
-
-  const videoId = djVideoIdAusSeite(html);
-  Logger.log('videoId (bisherige Logik): ' + (videoId || '(keine)'));
-
-  // Fallback unabhaengig vom canonical-Link pruefen, falls die bisherige Logik
-  // wegen eines vorhandenen (aber nicht auf /watch zeigenden) canonical-Links
-  // gar nicht bis hierher kommt.
-  const jsonVideoId = html.match(/"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"/);
-  Logger.log('erste "videoId" im Seiten-JSON: ' + (jsonVideoId ? jsonVideoId[1] : '(keine)'));
-  const anzahlVideoIds = (html.match(/"videoId"\s*:\s*"/g) || []).length;
-  Logger.log('Anzahl "videoId"-Vorkommen gesamt: ' + anzahlVideoIds);
-  if (jsonVideoId) {
-    const idx = html.indexOf(jsonVideoId[0]);
-    Logger.log('Kontext um erste videoId (+-150 Zeichen): ' + html.slice(Math.max(0, idx - 150), idx + 150));
+  let schmalHtml;
+  try {
+    schmalHtml = djYoutubeHolen(liveUrl);
+  } catch (fehler) {
+    Logger.log('Abruf fehlgeschlagen: ' + fehler);
+    return;
   }
+  Logger.log('HTML-Laenge: ' + schmalHtml.length + ' Zeichen');
+  Logger.log('Seitentitel: ' + (djFeld(schmalHtml, /<title>([^<]*)<\/title>/) || '(kein <title>)'));
+  Logger.log('canonical-Link: ' + (djFeld(schmalHtml, /<link\s+rel="canonical"\s+href="([^"]+)"/) || '(nicht gefunden)'));
+  Logger.log('Consent-Seite statt Inhalt? -> ' + /consent\.youtube\.com|Before you continue to YouTube/i.test(schmalHtml));
 
-  Logger.log('Treffer isLiveNow:true    -> ' + /"isLiveNow"\s*:\s*true/.test(html));
-  Logger.log('Treffer isLive:true       -> ' + /"isLive"\s*:\s*true/.test(html));
-  Logger.log('Treffer hlsManifestUrl    -> ' + /hlsManifestUrl/.test(html));
-  Logger.log('=> djSeiteIstLive() sagt: ' + djSeiteIstLive(html));
+  const videoId = djVideoIdAusSeite(schmalHtml);
+  Logger.log('daraus ermittelte videoId: ' + (videoId || '(keine -> nicht live, Schluss)'));
+  if (!videoId) return;
 
-  // Weitere gaengige Live-Marker aus YouTubes Badge-/Metadaten-JSON, unabhaengig
-  // von der bisherigen djSeiteIstLive()-Logik - zeigt, ob EINER davon greifen wuerde.
-  Logger.log('Treffer style":"LIVE"     -> ' + /"style"\s*:\s*"LIVE"/.test(html));
-  Logger.log('Treffer LIVE_NOW-Badge    -> ' + /BADGE_STYLE_TYPE_LIVE_NOW/.test(html));
-  Logger.log('Treffer isLiveContent:true-> ' + /"isLiveContent"\s*:\s*true/.test(html));
-  Logger.log('Treffer liveBroadcastDetails -> ' + /liveBroadcastDetails/.test(html));
-  Logger.log('Treffer "label":"LIVE"    -> ' + /"label"\s*:\s*"LIVE"/.test(html));
+  Logger.log('Schritt 2 - Watch-Seite: https://www.youtube.com/watch?v=' + videoId);
+  let watchHtml;
+  try {
+    watchHtml = djYoutubeHolen('https://www.youtube.com/watch?v=' + videoId);
+  } catch (fehler) {
+    Logger.log('Abruf fehlgeschlagen: ' + fehler);
+    return;
+  }
+  Logger.log('HTML-Laenge: ' + watchHtml.length + ' Zeichen');
+  Logger.log('Seitentitel: ' + (djFeld(watchHtml, /<title>([^<]*)<\/title>/) || '(kein <title>)'));
 
-  // Enthaelt die Seite ueberhaupt ein Consent-/Cookie-Formular statt der
-  // eigentlichen Kanalseite? Dann kommt UrlFetchApp gar nicht bis zum Inhalt durch.
-  Logger.log('Consent-Seite statt Inhalt? -> ' + /consent\.youtube\.com|Before you continue to YouTube/i.test(html));
+  Logger.log('Treffer isLiveNow:true    -> ' + /"isLiveNow"\s*:\s*true/.test(watchHtml));
+  Logger.log('Treffer isLive:true       -> ' + /"isLive"\s*:\s*true/.test(watchHtml));
+  Logger.log('Treffer hlsManifestUrl    -> ' + /hlsManifestUrl/.test(watchHtml));
+  Logger.log('=> djSeiteIstLive() sagt: ' + djSeiteIstLive(watchHtml));
 }
 
 // Zeigt, was der Checker gerade sehen wuerde - ohne irgendetwas zu committen.
