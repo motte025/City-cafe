@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-08-31T04:33:01Z",
+  "checked_at": "2026-08-31T04:47:58Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,14 @@
       "name": "Dj_SoundtraxX",
       "title": "LITTLE MIX SESSION, LETSSS GOOOO!",
       "game": "DJs"
+    },
+    {
+      "platform": "youtube",
+      "videoId": "HYAfFvdRvdA",
+      "channelId": "UCnZLvSnB-MLeJBRlfGL54Hw",
+      "handle": "wingcamlive",
+      "name": "WingCam",
+      "title": "LIVE WEBCAM LAS PALMAS PORT | CANARY ISLANDS | SPAIN"
     }
   ]
 }
