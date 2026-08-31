@@ -212,32 +212,38 @@ function djPruefeTwitch(kanaele, props) {
 //  YouTube
 // ===========================================================================
 //
-// Bewusst ohne API-Key, zweistufig:
-// 1. Die Kanalseite .../live abrufen. UrlFetchApp bekommt hier von YouTube nur
-//    eine schlanke "App-Shell"-Antwort (Titel bloss "YouTube", keine
-//    Live-Merkmale im HTML) - anders als ein echter Browser, der die volle,
-//    serverseitig gerenderte Seite laedt. Diese Schmalspur-Antwort enthaelt
-//    aber trotzdem verlaesslich die videoId, auf die die Vanity-URL zeigt
-//    (Navigations-Metadaten der Form watchEndpoint":{"videoId":"..."}).
-// 2. Mit dieser videoId gezielt https://www.youtube.com/watch?v=ID abrufen -
-//    DAS ist die Seite, die YouTube voll ausliefert, inklusive der
-//    Live-Merkmale (isLiveNow/hlsManifestUrl). Erst wenn die das bestaetigt,
-//    gilt der Kanal als live. Ein Kanal, der gerade nicht sendet, aber ueber
-//    /live auf sein letztes Video verweist, faellt hier korrekt raus, weil
-//    dessen Watch-Seite keine Live-Merkmale traegt.
-// Das ist die gaengige, aber inoffizielle Methode - sie kann sich jederzeit
-// aendern. Faellt sie aus, waere die YouTube Data API v3 (search.list mit
-// eventType=live) der Ersatz; die kostet allerdings 100 Quota-Einheiten pro
-// Aufruf bei 10.000 pro Tag, ein 5-Minuten-Trigger mit einem Kanal liegt damit
-// schon bei 28.800/Tag. Dann muesste der Takt deutlich groeber werden (oder
-// ein eigener Key pro Kanal her).
+// Zweistufig - und der zweite Schritt braucht zwingend einen API-Key:
+//
+// 1. Die Kanalseite .../live abrufen und daraus die videoId ziehen, auf die
+//    die Vanity-URL zeigt (Navigations-Metadaten der Form
+//    watchEndpoint":{"videoId":"..."}). Das funktioniert von Apps Script aus
+//    zuverlaessig und kostet nichts.
+//
+// 2. Diese videoId ueber die YouTube Data API v3 bestaetigen lassen:
+//    videos.list mit part=snippet liefert liveBroadcastContent, das genau
+//    "live", "upcoming" oder "none" ist. Nur bei "live" gilt der Kanal als
+//    sendend.
+//
+// WARUM NICHT WEITER SCRAPEN: Der urspruengliche Plan war, den Live-Status
+// direkt aus dem HTML zu lesen (isLiveNow/hlsManifestUrl). Das geht von Apps
+// Script aus nachweislich nicht: YouTube liefert Anfragen aus der
+// Google-Infrastruktur heraus nur eine schlanke App-Shell-Antwort (~570 KB,
+// Seitentitel bloss "YouTube", keine Live-Merkmale), waehrend dieselbe URL von
+// einer externen IP ~1,2 MB inklusive "isLive":true zurueckgibt. Getestet mit
+// verschiedenen User-Agents, Sec-Fetch-/Accept-Headern und ganz ohne Header -
+// immer dasselbe Ergebnis. Das liegt am Absender, nicht an den Headern, und
+// ist vom Skript aus nicht zu umgehen.
+//
+// QUOTA: videos.list kostet 1 Einheit pro Aufruf (nicht 100 wie search.list,
+// das urspruenglich als Fallback angedacht war). Bei 10.000 Einheiten pro Tag
+// und einem 5-Minuten-Trigger sind das 288 Aufrufe pro Kanal und Tag - selbst
+// ein Dutzend Kanaele bleibt weit unter dem Limit. Aufgerufen wird ohnehin nur
+// dann, wenn Schritt 1 ueberhaupt eine videoId gefunden hat.
+//
+// OHNE KEY: Ist YOUTUBE_API_KEY nicht gesetzt, meldet der Checker YouTube-
+// Kanaele grundsaetzlich als nicht live und schreibt einmal pro Lauf einen
+// Hinweis ins Protokoll. Twitch laeuft davon voellig unberuehrt weiter.
 
-// Ohne die Sec-Fetch-/Accept-Header einer echten Browser-Navigation liefert
-// YouTube offenbar durchgaengig nur eine schlanke App-Shell-Antwort statt der
-// vollen, serverseitig gerenderten Seite - egal ob /live oder /watch?v=...
-// abgerufen wird (beobachtet: Seitentitel bleibt "YouTube", keine
-// Live-Merkmale im HTML). Dieser vollstaendigere Header-Satz bildet nach, was
-// ein Chrome-Browser bei einer normalen Adresszeilen-Navigation mitschickt.
 const DJ_YOUTUBE_HEADERS = {
   // Ohne gesetztes CONSENT-Cookie liefert YouTube aus der EU heraus die
   // Einwilligungs-Zwischenseite statt der eigentlichen Seite.
@@ -265,8 +271,43 @@ function djYoutubeHolen(url) {
   return res.getContentText();
 }
 
+// Fragt die YouTube Data API v3, ob genau dieses Video gerade live ist.
+// Rueckgabe: { live: true/false, titel, kanalName, channelId } oder null, wenn
+// das Video nicht (mehr) existiert. Wirft bei API-/Netzfehlern.
+function djYoutubeApiStatus(videoId, apiKey) {
+  const url = 'https://www.googleapis.com/youtube/v3/videos'
+    + '?part=snippet&id=' + encodeURIComponent(videoId)
+    + '&key=' + encodeURIComponent(apiKey);
+
+  const res = UrlFetchApp.fetch(url, { method: 'get', muteHttpExceptions: true });
+  const code = res.getResponseCode();
+  if (code !== 200) {
+    // 400 = Key ungueltig, 403 = Key gesperrt oder Quota erschoepft.
+    throw new Error('YouTube-API HTTP ' + code + ': ' + res.getContentText().slice(0, 300));
+  }
+
+  const daten = JSON.parse(res.getContentText());
+  const eintrag = (daten.items || [])[0];
+  if (!eintrag) return null;   // Video geloescht oder privat
+
+  const snippet = eintrag.snippet || {};
+  return {
+    live: snippet.liveBroadcastContent === 'live',   // sonst "upcoming" oder "none"
+    titel: snippet.title || '',
+    kanalName: snippet.channelTitle || '',
+    channelId: snippet.channelId || ''
+  };
+}
+
 function djPruefeYoutube(kanaele) {
   if (!kanaele.length) return { live: [], fehler: null };
+
+  const apiKey = PropertiesService.getScriptProperties().getProperty('YOUTUBE_API_KEY');
+  if (!apiKey) {
+    Logger.log('Hinweis: Script Property YOUTUBE_API_KEY fehlt - YouTube-Kanaele '
+      + 'werden als nicht live gemeldet. Einrichtung: DJ-LIVESTREAM-SETUP.md');
+    return { live: [], fehler: null };
+  }
 
   const live = [];
   let fehlerZaehler = 0;
@@ -277,6 +318,7 @@ function djPruefeYoutube(kanaele) {
       ? 'https://www.youtube.com/channel/' + encodeURIComponent(kanal.channelId) + '/live'
       : 'https://www.youtube.com/@' + encodeURIComponent(String(kanal.handle).replace(/^@/, '')) + '/live';
 
+    // Schritt 1: videoId aus der Vanity-URL holen (kostenlos, ohne Quota).
     let schmalHtml;
     try {
       schmalHtml = djYoutubeHolen(liveUrl);
@@ -289,27 +331,25 @@ function djPruefeYoutube(kanaele) {
     const videoId = djVideoIdAusSeite(schmalHtml);
     if (!videoId) return;   // /live zeigt auf keine konkrete videoId -> nicht live
 
-    // Zweiter, gezielter Abruf der echten Watch-Seite: nur dort stehen die
-    // tatsaechlichen Live-Merkmale, die Schmalspur-Antwort von .../live traegt
-    // sie nicht.
-    let watchHtml;
+    // Schritt 2: Live-Status offiziell bestaetigen lassen (1 Quota-Einheit).
+    let status;
     try {
-      watchHtml = djYoutubeHolen('https://www.youtube.com/watch?v=' + encodeURIComponent(videoId));
+      status = djYoutubeApiStatus(videoId, apiKey);
     } catch (fehler) {
       fehlerZaehler++;
       letzterFehler = String(fehler);
       return;
     }
 
-    if (!djSeiteIstLive(watchHtml)) return;  // Video existiert, laeuft aber nicht (mehr)
+    if (!status || !status.live) return;   // existiert nicht, oder laeuft nicht (mehr)
 
     const eintrag = { platform: 'youtube', videoId: videoId };
     if (kanal.channelId) eintrag.channelId = kanal.channelId;
+    else if (status.channelId) eintrag.channelId = status.channelId;
     if (kanal.handle) eintrag.handle = kanal.handle;
-    const name = kanal.name || djFeld(watchHtml, /"author"\s*:\s*"([^"]+)"/);
+    const name = kanal.name || status.kanalName;
     if (name) eintrag.name = name;
-    const titel = djFeld(watchHtml, /<meta\s+property="og:title"\s+content="([^"]*)"/);
-    if (titel) eintrag.title = djEntkommeHtml(titel);
+    if (status.titel) eintrag.title = status.titel;
     live.push(eintrag);
   });
 
@@ -341,15 +381,6 @@ function djVideoIdAusSeite(html) {
   // Letzter Notnagel, falls beide obigen Muster einmal fehlen.
   const alternativ = html.match(/"videoId"\s*:\s*"([A-Za-z0-9_-]{11})"/);
   return alternativ ? alternativ[1] : '';
-}
-
-// /live leitet in manchen Faellen auf die zuletzt beendete Uebertragung weiter -
-// die haette dann zwar eine videoId, laeuft aber nicht mehr. Deshalb zusaetzlich
-// nach einem echten Live-Merkmal in der Seite suchen.
-function djSeiteIstLive(html) {
-  return /"isLiveNow"\s*:\s*true/.test(html) ||
-         /"isLive"\s*:\s*true/.test(html) ||
-         /hlsManifestUrl/.test(html);
 }
 
 function djFeld(html, muster) {
@@ -517,21 +548,29 @@ function djYoutubeDebug(kanal) {
   Logger.log('daraus ermittelte videoId: ' + (videoId || '(keine -> nicht live, Schluss)'));
   if (!videoId) return;
 
-  Logger.log('Schritt 2 - Watch-Seite: https://www.youtube.com/watch?v=' + videoId);
-  let watchHtml;
-  try {
-    watchHtml = djYoutubeHolen('https://www.youtube.com/watch?v=' + videoId);
-  } catch (fehler) {
-    Logger.log('Abruf fehlgeschlagen: ' + fehler);
+  const apiKey = PropertiesService.getScriptProperties().getProperty('YOUTUBE_API_KEY');
+  if (!apiKey) {
+    Logger.log('Schritt 2 nicht moeglich: Script Property YOUTUBE_API_KEY fehlt.');
+    Logger.log('Einrichtung siehe DJ-LIVESTREAM-SETUP.md, Abschnitt "YouTube-API-Key".');
     return;
   }
-  Logger.log('HTML-Laenge: ' + watchHtml.length + ' Zeichen');
-  Logger.log('Seitentitel: ' + (djFeld(watchHtml, /<title>([^<]*)<\/title>/) || '(kein <title>)'));
 
-  Logger.log('Treffer isLiveNow:true    -> ' + /"isLiveNow"\s*:\s*true/.test(watchHtml));
-  Logger.log('Treffer isLive:true       -> ' + /"isLive"\s*:\s*true/.test(watchHtml));
-  Logger.log('Treffer hlsManifestUrl    -> ' + /hlsManifestUrl/.test(watchHtml));
-  Logger.log('=> djSeiteIstLive() sagt: ' + djSeiteIstLive(watchHtml));
+  Logger.log('Schritt 2 - YouTube-API videos.list fuer ' + videoId);
+  let status;
+  try {
+    status = djYoutubeApiStatus(videoId, apiKey);
+  } catch (fehler) {
+    Logger.log('API-Abfrage fehlgeschlagen: ' + fehler);
+    return;
+  }
+
+  if (!status) {
+    Logger.log('API kennt dieses Video nicht (geloescht oder privat).');
+    return;
+  }
+  Logger.log('Titel:      ' + status.titel);
+  Logger.log('Kanal:      ' + status.kanalName);
+  Logger.log('=> live?    ' + status.live);
 }
 
 // Zeigt, was der Checker gerade sehen wuerde - ohne irgendetwas zu committen.

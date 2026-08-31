@@ -22,8 +22,15 @@ also jederzeit so bleiben, ohne dass am Dashboard etwas kaputtgeht.
 | DJ-Live-Slot | `index.html` | liest nur `live_status.json` und zeigt den Player |
 
 Das Dashboard fragt **keine** API selbst ab. Es liest ausschließlich
-`live_status.json` — deshalb liegen die Twitch-Zugangsdaten auch nirgends im
+`live_status.json` — deshalb liegen die Zugangsdaten auch nirgends im
 öffentlich einsehbaren Repo, sondern nur in den Script Properties bei Google.
+
+Was der Checker je Plattform braucht:
+
+| Plattform | Zugangsdaten | Wie geprüft wird |
+|---|---|---|
+| Twitch | Client-ID + Secret (Abschnitt 2) | Helix-API `streams`, alle Kanäle in einem Aufruf |
+| YouTube | API-Key (Abschnitt 2b) | Vanity-URL `/live` liefert die videoId, `videos.list` bestätigt den Live-Status |
 
 ---
 
@@ -68,6 +75,45 @@ dieses Repo, es ist öffentlich einsehbar.
 
 ---
 
+## 2b. YouTube-API-Key anlegen
+
+Nur nötig, wenn YouTube-Kanäle in der Liste stehen. Twitch braucht nichts davon.
+
+Der Key ist kostenlos und ohne Kreditkarte zu haben:
+
+1. <https://console.cloud.google.com/> öffnen, oben ein **Projekt anlegen**
+   (Name egal, z. B. `city-cafe-dj`)
+2. Links **APIs & Dienste → Bibliothek** → nach *YouTube Data API v3* suchen
+   → **Aktivieren**
+3. Links **APIs & Dienste → Anmeldedaten** → **Anmeldedaten erstellen**
+   → **API-Schlüssel**
+4. Den angezeigten Schlüssel kopieren — kommt in Schritt 3 als
+   `YOUTUBE_API_KEY` in die Script Properties
+5. Empfohlen: beim Schlüssel auf **Schlüssel einschränken** → unter
+   *API-Einschränkungen* nur *YouTube Data API v3* zulassen. Dann ist der
+   Schlüssel selbst bei einem Leck nur für diese eine API brauchbar.
+
+**Warum überhaupt ein Key?** Ursprünglich sollte der Live-Status ohne API direkt
+aus dem Seiten-HTML gelesen werden. Das funktioniert von Apps Script aus
+nachweislich nicht: YouTube liefert Anfragen aus der Google-Infrastruktur nur
+eine abgespeckte Seite ohne Live-Merkmale (~570 KB, Seitentitel bloß „YouTube"),
+während dieselbe URL von einer externen IP ~1,2 MB inklusive `"isLive":true`
+zurückgibt. Getestet mit verschiedenen User-Agents, Sec-Fetch-/Accept-Headern
+und ganz ohne Header — immer dasselbe. Das hängt am Absender, nicht an den
+Headern, und ist vom Skript aus nicht zu umgehen.
+
+**Quota:** Der Checker ruft `videos.list` auf — **1 Einheit** pro Abfrage, nicht
+100 wie das ursprünglich angedachte `search.list`. Bei 10.000 Einheiten pro Tag
+und 5-Minuten-Takt sind das 288 Abrufe pro Kanal und Tag; selbst ein Dutzend
+Kanäle bleibt weit unter dem Limit. Abgefragt wird ohnehin nur, wenn die
+kostenlose Vorstufe überhaupt einen Kandidaten gefunden hat.
+
+**Ohne Key** meldet der Checker YouTube-Kanäle grundsätzlich als nicht live und
+schreibt einen Hinweis ins Ausführungsprotokoll. Twitch läuft davon unberührt
+weiter.
+
+---
+
 ## 3. Apps Script einrichten
 
 Der Checker läuft in **einem eigenen Apps-Script-Projekt** oder im bestehenden
@@ -87,6 +133,12 @@ GitHub-Token: Script Properties gelten pro Projekt, im Song-Collector liegt
    | `GITHUB_TOKEN` | PAT mit Schreibrecht auf `motte025/City-cafe` |
    | `TWITCH_CLIENT_ID` | Client-ID aus Schritt 2 |
    | `TWITCH_CLIENT_SECRET` | Client-Secret aus Schritt 2 |
+   | `YOUTUBE_API_KEY` | API-Schlüssel aus Schritt 2b |
+
+   Nur eintragen, was gebraucht wird: reine Twitch-Nutzung kommt ohne
+   `YOUTUBE_API_KEY` aus, reine YouTube-Nutzung ohne die beiden Twitch-Werte.
+   **Wichtig:** Links steht der *Name* (`TWITCH_CLIENT_ID`), rechts der Wert —
+   nicht verwechseln, sonst findet das Skript die Eigenschaft nicht.
 
    Im Song-Collector-Projekt ist `GITHUB_TOKEN` schon da — dann nur die beiden
    Twitch-Werte ergänzen. Für ein eigenes Projekt: entweder den vorhandenen Wert
@@ -246,13 +298,24 @@ neues — ein einzelner Fehlversuch ist also normal.
 
 **YouTube meldet dauerhaft „offline“**
 
-Der YouTube-Check kommt ohne API-Key aus und wertet dafür die Seite
-`youtube.com/channel/…/live` aus. Das ist die gängige, aber **inoffizielle**
-Methode — sie kann sich jederzeit ändern. Falls sie ausfällt, wäre die YouTube
-Data API v3 (`search.list` mit `eventType=live`) der Ersatz. Die kostet
-allerdings 100 Quota-Einheiten pro Aufruf bei 10.000 pro Tag; ein
-5-Minuten-Trigger mit einem einzigen Kanal läge damit schon bei 28.800 pro Tag.
-Der Takt müsste dann deutlich gröber werden.
+`djYoutubeDebug` ausführen — die Funktion zeigt beide Stufen einzeln:
+
+* **Schritt 1 findet keine videoId** → die Vanity-URL (`/@handle/live` bzw.
+  `/channel/UC…/live`) löst auf kein Video auf. Handle oder Kanal-ID in
+  `dj_channels.json` prüfen.
+* **Schritt 2 meldet „YOUTUBE_API_KEY fehlt"** → Key nachtragen, siehe
+  Abschnitt 2b.
+* **Schritt 2 meldet HTTP 400** → Key ungültig oder vertippt.
+* **Schritt 2 meldet HTTP 403** → Key gesperrt, falsch eingeschränkt, oder das
+  Tageskontingent ist aufgebraucht.
+* **Schritt 2 meldet `live? false`** → alles korrekt verdrahtet, der Kanal
+  sendet gerade schlicht nicht.
+
+Die erste Stufe (videoId aus der Seite lesen) ist **inoffiziell** und kann sich
+jederzeit ändern. Bricht sie weg, bliebe als Ersatz `search.list` mit
+`eventType=live` — das kostet allerdings 100 Quota-Einheiten statt 1, damit
+wären bei 5-Minuten-Takt und einem einzigen Kanal schon 28.800 Einheiten pro Tag
+fällig (Limit: 10.000). Der Takt müsste dann deutlich gröber werden.
 
 ---
 
