@@ -40163,5 +40163,24 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "A Taste of Honey",
+    "title": "Boogie Oogie Oogie",
+    "album": "",
+    "category": "70s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Disco",
+      "Hymne"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
