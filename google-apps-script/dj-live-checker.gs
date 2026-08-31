@@ -232,11 +232,23 @@ function djPruefeTwitch(kanaele, props) {
 // schon bei 28.800/Tag. Dann muesste der Takt deutlich groeber werden (oder
 // ein eigener Key pro Kanal her).
 
+// Ohne die Sec-Fetch-/Accept-Header einer echten Browser-Navigation liefert
+// YouTube offenbar durchgaengig nur eine schlanke App-Shell-Antwort statt der
+// vollen, serverseitig gerenderten Seite - egal ob /live oder /watch?v=...
+// abgerufen wird (beobachtet: Seitentitel bleibt "YouTube", keine
+// Live-Merkmale im HTML). Dieser vollstaendigere Header-Satz bildet nach, was
+// ein Chrome-Browser bei einer normalen Adresszeilen-Navigation mitschickt.
 const DJ_YOUTUBE_HEADERS = {
   // Ohne gesetztes CONSENT-Cookie liefert YouTube aus der EU heraus die
   // Einwilligungs-Zwischenseite statt der eigentlichen Seite.
   'Cookie': 'CONSENT=YES+cb',
   'Accept-Language': 'de-DE,de;q=0.9,en;q=0.8',
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+  'Sec-Fetch-Mode': 'navigate',
+  'Sec-Fetch-Site': 'none',
+  'Sec-Fetch-User': '?1',
+  'Sec-Fetch-Dest': 'document',
+  'Upgrade-Insecure-Requests': '1',
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36'
 };
 
