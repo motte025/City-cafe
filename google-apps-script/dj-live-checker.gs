@@ -9,44 +9,54 @@
  * Vollstaendige Einrichtung inkl. aller Zugangsdaten: DJ-LIVESTREAM-SETUP.md
  *
  * ============================== KURZFASSUNG ==============================
- * 1. Dieses Skript in das BESTEHENDE Apps-Script-Projekt des Song-Collectors
- *    einfuegen (neue Datei). Dann ist GITHUB_TOKEN bereits vorhanden und muss
- *    nicht erneut angelegt werden.
- * 2. Script Properties ergaenzen (Projekteinstellungen -> Skripteigenschaften):
+ * 1. Dieses Skript als neue Datei in ein Apps-Script-Projekt einfuegen. Eigenes
+ *    Projekt oder das des Song-Collectors - beides geht.
+ * 2. Script Properties anlegen (Projekteinstellungen -> Skripteigenschaften):
+ *      GITHUB_TOKEN          = PAT mit Schreibrecht auf das Repo
+ *                              (im Song-Collector-Projekt schon vorhanden)
  *      TWITCH_CLIENT_ID      = <Client-ID der Twitch-Anwendung>
  *      TWITCH_CLIENT_SECRET  = <Client-Secret der Twitch-Anwendung>
  *    Die Werte gehoeren NICHT ins Repo - dieses ist oeffentlich einsehbar.
- * 3. Einmal triggerEinrichten() ausfuehren -> legt den 5-Minuten-Trigger an.
- * 4. Zum Testen testLauf() ausfuehren und ins Ausfuehrungsprotokoll schauen.
+ * 3. Einmal djTriggerEinrichten() ausfuehren -> legt den 5-Minuten-Trigger an.
+ * 4. Zum Testen djTestLauf() ausfuehren und ins Ausfuehrungsprotokoll schauen.
  * =========================================================================
  *
+ * Warum alles mit dj/DJ_ praefixiert ist: Apps Script teilt sich EINEN globalen
+ * Namensraum ueber alle .gs-Dateien eines Projekts. Ein schlichtes GITHUB_REPO
+ * kollidiert deshalb mit derselben Konstante im Song-Collector, und das Projekt
+ * laesst sich gar nicht mehr ausfuehren ("Identifier has already been
+ * declared"). Die Praefixe halten den Checker in jedem Projekt vertraeglich.
+ * Die Script-Property-SCHLUESSEL (GITHUB_TOKEN & Co.) sind davon nicht
+ * betroffen - das sind Strings, keine Bezeichner, und GITHUB_TOKEN wird mit dem
+ * Song-Collector bewusst geteilt.
+ *
  * Commit-Verhalten: geschrieben wird nur, wenn sich die Live-Liste tatsaechlich
- * aendert - plus ein Herzschlag alle HEARTBEAT_MINUTEN, solange jemand live ist,
+ * aendert - plus ein Herzschlag alle DJ_HEARTBEAT_MINUTEN, solange jemand live ist,
  * damit checked_at im Dashboard nicht veraltet. Bei niemandem live entstehen
  * also gar keine Commits. Ohne diese Bremse haette das Repo bei einem
  * 5-Minuten-Trigger rund 8.600 Commits pro Monat.
  */
 
-const GITHUB_REPO = 'motte025/City-cafe';
-const GITHUB_BRANCH = 'main';
-const KANAL_DATEI = 'dj_channels.json';
-const STATUS_DATEI = 'live_status.json';
+const DJ_GITHUB_REPO = 'motte025/City-cafe';
+const DJ_GITHUB_BRANCH = 'main';
+const DJ_KANAL_DATEI = 'dj_channels.json';
+const DJ_STATUS_DATEI = 'live_status.json';
 
 // Solange jemand live ist, wird der Zeitstempel spaetestens so oft aufgefrischt.
 // Muss deutlich unter DJ_LIVE_CONFIG.maxStatusAlterMinuten (45) im Dashboard
 // liegen, sonst haelt das Dashboard einen laufenden Stream faelschlich fuer alt.
-const HEARTBEAT_MINUTEN = 15;
+const DJ_HEARTBEAT_MINUTEN = 15;
 
 // Twitch erlaubt bis zu 100 user_login-Parameter pro Abfrage.
-const TWITCH_BATCH = 100;
+const DJ_TWITCH_BATCH = 100;
 
-const TRIGGER_MINUTEN = 5; // erlaubt sind 1, 5, 10, 15 oder 30
+const DJ_TRIGGER_MINUTEN = 5; // erlaubt sind 1, 5, 10, 15 oder 30
 
 // ===========================================================================
 //  Einstieg
 // ===========================================================================
 
-function pruefeLiveStatus() {
+function djPruefeLiveStatus() {
   const props = PropertiesService.getScriptProperties();
   const token = props.getProperty('GITHUB_TOKEN');
   if (!token) {
@@ -54,9 +64,9 @@ function pruefeLiveStatus() {
     return;
   }
 
-  const kanalDatei = githubLies(KANAL_DATEI, token);
+  const kanalDatei = djGithubLies(DJ_KANAL_DATEI, token);
   if (!kanalDatei) {
-    Logger.log('FEHLER: ' + KANAL_DATEI + ' nicht im Repo gefunden.');
+    Logger.log('FEHLER: ' + DJ_KANAL_DATEI + ' nicht im Repo gefunden.');
     return;
   }
 
@@ -64,11 +74,11 @@ function pruefeLiveStatus() {
   try {
     kanaele = JSON.parse(kanalDatei.text);
   } catch (fehler) {
-    Logger.log('FEHLER: ' + KANAL_DATEI + ' ist kein gueltiges JSON: ' + fehler);
+    Logger.log('FEHLER: ' + DJ_KANAL_DATEI + ' ist kein gueltiges JSON: ' + fehler);
     return;
   }
   if (!Array.isArray(kanaele)) {
-    Logger.log('FEHLER: ' + KANAL_DATEI + ' muss eine Liste sein.');
+    Logger.log('FEHLER: ' + DJ_KANAL_DATEI + ' muss eine Liste sein.');
     return;
   }
 
@@ -79,13 +89,13 @@ function pruefeLiveStatus() {
   // sonst reisst eine kurze API-Stoerung einen laufenden Stream vom Screen.
   // Dann wird lieber gar nichts geschrieben: der alte Stand bleibt stehen und
   // faellt nach 45 Minuten ueber die Altersgrenze im Dashboard von selbst aus.
-  const twitchErgebnis = pruefeTwitch(twitchKanaele, props);
+  const twitchErgebnis = djPruefeTwitch(twitchKanaele, props);
   if (twitchErgebnis.fehler) {
     Logger.log('Twitch-Abfrage fehlgeschlagen (' + twitchErgebnis.fehler + ') - Lauf wird verworfen.');
     return;
   }
 
-  const youtubeErgebnis = pruefeYoutube(youtubeKanaele);
+  const youtubeErgebnis = djPruefeYoutube(youtubeKanaele);
   if (youtubeErgebnis.fehler) {
     Logger.log('YouTube-Abfrage fehlgeschlagen (' + youtubeErgebnis.fehler + ') - Lauf wird verworfen.');
     return;
@@ -94,7 +104,7 @@ function pruefeLiveStatus() {
   const live = twitchErgebnis.live.concat(youtubeErgebnis.live);
   Logger.log('Live: ' + live.length + ' von ' + kanaele.length + ' Kanaelen.');
 
-  schreibeStatusWennNoetig(live, token);
+  djSchreibeStatusWennNoetig(live, token);
 }
 
 // ===========================================================================
@@ -103,7 +113,7 @@ function pruefeLiveStatus() {
 
 // App Access Token (Client-Credentials-Flow). Gilt rund 60 Tage, wird deshalb in
 // den Script Properties zwischengespeichert und erst kurz vor Ablauf erneuert.
-function twitchToken(props) {
+function djTwitchToken(props) {
   const gespeichert = props.getProperty('TWITCH_APP_TOKEN');
   const ablauf = Number(props.getProperty('TWITCH_APP_TOKEN_ABLAUF') || 0);
   // 10 Minuten Sicherheitsabstand, damit kein Lauf mitten im Ablauf steht.
@@ -134,12 +144,12 @@ function twitchToken(props) {
   return daten.access_token;
 }
 
-function pruefeTwitch(kanaele, props) {
+function djPruefeTwitch(kanaele, props) {
   if (!kanaele.length) return { live: [], fehler: null };
 
   let token, clientId;
   try {
-    token = twitchToken(props);
+    token = djTwitchToken(props);
     clientId = props.getProperty('TWITCH_CLIENT_ID');
   } catch (fehler) {
     return { live: [], fehler: String(fehler) };
@@ -153,8 +163,8 @@ function pruefeTwitch(kanaele, props) {
   const live = [];
   const logins = Object.keys(nachLogin);
 
-  for (let i = 0; i < logins.length; i += TWITCH_BATCH) {
-    const teil = logins.slice(i, i + TWITCH_BATCH);
+  for (let i = 0; i < logins.length; i += DJ_TWITCH_BATCH) {
+    const teil = logins.slice(i, i + DJ_TWITCH_BATCH);
     const url = 'https://api.twitch.tv/helix/streams?' +
       teil.map(l => 'user_login=' + encodeURIComponent(l)).join('&');
 
@@ -211,7 +221,7 @@ function pruefeTwitch(kanaele, props) {
 // 5-Minuten-Trigger mit einem Kanal liegt damit schon bei 28.800/Tag. Dann
 // muesste der Takt deutlich groeber werden (oder ein eigener Key pro Kanal her).
 
-function pruefeYoutube(kanaele) {
+function djPruefeYoutube(kanaele) {
   if (!kanaele.length) return { live: [], fehler: null };
 
   const live = [];
@@ -249,17 +259,17 @@ function pruefeYoutube(kanaele) {
       return;
     }
 
-    const videoId = youtubeVideoIdAusSeite(html);
+    const videoId = djVideoIdAusSeite(html);
     if (!videoId) return;                    // nicht live - Kanalseite statt Video
-    if (!youtubeSeiteIstLive(html)) return;  // /live kann auch auf eine Aufzeichnung zeigen
+    if (!djSeiteIstLive(html)) return;  // /live kann auch auf eine Aufzeichnung zeigen
 
     const eintrag = { platform: 'youtube', videoId: videoId };
     if (kanal.channelId) eintrag.channelId = kanal.channelId;
     if (kanal.handle) eintrag.handle = kanal.handle;
-    const name = kanal.name || youtubeFeld(html, /"author"\s*:\s*"([^"]+)"/);
+    const name = kanal.name || djFeld(html, /"author"\s*:\s*"([^"]+)"/);
     if (name) eintrag.name = name;
-    const titel = youtubeFeld(html, /<meta\s+property="og:title"\s+content="([^"]*)"/);
-    if (titel) eintrag.title = entkommeHtml(titel);
+    const titel = djFeld(html, /<meta\s+property="og:title"\s+content="([^"]*)"/);
+    if (titel) eintrag.title = djEntkommeHtml(titel);
     live.push(eintrag);
   });
 
@@ -272,8 +282,8 @@ function pruefeYoutube(kanaele) {
   return { live: live, fehler: null };
 }
 
-function youtubeVideoIdAusSeite(html) {
-  const canonical = youtubeFeld(html, /<link\s+rel="canonical"\s+href="([^"]+)"/);
+function djVideoIdAusSeite(html) {
+  const canonical = djFeld(html, /<link\s+rel="canonical"\s+href="([^"]+)"/);
   if (canonical) {
     const treffer = canonical.match(/[?&]v=([A-Za-z0-9_-]{11})/);
     if (treffer) return treffer[1];
@@ -287,18 +297,18 @@ function youtubeVideoIdAusSeite(html) {
 // /live leitet in manchen Faellen auf die zuletzt beendete Uebertragung weiter -
 // die haette dann zwar eine videoId, laeuft aber nicht mehr. Deshalb zusaetzlich
 // nach einem echten Live-Merkmal in der Seite suchen.
-function youtubeSeiteIstLive(html) {
+function djSeiteIstLive(html) {
   return /"isLiveNow"\s*:\s*true/.test(html) ||
          /"isLive"\s*:\s*true/.test(html) ||
          /hlsManifestUrl/.test(html);
 }
 
-function youtubeFeld(html, muster) {
+function djFeld(html, muster) {
   const treffer = html.match(muster);
   return treffer ? treffer[1] : '';
 }
 
-function entkommeHtml(text) {
+function djEntkommeHtml(text) {
   return String(text)
     .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
     .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
@@ -311,22 +321,22 @@ function entkommeHtml(text) {
 
 // Vergleichsschluessel: nur die Identitaet des Streams, nicht Titel oder
 // Kategorie. Sonst loeste jede Titelaenderung des DJs einen Commit aus.
-function liveSchluessel(live) {
+function djLiveSchluessel(live) {
   return live
     .map(e => [e.platform, e.channel || '', e.channelId || '', e.handle || '', e.videoId || ''].join('|'))
     .sort()
     .join(';');
 }
 
-function schreibeStatusWennNoetig(live, token) {
-  const vorhanden = githubLies(STATUS_DATEI, token);
+function djSchreibeStatusWennNoetig(live, token) {
+  const vorhanden = djGithubLies(DJ_STATUS_DATEI, token);
   let alt = null;
   if (vorhanden) {
     try { alt = JSON.parse(vorhanden.text); } catch (fehler) { alt = null; }
   }
 
   const alteListe = (alt && Array.isArray(alt.live)) ? alt.live : [];
-  const geaendert = liveSchluessel(alteListe) !== liveSchluessel(live);
+  const geaendert = djLiveSchluessel(alteListe) !== djLiveSchluessel(live);
 
   // Herzschlag: das Dashboard verwirft einen Stand, der aelter als 45 Minuten
   // ist. Solange jemand live ist, muss checked_at also regelmaessig nachziehen -
@@ -334,7 +344,7 @@ function schreibeStatusWennNoetig(live, token) {
   let herzschlagFaellig = false;
   if (!geaendert && live.length > 0) {
     const zuletzt = alt && alt.checked_at ? new Date(alt.checked_at).getTime() : 0;
-    herzschlagFaellig = !zuletzt || (Date.now() - zuletzt) > HEARTBEAT_MINUTEN * 60 * 1000;
+    herzschlagFaellig = !zuletzt || (Date.now() - zuletzt) > DJ_HEARTBEAT_MINUTEN * 60 * 1000;
   }
 
   if (!geaendert && !herzschlagFaellig) {
@@ -351,7 +361,7 @@ function schreibeStatusWennNoetig(live, token) {
     ? 'Auto: DJ-Live-Status aktualisiert (' + live.length + ' live)'
     : 'Auto: DJ-Live-Status Herzschlag (' + live.length + ' live)';
 
-  githubSchreibe(STATUS_DATEI, inhalt, vorhanden ? vorhanden.sha : null, nachricht, token);
+  djGithubSchreibe(DJ_STATUS_DATEI, inhalt, vorhanden ? vorhanden.sha : null, nachricht, token);
   Logger.log(nachricht);
 }
 
@@ -359,7 +369,7 @@ function schreibeStatusWennNoetig(live, token) {
 //  GitHub Contents API
 // ===========================================================================
 
-function githubKopf(token) {
+function djGithubKopf(token) {
   return {
     'Authorization': 'Bearer ' + token,
     'Accept': 'application/vnd.github+json',
@@ -367,12 +377,12 @@ function githubKopf(token) {
   };
 }
 
-function githubLies(pfad, token) {
-  const url = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + pfad +
-              '?ref=' + encodeURIComponent(GITHUB_BRANCH);
+function djGithubLies(pfad, token) {
+  const url = 'https://api.github.com/repos/' + DJ_GITHUB_REPO + '/contents/' + pfad +
+              '?ref=' + encodeURIComponent(DJ_GITHUB_BRANCH);
   const res = UrlFetchApp.fetch(url, {
     method: 'get',
-    headers: githubKopf(token),
+    headers: djGithubKopf(token),
     muteHttpExceptions: true
   });
 
@@ -387,18 +397,18 @@ function githubLies(pfad, token) {
   return { sha: body.sha, text: Utilities.newBlob(roh).getDataAsString('UTF-8') };
 }
 
-function githubSchreibe(pfad, text, sha, nachricht, token) {
+function djGithubSchreibe(pfad, text, sha, nachricht, token) {
   const nutzlast = {
     message: nachricht,
     content: Utilities.base64Encode(text, Utilities.Charset.UTF_8),
-    branch: GITHUB_BRANCH
+    branch: DJ_GITHUB_BRANCH
   };
   if (sha) nutzlast.sha = sha;   // ohne sha legt die API die Datei neu an
 
-  const res = UrlFetchApp.fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + pfad, {
+  const res = UrlFetchApp.fetch('https://api.github.com/repos/' + DJ_GITHUB_REPO + '/contents/' + pfad, {
     method: 'put',
     contentType: 'application/json',
-    headers: githubKopf(token),
+    headers: djGithubKopf(token),
     payload: JSON.stringify(nutzlast),
     muteHttpExceptions: true
   });
@@ -413,37 +423,37 @@ function githubSchreibe(pfad, text, sha, nachricht, token) {
 //  Einrichtung / Test - einmal von Hand ausfuehren
 // ===========================================================================
 
-function triggerEinrichten() {
+function djTriggerEinrichten() {
   ScriptApp.getProjectTriggers().forEach(t => {
-    if (t.getHandlerFunction() === 'pruefeLiveStatus') ScriptApp.deleteTrigger(t);
+    if (t.getHandlerFunction() === 'djPruefeLiveStatus') ScriptApp.deleteTrigger(t);
   });
-  ScriptApp.newTrigger('pruefeLiveStatus').timeBased().everyMinutes(TRIGGER_MINUTEN).create();
-  Logger.log('Trigger angelegt: pruefeLiveStatus alle ' + TRIGGER_MINUTEN + ' Minuten.');
+  ScriptApp.newTrigger('djPruefeLiveStatus').timeBased().everyMinutes(DJ_TRIGGER_MINUTEN).create();
+  Logger.log('Trigger angelegt: djPruefeLiveStatus alle ' + DJ_TRIGGER_MINUTEN + ' Minuten.');
 }
 
-function triggerEntfernen() {
+function djTriggerEntfernen() {
   let anzahl = 0;
   ScriptApp.getProjectTriggers().forEach(t => {
-    if (t.getHandlerFunction() === 'pruefeLiveStatus') { ScriptApp.deleteTrigger(t); anzahl++; }
+    if (t.getHandlerFunction() === 'djPruefeLiveStatus') { ScriptApp.deleteTrigger(t); anzahl++; }
   });
   Logger.log(anzahl + ' Trigger entfernt.');
 }
 
 // Zeigt, was der Checker gerade sehen wuerde - ohne irgendetwas zu committen.
-function testLauf() {
+function djTestLauf() {
   const props = PropertiesService.getScriptProperties();
   const token = props.getProperty('GITHUB_TOKEN');
   if (!token) { Logger.log('GITHUB_TOKEN fehlt.'); return; }
 
-  const datei = githubLies(KANAL_DATEI, token);
-  if (!datei) { Logger.log(KANAL_DATEI + ' nicht gefunden.'); return; }
+  const datei = djGithubLies(DJ_KANAL_DATEI, token);
+  if (!datei) { Logger.log(DJ_KANAL_DATEI + ' nicht gefunden.'); return; }
 
   const kanaele = JSON.parse(datei.text);
-  Logger.log('Kanaele in ' + KANAL_DATEI + ': ' + kanaele.length);
+  Logger.log('Kanaele in ' + DJ_KANAL_DATEI + ': ' + kanaele.length);
 
-  const twitch = pruefeTwitch(kanaele.filter(k => k && k.platform === 'twitch' && k.channel), props);
+  const twitch = djPruefeTwitch(kanaele.filter(k => k && k.platform === 'twitch' && k.channel), props);
   Logger.log('Twitch -> ' + JSON.stringify(twitch));
 
-  const youtube = pruefeYoutube(kanaele.filter(k => k && k.platform === 'youtube' && (k.channelId || k.handle)));
+  const youtube = djPruefeYoutube(kanaele.filter(k => k && k.platform === 'youtube' && (k.channelId || k.handle)));
   Logger.log('YouTube -> ' + JSON.stringify(youtube));
 }

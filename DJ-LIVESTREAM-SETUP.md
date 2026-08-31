@@ -70,36 +70,47 @@ dieses Repo, es ist öffentlich einsehbar.
 
 ## 3. Apps Script einrichten
 
-**Am besten in das bestehende Projekt des Song-Collectors einfügen** — dort ist
-`GITHUB_TOKEN` bereits als Script Property hinterlegt und muss nicht erneut
-angelegt werden.
+Der Checker läuft in **einem eigenen Apps-Script-Projekt** oder im bestehenden
+des Song-Collectors — beides funktioniert. Der Unterschied ist nur der
+GitHub-Token: Script Properties gelten pro Projekt, im Song-Collector liegt
+`GITHUB_TOKEN` schon, in einem eigenen Projekt muss er neu hinein.
 
-1. <https://script.google.com> → das Song-Collector-Projekt öffnen
-2. Links bei *Dateien* auf **+** → **Skript** → Datei z. B. `dj-live-checker`
+1. <https://script.google.com> → **Neues Projekt** (oder das Song-Collector-Projekt öffnen)
+2. Bei *Dateien* auf **+** → **Skript** → Datei z. B. `dj-live-checker`
 3. Den kompletten Inhalt von `google-apps-script/dj-live-checker.gs` einfügen
+   und speichern
 4. Zahnrad → **Projekteinstellungen** → ganz unten **Skripteigenschaften**
    → **Skripteigenschaft hinzufügen**:
 
    | Eigenschaft | Wert |
    |---|---|
+   | `GITHUB_TOKEN` | PAT mit Schreibrecht auf `motte025/City-cafe` |
    | `TWITCH_CLIENT_ID` | Client-ID aus Schritt 2 |
    | `TWITCH_CLIENT_SECRET` | Client-Secret aus Schritt 2 |
 
-   `GITHUB_TOKEN` ist bereits vorhanden — nicht anfassen.
+   Im Song-Collector-Projekt ist `GITHUB_TOKEN` schon da — dann nur die beiden
+   Twitch-Werte ergänzen. Für ein eigenes Projekt: entweder den vorhandenen Wert
+   aus den Script Properties des Song-Collectors kopieren oder einen neuen PAT
+   erzeugen (fine-grained: Repository-Berechtigung *Contents: Read and write*;
+   klassisch: Scope `repo`).
 
-5. Oben die Funktion **`triggerEinrichten`** auswählen und **Ausführen**.
+5. Oben die Funktion **`djTriggerEinrichten`** auswählen und **Ausführen**.
    Beim ersten Mal fragt Google nach Berechtigungen → *Erweitert* →
    *Zu [Projektname] (unsicher)* → zulassen.
-   Danach läuft `pruefeLiveStatus` automatisch alle 5 Minuten.
+   Danach läuft `djPruefeLiveStatus` automatisch alle 5 Minuten.
 
-> **Eigenes Projekt statt Song-Collector?** Geht auch — dann muss `GITHUB_TOKEN`
-> dort zusätzlich als Script Property angelegt werden (Personal Access Token mit
-> Schreibrecht auf `motte025/City-cafe`, klassisch: Scope `repo`; fine-grained:
-> Repository-Berechtigung *Contents: Read and write*).
+> **Warum alle Namen mit `dj`/`DJ_` beginnen:** Apps Script teilt sich **einen**
+> globalen Namensraum über alle `.gs`-Dateien eines Projekts. Eine schlichte
+> Konstante `GITHUB_REPO` würde mit derselben Konstante im Song-Collector
+> kollidieren — das Projekt ließe sich dann gar nicht mehr ausführen
+> (`SyntaxError: Identifier 'GITHUB_REPO' has already been declared`). Die
+> Präfixe halten den Checker in jedem Projekt verträglich. Die Script-Property-
+> *Schlüssel* (`GITHUB_TOKEN` & Co.) sind davon nicht betroffen — das sind
+> Strings, keine Bezeichner.
 
 ### Prüfen, ob es läuft
 
-Funktion **`testLauf`** ausführen und ins **Ausführungsprotokoll** schauen. Dort
+Funktion **`djTestLauf`** ausführen und ins **Ausführungsprotokoll** schauen. Dort
 steht pro Plattform, was gefunden wurde — ganz ohne etwas zu committen.
 
 ---
@@ -206,8 +217,8 @@ ersten Musik-Slot (`mediaStateIndex === 0.9` in `runMasterSequence`) — bewusst
 weit vorne, damit ein gerade gestarteter Stream nicht erst nach der halben
 Rotation auf dem Screen ankommt.
 
-Im Apps Script (`dj-live-checker.gs`): `TRIGGER_MINUTEN` (Standard 5, erlaubt
-sind 1/5/10/15/30) und `HEARTBEAT_MINUTEN` (Standard 15). `HEARTBEAT_MINUTEN`
+Im Apps Script (`dj-live-checker.gs`): `DJ_TRIGGER_MINUTEN` (Standard 5, erlaubt
+sind 1/5/10/15/30) und `DJ_HEARTBEAT_MINUTEN` (Standard 15). `DJ_HEARTBEAT_MINUTEN`
 muss deutlich unter `maxStatusAlterMinuten` bleiben.
 
 ---
@@ -217,7 +228,7 @@ muss deutlich unter `maxStatusAlterMinuten` bleiben.
 **Der Slot erscheint nie, obwohl jemand live ist**
 
 1. `live_status.json` im Repo ansehen — steht der Kanal in `live`?
-   * nein → Problem liegt beim Checker: im Apps Script `testLauf` ausführen und
+   * nein → Problem liegt beim Checker: im Apps Script `djTestLauf` ausführen und
      ins Ausführungsprotokoll schauen
    * ja → Problem liegt am Dashboard: `checked_at` prüfen (älter als 45 Minuten
      → Trigger läuft nicht), sonst Abschnitt 5 (Origin)
