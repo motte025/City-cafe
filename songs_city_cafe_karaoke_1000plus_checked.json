@@ -42599,5 +42599,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Pitbull",
+    "title": "I Know You Want Me (Calle Ocho)",
+    "album": "",
+    "category": "Internationale Party-Hits",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Dance",
+      "Electro"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
