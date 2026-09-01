@@ -28,6 +28,57 @@ https://github.com/motte025/City-cafe/blob/main/nightlife.json
 - Beliebig viele Videos, mindestens eines. Leere Liste = Widget faellt aus.
 - **Keine Laufzeiten eintragen** - die holt sich das Dashboard selbst vom Player.
 
+## Eigene Videodateien statt YouTube (die ruhigere Variante)
+
+Statt `videoId` kann ein Eintrag auch auf eine **Datei im Repo** zeigen:
+
+```json
+{ "datei": "videos/miami-1.mp4", "titel": "Brickell bei Nacht" }
+```
+
+Beides laesst sich mischen. Was damit wegfaellt:
+
+| | YouTube | eigene Datei |
+| --- | --- | --- |
+| Werbung | ja | **keine** |
+| Qualitaet | YouTube regelt selbst herunter | genau die des Files |
+| Puffern | abhaengig vom Netz | Datei liegt im Browser-Cache |
+| Dekodierung | meist VP9 - auf ARM-Boxen in Software | **H.264 in Hardware** |
+
+Genau diese vier Punkte sind die Ursache der Ruckler. Eigene Dateien sind
+deshalb die stabilste Loesung fuer einen Screen, der den ganzen Tag laeuft.
+
+### Woher die Videos
+
+Aufnahmen von YouTube herunterzuladen verstoesst gegen deren
+Nutzungsbedingungen, und die Clips gehoeren den jeweiligen Kanaelen - fuer einen
+Bildschirm im Lokal ist das der falsche Weg. Fertige Nightlife-/Stadt-Aufnahmen
+gibt es kostenlos und ausdruecklich zur kommerziellen Nutzung freigegeben bei:
+
+- https://www.pexels.com/videos/ (Suche z. B. „miami night", „city night walk")
+- https://pixabay.com/videos/
+- https://mixkit.co/free-stock-video/
+- https://coverr.co/
+
+Dort laedt man die MP4 direkt herunter - kein Umweg, keine offenen Fragen.
+
+### Aufbereiten und ablegen
+
+GitHub nimmt **maximal 100 MB pro Datei**. Fuer 5 Minuten heisst das rund
+2,5 Mbit/s - fuer ruhige Stadtaufnahmen reicht das gut:
+
+```
+ffmpeg -i original.mp4 -t 300 \
+  -vf "scale=1920:1080" -c:v libx264 -preset slow -b:v 2400k -maxrate 3000k \
+  -bufsize 6000k -profile:v high -level 4.0 -pix_fmt yuv420p \
+  -movflags +faststart -an videos/miami-1.mp4
+```
+
+- `-an` wirft die Tonspur weg (der Screen laeuft stumm) und spart Platz.
+- `-movflags +faststart` ist wichtig: sonst faengt der Browser erst an, wenn die
+  ganze Datei da ist.
+- Datei nach `videos/` im Repo legen und in `nightlife.json` eintragen.
+
 Nach dem Speichern auf GitHub ist die neue Stadt beim naechsten Auftritt drauf.
 Der Screen muss nicht neu gestartet werden.
 
@@ -55,6 +106,36 @@ er intern in **1920x1080** und wird nur per CSS auf die Buehne heruntergerechnet
 (`transform: scale(0.625)`). Bei den frueheren 1200x675 lieferte YouTube 720p,
 das auf dem Fernseher sichtbar unscharf ankam.
 
+## Welche Aufloesung kommt wirklich an?
+
+Nicht raten - messen. An die Dashboard-Adresse `?nldiag=1` haengen:
+
+```
+https://motte025.github.io/City-cafe/?nldiag=1
+```
+
+Unten rechts im Player steht dann, was tatsaechlich laeuft:
+
+- **`YouTube liefert: hd1080`** - alles gut.
+  Steht dort `hd720`, `large` (480p) oder `medium` (360p), regelt YouTube selbst
+  herunter, weil die Box nicht hinterherkommt.
+- Bei eigenen Dateien: **`ausgelassen 340 (4.1%)`**. Alles ueber etwa 1 % heisst,
+  die Box schafft die Dekodierung nicht - dann eine Stufe kleiner encodieren.
+
+Wieder abschalten: `?nldiag=1` einfach weglassen.
+
+### Wenn die Box nicht hinterherkommt
+
+1080p sieht besser aus, kostet aber deutlich mehr Rechenzeit. Zum Vergleichen
+ohne Codeaenderung:
+
+```
+https://motte025.github.io/City-cafe/?nlq=hd720&nldiag=1
+```
+
+Laeuft es damit ruhig und mit 1080p nicht, in `index.html` in `NL_CONFIG`
+dauerhaft `maxAufloesung: 'hd720'` setzen.
+
 ## Wenn ein Video nicht laeuft
 
 Manche Videos duerfen nicht eingebettet werden (Einstellung des Kanals). Das
@@ -76,5 +157,7 @@ https://github.com/motte025/City-cafe/blob/main/index.html
 | Wert | Bedeutung | Standard |
 | --- | --- | --- |
 | `sekundenProVideo` | Standzeit pro Auftritt, zugleich die Schrittweite des Startpunkts | `300` (5 Min) |
-| `vorladeSekunden` | wie lange das naechste Video im Hintergrund puffert | `30` |
+| `vorladeSekunden` | wie lange das naechste YouTube-Video im Hintergrund puffert | `30` |
+| `maxAufloesung` | `'hd1080'` oder `'hd720'` - bestimmt die Player-Groesse und damit die YouTube-Qualitaet | `'hd1080'` |
+| `zeigeDiagnose` | Diagnosefeld dauerhaft an (sonst `?nldiag=1`) | `false` |
 | `quelle` | Datei mit den Videos | `nightlife.json` |
