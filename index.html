@@ -1409,7 +1409,17 @@
             background: #000; border: 1px solid rgba(255,255,255,0.12);
             box-shadow: 0 18px 44px rgba(0,0,0,0.55);
         }
-        .nl-player iframe { width: 100%; height: 100%; border: 0; display: block; }
+        /* Der Player laeuft intern in voller HD-Groesse und wird nur per CSS auf die
+           Buehne heruntergerechnet. YouTube waehlt die Streamqualitaet nach der
+           Layoutgroesse des Players: bei 1200x675 liefert es 720p, das auf dem
+           Fernseher sichtbar unscharf ankommt. Mit 1920x1080 kommt 1080p, und die
+           Skalierung uebernimmt der Compositor. */
+        .nl-player #nl-player-frame {
+            position: absolute; top: 0; left: 0;
+            width: 1920px; height: 1080px; border: 0; display: block;
+            transform: scale(0.625);          /* 1920 -> 1200, 1080 -> 675 */
+            transform-origin: top left;
+        }
         .nl-player-hint {
             position: absolute; inset: 0; z-index: 1;
             display: flex; align-items: center; justify-content: center;
@@ -1716,7 +1726,14 @@
                                 <div class="nl-badge">Nightlife</div>
                             </div>
                         </div>
-                        <div class="nl-player" id="nl-player"></div>
+                        <!-- Der Player wird einmal beim Seitenstart gebaut und bleibt
+                             dann stehen. Beim Einblenden ist er dadurch schon warm -
+                             kein iframe-Aufbau, kein Player-Start, kein Puffern.
+                             Das leere <div> ersetzt die YouTube-API durch ihr iframe. -->
+                        <div class="nl-player" id="nl-player">
+                            <div id="nl-player-frame"></div>
+                            <div class="nl-player-hint" id="nl-player-hint">Video wird geladen …</div>
+                        </div>
                     </div>
                 </div>
 
@@ -4593,15 +4610,20 @@
         // es keine Ueberschneidungen und das ganze Video wird nach und nach
         // gezeigt. Der Stand haelt einen Neustart des Dashboards aus (localStorage).
         //
-        // Die Videolaenge liefert der Player selbst: mit enablejsapi=1 und einer
-        // "listening"-Nachricht schickt YouTube regelmaessig seinen Zustand
-        // zurueck, darin steht die Dauer. Deshalb muessen in nightlife.json nur
-        // Video-IDs stehen, keine Laufzeiten - beim Videotausch ist also nichts
-        // nachzupflegen.
+        // Die Videolaenge liefert der Player selbst (getDuration). Deshalb muessen
+        // in nightlife.json nur Video-IDs stehen, keine Laufzeiten - beim
+        // Videotausch ist also nichts nachzupflegen.
+        //
+        // Gegen Ruckler und Ladepausen laeuft der Player NICHT pro Auftritt neu an:
+        // er wird einmal beim Seitenstart erzeugt und bleibt danach stehen. Direkt
+        // nach dem Slot holt er sich das naechste Video schon in den Puffer und
+        // haelt an - bis zum naechsten Auftritt ist die Rotation einmal herum, das
+        // Video liegt lokal und startet ohne Verzoegerung.
 
         const NL_CONFIG = {
             quelle: 'nightlife.json',
             sekundenProVideo: 300,       // 5 Minuten Standzeit
+            vorladeSekunden: 30,         // so lange puffert das naechste Video vor
             abrufTimeoutMs: 8000,
             speicherSchluessel: 'cityCafeNightlife'
         };
@@ -4610,6 +4632,15 @@
         let nlVideoIndex = 0;     // welches Video ist als naechstes dran
         let nlAbschnitte = {};    // videoId -> naechster 5-Minuten-Abschnitt
         let nlDauern = {};        // videoId -> Laenge in Sekunden (vom Player gemeldet)
+
+        let nlPlayer = null;          // der eine, dauerhafte YT.Player
+        let nlPlayerBereit = false;
+        let nlApiAngefordert = false;
+        let nlGeladen = null;         // { videoId, start } - was gerade im Player liegt
+        let nlLaeuft = null;          // { videoId, abschnitt } - was der Slot gerade zeigt
+        let nlAktiv = false;          // Slot gerade sichtbar?
+        let nlVorladeTimer = null;    // bewusst kein later(): ueberlebt cancelSequenceTimers
+        let nlDefekt = {};            // videoId -> true, wenn YouTube das Einbetten verweigert
 
         // localStorage kann fehlschlagen (privater Modus, gesperrte Website-Daten).
         // Der Slot muss auch dann laufen - dann startet die Abschnittszaehlung eben
@@ -4650,6 +4681,14 @@
             }
         }
 
+        // Videos, die YouTube ueberhaupt einbetten laesst. Verweigert es eines
+        // (Fehler 101/150), faellt es fuer diesen Seitenaufruf raus, statt den Slot
+        // fuenf Minuten schwarz stehen zu lassen.
+        function nlBrauchbareVideos() {
+            const alle = (nlDaten && nlDaten.videos) || [];
+            return alle.filter(v => v && v.videoId && !nlDefekt[v.videoId]);
+        }
+
         // Startsekunde fuer diesen Durchlauf. Ohne bekannte Laenge (erster Auftritt
         // eines Videos) wird bei 0 begonnen - dann meldet der Player die Dauer und
         // ab dem naechsten Mal wandert der Startpunkt weiter.
@@ -4666,54 +4705,179 @@
         }
 
         // Nach dem Abspielen den Abschnitt weiterruecken. Passt der naechste nicht
-        // mehr ganz ins Video, geht es wieder von vorne los.
-        function nlAbschnittWeiter(videoId) {
+        // mehr ganz ins Video, geht es wieder von vorne los. Laeuft bewusst erst am
+        // Slot-Ende: da kennt der Player die Laenge, beim Slot-Start unter Umstaenden
+        // noch nicht.
+        function nlAbschnittWeiter(videoId, gespielterAbschnitt) {
             const laenge = nlDauern[videoId];
-            const naechster = (nlAbschnitte[videoId] || 0) + 1;
+            const naechster = gespielterAbschnitt + 1;
             const passt = laenge && (naechster * NL_CONFIG.sekundenProVideo +
                                      NL_CONFIG.sekundenProVideo <= laenge);
             nlAbschnitte[videoId] = passt ? naechster : 0;
         }
 
-        // YouTube meldet seinen Zustand nur, wenn man sich einmal dafuer anmeldet.
-        // In der Antwort steht unter anderem die Videolaenge - die einzige Stelle,
-        // an der wir sie ohne API-Key erfahren.
-        window.addEventListener('message', (ev) => {
-            if (!/^https:\/\/(www\.)?youtube(-nocookie)?\.com$/.test(ev.origin)) return;
-            let daten;
-            try { daten = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data; }
-            catch (e) { return; }
-            const dauer = daten && daten.info && daten.info.duration;
-            if (typeof dauer !== 'number' || dauer <= 0) return;
+        // Was als naechstes drankommt - ohne den Zeiger schon zu bewegen.
+        function nlNaechsterEintrag() {
+            const videos = nlBrauchbareVideos();
+            if (!videos.length) return null;
+            if (!(nlVideoIndex >= 0) || nlVideoIndex >= videos.length) nlVideoIndex = 0;
+            const video = videos[nlVideoIndex];
+            const start = nlStartSekunde(video.videoId);
+            return {
+                video: video,
+                start: start,
+                abschnitt: Math.round(start / NL_CONFIG.sekundenProVideo),
+                anzahl: videos.length
+            };
+        }
 
-            const rahmen = document.querySelector('#nl-player iframe');
-            if (!rahmen || rahmen.contentWindow !== ev.source) return;
-            const videoId = rahmen.dataset.videoId;
-            if (videoId && nlDauern[videoId] !== Math.floor(dauer)) {
-                nlDauern[videoId] = Math.floor(dauer);
+        // ------------------------------------------------------------------
+        //  Der dauerhafte Player
+        // ------------------------------------------------------------------
+        function nlApiLaden() {
+            if (nlApiAngefordert || !djEmbedHost()) return;   // gleiche Origin-Pruefung wie beim DJ-Slot
+            nlApiAngefordert = true;
+            const skript = document.createElement('script');
+            skript.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(skript);
+        }
+
+        window.onYouTubeIframeAPIReady = function () {
+            if (nlPlayer || !document.getElementById('nl-player-frame')) return;
+            nlPlayer = new YT.Player('nl-player-frame', {
+                width: '1920', height: '1080',
+                playerVars: {
+                    autoplay: 0, controls: 0, mute: 1, rel: 0, modestbranding: 1,
+                    playsinline: 1, iv_load_policy: 3, disablekb: 1, fs: 0,
+                    origin: location.origin
+                },
+                events: {
+                    onReady: () => {
+                        nlPlayerBereit = true;
+                        try { nlPlayer.mute(); } catch (e) {}
+                        nlQualitaetSetzen();
+                        nlVorladen();
+                    },
+                    onStateChange: nlZustandsWechsel,
+                    onError: nlPlayerFehler
+                }
+            });
+        };
+
+        // YouTube entscheidet die Qualitaet inzwischen selbst - die Wuensche kosten
+        // aber nichts. Den Ausschlag gibt die Layoutgroesse des Players (1920x1080).
+        function nlQualitaetSetzen() {
+            try {
+                if (nlPlayer.setPlaybackQualityRange) nlPlayer.setPlaybackQualityRange('hd1080', 'hd1080');
+                if (nlPlayer.setPlaybackQuality) nlPlayer.setPlaybackQuality('hd1080');
+            } catch (e) {}
+        }
+
+        function nlDauerMerken() {
+            const id = nlGeladen && nlGeladen.videoId;
+            if (!id || !nlPlayerBereit) return;
+            let laenge = 0;
+            try { laenge = nlPlayer.getDuration() || 0; } catch (e) {}
+            if (laenge > 0 && nlDauern[id] !== Math.floor(laenge)) {
+                nlDauern[id] = Math.floor(laenge);
                 nlStandSpeichern();
             }
-        });
+        }
 
+        // 1 = PLAYING, 0 = ENDED (Zahlen statt YT.PlayerState: die Konstanten gibt
+        // es nur, wenn die API wirklich geladen wurde).
+        function nlZustandsWechsel(ev) {
+            nlDauerMerken();
+            if (ev.data === 1) {
+                if (nlAktiv) {
+                    const hinweis = document.getElementById('nl-player-hint');
+                    if (hinweis) hinweis.style.display = 'none';
+                }
+                nlQualitaetSetzen();
+            }
+            // Video zu Ende, obwohl der Slot noch laeuft: vorne weiter statt
+            // Standbild mit Videovorschlaegen.
+            if (ev.data === 0 && nlAktiv) {
+                try { nlPlayer.seekTo(0, true); nlPlayer.playVideo(); } catch (e) {}
+            }
+        }
+
+        function nlPlayerFehler() {
+            const id = nlGeladen && nlGeladen.videoId;
+            if (id) nlDefekt[id] = true;
+            nlGeladen = null;
+
+            if (nlAktiv) {
+                // Nicht fuenf Minuten schwarz stehen bleiben - sofort weiterschalten.
+                nlAktiv = false;
+                nlLaeuft = null;
+                cancelTimer(globalMasterTimer);
+                globalMasterTimer = later(runMasterSequence, 400);
+            } else {
+                nlVorladen();
+            }
+        }
+
+        // Das naechste Video in den Puffer holen: kurz anspielen (stumm, hinter der
+        // ausgeblendeten Ansicht), dann anhalten und an den Startpunkt zuruecksetzen.
+        // Der Puffer bleibt erhalten, der Auftritt startet ohne Ladepause.
+        function nlVorladen() {
+            clearTimeout(nlVorladeTimer);
+            if (!nlPlayerBereit || nlAktiv) return;
+
+            const eintrag = nlNaechsterEintrag();
+            if (!eintrag) return;
+
+            nlGeladen = { videoId: eintrag.video.videoId, start: eintrag.start };
+            try {
+                nlPlayer.mute();
+                nlPlayer.loadVideoById({ videoId: eintrag.video.videoId, startSeconds: eintrag.start });
+            } catch (e) { return; }
+
+            nlVorladeTimer = setTimeout(() => {
+                if (nlAktiv) return;       // Slot ist inzwischen dran - einfach laufen lassen
+                try {
+                    nlPlayer.pauseVideo();
+                    nlPlayer.seekTo(eintrag.start, true);
+                } catch (e) {}
+            }, NL_CONFIG.vorladeSekunden * 1000);
+        }
+
+        // Wird bei jedem Ansichtswechsel gerufen. Der Player bleibt stehen - er wird
+        // nur angehalten und laedt danach gleich das naechste Video vor.
         function nlStopPlayer() {
-            const buehne = document.getElementById('nl-player');
-            if (buehne && buehne.firstChild) buehne.innerHTML = '';
+            clearTimeout(nlVorladeTimer);
+            if (!nlAktiv) return;
+            nlAktiv = false;
+
+            if (nlPlayerBereit) {
+                try { nlPlayer.pauseVideo(); } catch (e) {}
+            }
+            if (nlLaeuft) {
+                // Jetzt kennt der Player die Laenge - erst hier den Abschnitt weiterruecken.
+                nlDauerMerken();
+                nlAbschnittWeiter(nlLaeuft.videoId, nlLaeuft.abschnitt);
+                nlLaeuft = null;
+                nlStandSpeichern();
+            }
+            nlVorladen();
         }
 
         function runNightlifeState(nextStateIndex) {
             nlLadeVideos();   // fuer den naechsten Durchlauf frisch machen
+            clearTimeout(nlVorladeTimer);
 
-            const host = djEmbedHost();   // dieselbe Origin-Pruefung wie beim DJ-Slot
-            const videos = (nlDaten && nlDaten.videos) || [];
-            if (!host || !videos.length) {
+            const eintrag = nlNaechsterEintrag();
+            if (!nlPlayerBereit || !eintrag) {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
                 return;
             }
 
-            if (nlVideoIndex >= videos.length) nlVideoIndex = 0;
-            const video = videos[nlVideoIndex];
-            const start = nlStartSekunde(video.videoId);
+            const video = eintrag.video;
+            const start = eintrag.start;
+            nlAktiv = true;
+            nlLaeuft = { videoId: video.videoId, abschnitt: eintrag.abschnitt };
 
             document.getElementById('nl-stadt').textContent =
                 '🌃 ' + ((nlDaten && nlDaten.stadt) || 'Nightlife');
@@ -4721,39 +4885,35 @@
                 video.titel || (nlDaten && nlDaten.untertitel) || 'Unterwegs in der Nacht';
 
             const zaehler = document.getElementById('nl-counter');
-            zaehler.textContent = (nlVideoIndex + 1) + '/' + videos.length;
-            zaehler.style.display = videos.length > 1 ? '' : 'none';
+            zaehler.textContent = (nlVideoIndex + 1) + '/' + eintrag.anzahl;
+            zaehler.style.display = eintrag.anzahl > 1 ? '' : 'none';
 
             document.getElementById('media-view-nightlife').classList.add('active');
 
-            const buehne = document.getElementById('nl-player');
-            buehne.innerHTML = '';
-            const hinweis = document.createElement('div');
-            hinweis.className = 'nl-player-hint';
-            hinweis.textContent = 'Video wird geladen …';
-            buehne.appendChild(hinweis);
+            const hinweis = document.getElementById('nl-player-hint');
+            if (hinweis) hinweis.style.display = '';
 
-            const rahmen = document.createElement('iframe');
-            rahmen.dataset.videoId = video.videoId;
-            rahmen.src = 'https://www.youtube.com/embed/' + encodeURIComponent(video.videoId) +
-                '?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1' +
-                '&start=' + start + '&origin=' + encodeURIComponent(location.origin);
-            rahmen.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-            rahmen.setAttribute('frameborder', '0');
-            rahmen.setAttribute('scrolling', 'no');
-            rahmen.setAttribute('title', video.titel || 'Nightlife');
-            rahmen.addEventListener('load', () => {
-                // Zustandsmeldungen abonnieren - erst dadurch erfahren wir die Laenge.
-                try {
-                    rahmen.contentWindow.postMessage('{"event":"listening"}', '*');
-                } catch (e) {}
-            });
-            buehne.appendChild(rahmen);
+            // Im Normalfall liegt genau dieses Video schon gepuffert im Player -
+            // dann reicht playVideo() und das Bild ist sofort da.
+            const passt = nlGeladen && nlGeladen.videoId === video.videoId &&
+                          Math.abs(nlGeladen.start - start) < 2;
+            try {
+                nlPlayer.mute();
+                if (!passt) {
+                    nlPlayer.loadVideoById({ videoId: video.videoId, startSeconds: start });
+                } else {
+                    let stelle = 0;
+                    try { stelle = nlPlayer.getCurrentTime() || 0; } catch (e) {}
+                    if (Math.abs(stelle - start) > 3) nlPlayer.seekTo(start, true);
+                }
+                nlPlayer.playVideo();
+                nlQualitaetSetzen();
+            } catch (e) {}
+            nlGeladen = { videoId: video.videoId, start: start };
 
-            // Fuer den naechsten Durchlauf weiterruecken: anderes Video, und fuer
-            // dieses hier der naechste Abschnitt.
-            nlAbschnittWeiter(video.videoId);
-            nlVideoIndex = (nlVideoIndex + 1) % videos.length;
+            // Fuer den naechsten Durchlauf auf das andere Video weiterruecken. Der
+            // Abschnitt dieses Videos wandert erst am Slot-Ende (nlStopPlayer).
+            nlVideoIndex = (nlVideoIndex + 1) % eintrag.anzahl;
             nlStandSpeichern();
 
             mediaStateIndex = nextStateIndex;
@@ -4761,7 +4921,8 @@
         }
 
         nlStandLaden();
-        nlLadeVideos();
+        nlLadeVideos().then(nlVorladen);   // Player koennte schon bereit sein
+        nlApiLaden();
 
         // ==================================================================
         //  DJ-Live-Slot (Twitch / YouTube Live)
@@ -6657,12 +6818,12 @@
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
 
             if (mediaStateIndex === -1) {
-                runHosnObeTestSlot(NL_SLOT_INDEX); // -> Nightlife
+                runHosnObeTestSlot(0); // -> Tag/Nacht-Plakat
 
             } else if (mediaStateIndex === NL_SLOT_INDEX) {
-                // Steht bewusst ganz vorne im Zyklus. Ohne Videos in
+                // Steht ganz vorne im Zyklus - vor dem Kartenspiel. Ohne Videos in
                 // nightlife.json ueberspringt sich der Slot selbst.
-                runNightlifeState(0); // -> Tag/Nacht-Plakat
+                runNightlifeState(KT.testFirstInCycle ? -1 : 0); // -> Hos'n Obe bzw. Plakat
 
             } else if (mediaStateIndex === 0) {
                 showPosterImage(getDayNightPoster());
@@ -6758,16 +6919,17 @@
                 runMusicSlidesState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
-                runPhotoTrinkspielV1(KT.testFirstInCycle ? -1 : NL_SLOT_INDEX); // -> wieder an den Zyklusanfang
+                runPhotoTrinkspielV1(NL_SLOT_INDEX); // -> wieder an den Zyklusanfang (Nightlife)
             }
         }
         (function initialPoster() {
             showPosterImage(getDayNightPoster());
             prepareDrinkVideo(); // erstes Getraenke-Video schon beim Start vorbereiten
         })();
-        // Im Testmodus geht es nach kurzer Anlaufzeit (Firebase-Anmeldung) sofort
-        // in den Hos’n Obe-Slot, sonst laeuft der Zyklus wie bisher an.
-        mediaStateIndex = KT.testFirstInCycle ? -1 : NL_SLOT_INDEX;
+        // Der Zyklus beginnt immer mit Nightlife; Hos'n Obe folgt im Testmodus
+        // direkt danach. Die Anlaufzeit bleibt im Testmodus kurz, damit sich das
+        // Kartenspiel beim Ausprobieren schnell zeigt.
+        mediaStateIndex = NL_SLOT_INDEX;
         globalMasterTimer = later(runMasterSequence, KT.testFirstInCycle ? 6000 : 35000);
 
         function weatherCodeToIcon(code) {
