@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>City Cafe Klagenfurt Fischl - Ultimate Dashboard</title>
-    
+
+    <!-- Macht das Dashboard installierbar: mit "Zum Startbildschirm hinzufuegen"
+         startet Chrome es ohne Adressleiste und ohne Tableiste, also echtes
+         Vollbild ohne Zutun. Siehe KIOSK-SETUP.md. -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#081020">
+    <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
@@ -2085,6 +2094,58 @@
             sequenceTimers.set(rec.handle, rec);
             return rec.handle;
         }
+
+        // ==================================================================
+        //  Kiosk: Vollbild und wachbleiben
+        // ==================================================================
+        // Chrome unter Android kennt kein --kiosk (das ist ein Desktop-Flag).
+        // Zwei Wege zum Vollbild:
+        //   1. Ueber "Zum Startbildschirm hinzufuegen" installiert - dann sorgt
+        //      das Manifest (display: fullscreen) dafuer, ganz ohne Zutun.
+        //   2. Im normalen Tab - dort verlangt die Fullscreen-API eine Eingabe.
+        //      Mit ?kiosk=1 genuegt ein einziger Druck auf die Fernbedienung.
+        // Der Wachhalter laeuft immer: ohne ihn schaltet der Fernseher irgendwann
+        // ab, weil eine reine Webseite von sich aus keinen Wachzustand haelt.
+        let kioskWachschloss = null;
+
+        async function kioskWachHalten() {
+            if (!navigator.wakeLock || kioskWachschloss) return;
+            try {
+                kioskWachschloss = await navigator.wakeLock.request('screen');
+                // Beim Sperren/Wechseln gibt das System es von selbst wieder frei.
+                kioskWachschloss.addEventListener('release', () => { kioskWachschloss = null; });
+            } catch (e) { kioskWachschloss = null; }
+        }
+
+        function kioskVollbild() {
+            if (document.fullscreenElement || document.webkitFullscreenElement) return;
+            const el = document.documentElement;
+            const anfordern = el.requestFullscreen || el.webkitRequestFullscreen;
+            if (!anfordern) return;
+            try {
+                const p = anfordern.call(el);
+                if (p && p.catch) p.catch(() => {});
+            } catch (e) {}
+        }
+
+        (function kioskEinrichten() {
+            kioskWachHalten();
+            // Nach Bildschirmsperre oder Appwechsel ist das Schloss weg - neu holen.
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') kioskWachHalten();
+            });
+
+            let kiosk = false;
+            try { kiosk = new URLSearchParams(location.search).get('kiosk') === '1'; } catch (e) {}
+            // Als installierte App ist der Vollbildmodus schon aktiv - dann nichts tun.
+            const alsApp = window.matchMedia &&
+                           window.matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
+            if (!kiosk || alsApp) return;
+
+            const start = () => { kioskVollbild(); kioskWachHalten(); };
+            ['click', 'keydown', 'touchend'].forEach(ev =>
+                document.addEventListener(ev, start, { passive: true }));
+        })();
 
         function later(fn, ms) {
             return trackTimer({ type: 'timeout', fn, ms, remaining: ms, partial: false, cancelled: false });
