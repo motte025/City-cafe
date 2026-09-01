@@ -42001,15 +42001,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Solid Base",
-    "title": "Colours Of Your Dream",
+    "artist": "Missy Higgins",
+    "title": "Scar",
     "album": "",
-    "category": "90s Party",
+    "category": "Deutsch-Pop",
     "chart": "",
     "release_date": "",
     "tags": [
-      "90s",
-      "Eurodance"
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Ariana Grande",
+    "title": "Greedy",
+    "album": "",
+    "category": "Rock Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Rock",
+      "Pop",
+      "Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
