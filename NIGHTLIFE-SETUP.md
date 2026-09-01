@@ -62,10 +62,51 @@ gibt es kostenlos und ausdruecklich zur kommerziellen Nutzung freigegeben bei:
 
 Dort laedt man die MP4 direkt herunter - kein Umweg, keine offenen Fragen.
 
-### Aufbereiten und ablegen
+### Wohin mit der Datei
 
-GitHub nimmt **maximal 100 MB pro Datei**. Fuer 5 Minuten heisst das rund
-2,5 Mbit/s - fuer ruhige Stadtaufnahmen reicht das gut:
+Ins **Repo** passen nur Dateien bis **100 MB** - das reicht bei brauchbarer
+Bitrate fuer rund 5 Minuten. Fuer ein langes Video ist der bessere Platz ein
+**Release-Anhang**: dort sind **2 GB pro Datei** erlaubt, das Repo bleibt
+schlank, und die Adresse laesst sich direkt als `datei` eintragen.
+
+1. **https://github.com/motte025/City-cafe/releases/new** oeffnen
+2. Tag vergeben (z. B. `videos-nightlife`), Datei unter „Attach binaries"
+   hineinziehen, **Publish release**
+3. Auf die Datei rechtsklicken → Linkadresse kopieren. Sie sieht so aus:
+   `https://github.com/motte025/City-cafe/releases/download/<tag>/<datei>.mp4`
+4. Diese Adresse als `datei` in `nightlife.json` eintragen - fertig.
+
+Dateinamen ohne Leerzeichen und Umlaute waehlen, sonst wird die Adresse unnoetig
+kryptisch.
+
+**Vier Dinge muss die Datei erfuellen** (pruefen mit
+`ffprobe -show_entries stream=codec_name,width,height,r_frame_rate datei.mp4`):
+
+| | warum |
+| --- | --- |
+| Codec **h264** | wird auf der Box in Hardware dekodiert; `vp9` oder `av01` nicht |
+| **1920x1080** | mehr bringt auf dem Screen nichts und kostet Rechenzeit |
+| Index vorne (**faststart**) | sonst laedt der Browser erst die ganze Datei, bevor etwas laeuft |
+| moeglichst **30 fps** | 60 fps verdoppeln die Dekodierarbeit ohne sichtbaren Gewinn |
+
+Faststart nachtraeglich setzen und den Ton wegwerfen geht **ohne
+Qualitaetsverlust** (reines Umkopieren, dauert Sekunden):
+
+```
+ffmpeg -i original.mp4 -c:v copy -an -movflags +faststart fertig.mp4
+```
+
+### Bandbreite
+
+Bei 4,8 Mbit/s zieht jeder 5-Minuten-Auftritt rund 180 MB. Bei zehn Auftritten
+am Tag sind das ~1,8 GB taeglich. GitHubs Richtwert fuer Pages liegt bei
+100 GB/Monat - es passt, ist aber kein Kleinkram. Wird es eng, hilft eine
+Neukodierung auf 3,5 Mbit/s und 30 fps.
+
+### Neu kodieren, wenn noetig
+
+Nur wenn Codec, Bildrate oder Bitrate nicht passen. Fuer eine Datei im Repo
+(unter 100 MB) heisst das rund 2,5 Mbit/s bei 5 Minuten:
 
 ```
 ffmpeg -i original.mp4 -t 300 \
