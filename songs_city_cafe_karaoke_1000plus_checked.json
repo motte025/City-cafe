@@ -42301,16 +42301,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Ohio Players",
-    "title": "Love Rollercoaster",
+    "artist": "John West",
+    "title": "Jouw Blik",
     "album": "",
-    "category": "Party & Rock",
+    "category": "Après-Ski & Ballermann",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke",
+      "Après-Ski & Ballermann"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Masterboy",
+    "title": "Generation of Love",
+    "album": "",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "90s",
+      "Eurodance",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
