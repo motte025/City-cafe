@@ -42001,16 +42001,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Showaddywaddy",
-    "title": "Hey Rock And Roll",
+    "artist": "Missy Higgins",
+    "title": "Scar",
     "album": "",
-    "category": "Party-Hit",
+    "category": "Deutsch-Pop",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
-      "Kult",
-      "Retro"
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Wencke Myhre",
+    "title": "Er hat ein knallrotes Gummiboot",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
