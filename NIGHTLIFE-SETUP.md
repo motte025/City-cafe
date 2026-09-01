@@ -136,6 +136,33 @@ https://motte025.github.io/City-cafe/?nlq=hd720&nldiag=1
 Laeuft es damit ruhig und mit 1080p nicht, in `index.html` in `NL_CONFIG`
 dauerhaft `maxAufloesung: 'hd720'` setzen.
 
+## Werbung
+
+**Ueberspringen laesst sich ein Werbeblock nicht.** Der YouTube-Player liegt auf
+einer fremden Herkunft; an dessen "Werbung ueberspringen"-Knopf kommt kein
+Skript von aussen heran. Das ist keine Einstellungssache, sondern eine Grenze
+des Browsers.
+
+Was das Dashboard stattdessen tut:
+
+1. **Erkennen.** Waehrend eines Werbeblocks meldet der Player die Kennung des
+   Spots statt die des gewuenschten Videos. Zweite Spur: die gemeldete Laenge
+   passt nicht zur gespeicherten (ein Werbespot ist kurz, die Stadtvideos sind
+   lang).
+2. **Zudecken.** Der Player wird von einer Tafel mit dem Stadtnamen verdeckt -
+   sie sieht aus wie Teil der Gestaltung, nicht wie ein Fehler. Niemand im Lokal
+   bekommt die Werbung zu sehen.
+3. **Weiterschalten.** Zieht sich die Werbung laenger als
+   `NL_CONFIG.werbungGeduldSekunden` (45 s), wird der Slot vorzeitig beendet und
+   die Rotation laeuft weiter.
+
+Nebenbei wird verhindert, dass die **Werbelaenge** als Videolaenge
+haengenbleibt - sonst waere die Abschnittswanderung danach voellig verstellt.
+
+**Ganz weg ist die Werbung nur mit eigenen Videodateien** (siehe oben). Der
+zweite Weg waere, Chrome im Google-Konto mit YouTube Premium anzumelden - auf
+sideloadetem Chrome unter Android TV geht das oft nicht.
+
 ## Warum es ruckeln kann - und was hilft
 
 Wichtig zum Verstaendnis: Die Box spielt 4K-Videos in nativen Playern
@@ -152,6 +179,15 @@ verschiedene Wege durch die Hardware:
 Deshalb entscheidet, **wie viel der Browser pro Bild zusammensetzen muss**.
 
 ### Im Dashboard bereits erledigt
+
+- **Die teuren Effekte sind dauerhaft aus**: keine `backdrop-filter`, keine
+  `filter: blur()`, keine Schatten, keine Animationen ausser den beiden
+  Laufschriften. Auf dem Odroid startete Android TV neu, sobald das Dashboard in
+  Chrome geladen wurde - das ist ein haengender Grafiktreiber, und
+  grossflaechige Weichzeichner sind auf Mali-GPUs der klassische Ausloeser. Die
+  nackte Testseite lief auf derselben Box 5:29 mit 0,03 % ausgelassenen Bildern
+  durch; sie hatte keinen einzigen Weichzeichner.
+  Mit **`?fx=1`** kommt das alte Aussehen zum Vergleich zurueck.
 
 - Ausgeblendete Medienansichten stehen auf `visibility: hidden` statt nur
   `opacity: 0`. Vorher wurden alle 15 Ansichten dauernd mitgezeichnet - samt

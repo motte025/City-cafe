@@ -14,6 +14,17 @@
     <link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
     <link rel="apple-touch-icon" href="icon-192.png">
 
+    <script>
+        // Steht bewusst hier oben und nicht unten im Hauptskript: ?fx=1 holt die
+        // teuren Effekte zum Vergleich zurueck, und das muss vor dem ersten
+        // Bildaufbau feststehen, sonst blitzt kurz die sparsame Fassung auf.
+        try {
+            if (new URLSearchParams(location.search).get('fx') === '1') {
+                document.documentElement.setAttribute('data-fx', '1');
+            }
+        } catch (e) {}
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
@@ -233,31 +244,66 @@
            ausserhalb der Medienansichten - die kommen fuer die Dauer ganz raus. */
         body.video-laeuft #weather-effects { display: none !important; }
 
-        /* ------------------------------------------------------------------
-           Sparmodus (?safe=1|2|3) - zum Eingrenzen von Abstuerzen
-           ------------------------------------------------------------------
-           Startet die ganze Box neu statt nur den Tab, haengt fast immer der
-           Grafiktreiber. Die teuersten Kandidaten sind grossflaechige
-           Weichzeichner: die Seite hat 8 aktive backdrop-filter und 13
-           filter: blur(), zwei davon mit 50px Radius. Jede Stufe schaltet eine
-           Gruppe ab, damit sich der Ausloeser einkreisen laesst.
+        /* ==================================================================
+           Dauerhaft sparsam gerendert
+           ==================================================================
+           Auf dem Odroid startete Android TV neu, sobald das Dashboard in
+           Chrome geladen wurde - das ist ein haengender Grafiktreiber, kein
+           Speicherproblem. Die nackte Testseite lief auf derselben Box 5:29
+           mit 0,03 % ausgelassenen Bildern durch; sie hatte nur keinen
+           einzigen Weichzeichner. Das Dashboard hatte 8 backdrop-filter und
+           13 filter: blur(), zwei davon mit 50px Radius - grossflaechige
+           Weichzeichner verlangen Rueckgriff auf den Hintergrund und mehrere
+           Durchgaenge pro Bild und sind auf Mali-GPUs der klassische
+           Aufhaenger.
 
-           1 = Weichzeichner aus   2 = zusaetzlich Schatten und Animationen
-           3 = zusaetzlich gar kein Video                                     */
-        body.sparsam-1 *, body.sparsam-1 *::before, body.sparsam-1 *::after,
-        body.sparsam-2 *, body.sparsam-2 *::before, body.sparsam-2 *::after,
-        body.sparsam-3 *, body.sparsam-3 *::before, body.sparsam-3 *::after {
+           Mit ?fx=1 kommt das alte Aussehen zum Vergleich zurueck.        */
+        html:not([data-fx="1"]) *,
+        html:not([data-fx="1"]) *::before,
+        html:not([data-fx="1"]) *::after {
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
             filter: none !important;
-        }
-        body.sparsam-2 *, body.sparsam-2 *::before, body.sparsam-2 *::after,
-        body.sparsam-3 *, body.sparsam-3 *::before, body.sparsam-3 *::after {
             box-shadow: none !important;
             text-shadow: none !important;
-            animation: none !important;
             mix-blend-mode: normal !important;
             will-change: auto !important;
+            animation: none !important;
+        }
+
+        /* Ausnahme: die beiden Laufschriften. Sie verschieben nur ein
+           transform auf einer eigenen Ebene - das Guenstigste, was eine
+           Animation sein kann, und komplett Sache des Compositors.
+           Eingefroren saehen sie dagegen kaputt aus.
+
+           Bewusst in Langschrift: die Kurzschrift "animation:" wuerde auch
+           animation-play-state auf running zuruecksetzen und damit die
+           Pausierung in ausgeblendeten Ansichten aushebeln. */
+        html:not([data-fx="1"]) .bl-ticker-move {
+            animation-name: blTickerScroll !important;
+            animation-duration: 34s !important;
+            animation-timing-function: linear !important;
+            animation-iteration-count: infinite !important;
+            will-change: transform !important;
+        }
+        html:not([data-fx="1"]) .ticker-move {
+            animation-name: tickerMove !important;
+            animation-duration: 2600s !important;
+            animation-timing-function: linear !important;
+            animation-iteration-count: infinite !important;
+            will-change: transform !important;
+        }
+
+        /* Ohne backdrop-filter braucht der Untergrund mehr Deckkraft, sonst
+           steht der Text direkt auf dem Hintergrundbild. */
+        html:not([data-fx="1"]) .schlager-top-header,
+        html:not([data-fx="1"]) .schlager-bottom-footer {
+            background: rgba(10, 15, 30, 0.66);
+        }
+        html:not([data-fx="1"]) .view-news-style,
+        html:not([data-fx="1"]) .view-music-style {
+            background: radial-gradient(circle at center, rgba(3, 7, 15, 0.94) 0%,
+                        rgba(8, 16, 32, 0.86) 65%, rgba(0, 242, 254, 0.3) 100%) !important;
         }
 
         /* Video-Ansichten ohne Scale: das Neurastern eines 1280x815-Elements mit
@@ -1509,11 +1555,24 @@
             color: #00f2fe; font-family: 'Courier New', monospace; font-size: 13px;
             line-height: 1.5;
         }
+        /* Deckt den Player zu, solange nicht das gewuenschte Bild laeuft - beim
+           Laden und vor allem waehrend eines Werbeblocks. Deshalb deckend und
+           nicht mehr nur Text: eine durchsichtige Ebene wuerde die Werbung
+           durchscheinen lassen. */
         .nl-player-hint {
-            position: absolute; inset: 0; z-index: 1;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
-            letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.32);
+            position: absolute; inset: 0; z-index: 2;
+            display: flex; flex-direction: column; gap: 10px;
+            align-items: center; justify-content: center; text-align: center;
+            background: linear-gradient(150deg, #14091f 0%, #1d0b2e 55%, #0a0714 100%);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .nl-hint-titel {
+            font-size: 40px; font-weight: 900; letter-spacing: 3px;
+            text-transform: uppercase; color: #f9a8e8;
+        }
+        .nl-hint-text {
+            font-size: 19px; font-weight: 900; letter-spacing: 2px;
+            text-transform: uppercase; color: rgba(255,255,255,0.42);
         }
         /* Der Player fuellt die Buehne bis unten - der Starter-QR laege im Bild. */
         #media-view-nightlife.active ~ .kt-launcher { display: none !important; }
@@ -1821,7 +1880,10 @@
                              Das leere <div> ersetzt die YouTube-API durch ihr iframe. -->
                         <div class="nl-player" id="nl-player">
                             <div id="nl-player-frame"></div>
-                            <div class="nl-player-hint" id="nl-player-hint">Video wird geladen …</div>
+                            <div class="nl-player-hint" id="nl-player-hint">
+                                <div class="nl-hint-titel" id="nl-hint-titel">Nightlife</div>
+                                <div class="nl-hint-text" id="nl-hint-text">Video wird geladen …</div>
+                            </div>
                             <div id="nl-diag"></div>
                         </div>
                     </div>
@@ -2135,8 +2197,10 @@
         // ab, weil eine reine Webseite von sich aus keinen Wachzustand haelt.
         let kioskWachschloss = null;
 
-        // Sparmodus-Stufe aus ?safe=1|2|3. Muss vor allem anderen stehen: der
-        // Nightlife-Slot fragt sie ab, bevor er ein Video ueberhaupt anfasst.
+        // Stufe 1 und 2 (Weichzeichner, Schatten, Animationen) sind inzwischen
+        // der Normalfall - siehe den Stylesheet-Block "Dauerhaft sparsam".
+        // Uebrig bleibt Stufe 3 zum Eingrenzen: gar kein Video. Muss vor allem
+        // anderen stehen, der Nightlife-Slot fragt sie frueh ab.
         let SPARSTUFE = 0;
         try {
             const s = parseInt(new URLSearchParams(location.search).get('safe'), 10);
@@ -4779,6 +4843,8 @@
             sekundenProVideo: 300,       // 5 Minuten Standzeit
             vorladeSekunden: 30,         // so lange puffert das naechste YouTube-Video vor
             maxAufloesung: 'hd1080',     // 'hd1080' oder 'hd720' - siehe NL_GROESSEN
+            werbungGeduldSekunden: 45,   // so lange wird ein Werbeblock ueberdeckt
+            werbungMaxSekunden: 180,     // laenger ist kein Werbespot - siehe nlWerbungLaeuft
             zeigeDiagnose: false,        // Auflösung/ausgelassene Bilder einblenden (?nldiag=1)
             abrufTimeoutMs: 8000,
             speicherSchluessel: 'cityCafeNightlife'
@@ -5012,7 +5078,9 @@
         function nlZustandsWechsel(ev) {
             nlDauerMerken();
             if (ev.data === 1) {
-                if (nlAktiv) nlHinweisAus();
+                // Nur aufdecken, wenn wirklich das gewuenschte Video laeuft -
+                // sonst stuende hier der Werbeblock im Bild.
+                if (nlAktiv && !nlWerbungLaeuft()) nlHinweisAus();
                 nlQualitaetSetzen();
             }
             if (ev.data === 0 && nlAktiv && nlLaeuft && !nlLaeuft.datei) {
@@ -5028,6 +5096,78 @@
             if (hinweis) hinweis.style.display = 'none';
         }
 
+        function nlHinweisAn(titel, text) {
+            const hinweis = document.getElementById('nl-player-hint');
+            if (!hinweis) return;
+            hinweis.style.display = '';
+            const t = document.getElementById('nl-hint-titel');
+            const u = document.getElementById('nl-hint-text');
+            if (t) t.textContent = titel;
+            if (u) u.textContent = text;
+        }
+
+        // ------------------------------------------------------------------
+        //  Werbung
+        // ------------------------------------------------------------------
+        // Skippen laesst sich ein Werbeblock nicht: der Player liegt auf einer
+        // fremden Herkunft, an dessen "Werbung ueberspringen"-Knopf kommt kein
+        // Skript von aussen. Was geht, ist die Werbung gar nicht erst zeigen -
+        // ueberdecken, und wenn sie sich hinzieht, den Slot vorzeitig beenden.
+        //
+        // Ganz weg ist sie nur mit eigenen Videodateien (siehe NIGHTLIFE-SETUP.md).
+        let nlWerbungSeit = 0;
+
+        function nlWerbungLaeuft() {
+            const soll = (nlGeladen && !nlGeladen.datei) ? nlGeladen.schluessel : '';
+            if (!soll || !nlPlayerBereit) return false;
+
+            // Waehrend eines Werbeblocks meldet der Player die Kennung des
+            // Spots statt die des gewuenschten Videos.
+            try {
+                const daten = nlPlayer.getVideoData ? nlPlayer.getVideoData() : null;
+                if (daten && daten.video_id && daten.video_id !== soll) return true;
+            } catch (e) {}
+
+            // Zweite Spur, falls die Kennung stimmt: die gemeldete Laenge passt
+            // nicht zur gespeicherten. Nur brauchbar, wenn das echte Video
+            // deutlich laenger ist als jeder Werbespot sein kann.
+            const bekannt = nlDauern[soll];
+            if (bekannt > NL_CONFIG.werbungMaxSekunden) {
+                let jetzt = 0;
+                try { jetzt = nlPlayer.getDuration() || 0; } catch (e) {}
+                if (jetzt > 0 && Math.abs(jetzt - bekannt) > 5) return true;
+            }
+            return false;
+        }
+
+        // Laeuft auf einem eigenen Intervall (kein later(), soll den
+        // Ansichtswechsel ueberleben) und haelt die Abdeckung aktuell.
+        function nlWerbungPruefen() {
+            if (!nlAktiv || (nlLaeuft && nlLaeuft.datei)) { nlWerbungSeit = 0; return; }
+
+            if (!nlWerbungLaeuft()) {
+                nlWerbungSeit = 0;
+                let spielt = false;
+                try { spielt = nlPlayer.getPlayerState && nlPlayer.getPlayerState() === 1; } catch (e) {}
+                if (spielt) nlHinweisAus();
+                return;
+            }
+
+            if (!nlWerbungSeit) nlWerbungSeit = Date.now();
+            nlHinweisAn('🌃 ' + ((nlDaten && nlDaten.stadt) || 'Nightlife'), 'gleich geht es weiter …');
+
+            // Zieht sich die Werbung hin, ist der Slot nicht zu retten -
+            // dann lieber weiterschalten als minutenlang eine Tafel zeigen.
+            if (Date.now() - nlWerbungSeit > NL_CONFIG.werbungGeduldSekunden * 1000) {
+                nlWerbungSeit = 0;
+                nlAktiv = false;
+                nlLaeuft = null;
+                nlHinweisAus();
+                cancelTimer(globalMasterTimer);
+                globalMasterTimer = later(runMasterSequence, 300);
+            }
+        }
+
         function nlDauerMerken() {
             const schluessel = nlGeladen && nlGeladen.schluessel;
             if (!schluessel) return;
@@ -5035,6 +5175,10 @@
             if (nlGeladen.datei) {
                 if (nlVideoEl && isFinite(nlVideoEl.duration)) laenge = nlVideoEl.duration || 0;
             } else if (nlPlayerBereit) {
+                // Waehrend eines Werbeblocks meldet der Player dessen Laenge -
+                // die darf nicht als Videolaenge haengenbleiben, sonst wandert
+                // der Startpunkt danach voellig falsch.
+                if (nlWerbungLaeuft()) return;
                 try { laenge = nlPlayer.getDuration() || 0; } catch (e) {}
             }
             if (laenge > 0 && nlDauern[schluessel] !== Math.floor(laenge)) {
@@ -5125,6 +5269,7 @@
             nlAktiv = false;
 
             nlRuheModus(false);
+            nlWerbungSeit = 0;
             if (nlVideoEl) { try { nlVideoEl.pause(); } catch (e) {} }
             if (nlPlayerBereit) { try { nlPlayer.pauseVideo(); } catch (e) {} }
 
@@ -5167,8 +5312,12 @@
 
             document.getElementById('media-view-nightlife').classList.add('active');
 
-            const hinweis = document.getElementById('nl-player-hint');
-            if (hinweis) hinweis.style.display = '';
+            // Der Player bleibt zugedeckt, bis feststeht, dass wirklich das
+            // Video laeuft und keine Werbung. Die Tafel nennt die Stadt, damit
+            // sie wie Teil der Gestaltung aussieht und nicht wie ein Fehler.
+            nlHinweisAn('🌃 ' + ((nlDaten && nlDaten.stadt) || 'Nightlife'),
+                        eintrag.datei ? 'Video wird geladen …' : 'gleich geht es weiter …');
+            nlWerbungSeit = 0;
             nlAnsichtUmschalten(eintrag.datei);
             nlRuheModus(true);
 
@@ -5225,9 +5374,10 @@
 
             const masse = nlGroesse();
             const zeilen = [];
-            if (SPARSTUFE) zeilen.push('SPARMODUS Stufe ' + SPARSTUFE +
-                                       ['', ' (Weichzeichner aus)', ' (+ Schatten/Animationen aus)',
-                                        ' (+ kein Video)'][SPARSTUFE]);
+            zeilen.push(document.documentElement.getAttribute('data-fx') === '1'
+                ? 'Effekte AN (?fx=1) - nur zum Vergleich'
+                : 'Effekte aus (Weichzeichner, Schatten, Animationen)');
+            if (SPARSTUFE >= 3) zeilen.push('SPARMODUS 3 - Video abgeschaltet');
             zeilen.push('Player ' + masse[0] + 'x' + masse[1] + '  (' + NL_CONFIG.maxAufloesung + ')');
 
             if (nlGeladen && nlGeladen.datei && nlVideoEl) {
@@ -5265,6 +5415,9 @@
             nlApiLaden();
             nlDiagTimer = setInterval(nlDiagnose, 2000);
             nlDiagnose();
+            // Bewusst kein later(): die Werbepruefung muss jeden
+            // Ansichtswechsel ueberleben.
+            setInterval(nlWerbungPruefen, 1000);
         })();
 
         // ==================================================================
