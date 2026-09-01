@@ -192,14 +192,50 @@
             opacity: 0; pointer-events: none; z-index: 1;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             transform: scale(1.02);
-            transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
+            /* opacity:0 allein genuegt nicht: der Browser zeichnet und komponiert die
+               Ansicht trotzdem weiter - samt backdrop-filter, Schatten und laufenden
+               Animationen, fuer niemanden. visibility:hidden nimmt sie ganz aus dem
+               Rendering. Die Umschaltung kommt per transition-delay erst NACH der
+               Ueberblendung, sonst verschwindet die alte Ansicht schlagartig.
+               Layout bleibt erhalten - anders als bei display:none messen Skripte
+               weiterhin richtig. */
+            visibility: hidden;
+            transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out,
+                        visibility 0s linear 0.7s;
         }
-        .media-inner-view.active { opacity: 1; pointer-events: auto; z-index: 2; transform: scale(1); }
+        .media-inner-view.active {
+            opacity: 1; pointer-events: auto; z-index: 2; transform: scale(1);
+            visibility: visible;
+            transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out, visibility 0s;
+        }
+        /* Ausnahme: der Nightlife-Player puffert das naechste Video, waehrend seine
+           Ansicht ausgeblendet ist. Wird sie unsichtbar geschaltet, koennte der
+           Browser die Wiedergabe drosseln - dann waere der Vorlauf hinueber. */
+        #media-view-nightlife { visibility: visible; }
+
+        /* Was niemand sieht, muss auch nicht animieren. Jede laufende Animation
+           zwingt den Browser, das Bild neu zusammenzusetzen - genau die Leistung,
+           die dem Video im Nightlife-Slot fehlt. */
+        .media-inner-view:not(.active),
+        .media-inner-view:not(.active) * { animation-play-state: paused !important; }
+
+        /* Solange ein Video laeuft, gehoert die Bildrate dem Video. Die Regentropfen
+           im Wetter-Widget sind Dutzende einzeln animierter Elemente und liegen
+           ausserhalb der Medienansichten - die kommen fuer die Dauer ganz raus. */
+        body.video-laeuft #weather-effects { display: none !important; }
 
         /* Video-Ansichten ohne Scale: das Neurastern eines 1280x815-Elements mit
            startendem Video kostet auf schwacher Hardware die erste Sekunde Wiedergabe. */
-        #media-view-drinks { transform: none; transition: opacity 0.7s ease-in-out; }
-        #media-view-drinks.active { transform: none; }
+        /* Die transition-Kurzschrift muss den visibility-Teil mitnehmen, sonst
+           verschwindet diese Ansicht beim Ausblenden schlagartig statt weich. */
+        #media-view-drinks {
+            transform: none;
+            transition: opacity 0.7s ease-in-out, visibility 0s linear 0.7s;
+        }
+        #media-view-drinks.active {
+            transform: none;
+            transition: opacity 0.7s ease-in-out, visibility 0s;
+        }
 
         .drinks-stage {
             width: 1280px; height: 815px; position: relative;
@@ -4913,11 +4949,20 @@
                 // Nicht fuenf Minuten schwarz stehen bleiben - sofort weiterschalten.
                 nlAktiv = false;
                 nlLaeuft = null;
+                nlRuheModus(false);
                 cancelTimer(globalMasterTimer);
                 globalMasterTimer = later(runMasterSequence, 400);
             } else {
                 nlVorladen();
             }
+        }
+
+        // Waehrend ein Video laeuft, wird alles abgeschaltet, was sonst nebenher
+        // animiert. Auf der Box entscheidet nicht der Dekoder ueber ruckelfreie
+        // Wiedergabe, sondern wie viel der Browser pro Bild neu zusammensetzen
+        // muss - 4K-Videos laufen dort in nativen Playern problemlos.
+        function nlRuheModus(an) {
+            document.body.classList.toggle('video-laeuft', !!an);
         }
 
         // Welche Quelle ist gerade zu sehen: Datei oder YouTube.
@@ -4976,6 +5021,7 @@
             if (!nlAktiv) return;
             nlAktiv = false;
 
+            nlRuheModus(false);
             if (nlVideoEl) { try { nlVideoEl.pause(); } catch (e) {} }
             if (nlPlayerBereit) { try { nlPlayer.pauseVideo(); } catch (e) {} }
 
@@ -5021,6 +5067,7 @@
             const hinweis = document.getElementById('nl-player-hint');
             if (hinweis) hinweis.style.display = '';
             nlAnsichtUmschalten(eintrag.datei);
+            nlRuheModus(true);
 
             // Im Normalfall liegt genau dieses Video schon gepuffert bereit -
             // dann reicht Abspielen und das Bild ist sofort da.

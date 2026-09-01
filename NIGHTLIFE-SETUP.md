@@ -136,6 +136,49 @@ https://motte025.github.io/City-cafe/?nlq=hd720&nldiag=1
 Laeuft es damit ruhig und mit 1080p nicht, in `index.html` in `NL_CONFIG`
 dauerhaft `maxAufloesung: 'hd720'` setzen.
 
+## Warum es ruckeln kann - und was hilft
+
+Wichtig zum Verstaendnis: Die Box spielt 4K-Videos in nativen Playern
+problemlos. **Der Dekoder ist also nicht das Problem.** Das sind zwei
+verschiedene Wege durch die Hardware:
+
+- **Nativer Player:** Der Dekoder schreibt die Bilder direkt in eine
+  Overlay-Ebene, der Displaycontroller mischt sie mit der Oberflaeche. Die GPU
+  macht praktisch nichts.
+- **Video in einer Webseite:** Jedes dekodierte Bild muss in eine GPU-Textur
+  kopiert und mit allen Seitenebenen neu zusammengesetzt werden - jedes Frame.
+  Das kostet Fuellrate, nicht Dekoderleistung.
+
+Deshalb entscheidet, **wie viel der Browser pro Bild zusammensetzen muss**.
+
+### Im Dashboard bereits erledigt
+
+- Ausgeblendete Medienansichten stehen auf `visibility: hidden` statt nur
+  `opacity: 0`. Vorher wurden alle 15 Ansichten dauernd mitgezeichnet - samt
+  `backdrop-filter`, Schatten und laufenden Animationen, fuer niemanden.
+  Umgeschaltet wird per `transition-delay` erst nach der Ueberblendung, damit
+  nichts springt.
+- Animationen in ausgeblendeten Ansichten sind angehalten.
+- Waehrend ein Video laeuft, bekommt `<body>` die Klasse `video-laeuft`. Die
+  Regentropfen im Wetter-Widget (Dutzende einzeln animierter Elemente) sind
+  dann ganz aus dem Rendering. Die beiden Laufschriften laufen bewusst weiter -
+  eingefroren saehen sie kaputt aus.
+
+### An der Box
+
+1. **HDMI-Ausgabe auf 1920x1080 @ 60 Hz.** Bei 2160p setzt der Browser
+   8,3 Mio. Pixel pro Bild zusammen statt 2,1 Mio. Das Dashboard ist intern nur
+   1280 Pixel breit und gewinnt durch 4K-Ausgabe nichts. Groesster Hebel.
+2. **Android System WebView aktualisieren** (oder Chrome installieren und in den
+   Entwickleroptionen als WebView-Implementierung waehlen). Auf Custom-ROMs ist
+   die mitgelieferte oft Jahre alt.
+3. **Entwickleroptionen:** Fenster-, Uebergangs- und Animator-Skalierung auf 0,5
+   oder aus.
+4. **Alles Uebrige stilllegen:** Play-Store-Auto-Updates, Hintergrund-Sync,
+   Bildschirmschoner. Ein Signage-Geraet sollte genau eine App laufen haben.
+5. **Kuehlung pruefen.** Ein 4K-Test dauert Minuten, das Dashboard laeuft
+   14 Stunden - unter Dauerlast wird gedrosselt.
+
 ## Wenn ein Video nicht laeuft
 
 Manche Videos duerfen nicht eingebettet werden (Einstellung des Kanals). Das
