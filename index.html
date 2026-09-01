@@ -233,6 +233,33 @@
            ausserhalb der Medienansichten - die kommen fuer die Dauer ganz raus. */
         body.video-laeuft #weather-effects { display: none !important; }
 
+        /* ------------------------------------------------------------------
+           Sparmodus (?safe=1|2|3) - zum Eingrenzen von Abstuerzen
+           ------------------------------------------------------------------
+           Startet die ganze Box neu statt nur den Tab, haengt fast immer der
+           Grafiktreiber. Die teuersten Kandidaten sind grossflaechige
+           Weichzeichner: die Seite hat 8 aktive backdrop-filter und 13
+           filter: blur(), zwei davon mit 50px Radius. Jede Stufe schaltet eine
+           Gruppe ab, damit sich der Ausloeser einkreisen laesst.
+
+           1 = Weichzeichner aus   2 = zusaetzlich Schatten und Animationen
+           3 = zusaetzlich gar kein Video                                     */
+        body.sparsam-1 *, body.sparsam-1 *::before, body.sparsam-1 *::after,
+        body.sparsam-2 *, body.sparsam-2 *::before, body.sparsam-2 *::after,
+        body.sparsam-3 *, body.sparsam-3 *::before, body.sparsam-3 *::after {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            filter: none !important;
+        }
+        body.sparsam-2 *, body.sparsam-2 *::before, body.sparsam-2 *::after,
+        body.sparsam-3 *, body.sparsam-3 *::before, body.sparsam-3 *::after {
+            box-shadow: none !important;
+            text-shadow: none !important;
+            animation: none !important;
+            mix-blend-mode: normal !important;
+            will-change: auto !important;
+        }
+
         /* Video-Ansichten ohne Scale: das Neurastern eines 1280x815-Elements mit
            startendem Video kostet auf schwacher Hardware die erste Sekunde Wiedergabe. */
         /* Die transition-Kurzschrift muss den visibility-Teil mitnehmen, sonst
@@ -2108,6 +2135,17 @@
         // ab, weil eine reine Webseite von sich aus keinen Wachzustand haelt.
         let kioskWachschloss = null;
 
+        // Sparmodus-Stufe aus ?safe=1|2|3. Muss vor allem anderen stehen: der
+        // Nightlife-Slot fragt sie ab, bevor er ein Video ueberhaupt anfasst.
+        let SPARSTUFE = 0;
+        try {
+            const s = parseInt(new URLSearchParams(location.search).get('safe'), 10);
+            if (s >= 1 && s <= 3) {
+                SPARSTUFE = s;
+                document.documentElement.setAttribute('data-sparsam', String(s));
+            }
+        } catch (e) {}
+
         async function kioskWachHalten() {
             if (!navigator.wakeLock || kioskWachschloss) return;
             try {
@@ -2129,6 +2167,7 @@
         }
 
         (function kioskEinrichten() {
+            if (SPARSTUFE) document.body.classList.add('sparsam-' + SPARSTUFE);
             kioskWachHalten();
             // Nach Bildschirmsperre oder Appwechsel ist das Schloss weg - neu holen.
             document.addEventListener('visibilitychange', () => {
@@ -4833,6 +4872,9 @@
         // fehlt eine Datei, faellt der Eintrag fuer diesen Seitenaufruf raus,
         // statt den Slot fuenf Minuten schwarz stehen zu lassen.
         function nlBrauchbareVideos() {
+            // Sparmodus 3: gar kein Video. Der Slot ueberspringt sich dann selbst -
+            // damit laesst sich pruefen, ob die Abstuerze ueberhaupt am Video haengen.
+            if (SPARSTUFE >= 3) return [];
             const alle = (nlDaten && nlDaten.videos) || [];
             return alle.filter(v => nlSchluessel(v) && !nlDefekt[nlSchluessel(v)]);
         }
@@ -5182,7 +5224,11 @@
             box.style.display = 'block';
 
             const masse = nlGroesse();
-            const zeilen = ['Player ' + masse[0] + 'x' + masse[1] + '  (' + NL_CONFIG.maxAufloesung + ')'];
+            const zeilen = [];
+            if (SPARSTUFE) zeilen.push('SPARMODUS Stufe ' + SPARSTUFE +
+                                       ['', ' (Weichzeichner aus)', ' (+ Schatten/Animationen aus)',
+                                        ' (+ kein Video)'][SPARSTUFE]);
+            zeilen.push('Player ' + masse[0] + 'x' + masse[1] + '  (' + NL_CONFIG.maxAufloesung + ')');
 
             if (nlGeladen && nlGeladen.datei && nlVideoEl) {
                 zeilen.push('Datei ' + (nlVideoEl.videoWidth || '?') + 'x' + (nlVideoEl.videoHeight || '?'));
