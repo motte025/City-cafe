@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Videotest - City Cafe</title>
+<style>
+    /* Bewusst ohne externe Schriften und ohne Bibliotheken: die Seite soll genau
+       das messen, was sie misst, und nicht durch eigenes Beiwerk verfaelschen. */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #05070d; color: #e8f1ff;
+                 font-family: 'Courier New', ui-monospace, monospace; overflow: hidden; }
+    body { display: flex; flex-direction: column; }
+
+    header { padding: 10px 18px; background: #0b1220; border-bottom: 1px solid #1d2b45;
+             display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    h1 { font-size: 20px; letter-spacing: 1px; white-space: nowrap; }
+    .knopf { font: inherit; font-size: 17px; padding: 8px 16px; border-radius: 8px; cursor: pointer;
+             background: #12203a; color: #9fd9ff; border: 2px solid #24406b; }
+    .knopf.aktiv { background: #00f2fe; color: #04121f; border-color: #00f2fe; font-weight: bold; }
+    .knopf:focus { outline: 3px solid #f355da; outline-offset: 2px; }
+    .hinweis { font-size: 15px; color: #7f96b8; }
+
+    main { flex: 1; display: flex; gap: 10px; padding: 10px; min-height: 0; }
+    .feld { flex: 1; display: none; flex-direction: column; min-width: 0;
+            border: 1px solid #1d2b45; border-radius: 10px; overflow: hidden; background: #000; }
+    .feld.an { display: flex; }
+    .feld h2 { font-size: 16px; padding: 7px 12px; background: #0b1220; letter-spacing: 1px;
+               border-bottom: 1px solid #1d2b45; }
+    .buehne { flex: 1; position: relative; background: #000; min-height: 0; }
+    .buehne video, .buehne iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+                                    border: 0; display: block; object-fit: contain; background: #000; }
+
+    .werte { padding: 9px 12px; background: #0b1220; border-top: 1px solid #1d2b45;
+             font-size: 16px; line-height: 1.65; white-space: pre-wrap; }
+    .urteil { font-weight: bold; font-size: 18px; }
+    .gut { color: #3ddc84; } .mittel { color: #ffc857; } .schlecht { color: #ff5c5c; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>VIDEOTEST</h1>
+    <button class="knopf" id="k1" data-modus="datei">1 · Datei (MP4)</button>
+    <button class="knopf" id="k2" data-modus="youtube">2 · YouTube</button>
+    <button class="knopf" id="k3" data-modus="beide">3 · Beide</button>
+    <span class="hinweis" id="laufzeit">Laufzeit 0:00</span>
+    <span class="hinweis">Umschalten: Tasten 1/2/3 oder anklicken</span>
+</header>
+
+<main>
+    <div class="feld" id="feld-datei">
+        <h2 id="datei-titel">DATEI · videotest.mp4 · H.264 1080p30 ~4 Mbit/s (Schleife)</h2>
+        <div class="buehne"><video id="video" muted playsinline loop preload="auto"></video></div>
+        <div class="werte" id="werte-datei">wird gestartet …</div>
+    </div>
+
+    <div class="feld" id="feld-youtube">
+        <h2>YOUTUBE · eingebetteter Player</h2>
+        <div class="buehne" id="yt-buehne"><div id="yt-rahmen"></div></div>
+        <div class="werte" id="werte-youtube">wird gestartet …</div>
+    </div>
+</main>
+
+<script>
+// ---------------------------------------------------------------------------
+// Zweck: klaeren, ob diese Box ueberhaupt Video im Browser kann - und wenn ja,
+// auf welchem Weg. Links eine gewoehnliche Datei in einem nackten <video>,
+// rechts derselbe Browser mit YouTubes Player. Gleiche Box, gleiche Minute.
+//
+// Aussagekraeftig ist die Quote ausgelassener Bilder. Ausgelassene Bilder
+// heissen: der Browser bekommt die Bilder nicht rechtzeitig auf den Schirm -
+// das ist Rechenlast, nicht Netz. Bleibt das Bild stehen oder zerfaellt es in
+// Farbbalken, ist der Dekodierpfad selbst kaputt.
+// ---------------------------------------------------------------------------
+
+// Eines der Nightlife-Videos - damit der Vergleich echtes Material trifft.
+const YT_ID = '5E9wyQI5Z0k';
+
+// Standardmaessig die mitgelieferte Testdatei. Mit ?datei=videos/x.mp4 laesst
+// sich jede eigene Datei pruefen - dann misst die Seite genau das Material,
+// das spaeter im Dashboard laufen soll.
+const video   = document.getElementById('video');
+(function dateiWaehlen() {
+    let quelle = 'videotest.mp4';
+    try {
+        const wunsch = new URLSearchParams(location.search).get('datei');
+        // Nur Pfade im eigenen Verzeichnis - keine fremden Adressen einschleusen.
+        if (wunsch && !/^[a-z]+:|^\/\//i.test(wunsch)) quelle = wunsch;
+    } catch (e) {}
+    video.src = quelle;
+    document.getElementById('datei-titel').textContent = 'DATEI · ' + quelle + ' (Schleife)';
+})();
+const felder  = { datei: document.getElementById('feld-datei'),
+                  youtube: document.getElementById('feld-youtube') };
+const knoepfe = Array.from(document.querySelectorAll('.knopf'));
+const start   = Date.now();
+
+let modus = 'datei';
+let ytPlayer = null, ytBereit = false, ytApiAngefordert = false, ytFehler = null;
+
+function setzeModus(neu) {
+    modus = neu;
+    felder.datei.classList.toggle('an', neu === 'datei' || neu === 'beide');
+    felder.youtube.classList.toggle('an', neu === 'youtube' || neu === 'beide');
+    knoepfe.forEach(k => k.classList.toggle('aktiv', k.dataset.modus === neu));
+
+    if (felder.datei.classList.contains('an')) {
+        const p = video.play(); if (p && p.catch) p.catch(() => {});
+    } else {
+        video.pause();
+    }
+
+    if (felder.youtube.classList.contains('an')) ytStarten();
+    else if (ytBereit) { try { ytPlayer.pauseVideo(); } catch (e) {} }
+}
+
+knoepfe.forEach(k => k.addEventListener('click', () => setzeModus(k.dataset.modus)));
+document.addEventListener('keydown', (ev) => {
+    if (ev.key === '1') setzeModus('datei');
+    if (ev.key === '2') setzeModus('youtube');
+    if (ev.key === '3') setzeModus('beide');
+    // Auf dem Fernseher ist Vollbild sonst nicht erreichbar.
+    if (ev.key === 'Enter' || ev.key === 'f') {
+        const el = document.documentElement;
+        const fn = el.requestFullscreen || el.webkitRequestFullscreen;
+        if (fn && !document.fullscreenElement) { try { fn.call(el); } catch (e) {} }
+    }
+});
+
+// ---------------------------------------------------------------- YouTube
+function ytStarten() {
+    if (ytBereit) { try { ytPlayer.playVideo(); } catch (e) {} return; }
+    if (ytApiAngefordert) return;
+    ytApiAngefordert = true;
+    const s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    s.onerror = () => { ytFehler = 'YouTube-API nicht erreichbar'; };
+    document.head.appendChild(s);
+}
+
+window.onYouTubeIframeAPIReady = function () {
+    try {
+        ytPlayer = new YT.Player('yt-rahmen', {
+            width: '1920', height: '1080', videoId: YT_ID,
+            playerVars: { autoplay: 1, controls: 0, mute: 1, rel: 0, playsinline: 1,
+                          modestbranding: 1, origin: location.origin },
+            events: {
+                onReady: () => { ytBereit = true; try { ytPlayer.mute(); ytPlayer.playVideo(); } catch (e) {} },
+                onError: (e) => { ytFehler = 'Player-Fehler ' + (e && e.data); }
+            }
+        });
+    } catch (e) { ytFehler = String(e); }
+};
+
+// ---------------------------------------------------------------- Messung
+function urteil(quote) {
+    if (quote === null) return ['', ''];
+    if (quote < 0.5) return ['gut', 'LAEUFT SAUBER'];
+    if (quote < 2)   return ['mittel', 'LEICHTES RUCKELN'];
+    return ['schlecht', 'RUCKELT DEUTLICH'];
+}
+
+function mmss(ms) {
+    const s = Math.floor(ms / 1000);
+    return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+
+function messen() {
+    document.getElementById('laufzeit').textContent = 'Laufzeit ' + mmss(Date.now() - start);
+
+    // --- Datei ---
+    const zeilen = [];
+    if (video.error) {
+        zeilen.push('FEHLER: Datei laesst sich nicht abspielen (Code ' + video.error.code + ')');
+    } else if (!video.videoWidth) {
+        zeilen.push('laedt …');
+    } else {
+        let quote = null, q = null;
+        if (video.getVideoPlaybackQuality) {
+            q = video.getVideoPlaybackQuality();
+            if (q.totalVideoFrames > 0) quote = 100 * q.droppedVideoFrames / q.totalVideoFrames;
+        }
+        let gepuffert = 0;
+        for (let i = 0; i < video.buffered.length; i++) gepuffert += video.buffered.end(i) - video.buffered.start(i);
+
+        zeilen.push('Aufloesung   ' + video.videoWidth + ' x ' + video.videoHeight);
+        zeilen.push('Zustand      ' + (video.paused ? 'angehalten' : 'laeuft') +
+                    '   Stelle ' + video.currentTime.toFixed(1) + ' s' +
+                    '   Puffer ' + gepuffert.toFixed(1) + ' s');
+        if (q) zeilen.push('Bilder       ' + q.totalVideoFrames +
+                           '   ausgelassen ' + q.droppedVideoFrames +
+                           (quote === null ? '' : '  (' + quote.toFixed(2) + ' %)'));
+        else zeilen.push('Bilder       Browser meldet keine Zaehlung');
+        const [klasse, text] = urteil(quote);
+        if (text) zeilen.push('<span class="urteil ' + klasse + '">' + text + '</span>');
+    }
+    document.getElementById('werte-datei').innerHTML = zeilen.join('\n');
+
+    // --- YouTube ---
+    const y = [];
+    if (ytFehler) {
+        y.push('FEHLER: ' + ytFehler);
+    } else if (!ytBereit) {
+        y.push('Player startet …');
+    } else {
+        let stufe = '?', verfuegbar = '', stelle = 0;
+        try { stufe = ytPlayer.getPlaybackQuality() || '?'; } catch (e) {}
+        try { verfuegbar = (ytPlayer.getAvailableQualityLevels() || []).join(' '); } catch (e) {}
+        try { stelle = ytPlayer.getCurrentTime() || 0; } catch (e) {}
+        y.push('liefert      ' + stufe);
+        if (verfuegbar) y.push('verfuegbar   ' + verfuegbar);
+        y.push('Stelle       ' + stelle.toFixed(1) + ' s');
+        y.push('Bilder       nicht auslesbar (fremde Herkunft) - nach Augenschein beurteilen');
+    }
+    document.getElementById('werte-youtube').innerHTML = y.join('\n');
+}
+
+setInterval(messen, 1000);
+setzeModus('datei');
+messen();
+</script>
+</body>
+</html>
