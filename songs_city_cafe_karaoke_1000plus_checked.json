@@ -41441,15 +41441,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Perkelt",
-    "title": "Pilgrim",
+    "artist": "Lorde",
+    "title": "Homemade Dynamite",
     "album": "",
-    "category": "Party-Hit",
+    "category": "Party & Rock",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Folk-Pop",
-      "Party"
+      "Party",
+      "Rock",
+      "Anthem"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Vico Torriani",
+    "title": "La Campanella",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
