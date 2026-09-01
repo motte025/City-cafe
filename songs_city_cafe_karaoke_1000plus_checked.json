@@ -43581,8 +43581,28 @@
     "auto_discovered": true
   },
   {
-    "artist": "The Saturdays",
-    "title": "Higher",
+    "artist": "NoRMAhl",
+    "title": "Fraggles",
+    "album": "",
+    "category": "Deutsch Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Deutsch Karaoke",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "A Fine Frenzy",
+    "title": "Almost Lover",
     "album": "",
     "category": "Deutsch-Pop",
     "chart": "",
