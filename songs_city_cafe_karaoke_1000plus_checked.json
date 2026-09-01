@@ -41481,8 +41481,8 @@
     "auto_discovered": true
   },
   {
-    "artist": "fun.",
-    "title": "We Are Young (feat. Janelle Monáe)",
+    "artist": "Sheppard",
+    "title": "Geronimo",
     "album": "",
     "category": "Party & Rock",
     "chart": "",
@@ -41491,6 +41491,26 @@
       "Party",
       "Rock",
       "Anthem"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Gorillaz",
+    "title": "On Melancholy Hill",
+    "album": "",
+    "category": "2000s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "2000s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
