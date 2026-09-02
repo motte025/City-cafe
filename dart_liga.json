@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-02T12:23:03Z",
+  "aktualisiert": "2026-09-02T12:44:04Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -88,10 +88,6 @@
           "heim": 0,
           "auswaerts": 0
         },
-        "3": {
-          "heim": 0,
-          "auswaerts": 10
-        },
         "4": {
           "heim": 0,
           "auswaerts": 0
@@ -113,10 +109,6 @@
           "auswaerts": 0
         },
         "9": {
-          "heim": 0,
-          "auswaerts": 0
-        },
-        "10": {
           "heim": 0,
           "auswaerts": 0
         },
@@ -220,10 +212,6 @@
           "heim": 0,
           "auswaerts": 0
         },
-        "2": {
-          "heim": 0,
-          "auswaerts": 10
-        },
         "3": {
           "heim": 0,
           "auswaerts": 0
@@ -245,10 +233,6 @@
           "auswaerts": 0
         },
         "8": {
-          "heim": 0,
-          "auswaerts": 0
-        },
-        "9": {
           "heim": 0,
           "auswaerts": 0
         },
