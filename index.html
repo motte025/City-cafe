@@ -867,6 +867,9 @@
             line-height: 1.05; font-variant-numeric: tabular-nums;
         }
         .dn-runde { font-size: 18px; font-weight: 800; color: rgba(255,255,255,0.62); margin-top: 6px; }
+        /* Die Anwurfzeit ist die Angabe, wegen der jemand stehenbleibt - sie
+           hebt sich deshalb vom Wochentag daneben ab. */
+        .dn-zeit { color: #ffffff; font-variant-numeric: tabular-nums; }
         /* flex-Spalte, damit der Spielort ueber margin-top:auto am Kartenboden
            sitzt - sonst haengt unter kurzen Vereinsnamen ein Drittel Karte leer. */
         .dn-gegner-block { margin-top: 26px; flex: 1; display: flex; flex-direction: column; }
@@ -5133,6 +5136,11 @@
 
         const DART_WOCHENTAGE = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
+        // Angeworfen wird in dieser Liga immer um 19:00 - die Uhrzeit steht
+        // deshalb nicht an jedem der 28 Spiele, sondern einmal auf der Karte
+        // "Naechstes Spiel" und einmal im Kopf des Spielplans.
+        const DART_SPIELBEGINN = '19:00';
+
         // Der MDT-Server schreibt Vereinsnamen mit deutschen Anfuehrungszeichen
         // ("Waddling Arrows"), die Aushaenge mit geraden. Fuer jeden Vergleich
         // zwischen beiden Quellen muessen die Namen deshalb erst angeglichen
@@ -5228,7 +5236,7 @@
                     ${kopf}
                     <div class="dn-label">${wann} · Runde ${spiel.runde}</div>
                     <div class="dn-datum">${dartDatumLang(spiel.datum)}</div>
-                    <div class="dn-runde">${DART_WOCHENTAGE[spiel.datum.getDay()]}</div>
+                    <div class="dn-runde">${DART_WOCHENTAGE[spiel.datum.getDay()]} · <span class="dn-zeit">${DART_SPIELBEGINN} Uhr</span></div>
                     <div class="dn-gegner-block">
                         <div class="dn-label" style="margin-top: 4px;">Gegner</div>
                         <div class="dn-gegner">${spiel.gegner}</div>
@@ -5278,7 +5286,8 @@
             // Ohne Emoji: das Logo steht als eigenes Element daneben und wuerde
             // von einem textContent-Schreiber hier mit weggeraeumt.
             document.getElementById('dart-plan-titel').textContent = `City Flyers "${team.kurz}" · Spielplan`;
-            document.getElementById('dart-plan-untertitel').textContent = `${team.liga} · KEDSV E-Liga · Saison 26/27`;
+            document.getElementById('dart-plan-untertitel').textContent =
+                `${team.liga} · KEDSV E-Liga · Saison 26/27 · Spielbeginn ${DART_SPIELBEGINN} Uhr`;
             document.getElementById('dart-plan-seite').textContent = `Seite ${seitenIndex + 1}/${DART_PLAN_SEITEN.length}`;
 
             document.getElementById('dart-plan-liste').innerHTML = seite.zeilen.map(s => {

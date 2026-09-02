@@ -41,6 +41,10 @@ und Slot 3 ueberspringt sich selbst.
 
 Automatisches Verhalten:
 
+- **Spielbeginn ist immer 19:00 Uhr.** Die Uhrzeit steht deshalb nicht an
+  jedem der 28 Spiele, sondern einmal auf der Karte "Naechstes Spiel" und
+  einmal im Kopf des Spielplans. Aendert sich das, reicht die Konstante
+  `DART_SPIELBEGINN` in `index.html` - beide Stellen ziehen mit.
 - **Freilos-Runden** stehen im Spielplan als *spielfrei*, werden im
   "Naechstes Spiel" aber uebersprungen - dort interessiert nur, wann wirklich
   gespielt wird.
