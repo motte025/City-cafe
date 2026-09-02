@@ -6254,8 +6254,17 @@
         // sowohl runMasterSequence als auch djStopPlayer sie kennen muessen.
         const DJ_SLOT_INDEX = 0.9;
 
-        // Nightlife steht ganz vorne im Zyklus - vor dem Tag/Nacht-Plakat.
+        // Nightlife steht hinter der Dart-Strecke - vor dem Tag/Nacht-Plakat.
         const NL_SLOT_INDEX = -0.5;
+
+        // Die Dart-Strecke des Hausvereins eroeffnet den Zyklus und liegt
+        // deshalb noch vor Nightlife (-0.5) und dem Hos'n Obe-Testslot (-1).
+        // Die vier Werte sind reine Positionsmarken in runMasterSequence; sie
+        // stehen absteigend genau in der Reihenfolge, in der die Slots laufen.
+        const DART_SLOT_INDEX = -2;       // Naechstes Spiel
+        const DART_FOTO_INDEX = -1.9;     // Mannschaftsfoto
+        const DART_PLAN_INDEX = -1.8;     // Spielplan
+        const DART_TABELLE_INDEX = -1.7;  // Tabelle
 
         let djGepuffert = [];        // Eintraege, fuer die gerade Player im DOM stehen
         let djLiveEntries = [];      // zuletzt gemeldete Live-Kanaele
@@ -8109,12 +8118,48 @@
             djStopPlayer();
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
 
-            if (mediaStateIndex === -1) {
+            // Die vier Dart-Slots des Hausvereins City Flyers eroeffnen den
+            // Zyklus: erst wann als naechstes gespielt wird, dann das
+            // Mannschaftsfoto, der komplette Spielplan und die Tabelle.
+            // Danach geht es beim bisherigen Zyklusanfang (Nightlife) weiter.
+            if (mediaStateIndex === DART_SLOT_INDEX) {
+                // Nach dem letzten Spieltag beider Mannschaften hat die Karte
+                // nichts mehr zu zeigen und faellt aus.
+                if (dartNextSlotVerfuegbar()) {
+                    runDartNextState(DART_FOTO_INDEX); // -> Mannschaftsfoto
+                } else {
+                    mediaStateIndex = DART_FOTO_INDEX;
+                    runMasterSequence();
+                }
+
+            } else if (mediaStateIndex === DART_FOTO_INDEX) {
+                // Zwischenfolie mit Mannschaftsfoto - ohne die Bilddatei
+                // ueberspringt sie sich selbst.
+                if (dartFotoSlotVerfuegbar()) {
+                    runDartTeamFotoState(DART_PLAN_INDEX); // -> Dart-Spielplan
+                } else {
+                    mediaStateIndex = DART_PLAN_INDEX;
+                    runMasterSequence();
+                }
+
+            } else if (mediaStateIndex === DART_PLAN_INDEX) {
+                runDartScheduleState(DART_TABELLE_INDEX); // -> Dart-Tabelle
+
+            } else if (mediaStateIndex === DART_TABELLE_INDEX) {
+                // Ohne dart_liga.json gibt es keine Tabelle - dann direkt weiter.
+                if (dartTableSlotVerfuegbar()) {
+                    runDartTableState(NL_SLOT_INDEX); // -> Nightlife
+                } else {
+                    mediaStateIndex = NL_SLOT_INDEX;
+                    runMasterSequence();
+                }
+
+            } else if (mediaStateIndex === -1) {
                 runHosnObeTestSlot(0); // -> Tag/Nacht-Plakat
 
             } else if (mediaStateIndex === NL_SLOT_INDEX) {
-                // Steht ganz vorne im Zyklus - vor dem Kartenspiel. Ohne Videos in
-                // nightlife.json ueberspringt sich der Slot selbst.
+                // Steht hinter der Dart-Strecke, vor dem Kartenspiel. Ohne Videos
+                // in nightlife.json ueberspringt sich der Slot selbst.
                 runNightlifeState(KT.testFirstInCycle ? -1 : 0); // -> Hos'n Obe bzw. Plakat
 
             } else if (mediaStateIndex === 0) {
@@ -8163,42 +8208,7 @@
             // OpenLigaDB-Slots weiter unten (Spieltag + Tabelle).
 
             } else if (mediaStateIndex === 7) {
-                runEventsState(7.1); // -> Dart: nächstes Spiel
-
-            // Die drei Dart-Slots des Hausvereins City Flyers laufen als Block
-            // direkt hinter den Veranstaltungen: erst wann als naechstes gespielt
-            // wird, dann der komplette Spielplan, dann die Tabelle.
-            } else if (mediaStateIndex === 7.1) {
-                // Nach dem letzten Spieltag beider Mannschaften hat die Karte
-                // nichts mehr zu zeigen und faellt aus.
-                if (dartNextSlotVerfuegbar()) {
-                    runDartNextState(7.12); // -> Teamfoto
-                } else {
-                    mediaStateIndex = 7.12;
-                    runMasterSequence();
-                }
-
-            } else if (mediaStateIndex === 7.12) {
-                // Zwischenfolie mit Mannschaftsfoto - ohne die Bilddatei
-                // ueberspringt sie sich selbst.
-                if (dartFotoSlotVerfuegbar()) {
-                    runDartTeamFotoState(7.15); // -> Dart-Spielplan
-                } else {
-                    mediaStateIndex = 7.15;
-                    runMasterSequence();
-                }
-
-            } else if (mediaStateIndex === 7.15) {
-                runDartScheduleState(7.2); // -> Dart-Tabelle
-
-            } else if (mediaStateIndex === 7.2) {
-                // Ohne dart_liga.json gibt es keine Tabelle - dann direkt weiter.
-                if (dartTableSlotVerfuegbar()) {
-                    runDartTableState(7.25); // -> Bundesliga-Spieltag
-                } else {
-                    mediaStateIndex = 7.25;
-                    runMasterSequence();
-                }
+                runEventsState(7.25); // -> Bundesliga-Spieltag
 
             } else if (mediaStateIndex === 7.25) {
                 // Alle Fußball-Slots setzen in der Sommer-/Winterpause und bei
@@ -8246,17 +8256,17 @@
                 runMusicSlidesState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
-                runPhotoTrinkspielV1(NL_SLOT_INDEX); // -> wieder an den Zyklusanfang (Nightlife)
+                runPhotoTrinkspielV1(DART_SLOT_INDEX); // -> wieder an den Zyklusanfang (Dart)
             }
         }
         (function initialPoster() {
             showPosterImage(getDayNightPoster());
             prepareDrinkVideo(); // erstes Getraenke-Video schon beim Start vorbereiten
         })();
-        // Der Zyklus beginnt immer mit Nightlife; Hos'n Obe folgt im Testmodus
-        // direkt danach. Die Anlaufzeit bleibt im Testmodus kurz, damit sich das
-        // Kartenspiel beim Ausprobieren schnell zeigt.
-        mediaStateIndex = NL_SLOT_INDEX;
+        // Der Zyklus beginnt mit der Dart-Strecke, danach folgt Nightlife;
+        // Hos'n Obe kommt im Testmodus direkt dahinter. Die Anlaufzeit bleibt im
+        // Testmodus kurz, damit sich das Kartenspiel beim Ausprobieren schnell zeigt.
+        mediaStateIndex = DART_SLOT_INDEX;
         globalMasterTimer = later(runMasterSequence, KT.testFirstInCycle ? 6000 : 35000);
 
         function weatherCodeToIcon(code) {

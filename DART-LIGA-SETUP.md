@@ -1,6 +1,7 @@
 # Dart-Widgets: City Flyers (Chaoten & Fraggles)
 
-Vier Slots im grossen Media-Bereich, direkt **nach den Veranstaltungen**:
+Vier Slots im grossen Media-Bereich, **ganz am Anfang des Zyklus** - noch vor
+Nightlife und dem Tag/Nacht-Plakat:
 
 | # | Slot | Dauer | Inhalt |
 | --- | --- | --- | --- |
@@ -9,7 +10,18 @@ Vier Slots im grossen Media-Bereich, direkt **nach den Veranstaltungen**:
 | 3 | Spielplan | ~48 s | alle 28 Spiele, 7 Zeilen x 4 Seiten, wanderndes Aufleuchten |
 | 4 | Tabelle | 26 s | Rang, Team, Sp, S, N, Pkt - **nur mit Daten aus `dart_liga.json`** |
 
-Rotation danach unveraendert weiter zum Bundesliga-Spieltag.
+Danach laeuft die Rotation unveraendert weiter: Nightlife, Tag/Nacht-Plakat,
+Calamari, DJ-Live und der Rest bis zum Trinkspiel - von dort geht es wieder
+zurueck an den Anfang zur Dart-Strecke.
+
+Die Reihenfolge steckt in `runMasterSequence` (`index.html`) und haengt an
+vier Positionsmarken: `DART_SLOT_INDEX` (-2), `DART_FOTO_INDEX` (-1.9),
+`DART_PLAN_INDEX` (-1.8) und `DART_TABELLE_INDEX` (-1.7). Sie liegen bewusst
+vor Nightlife (-0.5) und dem Hos'n Obe-Testslot (-1), damit die Zahlen in
+derselben Reihenfolge stehen wie die Slots laufen. Soll die Dart-Strecke
+woanders hin, sind nur drei Stellen zu aendern: der Startwert von
+`mediaStateIndex` am Ende des Skripts, der Nachfolger des Tabellen-Slots und
+der Ruecksprung aus dem Trinkspiel V1.
 
 ## Bilder (optional)
 
