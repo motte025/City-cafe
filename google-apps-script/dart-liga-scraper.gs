@@ -150,7 +150,7 @@ function dartLigaAktualisieren() {
       ergebnisse: ergebnisse
     };
     Logger.log(t.name + ': ' + tabelle.length + ' Tabellenplaetze, ' +
-               Object.keys(ergebnisse).length + ' Runden, ' +
+               Object.keys(ergebnisse).length + ' Runden mit Gegner, ' +
                dartGespielte(ergebnisse) + ' davon gespielt.');
   });
 
@@ -307,11 +307,23 @@ function dartParseVorrunde(html, eigenerName) {
     if (i < 1) return;
 
     const heim = c[i - 1], aus = m[3];
-    if (dartSchluessel(heim) === eigen || dartSchluessel(aus) === eigen) {
-      ergebnisse[String(runde)] = { heim: parseInt(m[1], 10), auswaerts: parseInt(m[2], 10) };
-    }
+    if (dartSchluessel(heim) !== eigen && dartSchluessel(aus) !== eigen) return;
+
+    // Freilos-Runden gar nicht erst aufnehmen. MDT bucht dem spielfreien Team
+    // ein 10:0 - das ist kein Ergebnis, sondern eine Verrechnung. Im Dashboard
+    // steht bei diesen Runden ohnehin "spielfrei"; wuerden sie hier landen,
+    // zaehlte jede Diagnose sie als gespieltes Match mit.
+    if (dartIstFreilos(heim) || dartIstFreilos(aus)) return;
+
+    ergebnisse[String(runde)] = { heim: parseInt(m[1], 10), auswaerts: parseInt(m[2], 10) };
   });
   return ergebnisse;
+}
+
+// Die spielfreie Runde heisst im KEDSV-System "Freilos" mit angehaengter
+// Gruppennummer ("Freilos 2", "Freilos 3").
+function dartIstFreilos(name) {
+  return /^freilos\b/.test(dartSchluessel(name));
 }
 
 // ===========================================================================
@@ -452,7 +464,10 @@ function dartTestLauf() {
     Logger.log(eigene.length ? 'Eigene Mannschaft auf Rang ' + eigene[0].rang
                              : 'ACHTUNG: eigene Mannschaft nicht in der Tabelle - Turnier-ID pruefen!');
 
-    Logger.log('Runden: ' + Object.keys(ergebnisse).length + ', gespielt: ' + dartGespielte(ergebnisse));
+    // "mit Gegner": die beiden Freilos-Runden je Mannschaft stehen bewusst
+    // nicht drin, sonst zaehlten sie hier als gespieltes Match mit.
+    Logger.log('Runden mit Gegner: ' + Object.keys(ergebnisse).length +
+               ', davon gespielt: ' + dartGespielte(ergebnisse));
     Object.keys(ergebnisse).sort(function (a, b) { return a - b; }).forEach(function (r) {
       Logger.log('  Runde ' + r + ': ' + ergebnisse[r].heim + ':' + ergebnisse[r].auswaerts);
     });
