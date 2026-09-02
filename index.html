@@ -286,9 +286,14 @@
             animation-iteration-count: infinite !important;
             will-change: transform !important;
         }
+        /* Die Dauer kommt aus applyTickerSpeed() und haengt an der Textbreite.
+           Sie muss ueber eine Variable laufen: ein Inline-Stil verliert gegen
+           !important, und der Ticker haette dauerhaft auf dem Startwert
+           festgehangen - genau das ist nach dem Abschalten der Effekte
+           passiert. */
         html:not([data-fx="1"]) .ticker-move {
             animation-name: tickerMove !important;
-            animation-duration: 2600s !important;
+            animation-duration: var(--ticker-dauer, 260s) !important;
             animation-timing-function: linear !important;
             animation-iteration-count: infinite !important;
             will-change: transform !important;
@@ -560,7 +565,13 @@
         }
         .bl-spot-status.is-live { color: #ff6b6b; border-color: rgba(255, 51, 51, 0.6); background: rgba(255, 51, 51, 0.12); }
         .bl-spot-status.is-final { color: #00f2fe; border-color: rgba(0, 242, 254, 0.45); background: rgba(0, 242, 254, 0.1); }
-        .bl-spot-date { font-size: 16px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; }
+        /* Deutlich groesser und heller als frueher (16px, gedecktes Grau): auf dem
+           Fernseher war das Datum aus einigen Metern nicht mehr zu lesen. Gilt
+           fuer Bundesliga und Champions League - beide nutzen blRenderSpotlight. */
+        .bl-spot-date {
+            font-size: 32px; font-weight: 900; color: #e2e8f0;
+            text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
+        }
 
         .bl-spot-divider { height: 1px; background: rgba(255,255,255,0.13); margin: 14px 0 12px; flex-shrink: 0; }
         .bl-scorer-head {
@@ -1035,7 +1046,7 @@
         
         .ticker-move {
             display: inline-block; white-space: nowrap; padding-left: 100%; 
-            animation: tickerMove 2600s linear infinite; will-change: transform;
+            animation: tickerMove var(--ticker-dauer, 260s) linear infinite; will-change: transform;
             font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 34px; 
         }
         .ticker-item { display: inline-block; padding: 0 35px; }
@@ -2402,7 +2413,10 @@
         function applyTickerSpeed(container) {
             const breite = container.scrollWidth;
             if (!breite) return;
-            container.style.animationDuration = Math.round(breite / TICKER_PIXEL_PRO_SEKUNDE) + 's';
+            // Als Variable, nicht als animation-duration: die Regel im Stylesheet
+            // steht auf !important und wuerde einen Inline-Stil schlagen.
+            container.style.setProperty('--ticker-dauer',
+                                        Math.round(breite / TICKER_PIXEL_PRO_SEKUNDE) + 's');
         }
 
         // Bei jedem Durchlauf neu mischen - vorher wiederholte sich immer dieselbe
@@ -3666,7 +3680,9 @@
             const el = document.getElementById('bl-top-ticker');
             const label = document.getElementById('bl-top-label');
             if (!el) return;
-            if (label) label.textContent = BL_STATE.matchdayData.order ? `⚽ Bundesliga · Spieltag ${BL_STATE.matchdayData.order}` : '⚽ Bundesliga';
+            // Ohne "Bundesliga": das Wort kostete im schmalen Balken Platz, den
+            // die Spielpaarung besser gebrauchen kann.
+            if (label) label.textContent = BL_STATE.matchdayData.order ? `⚽ Spieltag ${BL_STATE.matchdayData.order}` : '⚽ Spieltag';
 
             const matches = blTopOrderedMatches();
             if (!matches.length) {
@@ -3677,8 +3693,10 @@
             if (blTopMatchIdx >= matches.length) blTopMatchIdx = 0;
             const m = matches[blTopMatchIdx];
             const now = Date.now();
-            const started = blIsLive(m, now) || blIsFinished(m);
-            const pages = started ? blTopScorerPages(m) : [];
+            // Nur laufende Spiele. Bei beendeten stand die Torschuetzenliste
+            // sonst noch tagelang im Balken und nahm dem Spielplan den Platz.
+            const zeigtTore = blIsLive(m, now);
+            const pages = zeigtTore ? blTopScorerPages(m) : [];
 
             el.innerHTML = (blTopPhase > 0 && pages[blTopPhase - 1])
                 ? blTopRenderScorerPage(pages[blTopPhase - 1])
@@ -3696,8 +3714,10 @@
             if (blTopMatchIdx >= matches.length) blTopMatchIdx = 0;
             const m = matches[blTopMatchIdx];
             const now = Date.now();
-            const started = blIsLive(m, now) || blIsFinished(m);
-            const totalPages = started ? blTopScorerPages(m).length : 0;
+            // Nur laufende Spiele. Bei beendeten stand die Torschuetzenliste
+            // sonst noch tagelang im Balken und nahm dem Spielplan den Platz.
+            const zeigtTore = blIsLive(m, now);
+            const totalPages = zeigtTore ? blTopScorerPages(m).length : 0;
 
             if (blTopPhase < totalPages) {
                 blTopPhase++;
@@ -4589,32 +4609,19 @@
             startTrinkspielCountdown('V2', startCardDealing);
         }
 
-        function startNextTrinkspielCountdown(nextVersion, gapSeconds) {
-            const weatherNormal = document.getElementById('weather-normal-content');
-            const weatherCountdown = document.getElementById('weather-countdown-content');
-            const weatherLabel = weatherCountdown.querySelector('div'); // "Nächstes Trinkspiel Vx in"
-            const weatherCountdownNumber = document.getElementById('weather-countdown-number');
-            if (weatherLabel) weatherLabel.textContent = `🍻 Nächstes Trinkspiel ${nextVersion} in`;
-
-            weatherNormal.style.display = 'none';
-            weatherCountdown.style.display = 'flex';
-
-            let secondsLeft = gapSeconds;
-            const render = () => {
-                const m = Math.floor(secondsLeft / 60), s = secondsLeft % 60;
-                weatherCountdownNumber.textContent = `${m}:${s.toString().padStart(2, '0')}`;
-            };
-            render();
-
-            nextTrinkspielInterval = setInterval(() => {
-                secondsLeft--;
-                render();
-                if (secondsLeft <= 0) {
-                    clearInterval(nextTrinkspielInterval);
-                    weatherCountdown.style.display = 'none';
-                    weatherNormal.style.display = 'flex';
-                }
-            }, 1000);
+        // Frueher lief hier ein Countdown bis zum naechsten Trinkspiel, der das
+        // Wetter im rechten Widget verdeckte. Auf Wunsch entfernt: das Wetter
+        // steht durchgehend, das naechste Trinkspiel loest ohnehin die Rotation
+        // aus - der Countdown war reine Anzeige und haengte an nichts.
+        function startNextTrinkspielCountdown() {
+            if (nextTrinkspielInterval) {
+                clearInterval(nextTrinkspielInterval);
+                nextTrinkspielInterval = null;
+            }
+            const normal = document.getElementById('weather-normal-content');
+            const countdown = document.getElementById('weather-countdown-content');
+            if (countdown) countdown.style.display = 'none';
+            if (normal) normal.style.display = 'flex';
         }
 
         // ---------- Veranstaltungen in Kärnten ----------
