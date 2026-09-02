@@ -995,7 +995,12 @@
         }
 
         /* ---------- Liga-Tabelle (Phase 2, nur mit Daten sichtbar) ---------- */
-        .dt-grid { display: flex; gap: 26px; height: 668px; }
+        /* 636 statt 668: darunter steht die Fussnote zur Freilos-Wertung. */
+        .dt-grid { display: flex; gap: 26px; height: 636px; }
+        .dt-fussnote {
+            margin-top: 10px; text-align: center; font-size: 15px; font-weight: 700;
+            color: rgba(255, 255, 255, 0.5); letter-spacing: 0.3px;
+        }
         .dt-col {
             flex: 1; min-width: 0; display: flex; flex-direction: column;
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.13);
@@ -2160,6 +2165,7 @@
                             <div id="dart-tabelle-stand" class="dart-badge">Stand --.--.</div>
                         </div>
                         <div class="dt-grid" id="dart-tabelle-grid"></div>
+                        <div class="dt-fussnote" id="dart-tabelle-fussnote"></div>
                     </div>
                 </div>
 
@@ -5494,15 +5500,12 @@
         // Der Slot laeuft nur mit, wenn fuer mindestens eine Mannschaft eine
         // Tabelle vorliegt - genau wie die Fussball-Slots ausserhalb der Saison.
         //
-        // Zusaetzlich muss die Saison wirklich begonnen haben. Der KEDSV bucht
-        // die Freilos-Siege naemlich im Voraus: schon Wochen vor dem ersten
-        // Spieltag steht in der Tabelle jede Mannschaft mit Sp 1 / S 1 / Pkt 2
-        // und das Freilos mit sieben Niederlagen. Auf dem Schirm sieht das aus,
-        // als waere laengst gespielt worden. Bis zum ersten echten Ergebnis
-        // bleibt der Slot deshalb weg - Spielplan und "Naechstes Spiel" tragen
-        // die Strecke solange allein.
+        // Dass die Tabelle vor dem ersten Spieltag "Sp 1 / S 1 / Pkt 2" bei
+        // allen zeigt, liegt an den im Voraus gebuchten Freilos-Siegen des
+        // KEDSV. Sie deswegen auszublenden war der erste Versuch; die Fussnote
+        // unter der Tabelle erklaert es stattdessen, und die Tabelle laeuft
+        // durchgehend mit (dartSaisonGestartet steuert nur noch den Text).
         function dartTableSlotVerfuegbar() {
-            if (!dartSaisonGestartet()) return false;
             return Object.keys(DART_CLUB).some(k => dartTabelleZeilen(k).length > 0);
         }
 
@@ -5517,6 +5520,15 @@
                 live ? `LIVE · ${uhrzeit}`
                      : (gueltig ? `Stand ${dartZwei(stand.getDate())}.${dartZwei(stand.getMonth() + 1)}. ${uhrzeit}` : 'Stand --.--.'),
                 live);
+
+            // Ohne diesen Hinweis liest sich die Tabelle falsch: der KEDSV
+            // bucht spielfreie Runden als 10:0-Sieg, und zwar im Voraus. Vor
+            // dem ersten Spieltag steht deshalb jede Mannschaft mit Sp 1 / S 1
+            // da, obwohl nichts gespielt wurde.
+            document.getElementById('dart-tabelle-fussnote').textContent =
+                dartSaisonGestartet()
+                    ? 'Wertung inkl. Freilos-Siege — spielfreie Runden zählt der KEDSV als 10:0.'
+                    : 'Noch kein Spiel ausgetragen — die Wertung stammt aus den vorab gebuchten Freilos-Siegen des KEDSV.';
 
             document.getElementById('dart-tabelle-grid').innerHTML = Object.keys(DART_CLUB).map(key => {
                 const team = DART_CLUB[key];
