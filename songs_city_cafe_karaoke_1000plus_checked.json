@@ -44556,5 +44556,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Becky G",
+    "title": "MAMIII",
+    "album": "",
+    "category": "Latin / Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Latin",
+      "Sertanejo",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
