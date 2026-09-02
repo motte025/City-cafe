@@ -811,16 +811,45 @@
            nicht im Repo liegt, steht hier das Dart-Emoji - dartBilderPruefen()
            tauscht es erst aus, wenn die Datei wirklich laedt. */
         .dart-logo { font-size: 34px; line-height: 1; flex-shrink: 0; display: flex; align-items: center; }
-        .dart-logo img { height: 46px; width: auto; display: block; }
+        /* Das Vereinslogo ist von der Wand abfotografiert und hat deshalb einen
+           weissen Grund - auf der dunklen Karte braucht es ein Badge, sonst
+           klebt ein weisses Rechteck im Kopf. Freistellen geht nicht: die
+           weissen Felder der Dartscheibe SIND der weisse Grund und wuerden
+           mit ihm verschwinden. */
+        .dart-logo img {
+            height: 46px; width: auto; display: block;
+            background: #ffffff; border-radius: 10px; padding: 5px 8px;
+            box-sizing: content-box; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        }
         .dart-kopf { display: flex; align-items: center; gap: 16px; }
+
+        /* Kopf-Badge der Dart-Ansichten. Als Klasse statt inline, damit der
+           Live-Zustand sie ohne !important umfaerben kann. */
+        .dart-badge {
+            background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5);
+            color: #f355da; font-weight: 900; padding: 8px 18px; border-radius: 12px;
+            font-size: 15px; white-space: nowrap;
+        }
+        .dart-badge.is-live {
+            background: rgba(255, 51, 85, 0.18); border-color: rgba(255, 51, 85, 0.65); color: #ff3355;
+        }
+        /* blLivePulse ist die Pulsanimation der Fussball-Widgets - nur
+           transform/opacity, laeuft also im Compositor und kostet auf der
+           Odroid-Box nichts. */
+        .dart-live-punkt {
+            display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+            background: #ff3355; margin-right: 9px; vertical-align: middle;
+            animation: blLivePulse 1.4s ease-in-out infinite;
+        }
 
         /* Teamfoto-Zwischenfolie vor dem Spielplan. */
         .df-buehne { position: absolute; inset: 0; }
         .df-foto {
             width: 100%; height: 100%; object-fit: cover;
-            /* Die Mannschaft steht im oberen Drittel, darunter nur Boden -
-               ohne die Verschiebung schneidet der Zuschnitt Koepfe ab. */
-            object-position: 50% 32%;
+            /* city_flyers_chaoten.webp ist bereits auf 1280x815 zugeschnitten,
+               der Ausschnitt sitzt also ohnehin. Die Mitte greift nur, falls
+               spaeter ein Foto mit anderem Seitenverhaeltnis hereinkommt. */
+            object-position: 50% 50%;
         }
         .df-verlauf {
             position: absolute; left: 0; right: 0; bottom: 0;
@@ -2039,7 +2068,7 @@
                                 <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">📅 Veranstaltungen in Kärnten</h2>
                                 <p style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">City Cafe Klagenfurt Fischl · Region-Tipps</p>
                             </div>
-                            <div id="events-page-indicator" style="background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5); color: #f355da; font-weight: 900; padding: 8px 18px; border-radius: 12px; font-size: 15px; white-space: nowrap;">Seite 1/3</div>
+                            <div id="events-page-indicator" class="dart-badge">Seite 1/3</div>
                         </div>
                         <div id="events-list" style="display: flex; flex-direction: column; gap: 14px;"></div>
                     </div>
@@ -2063,7 +2092,7 @@
                                     <p style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">Dartverein im City Cafe · KEDSV E-Liga</p>
                                 </div>
                             </div>
-                            <div id="dart-next-saison" style="background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5); color: #f355da; font-weight: 900; padding: 8px 18px; border-radius: 12px; font-size: 15px; white-space: nowrap;">Saison 26/27</div>
+                            <div id="dart-next-saison" class="dart-badge">Saison 26/27</div>
                         </div>
                         <div class="dn-grid" id="dart-next-grid"></div>
                     </div>
@@ -2097,7 +2126,7 @@
                                     <p id="dart-plan-untertitel" style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">Saison 26/27</p>
                                 </div>
                             </div>
-                            <div id="dart-plan-seite" style="background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5); color: #f355da; font-weight: 900; padding: 8px 18px; border-radius: 12px; font-size: 15px; white-space: nowrap;">Seite 1/4</div>
+                            <div id="dart-plan-seite" class="dart-badge">Seite 1/4</div>
                         </div>
                         <div class="ds-kopfzeile">
                             <span>Datum</span>
@@ -2120,7 +2149,7 @@
                                     <p style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">KEDSV E-Liga · Saison 26/27</p>
                                 </div>
                             </div>
-                            <div id="dart-tabelle-stand" style="background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5); color: #f355da; font-weight: 900; padding: 8px 18px; border-radius: 12px; font-size: 15px; white-space: nowrap;">Stand --.--.</div>
+                            <div id="dart-tabelle-stand" class="dart-badge">Stand --.--.</div>
                         </div>
                         <div class="dt-grid" id="dart-tabelle-grid"></div>
                     </div>
@@ -5208,8 +5237,19 @@
             return DART_SPIELE[teamKey].find(s => !s.freilos && s.datum >= heute) || null;
         }
 
+        // Setzt ein Kopf-Badge auf Live-Rot mit Pulspunkt oder zurueck auf den
+        // ruhigen Zustand. innerHTML statt textContent nur wegen des Punkts.
+        function dartBadgeSetzen(id, text, live) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.toggle('is-live', !!live);
+            el.innerHTML = live ? '<span class="dart-live-punkt"></span>' + text : text;
+        }
+
         // ---------- Slot 1: Naechstes Spiel je Mannschaft ----------
         function dartRenderNext() {
+            const live = dartLiveFenster();
+            dartBadgeSetzen('dart-next-saison', live ? 'LIVE' : 'Saison 26/27', live);
             document.getElementById('dart-next-grid').innerHTML = Object.keys(DART_CLUB).map(key => {
                 const team = DART_CLUB[key];
                 const spiel = dartNaechstesSpiel(key);
@@ -5361,8 +5401,18 @@
             url: 'https://raw.githubusercontent.com/motte025/City-cafe/main/dart_liga.json',
             fallbackUrl: 'dart_liga.json',
             abrufTimeoutMs: 8000,
-            aktualisierenMinuten: 30
+            // Ausserhalb der Spieltage aendert sich nichts - da genuegt der halbe
+            // Stundentakt. Waehrend eines Spielabends wird jede Minute geholt.
+            ruheTaktMinuten: 30,
+            liveTaktSekunden: 60
         };
+
+        // Gespielt wird immer samstags ab 19:00; ein Mannschaftsabend zieht sich
+        // bis in die Nacht. Das Live-Fenster laeuft deshalb ueber Mitternacht
+        // hinaus bis 01:00 des Folgetags.
+        const DART_LIVE_START_STUNDE = 19;
+        const DART_LIVE_ENDE_STUNDE = 1;
+
         let DART_LIGA = { teams: {}, aktualisiert: null };
 
         async function dartLigaAbrufen(url) {
@@ -5426,10 +5476,15 @@
 
         function dartRenderTabelle() {
             const stand = DART_LIGA.aktualisiert ? new Date(DART_LIGA.aktualisiert) : null;
-            document.getElementById('dart-tabelle-stand').textContent =
-                (stand && !isNaN(stand.getTime()))
-                    ? `Stand ${dartZwei(stand.getDate())}.${dartZwei(stand.getMonth() + 1)}. ${dartZwei(stand.getHours())}:${dartZwei(stand.getMinutes())}`
-                    : 'Stand --.--.';
+            const gueltig = stand && !isNaN(stand.getTime());
+            // Am Spielabend zaehlt die Uhrzeit des Stands - daran sieht man, ob
+            // die Zahlen wirklich mitlaufen oder irgendwo haengengeblieben sind.
+            const uhrzeit = gueltig ? `${dartZwei(stand.getHours())}:${dartZwei(stand.getMinutes())}` : '--:--';
+            const live = dartLiveFenster();
+            dartBadgeSetzen('dart-tabelle-stand',
+                live ? `LIVE · ${uhrzeit}`
+                     : (gueltig ? `Stand ${dartZwei(stand.getDate())}.${dartZwei(stand.getMonth() + 1)}. ${uhrzeit}` : 'Stand --.--.'),
+                live);
 
             document.getElementById('dart-tabelle-grid').innerHTML = Object.keys(DART_CLUB).map(key => {
                 const team = DART_CLUB[key];
@@ -5482,12 +5537,69 @@
             globalMasterTimer = later(runMasterSequence, DART_TABLE_SLOT_MS);
         }
 
-        // Einmal beim Seitenstart, danach im halbstuendigen Takt. repeat() waere
-        // hier falsch: cancelSequenceTimers() raeumt bei jedem Ansichtswechsel
-        // alles ab, was ueber later()/repeat() laeuft - der Abruf gehoert aber
-        // zu den Dauerlaeufern wie Uhr und Wetter.
-        dartLigaLaden();
-        setInterval(dartLigaLaden, DART_LIGA_CONFIG.aktualisierenMinuten * 60000);
+        // ---------- Live-Fenster an den Spieltagen ----------
+        // Die Spieltermine stehen im Spielplan, es muss also nicht "jeder
+        // Samstag" gepollt werden, sondern genau an den 14 Runden. Beide
+        // Mannschaften spielen an denselben Tagen; das Set der Daten wird
+        // einmal aufgebaut.
+        const DART_SPIELTAGE = new Set(
+            [].concat(...Object.keys(DART_CLUB).map(k => DART_CLUB[k].spielplan.map(s => s.datum)))
+        );
+
+        function dartTagesSchluessel(d) {
+            return `${d.getFullYear()}-${dartZwei(d.getMonth() + 1)}-${dartZwei(d.getDate())}`;
+        }
+
+        // Wahr zwischen 19:00 eines Spieltags und 01:00 des Folgetags. Der
+        // Abschnitt nach Mitternacht gehoert noch zum Abend davor - deshalb
+        // wird dort auf den VORTAG geprueft, nicht auf den aktuellen Tag.
+        function dartLiveFenster(jetzt) {
+            const n = jetzt || new Date();
+            const stunde = n.getHours();
+            if (stunde >= DART_LIVE_START_STUNDE) {
+                return DART_SPIELTAGE.has(dartTagesSchluessel(n));
+            }
+            if (stunde < DART_LIVE_ENDE_STUNDE) {
+                const gestern = new Date(n.getFullYear(), n.getMonth(), n.getDate() - 1);
+                return DART_SPIELTAGE.has(dartTagesSchluessel(gestern));
+            }
+            return false;
+        }
+
+        // Einmal beim Seitenstart, danach im Minutentakt nachsehen, ob ein Abruf
+        // faellig ist: am Spielabend jede Minute, sonst alle 30 Minuten.
+        // repeat() waere hier falsch - cancelSequenceTimers() raeumt bei jedem
+        // Ansichtswechsel alles ab, was ueber later()/repeat() laeuft. Der Abruf
+        // gehoert zu den Dauerlaeufern wie Uhr und Wetter.
+        let dartLetzterAbruf = 0;
+        async function dartAbrufTakt() {
+            const live = dartLiveFenster();
+            const abstand = live
+                ? DART_LIGA_CONFIG.liveTaktSekunden * 1000
+                : DART_LIGA_CONFIG.ruheTaktMinuten * 60000;
+            if (Date.now() - dartLetzterAbruf < abstand) return;
+            dartLetzterAbruf = Date.now();
+            await dartLigaLaden();
+            // Steht gerade eine Dart-Ansicht auf dem Schirm, soll sie den neuen
+            // Stand sofort zeigen und nicht erst beim naechsten Durchlauf.
+            dartAnsichtAuffrischen();
+        }
+
+        // Nur die gerade sichtbare Dart-Ansicht neu zeichnen. Der Spielplan
+        // bleibt bewusst aussen vor: er wird Seite fuer Seite durchgeschaltet,
+        // ein Neuaufbau mittendrin wuerde das wandernde Aufleuchten zerreissen.
+        function dartAnsichtAuffrischen() {
+            const sichtbar = id => {
+                const el = document.getElementById(id);
+                return el && el.classList.contains('active');
+            };
+            if (sichtbar('media-view-dart-next')) dartRenderNext();
+            if (sichtbar('media-view-dart-table') && dartTableSlotVerfuegbar()) dartRenderTabelle();
+        }
+
+        dartLetzterAbruf = Date.now();
+        dartLigaLaden().then(dartAnsichtAuffrischen);
+        setInterval(dartAbrufTakt, 20000);
 
         function runDrinksState(nextStateIndex) {
             const view = document.getElementById('media-view-drinks');

@@ -52,7 +52,74 @@ const DART_TEAMS = [
   { key: 'fraggles', name: 'City-Flyers "Fraggles"', liga: '2. Klasse B', turnierid: 316 }
 ];
 
-const DART_TRIGGER_STUNDEN = 6;
+// ---------------------------------------------------------------------------
+//  Live-Fenster an den Spieltagen
+// ---------------------------------------------------------------------------
+// Gespielt wird immer samstags ab 19:00, ein Mannschaftsabend zieht sich bis in
+// die Nacht. An genau diesen Terminen wird im Minutentakt abgerufen, sonst nur
+// alle paar Stunden. Die Daten stehen fest im Spielplan - es muss also nicht
+// "jeder Samstag" gepollt werden, sondern genau diese 14 Runden.
+//
+// Beide Mannschaften spielen an denselben Tagen; zum Saisonwechsel hier
+// dieselben Daten eintragen wie in DART_CLUB in index.html.
+const DART_SPIELTAGE = [
+  '2026-09-05', '2026-09-26', '2026-10-10', '2026-10-31', '2026-11-07',
+  '2026-11-21', '2026-12-05', '2027-01-09', '2027-01-23', '2027-02-13',
+  '2027-03-20', '2027-04-10', '2027-04-24', '2027-05-08'
+];
+const DART_LIVE_START_STUNDE = 19;   // ab 19:00 des Spieltags
+const DART_LIVE_ENDE_STUNDE = 1;     // bis 01:00 des Folgetags
+const DART_ZEITZONE = 'Europe/Vienna';
+
+const DART_RUHE_MINUTEN = 360;       // ausserhalb der Spieltage: alle 6 Stunden
+const DART_TRIGGER_STUNDEN = 6;      // nur noch fuer dartTriggerEinrichtenEinfach()
+
+// Die Zeitzone des Apps-Script-Projekts muss nicht Europe/Vienna sein - deshalb
+// wird sie hier ausdruecklich gesetzt statt auf getHours() zu vertrauen. Sonst
+// laege das Live-Fenster im Zweifel um Stunden daneben.
+function dartWienerStunde(datum) {
+  return parseInt(Utilities.formatDate(datum || new Date(), DART_ZEITZONE, 'H'), 10);
+}
+function dartWienerTag(datum) {
+  return Utilities.formatDate(datum || new Date(), DART_ZEITZONE, 'yyyy-MM-dd');
+}
+
+/**
+ * Wahr zwischen 19:00 eines Spieltags und 01:00 des Folgetags.
+ * Der Abschnitt nach Mitternacht gehoert noch zum Abend davor - dort wird
+ * deshalb auf den VORTAG geprueft, nicht auf den laufenden Tag.
+ */
+function dartImLiveFenster(jetzt) {
+  const n = jetzt || new Date();
+  const stunde = dartWienerStunde(n);
+  if (stunde >= DART_LIVE_START_STUNDE) {
+    return DART_SPIELTAGE.indexOf(dartWienerTag(n)) !== -1;
+  }
+  if (stunde < DART_LIVE_ENDE_STUNDE) {
+    const gestern = new Date(n.getTime() - 24 * 60 * 60 * 1000);
+    return DART_SPIELTAGE.indexOf(dartWienerTag(gestern)) !== -1;
+  }
+  return false;
+}
+
+/**
+ * Haengt am Minutentrigger. Am Spielabend laeuft der volle Abruf jede Minute,
+ * sonst nur alle DART_RUHE_MINUTEN. Ein Leerlauf kostet dadurch fast nichts -
+ * das ist wichtig, weil Apps Script die Gesamtlaufzeit aller Trigger pro Tag
+ * begrenzt und ein Minutentrigger sonst 1440 volle Laeufe pro Tag machen wuerde.
+ */
+function dartLiveTakt() {
+  const props = PropertiesService.getScriptProperties();
+  const live = dartImLiveFenster();
+
+  if (!live) {
+    const zuletzt = parseInt(props.getProperty('DART_LETZTER_LAUF') || '0', 10);
+    if (zuletzt && (Date.now() - zuletzt) < DART_RUHE_MINUTEN * 60 * 1000) return;
+  }
+
+  props.setProperty('DART_LETZTER_LAUF', String(Date.now()));
+  dartLigaAktualisieren();
+}
 
 // ===========================================================================
 //  Hauptlauf
@@ -340,20 +407,27 @@ function dartGithubSchreibe(pfad, text, sha, nachricht, token) {
 //  Einrichtung / Test - einmal von Hand ausfuehren
 // ===========================================================================
 
+/**
+ * Legt den Minutentrigger an. dartLiveTakt() entscheidet bei jedem Aufruf
+ * selbst, ob wirklich abgerufen wird - am Spielabend jede Minute, sonst alle
+ * sechs Stunden.
+ */
 function dartTriggerEinrichten() {
-  ScriptApp.getProjectTriggers().forEach(function (t) {
-    if (t.getHandlerFunction() === 'dartLigaAktualisieren') ScriptApp.deleteTrigger(t);
-  });
-  ScriptApp.newTrigger('dartLigaAktualisieren').timeBased().everyHours(DART_TRIGGER_STUNDEN).create();
-  Logger.log('Trigger angelegt: dartLigaAktualisieren alle ' + DART_TRIGGER_STUNDEN + ' Stunden.');
+  dartTriggerEntfernen();
+  ScriptApp.newTrigger('dartLiveTakt').timeBased().everyMinutes(1).create();
+  Logger.log('Trigger angelegt: dartLiveTakt jede Minute.');
+  Logger.log('Live-Fenster: ' + DART_SPIELTAGE.length + ' Spieltage, jeweils ' +
+             DART_LIVE_START_STUNDE + ':00 bis ' + DART_LIVE_ENDE_STUNDE + ':00 (' + DART_ZEITZONE + ').');
+  Logger.log('Ausserhalb davon laeuft der Abruf alle ' + (DART_RUHE_MINUTEN / 60) + ' Stunden.');
 }
 
 function dartTriggerEntfernen() {
   let anzahl = 0;
   ScriptApp.getProjectTriggers().forEach(function (t) {
-    if (t.getHandlerFunction() === 'dartLigaAktualisieren') { ScriptApp.deleteTrigger(t); anzahl++; }
+    const f = t.getHandlerFunction();
+    if (f === 'dartLiveTakt' || f === 'dartLigaAktualisieren') { ScriptApp.deleteTrigger(t); anzahl++; }
   });
-  Logger.log(anzahl + ' Trigger entfernt.');
+  if (anzahl) Logger.log(anzahl + ' Trigger entfernt.');
 }
 
 /**

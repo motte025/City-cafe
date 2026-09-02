@@ -34,6 +34,13 @@ weiter. Format wie die uebrigen Bilder im Repo: **WebP**, ins Repo-Hauptverzeich
 | `city_flyers_chaoten.webp` | Foto-Zwischenfolie "City Flyers \"Chaoten\"" | Slot 2 faellt aus der Rotation |
 | `city_flyers_fraggles.webp` | dieselbe Folie fuer die Fraggles | - |
 
+Das Logo ist von der Wand abfotografiert und hat deshalb einen weissen Grund.
+Es sitzt im Kopf auf einem weissen Badge - **freistellen geht nicht**: die
+weissen Felder der Dartscheibe SIND dieser weisse Grund und wuerden mit ihm
+verschwinden. Im Bild steckt nur das Emblem (Pfeile + Scheibe), nicht der
+Schriftzug: bei 46 Pixel Kopfhoehe waere er ohnehin unlesbar, und daneben
+steht "City Flyers" bereits als Text.
+
 Sind **beide** Mannschaftsfotos da, wechselt die Folie von Durchlauf zu
 Durchlauf zwischen den Mannschaften - der Slot bleibt dabei immer 15 Sekunden
 lang. Mehr ist nicht einzustellen: die Dateien werden beim Seitenstart
@@ -125,10 +132,50 @@ schreibt `dart_liga.json` ins Repo, das Dashboard liest nur diese Datei.
    Im DJ-Checker-Projekt ist der Schluessel schon vorhanden und wird geteilt.
 3. Einmal `dartTestLauf()` ausfuehren und ins Ausfuehrungsprotokoll schauen -
    das schreibt **nichts**, sondern zeigt nur, was ankommt.
-4. Einmal `dartTriggerEinrichten()` ausfuehren -> Trigger alle 6 Stunden.
+4. Einmal `dartTriggerEinrichten()` ausfuehren -> Minutentrigger.
 
-Gespielt wird an rund 14 Samstagen pro Saison, ein Commit entsteht nur bei
-echten Aenderungen - ausserhalb der Spieltage also gar keiner.
+## Live am Spielabend
+
+Gespielt wird immer **samstags ab 19:00**, ein Mannschaftsabend zieht sich bis
+in die Nacht. Deshalb laeuft der Abruf zweistufig:
+
+| Wann | Abruf im Skript | Abruf im Dashboard |
+| --- | --- | --- |
+| Spieltag 19:00 - 01:00 | jede Minute | jede Minute |
+| sonst | alle 6 Stunden | alle 30 Minuten |
+
+Waehrend des Fensters steht im Kopf der Dart-Ansichten ein rotes **LIVE** mit
+Pulspunkt, bei der Tabelle zusaetzlich die Uhrzeit des Stands - daran sieht
+man auf einen Blick, ob die Zahlen wirklich mitlaufen oder irgendwo
+haengengeblieben sind.
+
+Das Fenster haengt **nicht** an "jedem Samstag", sondern an den 14 konkreten
+Spielterminen. Die stehen doppelt: in `DART_CLUB` (index.html) und in
+`DART_SPIELTAGE` (dart-liga-scraper.gs) - beim Saisonwechsel **beide**
+nachziehen, sonst pollt eine Seite am falschen Tag.
+
+Der Trigger laeuft jede Minute, `dartLiveTakt()` entscheidet aber bei jedem
+Aufruf selbst, ob wirklich abgerufen wird. Ein Leerlauf kostet dadurch fast
+nichts - wichtig, weil Apps Script die Gesamtlaufzeit aller Trigger pro Tag
+begrenzt und ein stumpfer Minutentrigger sonst 1440 volle Laeufe pro Tag
+machen wuerde.
+
+Zeitzone: das Skript rechnet ausdruecklich in `Europe/Vienna`
+(`Utilities.formatDate`), nicht mit `getHours()`. Die Zeitzone des
+Apps-Script-Projekts spielt damit keine Rolle - sonst laege das Fenster im
+Zweifel um ein bis zwei Stunden daneben.
+
+Ein Commit entsteht nur bei echten Aenderungen. An einem Spielabend sind das
+so viele, wie Saetze eingetragen werden; ausserhalb der Spieltage gar keine.
+
+**Was MDT live wirklich hergibt:** `livescore.php` waere die naheliegende
+Quelle, ist aber unbrauchbar - die Seite ignoriert `turnierid`, ignoriert auch
+eine ueber `spieler.php` gesetzte Session und zeigt immer das Test-Turnier;
+ausserdem will sie einen Login. Geholt werden deshalb `vorrunde.php` und
+`tabelle.php`, die beide sauber auf `turnierid` hoeren. Wie feinkoernig MDT
+dort waehrend eines laufenden Matches nachtraegt (nach jedem Satz oder erst am
+Ende), zeigt sich erst am ersten Spielabend - der Minutentakt holt in jedem
+Fall ab, sobald etwas eingetragen ist.
 
 ## Format von `dart_liga.json`
 
