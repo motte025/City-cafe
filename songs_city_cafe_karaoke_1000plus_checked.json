@@ -45537,16 +45537,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Black-Out",
-    "title": "Mamae Eu Quero/ Marcha Do Gago",
+    "artist": "Wolkenfrei",
+    "title": "Der Zaubertrank ist leer",
     "album": "",
-    "category": "Après-Ski & Ballermann",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
       "Party",
-      "Karaoke",
-      "Après-Ski & Ballermann"
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Janis Nikos",
+    "title": "Engel von Piräus",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
