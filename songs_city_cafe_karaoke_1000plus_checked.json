@@ -45196,5 +45196,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Bernd Clüver",
+    "title": "Mexican Girl",
+    "album": "",
+    "category": "Deutschpop & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Pop",
+      "Klassiker",
+      "Mitsingen"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
