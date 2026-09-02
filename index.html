@@ -807,6 +807,38 @@
            Farbleitsystem: Chaoten = Cyan (#00f2fe), Fraggles = Magenta
            (#f355da) - beides Hausfarben, die im Dashboard schon gesetzt sind.
            ================================================================== */
+        /* Vereinslogo im Kopf der drei Dart-Ansichten. Solange city_flyers_logo.webp
+           nicht im Repo liegt, steht hier das Dart-Emoji - dartBilderPruefen()
+           tauscht es erst aus, wenn die Datei wirklich laedt. */
+        .dart-logo { font-size: 34px; line-height: 1; flex-shrink: 0; display: flex; align-items: center; }
+        .dart-logo img { height: 46px; width: auto; display: block; }
+        .dart-kopf { display: flex; align-items: center; gap: 16px; }
+
+        /* Teamfoto-Zwischenfolie vor dem Spielplan. */
+        .df-buehne { position: absolute; inset: 0; }
+        .df-foto {
+            width: 100%; height: 100%; object-fit: cover;
+            /* Die Mannschaft steht im oberen Drittel, darunter nur Boden -
+               ohne die Verschiebung schneidet der Zuschnitt Koepfe ab. */
+            object-position: 50% 32%;
+        }
+        .df-verlauf {
+            position: absolute; left: 0; right: 0; bottom: 0;
+            display: flex; align-items: center; gap: 22px;
+            padding: 44px 44px 38px;
+            background: linear-gradient(to top, rgba(20, 5, 14, 0.94) 0%, rgba(20, 5, 14, 0.75) 55%, rgba(20, 5, 14, 0) 100%);
+        }
+        .df-verlauf .dart-logo img { height: 84px; }
+        .df-verlauf .dart-logo { font-size: 64px; }
+        .df-titel {
+            font-family: 'Orbitron', sans-serif; font-size: 44px; font-weight: 900; color: #ffffff;
+            text-transform: uppercase; letter-spacing: 2px; margin: 0; text-shadow: 0 3px 12px rgba(0,0,0,0.8);
+        }
+        .df-untertitel {
+            font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.85); margin: 6px 0 0;
+            letter-spacing: 0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+
         .dn-grid { display: flex; gap: 26px; height: 668px; }
         .dn-card {
             flex: 1; min-width: 0; display: flex; flex-direction: column;
@@ -2021,9 +2053,12 @@
                 <div class="media-inner-view" id="media-view-dart-next">
                     <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden; padding: 32px 40px; box-sizing: border-box;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 22px;">
-                            <div>
-                                <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">🎯 City Flyers · Nächstes Spiel</h2>
-                                <p style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">Dartverein im City Cafe · KEDSV E-Liga</p>
+                            <div class="dart-kopf">
+                                <span class="dart-logo">🎯</span>
+                                <div>
+                                    <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">City Flyers · Nächstes Spiel</h2>
+                                    <p style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">Dartverein im City Cafe · KEDSV E-Liga</p>
+                                </div>
                             </div>
                             <div id="dart-next-saison" style="background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5); color: #f355da; font-weight: 900; padding: 8px 18px; border-radius: 12px; font-size: 15px; white-space: nowrap;">Saison 26/27</div>
                         </div>
@@ -2031,12 +2066,33 @@
                     </div>
                 </div>
 
+                <!-- Zwischenfolie zwischen "Naechstes Spiel" und Spielplan. Laeuft nur
+                     mit, wenn city_flyers_team.webp wirklich im Repo liegt - sonst
+                     stuende hier ein schwarzes Rechteck. -->
+                <div class="media-inner-view" id="media-view-dart-team">
+                    <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden;">
+                        <div class="df-buehne">
+                            <img class="df-foto" id="dart-team-foto" alt="">
+                            <div class="df-verlauf">
+                                <span class="dart-logo">🎯</span>
+                                <div>
+                                    <h2 class="df-titel" id="dart-team-titel">City Flyers</h2>
+                                    <p class="df-untertitel" id="dart-team-untertitel">Unser Dartverein · zu Hause im City Cafe, Fischlstraße 39</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="media-inner-view" id="media-view-dart-schedule">
                     <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden; padding: 32px 40px; box-sizing: border-box;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px;">
-                            <div>
-                                <h2 id="dart-plan-titel" style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">🎯 City Flyers · Spielplan</h2>
-                                <p id="dart-plan-untertitel" style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">Saison 26/27</p>
+                            <div class="dart-kopf">
+                                <span class="dart-logo">🎯</span>
+                                <div>
+                                    <h2 id="dart-plan-titel" style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">City Flyers · Spielplan</h2>
+                                    <p id="dart-plan-untertitel" style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">Saison 26/27</p>
+                                </div>
                             </div>
                             <div id="dart-plan-seite" style="background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5); color: #f355da; font-weight: 900; padding: 8px 18px; border-radius: 12px; font-size: 15px; white-space: nowrap;">Seite 1/4</div>
                         </div>
@@ -2054,9 +2110,12 @@
                 <div class="media-inner-view" id="media-view-dart-table">
                     <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden; padding: 32px 40px; box-sizing: border-box;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 22px;">
-                            <div>
-                                <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">🎯 City Flyers · Tabelle</h2>
-                                <p style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">KEDSV E-Liga · Saison 26/27</p>
+                            <div class="dart-kopf">
+                                <span class="dart-logo">🎯</span>
+                                <div>
+                                    <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">City Flyers · Tabelle</h2>
+                                    <p style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">KEDSV E-Liga · Saison 26/27</p>
+                                </div>
                             </div>
                             <div id="dart-tabelle-stand" style="background: rgba(243, 85, 218, 0.18); border: 1px solid rgba(243, 85, 218, 0.5); color: #f355da; font-weight: 900; padding: 8px 18px; border-radius: 12px; font-size: 15px; white-space: nowrap;">Stand --.--.</div>
                         </div>
@@ -5002,6 +5061,71 @@
             'DC Drautal Dart Vipers': 'DSV Spittal Dart Center, Villacherstraße 53, 9800 Spittal a.d. Drau'
         };
 
+        // Vereinslogo und Mannschaftsfoto. Beide sind optional: liegt die Datei
+        // nicht im Repo, bleibt im Kopf das Dart-Emoji stehen und die
+        // Foto-Zwischenfolie faellt aus der Rotation. So laeuft das Dashboard
+        // auch dann sauber, wenn die Bilder erst spaeter nachgereicht werden.
+        const DART_LOGO_URL = 'city_flyers_logo.webp';
+        // Je Mannschaft ein Mannschaftsfoto. Vorhanden sein muss keines - was
+        // fehlt, faellt einfach weg. Kommt spaeter ein Foto der zweiten
+        // Mannschaft dazu, reicht die Datei im Repo; hier ist nichts zu aendern.
+        const DART_TEAMFOTOS = [
+            { teamKey: 'chaoten',  url: 'city_flyers_chaoten.webp' },
+            { teamKey: 'fraggles', url: 'city_flyers_fraggles.webp' }
+        ];
+        const DART_FOTO_SLOT_MS = 15000;
+        let dartFotos = [];        // nur die, die wirklich laden
+        let dartFotoIndex = 0;
+
+        // Ein Bild, das nicht laedt, meldet sich ueber onerror - nur so laesst
+        // sich vorher entscheiden, ob der Slot ueberhaupt etwas zu zeigen hat.
+        // Ein <img> mit totem src im DOM stehen zu lassen reicht nicht: der
+        // Browser zeigt dann das kaputte Bildsymbol.
+        function dartBildPruefen(url, fertig) {
+            const p = new Image();
+            p.onload = () => fertig(true);
+            p.onerror = () => fertig(false);
+            p.src = url;
+        }
+
+        (function dartBilderPruefen() {
+            dartBildPruefen(DART_LOGO_URL, (da) => {
+                if (!da) return;   // Emoji bleibt stehen
+                document.querySelectorAll('.dart-logo').forEach(el => {
+                    el.innerHTML = '<img src="' + DART_LOGO_URL + '" alt="City Flyers">';
+                });
+            });
+            DART_TEAMFOTOS.forEach(f => dartBildPruefen(f.url, (da) => {
+                if (!da) return;
+                dartFotos.push(f);
+                // Reihenfolge wie in DART_TEAMFOTOS halten - die Pruefungen
+                // kommen sonst in der Reihenfolge zurueck, in der das Netz
+                // antwortet, und die Folie waechselt bei jedem Seitenstart.
+                dartFotos.sort((a, b) => DART_TEAMFOTOS.indexOf(a) - DART_TEAMFOTOS.indexOf(b));
+            }));
+        })();
+
+        function dartFotoSlotVerfuegbar() { return dartFotos.length > 0; }
+
+        // Bei zwei Fotos wechselt die Folie von Durchlauf zu Durchlauf, statt
+        // beide hintereinander zu zeigen - so bleibt der Slot immer gleich lang.
+        function runDartTeamFotoState(nextStateIndex) {
+            const foto = dartFotos[dartFotoIndex % dartFotos.length];
+            dartFotoIndex++;
+            const team = DART_CLUB[foto.teamKey];
+
+            document.getElementById('dart-team-foto').src = foto.url;
+            document.getElementById('dart-team-titel').textContent =
+                team ? `City Flyers "${team.kurz}"` : 'City Flyers';
+            document.getElementById('dart-team-untertitel').textContent = team
+                ? `${team.liga} · zu Hause im City Cafe, Fischlstraße 39`
+                : 'Unser Dartverein · zu Hause im City Cafe, Fischlstraße 39';
+
+            document.getElementById('media-view-dart-team').classList.add('active');
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = later(runMasterSequence, DART_FOTO_SLOT_MS);
+        }
+
         const DART_PLAN_PRO_SEITE = 7;      // 14 Spiele je Team -> genau 2 Seiten pro Mannschaft
         const DART_PLAN_ROW_MS = 1700;      // ~12s je Seite, gleicher Takt wie das Veranstaltungs-Widget
         const DART_NEXT_SLOT_MS = 22000;
@@ -5151,7 +5275,9 @@
             const naechstes = dartNaechstesSpiel(seite.teamKey);
             const heute = dartHeuteMitternacht();
 
-            document.getElementById('dart-plan-titel').textContent = `🎯 City Flyers "${team.kurz}" · Spielplan`;
+            // Ohne Emoji: das Logo steht als eigenes Element daneben und wuerde
+            // von einem textContent-Schreiber hier mit weggeraeumt.
+            document.getElementById('dart-plan-titel').textContent = `City Flyers "${team.kurz}" · Spielplan`;
             document.getElementById('dart-plan-untertitel').textContent = `${team.liga} · KEDSV E-Liga · Saison 26/27`;
             document.getElementById('dart-plan-seite').textContent = `Seite ${seitenIndex + 1}/${DART_PLAN_SEITEN.length}`;
 
@@ -8037,7 +8163,17 @@
                 // Nach dem letzten Spieltag beider Mannschaften hat die Karte
                 // nichts mehr zu zeigen und faellt aus.
                 if (dartNextSlotVerfuegbar()) {
-                    runDartNextState(7.15); // -> Dart-Spielplan
+                    runDartNextState(7.12); // -> Teamfoto
+                } else {
+                    mediaStateIndex = 7.12;
+                    runMasterSequence();
+                }
+
+            } else if (mediaStateIndex === 7.12) {
+                // Zwischenfolie mit Mannschaftsfoto - ohne die Bilddatei
+                // ueberspringt sie sich selbst.
+                if (dartFotoSlotVerfuegbar()) {
+                    runDartTeamFotoState(7.15); // -> Dart-Spielplan
                 } else {
                     mediaStateIndex = 7.15;
                     runMasterSequence();

@@ -1,14 +1,37 @@
 # Dart-Widgets: City Flyers (Chaoten & Fraggles)
 
-Drei Slots im grossen Media-Bereich, direkt **nach den Veranstaltungen**:
+Vier Slots im grossen Media-Bereich, direkt **nach den Veranstaltungen**:
 
 | # | Slot | Dauer | Inhalt |
 | --- | --- | --- | --- |
 | 1 | Naechstes Spiel | 22 s | je Mannschaft eine Karte: Datum, Runde, Gegner, Heim/Auswaerts, Spielort |
-| 2 | Spielplan | ~48 s | alle 28 Spiele, 7 Zeilen x 4 Seiten, wanderndes Aufleuchten |
-| 3 | Tabelle | 26 s | Rang, Team, Sp, S, N, Pkt - **nur mit Daten aus `dart_liga.json`** |
+| 2 | Mannschaftsfoto | 15 s | Foto als Zwischenfolie - **nur wenn die Bilddatei vorhanden ist** |
+| 3 | Spielplan | ~48 s | alle 28 Spiele, 7 Zeilen x 4 Seiten, wanderndes Aufleuchten |
+| 4 | Tabelle | 26 s | Rang, Team, Sp, S, N, Pkt - **nur mit Daten aus `dart_liga.json`** |
 
 Rotation danach unveraendert weiter zum Bundesliga-Spieltag.
+
+## Bilder (optional)
+
+Zwei Dateien, beide freiwillig - fehlt eine, laeuft das Dashboard ohne sie
+weiter. Format wie die uebrigen Bilder im Repo: **WebP**, ins Repo-Hauptverzeichnis.
+
+| Datei | Wirkung wenn vorhanden | Wirkung wenn nicht |
+| --- | --- | --- |
+| `city_flyers_logo.webp` | Vereinslogo im Kopf aller Dart-Ansichten und auf der Foto-Folie | Dart-Emoji 🎯 bleibt stehen |
+| `city_flyers_chaoten.webp` | Foto-Zwischenfolie "City Flyers \"Chaoten\"" | Slot 2 faellt aus der Rotation |
+| `city_flyers_fraggles.webp` | dieselbe Folie fuer die Fraggles | - |
+
+Sind **beide** Mannschaftsfotos da, wechselt die Folie von Durchlauf zu
+Durchlauf zwischen den Mannschaften - der Slot bleibt dabei immer 15 Sekunden
+lang. Mehr ist nicht einzustellen: die Dateien werden beim Seitenstart
+geprueft, Titel und Liga stehen automatisch darunter.
+
+Zuschnitt: die Folie fuellt 1280x815 im Format `cover` und zeigt vom Bild den
+Ausschnitt um **32 % Hoehe** - passend fuer ein Mannschaftsfoto, bei dem die
+Leute im oberen Drittel stehen. Steht die Mannschaft auf einem neuen Foto
+deutlich anders im Bild, laesst sich das ueber `object-position` in der
+Regel `.df-foto` nachziehen.
 
 ## Was ohne jede Einrichtung laeuft
 
