@@ -5455,20 +5455,35 @@
         // sondern "noch nicht gespielt". Ein wirklich ausgetragenes E-Dart-Match
         // endet nie 0:0 (es werden zehn Sets gespielt), die Abfrage ist also
         // eindeutig.
-        function dartErgebnisAnzeige(spiel) {
-            if (spiel.freilos) return { text: '—', klasse: 'is-offen' };
+        // Rohergebnis einer Runde, oder null wenn (noch) nicht gespielt.
+        // Eine Freilos-Runde ist nie ein Ergebnis - auch dann nicht, wenn eine
+        // aeltere Scraper-Fassung das gebuchte 10:0 noch mitgeschrieben hat.
+        function dartRohErgebnis(spiel) {
+            if (spiel.freilos) return null;
             const team = dartLigaTeam(spiel.teamKey);
             const roh = team && team.ergebnisse && team.ergebnisse[String(spiel.runde)];
+            if (!roh) return null;
+            const heim = Number(roh.heim), aus = Number(roh.auswaerts);
+            if (!isFinite(heim) || !isFinite(aus) || (heim === 0 && aus === 0)) return null;
+            return { heim, auswaerts: aus };
+        }
+
+        function dartErgebnisAnzeige(spiel) {
+            if (spiel.freilos) return { text: '—', klasse: 'is-offen' };
+            const roh = dartRohErgebnis(spiel);
             if (!roh) return { text: '–', klasse: 'is-offen' };
 
-            const heim = Number(roh.heim), aus = Number(roh.auswaerts);
-            if (!isFinite(heim) || !isFinite(aus) || (heim === 0 && aus === 0)) {
-                return { text: '–', klasse: 'is-offen' };
-            }
-            const unser = spiel.istHeim ? heim : aus;
-            const gegen = spiel.istHeim ? aus : heim;
+            const unser = spiel.istHeim ? roh.heim : roh.auswaerts;
+            const gegen = spiel.istHeim ? roh.auswaerts : roh.heim;
             const klasse = unser > gegen ? 'is-sieg' : (unser < gegen ? 'is-nied' : '');
             return { text: `${unser}:${gegen}`, klasse };
+        }
+
+        // Hat ueberhaupt schon eine der beiden Mannschaften ein echtes Spiel
+        // hinter sich? Freilos-Runden zaehlen dabei nicht.
+        function dartSaisonGestartet() {
+            return Object.keys(DART_SPIELE).some(k =>
+                DART_SPIELE[k].some(s => dartRohErgebnis(s) !== null));
         }
 
         function dartTabelleZeilen(teamKey) {
@@ -5478,7 +5493,16 @@
 
         // Der Slot laeuft nur mit, wenn fuer mindestens eine Mannschaft eine
         // Tabelle vorliegt - genau wie die Fussball-Slots ausserhalb der Saison.
+        //
+        // Zusaetzlich muss die Saison wirklich begonnen haben. Der KEDSV bucht
+        // die Freilos-Siege naemlich im Voraus: schon Wochen vor dem ersten
+        // Spieltag steht in der Tabelle jede Mannschaft mit Sp 1 / S 1 / Pkt 2
+        // und das Freilos mit sieben Niederlagen. Auf dem Schirm sieht das aus,
+        // als waere laengst gespielt worden. Bis zum ersten echten Ergebnis
+        // bleibt der Slot deshalb weg - Spielplan und "Naechstes Spiel" tragen
+        // die Strecke solange allein.
         function dartTableSlotVerfuegbar() {
+            if (!dartSaisonGestartet()) return false;
             return Object.keys(DART_CLUB).some(k => dartTabelleZeilen(k).length > 0);
         }
 
