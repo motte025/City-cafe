@@ -44918,16 +44918,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Everything But the Girl",
-    "title": "Missing",
+    "artist": "T. Rex",
+    "title": "Ride A White Swan",
     "album": "",
-    "category": "Party & Rock",
+    "category": "Party-Hit",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
+      "Kult",
+      "Retro"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Christoff",
+    "title": "Ich hab Alain Delon geseh'n (Party Remix)",
+    "album": "",
+    "category": "Schlager-Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
       "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
