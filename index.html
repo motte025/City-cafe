@@ -1630,6 +1630,14 @@
         /* Der DJ-Player fuellt die Buehne bis unten aus - der Starter-QR laege
            mitten im Bild. */
         #media-view-djlive.active ~ .kt-launcher { display: none !important; }
+        /* In der Dart-Strecke bleibt der Starter-QR ebenfalls weg: unten links
+           stehen dort die Spielort-Adresse, die letzte Spielplan-Zeile, der
+           Verlauf der Foto-Folie und der letzte Tabellenplatz - ueberall waere
+           er im Weg. */
+        #media-view-dart-next.active ~ .kt-launcher,
+        #media-view-dart-team.active ~ .kt-launcher,
+        #media-view-dart-schedule.active ~ .kt-launcher,
+        #media-view-dart-table.active ~ .kt-launcher { display: none !important; }
 
         /* ---------- DJ-Live-Widget (Twitch / YouTube Live) ---------- */
         /* Gleiche Buehnen-Handschrift wie die Bundesliga-Slots, nur in Club-Farben
