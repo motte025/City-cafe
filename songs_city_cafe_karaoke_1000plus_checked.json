@@ -44618,16 +44618,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Ireen Sheer",
-    "title": "Fantasy Island",
+    "artist": "Dune",
+    "title": "Can't stop raving - Video Mix",
     "album": "",
-    "category": "Schlager",
+    "category": "90s Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Schlager"
+      "90s Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Fall Out Boy",
+    "title": "Sugar, We're Goin Down",
+    "album": "",
+    "category": "Party & Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Rock",
+      "Anthem"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
