@@ -46111,5 +46111,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Ibo",
+    "title": "Bungalow in Santa Nirgendwo",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
