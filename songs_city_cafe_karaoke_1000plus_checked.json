@@ -46311,5 +46311,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "The Bangles",
+    "title": "Walk Like an Egyptian",
+    "album": "",
+    "category": "NDW / Retro",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "NDW",
+      "Klassiker",
+      "Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
