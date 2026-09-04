@@ -46970,16 +46970,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Rosanna Rocci",
-    "title": "Es gibt ein zweites Leben",
+    "artist": "Nils Lofgren",
+    "title": "No Mercy",
     "album": "",
-    "category": "Schlager & Karaoke",
+    "category": "Party-Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Schlager & Karaoke"
+      "Party-Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "DJs @ Work",
+    "title": "Past Was Yesterday",
+    "album": "",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "90s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
