@@ -47230,16 +47230,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Jessica Simpson",
-    "title": "I Wanna Love You Forever",
+    "artist": "Motion City Soundtrack",
+    "title": "My Favorite Accident",
     "album": "",
-    "category": "Deutsch-Pop",
+    "category": "Deutsch Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Deutsch-Pop"
+      "Deutsch Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Guru Josh Project",
+    "title": "Infinity 2008 (Klaas Vocal Edit)",
+    "album": "",
+    "category": "Dance & Club",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Dance & Club"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
