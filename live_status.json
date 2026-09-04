@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-09-04T15:33:00Z",
-  "live": []
+  "checked_at": "2026-09-04T16:37:57Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "🔴 Letzter Bass vor dem Urlaub | !holy #werbung",
+      "game": "DJs"
+    }
+  ]
 }
