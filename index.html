@@ -1720,16 +1720,29 @@
             font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
             letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.32);
         }
-        /* Alle Player liegen uebereinander und laufen gleichzeitig - sichtbar ist
-           immer nur einer. Das Umschalten kostet so keine Ladezeit, und der erste
-           Stream kann schon im Slot davor anlaufen. */
+        /* Es existiert immer nur EIN Rahmen - der des gerade gezeigten Kanals.
+           Frueher lag fuer jeden Live-Kanal einer im DOM und alle liefen
+           gleichzeitig; bei drei Live-Kanaelen dekodierte die Box also drei
+           Streams parallel.
+
+           Der Player laeuft intern in 1280x720 (DJ_LIVE_CONFIG.spielerBreite)
+           und wird per CSS auf die 1200px breite Buehne heruntergerechnet:
+           Twitch und YouTube waehlen die Streamqualitaet nach der Layoutgroesse
+           des Players, und bei 1200x675 blieb die immer unter 720p. Die Werte
+           setzt djGroesseAnwenden() als CSS-Variablen. */
         .dj-player-frame {
-            position: absolute; inset: 0; z-index: 2;
-            width: 100%; height: 100%; border: 0; display: block;
+            position: absolute; top: 0; left: 0; z-index: 2;
+            width: var(--dj-breite, 1280px); height: var(--dj-hoehe, 720px);
+            border: 0; display: block;
+            transform: scale(var(--dj-scale, 0.9375));   /* 1280 -> 1200 Buehnenbreite */
+            transform-origin: top left;
             opacity: 0; pointer-events: none;
             transition: opacity 0.4s ease-in-out;
         }
         .dj-player-frame.is-visible { opacity: 1; pointer-events: auto; z-index: 3; }
+        /* Bei Twitch baut das SDK den iframe selbst in den Container hinein,
+           bei YouTube tun wir es. In beiden Faellen soll er den Rahmen fuellen. */
+        .dj-player-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
 
         /* ---------- Nightlife-Widget (feste Stadt-Videos, kein Livestream) ---------- */
         /* Eigene Buehne, aber dieselbe Bauweise wie .dj-stage - beide zeigen einen
@@ -6400,11 +6413,39 @@
             maxStatusAlterMinuten: 45,   // aelterer Stand = Checker haengt -> Slot aus
             abrufTaktSekunden: 180,      // Hintergrund-Refresh, unabhaengig von der Rotation
             abrufTimeoutMs: 8000,
+
+            // Interne Groesse des Players. Twitch und YouTube waehlen die
+            // Streamqualitaet nach der LAYOUTGROESSE des Players, nicht nach der
+            // des Bildschirms - die Buehne mass 1200x675 und lag damit unter
+            // 1280x720, also gab es nie echtes 720p. Der Player laeuft jetzt
+            // intern in 1280x720 und wird per CSS auf die Buehne heruntergerechnet.
+            // Mehr als 720p bringt hier nichts: die Buehne ist am 1080p-Fernseher
+            // rund 1200 Pixel breit, ein 1080p-Stream wuerde nur wieder
+            // heruntergerechnet - kostete aber die doppelte Bandbreite und bei
+            // 60 fps auch die doppelte Rechenzeit.
+            spielerBreite: 1280,
+            spielerHoehe: 720,
+
+            // Obergrenze fuer die Qualitaet, die dem Twitch-Player aktiv
+            // vorgegeben wird (in Bildzeilen). Passend zu spielerHoehe.
+            maxQualitaetHoehe: 720,
+            // Twitchs Embed-SDK. Der iframe allein kennt keinen quality-Parameter
+            // (offiziell bestaetigt) - die Qualitaet laesst sich ausschliesslich
+            // ueber Twitch.Player.setQuality() setzen. Wird erst geladen, wenn
+            // wirklich ein Twitch-Kanal dran ist.
+            twitchSdkUrl: 'https://player.twitch.tv/js/embed/v1.js',
+            sdkTimeoutMs: 6000,          // danach: einfacher iframe statt SDK
+
             // Auf true stellen, um auf dem echten Screen abzulesen, unter welcher
             // Adresse das Dashboard dort laeuft (Lumify-WebView!). Danach wieder
             // auf false. Alternativ ?origincheck=1 an die URL haengen.
             showOriginDebug: false
         };
+
+        // Breite der Player-Buehne, wie sie in .dj-player im Stylesheet steht.
+        // Daraus ergibt sich der Massstab, mit dem der intern groessere Player
+        // heruntergerechnet wird.
+        const DJ_BUEHNE_BREITE = 1200;
 
         // Position des DJ-Slots in der Rotation. Steht als Konstante hier, weil
         // sowohl runMasterSequence als auch djStopPlayer sie kennen muessen.
@@ -6422,7 +6463,11 @@
         const DART_PLAN_INDEX = -1.8;     // Spielplan
         const DART_TABELLE_INDEX = -1.7;  // Tabelle
 
-        let djGepuffert = [];        // Eintraege, fuer die gerade Player im DOM stehen
+        let djGepuffert = [];        // Eintraege der laufenden Runde (nicht: Player!)
+        let djAktiverIndex = -1;     // welcher davon gerade einen Player hat, sonst -1
+        let djTwitchSpieler = null;  // Twitch.Player-Objekt, wenn das SDK laeuft
+        let djSdkPromise = null;     // laeuft nur einmal, egal wie oft gefragt wird
+        let djRahmenZaehler = 0;     // fuer eindeutige Container-ids (das SDK braucht eine)
         let djLiveEntries = [];      // zuletzt gemeldete Live-Kanaele
         let djLiveCheckedAt = null;  // Date des Checker-Laufs, oder null
         let djStatusGeladen = false; // erst nach dem ersten erfolgreichen Abruf true
@@ -6490,7 +6535,20 @@
             djStatusGeladen = true;
         }
 
+        // Testbetrieb: ?djtest=kanalname zeigt genau diesen Twitch-Kanal, ohne
+        // Checker und ohne live_status.json. Gedacht, um das Widget am Screen
+        // auszuprobieren, bevor das Apps Script eingerichtet ist - und um bei
+        // Problemen den Player unabhaengig von der Live-Erkennung zu pruefen.
+        // Laeuft nur ueber die URL, kann also nichts dauerhaft verstellen.
+        function djTestEintrag() {
+            const kanal = (new URLSearchParams(location.search).get('djtest') || '').trim();
+            if (!kanal) return null;
+            return { platform: 'twitch', channel: kanal, name: kanal, title: 'Testbetrieb · ?djtest' };
+        }
+
         function djUsableEntries() {
+            const test = djTestEintrag();
+            if (test) return djEmbedUrl(test) ? [test] : [];
             if (!djStatusGeladen) return [];
             // Ein stehengebliebener Stand (Checker haengt, Trigger geloescht, Netz weg)
             // wuerde sonst stundenlang einen laengst beendeten Stream einblenden.
@@ -6524,76 +6582,226 @@
             if (mediaStateIndex === DJ_SLOT_INDEX) return;
             const buehne = document.getElementById('dj-live-player');
             if (buehne && buehne.firstChild) {
+                djSpielerAbbauen();
                 buehne.innerHTML = '';
                 djGepuffert = [];
             }
         }
 
-        function djBaueRahmen(entry) {
-            const rahmen = document.createElement('iframe');
-            rahmen.src = djEmbedUrl(entry);
+        // Stabile Kennung eines Eintrags, um zu erkennen, ob sich die Live-Liste
+        // geaendert hat. djEmbedUrl taugt dafuer nicht mehr: Twitch-Kanaele laufen
+        // jetzt ueber das SDK und haben gar keine eigene URL mehr.
+        function djSchluessel(entry) {
+            if (!entry) return '';
+            return entry.platform === 'twitch'
+                ? 'twitch:' + String(entry.channel || '').toLowerCase()
+                : 'youtube:' + (entry.videoId || entry.channelId || entry.handle || '');
+        }
+
+        // Rechnet den intern groesseren Player auf die Buehne herunter.
+        function djGroesseAnwenden() {
+            const buehne = document.getElementById('dj-live-player');
+            if (!buehne) return;
+            const breite = DJ_LIVE_CONFIG.spielerBreite;
+            buehne.style.setProperty('--dj-breite', breite + 'px');
+            buehne.style.setProperty('--dj-hoehe', DJ_LIVE_CONFIG.spielerHoehe + 'px');
+            buehne.style.setProperty('--dj-scale', (DJ_BUEHNE_BREITE / breite).toFixed(6));
+        }
+
+        // Liegt unter dem Player und ueberbrueckt die Sekunden bis zum ersten Bild.
+        function djHinweisSetzen() {
+            const buehne = document.getElementById('dj-live-player');
+            if (!buehne) return;
+            let hinweis = buehne.querySelector('.dj-player-hint');
+            if (!hinweis) {
+                hinweis = document.createElement('div');
+                hinweis.className = 'dj-player-hint';
+                buehne.appendChild(hinweis);
+            }
+            hinweis.textContent = 'Stream wird geladen …';
+        }
+
+        // ---- Twitch-SDK ------------------------------------------------------
+        // Der reine iframe kennt keinen quality-Parameter - Twitch dokumentiert
+        // fuer player.twitch.tv nur channel, parent, autoplay, muted und time.
+        // Die Qualitaet laesst sich ausschliesslich ueber Twitch.Player setzen,
+        // deshalb dieser Umweg. Geladen wird erst, wenn wirklich ein Twitch-Kanal
+        // dran ist: laeuft niemand live - der Normalfall - holt das Dashboard das
+        // SDK nie.
+        function djTwitchSdkLaden() {
+            if (window.Twitch && window.Twitch.Player) return Promise.resolve(true);
+            if (djSdkPromise) return djSdkPromise;
+            djSdkPromise = new Promise(fertig => {
+                const bereit = () => fertig(!!(window.Twitch && window.Twitch.Player));
+                const s = document.createElement('script');
+                s.src = DJ_LIVE_CONFIG.twitchSdkUrl;
+                s.async = true;
+                s.onload = bereit;
+                s.onerror = () => fertig(false);
+                document.head.appendChild(s);
+                // Notbremse: haengt der Abruf, faellt der Kanal auf den einfachen
+                // iframe zurueck, statt den Slot leer stehen zu lassen.
+                setTimeout(bereit, DJ_LIVE_CONFIG.sdkTimeoutMs);
+            });
+            return djSdkPromise;
+        }
+
+        // getQualities() liefert je nach SDK-Stand Strings ("720p60") oder Objekte
+        // ({name, group, height, …}). Beides wird hier vertragen.
+        function djQualiName(q) {
+            if (typeof q === 'string') return q;
+            return (q && (q.group || q.name)) || '';
+        }
+        function djQualiHoehe(q) {
+            if (q && typeof q === 'object' && q.height) return q.height;
+            const name = djQualiName(q);
+            // "chunked" ist Twitchs Name fuer die unveraenderte Quelle.
+            if (name === 'chunked' || name === 'source') return 100000;
+            const treffer = /(\d+)p/.exec(name);
+            return treffer ? parseInt(treffer[1], 10) : 0;
+        }
+
+        // Beste angebotene Stufe bis einschliesslich der Obergrenze. Findet sich
+        // keine, bleibt es bei Twitchs eigener Wahl - kleine Kanaele ohne
+        // Affiliate-Status bekommen von Twitch gar keine Transcodes, dort gibt es
+        // nur die Quelle und nichts zu waehlen.
+        function djBesteQualitaet(stufen) {
+            const grenze = DJ_LIVE_CONFIG.maxQualitaetHoehe;
+            let beste = null, besteHoehe = 0;
+            (stufen || []).forEach(q => {
+                const name = djQualiName(q);
+                if (!name || name === 'auto') return;
+                const hoehe = djQualiHoehe(q);
+                if (hoehe > grenze || hoehe <= besteHoehe) return;
+                beste = name; besteHoehe = hoehe;
+            });
+            return beste;
+        }
+
+        function djBaueTwitch(rahmen, entry, host) {
+            // Das SDK adressiert seinen Container ueber getElementById.
+            rahmen.id = 'dj-twitch-' + (++djRahmenZaehler);
+            djTwitchSdkLaden().then(daIst => {
+                // Bis das SDK da ist, kann der Slot laengst weitergelaufen sein.
+                if (!rahmen.isConnected) return;
+                if (!daIst) { djBaueIframe(rahmen, entry); return; }
+
+                let spieler;
+                try {
+                    spieler = new Twitch.Player(rahmen.id, {
+                        channel: entry.channel,
+                        parent: [host],
+                        width: DJ_LIVE_CONFIG.spielerBreite,
+                        height: DJ_LIVE_CONFIG.spielerHoehe,
+                        autoplay: true,
+                        muted: true
+                    });
+                } catch (e) {
+                    djBaueIframe(rahmen, entry);
+                    return;
+                }
+                djTwitchSpieler = spieler;
+
+                const stufeSetzen = () => {
+                    try {
+                        const wunsch = djBesteQualitaet(spieler.getQualities && spieler.getQualities());
+                        if (wunsch && spieler.setQuality) spieler.setQuality(wunsch);
+                    } catch (e) {}
+                };
+                try {
+                    // Nach READY stehen die Stufen noch nicht immer fest, deshalb
+                    // beim ersten Bild noch einmal nachsetzen.
+                    spieler.addEventListener(Twitch.Player.READY, stufeSetzen);
+                    spieler.addEventListener(Twitch.Player.PLAYING, stufeSetzen);
+                    // Blockiert der Browser das Autoplay doch, hier nachhelfen.
+                    spieler.addEventListener(Twitch.Player.PLAYBACK_BLOCKED, () => {
+                        try { spieler.setMuted(true); spieler.play(); } catch (e) {}
+                    });
+                } catch (e) {}
+            });
+        }
+
+        function djBaueIframe(rahmen, entry) {
+            const url = djEmbedUrl(entry);
+            if (!url) return;
+            const frame = document.createElement('iframe');
+            frame.src = url;
             // Cross-Origin-Player von player.twitch.tv / youtube.com brauchen die
             // Autoplay-Freigabe ausdruecklich: ohne allow="autoplay" blockiert der
             // Browser den Start im iframe eigenstaendig - auch dann, wenn stummes
             // Autoplay auf der Dashboard-Seite selbst laengst funktioniert.
-            rahmen.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-            rahmen.setAttribute('allowfullscreen', 'true');
-            rahmen.setAttribute('frameborder', '0');
-            rahmen.setAttribute('scrolling', 'no');
-            rahmen.setAttribute('title', djAnzeigeName(entry));
-            return rahmen;
+            frame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+            frame.setAttribute('allowfullscreen', 'true');
+            frame.setAttribute('frameborder', '0');
+            frame.setAttribute('scrolling', 'no');
+            frame.setAttribute('title', djAnzeigeName(entry));
+            rahmen.innerHTML = '';
+            rahmen.appendChild(frame);
         }
 
-        // Legt alle Player gleichzeitig an, aber uebereinandergestapelt und bis auf
-        // einen unsichtbar. Zwei Gruende: der Wechsel von Kanal zu Kanal braucht dann
-        // keine Ladezeit mehr, und - wichtiger - der erste Stream bekommt Vorlauf,
-        // weil das schon waehrend des vorherigen Slots passiert. Twitch startete
-        // sonst haeufig gar nicht, weil der Player die Autoplay-Entscheidung faellt,
-        // bevor er ueberhaupt Daten hat.
+        // Baut GENAU EINEN Player - und raeumt den vorigen vorher ab.
+        function djSpielerAufbauen(entry) {
+            const buehne = document.getElementById('dj-live-player');
+            if (!buehne || !entry) return;
+            djSpielerAbbauen();
+            djGroesseAnwenden();
+            djHinweisSetzen();
+
+            const rahmen = document.createElement('div');
+            rahmen.className = 'dj-player-frame is-visible';
+            buehne.appendChild(rahmen);
+
+            const host = djEmbedHost();
+            if (entry.platform === 'twitch' && entry.channel && host) {
+                djBaueTwitch(rahmen, entry, host);
+            } else {
+                djBaueIframe(rahmen, entry);
+            }
+        }
+
+        function djSpielerAbbauen() {
+            const buehne = document.getElementById('dj-live-player');
+            djAktiverIndex = -1;
+            // Das SDK dokumentiert kein destroy() - der Player verschwindet mit
+            // seinem Container. Gibt es doch eins, wird es genutzt.
+            if (djTwitchSpieler && typeof djTwitchSpieler.destroy === 'function') {
+                try { djTwitchSpieler.destroy(); } catch (e) {}
+            }
+            djTwitchSpieler = null;
+            if (!buehne) return;
+            buehne.querySelectorAll('.dj-player-frame').forEach(el => el.remove());
+        }
+
+        // Baut den Player des ERSTEN Kanals schon im Slot davor. Das ist der
+        // eigentliche Zweck des Vorpufferns: Twitch startete sonst haeufig gar
+        // nicht, weil der Player die Autoplay-Entscheidung faellt, bevor er
+        // ueberhaupt Daten hat. Die weiteren Kanaele bekommen ihren Player erst,
+        // wenn sie an der Reihe sind - frueher liefen alle gleichzeitig.
         function djVorpuffern() {
             const eintraege = djUsableEntries();
             const buehne = document.getElementById('dj-live-player');
             if (!buehne || !eintraege.length) return;
 
-            // Schon passend gepuffert? Dann nicht neu starten - ein Neuaufbau wuerde
-            // den bereits laufenden Stream abwuergen.
-            if (djGepuffert.length === eintraege.length &&
-                djGepuffert.every((e, i) => djEmbedUrl(e) === djEmbedUrl(eintraege[i]))) return;
+            // Unveraenderte Liste und es laeuft schon ein Player? Dann nichts
+            // anfassen - ein Neuaufbau wuerde den laufenden Stream abwuergen.
+            const gleich = djGepuffert.length === eintraege.length &&
+                           djGepuffert.every((e, i) => djSchluessel(e) === djSchluessel(eintraege[i]));
+            if (gleich && djAktiverIndex >= 0) return;
 
-            buehne.innerHTML = '';
             djGepuffert = eintraege.slice();
-
-            const hinweis = document.createElement('div');
-            hinweis.className = 'dj-player-hint';
-            hinweis.textContent = 'Stream wird geladen …';
-            buehne.appendChild(hinweis);
-
-            eintraege.forEach((entry, i) => {
-                const rahmen = djBaueRahmen(entry);
-                rahmen.className = 'dj-player-frame' + (i === 0 ? ' is-visible' : '');
-                buehne.appendChild(rahmen);
-            });
+            djSpielerAufbauen(djGepuffert[0]);
+            djAktiverIndex = 0;
         }
 
-        // Schaltet nur die Sichtbarkeit um - die Player laufen alle bereits.
+        // Baut den Player des gewuenschten Kanals; laeuft er schon, bleibt er stehen.
         function djZeigeEintrag(index) {
             const entry = djGepuffert[index];
             if (!entry) return;
 
-            document.querySelectorAll('#dj-live-player .dj-player-frame').forEach((el, i) => {
-                const aktiv = i === index;
-                el.classList.toggle('is-visible', aktiv);
-                // YouTube pausiert einen vorgepufferten Player im Hintergrund.
-                // Beim Sichtbarschalten deshalb ausdruecklich wieder starten,
-                // sonst steht das Pause-Symbol im Bild. Braucht enablejsapi=1
-                // in der Embed-URL; bei Twitch tut der Aufruf schlicht nichts.
-                if (aktiv && el.contentWindow) {
-                    try {
-                        el.contentWindow.postMessage(
-                            '{"event":"command","func":"playVideo","args":""}', '*');
-                    } catch (e) {}
-                }
-            });
+            if (index !== djAktiverIndex) {
+                djSpielerAufbauen(entry);
+                djAktiverIndex = index;
+            }
 
             // Kanal- und Streamtitel kommen ueber Twitch/YouTube von fremden Nutzern -
             // deshalb ausschliesslich per textContent ins DOM, nie per innerHTML.
@@ -8328,9 +8536,9 @@
                 // Calamari-Grill-Event (12.09., Dartverein City Flyers), direkt nach dem Tag/Nacht-Plakat
                 showPosterImage(CALAMARI_EVENT_URL);
 
-                // Die Streams schon hier anwerfen: der DJ-Slot kommt als naechstes,
-                // und die 35 Sekunden Plakat geben den Playern genug Vorlauf, um
-                // beim Einblenden bereits zu laufen statt erst zu puffern.
+                // Den ersten Stream schon hier anwerfen: der DJ-Slot kommt als
+                // naechstes, und die 35 Sekunden Plakat geben ihm genug Vorlauf,
+                // um beim Einblenden bereits zu laufen statt erst zu puffern.
                 djVorpuffern();
 
                 mediaStateIndex = DJ_SLOT_INDEX;
