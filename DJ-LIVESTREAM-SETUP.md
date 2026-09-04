@@ -3,12 +3,21 @@
 Das Dashboard kann Live-Streams von DJs (Twitch und YouTube Live) einblenden.
 Der Slot erscheint **nur, wenn wirklich jemand live ist** — sonst überspringt
 die Rotation ihn ersatzlos und läuft direkt zum nächsten Widget weiter. Sind
-mehrere Kanäle gleichzeitig live, wird jeder 30 Sekunden gezeigt und danach
+mehrere Kanäle gleichzeitig live, wird jeder 3 Minuten gezeigt und danach
 automatisch zum nächsten geschaltet.
 
-Bis die Einrichtung fertig ist, passiert **gar nichts**: `dj_channels.json` ist
-leer, `live_status.json` meldet niemanden, der Slot fällt aus. Das Repo kann
-also jederzeit so bleiben, ohne dass am Dashboard etwas kaputtgeht.
+Bis die Einrichtung fertig ist, passiert **gar nichts**: `live_status.json`
+meldet niemanden, der Slot fällt aus. Das Repo kann also jederzeit so bleiben,
+ohne dass am Dashboard etwas kaputtgeht.
+
+> **Sofort ausprobieren, ohne Einrichtung:** `?djtest=kanalname` an die
+> Dashboard-URL hängen, zum Beispiel
+> <https://motte025.github.io/City-cafe/?djtest=valorant_fortnite_cs>.
+> Damit läuft genau dieser Twitch-Kanal im Slot, ganz ohne Checker und ohne
+> `live_status.json`. Der Schalter wirkt nur über die URL — im Normalbetrieb
+> ist er also nicht aktiv und kann nichts dauerhaft verstellen. Gut geeignet,
+> um Player, Bildqualität und Einbettung zu prüfen, bevor die Apps-Script-Seite
+> überhaupt steht.
 
 ---
 
@@ -292,10 +301,57 @@ Alle in `index.html`, Block `DJ_LIVE_CONFIG`:
 
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
-| `sekundenProKanal` | `30` | Standzeit je Live-Kanal |
+| `sekundenProKanal` | `180` | Standzeit je Live-Kanal |
 | `maxStatusAlterMinuten` | `45` | älterer Stand → Slot aus |
 | `abrufTaktSekunden` | `180` | wie oft `live_status.json` neu geholt wird |
+| `spielerBreite` / `spielerHoehe` | `1280` / `720` | interne Playergröße, siehe unten |
+| `maxQualitaetHoehe` | `720` | Obergrenze für die erzwungene Twitch-Qualität |
 | `showOriginDebug` | `false` | Origin-Diagnose einblenden (Abschnitt 5) |
+
+### Bildqualität
+
+Zwei Dinge bestimmen, was Twitch liefert:
+
+**1. Die Layoutgröße des Players.** Twitch und YouTube wählen die Streamqualität
+danach, wie groß der Player im Layout ist — nicht danach, wie groß der
+Bildschirm ist. Die Bühne ist 1200 × 675 Pixel groß und lag damit *unter*
+1280 × 720; es gab deshalb nie echtes 720p. Der Player läuft jetzt intern in
+`spielerBreite × spielerHoehe` (1280 × 720) und wird per CSS auf die Bühne
+heruntergerechnet.
+
+Mehr als 720p bringt hier nichts: die Bühne ist am 1080p-Fernseher rund 1200
+Pixel breit, ein 1080p-Stream würde also nur wieder heruntergerechnet — kostet
+aber die doppelte Bandbreite und bei 60 fps auch die doppelte Rechenzeit. Wer
+es trotzdem will, setzt `spielerBreite`/`spielerHoehe` auf 1920/1080 und
+`maxQualitaetHoehe` auf 1080.
+
+**2. Die aktiv gesetzte Qualität.** Der reine iframe kennt *keinen*
+`quality`-Parameter — Twitch dokumentiert für `player.twitch.tv` nur `channel`,
+`parent`, `autoplay`, `muted` und `time`. Die Qualität lässt sich ausschließlich
+über das Embed-SDK (`Twitch.Player.setQuality()`) setzen. Das Dashboard lädt
+dieses SDK deshalb nach — aber **erst dann, wenn wirklich ein Twitch-Kanal
+dran ist**. Läuft niemand live, wird es nie geholt. Schlägt das Laden fehl
+(kein Netz, blockiert), fällt der Kanal automatisch auf den einfachen iframe
+zurück; dann entscheidet Twitch die Qualität selbst.
+
+> **Kleine Kanäle:** Twitch stellt Transcodes (720p, 480p, …) nur Partnern und
+> Affiliates zuverlässig bereit. Bei kleinen Kanälen gibt es oft **nur die
+> Quelle** — dann ist jede Qualitätswahl wirkungslos, egal was hier eingestellt
+> ist. Das ist kein Fehler im Dashboard.
+
+### Nur ein Player gleichzeitig
+
+Früher lag für *jeden* live gemeldeten Kanal ein eigener Player im DOM, und alle
+liefen gleichzeitig — sichtbar war nur einer. Bei drei Live-Kanälen dekodierte
+die Box also drei Streams parallel, was auf dem Odroid die mit Abstand größte
+Einzellast war. Jetzt existiert immer nur der Player des gerade gezeigten
+Kanals.
+
+Der Vorlauf bleibt trotzdem erhalten: der **erste** Kanal wird schon im Slot
+davor gebaut (`djVorpuffern`) — genau das war der ursprüngliche Zweck, weil
+Twitch sonst häufig gar nicht startete. Beim Wechsel von Kanal zu Kanal gibt es
+dafür jetzt eine kurze Ladepause, die der Hinweis „Stream wird geladen …“
+überbrückt.
 
 Position in der Rotation: direkt nach dem Calamari-Event-Plakat und vor dem
 ersten Musik-Slot (`mediaStateIndex === 0.9` in `runMasterSequence`) — bewusst
