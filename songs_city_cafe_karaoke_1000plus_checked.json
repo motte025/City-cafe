@@ -47350,16 +47350,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Udo Lindenberg",
-    "title": "Reeperbahn",
+    "artist": "Jürgen Marcus",
+    "title": "Ein Festival der Liebe",
     "album": "",
-    "category": "Schlager",
+    "category": "Party-Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
       "Party",
-      "Karaoke",
-      "Schlager"
+      "Mitmach-Tanz"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "System F",
+    "title": "Out of the Blue",
+    "album": "",
+    "category": "2000s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "2000s",
+      "Dance",
+      "Cover"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
