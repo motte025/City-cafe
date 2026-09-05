@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-05T17:55:01Z",
+  "aktualisiert": "2026-09-05T17:57:00Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -145,24 +145,6 @@
         },
         {
           "rang": 2,
-          "team": "DSZKärnten \"2er\"",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 3,
-          "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 4,
           "team": "DC Drautal Dart Vipers",
           "spiele": 1,
           "siege": 1,
@@ -171,8 +153,26 @@
           "punkte": 2
         },
         {
+          "rang": 3,
+          "team": "DSZKärnten \"2er\"",
+          "spiele": 1,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 0,
+          "punkte": 2
+        },
+        {
+          "rang": 4,
+          "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+          "spiele": 1,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 0,
+          "punkte": 2
+        },
+        {
           "rang": 5,
-          "team": "ESV DC Inferno",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -181,7 +181,7 @@
         },
         {
           "rang": 6,
-          "team": "City-Flyers \"Fraggles\"",
+          "team": "ESV DC Inferno",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
