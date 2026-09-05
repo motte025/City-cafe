@@ -45,6 +45,35 @@ eq('Pik-Ass hat die 2-Endung', E.cardImage('SA', ''), 'ace_of_spades2.webp');
 eq('Herz-Ass hat keine 2-Endung', E.cardImage('HA', ''), 'ace_of_hearts.webp');
 eq('Bube hat die 2-Endung', E.cardImage('CJ', ''), 'jack_of_clubs2.webp');
 
+// ---------- Status-Smileys ----------
+eq('smileyImage zeigt ins Wurzelverzeichnis', E.smileyImage('cool'), 'smiley-cool.svg');
+eq('Weinender Smiley', E.smileyImage('crying'), 'smiley-weinend.svg');
+check('Unbekannter Smiley fliegt auf', (function () {
+    try { E.smileyImage('grinsend'); return false; } catch (e) { return true; }
+})());
+
+var smileysMissing = ['cool', 'crying']
+    .map(function (kind) { return E.smileyImage(kind); })
+    .filter(function (rel) { return !fs.existsSync(path.join(__dirname, rel)); });
+eq('Beide Smiley-Dateien liegen im Repo', smileysMissing, []);
+
+/*
+ * Was die Anzeige von den Dateien erwartet: quadratische viewBox mit
+ * zentriertem Gesicht (ueber die Breite skalierbar), eigene Animation ohne
+ * JavaScript und Ruhe bei "Bewegung reduzieren". Praefixe sc-/sw- halten die
+ * beiden auseinander, falls sie doch einmal inline nebeneinander landen.
+ */
+[['cool', 'sc-'], ['crying', 'sw-']].forEach(function (pair) {
+    var svg = fs.readFileSync(path.join(__dirname, E.smileyImage(pair[0])), 'utf8');
+    var name = E.smileyImage(pair[0]);
+    check(name + ': quadratische viewBox', svg.indexOf('viewBox="-90 -90 180 180"') !== -1);
+    check(name + ': Animation steckt in der Datei', /@keyframes/.test(svg));
+    check(name + ': steht bei "Bewegung reduzieren" still',
+          svg.indexOf('prefers-reduced-motion') !== -1);
+    check(name + ': eigenes Praefix ' + pair[1], svg.indexOf(pair[1]) !== -1);
+    check(name + ': kommt ohne JavaScript aus', !/<script/i.test(svg));
+});
+
 // ---------- Wertung ----------
 eq('Feuer: Herz Bube/Dame/Ass = 31', E.scoreHand(['HJ', 'HQ', 'HA']).score, 31);
 check('Feuer wird als Feuer erkannt', E.scoreHand(['HJ', 'HQ', 'HA']).fire === true);
@@ -117,33 +146,34 @@ var f1 = E.evaluateRound({
 });
 eq('Feuer-Modus', f1.mode, 'fire');
 eq('Feuer: Feuer-Sitz wird gemeldet', f1.fireSeats, [0]);
-eq('Feuer: alle unter 11 zahlen', f1.payingSeats, [1, 3]);
-// Sitz 1 und 3 haben beide 9; Tie-Break: Pik 9 schlägt Kreuz 9, also verliert Sitz 3.
+// Nutzer-Vorgabe: bei Feuer zahlt nur noch der Schwaechste - nicht mehr
+// zusaetzlich jeder unter 11 Punkten. Sitz 1 und 3 haben beide 9;
+// Tie-Break: Pik 9 schlaegt Kreuz 9, also verliert Sitz 3 allein.
+eq('Feuer: nur der Schwächste zahlt', f1.payingSeats, [3]);
 eq('Feuer: der Schwächste wird per Tie-Break bestimmt', f1.loserSeat, 3);
 
-// Liegt niemand unter 11, zahlt trotzdem der Schwächste - neue Nutzer-Vorgabe.
+// Auch wenn niemand unter 11 liegt, zahlt der Schwächste - unverändert.
 var f2 = E.evaluateRound({
     0: ['SA', 'S10', 'SK'],  // Feuer, 31
-    1: ['DA', 'D10', 'C8']   // 21 → schwächster, zahlt trotzdem
+    1: ['DA', 'D10', 'C8']   // 21 → schwächster, zahlt
 });
 eq('Feuer: der Schwächste zahlt auch über 11', f2.payingSeats, [1]);
 
-// Grenzwert: exakt 11 Punkte zahlt NICHT mehr (Grenze von 12 auf 11 gesenkt),
-// aber als Schwächster kann man trotzdem drankommen.
+// Frueher zahlten hier zwei Sitze mit (beide unter 11), jetzt nur noch einer.
 var f3 = E.evaluateRound({
     0: ['HJ', 'HQ', 'HA'],   // Feuer
-    1: ['C7', 'D8', 'S9'],   //  9 → unter 11, zahlt
-    2: ['SA', 'H7', 'D8']    // 11 → nicht unter 11 und nicht schwächster
+    1: ['C7', 'D8', 'S9'],   //  9 → schwächster, zahlt
+    2: ['SA', 'H7', 'D8']    // 11 → zahlt nicht
 });
-eq('Feuer-Grenzwert: 11 Punkte zahlen nicht mehr', f3.payingSeats, [1]);
+eq('Feuer: niedrige Hände zahlen nicht mehr mit', f3.payingSeats, [1]);
 
 var f5 = E.evaluateRound({
     0: ['HJ', 'HQ', 'HA'],   // Feuer
-    1: ['C7', 'D8', 'H9'],   //  9 → unter 11
-    2: ['S7', 'D8', 'C9'],   //  9 → unter 11
+    1: ['C7', 'D8', 'H9'],   //  9 → Herz 9 ist die höhere Einzelkarte
+    2: ['S7', 'D8', 'C9'],   //  9 → Kreuz 9 verliert den Tie-Break
     3: ['DA', 'D10', 'C8']   // 21
 });
-eq('Feuer: mehrere unter 11 zahlen gemeinsam', f5.payingSeats, [1, 2]);
+eq('Feuer: auch bei mehreren niedrigen Händen zahlt genau einer', f5.payingSeats, [2]);
 
 // ---------- Tischfeuer: die Mitte stand bei 31, keine Hand ist fuer sich Feuer ----------
 var tf = E.evaluateRound({
@@ -274,17 +304,14 @@ for (var i = 0; i < 20000; i++) {
     var count = 2 + Math.floor(seededRandom() * 5);
     var d = E.deal(count, seededRandom);
     var res = E.evaluateRound(d.hands);
-    if (res.mode === 'normal') {
-        normalRounds++;
-        if (res.loserSeat === null || res.payingSeats.length !== 1) uniquenessBroken++;
-    } else {
-        fireRounds++;
-        // Neue Regel: auch bei Feuer wird der Schwächste eindeutig benannt und
-        // zahlt in jedem Fall mit.
-        if (res.loserSeat === null || res.payingSeats.indexOf(res.loserSeat) === -1) uniquenessBroken++;
-    }
+    if (res.mode === 'normal') normalRounds++;
+    else fireRounds++;
+    // Seit der Feuer-Regelaenderung gilt in BEIDEN Modi dasselbe: genau ein
+    // Zahler, und das ist der eindeutig bestimmte Schwaechste.
+    if (res.loserSeat === null || res.payingSeats.length !== 1 ||
+        res.payingSeats[0] !== res.loserSeat) uniquenessBroken++;
 }
-eq('20000 Zufallsrunden liefern immer einen eindeutigen Schwächsten', uniquenessBroken, 0);
+eq('20000 Zufallsrunden liefern immer genau einen Zahler', uniquenessBroken, 0);
 check('Testlauf enthielt echte Feuer-Runden', fireRounds > 0, fireRounds + ' Feuer / ' + normalRounds + ' normal');
 
 // ---------- Alle 4960 möglichen Hände ----------

@@ -177,6 +177,24 @@
         text-shadow: 0 0 18px rgba(244,163,0,0.45);
     }
 
+    /* ---------- Status-Smileys ----------
+       Zwei animierte SVGs; die Animation steckt in der Datei, hier wird nur
+       platziert. Reine Anzeige: nicht anklickbar, nicht fokussierbar, und per
+       aria-hidden aus dem Vorlesetext heraus - daneben steht dasselbe als
+       Text. Feste Groesse, damit beim Nachladen nichts springt. */
+    .kt-smiley { display: block; margin: 0 auto 8px; pointer-events: none; }
+    .kt-smiley-big { width: 112px; height: 112px; }
+    .kt-smiley-hint { width: 56px; height: 56px; margin-bottom: 6px; }
+    /* In der Aufdeck-Liste sitzt er neben dem Namen, nicht darueber. */
+    .kt-smiley-row { display: inline-block; width: 26px; height: 26px; margin: 0 0 -6px 6px; }
+    /* Kleiner Hinweis ueber den Knoepfen, solange der Startspieler noch nicht
+       getauscht hat. */
+    .kt-first-swap {
+        text-align: center; padding: 8px 12px; border-radius: 14px;
+        background: rgba(0,242,254,0.09); border: 1px solid rgba(0,242,254,0.45);
+        color: #00f2fe; font-weight: 800; font-size: 17px;
+    }
+
     /* Die Knoepfe fuellen den Rest der Hoehe und sitzen unten - dort, wo der
        Daumen beim Halten des Handys ohnehin liegt. */
     .kt-actions {
@@ -396,6 +414,26 @@
         return img;
     }
 
+    /*
+     * Status-Smiley als <img>: die Animation steckt komplett in der SVG-Datei,
+     * angesteuert wird hier nichts. Fehlt die Datei, nimmt onerror das Bild
+     * wieder aus dem Fluss - dann fehlt nur der Smiley, sonst bleibt alles.
+     *
+     * kind: 'cool' (hoechste Karte, tauscht zuerst) | 'crying' (zahlt)
+     */
+    function smileyImg(kind, className) {
+        var img = document.createElement('img');
+        img.className = 'kt-smiley ' + (className || 'kt-smiley-big');
+        img.src = E.smileyImage(kind);
+        img.alt = '';
+        img.setAttribute('aria-hidden', 'true');
+        img.draggable = false;
+        img.addEventListener('error', function () {
+            if (img.parentNode) img.parentNode.removeChild(img);
+        });
+        return img;
+    }
+
     function renderCards(container, codes, opts) {
         container.innerHTML = '';
         (codes || []).forEach(function (code, index) {
@@ -554,6 +592,20 @@
         if (pub.botGame) return false;
         return pub.phase && (pub.phase === 'playing' || pub.phase === 'knocked') &&
                Number(pub.currentTurnSeat) === mySeat && myHand.length === 3;
+    }
+
+    /*
+     * Bin ich der Startspieler und ist der erste Zug der Runde noch offen?
+     *
+     * Quelle ist ausschliesslich pub.starterSeat (die hoechste gezogene Karte
+     * aus dem Austeilen) und pub.turnsPlayed - dieselben Felder, die auch der
+     * TV liest. Es gibt bewusst keine zweite Rechnung dafuer am Handy.
+     */
+    function isStarterBeforeFirstSwap() {
+        if (mySeat < 0) return false;
+        if (pub.phase !== 'starter' && pub.phase !== 'playing') return false;
+        if ((Number(pub.turnsPlayed) || 0) >= 1) return false;
+        return Number(pub.starterSeat) === mySeat;
     }
 
     // Aufgehen darf man erst, wenn jeder einmal am Zug war - also ab der
@@ -933,6 +985,19 @@
         if (!isMyTurn()) return;
 
         /*
+         * Am eigenen Zug ist die Statusbox ausgeblendet - der Hinweis auf die
+         * hoechste Karte muss deshalb hier stehen. Er gilt nur fuer den ersten
+         * Zug der Runde und verschwindet danach von selbst (turnsPlayed).
+         */
+        if (isStarterBeforeFirstSwap()) {
+            els.actions.appendChild(smileyImg('cool', 'kt-smiley-hint'));
+            var firstSwapNote = document.createElement('div');
+            firstSwapNote.className = 'kt-first-swap';
+            firstSwapNote.textContent = 'Höchste Karte — du tauschst zuerst.';
+            els.actions.appendChild(firstSwapNote);
+        }
+
+        /*
          * Getauscht wird ohne Bestaetigung - zweites Antippen oder Ziehen
          * genuegt. Deshalb steht hier nur, was nicht ueber die Karten geht.
          */
@@ -979,6 +1044,8 @@
             name.className = 'kt-reveal-name';
             name.textContent = (seat === mySeat ? 'Du' : seatName(seat)) +
                 (fireSeats.indexOf(seat) !== -1 ? ' 🔥' : '');
+            // Wer zahlt, bekommt den weinenden Smiley klein neben den Namen.
+            if (paying.indexOf(seat) !== -1) name.appendChild(smileyImg('crying', 'kt-smiley-row'));
             row.appendChild(name);
 
             var cards = document.createElement('div');
@@ -1076,6 +1143,16 @@
             setStatus(starter === mySeat ? 'Du beginnst!' : seatName(starter) + ' beginnt',
                 'Höchste gezogene Karte fängt an — schau auf den Fernseher.',
                 starter === mySeat ? 'is-myturn' : 'is-turnof');
+            /* Nur beim Startspieler selbst: der coole Smiley samt Hinweis. Die
+               anderen lesen im Text, wer dran ist - bei ihnen waere ein grosser
+               Smiley auf dem eigenen Handy irrefuehrend. */
+            if (isStarterBeforeFirstSwap()) {
+                els.statusExtra.appendChild(smileyImg('cool'));
+                var firstNote = document.createElement('div');
+                firstNote.className = 'kt-first-swap';
+                firstNote.textContent = 'Du hast die höchste Karte — du tauschst zuerst.';
+                els.statusExtra.appendChild(firstNote);
+            }
 
         } else if (phase === 'playing' || phase === 'knocked') {
             var knockNote = (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined)
@@ -1106,13 +1183,15 @@
             var iPay = paying.indexOf(mySeat) !== -1;
             setStatus(
                 pub.tableFire ? '🔥 TISCHFEUER!' : fire ? '🔥 FEUER!' : (iPay ? 'Du zahlst die Runde!' : 'Aufgedeckt'),
-                pub.tableFire ? 'Die Mitte stand bei 31. Alle unter ' + E.FIRE_PAY_BELOW +
-                       ' Punkten zahlen — und der Schwächste sowieso.' + (iPay ? ' Du bist dabei.' : ' Du bist raus.')
-                     : fire ? 'Alle unter ' + E.FIRE_PAY_BELOW + ' Punkten zahlen — und der Schwächste sowieso.' +
-                       (iPay ? ' Du bist dabei.' : ' Du bist raus.')
+                pub.tableFire ? 'Die Mitte stand bei 31 — Schluss sofort. Die niedrigste Hand zahlt.' +
+                       (iPay ? ' Das bist du.' : ' Du bist raus.')
+                     : fire ? 'Schluss sofort — die niedrigste Hand zahlt.' +
+                       (iPay ? ' Das bist du.' : ' Du bist raus.')
                      : (iPay ? 'Niedrigste Hand — Prost!' : 'Diesmal nicht du.'),
                 iPay ? 'is-error' : '');
-            renderReveal();
+            // Eigene Einblendung fuer den, der zahlt.
+            if (iPay) els.statusExtra.appendChild(smileyImg('crying'));
+            renderReveal(true);
 
         } else {
             setStatus('Bereit', 'Tippe unten auf „Neues Spiel starten“, wenn es weitergehen soll.');
