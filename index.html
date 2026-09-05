@@ -2860,7 +2860,10 @@
         }
 
         let musicCycleTimer = null, activeMusicBatch = [], isSchlagerBg1Active = true, currentMusicSubIndex = 0;
-        let globalMasterTimer = null, mediaStateIndex = 0; 
+        let globalMasterTimer = null, mediaStateIndex = 0;
+        // Stream-Modus: mit ?v2only=1 aufgerufen läuft NUR das Trinkspiel V2 (Kartenspiel) in Dauerschleife,
+        // ohne durch das restliche Dashboard (Wetter, Musik, Fußball, ...) zu rotieren.
+        const V2_ONLY_MODE = new URLSearchParams(location.search).has('v2only');
 
         const fallbackPartyBackgrounds = [
             "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80",
@@ -4938,13 +4941,26 @@
 
             function finishRoundCommon() {
                 later(() => {
-                    mediaStateIndex = nextStateIndex;
-                    runMasterSequence();
-                    startNextTrinkspielCountdown('V1', getGapAfterV2ToV1());
+                    if (V2_ONLY_MODE) {
+                        runV2OnlyLoop();
+                    } else {
+                        mediaStateIndex = nextStateIndex;
+                        runMasterSequence();
+                        startNextTrinkspielCountdown('V1', getGapAfterV2ToV1());
+                    }
                 }, 15000);
             }
 
             startTrinkspielCountdown('V2', startCardDealing);
+        }
+
+        // Stream-Loop für ?v2only=1: zeigt ausschließlich das Kartenspiel, endlos wiederholt.
+        function runV2OnlyLoop() {
+            cancelSequenceTimers();
+            document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
+            djStopPlayer();
+            nlStopPlayer();
+            runCardTrinkspielV2(3); // nextStateIndex wird im V2_ONLY_MODE ignoriert
         }
 
         // Frueher lief hier ein Countdown bis zum naechsten Trinkspiel, der das
@@ -8627,11 +8643,15 @@
             showPosterImage(getDayNightPoster());
             prepareDrinkVideo(); // erstes Getraenke-Video schon beim Start vorbereiten
         })();
-        // Der Zyklus beginnt mit der Dart-Strecke, danach folgt Nightlife;
-        // Hos'n Obe kommt im Testmodus direkt dahinter. Die Anlaufzeit bleibt im
-        // Testmodus kurz, damit sich das Kartenspiel beim Ausprobieren schnell zeigt.
-        mediaStateIndex = DART_SLOT_INDEX;
-        globalMasterTimer = later(runMasterSequence, KT.testFirstInCycle ? 6000 : 35000);
+        if (V2_ONLY_MODE) {
+            later(() => { runV2OnlyLoop(); }, 3000);
+        } else {
+            // Der Zyklus beginnt mit der Dart-Strecke, danach folgt Nightlife;
+            // Hos'n Obe kommt im Testmodus direkt dahinter. Die Anlaufzeit bleibt im
+            // Testmodus kurz, damit sich das Kartenspiel beim Ausprobieren schnell zeigt.
+            mediaStateIndex = DART_SLOT_INDEX;
+            globalMasterTimer = later(runMasterSequence, KT.testFirstInCycle ? 6000 : 35000);
+        }
 
         function weatherCodeToIcon(code) {
             if (code === 95 || code === 96 || code === 99) return '⛈️';
