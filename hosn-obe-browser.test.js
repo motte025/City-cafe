@@ -1,0 +1,945 @@
+/*
+ * Hos’n Obe — Browser-Test fuer den kompletten Spielablauf.
+ *
+ * OPTIONAL. Die Regel-Logik prueft `node hosn-obe-engine.test.js` ohne
+ * jede Abhaengigkeit; dieser Test hier faehrt zusaetzlich die echten Seiten
+ * (index.html als TV, hosn-obe.html als Handy) in einem Browser und
+ * spielt eine ganze Runde durch. Firebase wird dabei durch einen
+ * gemeinsamen Speicher in Node ersetzt, es geht also nichts ins Netz.
+ *
+ * Voraussetzung:  npm install playwright
+ * Aufruf:         node hosn-obe-browser.test.js
+ *
+ * Faellt der Test mit "Executable doesn't exist" aus, fehlt der Browser:
+ *   npx playwright install chromium
+ * Alternativ den Pfad zu einem vorhandenen Chromium setzen:
+ *   CHROMIUM_PATH=/pfad/zu/chrome node hosn-obe-browser.test.js
+ *
+ * Geprueft werden vor allem die Regeln, die man beim Umbauen leicht
+ * kaputtmacht: Geber-Ermittlung vor der Runde, Aufgehen erst ab der zweiten
+ * Runde und nur nach einem Tausch (Sechs-Sekunden-Fenster) oder mit bereits
+ * genutztem "Weiter", schrittweises Aufdecken danach, "Alle 3 tauschen" nur bei
+ * Drilling oder gleicher Farbe.
+ */
+const { chromium } = require('playwright');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = __dirname;
+const PORT = Number(process.env.KT_TEST_PORT || 8099);
+
+const MIME = {
+    '.html': 'text/html; charset=utf-8',
+    '.js': 'text/javascript; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
+    '.webp': 'image/webp',
+    '.svg': 'image/svg+xml',
+    '.png': 'image/png',
+    '.mp4': 'video/mp4'
+};
+
+function serve() {
+    return new Promise(resolve => {
+        const server = http.createServer((req, res) => {
+            const rel = decodeURIComponent(req.url.split('?')[0]).replace(/^\/+/, '') || 'index.html';
+            const file = path.join(ROOT, rel);
+            if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
+                res.writeHead(404); res.end('nope'); return;
+            }
+            res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
+            fs.createReadStream(file).pipe(res);
+        });
+        server.listen(PORT, () => resolve(server));
+    });
+}
+
+// ---------- gemeinsamer Datenbaum ----------
+
+const tree = {};
+const pages = [];
+
+function getAt(obj, parts) {
+    let cur = obj;
+    for (const p of parts) {
+        if (cur === null || typeof cur !== 'object') return null;
+        cur = cur[p];
+        if (cur === undefined) return null;
+    }
+    return cur === undefined ? null : cur;
+}
+
+function setAt(obj, parts, value) {
+    let cur = obj;
+    for (let i = 0; i < parts.length - 1; i++) {
+        if (typeof cur[parts[i]] !== 'object' || cur[parts[i]] === null) cur[parts[i]] = {};
+        cur = cur[parts[i]];
+    }
+    const last = parts[parts.length - 1];
+    if (value === null) delete cur[last];
+    else cur[last] = value;
+}
+
+/*
+ * Jede Aktualisierung bekommt eine laufende Nummer.
+ *
+ * Ohne die kann der Testaufbau Zustaende in FALSCHER Reihenfolge zustellen:
+ * broadcast() haelt seinen Schnappschuss fest und schickt ihn dann an alle
+ * Seiten; ist eine Seite gerade beschaeftigt, kann ein aelterer Schnappschuss
+ * nach einem neueren ankommen und die Seite auf einen alten Spielstand
+ * zuruecksetzen. Echtes Firebase garantiert die Reihenfolge - der Ersatz hier
+ * muss das ebenfalls tun, sonst meldet der Test Fehler, die es gar nicht gibt.
+ */
+let broadcastSeq = 0;
+
+async function broadcast() {
+    const seq = ++broadcastSeq;
+    const snapshot = JSON.stringify(tree);
+    await Promise.all(pages.map(p =>
+        p.evaluate(([s, n]) => window.__ktPush && window.__ktPush(s, n), [snapshot, seq]).catch(() => {})
+    ));
+}
+
+async function dbOp(op) {
+    const parts = op.path.split('/').filter(Boolean);
+    if (op.kind === 'set') {
+        setAt(tree, parts, op.value);
+    } else if (op.kind === 'remove') {
+        setAt(tree, parts, null);
+    } else if (op.kind === 'update') {
+        for (const key of Object.keys(op.value)) {
+            setAt(tree, parts.concat(key.split('/').filter(Boolean)), op.value[key]);
+        }
+    } else if (op.kind === 'read') {
+        return getAt(tree, parts);
+    } else if (op.kind === 'snapshot') {
+        return { seq: broadcastSeq, tree: tree };
+    } else if (op.kind === 'transaction') {
+        // Der Aufrufer hat den neuen Wert bereits berechnet; hier nur schreiben,
+        // wenn sich der Ausgangswert nicht veraendert hat (Serialisierung durch
+        // den Node-Single-Thread reicht fuer den Test).
+        if (op.value !== undefined) setAt(tree, parts, op.value);
+        const after = getAt(tree, parts);
+        await broadcast();
+        return after;
+    }
+    await broadcast();
+    return getAt(tree, parts);
+}
+
+// ---------- Firebase-Ersatz im Browser ----------
+
+const STUB = `
+window.__ktListeners = [];
+window.__ktTree = {};
+window.__ktSeq = 0;
+// Einen einzelnen Zuhoerer mit dem aktuellen Stand versorgen.
+window.__ktNotify = function (l) {
+    var parts = l.path.split('/').filter(Boolean);
+    var cur = window.__ktTree;
+    for (var i = 0; i < parts.length; i++) {
+        if (cur === null || typeof cur !== 'object') { cur = null; break; }
+        cur = cur[parts[i]];
+        if (cur === undefined) { cur = null; break; }
+    }
+    var val = cur === undefined ? null : cur;
+    var key = JSON.stringify(val);
+    if (key === l.last) return;
+    l.last = key;
+    l.cb({ val: function () { return val; } });
+};
+
+window.__ktPush = function (json, seq) {
+    // Veraltete Zustellung verwerfen - siehe broadcast() im Testtreiber.
+    if (seq !== undefined && seq !== null) {
+        if (seq < window.__ktSeq) return;
+        window.__ktSeq = seq;
+    }
+    window.__ktTree = JSON.parse(json);
+    window.__ktListeners.forEach(window.__ktNotify);
+};
+
+function ktRef(path) {
+    return {
+        path: path,
+        set: function (v) { return window.__ktOp(JSON.stringify({ kind: 'set', path: path, value: v })); },
+        remove: function () { return window.__ktOp(JSON.stringify({ kind: 'remove', path: path })); },
+        update: function (v) { return window.__ktOp(JSON.stringify({ kind: 'update', path: path, value: v })); },
+        transaction: function (fn) {
+            return window.__ktOp(JSON.stringify({ kind: 'read', path: path })).then(function (current) {
+                var next = fn(current);
+                return window.__ktOp(JSON.stringify({
+                    kind: 'transaction', path: path, value: next === undefined ? undefined : next
+                })).then(function (after) {
+                    return {
+                        committed: next !== undefined,
+                        snapshot: { val: function () { return after; } }
+                    };
+                });
+            });
+        },
+        once: function () {
+            return window.__ktOp(JSON.stringify({ kind: 'read', path: path })).then(function (v) {
+                return { val: function () { return v === undefined ? null : v; } };
+            });
+        },
+        on: function (ev, cb) {
+            var entry = { path: path, cb: cb, last: null };
+            window.__ktListeners.push(entry);
+            window.__ktOp(JSON.stringify({ kind: 'snapshot', path: '' })).then(function (res) {
+                var full = (res && res.tree) ? res.tree : (res || {});
+                var seq = res ? res.seq : undefined;
+                window.__ktPush(JSON.stringify(full), seq);
+                /*
+                 * Wichtig: __ktPush verwirft einen Schnappschuss, der aelter ist
+                 * als der zuletzt zugestellte Stand - dieser Zuhoerer hat aber
+                 * noch NIE einen Wert bekommen. Ohne diesen Nachschlag bliebe
+                 * eine frisch geoeffnete Seite dauerhaft ohne Spielstand
+                 * (echtes Firebase liefert beim Anmelden immer einen Wert).
+                 */
+                window.__ktNotify(entry);
+            });
+            return cb;
+        },
+        off: function () {
+            window.__ktListeners = window.__ktListeners.filter(function (l) { return l.path !== path; });
+        }
+    };
+}
+
+window.firebase = {
+    apps: [],
+    initializeApp: function () { window.firebase.apps.push({}); },
+    auth: function () {
+        return {
+            onAuthStateChanged: function (cb) { setTimeout(function () { cb({ uid: window.__ktUid }); }, 5); },
+            signInAnonymously: function () { return Promise.resolve(); }
+        };
+    },
+    database: function () { return { ref: ktRef }; }
+};
+window.firebase.database.ServerValue = { TIMESTAMP: 1 };
+`;
+
+// ---------- Testlauf ----------
+
+const results = [];
+function check(name, ok, detail) {
+    results.push({ name, ok, detail });
+    console.log((ok ? '  OK   ' : '  FEHL ') + name + (ok || detail === undefined ? '' : '  → ' + detail));
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/*
+ * Auf einen Zustand warten statt blind zu schlafen.
+ *
+ * Eine neue Browser-Seite zu oeffnen dauert auf einer ausgelasteten Maschine
+ * ohne Weiteres zehn Sekunden - mit festen Pausen laeuft dann die Lobby ab,
+ * bevor das zweite Handy ueberhaupt da ist, und der Test meldet einen Fehler,
+ * den es gar nicht gibt.
+ */
+async function waitFor(label, fn, timeoutMs) {
+    const limit = timeoutMs || 30000;
+    const started = Date.now();
+    while (Date.now() - started < limit) {
+        let ok = false;
+        try { ok = !!(await fn()); } catch (e) { ok = false; }
+        if (ok) return true;
+        await sleep(120);
+    }
+    console.log('  (Zeitueberschreitung beim Warten auf: ' + label + ')');
+    return false;
+}
+
+async function run() {
+    const server = await serve();
+    const browser = await chromium.launch(launchOptions());
+
+    /*
+     * cfg: zusaetzliche Einstellungen NUR fuer diese Seite. Der Computer-TV
+     * bekommt damit eine laengere Geber-Anzeige und mehr Bedenkzeit - sonst ist
+     * die Vorfuehrrunde vorbei, bevor der Gast ueberhaupt gescannt hat.
+     */
+    async function open(url, uid, cfg) {
+        const ctx = await browser.newContext({ viewport: { width: 1500, height: 900 } });
+        const page = await ctx.newPage();
+        const errors = [];
+        page.on('pageerror', e => errors.push(String(e)));
+        page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+        // Firebase-CDN blockieren, Stub stattdessen einsetzen
+        await page.route('**gstatic.com/**', r => r.abort());
+        await page.exposeBinding('__ktOp', (_src, json) => dbOp(JSON.parse(json)));
+        await page.addInitScript(`window.__ktUid = ${JSON.stringify(uid)};`);
+        await page.addInitScript(STUB);
+        // Im Test denkt der Computer schneller als im Cafe (dort 8s pro Zug),
+        // sonst laeuft der Testlauf minutenlang.
+        const cfgOverrides = Object.assign({
+            botMoveSeconds: 0.9,
+            revealSeconds: 3,
+            starterSeconds: 1,
+            swapWindowSeconds: 3,
+            roundTargetSeconds: 90,
+            lobbySeconds: 45,
+            botLobbySeconds: 20
+        }, cfg || {});
+        await page.addInitScript(`
+            window.addEventListener('DOMContentLoaded', function () {
+                if (!window.HOSN_OBE_CONFIG) return;
+                var over = ${JSON.stringify(cfgOverrides)};
+                for (var key in over) window.HOSN_OBE_CONFIG[key] = over[key];
+            });
+        `);
+        page.__errors = errors;
+        pages.push(page);
+        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        return page;
+    }
+
+    console.log('\n--- TV startet ---');
+    const tv = await open(`http://localhost:${PORT}/index.html`, 'tv-uid');
+    await sleep(2500);
+
+    const sessionId = Object.keys(tree.games || {})[0] || null;
+    check('TV legt eine Session an', !!sessionId, String(sessionId));
+    check('Session-Kennung ist sechsstellig', sessionId && sessionId.length === 6, sessionId);
+    const pubNow = () => (tree.games[sessionId] || {}).public || {};
+    check('Startphase ist idle', pubNow().phase === 'idle', pubNow().phase);
+
+    const names = await tv.evaluate(() => ({
+        banner: document.getElementById('kt-banner-title').textContent,
+        launcher: document.querySelector('.kt-launcher-label').textContent
+    }));
+    check('TV nennt das Spiel "Hos’n Obe"',
+        /Hos’n Obe/.test(names.banner) && /Hos’n Obe/.test(names.launcher), JSON.stringify(names));
+
+    const launcherVisible = await tv.evaluate(() => {
+        const el = document.getElementById('kt-launcher');
+        return el && getComputedStyle(el).display !== 'none';
+    });
+    check('Starter-QR ist sichtbar', launcherVisible);
+
+    console.log('\n--- Handy 1 scannt (wird Host) ---');
+    const phone1 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-1');
+    await waitFor('hostSelect', () => pubNow().phase === 'hostSelect');
+    // Handy 2 gleich mitoeffnen: es wartet, bis die Lobby aufmacht. Eine Seite
+    // erst mitten in der Lobby zu oeffnen kostet mehr Zeit, als die Lobby hat.
+    const phone2 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-2');
+    await sleep(400);
+
+    check('Phase wechselt auf hostSelect', pubNow().phase === 'hostSelect', pubNow().phase);
+
+    // Schritt 1: der Spielmodus - erst danach die Spieleranzahl.
+    const modeButtons = await phone1.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    check('Host sieht zuerst die drei Spielmodi',
+        modeButtons.length === 3 &&
+        modeButtons.some(t => /Gäste spielen selbst/.test(t)) &&
+        modeButtons.some(t => /Gäste bekommen Karten/.test(t)) &&
+        modeButtons.some(t => /allein/.test(t)), JSON.stringify(modeButtons));
+    check('Vor dem Modus keine Spieleranzahl',
+        (await phone1.evaluate(() => document.querySelectorAll('.kt-count-btn').length)) === 0);
+
+    console.log('\n--- Modus "Gäste spielen selbst", danach 2 Spieler ---');
+    await phone1.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-btn')).find(b => /Gäste spielen selbst/.test(b.textContent)).click();
+    });
+    await sleep(700);
+    check('Phase wechselt auf countSelect', pubNow().phase === 'countSelect', pubNow().phase);
+    check('Modus ist gespeichert', pubNow().mode === 'humans', String(pubNow().mode));
+
+    const countButtons = await phone1.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-count-btn')).map(b => b.textContent));
+    check('Host sieht Spieleranzahl 2-6', JSON.stringify(countButtons) === '["2","3","4","5","6"]',
+        JSON.stringify(countButtons));
+
+    const countBtnSize = await phone1.evaluate(() => {
+        const b = document.querySelector('.kt-count-btn');
+        return b ? Math.round(b.getBoundingClientRect().height) : 0;
+    });
+    check('Spieleranzahl-Knöpfe sind groß (>=90px hoch)', countBtnSize >= 90, countBtnSize + 'px');
+
+    await phone1.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '2').click();
+    });
+    await sleep(800);
+    await waitFor('beide Plätze belegt',
+        () => Object.keys(pubNow().seats || {}).length === 2);
+    await waitFor('Geber-Ermittlung', () => pubNow().phase === 'starter');
+
+    // ---------- Geber ermitteln ----------
+    console.log('\n--- Geber wird ausgespielt ---');
+    const starterPub = pubNow();
+    const starterCards = starterPub.starterCards || {};
+    check('Jeder Platz hat eine Geberkarte gezogen',
+        Object.keys(starterCards).length === 2,
+        'Phase=' + starterPub.phase + ' Plätze=' + JSON.stringify(starterPub.seats || {}) +
+        ' Karten=' + JSON.stringify(starterCards));
+    if (Object.keys(starterCards).length !== 2) {
+        // Ohne Geberkarten hat der weitere Ablauf keinen Sinn - lieber hier
+        // abbrechen als zwanzig Folgefehler zu melden.
+        throw new Error('Geber-Ermittlung fehlt — Phase ' + starterPub.phase);
+    }
+    const E = require('./hosn-obe-engine.js');
+    const expectedStarter =
+        E.compareCards(starterCards[0], starterCards[1]) > 0 ? 0 : 1;
+    check('Höchste Geberkarte beginnt', starterPub.starterSeat === expectedStarter,
+        JSON.stringify(starterCards) + ' -> ' + starterPub.starterSeat);
+    check('Der Geber ist auch am Zug', starterPub.currentTurnSeat === starterPub.starterSeat,
+        String(starterPub.currentTurnSeat));
+
+    await waitFor('Spielbeginn nach der Geber-Anzeige', () => pubNow().phase === 'playing');
+
+    const pubAfterDeal = pubNow();
+    check('Ausgeteilt, Phase playing', pubAfterDeal.phase === 'playing', pubAfterDeal.phase);
+    check('Drei Karten in der Mitte', (pubAfterDeal.middleCards || []).length === 3);
+    check('turnsPlayed startet bei 0', pubAfterDeal.turnsPlayed === 0, String(pubAfterDeal.turnsPlayed));
+
+    check('Countdown-Zahl ist geleert',
+        (await tv.evaluate(() => document.getElementById('kt-banner-timer').textContent)) === '',
+        JSON.stringify(await tv.evaluate(() => document.getElementById('kt-banner-timer').textContent)));
+
+    /*
+     * Vollbild-Regression.
+     *
+     * #dashboard-scaler traegt ein transform:scale(); ein transformierter
+     * Vorfahre wird zum Bezugsrahmen fuer position:fixed. Genau daran ist das
+     * Vollbild am echten Fernseher frueher gescheitert - und ein Test bei
+     * exakt 1920x1080 (Massstab 1:1) haette es NICHT gesehen. Dieser Testlauf
+     * arbeitet bewusst mit 1500x900.
+     */
+    const fsState = await tv.evaluate(() => {
+        const view = document.getElementById('media-view-hosnobe');
+        const stage = view.querySelector('.kt-stage');
+        const scaler = document.getElementById('dashboard-scaler');
+        const vr = view.getBoundingClientRect();
+        const sr = scaler.getBoundingClientRect();
+        const st = stage.getBoundingClientRect();
+        return {
+            fullscreen: view.classList.contains('kt-fullscreen'),
+            scale: view.style.getPropertyValue('--kt-scale'),
+            coversScaler: vr.width >= sr.width - 2 && vr.height >= sr.height - 2,
+            stageShare: sr.width ? st.width / sr.width : 0,
+            stageRatio: st.height ? +(st.width / st.height).toFixed(3) : 0,
+            centered: Math.abs((st.left + st.width / 2) - (sr.left + sr.width / 2)) < 3
+        };
+    });
+    check('TV schaltet auf Vollbild', fsState.fullscreen && parseFloat(fsState.scale) > 1,
+        JSON.stringify(fsState));
+    check('Vollbild deckt den ganzen Dashboard-Rahmen ab', fsState.coversScaler, JSON.stringify(fsState));
+    check('Bühne bleibt zentriert und füllt den Rahmen',
+        fsState.centered && fsState.stageShare > 0.98 && fsState.stageShare <= 1.001,
+        JSON.stringify(fsState));
+    check('Seitenverhältnis der Bühne stimmt (1530:860)',
+        Math.abs(fsState.stageRatio - 1530 / 860) < 0.02, String(fsState.stageRatio));
+
+    // Wer am Zug ist, muss am TV deutlich markiert sein - ueber das Band
+    // unter dem Namen, NICHT ueber einen Rahmen um den Kartenfaecher (der
+    // wirkte wie ein Kasten um die Karten und wurde entfernt).
+    const turnMark = await tv.evaluate(() => {
+        const seat = document.querySelector('.kt-seat.is-active');
+        if (!seat) return null;
+        const ring = getComputedStyle(seat.querySelector('.kt-fan'), '::after');
+        const tag = seat.querySelector('.kt-seat-tag');
+        return {
+            ringContent: ring.content,
+            tag: tag ? tag.textContent : '',
+            tagSize: tag ? getComputedStyle(tag).fontSize : ''
+        };
+    });
+    check('Kein Rahmen mehr um den Kartenfaecher des aktiven Spielers',
+        !!turnMark && (turnMark.ringContent === 'none' || turnMark.ringContent === ''), JSON.stringify(turnMark));
+    check('Aktiver Platz trägt ein großes "am Zug"-Band',
+        !!turnMark && turnMark.tag === 'am Zug' && parseFloat(turnMark.tagSize) >= 20,
+        JSON.stringify(turnMark));
+
+    // ---------- Regeln am Handy ----------
+    console.log('\n--- Regeln am Zug-Handy ---');
+    const turnSeat = pubAfterDeal.currentTurnSeat;
+    /*
+     * Welches Handy ist am Zug?
+     *
+     * Ueber den Sitzplatz statt ueber den Statustext: der Text haengt am
+     * Neuzeichnen und kann kurz hinterherhinken - dann haetten wir das falsche
+     * Handy erwischt und der Test waere an einer Stelle gescheitert, an der
+     * gar nichts kaputt ist.
+     */
+    const seatOf = async p => {
+        const t = await p.evaluate(() => (document.getElementById('kt-seat-badge') || {}).textContent || '');
+        const m = /Spieler (\d)/.exec(t);
+        return m ? Number(m[1]) - 1 : -1;
+    };
+    const atTurn = async () => {
+        await waitFor('laufendes Spiel', () => ['playing', 'knocked'].includes(pubNow().phase));
+        const seat = Number(pubNow().currentTurnSeat);
+        const s1 = await seatOf(phone1);
+        const p = s1 === seat ? phone1 : phone2;
+        // Warten, bis das Handy den Zug auch anzeigt.
+        await waitFor('Zug-Ansicht bereit', () => p.evaluate(() =>
+            document.querySelectorAll('#kt-hand-cards .kt-card.is-pickable').length > 0 ||
+            Array.from(document.querySelectorAll('.kt-btn')).some(b => b.textContent === 'ALLE 3 NEHMEN')));
+        return p;
+    };
+    const buttonsOf = p => p.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    const clickButton = async (p, label) => {
+        const hit = await p.evaluate(text => {
+            const b = Array.from(document.querySelectorAll('.kt-btn')).find(x => x.textContent === text);
+            if (!b) return false;
+            b.click();
+            return true;
+        }, label);
+        if (!hit) throw new Error('Knopf "' + label + '" nicht gefunden');
+        await sleep(600);
+    };
+
+    /*
+     * Einen Zug tauschen - egal wie die Mitte gerade aussieht.
+     *
+     * Liegt dort ein Drilling oder liegen drei gleiche Farben, ist der
+     * Einzeltausch regelkonform gesperrt; dann bleibt nur "alle 3 nehmen".
+     * Ohne diese Fallunterscheidung war der Test von der Zufallsmitte abhaengig
+     * und schlug gelegentlich fehl, obwohl alles stimmte.
+     */
+    const swapFirstCard = async p => {
+        const canPick = await p.evaluate(() =>
+            document.querySelectorAll('#kt-hand-cards .kt-card.is-pickable').length > 0);
+        if (!canPick) { await clickButton(p, 'ALLE 3 NEHMEN'); return; }
+        await p.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
+        await sleep(150);
+        await p.evaluate(() => { document.querySelector('#kt-middle-cards .kt-card').click(); });
+        await sleep(600);
+    };
+
+    const active = await atTurn();
+    const labels = await buttonsOf(active);
+    check('Kein "1 Karte tauschen"-Knopf mehr', !labels.some(l => /1 Karte tauschen/.test(l)),
+        JSON.stringify(labels));
+    check('Kein Aufgehen in der ersten Runde', !labels.some(l => l === 'AUFGEHEN'), JSON.stringify(labels));
+    check('"Weiter" steht immer zur Verfügung', labels.includes('WEITER'), JSON.stringify(labels));
+
+    const middleWorth = await active.evaluate(
+        m => window.HosnObeEngine.middleWorthTakingAll(m || []), pubNow().middleCards);
+    const hasAll = labels.some(l => /ALLE 3 NEHMEN/.test(l));
+    check('"Alle 3 tauschen" genau dann, wenn die Mitte es hergibt', hasAll === middleWorth,
+        'Knopf=' + hasAll + ' Mitte=' + middleWorth);
+
+    // Regressionsschutz: frueher verschwanden "Alle 3 tauschen" und "Aufgehen",
+    // sobald man eine Karte antippte.
+    await active.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
+    await sleep(200);
+    const whileSelected = await buttonsOf(active);
+    check('Knöpfe bleiben nach dem Antippen einer Karte stehen',
+        JSON.stringify(whileSelected) === JSON.stringify(labels),
+        JSON.stringify(labels) + ' -> ' + JSON.stringify(whileSelected));
+    await active.evaluate(() => { document.querySelector('#kt-hand-cards .kt-card').click(); });
+    await sleep(200);
+
+    const handCardH = await active.evaluate(() => {
+        const c = document.querySelector('#kt-hand-cards .kt-card');
+        return c ? Math.round(c.getBoundingClientRect().height) : 0;
+    });
+    check('Handkarten sind groß (>=220px auf 1500px-Viewport)', handCardH >= 220, handCardH + 'px');
+
+    // ---------- Zug 1 und 2: je ein Tausch ----------
+    console.log('\n--- Tausch per Antippen ---');
+    await swapFirstCard(active);
+    check('Kein Bestätigen-Schritt mehr',
+        !(await active.evaluate(() =>
+            Array.from(document.querySelectorAll('.kt-btn')).some(b => /bestätigen/i.test(b.textContent)))));
+    const afterSwap = pubNow();
+    /*
+     * Ein Tausch ist 1:1 und ortsfest: die genommene Karte landet GENAU auf dem
+     * Platz, den die abgegebene hatte. Der Fernseher animiert nach handIndex -
+     * fehlt der, blendet er den falschen Platz aus und der richtige zeigt die
+     * neue Karte sofort. Am Tisch sah das aus, als wuerde gezaubert.
+     */
+    if (afterSwap.lastMove && afterSwap.lastMove.type === 'single') {
+        const lm = afterSwap.lastMove;
+        check('Handy meldet den getauschten Platz mit',
+            Number.isInteger(lm.handIndex) && lm.handIndex >= 0 && lm.handIndex <= 2,
+            JSON.stringify(lm));
+        check('Mitte traegt die abgegebene Karte am gemeldeten Platz',
+            (afterSwap.middleCards || [])[lm.middleIndex] === lm.gave,
+            JSON.stringify(afterSwap.middleCards) + ' vs ' + JSON.stringify(lm));
+    }
+    check('turnsPlayed hochgezählt', afterSwap.turnsPlayed === 1, String(afterSwap.turnsPlayed));
+    check('Zug ist beim anderen Spieler', afterSwap.currentTurnSeat !== turnSeat);
+    check('Vor der zweiten Runde kein Aufgeh-Fenster',
+        afterSwap.swapWindowSeat === undefined || afterSwap.swapWindowSeat === null,
+        JSON.stringify(afterSwap.swapWindowSeat));
+
+    const active2 = await atTurn();
+    await swapFirstCard(active2);
+    check('Nach zwei Zügen war jeder einmal dran', pubNow().turnsPlayed === 2,
+        String(pubNow().turnsPlayed));
+
+    // ---------- Ab der zweiten Runde: Aufgehen auch direkt ohne Tausch ----------
+    console.log('\n--- Aufgehen ohne Tausch ab Runde 2 ---');
+    const active3 = await atTurn();
+    const labels3 = await buttonsOf(active3);
+    check('Aufgehen steht ab der zweiten Runde auch ohne Tausch zur Verfügung',
+        labels3.some(l => l === 'AUFGEHEN'), JSON.stringify(labels3));
+    await clickButton(active3, 'WEITER');
+    check('Weiter zählt als Zug', pubNow().turnsPlayed === 3, String(pubNow().turnsPlayed));
+
+    // ---------- Sechs-Sekunden-Fenster nach dem Tausch ----------
+    console.log('\n--- Aufgeh-Fenster nach dem Tausch ---');
+    const active4 = await atTurn();
+    await swapFirstCard(active4);
+    const windowPub = pubNow();
+    check('Nach dem Tausch bleibt der Zug beim Spieler',
+        windowPub.swapWindowSeat !== undefined && windowPub.swapWindowSeat !== null,
+        JSON.stringify(windowPub.swapWindowSeat));
+    const windowUi = await active4.evaluate(() => ({
+        buttons: Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent),
+        count: (document.querySelector('.kt-window-count') || {}).textContent || '',
+        pickable: document.querySelectorAll('.kt-card.is-pickable').length
+    }));
+    check('Im Fenster stehen Aufgehen und Weitergeben bereit',
+        windowUi.buttons.includes('AUFGEHEN') && windowUi.buttons.includes('WEITERGEBEN'),
+        JSON.stringify(windowUi.buttons));
+    check('Der Countdown läuft', Number(windowUi.count) > 0, windowUi.count);
+    check('Im Fenster ist der Tausch gesperrt', windowUi.pickable === 0, String(windowUi.pickable));
+    const tvWindow = await tv.evaluate(() => {
+        const seat = document.querySelector('.kt-seat.is-window');
+        return seat ? seat.querySelector('.kt-seat-tag').textContent : null;
+    });
+    check('TV zeigt das Fenster am richtigen Platz', tvWindow === 'aufgehen?', String(tvWindow));
+
+    await clickButton(active4, 'WEITERGEBEN');
+    const afterWindow = pubNow();
+    check('Weitergeben schließt das Fenster',
+        afterWindow.swapWindowSeat === null || afterWindow.swapWindowSeat === undefined,
+        JSON.stringify(afterWindow.swapWindowSeat));
+    check('Der Tausch im Fenster zählt nur einen Zug', afterWindow.turnsPlayed === 4,
+        String(afterWindow.turnsPlayed));
+
+    // ---------- Aufgehen ohne Tausch ----------
+    console.log('\n--- Aufgehen deckt sofort auf ---');
+    const active5 = await atTurn();
+    const labels5 = await buttonsOf(active5);
+    check('Aufgehen ohne Tausch weiterhin verfügbar',
+        labels5.some(l => l === 'AUFGEHEN'), JSON.stringify(labels5));
+    await clickButton(active5, 'AUFGEHEN');
+    await sleep(400);
+    const afterKnock = pubNow();
+    const knocker = afterKnock.knockedBySeat;
+    check('Phase ist knocked', afterKnock.phase === 'knocked', afterKnock.phase);
+    check('Wer aufgeht, liegt sofort offen',
+        !!(afterKnock.revealedHands && afterKnock.revealedHands[knocker]),
+        JSON.stringify(afterKnock.revealedHands || null));
+
+    const facesUp = await tv.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-fan-card img'))
+            .filter(i => !/back_(lightblue|red)\.webp/.test(i.getAttribute('src'))).length);
+    check('TV zeigt die offenen Karten', facesUp === 3, String(facesUp));
+
+    const tvTag = await tv.evaluate(() => {
+        const el = document.querySelector('.kt-seat.is-knocker .kt-seat-tag');
+        return el ? el.textContent : null;
+    });
+    check('TV nennt es "aufgegangen"', tvTag === 'aufgegangen', String(tvTag));
+
+    const backsUsed = await tv.evaluate(() => {
+        const s = new Set(Array.from(document.querySelectorAll('.kt-fan-card img'))
+            .map(i => i.getAttribute('src')).filter(x => /back_(lightblue|red)\.webp/.test(x)));
+        return Array.from(s);
+    });
+    check('Verdeckte Karten nutzen die neuen Rückseiten',
+        backsUsed.length > 0 && backsUsed.every(s => /back_(lightblue|red)\.webp$/.test(s)),
+        JSON.stringify(backsUsed));
+    check('Genau EINE Rückseiten-Farbe pro Runde', backsUsed.length === 1, JSON.stringify(backsUsed));
+
+    const backBg = await tv.evaluate(() => {
+        const el = document.querySelector('.kt-fan-card.is-back');
+        return el ? getComputedStyle(el).backgroundColor : null;
+    });
+    check('Rückseiten liegen auf Weiß', backBg === 'rgb(255, 255, 255)', String(backBg));
+
+    const skews = await tv.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-middle-card')).map(c => c.style.transform));
+    check('Mittenkarten liegen schief und unterschiedlich',
+        skews.length === 3 && new Set(skews).size === 3 && skews.every(s => /rotate\(/.test(s)),
+        JSON.stringify(skews));
+
+    console.log('\n--- Letzter Zug, dann Auswertung ---');
+    const last = await atTurn();
+    await swapFirstCard(last);
+    await waitFor('Auswertung', () => ['reveal', 'idle'].includes(pubNow().phase), 25000);
+    await sleep(1200);
+
+    const finalPub = pubNow();
+    check('Runde endet in reveal oder idle',
+        ['reveal', 'idle'].includes(finalPub.phase), finalPub.phase);
+    if (finalPub.scores) {
+        const seats = Object.keys(finalPub.scores);
+        check('Für jeden Sitz ein Ergebnis', seats.length === 2, JSON.stringify(finalPub.scores));
+        const fire = (finalPub.fireSeats || []).length > 0;
+        check('Genau ein Verlierer (oder Feuer-Sonderfall)',
+            fire || (finalPub.payingSeats || []).length === 1,
+            JSON.stringify(finalPub.payingSeats));
+        check('Alle Hände aufgedeckt',
+            Object.keys(finalPub.revealedHands || {}).length === 2,
+            JSON.stringify(Object.keys(finalPub.revealedHands || {})));
+    }
+
+
+    // ---------- Computer-Runde im selben Browser ----------
+    console.log('\n--- Computer-Runde ---');
+    const tv2 = await open(`http://localhost:${PORT}/index.html`, 'tv-uid',
+        { starterSeconds: 5, botMoveSeconds: 1.4 });
+    await sleep(2500);
+    const sessionId2 = Object.keys(tree.games || {}).filter(k => k !== sessionId)[0] || sessionId;
+    const pubNow2 = () => (tree.games[sessionId2] || {}).public || {};
+    check('Zweite Session vorhanden', !!sessionId2, String(sessionId2));
+
+    const phone3 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-1');
+    await waitFor('hostSelect (Computer-Session)', () => pubNow2().phase === 'hostSelect');
+    // Der zweite Gast wartet von Anfang an mit - so ist er da, wenn die Lobby
+    // aufmacht, statt erst mitten in der Wartezeit zu erscheinen.
+    const phone4 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId2}`, 'phone-4');
+    await sleep(400);
+
+    const botButtons = await phone3.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent).filter(t => /Computer/.test(t)));
+    check('Beide Computer-Spielarten stehen zur Wahl',
+        botButtons.length === 2 && botButtons.some(t => /Gäste bekommen Karten/.test(t)) &&
+        botButtons.some(t => /allein/.test(t)), JSON.stringify(botButtons));
+
+    /*
+     * Computer mit Deckvergabe: es muessen ALLE Decks vergeben werden. Erst
+     * der Fehlversuch - drei Decks, aber nur ein Gast - dann der echte Lauf.
+     */
+    console.log('\n--- Computer mit Deckvergabe: unvollständig -> zurück zur Anzahl ---');
+    await phone3.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-btn'))
+            .find(b => /Gäste bekommen Karten/.test(b.textContent)).click();
+    });
+    await sleep(800);
+    check('Modus botDecks gespeichert', pubNow2().mode === 'botDecks', String(pubNow2().mode));
+    check('Erst der Modus, dann die Anzahl', pubNow2().phase === 'countSelect', pubNow2().phase);
+
+    await phone3.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '3').click();
+    });
+    await sleep(700);
+    check('Lobby wartet auf drei Decks',
+        pubNow2().phase === 'lobby' && Number(pubNow2().playerCount) === 3,
+        pubNow2().phase + '/' + pubNow2().playerCount);
+    // Zwei Gaeste sind da, das dritte Deck bleibt liegen.
+    await waitFor('zwei von drei Decks vergeben',
+        () => Object.keys(pubNow2().seats || {}).length === 2);
+
+    await waitFor('Rückschritt zur Spieleranzahl',
+        () => pubNow2().phase === 'countSelect', 20000);
+    check('Unvollständige Deckvergabe führt zurück zur Spieleranzahl',
+        pubNow2().phase === 'countSelect', pubNow2().phase);
+    check('Plätze sind dabei freigeräumt',
+        Object.keys(pubNow2().seats || {}).length === 0, JSON.stringify(pubNow2().seats || {}));
+
+    console.log('\n--- Computer mit Deckvergabe: zwei Decks, zwei Gäste ---');
+    // Warten, bis die Anzahl-Knoepfe wirklich stehen - sonst geht der Klick ins
+    // Leere und der Test scheitert an etwas, das gar nicht kaputt ist.
+    await waitFor('Anzahl-Auswahl steht', () => phone3.evaluate(() =>
+        document.querySelectorAll('.kt-count-btn').length === 5));
+    await phone3.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '2').click();
+    });
+    await waitFor('beide Decks vergeben',
+        () => Object.keys(pubNow2().seats || {}).length === 2);
+    await waitFor('Computer-Runde läuft',
+        () => ['starter', 'playing', 'knocked', 'reveal'].includes(pubNow2().phase));
+    await sleep(1500);
+
+    const started = pubNow2();
+    check('Computer-Runde markiert', started.botGame === true, JSON.stringify(started.botGame));
+    check('Deckvergabe ist eingeschaltet', started.botSeats === true, JSON.stringify(started.botSeats));
+    check('Zwei Plätze im Spiel', Number(started.playerCount) === 2, String(started.playerCount));
+    check('Beide Plätze sind an Gäste vergeben',
+        Object.keys(started.seats || {}).length === 2, JSON.stringify(started.seats || {}));
+    check('Runde läuft (Geber oder Spiel)',
+        ['starter', 'playing', 'knocked', 'reveal'].includes(started.phase), started.phase);
+
+    // Der QR im laufenden Spiel ist ersatzlos weg - gescannt wird in der Lobby.
+    const noQr = await tv2.evaluate(() => !document.getElementById('kt-joinqr'));
+    check('Kein QR-Code im laufenden Spiel', noQr);
+
+    // Erst wenn wirklich gespielt wird - waehrend der Geber-Ermittlung steht am
+    // Handy noch "Spieler X beginnt".
+    await waitFor('Computer zieht', () => ['playing', 'knocked'].includes(pubNow2().phase));
+    await sleep(400);
+    const guest = await phone4.evaluate(() => ({
+        seatBadge: document.getElementById('kt-seat-badge').textContent,
+        cards: document.querySelectorAll('#kt-hand-cards .kt-card').length,
+        buttons: Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent),
+        status: document.getElementById('kt-status-main').textContent
+    }));
+    check('Gast hat einen Platz', /Spieler \d/.test(guest.seatBadge), guest.seatBadge);
+    check('Gast sieht seine drei Karten', guest.cards === 3, String(guest.cards));
+    check('Gast darf nicht eingreifen', guest.buttons.length === 0, JSON.stringify(guest.buttons));
+    check('Gast weiß, dass der Computer spielt', /Computer/.test(guest.status), guest.status);
+
+    /*
+     * Die Mitte darf beim Tausch nie aufklaffen.
+     *
+     * Frueher lief ein Tausch in zwei Schritten: die genommene Karte flog weg,
+     * die Mitte zeigte solange nur zwei Karten, und erst danach fiel die eigene
+     * Karte in die Luecke. Das las sich wie zwei getrennte Zuege. Jetzt legt
+     * man seine Karte auf die Zielkarte, erst dann hebt die ab - waehrend der
+     * ganzen Runde liegen also durchgehend drei Karten in der Mitte.
+     *
+     * Gemessen wird per requestAnimationFrame, damit auch ein Aussetzer von
+     * wenigen Frames auffaellt.
+     */
+    await tv2.evaluate(() => {
+        window.__midMin = 3;
+        const tick = () => {
+            const view = document.getElementById('media-view-hosnobe');
+            if (view && view.classList.contains('active')) {
+                const slots = document.querySelectorAll('#kt-middle .kt-middle-card');
+                const wrap = document.getElementById('kt-middle');
+                const shown = wrap && getComputedStyle(wrap).display !== 'none';
+                if (shown && slots.length === 3) {
+                    let visible = 0;
+                    slots.forEach(el => {
+                        const img = el.querySelector('img');
+                        if (getComputedStyle(el).visibility !== 'hidden' && img && img.getAttribute('src')) visible++;
+                    });
+                    if (visible < window.__midMin) window.__midMin = visible;
+                }
+            }
+            requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    });
+
+    // Runde durchlaufen lassen
+    let sawKnock = false, sawProgressiveReveal = false, maxRevealDuringPlay = 0;
+    let swapsGeprueft = 0, swapsFalsch = 0, letzterZug = null;
+    for (let i = 0; i < 900; i++) {
+        const p = pubNow2();
+        /*
+         * Jeden Einzeltausch des Computers auf Ortstreue pruefen: die genommene
+         * Karte muss an genau dem Platz liegen, den lastMove nennt, und die
+         * abgegebene an ihrem Platz in der Mitte. Kein Umsortieren im Faecher.
+         */
+        if (p.lastMove && p.lastMove.type === 'single' && JSON.stringify(p.lastMove) !== letzterZug) {
+            letzterZug = JSON.stringify(p.lastMove);
+            const lm = p.lastMove;
+            // ktMirrorHands ist ein top-level `let` - das legt KEINE
+            // window-Eigenschaft an, der blanke Name greift aber.
+            const handPasst = await tv2.evaluate((m) => {
+                if (typeof ktMirrorHands === 'undefined') return null;
+                const h = ktMirrorHands[m.seat];
+                return !!(h && h[m.handIndex] === m.took);
+            }, lm).catch(() => null);
+            swapsGeprueft++;
+            const mittePasst = (p.middleCards || [])[lm.middleIndex] === lm.gave;
+            if (!Number.isInteger(lm.handIndex) || handPasst === false || !mittePasst) {
+                swapsFalsch++;
+                if (swapsFalsch === 1) console.log('   (erster fehlerhafter Tausch: ' + JSON.stringify(lm) + ')');
+            }
+        }
+        if (p.knockedBySeat !== undefined && p.knockedBySeat !== null) sawKnock = true;
+        if (p.phase === 'knocked') {
+            const n = Object.keys(p.revealedHands || {}).length;
+            maxRevealDuringPlay = Math.max(maxRevealDuringPlay, n);
+            if (n > 0 && n < 3) sawProgressiveReveal = true;
+        }
+        if (p.phase === 'reveal' && p.scores) break;
+        if (p.phase === 'idle' && i > 150) break;
+        await sleep(60);
+    }
+
+    check('Computer tauscht ortstreu 1:1 (kein Verschieben im Fächer)',
+        swapsGeprueft > 0 && swapsFalsch === 0,
+        swapsGeprueft + ' Tausche geprüft, ' + swapsFalsch + ' fehlerhaft');
+
+    const midMin = await tv2.evaluate(() => window.__midMin);
+    check('Mitte klafft beim Tausch nie auf', midMin === 3,
+        'wenigste sichtbare Mittenkarten: ' + midMin);
+
+    const done = pubNow2();
+    check('Runde läuft von allein bis zum Ende',
+        done.phase === 'reveal' || done.phase === 'idle', done.phase);
+    /*
+     * Eine Runde endet auf zwei Wegen: jemand geht auf, oder es gibt Feuer -
+     * dann ist sofort Schluss und alle decken auf, ohne Aufgehen. Mit sechs
+     * Spielern ist Feuer haeufig genug, dass der Test beides zulassen muss.
+     */
+    const endedByFire = done.fireBySeat !== undefined && done.fireBySeat !== null;
+    check('Runde endet durch Aufgehen oder Feuer', sawKnock || endedByFire,
+        'aufgegangen=' + sawKnock + ' feuer=' + endedByFire);
+    if (sawKnock && !endedByFire) {
+        check('Nach dem Aufgehen wird schrittweise aufgedeckt',
+            sawProgressiveReveal, 'max. gleichzeitig offen während knocked: ' + maxRevealDuringPlay);
+    } else {
+        console.log('  (übersprungen: Runde endete durch Feuer, nicht durch Aufgehen)');
+    }
+
+    if (done.scores) {
+        check('Für beide Plätze ein Ergebnis', Object.keys(done.scores).length === 2, JSON.stringify(done.scores));
+        const fire = (done.fireSeats || []).length > 0;
+        check('Genau ein Verlierer (oder Feuer)',
+            fire || (done.payingSeats || []).length === 1, JSON.stringify(done.payingSeats));
+        const scores = Object.values(done.scores);
+        check('Alle Punktzahlen plausibel (7-31)',
+            scores.every(s => s >= 7 && s <= 31), JSON.stringify(scores));
+    }
+
+
+    // ---------- Neues Spiel starten ----------
+    console.log('\n--- Neues Spiel starten ---');
+    const restartLabels = await phone3.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    check('Nach dem Spiel steht "Neues Spiel starten" bereit',
+        restartLabels.some(t => /NEUES SPIEL STARTEN/.test(t)), JSON.stringify(restartLabels));
+
+    await phone3.evaluate(() => {
+        Array.from(document.querySelectorAll('.kt-btn'))
+            .find(b => /NEUES SPIEL STARTEN/.test(b.textContent)).click();
+    });
+    await sleep(2000);
+    check('Neues Spiel führt zurück zur Modus-Auswahl',
+        pubNow2().phase === 'hostSelect', pubNow2().phase);
+    check('Alte Rundendaten sind abgeräumt',
+        !pubNow2().revealedHands && !pubNow2().scores && !pubNow2().middleCards,
+        JSON.stringify({ h: !!pubNow2().revealedHands, s: !!pubNow2().scores, m: !!pubNow2().middleCards }));
+    const restartModes = await phone3.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    check('Die drei Modi stehen wieder zur Wahl', restartModes.length === 3, JSON.stringify(restartModes));
+
+    // ---------- Fehlerfreiheit ----------
+    console.log('\n--- Konsolenfehler ---');
+    for (const [name, p] of [['TV', tv], ['Handy 1', phone1], ['Handy 2', phone2],
+                             ['TV (Computer)', tv2], ['Handy (Computer)', phone3], ['Gast (Computer)', phone4]]) {
+        const real = p.__errors.filter(e => !/gstatic|net::ERR|Failed to load resource|favicon/i.test(e));
+        check(name + ' ohne JS-Fehler', real.length === 0, real.slice(0, 3).join(' | '));
+    }
+
+    await browser.close();
+    server.close();
+
+    const failed = results.filter(r => !r.ok);
+    console.log('\n' + (results.length - failed.length) + ' von ' + results.length + ' Checks bestanden.');
+    if (failed.length) {
+        console.log('\nFEHLGESCHLAGEN:');
+        failed.forEach(f => console.log('  x ' + f.name + (f.detail ? '  -> ' + f.detail : '')));
+        process.exit(1);
+    }
+    console.log('Browser-Durchlauf in Ordnung.\n');
+}
+
+function launchOptions() {
+    const candidates = [
+        process.env.CHROMIUM_PATH,
+        '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+    ].filter(Boolean);
+    for (const p of candidates) {
+        try { if (require('fs').existsSync(p)) return { executablePath: p }; } catch (e) { /* weiter */ }
+    }
+    return {};   // Playwright nimmt seinen eigenen Browser
+}
+
+run().catch(err => { console.error(err); process.exit(1); });
