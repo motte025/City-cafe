@@ -1480,6 +1480,24 @@
         .kt-seat.is-fire .kt-seat-name, .kt-seat.is-fire .kt-seat-score { color: #ff8a3d; }
         .kt-seat.is-knocker .kt-seat-tag { border-color: #f4a300; color: #f4a300; }
 
+        /* ---------- Status-Smileys ----------
+           Zwei animierte SVGs; die Animation steckt komplett in der Datei, hier
+           wird nur platziert. Der Coole markiert beim Rundenstart die hoechste
+           Karte, der Weinende beim Aufdecken den, der zahlt. Pro Sitz reicht
+           EIN Element: die beiden treten nie gleichzeitig auf, und so kann
+           auch nichts aus der Vorrunde haengenbleiben.
+
+           Absolut positioniert und ausserhalb des Textflusses, damit das Ein-
+           und Ausblenden den Faecher nicht verschiebt. Reine Anzeige: nicht
+           anklickbar, nicht fokussierbar, per aria-hidden aus dem Vorlesetext
+           heraus - Name, Punkte und Ergebnistext sagen dasselbe. */
+        .kt-seat-smiley {
+            position: absolute; top: -8px; right: 38px;
+            width: 22px; height: 22px;          /* ~19 % der Kartenbreite (116px) */
+            z-index: 20; pointer-events: none;
+            filter: drop-shadow(0 2px 7px rgba(0,0,0,0.85));
+        }
+
         /* Offene Mitte, waagrecht im freien Band zwischen oberer und unterer Reihe.
            Die Karten liegen bewusst schief und leicht versetzt - wie echte Karten,
            die jemand auf den Tisch geworfen hat, nicht wie ein Raster. Rotation und
@@ -1592,6 +1610,16 @@
         }
         .kt-result-main { font-size: 38px; letter-spacing: 1px; }
         .kt-result-sub { margin-top: 7px; font-size: 20px; color: #ffb3ba; letter-spacing: 0.5px; }
+        /* Der weinende Smiley ueber dem Namen. Die Reihe bleibt auch leer
+           stehen (min-height), damit der Kasten beim Nachladen des SVGs nicht
+           aufspringt. Zahlen ausnahmsweise mehrere, wird jeder kleiner. */
+        .kt-result-smileys {
+            display: flex; justify-content: center; gap: 10px;
+            min-height: 84px; margin-bottom: 4px;
+        }
+        .kt-result-smileys img { width: 84px; height: 84px; }
+        .kt-result-smileys.is-many { min-height: 54px; }
+        .kt-result-smileys.is-many img { width: 54px; height: 54px; }
         .kt-result.is-fire { border-color: #ff8a3d; box-shadow: 0 0 46px rgba(255,138,61,0.6); }
         .kt-result.is-fire .kt-result-sub { color: #ffd2ab; }
 
@@ -2286,6 +2314,7 @@
 
 
                         <div class="kt-result" id="kt-result" style="display: none;">
+                            <div class="kt-result-smileys" id="kt-result-smileys" aria-hidden="true"></div>
                             <div class="kt-result-main" id="kt-result-main"></div>
                             <div class="kt-result-sub" id="kt-result-sub"></div>
                         </div>
@@ -7113,6 +7142,75 @@
         let ktSeatEls = [];          // { wrap, cards[], imgs[], name, score, tag }
         let ktSeatLayoutKey = '';    // Spieleranzahl, fuer die die Struktur gebaut wurde
 
+        /* ---------- Status-Smileys ----------
+         *
+         * Zwei animierte SVGs, die Animation steckt in der Datei selbst - hier
+         * wird nur ein- und ausgeblendet, nichts angesteuert. Deshalb reicht
+         * <img>: gekapselt, cachebar, und die Keyframes der beiden Dateien
+         * koennen sich nicht in die Quere kommen.
+         *
+         * Fehlt eine Datei, blendet onerror das Bild dauerhaft aus. Dann laeuft
+         * das Spiel unveraendert weiter, nur ohne Smiley - am Fernseher steht
+         * kein kaputtes Bildsymbol.
+         */
+        function ktMakeSmiley(className) {
+            const img = document.createElement('img');
+            img.className = className;
+            img.alt = '';                       // Info steht daneben als Text
+            img.setAttribute('aria-hidden', 'true');
+            img.draggable = false;
+            img.style.display = 'none';
+            img.addEventListener('error', () => {
+                img.dataset.broken = '1';
+                img.style.display = 'none';
+            });
+            return img;
+        }
+
+        /*
+         * kind: 'cool' | 'crying' | null (null = ausblenden)
+         *
+         * Beim Ausblenden faellt auch das src-Attribut weg. Damit ist das
+         * Attribut selbst die Markierung ("dieser Sitz traegt gerade diesen
+         * Smiley") und es kann nichts aus der Vorrunde haengenbleiben, auch
+         * nicht unsichtbar.
+         */
+        function ktShowSmiley(img, kind) {
+            if (!img) return;
+            if (!kind) {
+                if (img.hasAttribute('src')) img.removeAttribute('src');
+                delete img.dataset.broken;
+                if (img.style.display !== 'none') img.style.display = 'none';
+                return;
+            }
+            const src = KtEngine.smileyImage(kind);
+            if (img.getAttribute('src') !== src) {
+                delete img.dataset.broken;      // andere Datei, neuer Versuch
+                img.setAttribute('src', src);
+            }
+            const want = img.dataset.broken ? 'none' : '';
+            if (img.style.display !== want) img.style.display = want;
+        }
+
+        /*
+         * Welcher Sitz traegt gerade den coolen Smiley?
+         *
+         * Quelle ist allein ktPub.starterSeat aus dem Austeilen - dort wird die
+         * hoechste gezogene Karte bestimmt (Rang, dann Herz > Pik > Karo >
+         * Kreuz), also immer genau ein Sitz. Sichtbar bleibt die Markierung,
+         * bis der erste Zug durch ist (turnsPlayed >= 1): sie zeigt an, wer
+         * anfaengt, und ist danach erledigt - kein Dauerabzeichen.
+         *
+         * Rueckgabe -1 = niemand.
+         */
+        function ktStarterMarkSeat() {
+            const phase = ktPub.phase;
+            if (phase !== 'starter' && phase !== 'playing') return -1;
+            if ((Number(ktPub.turnsPlayed) || 0) >= 1) return -1;
+            const seat = Number(ktPub.starterSeat);
+            return isFinite(seat) ? seat : -1;
+        }
+
         function ktBuildSeats(count) {
             const host = ktEl('kt-seats');
             host.innerHTML = '';
@@ -7158,8 +7256,12 @@
                 tag.style.display = 'none';
                 wrap.appendChild(tag);
 
+                // Status-Smiley oben rechts am Faecher - siehe ktSeatSmiley().
+                const smiley = ktMakeSmiley('kt-seat-smiley');
+                fan.appendChild(smiley);
+
                 host.appendChild(wrap);
-                ktSeatEls.push({ wrap: wrap, cards: cards, imgs: imgs, name: name, score: score, tag: tag });
+                ktSeatEls.push({ wrap: wrap, cards: cards, imgs: imgs, name: name, score: score, tag: tag, smiley: smiley });
             }
             ktSeatLayoutKey = String(count);
         }
@@ -7206,6 +7308,7 @@
             // markiert - sonst wechselt die Anzeige, bevor die Animation zeigt,
             // wer eigentlich getauscht hat.
             const displaySeat = ktTurnDisplaySeat !== null ? ktTurnDisplaySeat : Number(ktPub.currentTurnSeat);
+            const starterMark = ktStarterMarkSeat();
 
             for (let seat = 0; seat < count; seat++) {
                 const el = ktSeatEls[seat];
@@ -7249,6 +7352,14 @@
                     : isTurn ? 'am Zug' : '';
                 ktSetShown(el.tag, !!tagText);
                 if (tagText) ktSetText(el.tag, tagText);
+
+                // Cool = hoechste Karte, darf zuerst tauschen (bis zum ersten
+                // Zug). Weinend = zahlt die Runde. Beides schliesst sich
+                // gegenseitig aus, ein Element genuegt pro Sitz.
+                ktShowSmiley(el.smiley,
+                    starterMark === seat ? 'cool'
+                    : (phase === 'reveal' && paying.indexOf(seat) !== -1) ? 'crying'
+                    : null);
             }
         }
 
@@ -7436,19 +7547,36 @@
             const fire = (ktPub.fireSeats || []).length > 0 || !!ktPub.tableFire;
             box.style.display = '';
             box.className = 'kt-result' + (fire ? ' is-fire' : '');
+
+            /*
+             * Der weinende Smiley steht ueber dem Namen. Zahlt niemand, bleibt
+             * die Reihe leer - der reservierte Platz verhindert, dass der
+             * Kasten beim Nachladen des SVGs aufspringt.
+             */
+            const smileys = ktEl('kt-result-smileys');
+            const wantSmileys = paying.length;
+            if (Number(smileys.dataset.count) !== wantSmileys) {
+                smileys.dataset.count = String(wantSmileys);
+                smileys.innerHTML = '';
+                for (let i = 0; i < wantSmileys; i++) {
+                    const img = ktMakeSmiley('');
+                    ktShowSmiley(img, 'crying');
+                    smileys.appendChild(img);
+                }
+            }
+            // Zahlen ausnahmsweise mehrere, wird jeder kleiner dargestellt.
+            ktSetClass(smileys, 'is-many', wantSmileys > 1);
+
             if (ktPub.tableFire) {
                 ktEl('kt-result-main').textContent = '🔥 TISCHFEUER!';
                 ktEl('kt-result-sub').textContent = 'Die Mitte stand bei 31 — alle decken auf. ' +
-                    (paying.length
-                        ? ktNameList(paying) + (paying.length > 1 ? ' zahlen' : ' zahlt') +
-                          ' (unter ' + KtEngine.FIRE_PAY_BELOW + ' Punkte und der Schwächste)'
-                        : 'Niemand unter ' + KtEngine.FIRE_PAY_BELOW + ' Punkten — diesmal kommen alle davon!');
+                    (paying.length ? ktNameList(paying) + ' zahlt die Runde (niedrigste Hand)'
+                                   : 'Niemand zahlt.');
             } else if (fire) {
                 ktEl('kt-result-main').textContent = '🔥 FEUER!';
                 ktEl('kt-result-sub').textContent = paying.length
-                    ? ktNameList(paying) + (paying.length > 1 ? ' zahlen' : ' zahlt') +
-                      ' die Runde (unter ' + KtEngine.FIRE_PAY_BELOW + ' Punkte und der Schwächste)'
-                    : 'Niemand unter ' + KtEngine.FIRE_PAY_BELOW + ' Punkten — diesmal kommen alle davon!';
+                    ? ktNameList(paying) + ' zahlt die Runde (niedrigste Hand)'
+                    : 'Niemand zahlt.';
             } else {
                 ktEl('kt-result-main').textContent = ktNameList(paying) + ' zahlt die Runde!';
                 ktEl('kt-result-sub').textContent = 'Niedrigste Hand';
@@ -8193,10 +8321,13 @@
                 }).catch(err => console.warn('[Hos’n Obe] Ergebnis nicht schreibbar:', err))
                   .then(() => {
                       ktRender();
+                      // Mindestens drei Sekunden, damit die Traenen-Animation
+                      // des weinenden Smileys einmal ganz durchlaeuft, bevor
+                      // die naechste Runde starten kann.
                       ktPhaseTimer = setTimeout(() => {
                           ktResolving = false;
                           ktResetSession();
-                      }, (KT.revealSeconds || 12) * 1000);
+                      }, Math.max(3, KT.revealSeconds || 12) * 1000);
                   });
             }, 3500);
         }

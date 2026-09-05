@@ -388,6 +388,41 @@ async function run() {
     check('Der Geber ist auch am Zug', starterPub.currentTurnSeat === starterPub.starterSeat,
         String(starterPub.currentTurnSeat));
 
+    /*
+     * ---------- Status-Smileys ----------
+     *
+     * Geprueft wird die MARKIERUNG (welcher Sitz traegt welche Datei), nicht
+     * die Sichtbarkeit: fehlt die SVG-Datei noch, blendet onerror das Bild
+     * bewusst aus - die Markierung selbst muss trotzdem am richtigen Platz
+     * sitzen. So gilt der Test vor und nach dem Einspielen der Dateien.
+     *
+     * Alles in EINEM evaluate()-Aufruf: der Test ist an mehreren Stellen
+     * zeitkritisch (Geber-Anzeige 1 s, Aufgeh-Fenster 6 s, Ergebnis 3 s), da
+     * zaehlt jeder gesparte Browser-Roundtrip.
+     */
+    const smileyState = () => tv.evaluate(() => {
+        const file = img => {
+            const src = img && img.getAttribute('src');
+            return src ? src.replace(/^.*\//, '') : null;
+        };
+        const seatEls = Array.from(document.querySelectorAll('#kt-seats .kt-seat'));
+        const first = seatEls.length ? seatEls[0].querySelector('.kt-seat-smiley') : null;
+        return {
+            seats: seatEls.map(seat => file(seat.querySelector('.kt-seat-smiley'))),
+            result: Array.from(document.querySelectorAll('#kt-result-smileys img')).map(file),
+            inert: !!first && first.getAttribute('aria-hidden') === 'true' && !first.hasAttribute('tabindex')
+        };
+    });
+
+    const starterState = await smileyState();
+    check('Cool-Smiley sitzt beim Spieler mit der höchsten Karte',
+        starterState.seats[starterPub.starterSeat] === 'smiley-cool.svg',
+        JSON.stringify(starterState.seats));
+    check('Genau ein Cool-Smiley im Spiel',
+        starterState.seats.filter(s => s === 'smiley-cool.svg').length === 1,
+        JSON.stringify(starterState.seats));
+    check('Der Smiley ist kein Bedienelement', starterState.inert);
+
     await waitFor('Spielbeginn nach der Geber-Anzeige', () => pubNow().phase === 'playing');
 
     const pubAfterDeal = pubNow();
@@ -564,6 +599,11 @@ async function run() {
             JSON.stringify(afterSwap.middleCards) + ' vs ' + JSON.stringify(lm));
     }
     check('turnsPlayed hochgezählt', afterSwap.turnsPlayed === 1, String(afterSwap.turnsPlayed));
+    // Der Cool-Smiley markiert den Rundenstart, kein Dauerabzeichen: nach dem
+    // ersten Zug ist er weg - src-Attribut inklusive.
+    const afterSwapState = await smileyState();
+    check('Cool-Smiley verschwindet nach dem ersten Tausch',
+        afterSwapState.seats.every(s => s === null), JSON.stringify(afterSwapState.seats));
     check('Zug ist beim anderen Spieler', afterSwap.currentTurnSeat !== turnSeat);
     check('Vor der zweiten Runde kein Aufgeh-Fenster',
         afterSwap.swapWindowSeat === undefined || afterSwap.swapWindowSeat === null,
@@ -682,6 +722,20 @@ async function run() {
         check('Alle Hände aufgedeckt',
             Object.keys(finalPub.revealedHands || {}).length === 2,
             JSON.stringify(Object.keys(finalPub.revealedHands || {})));
+    }
+
+    // ---------- Weinender Smiley beim Aufdecken ----------
+    if (finalPub.phase === 'reveal') {
+        const paying = finalPub.payingSeats || [];
+        const revealState = await smileyState();
+        check('Weinender Smiley genau bei denen, die zahlen',
+            revealState.seats.every((s, seat) =>
+                s === (paying.indexOf(seat) !== -1 ? 'smiley-weinend.svg' : null)),
+            JSON.stringify(revealState.seats) + ' zahlt: ' + JSON.stringify(paying));
+        check('Ergebnisanzeige zeigt den weinenden Smiley',
+            revealState.result.length === paying.length &&
+            revealState.result.every(s => s === 'smiley-weinend.svg'),
+            JSON.stringify(revealState.result));
     }
 
 

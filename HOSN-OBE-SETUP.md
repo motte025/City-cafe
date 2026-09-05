@@ -188,11 +188,12 @@ welches Widget gerade läuft.
   (derselbe Flush-Fall), gilt dasselbe — egal wessen Zug es gerade ist, alle
   decken sofort auf. Das gilt auch dann, wenn die Mitte erst durch einen
   Tausch auf 31 kommt, nicht nur beim Austeilen.
-- **Normalfall:** die niedrigste Hand zahlt. Bei Gleichstand entscheidet die
+- **Wer zahlt:** die niedrigste Hand. Bei Gleichstand entscheidet die
   höchste Einzelkarte, danach die Farbrangfolge **Herz > Pik > Karo > Kreuz**.
   Da jede Karte im Deck einmalig ist, gibt es immer genau einen Verlierer.
-- **Bei Feuer oder Tischfeuer** zahlen **alle unter 11 Punkten** — und
-  zusätzlich der **Schwächste in jedem Fall**, auch wenn er darüber liegt.
+- **Bei Feuer oder Tischfeuer** gilt dasselbe: es zahlt **nur der Schwächste**.
+  Feuer ändert also allein das Tempo (die Runde endet sofort), nicht die
+  Zahlung. Früher zahlte zusätzlich jeder unter 11 Punkten — das ist raus.
 - Liegt in der Mitte ein **Drilling oder drei gleiche Farben**, ist der
   Einzeltausch gesperrt: es gilt **alles oder nichts**. Man nimmt alle drei,
   geht auf oder gibt weiter.
@@ -210,6 +211,24 @@ welches Widget gerade läuft.
      Spielart, die im Rotationszyklus von selbst anläuft.
 - Nach dem Aufdecken steht am Handy **„Neues Spiel starten"** — damit geht es
   direkt zurück zur Modus-Auswahl.
+
+### Status-Smileys
+
+Zwei animierte SVGs markieren die beiden wichtigen Momente einer Runde:
+
+| Datei | Wann | Wo |
+|---|---|---|
+| `assets/smiley-cool.svg` | Rundenstart: höchste gezogene Karte, darf zuerst tauschen | TV oben rechts am Fächer, am Handy des Betreffenden mit Hinweis |
+| `assets/smiley-weinend.svg` | Rundenende: wer zahlt | TV groß in der Ergebnisanzeige und klein am Platz, am Handy des Zahlers |
+
+Der coole Smiley verschwindet, sobald der erste Zug durch ist — er markiert den
+Start, er ist kein Abzeichen. Das Ergebnis steht mindestens **3 Sekunden**, damit
+die Tränen-Animation einmal ganz durchläuft.
+
+Die Animation steckt komplett in den SVG-Dateien (CSS-Keyframes, kein
+JavaScript); bei aktiviertem „Bewegung reduzieren" stehen sie still, bleiben aber
+sichtbar. Eingebunden sind sie als `<img>` — **fehlt eine Datei, blendet die
+Anzeige sie einfach aus und das Spiel läuft unverändert weiter.**
 
 Die Regeln stecken vollständig in `hosn-obe-engine.js` und sind mit
 Regel-Checks abgesichert:
@@ -233,5 +252,7 @@ Runden darauf, dass immer genau ein Verlierer feststeht.
 | `hosn-obe-net.js` | Firebase-Anbindung, anonyme Anmeldung, Sitzplatzvergabe |
 | `hosn-obe.html` | Handy-Seite (Ziel des QR-Codes) |
 | `cards/back_red.webp` | Kartenrückseite für alle verdeckten Karten |
+| `assets/smiley-cool.svg` | Status-Smiley: höchste Karte beim Rundenstart |
+| `assets/smiley-weinend.svg` | Status-Smiley: wer die Runde zahlt |
 | `hosn-obe-browser.test.js` | Browsertests (Handy + TV, `node hosn-obe-browser.test.js`) |
 | `index.html` | TV-Widget, Pause/Fortsetzen der Rotation, QR-Overlay |

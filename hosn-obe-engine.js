@@ -34,7 +34,6 @@
     var RANK_FILE = { '7': '7', '8': '8', '9': '9', '10': '10', 'J': 'jack', 'Q': 'queen', 'K': 'king', 'A': 'ace' };
 
     var FIRE_TOTAL = 31;          // gleichfarbiger Flush mit exakt 31 = "Feuer"
-    var FIRE_PAY_BELOW = 11;      // bei Feuer zahlt jeder unter 11 Punkten
 
     function parseCard(code) {
         var suit = code.charAt(0);
@@ -231,15 +230,17 @@
     /*
      * Rundenauswertung.
      *
-     * Normalfall: niedrigste Punktzahl verliert. Bei Gleichstand entscheidet die
-     * höchste Einzelkarte (Rang, dann Herz > Pik > Karo > Kreuz) — wer die
-     * niedrigste davon hat, verliert. Ergebnis ist immer genau ein Verlierer.
+     * Niedrigste Punktzahl verliert. Bei Gleichstand entscheidet die höchste
+     * Einzelkarte (Rang, dann Herz > Pik > Karo > Kreuz) — wer die niedrigste
+     * davon hat, verliert. Ergebnis ist immer genau ein Verlierer.
      *
-     * Feuer: die Ein-Verlierer-Regel fällt weg, stattdessen zahlt jeder Spieler
-     * unter FIRE_PAY_BELOW Punkten — und der Schwächste in jedem Fall.
+     * Feuer aendert daran nur das Tempo, nicht die Zahlung: die Runde endet
+     * sofort, gezahlt wird aber wie sonst auch vom Schwaechsten allein.
+     * (Frueher zahlte bei Feuer zusaetzlich jeder unter 11 Punkten -
+     * Nutzer-Vorgabe: "bei Feuer zahlt ab jetzt auch nur der Schwaechste".)
      *
-     * tableFire: die Mitte selbst stand bei 31 (Flush) - dann gilt fuer alle
-     * dieselbe Feuer-Zahlung, auch wenn keine einzelne Hand fuer sich Feuer ist.
+     * tableFire: die Mitte selbst stand bei 31 (Flush) - dann endet die Runde
+     * genauso sofort, auch wenn keine einzelne Hand fuer sich Feuer ist.
      */
     function evaluateRound(hands, tableFire) {
         var seats = Object.keys(hands).map(Number).sort(function (a, b) { return a - b; });
@@ -269,21 +270,18 @@
 
         if (fireSeats.length || tableFire) {
             /*
-             * Feuer: es wird nicht mehr getauscht, alle decken auf.
-             * Zahlen muss jeder unter 11 Punkten - UND der Schwaechste in
-             * jedem Fall, auch wenn der ueber 11 liegt. Gilt genauso, wenn die
-             * MITTE bei 31 stand (Tischfeuer) statt einer einzelnen Hand.
+             * Feuer: es wird nicht mehr getauscht, alle decken sofort auf.
+             * Gezahlt wird trotzdem wie im Normalfall - nur der Schwaechste.
+             * Gilt genauso, wenn die MITTE bei 31 stand (Tischfeuer) statt
+             * einer einzelnen Hand.
              */
-            var firePaying = seats.filter(function (seat) { return scores[seat] < FIRE_PAY_BELOW; });
-            if (firePaying.indexOf(loserSeat) === -1) firePaying.push(loserSeat);
-            firePaying.sort(function (a, b) { return a - b; });
             return {
                 mode: 'fire',
                 scores: scores,
                 results: results,
                 fireSeats: fireSeats,
                 tableFire: !!tableFire,
-                payingSeats: firePaying,
+                payingSeats: [loserSeat],
                 loserSeat: loserSeat,
                 tieBreak: tied.length > 1
             };
@@ -312,6 +310,25 @@
         var needsSuffix = p.rank === 'J' || p.rank === 'Q' || p.rank === 'K' || (p.rank === 'A' && p.suit === 'S');
         var prefix = basePath === undefined ? 'cards/' : basePath;
         return prefix + RANK_FILE[p.rank] + '_of_' + SUIT_FILE[p.suit] + (needsSuffix ? '2' : '') + '.webp';
+    }
+
+    /*
+     * Status-Smileys (animierte SVGs, Animation steckt in der Datei selbst).
+     *
+     * Pfad kommt aus derselben Ecke wie cardImage(), damit TV und Handy nicht
+     * jeweils ihren eigenen Dateinamen mitschleppen: wandert der Asset-Ordner,
+     * ist hier die einzige Stelle.
+     *
+     *   cool     - hoechste Karte beim Rundenstart, darf zuerst tauschen
+     *   crying   - zahlt die Runde
+     */
+    var SMILEY_FILE = { cool: 'smiley-cool.svg', crying: 'smiley-weinend.svg' };
+
+    function smileyImage(kind, basePath) {
+        var file = SMILEY_FILE[kind];
+        if (!file) throw new Error('Unbekannter Smiley: ' + kind);
+        var prefix = basePath === undefined ? 'assets/' : basePath;
+        return prefix + file;
     }
 
     function cardLabel(code) {
@@ -521,7 +538,6 @@
         SUIT_SYMBOL: SUIT_SYMBOL,
         RANK_NAME: RANK_NAME,
         FIRE_TOTAL: FIRE_TOTAL,
-        FIRE_PAY_BELOW: FIRE_PAY_BELOW,
         THREE_OF_A_KIND_SCORE: THREE_OF_A_KIND_SCORE,
         formatScore: formatScore,
         parseCard: parseCard,
@@ -536,6 +552,7 @@
         evaluateRound: evaluateRound,
         nextSeat: nextSeat,
         cardImage: cardImage,
+        smileyImage: smileyImage,
         cardLabel: cardLabel,
         CARD_BACKS: CARD_BACKS,
         cardBackImage: cardBackImage,
