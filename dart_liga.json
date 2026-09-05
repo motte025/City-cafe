@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-05T20:32:01Z",
+  "aktualisiert": "2026-09-05T20:32:59Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -9,11 +9,11 @@
         {
           "rang": 1,
           "team": "Askö DC Sonne 2",
-          "spiele": 1,
-          "siege": 1,
+          "spiele": 2,
+          "siege": 2,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 2
+          "punkte": 4
         },
         {
           "rang": 2,
@@ -63,10 +63,10 @@
         {
           "rang": 7,
           "team": "City-Flyers \"Chaoten\"",
-          "spiele": 1,
+          "spiele": 2,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 0,
+          "niederlagen": 1,
           "punkte": 2
         },
         {
@@ -82,7 +82,7 @@
       "ergebnisse": {
         "1": {
           "heim": 1,
-          "auswaerts": 8
+          "auswaerts": 9
         },
         "2": {
           "heim": 0,
