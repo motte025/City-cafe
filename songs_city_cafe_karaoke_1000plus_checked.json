@@ -48485,16 +48485,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Knochenfabrik",
-    "title": "Grüne Haare",
+    "artist": "Martin Solveig",
+    "title": "Intoxicated - Edit",
     "album": "",
-    "category": "Deutsch Karaoke",
+    "category": "Party-Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Deutsch Karaoke",
       "Party",
-      "Karaoke"
+      "Karaoke",
+      "Party-Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Jack De Nijs",
+    "title": "Sophia Loren",
+    "album": "",
+    "category": "Après-Ski & Ballermann",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Après-Ski & Ballermann"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
