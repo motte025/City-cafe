@@ -48044,5 +48044,24 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "B.G. The Prince Of Rap",
+    "title": "The Colour Of My Dreams",
+    "album": "",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "90s",
+      "Eurodance"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
