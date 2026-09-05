@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-05T17:51:00Z",
+  "aktualisiert": "2026-09-05T17:55:01Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -136,7 +136,7 @@
       "tabelle": [
         {
           "rang": 1,
-          "team": "DSZKärnten \"2er\"",
+          "team": "DC Garzern",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -145,7 +145,7 @@
         },
         {
           "rang": 2,
-          "team": "DC Garzern",
+          "team": "DSZKärnten \"2er\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -181,7 +181,7 @@
         },
         {
           "rang": 6,
-          "team": "DC O3tz 1.0",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -190,7 +190,7 @@
         },
         {
           "rang": 7,
-          "team": "City-Flyers \"Fraggles\"",
+          "team": "DC O3tz 1.0",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
