@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-05T17:58:00Z",
+  "aktualisiert": "2026-09-05T18:07:00Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -8,7 +8,7 @@
       "tabelle": [
         {
           "rang": 1,
-          "team": "DC Fighting Penguins „Waddling Arrows“",
+          "team": "Askö DC Sonne 2",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -17,7 +17,7 @@
         },
         {
           "rang": 2,
-          "team": "Askö DC Sonne 2",
+          "team": "DC Fighting Penguins „Waddling Arrows“",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -53,7 +53,7 @@
         },
         {
           "rang": 6,
-          "team": "City-Flyers \"Chaoten\"",
+          "team": "Dart Fuchs 4",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -62,7 +62,7 @@
         },
         {
           "rang": 7,
-          "team": "Dart Fuchs 4",
+          "team": "City-Flyers \"Chaoten\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -82,7 +82,7 @@
       "ergebnisse": {
         "1": {
           "heim": 0,
-          "auswaerts": 1
+          "auswaerts": 2
         },
         "2": {
           "heim": 0,
