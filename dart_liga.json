@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-05T17:57:00Z",
+  "aktualisiert": "2026-09-05T17:58:00Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -154,7 +154,7 @@
         },
         {
           "rang": 3,
-          "team": "DSZKärnten \"2er\"",
+          "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -163,7 +163,7 @@
         },
         {
           "rang": 4,
-          "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+          "team": "DSZKärnten \"2er\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -210,7 +210,7 @@
       "ergebnisse": {
         "1": {
           "heim": 1,
-          "auswaerts": 0
+          "auswaerts": 1
         },
         "3": {
           "heim": 0,
