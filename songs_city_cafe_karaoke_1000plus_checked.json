@@ -48485,36 +48485,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Martin Solveig",
-    "title": "Intoxicated - Edit",
+    "artist": "Knochenfabrik",
+    "title": "Grüne Haare",
     "album": "",
-    "category": "Party-Schlager",
+    "category": "Deutsch Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Deutsch Karaoke",
       "Party",
-      "Karaoke",
-      "Party-Schlager"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Udo Jürgens",
-    "title": "Auch heute noch",
-    "album": "",
-    "category": "Schlager & Karaoke",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Karaoke",
-      "Schlager & Karaoke"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
