@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-02T12:44:04Z",
+  "aktualisiert": "2026-09-05T19:32:00Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -8,7 +8,7 @@
       "tabelle": [
         {
           "rang": 1,
-          "team": "City-Flyers \"Chaoten\"",
+          "team": "Askö DC Sonne 2",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -17,15 +17,6 @@
         },
         {
           "rang": 2,
-          "team": "PBC DC Skorpions Reichenfels",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 3,
           "team": "DC Fighting Penguins „Waddling Arrows“",
           "spiele": 1,
           "siege": 1,
@@ -34,8 +25,8 @@
           "punkte": 2
         },
         {
-          "rang": 4,
-          "team": "Dart Fuchs 4",
+          "rang": 3,
+          "team": "PBC DC Skorpions Reichenfels",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -43,7 +34,7 @@
           "punkte": 2
         },
         {
-          "rang": 5,
+          "rang": 4,
           "team": "DC Cafe Seven",
           "spiele": 1,
           "siege": 1,
@@ -52,7 +43,7 @@
           "punkte": 2
         },
         {
-          "rang": 6,
+          "rang": 5,
           "team": "DC Schwarzer Kater",
           "spiele": 1,
           "siege": 1,
@@ -61,8 +52,17 @@
           "punkte": 2
         },
         {
+          "rang": 6,
+          "team": "Dart Fuchs 4",
+          "spiele": 1,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 0,
+          "punkte": 2
+        },
+        {
           "rang": 7,
-          "team": "Askö DC Sonne 2",
+          "team": "City-Flyers \"Chaoten\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -81,8 +81,8 @@
       ],
       "ergebnisse": {
         "1": {
-          "heim": 0,
-          "auswaerts": 0
+          "heim": 1,
+          "auswaerts": 5
         },
         "2": {
           "heim": 0,
@@ -136,33 +136,6 @@
       "tabelle": [
         {
           "rang": 1,
-          "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 2,
-          "team": "DC O3tz 1.0",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 3,
-          "team": "DC Drautal Dart Vipers",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 4,
           "team": "DSZKärnten \"2er\"",
           "spiele": 1,
           "siege": 1,
@@ -171,8 +144,8 @@
           "punkte": 2
         },
         {
-          "rang": 5,
-          "team": "City-Flyers \"Fraggles\"",
+          "rang": 2,
+          "team": "DC Garzern",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -180,7 +153,7 @@
           "punkte": 2
         },
         {
-          "rang": 6,
+          "rang": 3,
           "team": "ESV DC Inferno",
           "spiele": 1,
           "siege": 1,
@@ -189,8 +162,35 @@
           "punkte": 2
         },
         {
+          "rang": 4,
+          "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+          "spiele": 1,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 0,
+          "punkte": 2
+        },
+        {
+          "rang": 5,
+          "team": "DC Drautal Dart Vipers",
+          "spiele": 1,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 0,
+          "punkte": 2
+        },
+        {
+          "rang": 6,
+          "team": "DC O3tz 1.0",
+          "spiele": 1,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 0,
+          "punkte": 2
+        },
+        {
           "rang": 7,
-          "team": "DC Garzern",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -209,8 +209,8 @@
       ],
       "ergebnisse": {
         "1": {
-          "heim": 0,
-          "auswaerts": 0
+          "heim": 4,
+          "auswaerts": 1
         },
         "3": {
           "heim": 0,
