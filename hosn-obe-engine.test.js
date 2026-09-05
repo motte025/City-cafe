@@ -46,24 +46,33 @@ eq('Herz-Ass hat keine 2-Endung', E.cardImage('HA', ''), 'ace_of_hearts.webp');
 eq('Bube hat die 2-Endung', E.cardImage('CJ', ''), 'jack_of_clubs2.webp');
 
 // ---------- Status-Smileys ----------
-eq('smileyImage nutzt assets/ als Standardpfad', E.smileyImage('cool'), 'assets/smiley-cool.svg');
-eq('Weinender Smiley', E.smileyImage('crying', ''), 'smiley-weinend.svg');
+eq('smileyImage zeigt ins Wurzelverzeichnis', E.smileyImage('cool'), 'smiley-cool.svg');
+eq('Weinender Smiley', E.smileyImage('crying'), 'smiley-weinend.svg');
 check('Unbekannter Smiley fliegt auf', (function () {
     try { E.smileyImage('grinsend'); return false; } catch (e) { return true; }
 })());
 
-/*
- * Die beiden SVGs sind Inhalt, kein Code: fehlen sie, blenden TV und Handy den
- * Smiley einfach aus (onerror), das Spiel laeuft unveraendert weiter. Deshalb
- * bricht der Testlauf hier nicht ab - er sagt nur Bescheid.
- */
 var smileysMissing = ['cool', 'crying']
     .map(function (kind) { return E.smileyImage(kind); })
     .filter(function (rel) { return !fs.existsSync(path.join(__dirname, rel)); });
-if (smileysMissing.length) {
-    console.log('Hinweis: Smiley-Dateien fehlen noch — ' + smileysMissing.join(', ') +
-                '. Die Anzeige blendet sie so lange aus.');
-}
+eq('Beide Smiley-Dateien liegen im Repo', smileysMissing, []);
+
+/*
+ * Was die Anzeige von den Dateien erwartet: quadratische viewBox mit
+ * zentriertem Gesicht (ueber die Breite skalierbar), eigene Animation ohne
+ * JavaScript und Ruhe bei "Bewegung reduzieren". Praefixe sc-/sw- halten die
+ * beiden auseinander, falls sie doch einmal inline nebeneinander landen.
+ */
+[['cool', 'sc-'], ['crying', 'sw-']].forEach(function (pair) {
+    var svg = fs.readFileSync(path.join(__dirname, E.smileyImage(pair[0])), 'utf8');
+    var name = E.smileyImage(pair[0]);
+    check(name + ': quadratische viewBox', svg.indexOf('viewBox="-90 -90 180 180"') !== -1);
+    check(name + ': Animation steckt in der Datei', /@keyframes/.test(svg));
+    check(name + ': steht bei "Bewegung reduzieren" still',
+          svg.indexOf('prefers-reduced-motion') !== -1);
+    check(name + ': eigenes Praefix ' + pair[1], svg.indexOf(pair[1]) !== -1);
+    check(name + ': kommt ohne JavaScript aus', !/<script/i.test(svg));
+});
 
 // ---------- Wertung ----------
 eq('Feuer: Herz Bube/Dame/Ass = 31', E.scoreHand(['HJ', 'HQ', 'HA']).score, 31);

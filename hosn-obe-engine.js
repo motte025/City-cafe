@@ -316,8 +316,12 @@
      * Status-Smileys (animierte SVGs, Animation steckt in der Datei selbst).
      *
      * Pfad kommt aus derselben Ecke wie cardImage(), damit TV und Handy nicht
-     * jeweils ihren eigenen Dateinamen mitschleppen: wandert der Asset-Ordner,
-     * ist hier die einzige Stelle.
+     * jeweils ihren eigenen Dateinamen mitschleppen: wandert eine Datei, ist
+     * hier die einzige Stelle.
+     *
+     * Die Smileys liegen im Wurzelverzeichnis - dort, wo auch alle uebrigen
+     * Bilder des Dashboards liegen (plakat_tag.webp, jaeger.webp, ...) und wo
+     * ein Upload ueber die GitHub-Oberflaeche von selbst landet.
      *
      *   cool     - hoechste Karte beim Rundenstart, darf zuerst tauschen
      *   crying   - zahlt die Runde
@@ -327,8 +331,7 @@
     function smileyImage(kind, basePath) {
         var file = SMILEY_FILE[kind];
         if (!file) throw new Error('Unbekannter Smiley: ' + kind);
-        var prefix = basePath === undefined ? 'assets/' : basePath;
-        return prefix + file;
+        return (basePath === undefined ? '' : basePath) + file;
     }
 
     function cardLabel(code) {

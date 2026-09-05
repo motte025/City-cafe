@@ -218,8 +218,8 @@ Zwei animierte SVGs markieren die beiden wichtigen Momente einer Runde:
 
 | Datei | Wann | Wo |
 |---|---|---|
-| `assets/smiley-cool.svg` | Rundenstart: höchste gezogene Karte, darf zuerst tauschen | TV oben rechts am Fächer, am Handy des Betreffenden mit Hinweis |
-| `assets/smiley-weinend.svg` | Rundenende: wer zahlt | TV groß in der Ergebnisanzeige und klein am Platz, am Handy des Zahlers |
+| `smiley-cool.svg` | Rundenstart: höchste gezogene Karte, darf zuerst tauschen | TV oben rechts am Fächer, am Handy des Betreffenden mit Hinweis |
+| `smiley-weinend.svg` | Rundenende: wer zahlt | TV groß in der Ergebnisanzeige und klein am Platz, am Handy des Zahlers |
 
 Der coole Smiley verschwindet, sobald der erste Zug durch ist — er markiert den
 Start, er ist kein Abzeichen. Das Ergebnis steht mindestens **3 Sekunden**, damit
@@ -252,7 +252,7 @@ Runden darauf, dass immer genau ein Verlierer feststeht.
 | `hosn-obe-net.js` | Firebase-Anbindung, anonyme Anmeldung, Sitzplatzvergabe |
 | `hosn-obe.html` | Handy-Seite (Ziel des QR-Codes) |
 | `cards/back_red.webp` | Kartenrückseite für alle verdeckten Karten |
-| `assets/smiley-cool.svg` | Status-Smiley: höchste Karte beim Rundenstart |
-| `assets/smiley-weinend.svg` | Status-Smiley: wer die Runde zahlt |
+| `smiley-cool.svg` | Status-Smiley: höchste Karte beim Rundenstart |
+| `smiley-weinend.svg` | Status-Smiley: wer die Runde zahlt |
 | `hosn-obe-browser.test.js` | Browsertests (Handy + TV, `node hosn-obe-browser.test.js`) |
 | `index.html` | TV-Widget, Pause/Fortsetzen der Rotation, QR-Overlay |
