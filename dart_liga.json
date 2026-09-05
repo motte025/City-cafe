@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-05T17:32:00Z",
+  "aktualisiert": "2026-09-05T17:38:02Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -8,24 +8,6 @@
       "tabelle": [
         {
           "rang": 1,
-          "team": "City-Flyers \"Chaoten\"",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 2,
-          "team": "PBC DC Skorpions Reichenfels",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 3,
           "team": "DC Fighting Penguins „Waddling Arrows“",
           "spiele": 1,
           "siege": 1,
@@ -34,8 +16,8 @@
           "punkte": 2
         },
         {
-          "rang": 4,
-          "team": "Dart Fuchs 4",
+          "rang": 2,
+          "team": "City-Flyers \"Chaoten\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -43,7 +25,16 @@
           "punkte": 2
         },
         {
-          "rang": 5,
+          "rang": 3,
+          "team": "PBC DC Skorpions Reichenfels",
+          "spiele": 1,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 0,
+          "punkte": 2
+        },
+        {
+          "rang": 4,
           "team": "DC Cafe Seven",
           "spiele": 1,
           "siege": 1,
@@ -52,7 +43,7 @@
           "punkte": 2
         },
         {
-          "rang": 6,
+          "rang": 5,
           "team": "DC Schwarzer Kater",
           "spiele": 1,
           "siege": 1,
@@ -61,8 +52,17 @@
           "punkte": 2
         },
         {
-          "rang": 7,
+          "rang": 6,
           "team": "Askö DC Sonne 2",
+          "spiele": 1,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 0,
+          "punkte": 2
+        },
+        {
+          "rang": 7,
+          "team": "Dart Fuchs 4",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
