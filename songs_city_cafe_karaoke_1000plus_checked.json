@@ -48146,16 +48146,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Sqeezer",
-    "title": "Wake Up",
+    "artist": "Will Young",
+    "title": "Evergreen",
     "album": "",
-    "category": "Summer Party",
+    "category": "Deutsch-Pop",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Latin",
-      "Sommer",
-      "Dance"
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Sam Cooke",
+    "title": "A Change Is Gonna Come",
+    "album": "",
+    "category": "Party & Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Rock",
+      "Anthem"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
