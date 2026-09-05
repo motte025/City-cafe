@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-05T21:12:00Z",
+  "aktualisiert": "2026-09-05T21:19:59Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -136,7 +136,7 @@
       "tabelle": [
         {
           "rang": 1,
-          "team": "ESV DC Inferno",
+          "team": "DC Garzern",
           "spiele": 2,
           "siege": 2,
           "unentschieden": 0,
@@ -145,16 +145,16 @@
         },
         {
           "rang": 2,
-          "team": "DSZKärnten \"2er\"",
-          "spiele": 1,
-          "siege": 1,
+          "team": "ESV DC Inferno",
+          "spiele": 2,
+          "siege": 2,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 2
+          "punkte": 4
         },
         {
           "rang": 3,
-          "team": "DC Garzern",
+          "team": "DSZKärnten \"2er\"",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
@@ -172,15 +172,6 @@
         },
         {
           "rang": 5,
-          "team": "DC O3tz 1.0",
-          "spiele": 1,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 6,
           "team": "City-Flyers \"Fraggles\"",
           "spiele": 1,
           "siege": 1,
@@ -189,8 +180,17 @@
           "punkte": 2
         },
         {
-          "rang": 7,
+          "rang": 6,
           "team": "DC Drautal Dart Vipers",
+          "spiele": 2,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 1,
+          "punkte": 2
+        },
+        {
+          "rang": 7,
+          "team": "DC O3tz 1.0",
           "spiele": 2,
           "siege": 1,
           "unentschieden": 0,
