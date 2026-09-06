@@ -145,8 +145,18 @@ schreibt `dart_liga.json` ins Repo, das Dashboard liest nur diese Datei.
 
    Im DJ-Checker-Projekt ist der Schluessel schon vorhanden und wird geteilt.
 3. Einmal `dartTestLauf()` ausfuehren und ins Ausfuehrungsprotokoll schauen -
-   das schreibt **nichts**, sondern zeigt nur, was ankommt.
+   das schreibt **nichts**, sondern zeigt nur, was ankommt. Geholt wird
+   dabei alles, was auch der echte Lauf holt (Tabelle, Spielplan,
+   Einzelwertung, Kader, Spiel-Detail); Probleme stehen als `ACHTUNG:`-Zeile
+   drin.
 4. Einmal `dartTriggerEinrichten()` ausfuehren -> Minutentrigger.
+
+Die **erste Protokollzeile** nennt die Fassung des Skripts
+(`Skriptfassung: 2026-09-06 (Einzelwertung, Kader, Spiel-Detail)`). Steht dort
+etwas Aelteres oder gar nichts, liegt im Apps Script noch eine alte Datei -
+alle anderen Zeilen sind dann wenig wert. Die Konstante dazu heisst
+`DART_FASSUNG` und gehoert bei jeder groesseren Aenderung am Scraper
+mitgezogen.
 
 ## Live am Spielabend
 
@@ -277,7 +287,7 @@ Fuer die Erg-Spalte reicht das; der Tabellen-Slot braucht zusaetzlich einen
 | Tabellen-Slot kommt nie | `teams` leer oder `tabelle` leer - Scraper laeuft nicht |
 | Fremde Vereine in der Tabelle | falsche `turnierid` (Server liefert dann "Training") |
 | Ergebnis fehlt | Runde fehlt in `ergebnisse`, oder Eintrag ist `0:0` |
-| Einzelwertung/Spiel-Detail kommen nie | alte Skriptfassung in Apps Script - `dart-liga-scraper.gs` neu einspielen, die Felder `einzelwertung`, `kader` und `letztes_spiel` sind neu |
+| Einzelwertung/Spiel-Detail kommen nie | alte Skriptfassung in Apps Script - erste Zeile von `dartTestLauf()` pruefen, notfalls `dart-liga-scraper.gs` neu einspielen |
 | Einzelwertung ohne eigene Markierung | `kader` leer - Vereinsname in `DART_TEAMS` weicht von der Schreibweise in `spieler.php` ab |
 | Spiel-Detail bleibt leer | Session nicht zustande gekommen; das Protokoll meldet "keine Session fuer Turnier ..." |
 | Tabelle veraltet | Trigger geloescht - `dartTriggerEinrichten()` erneut ausfuehren |

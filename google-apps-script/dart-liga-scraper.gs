@@ -621,8 +621,17 @@ function dartTriggerEntfernen() {
  * Trockenlauf: ruft beide Turniere ab und schreibt das Ergebnis nur ins
  * Protokoll - kein Commit. Erste Anlaufstelle, wenn im Dashboard eine
  * Tabelle fehlt oder veraltet aussieht.
+ *
+ * Geprueft wird alles, was auch der echte Lauf holt - sonst sagt ein
+ * fehlerfreies Protokoll nichts darueber, ob die Slots Daten bekommen.
+ * Die Fassungskennung in der ersten Zeile zeigt auf einen Blick, ob im
+ * Apps Script wirklich die aktuelle Datei steht.
  */
+const DART_FASSUNG = '2026-09-06 (Einzelwertung, Kader, Spiel-Detail)';
+
 function dartTestLauf() {
+  Logger.log('Skriptfassung: ' + DART_FASSUNG);
+
   DART_TEAMS.forEach(function (t) {
     const tabelle = dartHoleTabelle(t.turnierid);
     const ergebnisse = dartHoleErgebnisse(t.turnierid, t.name);
@@ -646,5 +655,37 @@ function dartTestLauf() {
     Object.keys(ergebnisse).sort(function (a, b) { return a - b; }).forEach(function (r) {
       Logger.log('  Runde ' + r + ': ' + ergebnisse[r].heim + ':' + ergebnisse[r].auswaerts);
     });
+
+    // --- Einzelwertung + Kader (Slot 3) --------------------------------
+    const einzel = dartParseEinzelwertung(dartSeiteHolen('team_einzelwertung.php', t.turnierid));
+    const kader = dartParseKader(dartSeiteHolen('spieler.php', t.turnierid), t.name);
+    Logger.log('Einzelwertung: ' + einzel.length + ' Spieler der Klasse, Kader: ' + kader.length);
+    if (!einzel.length) Logger.log('ACHTUNG: Einzelwertung leer - Slot 3 bleibt dunkel.');
+    if (!kader.length) {
+      Logger.log('ACHTUNG: Kader leer - Vereinsname in DART_TEAMS weicht von spieler.php ab.');
+    } else {
+      // Der Abgleich ueber den Namen ist die einzige Verbindung zwischen
+      // beiden Seiten; findet er niemanden, bleibt die Liste unmarkiert.
+      const markiert = einzel.filter(function (e) {
+        return kader.some(function (k) { return dartSchluessel(k) === dartSchluessel(e.spieler); });
+      });
+      Logger.log('  davon eigene: ' + markiert.length + ' -> ' + kader.join(', '));
+      if (!markiert.length) Logger.log('ACHTUNG: kein Kaderspieler in der Einzelwertung gefunden.');
+    }
+
+    // --- Letzter Mannschaftsabend (Slot 4) -----------------------------
+    const runde = dartLetzteGespielteRunde(ergebnisse);
+    if (runde === null) {
+      Logger.log('Spiel-Detail: noch nicht gespielt - Slot 4 faellt aus (normal vor dem ersten Spieltag).');
+    } else if (!ergebnisse[String(runde)].id) {
+      Logger.log('ACHTUNG: Runde ' + runde + ' ohne teamSpielId - Spiel-Detail nicht abrufbar.');
+    } else {
+      const paarungen = dartHoleSpielDetail(t.turnierid, ergebnisse[String(runde)].id);
+      Logger.log('Spiel-Detail Runde ' + runde + ': ' + paarungen.length + ' Paarungen');
+      paarungen.forEach(function (p) {
+        Logger.log('  ' + p.art + '  ' + p.spieler1 + '  ' + p.legs1 + ':' + p.legs2 + '  ' + p.spieler2);
+      });
+      if (!paarungen.length) Logger.log('ACHTUNG: Detailseite leer - Session oder teamSpielId pruefen.');
+    }
   });
 }
