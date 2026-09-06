@@ -6750,11 +6750,52 @@
             // Genau daran hing das Ruckeln auf der Box: die Stufe war fest
             // gesetzt, und bei zu schmaler Leitung kam der Player nie aus dem
             // Puffern heraus ("zappelt, laeuft aber nicht").
-            qualitaetModus: 'auto',
+            //
+            //   'mindestens' - der Mittelweg und der Standard. Twitch entscheidet
+            //            zunaechst allein; bleibt der Player aber unter
+            //            minQualitaetHoehe haengen, wird EINMAL hochgesetzt.
+            //            Steht das Bild danach, geht die Steuerung an Twitch
+            //            zurueck ('auto') und bleibt dort.
+            //
+            // Warum es den Modus ueberhaupt braucht: der Player wird schon im
+            // Slot davor gebaut, und dort ist die Ansicht noch visibility:hidden.
+            // Twitch misst in dem Moment die Playergroesse - an einem
+            // unsichtbaren Rahmen faellt die Schaetzung niedrig aus, und der
+            // Stream blieb dann bei 360p stehen, obwohl der Player intern
+            // 1920x1080 gross ist.
+            qualitaetModus: 'mindestens',
 
-            // Obergrenze fuer die Qualitaet - nur bei qualitaetModus 'fest'
+            // Untergrenze fuer 'mindestens' (in Bildzeilen). Darunter wird
+            // nachgeholfen, darueber nie eingegriffen.
+            minQualitaetHoehe: 720,
+            // Obergrenze fuer die Qualitaet - bei 'fest' und 'mindestens'
             // wirksam (in Bildzeilen). Passend zu spielerHoehe.
             maxQualitaetHoehe: 1080,
+
+            // Takt des Waechters, der Wiedergabe und Qualitaet nachhaelt.
+            waechterTaktSekunden: 3,
+            // So lange muss der Stream sichtbar laufen, bevor die Qualitaet
+            // ueberhaupt beurteilt wird - Twitch faengt bewusst niedrig an und
+            // arbeitet sich hoch, ein zu frueher Eingriff wuerde das abwuergen.
+            qualiPruefSekunden: 9,
+            // Steht das Bild nach dem Hochsetzen so lange still, war die Stufe
+            // zu hoch: zurueck auf Twitchs eigene Anpassung.
+            stillstandSekunden: 8,
+
+            // Ton im DJ-Slot. 0 = stumm, sonst 0…1 als Lautstaerke.
+            //
+            // Der Player MUSS stumm starten: Autoplay mit Ton lehnt jeder Browser
+            // ohne Klick ab, der Stream liefe sonst gar nicht erst an. Aufgedreht
+            // wird deshalb erst, wenn das Bild nachweislich laeuft. Verweigert der
+            // Browser auch das, geht es stumm weiter - ein stehendes Bild waere
+            // der schlechtere Tausch.
+            //
+            // Auf der Box lohnt sich dafuer der Chrome-Schalter:
+            // chrome://flags -> "Autoplay policy" -> "No user gesture is required".
+            //
+            // Der Ton endet mit dem Slot, weil der Player dann abgeraeumt wird -
+            // die uebrigen Widgets bleiben still.
+            tonLautstaerke: 0.7,
             // Twitchs Embed-SDK. Der iframe allein kennt keinen quality-Parameter
             // (offiziell bestaetigt) - die Qualitaet laesst sich ausschliesslich
             // ueber Twitch.Player.setQuality() setzen. Wird erst geladen, wenn
@@ -6795,6 +6836,8 @@
         let djTwitchSpieler = null;  // Twitch.Player-Objekt, wenn das SDK laeuft
         let djSdkPromise = null;     // laeuft nur einmal, egal wie oft gefragt wird
         let djRahmenZaehler = 0;     // fuer eindeutige Container-ids (das SDK braucht eine)
+        let djWaechter = null;       // Intervall, das Wiedergabe und Qualitaet nachhaelt
+        let djQualiLage = null;      // Messwerte des Waechters zum laufenden Player
         let djLiveEntries = [];      // zuletzt gemeldete Live-Kanaele
         let djLiveCheckedAt = null;  // Date des Checker-Laufs, oder null
         let djStatusGeladen = false; // erst nach dem ersten erfolgreichen Abruf true
@@ -6908,6 +6951,7 @@
         function djStopPlayer() {
             if (mediaStateIndex === DJ_SLOT_INDEX) return;
             const buehne = document.getElementById('dj-live-player');
+            djWaechterStoppen();
             if (buehne && buehne.firstChild) {
                 djSpielerAbbauen();
                 buehne.innerHTML = '';
@@ -7071,7 +7115,172 @@
             rahmen.appendChild(frame);
         }
 
-        // Baut GENAU EINEN Player - und raeumt den vorigen vorher ab.
+        // Beste Stufe im Bereich [min, max] Bildzeilen. Ohne Treffer null - dann
+        // wird nichts angefasst. "chunked" (die unveraenderte Quelle) faellt hier
+        // bewusst heraus: sie liegt ueber jeder Obergrenze.
+        function djStufeImBereich(stufen, min, max) {
+            let beste = null, besteHoehe = 0;
+            (stufen || []).forEach(q => {
+                const name = djQualiName(q);
+                if (!name || name === 'auto') return;
+                const hoehe = djQualiHoehe(q);
+                if (hoehe < min || hoehe > max || hoehe <= besteHoehe) return;
+                beste = name; besteHoehe = hoehe;
+            });
+            return beste;
+        }
+
+        // Stupst einen bereits gebauten Player wieder an.
+        //
+        // Noetig, weil der Player schon im Slot davor gebaut wird - dort ist die
+        // Ansicht aber noch visibility:hidden, und der Browser haelt die
+        // Wiedergabe in einem unsichtbaren Rahmen an. Ohne diesen Anstupser stand
+        // beim Einblenden das Play-Symbol im Bild, obwohl der Stream laengst
+        // geladen war. Bis zum Umbau auf einen einzigen Player erledigte das die
+        // postMessage-Zeile in djZeigeEintrag; die griff nur nicht mehr, seit der
+        // Player beim Wiederanzeigen nicht mehr neu gebaut wird.
+        function djAnstupsen() {
+            if (djTwitchSpieler) {
+                try {
+                    const pausiert = typeof djTwitchSpieler.isPaused === 'function'
+                                   ? djTwitchSpieler.isPaused() : true;
+                    if (!pausiert) return;
+                    // Stumm ist die einzige Art zu starten, die der Browser ohne
+                    // Klick erlaubt. Der Ton kommt dazu, sobald das Bild laeuft -
+                    // siehe djTonNachziehen.
+                    djTwitchSpieler.setMuted(true);
+                    djTwitchSpieler.play();
+                    // tonAn bleibt bewusst stehen: genau daran erkennt
+                    // djTonNachziehen im naechsten Takt, dass das Aufdrehen den
+                    // Player angehalten hat, und hoert damit auf. Wuerde es hier
+                    // zurueckgesetzt, drehte der Waechter endlos auf und ab.
+                    // Fuer einen frisch gebauten Player setzt djSpielerAufbauen
+                    // ohnehin die ganzen Messwerte neu.
+                } catch (e) {}
+                return;
+            }
+            // YouTube und der Twitch-Rueckfall laufen als reiner iframe - dort geht
+            // es nur per postMessage (braucht enablejsapi=1 in der Embed-URL).
+            const f = document.querySelector('#dj-live-player .dj-player-frame iframe');
+            if (f && f.contentWindow) {
+                try {
+                    f.contentWindow.postMessage(
+                        '{"event":"command","func":"playVideo","args":""}', '*');
+                } catch (e) {}
+            }
+        }
+
+        // Dreht den Ton auf, sobald das Bild laeuft.
+        //
+        // Warum nicht gleich beim Bauen: Autoplay MIT Ton lehnt jeder Browser
+        // ohne Klick ab - der Stream liefe dann gar nicht erst an. Stumm starten
+        // und danach aufdrehen ist der einzige Weg, der ohne Bedienung
+        // funktioniert. Und selbst der kann scheitern: manche Browser halten die
+        // Wiedergabe beim Aufdrehen an oder schalten sofort wieder stumm. Dann
+        // geht es hier stumm weiter - ein stehendes Bild waere der schlechtere
+        // Tausch, und ein zweiter Versuch wuerde nur dasselbe Ergebnis liefern.
+        function djTonNachziehen(laeuft) {
+            const wunsch = DJ_LIVE_CONFIG.tonLautstaerke;
+            if (!djTwitchSpieler || !djQualiLage) return;
+            if (!(wunsch > 0) || djQualiLage.tonBlockiert) return;
+
+            if (!djQualiLage.tonAn) {
+                if (!laeuft) return;              // erst muss das Bild sicher laufen
+                try {
+                    djTwitchSpieler.setMuted(false);
+                    if (djTwitchSpieler.setVolume) djTwitchSpieler.setVolume(wunsch);
+                } catch (e) { return; }
+                djQualiLage.tonAn = true;
+                return;
+            }
+
+            // Aufgedreht - hat der Browser es geschluckt?
+            let pausiert = false, stumm = false;
+            try {
+                pausiert = typeof djTwitchSpieler.isPaused === 'function'
+                         ? djTwitchSpieler.isPaused() : false;
+                stumm = typeof djTwitchSpieler.getMuted === 'function'
+                      ? djTwitchSpieler.getMuted() : false;
+            } catch (e) { return; }
+            if (!pausiert && !stumm) return;      // laeuft mit Ton, alles gut
+
+            try {
+                djTwitchSpieler.setMuted(true);
+                djTwitchSpieler.play();
+            } catch (e) {}
+            djQualiLage.tonBlockiert = true;      // kein zweiter Versuch
+        }
+
+        // Laeuft nur waehrend des DJ-Slots und macht drei Dinge: die Wiedergabe
+        // am Laufen halten, den Ton nachziehen, und im Modus 'mindestens' die
+        // Qualitaet anheben, wenn Twitch zu niedrig eingestiegen ist.
+        function djWaechterTakt() {
+            djAnstupsen();
+            if (!djTwitchSpieler || !djQualiLage) return;
+
+            // Laufzustand EINMAL ermitteln - Ton und Qualitaet haengen beide daran.
+            // "laeuft" heisst: nicht pausiert und die Wiedergabezeit ist seit dem
+            // letzten Takt weitergewandert. Ein Player, der puffert, meldet sich
+            // nicht als pausiert, bleibt aber in der Zeit stehen.
+            let zeit = 0, pausiert = true, stufen = null, aktuell = '';
+            try {
+                zeit = djTwitchSpieler.getCurrentTime ? djTwitchSpieler.getCurrentTime() : 0;
+                pausiert = typeof djTwitchSpieler.isPaused === 'function'
+                         ? djTwitchSpieler.isPaused() : false;
+                stufen = djTwitchSpieler.getQualities ? djTwitchSpieler.getQualities() : null;
+                aktuell = djTwitchSpieler.getQuality ? djTwitchSpieler.getQuality() : '';
+            } catch (e) { return; }
+
+            const takt = DJ_LIVE_CONFIG.waechterTaktSekunden;
+            const laeuft = !pausiert && zeit > djQualiLage.letzteZeit;
+            djQualiLage.letzteZeit = zeit;
+
+            djTonNachziehen(laeuft);
+
+            if (DJ_LIVE_CONFIG.qualitaetModus !== 'mindestens') return;
+            if (djQualiLage.erledigt) return;
+
+            if (!djQualiLage.hochgesetzt) {
+                // Erst messen, wenn der Stream eine Weile sichtbar gelaufen ist:
+                // Twitch faengt bewusst niedrig an und arbeitet sich hoch.
+                djQualiLage.laufSekunden += laeuft ? takt : 0;
+                if (djQualiLage.laufSekunden < DJ_LIVE_CONFIG.qualiPruefSekunden) return;
+
+                if (djQualiHoehe(aktuell) >= DJ_LIVE_CONFIG.minQualitaetHoehe) {
+                    djQualiLage.erledigt = true;   // passt von allein, nichts zu tun
+                    return;
+                }
+                const wunsch = djStufeImBereich(stufen, DJ_LIVE_CONFIG.minQualitaetHoehe,
+                                                        DJ_LIVE_CONFIG.maxQualitaetHoehe);
+                // Kein Treffer heisst: der Kanal bietet nichts Hoeheres an (kleine
+                // Kanaele bekommen von Twitch oft gar keine Transcodes). Dann
+                // bleibt es bei Twitchs Wahl.
+                if (!wunsch) { djQualiLage.erledigt = true; return; }
+                try { djTwitchSpieler.setQuality(wunsch); } catch (e) { return; }
+                djQualiLage.hochgesetzt = true;
+                djQualiLage.stillSekunden = 0;
+                return;
+            }
+
+            // Nach dem Hochsetzen aufpassen, ob das Bild stehenbleibt. Genau das
+            // war die Falle beim festen Modus: reicht die Leitung nicht, puffert
+            // der Player endlos, statt selbst herunterzuschalten.
+            djQualiLage.stillSekunden = laeuft ? 0 : djQualiLage.stillSekunden + takt;
+            if (djQualiLage.stillSekunden >= DJ_LIVE_CONFIG.stillstandSekunden) {
+                try { djTwitchSpieler.setQuality('auto'); } catch (e) {}
+                djQualiLage.erledigt = true;   // kein zweiter Versuch
+            }
+        }
+
+        function djWaechterStarten() {
+            djWaechterStoppen();
+            djWaechter = setInterval(djWaechterTakt, DJ_LIVE_CONFIG.waechterTaktSekunden * 1000);
+        }
+
+        function djWaechterStoppen() {
+            if (djWaechter) { clearInterval(djWaechter); djWaechter = null; }
+        }
+
         function djSpielerAufbauen(entry) {
             const buehne = document.getElementById('dj-live-player');
             if (!buehne || !entry) return;
@@ -7082,6 +7291,11 @@
             const rahmen = document.createElement('div');
             rahmen.className = 'dj-player-frame is-visible';
             buehne.appendChild(rahmen);
+
+            // Jeder neue Player faengt mit frischen Messwerten an.
+            djQualiLage = { laufSekunden: 0, letzteZeit: -1, stillSekunden: 0,
+                            hochgesetzt: false, erledigt: false,
+                            tonAn: false, tonBlockiert: false };
 
             const host = djEmbedHost();
             if (entry.platform === 'twitch' && entry.channel && host) {
@@ -7094,6 +7308,7 @@
         function djSpielerAbbauen() {
             const buehne = document.getElementById('dj-live-player');
             djAktiverIndex = -1;
+            djQualiLage = null;
             // Das SDK dokumentiert kein destroy() - der Player verschwindet mit
             // seinem Container. Gibt es doch eins, wird es genutzt.
             if (djTwitchSpieler && typeof djTwitchSpieler.destroy === 'function') {
@@ -7133,6 +7348,10 @@
             if (index !== djAktiverIndex) {
                 djSpielerAufbauen(entry);
                 djAktiverIndex = index;
+            } else {
+                // Schon gebaut - aber im Slot davor, wo die Ansicht noch
+                // unsichtbar war und der Browser die Wiedergabe angehalten hat.
+                djAnstupsen();
             }
 
             // Kanal- und Streamtitel kommen ueber Twitch/YouTube von fremden Nutzern -
@@ -7169,6 +7388,7 @@
             }
 
             document.getElementById('media-view-djlive').classList.add('active');
+            djWaechterStarten();
             let idx = 0;
 
             const zeigeNaechsten = () => {
