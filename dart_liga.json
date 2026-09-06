@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-05T21:26:00Z",
+  "aktualisiert": "2026-09-06T04:08:48Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -82,52 +82,371 @@
       "ergebnisse": {
         "1": {
           "heim": 1,
-          "auswaerts": 9
+          "auswaerts": 9,
+          "id": 109433
         },
         "2": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109510
         },
         "4": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109587
         },
         "5": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109631
         },
         "6": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109664
         },
         "7": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109730
         },
         "8": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109741
         },
         "9": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109818
         },
         "11": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109895
         },
         "12": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109939
         },
         "13": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109972
         },
         "14": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 110038
         }
+      },
+      "einzelwertung": [
+        {
+          "rang": 1,
+          "spieler": "RAINER Gerald",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 0,
+          "punkte": 8
+        },
+        {
+          "rang": 2,
+          "spieler": "DOUJAK Siegfried",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 0,
+          "punkte": 8
+        },
+        {
+          "rang": 3,
+          "spieler": "BERGLER Benjamin",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 3,
+          "punkte": 8
+        },
+        {
+          "rang": 4,
+          "spieler": "KLEINHAPPEL Ernestine",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 4,
+          "punkte": 8
+        },
+        {
+          "rang": 5,
+          "spieler": "FELLNER Johann",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 4,
+          "punkte": 6
+        },
+        {
+          "rang": 6,
+          "spieler": "SCHNEIDER Thomas",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 4,
+          "punkte": 6
+        },
+        {
+          "rang": 7,
+          "spieler": "POLZER Hannah",
+          "spiele": 2,
+          "siege": 2,
+          "niederlagen": 0,
+          "legs_plus": 5,
+          "legs_minus": 3,
+          "punkte": 5
+        },
+        {
+          "rang": 8,
+          "spieler": "ELEZOSKI Serif",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 5,
+          "legs_minus": 3,
+          "punkte": 5
+        },
+        {
+          "rang": 9,
+          "spieler": "KOLLER Elias",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 5,
+          "legs_minus": 6,
+          "punkte": 5
+        },
+        {
+          "rang": 10,
+          "spieler": "JAHN Corinna",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 3,
+          "legs_minus": 1,
+          "punkte": 3
+        },
+        {
+          "rang": 11,
+          "spieler": "BÄCKER Josephine",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 3,
+          "legs_minus": 6,
+          "punkte": 3
+        },
+        {
+          "rang": 12,
+          "spieler": "JAHN Andreas",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 3,
+          "legs_minus": 7,
+          "punkte": 3
+        },
+        {
+          "rang": 13,
+          "spieler": "ROSSMANN Christoph",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 3,
+          "legs_minus": 8,
+          "punkte": 3
+        },
+        {
+          "rang": 14,
+          "spieler": "JESENKO Julia",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 2,
+          "legs_minus": 0,
+          "punkte": 2
+        },
+        {
+          "rang": 15,
+          "spieler": "SCHECK Guenther",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 2,
+          "legs_minus": 0,
+          "punkte": 2
+        },
+        {
+          "rang": 16,
+          "spieler": "KOGLER Sabine",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 2,
+          "legs_minus": 3,
+          "punkte": 2
+        },
+        {
+          "rang": 17,
+          "spieler": "GORICNIK Cornelia",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 2,
+          "legs_minus": 5,
+          "punkte": 2
+        },
+        {
+          "rang": 18,
+          "spieler": "JAMMER Fabian",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 2,
+          "legs_minus": 6,
+          "punkte": 2
+        },
+        {
+          "rang": 19,
+          "spieler": "JAHN Christian",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 0,
+          "legs_minus": 2,
+          "punkte": 0
+        },
+        {
+          "rang": 20,
+          "spieler": "PROVNIK Gabriele",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 0,
+          "legs_minus": 2,
+          "punkte": 0
+        },
+        {
+          "rang": 21,
+          "spieler": "GORICNIK Michael",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 0,
+          "legs_minus": 6,
+          "punkte": 0
+        },
+        {
+          "rang": 22,
+          "spieler": "JAHN Herbert",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 0,
+          "legs_minus": 8,
+          "punkte": 0
+        }
+      ],
+      "kader": [
+        "GORICNIK Cornelia",
+        "GORICNIK Michael",
+        "JAHN Andreas",
+        "JAHN Christian",
+        "JAHN Herbert",
+        "KOGLER Sabine"
+      ],
+      "letztes_spiel": {
+        "runde": 1,
+        "heim": 1,
+        "auswaerts": 9,
+        "paarungen": [
+          {
+            "art": "DE",
+            "spieler1": "GORICNIK Cornelia",
+            "spieler2": "KLEINHAPPEL Ernestine",
+            "legs1": 2,
+            "legs2": 3
+          },
+          {
+            "art": "HE",
+            "spieler1": "GORICNIK Michael",
+            "spieler2": "DOUJAK Siegfried",
+            "legs1": 0,
+            "legs2": 3
+          },
+          {
+            "art": "OE",
+            "spieler1": "JAHN Herbert",
+            "spieler2": "RAINER Gerald",
+            "legs1": 0,
+            "legs2": 3
+          },
+          {
+            "art": "OE",
+            "spieler1": "JAHN Andreas",
+            "spieler2": "ELEZOSKI Serif",
+            "legs1": 3,
+            "legs2": 2
+          },
+          {
+            "art": "MD",
+            "spieler1": "GORICNIK Cornelia / JAHN Andreas",
+            "spieler2": "KLEINHAPPEL Ernestine / RAINER Gerald",
+            "legs1": 0,
+            "legs2": 2
+          },
+          {
+            "art": "OD",
+            "spieler1": "JAHN Christian / JAHN Herbert",
+            "spieler2": "SCHECK Guenther / DOUJAK Siegfried",
+            "legs1": 0,
+            "legs2": 2
+          },
+          {
+            "art": "HE",
+            "spieler1": "GORICNIK Michael",
+            "spieler2": "ELEZOSKI Serif",
+            "legs1": 0,
+            "legs2": 3
+          },
+          {
+            "art": "DE",
+            "spieler1": "KOGLER Sabine",
+            "spieler2": "KLEINHAPPEL Ernestine",
+            "legs1": 2,
+            "legs2": 3
+          },
+          {
+            "art": "OE",
+            "spieler1": "JAHN Herbert",
+            "spieler2": "DOUJAK Siegfried",
+            "legs1": 0,
+            "legs2": 3
+          },
+          {
+            "art": "OE",
+            "spieler1": "JAHN Andreas",
+            "spieler2": "RAINER Gerald",
+            "legs1": 0,
+            "legs2": 3
+          }
+        ]
       }
     },
     "fraggles": {
@@ -210,52 +529,441 @@
       "ergebnisse": {
         "1": {
           "heim": 8,
-          "auswaerts": 2
+          "auswaerts": 2,
+          "id": 108850
         },
         "3": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 108938
         },
         "4": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 108960
         },
         "5": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109015
         },
         "6": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109059
         },
         "7": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109092
         },
         "8": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109158
         },
         "10": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109246
         },
         "11": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109268
         },
         "12": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109323
         },
         "13": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109367
         },
         "14": {
           "heim": 0,
-          "auswaerts": 0
+          "auswaerts": 0,
+          "id": 109400
         }
+      },
+      "einzelwertung": [
+        {
+          "rang": 1,
+          "spieler": "NIKOLIC Dennis",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 1,
+          "punkte": 8
+        },
+        {
+          "rang": 2,
+          "spieler": "GÖSCHL Mario",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 1,
+          "punkte": 8
+        },
+        {
+          "rang": 3,
+          "spieler": "JANESCH Christine",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 3,
+          "punkte": 8
+        },
+        {
+          "rang": 4,
+          "spieler": "DANIEL Utta",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 3,
+          "punkte": 8
+        },
+        {
+          "rang": 5,
+          "spieler": "WILTSCHNIG Gernot",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 4,
+          "punkte": 8
+        },
+        {
+          "rang": 6,
+          "spieler": "MARKTL Werner",
+          "spiele": 2,
+          "siege": 2,
+          "niederlagen": 0,
+          "legs_plus": 6,
+          "legs_minus": 2,
+          "punkte": 6
+        },
+        {
+          "rang": 7,
+          "spieler": "BRUNNER Peter",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 3,
+          "punkte": 6
+        },
+        {
+          "rang": 8,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 3,
+          "punkte": 6
+        },
+        {
+          "rang": 9,
+          "spieler": "FRADL Ingemar",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 5,
+          "punkte": 6
+        },
+        {
+          "rang": 10,
+          "spieler": "STINGLER Engelbert",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 5,
+          "punkte": 6
+        },
+        {
+          "rang": 11,
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 5,
+          "punkte": 6
+        },
+        {
+          "rang": 12,
+          "spieler": "SPANRING Andreas",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 13,
+          "spieler": "GRAFSCHAFTER Bastian",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 14,
+          "spieler": "UNTERDORFER Heimo",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 5,
+          "legs_minus": 6,
+          "punkte": 5
+        },
+        {
+          "rang": 15,
+          "spieler": "KRENN Klaus",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 3,
+          "punkte": 4
+        },
+        {
+          "rang": 16,
+          "spieler": "SONNBERGER Harald",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 4,
+          "legs_minus": 6,
+          "punkte": 4
+        },
+        {
+          "rang": 17,
+          "spieler": "ANWALD Guenther",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 4,
+          "legs_minus": 7,
+          "punkte": 4
+        },
+        {
+          "rang": 18,
+          "spieler": "WIMMER Leon",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 3,
+          "legs_minus": 3,
+          "punkte": 3
+        },
+        {
+          "rang": 19,
+          "spieler": "ETTL Theresa",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 3,
+          "legs_minus": 4,
+          "punkte": 3
+        },
+        {
+          "rang": 20,
+          "spieler": "GREINIG Hubert",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 3,
+          "legs_minus": 5,
+          "punkte": 3
+        },
+        {
+          "rang": 21,
+          "spieler": "PINTER Michele",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 3,
+          "legs_minus": 6,
+          "punkte": 3
+        },
+        {
+          "rang": 22,
+          "spieler": "GREINIG Petra",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 3,
+          "legs_minus": 8,
+          "punkte": 3
+        },
+        {
+          "rang": 23,
+          "spieler": "POSCHINGER Franz",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 2,
+          "legs_minus": 5,
+          "punkte": 2
+        },
+        {
+          "rang": 24,
+          "spieler": "FRÜSTÜCK Kerstin",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 2,
+          "legs_minus": 8,
+          "punkte": 2
+        },
+        {
+          "rang": 25,
+          "spieler": "MARKTL (J) Maximilian",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 1,
+          "legs_minus": 2,
+          "punkte": 1
+        },
+        {
+          "rang": 26,
+          "spieler": "LANG Melanie",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 1,
+          "legs_minus": 8,
+          "punkte": 1
+        },
+        {
+          "rang": 27,
+          "spieler": "BRUNNER Katharina",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 0,
+          "legs_minus": 2,
+          "punkte": 0
+        },
+        {
+          "rang": 28,
+          "spieler": "WHYMAN Christian",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 0,
+          "legs_minus": 3,
+          "punkte": 0
+        },
+        {
+          "rang": 29,
+          "spieler": "LEUTSCHACHER Martin",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 0,
+          "legs_minus": 3,
+          "punkte": 0
+        }
+      ],
+      "kader": [
+        "FRÜSTÜCK Kerstin",
+        "KRENN Klaus",
+        "MÜLLER Reinfried",
+        "PINTER Michele",
+        "POSCHINGER Franz",
+        "SONNBERGER Harald"
+      ],
+      "letztes_spiel": {
+        "runde": 1,
+        "heim": 8,
+        "auswaerts": 2,
+        "paarungen": [
+          {
+            "art": "DE",
+            "spieler1": "JANESCH Christine",
+            "spieler2": "PINTER Michele",
+            "legs1": 3,
+            "legs2": 1
+          },
+          {
+            "art": "HE",
+            "spieler1": "ANWALD Guenther",
+            "spieler2": "SONNBERGER Harald",
+            "legs1": 1,
+            "legs2": 3
+          },
+          {
+            "art": "OE",
+            "spieler1": "NIKOLIC Dennis",
+            "spieler2": "FRÜSTÜCK Kerstin",
+            "legs1": 3,
+            "legs2": 0
+          },
+          {
+            "art": "OE",
+            "spieler1": "WILTSCHNIG Gernot",
+            "spieler2": "POSCHINGER Franz",
+            "legs1": 3,
+            "legs2": 1
+          },
+          {
+            "art": "MD",
+            "spieler1": "JANESCH Christine / ANWALD Guenther",
+            "spieler2": "SONNBERGER Harald / FRÜSTÜCK Kerstin",
+            "legs1": 2,
+            "legs2": 1
+          },
+          {
+            "art": "OD",
+            "spieler1": "NIKOLIC Dennis / WILTSCHNIG Gernot",
+            "spieler2": "POSCHINGER Franz / KRENN Klaus",
+            "legs1": 2,
+            "legs2": 1
+          },
+          {
+            "art": "HE",
+            "spieler1": "NIKOLIC Dennis",
+            "spieler2": "SONNBERGER Harald",
+            "legs1": 3,
+            "legs2": 0
+          },
+          {
+            "art": "DE",
+            "spieler1": "JANESCH Christine",
+            "spieler2": "FRÜSTÜCK Kerstin",
+            "legs1": 3,
+            "legs2": 1
+          },
+          {
+            "art": "OE",
+            "spieler1": "ANWALD Guenther",
+            "spieler2": "KRENN Klaus",
+            "legs1": 1,
+            "legs2": 3
+          },
+          {
+            "art": "OE",
+            "spieler1": "WILTSCHNIG Gernot",
+            "spieler2": "PINTER Michele",
+            "legs1": 3,
+            "legs2": 2
+          }
+        ]
       }
     }
   }
