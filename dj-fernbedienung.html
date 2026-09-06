@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#12071f">
+<title>DJ-Fernbedienung · City Cafe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --lila:      #9146ff;
+        --lila-hell: #c9adff;
+        --pink:      #f355da;
+        --gruen:     #22c55e;
+        --rot:       #ef4444;
+        --grund:     #0c0714;
+        --karte:     #191029;
+        --karte-hoch:#241537;
+        --rand:      rgba(255,255,255,0.10);
+        --text:      #f4f1fa;
+        --text-leise:#9d92b5;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+        margin: 0; padding: 0; background: var(--grund); color: var(--text);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        /* Auf dem Handy soll die Seite nicht mitwackeln, wenn man scrollt. */
+        overscroll-behavior-y: none;
+    }
+    body {
+        min-height: 100dvh;
+        /* Unten so viel Luft, dass der feste Aktionsbalken nie den letzten
+           Inhalt verdeckt: Balkenhoehe (ca. 86px) plus Sicherheitsabstand. */
+        padding: max(16px, env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom));
+        background:
+            radial-gradient(ellipse 80% 50% at 50% 0%, rgba(145,70,255,0.22) 0%, rgba(0,0,0,0) 70%),
+            var(--grund);
+    }
+    /* Tablet: Inhalt mittig und breiter, statt auf volle Breite zu ziehen. */
+    .huelle { max-width: 620px; margin: 0 auto; }
+
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    header h1 {
+        font-family: 'Orbitron', sans-serif; font-size: 21px; font-weight: 900;
+        letter-spacing: 1px; margin: 0; text-transform: uppercase;
+    }
+    header .kopf-icon { font-size: 26px; }
+
+    /* Statuszeile: was der Fernseher gerade tut. */
+    .stand {
+        display: flex; align-items: center; gap: 10px;
+        background: var(--karte); border: 1px solid var(--rand); border-radius: 14px;
+        padding: 12px 14px; margin: 12px 0 20px; font-size: 15px; font-weight: 600;
+    }
+    .stand-punkt {
+        width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0;
+        background: var(--text-leise);
+    }
+    .stand.laeuft .stand-punkt { background: var(--gruen); box-shadow: 0 0 10px var(--gruen); }
+    .stand.fehler .stand-punkt { background: var(--rot); }
+    .stand-text { flex: 1; min-width: 0; }
+    .stand-rest { color: var(--lila-hell); font-variant-numeric: tabular-nums; font-weight: 800; }
+
+    h2 {
+        font-size: 13px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
+        color: var(--text-leise); margin: 24px 0 10px;
+    }
+
+    /* Auswahlknoepfe: Laufzeit und Qualitaet. Mindestens 48px hoch, damit sie
+       sich am Handy sicher treffen lassen. */
+    .wahl { display: flex; flex-wrap: wrap; gap: 8px; }
+    .wahl button {
+        flex: 1 1 auto; min-width: 84px; min-height: 48px;
+        background: var(--karte); color: var(--text);
+        border: 2px solid var(--rand); border-radius: 12px;
+        font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+    }
+    .wahl button[aria-pressed="true"] {
+        background: rgba(145,70,255,0.22); border-color: var(--lila); color: #fff;
+    }
+
+    /* Kanalliste */
+    .suche {
+        width: 100%; min-height: 50px; margin-bottom: 10px;
+        background: var(--karte); color: var(--text);
+        border: 2px solid var(--rand); border-radius: 12px;
+        padding: 0 14px; font-family: inherit; font-size: 16px;
+    }
+    .suche::placeholder { color: var(--text-leise); }
+    .kanaele { display: flex; flex-direction: column; gap: 8px; }
+    .kanal {
+        display: flex; align-items: center; gap: 12px; width: 100%;
+        min-height: 62px; padding: 8px 12px; text-align: left;
+        background: var(--karte); color: var(--text);
+        border: 2px solid var(--rand); border-radius: 14px;
+        font-family: inherit; cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+    }
+    .kanal[aria-pressed="true"] { background: rgba(145,70,255,0.22); border-color: var(--lila); }
+    .kanal img {
+        width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+        background: var(--karte-hoch); object-fit: cover;
+    }
+    .kanal-text { flex: 1; min-width: 0; }
+    .kanal-name {
+        font-size: 16px; font-weight: 700;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .kanal-sub {
+        font-size: 13px; color: var(--text-leise); margin-top: 2px;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .kanal-live {
+        flex-shrink: 0; font-size: 11px; font-weight: 900; letter-spacing: 1px;
+        text-transform: uppercase; padding: 5px 10px; border-radius: 8px;
+        background: rgba(239,68,68,0.18); border: 1px solid rgba(239,68,68,0.6); color: #ff8080;
+    }
+    .kanal-offline {
+        flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 1px;
+        text-transform: uppercase; color: var(--text-leise);
+    }
+
+    /* Aktionsknoepfe fest am unteren Rand, damit sie am Handy immer in
+       Daumenreichweite liegen - egal wie weit die Kanalliste gescrollt ist.
+       Bewusst fixed statt sticky: sticky bliebe im Textfluss und legte sich
+       je nach Scrollstand ueber die letzten Bedienelemente. */
+    .aktionen {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+        padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+        background: rgba(12,7,20,0.96); border-top: 1px solid var(--rand);
+        backdrop-filter: blur(8px);
+        display: flex; gap: 10px;
+    }
+    .aktionen > * { max-width: 300px; }
+    /* Tablet: Knoepfe mittig statt ueber die ganze Breite gezogen. */
+    .aktionen { justify-content: center; }
+    .aktionen button {
+        flex: 1; min-height: 58px; border: 0; border-radius: 14px;
+        font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
+        letter-spacing: 1px; text-transform: uppercase; cursor: pointer; color: #fff;
+    }
+    #starten { background: linear-gradient(135deg, var(--lila), var(--pink)); flex: 2; }
+    #starten:disabled { opacity: 0.4; }
+    #stoppen { background: var(--karte-hoch); border: 2px solid var(--rand); }
+
+    .hinweis {
+        background: var(--karte); border: 1px solid var(--rand); border-left: 4px solid var(--lila);
+        border-radius: 12px; padding: 13px 15px; margin: 14px 0;
+        font-size: 14px; line-height: 1.55; color: var(--text-leise);
+    }
+    .hinweis b { color: var(--text); }
+    .hinweis a { color: var(--lila-hell); }
+
+    .twitch-knopf {
+        width: 100%; min-height: 54px; margin-bottom: 12px;
+        background: var(--lila); color: #fff; border: 0; border-radius: 12px;
+        font-family: inherit; font-size: 16px; font-weight: 800; cursor: pointer;
+    }
+    .abmelden {
+        background: none; border: 0; color: var(--text-leise);
+        font-family: inherit; font-size: 13px; text-decoration: underline;
+        cursor: pointer; padding: 6px 0;
+    }
+    .lade { color: var(--text-leise); font-size: 14px; padding: 10px 2px; }
+    [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="huelle">
+
+    <header>
+        <span class="kopf-icon">🎧</span>
+        <h1>DJ-Fernbedienung</h1>
+    </header>
+
+    <div class="stand" id="stand">
+        <span class="stand-punkt"></span>
+        <span class="stand-text" id="stand-text">Verbinde mit dem Screen …</span>
+        <span class="stand-rest" id="stand-rest"></span>
+    </div>
+
+    <div class="hinweis" id="hinweis-firebase" hidden>
+        <b>Nicht eingerichtet.</b> In <code>dj-fernbedienung-config.js</code> fehlt die
+        Firebase-Adresse, oder die Datenbank-Regeln für <code>djremote</code> fehlen.
+        Siehe <b>DJ-FERNBEDIENUNG-SETUP.md</b>.
+    </div>
+
+    <h2>Kanal</h2>
+    <button class="twitch-knopf" id="twitch-login" hidden>Mit Twitch anmelden — zeigt, wem du folgst</button>
+    <div class="hinweis" id="hinweis-twitch" hidden>
+        <b>Ohne Anmeldung</b> siehst du nur die fest eingetragenen Kanäle. Nach der
+        Anmeldung erscheinen alle, denen du folgst — wer gerade live ist, steht oben.
+    </div>
+    <input class="suche" id="suche" type="search" inputmode="search"
+           placeholder="Kanal suchen oder Namen eintippen …" autocomplete="off" autocapitalize="off">
+    <div class="lade" id="kanal-lade" hidden>Lade deine Kanäle …</div>
+    <div class="kanaele" id="kanaele"></div>
+    <button class="abmelden" id="twitch-abmelden" hidden>Twitch abmelden</button>
+
+    <h2>Laufzeit</h2>
+    <div class="wahl" id="laufzeiten"></div>
+
+    <h2>Auflösung</h2>
+    <div class="wahl" id="qualitaeten"></div>
+    <div class="hinweis">
+        <b>Auto</b> ist meist die beste Wahl: Twitch passt die Qualität laufend an die
+        Leitung an. Eine feste Stufe schaltet das ab — reicht die Bandbreite nicht,
+        bleibt das Bild dann stehen statt herunterzuschalten.
+    </div>
+
+    <div class="aktionen">
+        <button id="starten" disabled>Auf den Screen</button>
+        <button id="stoppen">Stopp</button>
+    </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="dj-fernbedienung-config.js"></script>
+<script src="dj-fernbedienung-net.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    var CFG = window.DJ_REMOTE_CONFIG || {};
+    var NET = window.DJ_REMOTE_NET;
+
+    var el = function (id) { return document.getElementById(id); };
+    var verbindung = null;
+
+    var wahl = {
+        kanal:   null,                              // { channel, name, live, bild }
+        dauer:   CFG.laufzeitStandard || 900,
+        quali:   CFG.qualitaetStandard || 0
+    };
+    var kanalListe = [];
+
+    // ---------------------------------------------------------------- Anzeige
+
+    function textSetzen(knoten, text) { knoten.textContent = text; }
+
+    function standSetzen(art, text, rest) {
+        var s = el('stand');
+        s.classList.toggle('laeuft', art === 'laeuft');
+        s.classList.toggle('fehler', art === 'fehler');
+        textSetzen(el('stand-text'), text);
+        textSetzen(el('stand-rest'), rest || '');
+    }
+
+    function restZeit(bisWann) {
+        if (!bisWann || bisWann < 0) return '';
+        var sek = Math.max(0, Math.round((bisWann - Date.now()) / 1000));
+        var min = Math.floor(sek / 60);
+        if (min >= 60) return Math.floor(min / 60) + ' h ' + (min % 60) + ' min';
+        if (min >= 1)  return min + ' min';
+        return sek + ' s';
+    }
+
+    // Knopfreihen fuer Laufzeit und Qualitaet.
+    function wahlBauen(behaelter, eintraege, istGewaehlt, beiKlick) {
+        behaelter.innerHTML = '';
+        eintraege.forEach(function (e) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            textSetzen(b, e.text);
+            b.setAttribute('aria-pressed', istGewaehlt(e) ? 'true' : 'false');
+            b.addEventListener('click', function () {
+                beiKlick(e);
+                Array.prototype.forEach.call(behaelter.children, function (k) {
+                    k.setAttribute('aria-pressed', 'false');
+                });
+                b.setAttribute('aria-pressed', 'true');
+            });
+            behaelter.appendChild(b);
+        });
+    }
+
+    // Kanalliste. Namen und Bilder kommen von Twitch, also von fremden Nutzern -
+    // deshalb ausschliesslich per textContent ins DOM, nie per innerHTML.
+    function kanaeleZeichnen() {
+        var suchtext = el('suche').value.trim().toLowerCase();
+        var liste = kanalListe.filter(function (k) {
+            if (!suchtext) return true;
+            return (k.channel + ' ' + (k.name || '')).toLowerCase().indexOf(suchtext) !== -1;
+        });
+
+        var behaelter = el('kanaele');
+        behaelter.innerHTML = '';
+
+        // Getippter Name, der in der Liste nicht vorkommt: trotzdem anbieten.
+        if (suchtext && !liste.some(function (k) { return k.channel.toLowerCase() === suchtext; })) {
+            liste.unshift({ channel: suchtext, name: suchtext, live: null, frei: true });
+        }
+
+        if (!liste.length) {
+            var leer = document.createElement('div');
+            leer.className = 'lade';
+            textSetzen(leer, 'Keine Kanäle gefunden.');
+            behaelter.appendChild(leer);
+            return;
+        }
+
+        liste.slice(0, 60).forEach(function (k) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'kanal';
+            b.setAttribute('aria-pressed',
+                wahl.kanal && wahl.kanal.channel === k.channel ? 'true' : 'false');
+
+            if (k.bild) {
+                var img = document.createElement('img');
+                img.src = k.bild;
+                img.alt = '';
+                img.loading = 'lazy';
+                b.appendChild(img);
+            }
+
+            var txt = document.createElement('div');
+            txt.className = 'kanal-text';
+            var name = document.createElement('div');
+            name.className = 'kanal-name';
+            textSetzen(name, k.name || k.channel);
+            txt.appendChild(name);
+            if (k.spiel || k.frei) {
+                var sub = document.createElement('div');
+                sub.className = 'kanal-sub';
+                textSetzen(sub, k.frei ? 'Kanalname von Hand eingetippt' : k.spiel);
+                txt.appendChild(sub);
+            }
+            b.appendChild(txt);
+
+            if (k.live === true) {
+                var chip = document.createElement('span');
+                chip.className = 'kanal-live';
+                textSetzen(chip, 'Live');
+                b.appendChild(chip);
+            } else if (k.live === false) {
+                var aus = document.createElement('span');
+                aus.className = 'kanal-offline';
+                textSetzen(aus, 'Offline');
+                b.appendChild(aus);
+            }
+
+            b.addEventListener('click', function () {
+                wahl.kanal = k;
+                el('starten').disabled = false;
+                kanaeleZeichnen();
+            });
+            behaelter.appendChild(b);
+        });
+    }
+
+    // ---------------------------------------------------------------- Twitch
+
+    var TW_SPEICHER = 'dj-twitch-token';
+
+    function twitchToken() {
+        try { return sessionStorage.getItem(TW_SPEICHER) || ''; } catch (e) { return ''; }
+    }
+    function twitchTokenSetzen(t) {
+        try { t ? sessionStorage.setItem(TW_SPEICHER, t) : sessionStorage.removeItem(TW_SPEICHER); }
+        catch (e) {}
+    }
+
+    // Implicit-Flow: Twitch haengt das Token als #-Fragment an die Rueckkehr-URL.
+    // Das Fragment wird nie an einen Server geschickt, das Token bleibt also auf
+    // dem Geraet. Gespeichert wird es nur in der sessionStorage - beim Schliessen
+    // des Tabs ist es weg.
+    function twitchTokenAusUrlHolen() {
+        if (!location.hash || location.hash.indexOf('access_token=') === -1) return false;
+        var p = new URLSearchParams(location.hash.slice(1));
+        var t = p.get('access_token');
+        if (t) twitchTokenSetzen(t);
+        history.replaceState(null, '', location.pathname + location.search);
+        return !!t;
+    }
+
+    function twitchAnmelden() {
+        var url = 'https://id.twitch.tv/oauth2/authorize' +
+            '?client_id=' + encodeURIComponent(CFG.twitchClientId || '') +
+            '&redirect_uri=' + encodeURIComponent(location.origin + location.pathname) +
+            '&response_type=token' +
+            '&scope=' + encodeURIComponent('user:read:follows');
+        location.href = url;
+    }
+
+    function twitchAbfrage(pfad, token) {
+        return fetch('https://api.twitch.tv/helix/' + pfad, {
+            headers: {
+                'Client-Id': CFG.twitchClientId || '',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        });
+    }
+
+    // Folge-Liste holen: erst wem der Nutzer folgt, dann in einem zweiten
+    // Aufruf, wer davon gerade sendet. Live zuerst, sonst alphabetisch.
+    function folgeListeLaden() {
+        var token = twitchToken();
+        if (!token) return Promise.resolve(null);
+
+        el('kanal-lade').hidden = false;
+        return twitchAbfrage('users', token).then(function (ich) {
+            var uid = ich.data && ich.data[0] && ich.data[0].id;
+            if (!uid) throw new Error('keine Nutzer-ID');
+            return twitchAbfrage('channels/followed?user_id=' + uid + '&first=100', token);
+        }).then(function (folge) {
+            var eintraege = (folge.data || []).map(function (f) {
+                return { channel: f.broadcaster_login, name: f.broadcaster_name,
+                         id: f.broadcaster_id, live: false };
+            });
+            if (!eintraege.length) return eintraege;
+
+            // Live-Status in Bloecken zu 100 - mehr laesst Helix pro Aufruf nicht zu.
+            var frage = eintraege.slice(0, 100)
+                .map(function (e) { return 'user_id=' + encodeURIComponent(e.id); }).join('&');
+            return twitchAbfrage('streams?' + frage, token).then(function (streams) {
+                var live = {};
+                (streams.data || []).forEach(function (s) {
+                    live[s.user_login] = s.game_name || 'Live';
+                });
+                eintraege.forEach(function (e) {
+                    if (live[e.channel]) { e.live = true; e.spiel = live[e.channel]; }
+                });
+                return eintraege;
+            }).catch(function () { return eintraege; });   // ohne Live-Info geht es auch
+        }).then(function (eintraege) {
+            eintraege.sort(function (a, b) {
+                if (a.live !== b.live) return a.live ? -1 : 1;
+                return (a.name || '').localeCompare(b.name || '');
+            });
+            return eintraege;
+        }).catch(function (err) {
+            console.warn('[DJ-Fernbedienung] Twitch-Abruf fehlgeschlagen:', err);
+            // Abgelaufenes Token: Anmeldung wieder anbieten.
+            twitchTokenSetzen('');
+            return null;
+        }).finally(function () {
+            el('kanal-lade').hidden = true;
+        });
+    }
+
+    function festeKanaeleLaden() {
+        return fetch(CFG.kanalDatei || 'dj_channels.json', { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : []; })
+            .then(function (liste) {
+                return (Array.isArray(liste) ? liste : [])
+                    .filter(function (e) { return e && e.platform === 'twitch' && e.channel; })
+                    .map(function (e) {
+                        return { channel: e.channel, name: e.name || e.channel, live: null };
+                    });
+            })
+            .catch(function () { return []; });
+    }
+
+    function kanaeleLaden() {
+        var angemeldet = !!twitchToken();
+        el('twitch-login').hidden = angemeldet;
+        el('hinweis-twitch').hidden = angemeldet;
+        el('twitch-abmelden').hidden = !angemeldet;
+
+        return (angemeldet ? folgeListeLaden() : Promise.resolve(null))
+            .then(function (vonTwitch) {
+                if (vonTwitch && vonTwitch.length) return vonTwitch;
+                // Kein Login, leere Folge-Liste oder Twitch antwortet nicht:
+                // die fest eingetragenen Kanaele sind der Rueckfall.
+                el('twitch-login').hidden = false;
+                el('hinweis-twitch').hidden = false;
+                return festeKanaeleLaden();
+            })
+            .then(function (liste) {
+                kanalListe = liste;
+                kanaeleZeichnen();
+            });
+    }
+
+    // ---------------------------------------------------------------- Befehle
+
+    function senden(aktion) {
+        if (!verbindung) return;
+        NET.befehlSenden(verbindung, {
+            aktion:   aktion,
+            kanal:    wahl.kanal ? wahl.kanal.channel : '',
+            name:     wahl.kanal ? (wahl.kanal.name || wahl.kanal.channel) : '',
+            quali:    wahl.quali,
+            dauerSek: wahl.dauer
+        }).catch(function (err) {
+            console.warn('[DJ-Fernbedienung] Senden fehlgeschlagen:', err);
+            standSetzen('fehler', 'Konnte nicht senden — Datenbank-Regeln prüfen');
+        });
+    }
+
+    var restTicker = null;
+    function statusAnzeigen(status) {
+        if (restTicker) { clearInterval(restTicker); restTicker = null; }
+        if (!status) { standSetzen('', 'Screen meldet sich noch nicht'); return; }
+
+        if (!status.laeuft) { standSetzen('', 'Screen läuft in der normalen Rotation'); return; }
+
+        var name = status.name || status.kanal || 'Stream';
+        var zeigen = function () {
+            standSetzen('laeuft', name + ' läuft am Screen',
+                status.bisWann === -1 ? 'bis offline' : restZeit(status.bisWann));
+        };
+        zeigen();
+        if (status.bisWann && status.bisWann > 0) restTicker = setInterval(zeigen, 1000);
+    }
+
+    // ---------------------------------------------------------------- Start
+
+    function aufbauen() {
+        wahlBauen(el('laufzeiten'), CFG.laufzeiten || [],
+            function (e) { return e.sek === wahl.dauer; },
+            function (e) { wahl.dauer = e.sek; });
+
+        wahlBauen(el('qualitaeten'), CFG.qualitaeten || [],
+            function (e) { return e.hoehe === wahl.quali; },
+            function (e) { wahl.quali = e.hoehe; });
+
+        el('suche').addEventListener('input', kanaeleZeichnen);
+        el('twitch-login').addEventListener('click', twitchAnmelden);
+        el('twitch-abmelden').addEventListener('click', function () {
+            twitchTokenSetzen('');
+            kanaeleLaden();
+        });
+        el('starten').addEventListener('click', function () { senden('start'); });
+        el('stoppen').addEventListener('click', function () { senden('stop'); });
+
+        twitchTokenAusUrlHolen();
+        kanaeleLaden();
+
+        if (!NET || !NET.istEingerichtet()) {
+            el('hinweis-firebase').hidden = false;
+            standSetzen('fehler', 'Keine Verbindung eingerichtet');
+            return;
+        }
+
+        NET.bereit().then(function (verb) {
+            if (!verb) {
+                el('hinweis-firebase').hidden = false;
+                standSetzen('fehler', 'Keine Verbindung zum Screen');
+                return;
+            }
+            verbindung = verb;
+            NET.aufStatusHoeren(verb, statusAnzeigen);
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', aufbauen);
+    } else {
+        aufbauen();
+    }
+})();
+</script>
+</body>
+</html>

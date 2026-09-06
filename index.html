@@ -1861,6 +1861,18 @@
             white-space: nowrap;
         }
         .dj-tap-hinweis.is-an { display: flex; }
+        /* QR zur Handy-Fernbedienung. Sitzt in der Kopfzeile neben den Chips,
+           damit er den Player nicht verdeckt. Bleibt aus, solange Firebase
+           nicht eingerichtet ist - djFernQrZeichnen blendet ihn erst dann ein. */
+        .dj-fern-qr {
+            display: none; flex-direction: column; align-items: center; gap: 4px;
+            background: #ffffff; border-radius: 10px; padding: 6px 6px 4px;
+        }
+        .dj-fern-qr img { width: 74px; height: 74px; display: block; }
+        .dj-fern-qr span {
+            font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 800;
+            letter-spacing: 0.6px; text-transform: uppercase; color: #12071f;
+        }
         .dj-tap-hinweis span { font-size: 34px; }
         .dj-tap-sub {
             display: block; font-family: 'Inter', sans-serif; font-size: 15px;
@@ -2431,6 +2443,10 @@
                                 <div class="dj-counter" id="dj-live-counter" style="display: none;">1/1</div>
                                 <div class="dj-platform-chip is-twitch" id="dj-live-platform">Twitch</div>
                                 <div class="dj-live-badge"><span class="dj-live-dot"></span>Live</div>
+                                <div class="dj-fern-qr" id="dj-fern-qr" style="display: none;">
+                                    <img id="dj-fern-qr-img" src="" alt="QR-Code DJ-Fernbedienung">
+                                    <span>Steuern</span>
+                                </div>
                             </div>
                         </div>
                         <div class="dj-player" id="dj-live-player"></div>
@@ -2659,11 +2675,13 @@
          ist. Bleibt hosn-obe-config.js leer, schaltet sich das Widget selbst
          ab und die uebrige Rotation laeuft unveraendert weiter. -->
     <script src="hosn-obe-config.js"></script>
+    <script src="dj-fernbedienung-config.js"></script>
     <script src="hosn-obe-engine.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
     <script src="hosn-obe-net.js"></script>
+    <script src="dj-fernbedienung-net.js"></script>
 
     <script>
         function autoScaleDashboard() {
@@ -6853,6 +6871,12 @@
             showOriginDebug: false
         };
 
+        // "Bis offline" endet normalerweise am OFFLINE-Ereignis des Players.
+        // Bleibt das aus (Netz weg, Player haengt), soll der Slot trotzdem
+        // irgendwann zurueck in die Rotation - nach acht Stunden ist auch der
+        // laengste DJ-Stream vorbei.
+        const DJ_FERN_NOTBREMSE_MS = 8 * 60 * 60 * 1000;
+
         // Breite der Player-Buehne, wie sie in .dj-player im Stylesheet steht.
         // Daraus ergibt sich der Massstab, mit dem der intern groessere Player
         // heruntergerechnet wird.
@@ -6949,6 +6973,126 @@
             djStatusGeladen = true;
         }
 
+        // ==================================================================
+        //  Fernbedienung vom Handy (dj-fernbedienung.html)
+        // ==================================================================
+        // Das Handy schreibt einen Befehl nach Firebase, das Dashboard liest ihn
+        // und uebernimmt Kanal, Qualitaet und Laufzeit. Der Rueckkanal ist der
+        // Status, den die Handy-Seite anzeigt.
+        //
+        // Solange Firebase nicht eingerichtet ist, passiert hier gar nichts: kein
+        // QR-Code, kein Zuhoerer, die Rotation laeuft unveraendert.
+
+        let djFern = null;        // {kanal, name, quali, dauerSek, bisWann, id}
+        let djFernVerb = null;    // Firebase-Verbindung, sobald angemeldet
+        let djFernLetzteId = '';  // gegen erneut zugestellte, schon erledigte Befehle
+
+        // Wahr, solange der ferngesteuerte Stream laufen soll. bisWann === -1
+        // heisst "bis der Streamer offline geht" - das meldet der Player selbst
+        // ueber das OFFLINE-Ereignis, es braucht dafuer keinen API-Abruf.
+        function djFernAktiv() {
+            if (!djFern) return false;
+            if (djFern.bisWann === -1) return true;
+            return Date.now() < djFern.bisWann;
+        }
+
+        function djFernEintrag() {
+            if (!djFernAktiv()) return null;
+            return { platform: 'twitch', channel: djFern.kanal,
+                     name: djFern.name || djFern.kanal,
+                     title: 'Per Fernbedienung gestartet' };
+        }
+
+        // Eine feste Stufe schaltet Twitchs eigene Anpassung ab - deshalb nur
+        // dann, wenn am Handy ausdruecklich eine gewaehlt wurde. "Auto" (0)
+        // stellt den Normalbetrieb wieder her.
+        function djFernQualitaetAnwenden(hoehe) {
+            if (hoehe > 0) {
+                DJ_LIVE_CONFIG.qualitaetModus = 'fest';
+                DJ_LIVE_CONFIG.maxQualitaetHoehe = hoehe;
+            } else {
+                DJ_LIVE_CONFIG.qualitaetModus = 'mindestens';
+                DJ_LIVE_CONFIG.maxQualitaetHoehe = 1080;
+            }
+        }
+
+        function djFernStatusMelden() {
+            if (!djFernVerb || !window.DJ_REMOTE_NET) return;
+            DJ_REMOTE_NET.statusMelden(djFernVerb, {
+                laeuft:  djFernAktiv(),
+                kanal:   djFern ? djFern.kanal : '',
+                name:    djFern ? (djFern.name || djFern.kanal) : '',
+                quali:   djFern ? djFern.quali : 0,
+                bisWann: djFern ? djFern.bisWann : 0
+            }).catch(() => {});
+        }
+
+        function djFernBefehlAusfuehren(befehl) {
+            if (!befehl || !befehl.id || befehl.id === djFernLetzteId) return;
+            djFernLetzteId = befehl.id;
+
+            if (befehl.aktion === 'stop') {
+                djFern = null;
+                djFernQualitaetAnwenden(0);
+                djFernStatusMelden();
+                // Laeuft der Slot gerade, raeumt runMasterSequence ihn beim
+                // naechsten Schritt ab; ein sofortiger Sprung wuerde mitten in
+                // die Ueberblendung fallen.
+                if (mediaStateIndex === DJ_SLOT_INDEX) {
+                    cancelSequenceTimers();
+                    mediaStateIndex = 2;
+                    runMasterSequence();
+                }
+                return;
+            }
+
+            if (befehl.aktion !== 'start' || !befehl.kanal) return;
+
+            const dauer = Number(befehl.dauerSek);
+            djFern = {
+                kanal:   String(befehl.kanal).trim(),
+                name:    befehl.name || befehl.kanal,
+                quali:   Number(befehl.quali) || 0,
+                bisWann: dauer === -1 ? -1 : Date.now() + (dauer > 0 ? dauer : 900) * 1000
+            };
+            djFernQualitaetAnwenden(djFern.quali);
+            djFernStatusMelden();
+
+            // Sofort hinschalten - wer am Handy auf "Auf den Screen" tippt, will
+            // nicht erst die halbe Rotation abwarten.
+            cancelSequenceTimers();
+            djSpielerAbbauen();
+            djGepuffert = [];
+            mediaStateIndex = DJ_SLOT_INDEX;
+            runMasterSequence();
+        }
+
+        function djFernStarten() {
+            if (!window.DJ_REMOTE_NET || !DJ_REMOTE_NET.istEingerichtet()) return;
+            DJ_REMOTE_NET.bereit().then(verb => {
+                if (!verb) return;
+                djFernVerb = verb;
+                DJ_REMOTE_NET.aufBefehlHoeren(verb, djFernBefehlAusfuehren);
+                djFernQrZeichnen();
+                djFernStatusMelden();
+            });
+        }
+
+        function djFernQrZeichnen() {
+            const bild = document.getElementById('dj-fern-qr-img');
+            const kasten = document.getElementById('dj-fern-qr');
+            if (!bild || !kasten) return;
+            const ziel = (DJ_REMOTE_CONFIG.mobileUrl || '');
+            if (!ziel) return;
+            bild.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=' +
+                       encodeURIComponent(ziel);
+            // Ausdruecklich flex: ein leerer Wert wuerde auf die Stylesheet-Regel
+            // zurueckfallen, und die steht auf display:none.
+            kasten.style.display = 'flex';
+        }
+
+        djFernStarten();
+
         // Testbetrieb: ?djtest=kanalname zeigt genau diesen Twitch-Kanal, ohne
         // Checker und ohne live_status.json. Gedacht, um das Widget am Screen
         // auszuprobieren, bevor das Apps Script eingerichtet ist - und um bei
@@ -6961,6 +7105,11 @@
         }
 
         function djUsableEntries() {
+            // Vorrang: was am Handy gewaehlt wurde, dann der Testschalter, dann
+            // der Checker. Eine ausdrueckliche Wahl soll nie vom Automatismus
+            // ueberstimmt werden.
+            const fern = djFernEintrag();
+            if (fern) return djEmbedUrl(fern) ? [fern] : [];
             const test = djTestEintrag();
             if (test) return djEmbedUrl(test) ? [test] : [];
             if (!djStatusGeladen) return [];
@@ -6997,6 +7146,13 @@
             const buehne = document.getElementById('dj-live-player');
             djWaechterStoppen();
             djTapHinweis(false);
+            // Abgelaufene Fernsteuerung aufraeumen, damit das Handy nicht
+            // weiter "laeuft" anzeigt und die Qualitaet nicht festgenagelt bleibt.
+            if (djFern && !djFernAktiv()) {
+                djFern = null;
+                djFernQualitaetAnwenden(0);
+            }
+            djFernStatusMelden();
             if (buehne && buehne.firstChild) {
                 djSpielerAbbauen();
                 buehne.innerHTML = '';
@@ -7168,6 +7324,19 @@
                     // beim ersten Bild noch einmal nachsetzen.
                     spieler.addEventListener(Twitch.Player.READY, stufeSetzen);
                     spieler.addEventListener(Twitch.Player.PLAYING, stufeSetzen);
+                    // Geht der Streamer offline, endet "bis offline" - genau
+                    // dafuer gibt es das Ereignis, ein API-Abruf eruebrigt sich.
+                    spieler.addEventListener(Twitch.Player.OFFLINE, () => {
+                        if (!djFern || djFern.bisWann !== -1) return;
+                        djFern = null;
+                        djFernQualitaetAnwenden(0);
+                        djFernStatusMelden();
+                        if (mediaStateIndex === DJ_SLOT_INDEX) {
+                            cancelSequenceTimers();
+                            mediaStateIndex = 2;
+                            runMasterSequence();
+                        }
+                    });
                     // Blockiert der Browser das Autoplay doch, hier nachhelfen.
                     spieler.addEventListener(Twitch.Player.PLAYBACK_BLOCKED, () => {
                         try { spieler.setMuted(true); spieler.play(); } catch (e) {}
@@ -7579,7 +7748,16 @@
                 }
                 djZeigeEintrag(idx);
                 idx++;
-                later(zeigeNaechsten, DJ_LIVE_CONFIG.sekundenProKanal * 1000);
+                // Per Fernbedienung gilt die dort gewaehlte Laufzeit statt der
+                // ueblichen Standzeit. "Bis offline" wird gar nicht ueber die
+                // Uhr beendet, sondern vom OFFLINE-Ereignis des Players -
+                // deshalb hier eine bewusst grosse Wartezeit als Notbremse,
+                // falls das Ereignis ausbleibt.
+                later(zeigeNaechsten, djFernAktiv()
+                    ? (djFern.bisWann === -1
+                        ? DJ_FERN_NOTBREMSE_MS
+                        : Math.max(5000, djFern.bisWann - Date.now()))
+                    : DJ_LIVE_CONFIG.sekundenProKanal * 1000);
             };
             zeigeNaechsten();
         }
