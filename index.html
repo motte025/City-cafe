@@ -1847,6 +1847,26 @@
             font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
             letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.32);
         }
+        /* Erscheint NUR, wenn der Player klemmt und die Seite noch nie bedient
+           wurde. Bewusst kein dauerhaftes Overlay: auf dem Signage-Screen wird
+           nie getippt, ein Vollbild-Hinweis laege dort staendig ueber dem
+           Dashboard und waere schlimmer als das Problem selbst. */
+        .dj-tap-hinweis {
+            position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%);
+            z-index: 5; display: none; align-items: center; gap: 14px;
+            padding: 16px 30px; border-radius: 16px;
+            background: rgba(10, 7, 20, 0.92); border: 2px solid rgba(145, 70, 255, 0.8);
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff;
+            white-space: nowrap;
+        }
+        .dj-tap-hinweis.is-an { display: flex; }
+        .dj-tap-hinweis span { font-size: 34px; }
+        .dj-tap-sub {
+            display: block; font-family: 'Inter', sans-serif; font-size: 15px;
+            font-weight: 700; letter-spacing: 0.5px; text-transform: none;
+            color: #c9adff; margin-top: 3px;
+        }
         /* Es existiert immer nur EIN Rahmen - der des gerade gezeigten Kanals.
            Frueher lag fuer jeden Live-Kanal einer im DOM und alle liefen
            gleichzeitig; bei drei Live-Kanaelen dekodierte die Box also drei
@@ -2414,6 +2434,16 @@
                             </div>
                         </div>
                         <div class="dj-player" id="dj-live-player"></div>
+                        <!-- Bewusst NEBEN dem Player, nicht darin: djStopPlayer
+                             leert den Player-Container komplett aus. Sichtbar nur,
+                             wenn der Stream klemmt und die Seite noch nie bedient
+                             wurde. -->
+                        <div class="dj-tap-hinweis" id="dj-tap-hinweis">
+                            <span>👆</span>
+                            <div>Zum Starten tippen
+                                <span class="dj-tap-sub">Einmal pro Sitzung — danach laufen alle Streams von allein</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -6966,6 +6996,7 @@
             if (mediaStateIndex === DJ_SLOT_INDEX) return;
             const buehne = document.getElementById('dj-live-player');
             djWaechterStoppen();
+            djTapHinweis(false);
             if (buehne && buehne.firstChild) {
                 djSpielerAbbauen();
                 buehne.innerHTML = '';
@@ -7178,6 +7209,45 @@
             return beste;
         }
 
+        // ---- Wiedergabe-Freigabe ---------------------------------------------
+        // Der Kern des Autostart-Problems. Chrome laesst Wiedergabe erst zu,
+        // wenn die Seite EINMAL bedient wurde ("sticky activation"). Danach gilt
+        // die Freigabe fuer die ganze Sitzung und wird ueber allow="autoplay"
+        // auch an die eingebetteten Player weitergereicht.
+        //
+        // Auf dem Signage-Screen wird nie getippt - deshalb kein Overlay, das
+        // dort dauerhaft ueber dem Dashboard laege. Stattdessen: jede Bedienung
+        // irgendwo auf der Seite schaltet frei, und ein Hinweis erscheint nur,
+        // wenn ein Player tatsaechlich klemmt. Einmal pro Chrome-Start genuegt,
+        // danach laufen alle weiteren Slots von allein.
+        //
+        // Ganz ohne Bedienung hilft nur der Chrome-Schalter auf der Box:
+        // chrome://flags -> "Autoplay policy" -> "No user gesture is required".
+        let djFreigabeErteilt = false;
+
+        function djTapHinweis(zeigen) {
+            const el = document.getElementById('dj-tap-hinweis');
+            if (el) el.classList.toggle('is-an', !!zeigen && !djFreigabeErteilt);
+        }
+
+        function djFreigabeEinsammeln() {
+            if (djFreigabeErteilt) return;
+            djFreigabeErteilt = true;
+            djTapHinweis(false);
+            // Der Tastendruck selbst ist die Freigabe - jetzt gleich nutzen,
+            // solange sie noch "frisch" ist.
+            djAnstupsen();
+            if (djQualiLage) { djQualiLage.tonAn = false; djQualiLage.tonBlockiert = false; }
+        }
+
+        // Auf window und in der Aufnahmephase (capture), damit auch ein Klick
+        // greift, den ein Widget sonst selbst abfangen wuerde. Absichtlich nicht
+        // { once: true }: die Freigabe kostet nichts, und ein zweiter Tap nach
+        // einem Neuladen soll genauso wirken.
+        ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(art => {
+            window.addEventListener(art, djFreigabeEinsammeln, { capture: true, passive: true });
+        });
+
         // Stupst einen bereits gebauten Player wieder an.
         //
         // Noetig, weil der Player schon im Slot davor gebaut wird - dort ist die
@@ -7302,8 +7372,15 @@
             if (!djQualiLage.jeGelaufen) {
                 if (laeuft) {
                     djQualiLage.jeGelaufen = true;
+                    djTapHinweis(false);
                 } else if (djSlotSichtbar()) {
                     djQualiLage.totSekunden += takt;
+                    // Klemmt es und die Seite wurde noch nie bedient, ist das der
+                    // wahrscheinlichste Grund - dann den Hinweis zeigen. Ist die
+                    // Freigabe schon da, blendet djTapHinweis von selbst nichts ein.
+                    if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.neustartNachSekunden) {
+                        djTapHinweis(true);
+                    }
                     if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.neustartNachSekunden &&
                         !djQualiLage.iframeErzwungen) {
                         const bisher = djQualiLage.neustarts;
