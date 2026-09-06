@@ -405,6 +405,26 @@ in einem unsichtbaren Rahmen an**. Beim Einblenden stand deshalb das Play-Symbol
 im Bild, obwohl der Stream längst geladen war. Ein Wächter stupst den Player
 beim Einblenden wieder an und hält ihn danach am Laufen.
 
+### Einmal tippen, dann läuft es
+
+Chrome lässt Wiedergabe erst zu, wenn die Seite **einmal bedient** wurde
+(„sticky activation"). Danach gilt die Freigabe für die **ganze Sitzung** und
+wird über `allow="autoplay"` auch an die eingebetteten Player weitergereicht.
+
+Deshalb genügt **ein Tipp irgendwo auf dem Dashboard pro Chrome-Start** — nicht
+pro Slot. Danach starten alle weiteren Streams von allein, mit Ton. Ein
+Tastendruck zählt genauso (Fernbedienung am Fernseher).
+
+Klemmt ein Stream und wurde noch nicht getippt, blendet das Widget unten im
+Player den Hinweis **„Zum Starten tippen"** ein. Er verschwindet, sobald
+irgendwo getippt wurde, und kommt danach nicht wieder. Bewusst **kein**
+Vollbild-Overlay: auf dem Signage-Screen wird nie getippt, ein dauerhafter
+Hinweis läge dort ständig über dem Dashboard.
+
+**Ganz ohne Bedienung** (echter Signage-Betrieb, Lumify) hilft nur der
+Chrome-Schalter auf der Box: `chrome://flags` → **Autoplay policy** → *No user
+gesture is required*. Chrome danach komplett schließen und neu starten.
+
 **Die Autoplay-Freigabe ist dabei der entscheidende Punkt.** Chrome lässt
 Wiedergabe in einem *fremden* Rahmen nur zu, wenn dieser `allow="autoplay"`
 trägt. Unseren eigenen iframe stellen wir so ein — den Rahmen für das SDK baut
