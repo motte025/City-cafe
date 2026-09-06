@@ -405,6 +405,17 @@ in einem unsichtbaren Rahmen an**. Beim Einblenden stand deshalb das Play-Symbol
 im Bild, obwohl der Stream längst geladen war. Ein Wächter stupst den Player
 beim Einblenden wieder an und hält ihn danach am Laufen.
 
+Reicht das Anstupsen nicht — Chrome lässt einen im unsichtbaren Rahmen
+erzeugten Player teils gar nicht mehr anlaufen —, wird der Player nach
+`neustartNachSekunden` **neu gebaut**, dann aber in der sichtbaren Ansicht. Dort
+startet er ganz normal von allein, weil er stumm startet. Höchstens
+`maxNeustarts` Versuche, danach bleibt es dabei.
+
+| Einstellung | Standard | Bedeutung |
+|---|---|---|
+| `neustartNachSekunden` | `6` | so lange darf der Stream nach dem Einblenden tot bleiben |
+| `maxNeustarts` | `2` | danach kein weiterer Versuch |
+
 Der **Ton** hängt an derselben Mechanik: Autoplay *mit* Ton lehnt jeder Browser
 ohne Klick ab — der Stream liefe dann gar nicht erst an. Der Player startet
 deshalb stumm und wird erst aufgedreht, wenn das Bild nachweislich läuft.
