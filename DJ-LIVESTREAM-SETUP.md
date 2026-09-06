@@ -12,7 +12,7 @@ ohne dass am Dashboard etwas kaputtgeht.
 
 > **Sofort ausprobieren, ohne Einrichtung:** `?djtest=kanalname` an die
 > Dashboard-URL hängen, zum Beispiel
-> <https://motte025.github.io/City-cafe/?djtest=tschessy>.
+> <https://motte025.github.io/City-cafe/?djtest=juliaonair>.
 > Damit läuft genau dieser Twitch-Kanal im Slot, ganz ohne Checker und ohne
 > `live_status.json`. Der Schalter wirkt nur über die URL — im Normalbetrieb
 > ist er also nicht aktiv und kann nichts dauerhaft verstellen. Gut geeignet,
