@@ -49020,5 +49020,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Jax Jones",
+    "title": "All Day and Night",
+    "album": "",
+    "category": "Dance & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Dance",
+      "House",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
