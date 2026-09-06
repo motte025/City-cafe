@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-09-04T19:42:57Z",
-  "live": []
+  "checked_at": "2026-09-06T09:52:56Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "Julia On Air",
+      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    }
+  ]
 }
