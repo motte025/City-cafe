@@ -299,6 +299,42 @@
             will-change: transform !important;
         }
 
+        /* Ausnahme: die Geber-Ermittlung von Hos'n Obe. Sie laeuft ein paar
+           Sekunden einmal pro Runde und bewegt nur transform und opacity -
+           dieselbe Klasse Animation wie die Laufschriften oben, also auch auf
+           der Odroid-Box unbedenklich. Die Verzoegerung kommt je Karte aus
+           --kt-in: ein Inline-Stil verlöre gegen !important, eine Variable
+           nicht (siehe Ticker-Kommentar). */
+        html:not([data-fx="1"]) .kt-starter-title,
+        html:not([data-fx="1"]) .kt-starter-sub {
+            animation-name: ktStarterSlideIn !important;
+            animation-duration: 0.4s !important;
+            animation-timing-function: ease-out !important;
+            animation-fill-mode: both !important;
+            animation-delay: var(--kt-in, 0ms) !important;
+        }
+        html:not([data-fx="1"]) .kt-starter-item {
+            animation-name: ktStarterCardIn !important;
+            animation-duration: 0.55s !important;
+            animation-timing-function: cubic-bezier(.22,.85,.32,1.2) !important;
+            animation-fill-mode: both !important;
+            animation-delay: var(--kt-in, 0ms) !important;
+        }
+        html:not([data-fx="1"]) .kt-starter-item.is-winner .kt-starter-card {
+            animation-name: ktStarterWinnerPulse !important;
+            animation-duration: 1.2s !important;
+            animation-timing-function: ease-in-out !important;
+            animation-iteration-count: infinite !important;
+            animation-delay: var(--kt-pulse, 0ms) !important;
+        }
+        html:not([data-fx="1"]) .kt-starter-smiley {
+            animation-name: ktSmileyPop !important;
+            animation-duration: 0.45s !important;
+            animation-timing-function: cubic-bezier(.2,.9,.3,1.4) !important;
+            animation-fill-mode: both !important;
+            animation-delay: var(--kt-in, 0ms) !important;
+        }
+
         /* Ohne backdrop-filter braucht der Untergrund mehr Deckkraft, sonst
            steht der Text direkt auf dem Hintergrundbild. */
         html:not([data-fx="1"]) .schlager-top-header,
@@ -1492,10 +1528,9 @@
            anklickbar, nicht fokussierbar, per aria-hidden aus dem Vorlesetext
            heraus - Name, Punkte und Ergebnistext sagen dasselbe. */
         .kt-seat-smiley {
-            position: absolute; top: -8px; right: 38px;
-            width: 22px; height: 22px;          /* ~19 % der Kartenbreite (116px) */
-            z-index: 20; pointer-events: none;
-            filter: drop-shadow(0 2px 7px rgba(0,0,0,0.85));
+            position: absolute; left: 50%; top: 50%;
+            width: 128px; height: 128px; margin: -64px 0 0 -64px;
+            z-index: 25; pointer-events: none;
         }
 
         /* Offene Mitte, waagrecht im freien Band zwischen oberer und unterer Reihe.
@@ -1558,10 +1593,17 @@
             animation: ktStarterFadeIn 0.35s ease-out;
         }
         @keyframes ktStarterFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* WICHTIG: Sichtbarkeit haengt hier an keiner Animation.
+           Weiter oben schaltet eine Sparregel (html:not([data-fx="1"]))
+           "animation: none !important" fuer die ganze Seite ab - alles, was
+           auf opacity:0 startet und erst per Animation aufblendet, bliebe am
+           Fernseher unsichtbar. Genau daran ist diese Anzeige frueher
+           gescheitert: der Kasten stand leer da. Grundzustand ist deshalb
+           sichtbar, die Animation ist reine Zugabe. */
         .kt-starter-title {
             font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
             letter-spacing: 1.6px; color: #ffffff; text-transform: uppercase;
-            opacity: 0; animation: ktStarterSlideIn 0.4s ease-out forwards;
+            animation: ktStarterSlideIn 0.4s ease-out both;
         }
         @keyframes ktStarterSlideIn {
             from { opacity: 0; transform: translateY(-10px); }
@@ -1569,15 +1611,21 @@
         }
         .kt-starter-row { margin-top: 16px; display: flex; gap: 16px; justify-content: center; align-items: flex-end; }
         .kt-starter-item {
-            width: 104px; text-align: center;
-            opacity: 0; animation: ktStarterCardIn 0.5s cubic-bezier(.22,.85,.32,1.2) forwards;
+            position: relative; width: 104px; text-align: center;
+            animation: ktStarterCardIn 0.55s cubic-bezier(.22,.85,.32,1.2) both;
+            animation-delay: var(--kt-in, 0ms);
         }
+        /* Die Karte kippt herein wie hingelegt: aus der Tiefe, gedreht, mit
+           kurzem Ueberschwingen. Nur transform und opacity - beides Sache des
+           Compositors und damit auch auf der Odroid-Box billig. */
         @keyframes ktStarterCardIn {
-            0% { opacity: 0; transform: translateY(30px) scale(0.78) rotate(-8deg); }
-            65% { opacity: 1; transform: translateY(-5px) scale(1.06) rotate(2deg); }
+            0%   { opacity: 0; transform: translateY(46px) scale(0.7) rotate(-14deg); }
+            60%  { opacity: 1; transform: translateY(-9px) scale(1.08) rotate(4deg); }
+            80%  { transform: translateY(2px) scale(0.98) rotate(-1.5deg); }
             100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
         }
         .kt-starter-card {
+            position: relative;
             width: 104px; height: 156px; border-radius: 10px; overflow: hidden;
             background: #0a1426; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
         }
@@ -1586,19 +1634,36 @@
             margin-top: 6px; font-family: 'Orbitron', sans-serif; font-size: 16px;
             font-weight: 900; color: #cbd5e1; letter-spacing: 0.6px;
         }
+        /* Der Gewinner wird per outline hervorgehoben, nicht per box-shadow:
+           Schatten schaltet die Sparregel oben ab, outline nicht. */
         .kt-starter-item.is-winner .kt-starter-card {
-            animation: ktStarterGlow 1.15s ease-in-out 0.5s infinite;
+            outline: 4px solid #00f2fe; outline-offset: 1px;
+            animation: ktStarterWinnerPulse 1.2s ease-in-out var(--kt-pulse, 0ms) infinite;
         }
-        @keyframes ktStarterGlow {
-            0%, 100% { box-shadow: 0 0 0 4px #00f2fe, 0 0 26px rgba(0,242,254,0.7); }
-            50% { box-shadow: 0 0 0 7px #00f2fe, 0 0 44px rgba(0,242,254,0.95); }
+        @keyframes ktStarterWinnerPulse {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.06); }
         }
         .kt-starter-item.is-winner .kt-starter-name { color: #00f2fe; }
+        /* Der coole Smiley liegt gross mitten auf der Gewinnerkarte. */
+        .kt-starter-smiley {
+            position: absolute; left: 50%; top: 50%;
+            width: 86px; height: 86px; margin: -43px 0 0 -43px;
+            z-index: 5; pointer-events: none;
+            animation: ktSmileyPop 0.45s cubic-bezier(.2,.9,.3,1.4) both;
+            animation-delay: var(--kt-in, 0ms);
+        }
+        @keyframes ktSmileyPop {
+            0%   { opacity: 0; transform: scale(0.2) rotate(-25deg); }
+            70%  { opacity: 1; transform: scale(1.15) rotate(6deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
         .kt-starter-sub {
             margin-top: 16px; font-family: 'Orbitron', sans-serif; font-size: 22px;
             font-weight: 900; color: #00f2fe; letter-spacing: 1.2px;
             text-shadow: 0 0 18px rgba(0,242,254,0.6);
-            opacity: 0; animation: ktStarterSlideIn 0.4s ease-out forwards;
+            animation: ktStarterSlideIn 0.4s ease-out both;
+            animation-delay: var(--kt-in, 0ms);
         }
 
         .kt-result {
@@ -7510,18 +7575,36 @@
             title.textContent = 'Wer beginnt? Höchste Karte!';
             box.appendChild(title);
 
+            /*
+             * Die Karten kommen nacheinander herein, nicht alle auf einmal -
+             * so sieht man beim Zuschauen, wie sich der Geber ergibt. Die
+             * Verzoegerung steckt in --kt-in statt in style.animationDelay:
+             * die Sparregel setzt animation per !important zurueck, dagegen
+             * verliert ein Inline-Stil (siehe Ticker weiter oben).
+             */
+            const STEP = 260;                       // Abstand zwischen zwei Karten
             const row = document.createElement('div');
             row.className = 'kt-starter-row';
             seats.forEach((seat, i) => {
                 const item = document.createElement('div');
                 item.className = 'kt-starter-item' + (seat === winner ? ' is-winner' : '');
-                item.style.animationDelay = (i * 110) + 'ms';
+                item.style.setProperty('--kt-in', (i * STEP) + 'ms');
 
                 const card = document.createElement('div');
                 card.className = 'kt-starter-card';
                 const img = document.createElement('img');
                 img.src = KtEngine.cardImage(cards[seat], 'cards/');
                 card.appendChild(img);
+
+                // Der Gewinner pulst erst, wenn alle Karten liegen - sonst
+                // zappelt er, waehrend die anderen noch hereinkommen.
+                if (seat === winner) {
+                    item.style.setProperty('--kt-pulse', (seats.length * STEP + 200) + 'ms');
+                    const smiley = ktMakeSmiley('kt-starter-smiley');
+                    smiley.style.setProperty('--kt-in', (seats.length * STEP + 120) + 'ms');
+                    ktShowSmiley(smiley, 'cool');
+                    card.appendChild(smiley);
+                }
                 item.appendChild(card);
 
                 const name = document.createElement('div');
@@ -7535,7 +7618,7 @@
 
             const sub = document.createElement('div');
             sub.className = 'kt-starter-sub';
-            sub.style.animationDelay = (seats.length * 110 + 150) + 'ms';
+            sub.style.setProperty('--kt-in', (seats.length * STEP + 260) + 'ms');
             sub.textContent = ktName(winner) + ' tauscht als Erster';
             box.appendChild(sub);
         }
