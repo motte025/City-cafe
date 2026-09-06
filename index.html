@@ -803,7 +803,8 @@
 
         /* ==================================================================
            Dartverein City Flyers (Chaoten + Fraggles)
-           Zwei Slots: "Naechstes Spiel" (dn-) und Spielplan (ds-).
+           Slots: "Naechstes Spiel" (dn-), Einzelwertung (ew-) und das
+           letzte Spiel im Detail (sd-).
            Farbleitsystem: Chaoten = Cyan (#00f2fe), Fraggles = Magenta
            (#f355da) - beides Hausfarben, die im Dashboard schon gesetzt sind.
            ================================================================== */
@@ -833,6 +834,14 @@
         .dart-badge.is-live {
             background: rgba(255, 51, 85, 0.18); border-color: rgba(255, 51, 85, 0.65); color: #ff3355;
         }
+        /* Endstand des letzten Spiels: gewonnen/verloren soll man sehen, bevor
+           man das Wort daneben gelesen hat. */
+        .dart-badge.is-sieg {
+            background: rgba(52, 211, 153, 0.18); border-color: rgba(52, 211, 153, 0.6); color: #34d399;
+        }
+        .dart-badge.is-nied {
+            background: rgba(255, 107, 107, 0.16); border-color: rgba(255, 107, 107, 0.55); color: #ff6b6b;
+        }
         /* blLivePulse ist die Pulsanimation der Fussball-Widgets - nur
            transform/opacity, laeuft also im Compositor und kostet auf der
            Odroid-Box nichts. */
@@ -842,7 +851,7 @@
             animation: blLivePulse 1.4s ease-in-out infinite;
         }
 
-        /* Teamfoto-Zwischenfolie vor dem Spielplan. */
+        /* Teamfoto-Zwischenfolie vor der Einzelwertung. */
         .df-buehne { position: absolute; inset: 0; }
         .df-foto {
             width: 100%; height: 100%; object-fit: cover;
@@ -934,64 +943,83 @@
             text-transform: uppercase; letter-spacing: 2px; text-align: center;
         }
 
-        /* ---------- Spielplan (Mehrseiten-Liste) ---------- */
-        /* Spaltenbreiten stehen einmal hier und gelten fuer Kopfzeile und alle
+        /* ---------- Einzelwertung (Mehrseiten-Liste, zwei Klassen) ---------- */
+        /* Spaltenbreiten stehen einmal hier und gelten fuer Kopfzeile und
            Datenzeilen - sonst laufen die beiden Raster auseinander. */
-        .ds-kopfzeile, .ds-row {
-            display: grid;
-            grid-template-columns: 132px 78px 1fr 116px 92px;
-            align-items: center; gap: 20px;
+        .ew-grid { display: flex; gap: 26px; height: 636px; }
+        .ew-col {
+            flex: 1; min-width: 0; display: flex; flex-direction: column;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 20px; padding: 22px 24px; box-sizing: border-box;
+            border-top: 4px solid var(--dn-akzent);
         }
-        .ds-kopfzeile {
-            padding: 0 28px 10px; font-size: 15px; font-weight: 800;
-            color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px;
+        .ew-col-kopf { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+        .ew-col-team {
+            font-family: 'Orbitron', sans-serif; font-size: 23px; font-weight: 900;
+            color: var(--dn-akzent); text-transform: uppercase; letter-spacing: 1px;
         }
-        /* Die 26px Innenabstand sind gerechnet, nicht geraten: sieben Zeilen plus
-           Zwischenraeume fuellen damit die 815px-Karte genau aus. */
-        .ds-row {
-            background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 14px; padding: 26px 28px;
-            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s ease;
+        .ew-col-liga { font-size: 14px; font-weight: 800; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.2px; }
+        .ew-head, .ew-row {
+            display: grid; grid-template-columns: 34px 1fr 38px 38px 38px 46px;
+            align-items: center; gap: 8px;
         }
-        /* Wanderndes Aufleuchten wie beim Veranstaltungs-Widget. */
-        .ds-row.ds-row-active {
-            background: rgba(0, 242, 254, 0.16); border-color: rgba(0, 242, 254, 0.65);
-            box-shadow: 0 0 30px rgba(0, 242, 254, 0.3); transform: scale(1.012);
+        .ew-head {
+            padding: 0 12px 8px; font-size: 13px; font-weight: 800;
+            color: rgba(255,255,255,0.48); text-transform: uppercase; letter-spacing: 1px;
         }
-        /* Das naechste anstehende Spiel bleibt dauerhaft markiert, auch wenn das
-           wandernde Licht gerade woanders steht. */
-        .ds-row.is-naechstes { border-color: rgba(243, 85, 218, 0.6); background: rgba(243, 85, 218, 0.1); }
-        .ds-row.is-naechstes.ds-row-active { border-color: rgba(0, 242, 254, 0.7); }
-        .ds-row.is-gespielt { opacity: 0.62; }
-        .ds-row.is-frei { opacity: 0.5; }
-        .ds-datum {
-            font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #00f2fe;
-            font-variant-numeric: tabular-nums; white-space: nowrap;
+        .ew-row {
+            padding: 11px 12px; border-radius: 10px; margin-bottom: 5px;
+            background: rgba(0, 0, 0, 0.18); border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .ds-row.ds-row-active .ds-datum { color: #ffffff; }
-        .ds-runde { font-size: 17px; font-weight: 800; color: rgba(255,255,255,0.6); white-space: nowrap; }
-        .ds-gegner {
-            font-size: 25px; font-weight: 800; color: #ffffff;
+        /* Die eigenen Leute muessen auf zwei Meter Entfernung herausstechen -
+           die Liste umfasst die ganze Klasse, nicht nur den Hausverein. */
+        .ew-row.is-wir { background: rgba(243, 85, 218, 0.16); border-color: rgba(243, 85, 218, 0.55); }
+        .ew-rang { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; color: #00f2fe; text-align: center; }
+        .ew-row.is-wir .ew-rang { color: #ffffff; }
+        .ew-name { font-size: 18px; font-weight: 800; color: rgba(255,255,255,0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ew-row.is-wir .ew-name { color: #ffffff; }
+        .ew-zahl { font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.7); text-align: center; font-variant-numeric: tabular-nums; }
+        .ew-pkt { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; color: #ffffff; text-align: center; font-variant-numeric: tabular-nums; }
+
+        /* ---------- Spiel-Detail (die zehn Paarungen eines Abends) ---------- */
+        .sd-liste { display: flex; flex-direction: column; gap: 9px; }
+        .sd-row {
+            display: grid; grid-template-columns: 74px 1fr 104px 1fr;
+            align-items: center; gap: 18px;
+            background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px; padding: 13px 22px;
+        }
+        /* Disziplin-Kuerzel aus der MDT-Kennung: DE Damen-, HE Herren-,
+           OE Offen-Einzel, MD Mixed-, OD Offen-Doppel. */
+        .sd-art {
+            font-size: 14px; font-weight: 900; letter-spacing: 1px; text-align: center;
+            padding: 4px 0; border-radius: 7px; white-space: nowrap;
+            background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+        }
+        .sd-art.is-doppel { background: rgba(243, 85, 218, 0.16); color: #f355da; }
+        .sd-spieler {
+            font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.62);
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .ds-gegner .ds-vs { color: rgba(255,255,255,0.45); font-weight: 700; margin-right: 9px; }
-        .ds-ha {
-            font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
-            text-align: center; padding: 5px 0; border-radius: 8px; white-space: nowrap;
-        }
-        .ds-ha.is-heim { background: rgba(52, 211, 153, 0.16); color: #34d399; }
-        .ds-ha.is-aus  { background: rgba(251, 191, 36, 0.14); color: #fbbf24; }
-        .ds-ha.is-frei { background: rgba(255, 255, 255, 0.07); color: rgba(255,255,255,0.55); }
-        .ds-erg {
-            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: #ffffff;
+        .sd-spieler.is-wir { color: #ffffff; font-weight: 800; }
+        .sd-spieler.is-rechts { text-align: right; }
+        .sd-legs {
+            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
             text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap;
+            color: rgba(255,255,255,0.85);
         }
-        .ds-erg.is-offen { color: rgba(255,255,255,0.3); }
-        .ds-erg.is-sieg { color: #34d399; }
-        .ds-erg.is-nied { color: #ff6b6b; }
-        .ds-marker {
-            font-size: 13px; font-weight: 900; color: #f355da;
-            text-transform: uppercase; letter-spacing: 1.5px; margin-top: 3px;
+        .sd-legs.is-sieg { color: #34d399; }
+        .sd-legs.is-nied { color: #ff6b6b; }
+        .sd-kopfzeile {
+            display: grid; grid-template-columns: 74px 1fr 104px 1fr;
+            align-items: center; gap: 18px; padding: 0 22px 8px;
+            font-size: 14px; font-weight: 800; color: rgba(255,255,255,0.5);
+            text-transform: uppercase; letter-spacing: 1.2px;
+        }
+        .sd-kopfzeile .is-rechts { text-align: right; }
+        .sd-endstand {
+            font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
+            font-variant-numeric: tabular-nums;
         }
 
         /* ---------- Liga-Tabelle (Phase 2, nur mit Daten sichtbar) ---------- */
@@ -1636,12 +1664,13 @@
            mitten im Bild. */
         #media-view-djlive.active ~ .kt-launcher { display: none !important; }
         /* In der Dart-Strecke bleibt der Starter-QR ebenfalls weg: unten links
-           stehen dort die Spielort-Adresse, die letzte Spielplan-Zeile, der
+           stehen dort die Spielort-Adresse, die letzte Listenzeile, der
            Verlauf der Foto-Folie und der letzte Tabellenplatz - ueberall waere
            er im Weg. */
         #media-view-dart-next.active ~ .kt-launcher,
         #media-view-dart-team.active ~ .kt-launcher,
-        #media-view-dart-schedule.active ~ .kt-launcher,
+        #media-view-dart-einzel.active ~ .kt-launcher,
+        #media-view-dart-spiel.active ~ .kt-launcher,
         #media-view-dart-table.active ~ .kt-launcher { display: none !important; }
 
         /* ---------- DJ-Live-Widget (Twitch / YouTube Live) ---------- */
@@ -2090,7 +2119,7 @@
                 <!-- ==========================================================
                      Dartverein City Flyers - Hausverein des City Cafe.
                      Drei Slots hintereinander: naechstes Spiel je Mannschaft,
-                     der komplette Spielplan ueber vier Seiten und (sobald
+                     die Einzelwertung, das letzte Spiel und (sobald
                      dart_liga.json Daten liefert) die Liga-Tabelle.
                      Der dunkelrote Verlauf grenzt die Dart-Strecke optisch von
                      der blauen Veranstaltungs-Seite davor ab.
@@ -2111,7 +2140,7 @@
                     </div>
                 </div>
 
-                <!-- Zwischenfolie zwischen "Naechstes Spiel" und Spielplan. Laeuft nur
+                <!-- Zwischenfolie zwischen "Naechstes Spiel" und Einzelwertung. Laeuft nur
                      mit, wenn city_flyers_team.webp wirklich im Repo liegt - sonst
                      stuende hier ein schwarzes Rechteck. -->
                 <div class="media-inner-view" id="media-view-dart-team">
@@ -2129,26 +2158,46 @@
                     </div>
                 </div>
 
-                <div class="media-inner-view" id="media-view-dart-schedule">
+                <!-- Einzelwertung der ganzen Klasse; die eigenen Leute sind
+                     hervorgehoben. Laeuft ueber mehrere Seiten, weil eine Klasse
+                     22 bis 29 Spieler hat. -->
+                <div class="media-inner-view" id="media-view-dart-einzel">
+                    <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden; padding: 32px 40px; box-sizing: border-box;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 22px;">
+                            <div class="dart-kopf">
+                                <span class="dart-logo">🎯</span>
+                                <div>
+                                    <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">City Flyers · Einzelwertung</h2>
+                                    <p style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">KEDSV E-Liga · Saison 26/27</p>
+                                </div>
+                            </div>
+                            <div id="dart-einzel-seite" class="dart-badge">Seite 1/3</div>
+                        </div>
+                        <div class="ew-grid" id="dart-einzel-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Der letzte Mannschaftsabend mit seinen zehn Paarungen.
+                     Faellt aus, solange noch nicht gespielt wurde. -->
+                <div class="media-inner-view" id="media-view-dart-spiel">
                     <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden; padding: 32px 40px; box-sizing: border-box;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 18px;">
                             <div class="dart-kopf">
                                 <span class="dart-logo">🎯</span>
                                 <div>
-                                    <h2 id="dart-plan-titel" style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">City Flyers · Spielplan</h2>
-                                    <p id="dart-plan-untertitel" style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">Saison 26/27</p>
+                                    <h2 id="dart-spiel-titel" style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Letztes Spiel</h2>
+                                    <p id="dart-spiel-untertitel" style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;"></p>
                                 </div>
                             </div>
-                            <div id="dart-plan-seite" class="dart-badge">Seite 1/4</div>
+                            <div id="dart-spiel-endstand" class="dart-badge">–</div>
                         </div>
-                        <div class="ds-kopfzeile">
-                            <span>Datum</span>
-                            <span>Runde</span>
-                            <span>Gegner</span>
-                            <span style="text-align: center;">Wo</span>
-                            <span style="text-align: center;">Erg</span>
+                        <div class="sd-kopfzeile">
+                            <span style="text-align: center;">Art</span>
+                            <span id="dart-spiel-kopf-links">City Flyers</span>
+                            <span style="text-align: center;">Legs</span>
+                            <span class="is-rechts" id="dart-spiel-kopf-rechts">Gegner</span>
                         </div>
-                        <div id="dart-plan-liste" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                        <div class="sd-liste" id="dart-spiel-liste"></div>
                     </div>
                 </div>
 
@@ -5035,9 +5084,8 @@
         //
         // "Freilos" ist kein echter Gegner, sondern eine spielfreie Runde: bei
         // sieben Mannschaften in einer Achtergruppe setzt in jeder Runde eine
-        // aus. Im Spielplan bleiben diese Zeilen sichtbar (sonst fehlen im
-        // Aushang ploetzlich Runden), im "Naechstes Spiel" werden sie
-        // uebersprungen - da will jemand wissen, wann wirklich gespielt wird.
+        // aus. Im "Naechstes Spiel" werden diese Runden uebersprungen - da will
+        // jemand wissen, wann wirklich gespielt wird.
         //
         // Die Ergebnisse kommen ueber dart_liga.json dazu (siehe weiter unten,
         // Abschnitt "Phase 2"). Ohne diese Datei laeuft alles hier unveraendert
@@ -5172,16 +5220,18 @@
             globalMasterTimer = later(runMasterSequence, DART_FOTO_SLOT_MS);
         }
 
-        const DART_PLAN_PRO_SEITE = 7;      // 14 Spiele je Team -> genau 2 Seiten pro Mannschaft
-        const DART_PLAN_ROW_MS = 1700;      // ~12s je Seite, gleicher Takt wie das Veranstaltungs-Widget
+        // Eine Klasse hat 22 bis 29 Spieler - bei zehn Zeilen je Seite sind das
+        // drei Seiten. Der Takt entspricht dem des Veranstaltungs-Widgets.
+        const DART_EINZEL_PRO_SEITE = 10;
+        const DART_EINZEL_SEITE_MS = 12000;
+        const DART_SPIEL_SLOT_MS = 26000;
         const DART_NEXT_SLOT_MS = 22000;
         const DART_TABLE_SLOT_MS = 26000;
 
         const DART_WOCHENTAGE = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
         // Angeworfen wird in dieser Liga immer um 19:00 - die Uhrzeit steht
-        // deshalb nicht an jedem der 28 Spiele, sondern einmal auf der Karte
-        // "Naechstes Spiel" und einmal im Kopf des Spielplans.
+        // deshalb einmal auf der Karte "Naechstes Spiel" statt an jedem Termin.
         const DART_SPIELBEGINN = '19:00';
 
         // Der MDT-Server schreibt Vereinsnamen mit deutschen Anfuehrungszeichen
@@ -5320,82 +5370,201 @@
             globalMasterTimer = later(runMasterSequence, DART_NEXT_SLOT_MS);
         }
 
-        // ---------- Slot 2: Kompletter Spielplan ueber vier Seiten ----------
-        // Nach Mannschaften gruppiert statt nach Datum: beide spielen an
-        // denselben Terminen, gemischt stuenden also staendig zwei Zeilen mit
-        // demselben Datum untereinander. So bekommt jede Mannschaft ihre zwei
-        // eigenen Seiten mit eigener Ueberschrift.
-        const DART_PLAN_SEITEN = [];
-        Object.keys(DART_CLUB).forEach(key => {
-            chunkArray(DART_SPIELE[key], DART_PLAN_PRO_SEITE).forEach(zeilen => {
-                DART_PLAN_SEITEN.push({ teamKey: key, zeilen });
-            });
-        });
+        // ---------- Spielernamen kuerzen ----------
+        // MDT schreibt "NACHNAME Vorname". Auf dem Schirm im Lokal steht nur
+        // "Vorname N." - der Vorname reicht zum Erkennen, der volle Nachname
+        // muss nicht fuer jeden Gast an der Wand haengen.
+        //
+        // Der Nachname ist das fuehrende Wort ohne Kleinbuchstaben. Ein simpler
+        // Grossschreibungs-Test (wort === wort.toUpperCase()) waere hier falsch:
+        // bei "FRIESSNEGGER" mit scharfem s liefert toUpperCase() ein doppeltes
+        // s zurueck und der Vergleich schlaegt fehl.
+        function dartKurzName(name) {
+            const roh = String(name || '').trim();
+            if (!roh) return '';
+            // Doppel kommen als "A / B" - beide Haelften einzeln kuerzen.
+            if (roh.indexOf('/') !== -1) {
+                return roh.split('/').map(t => dartKurzName(t)).join(' / ');
+            }
+            // Zusaetze in Klammern herausloesen - MDT markiert damit einzelne
+            // Spieler, z.B. "MARKTL (J) Maximilian" fuer einen Jugendspieler.
+            // Mitten im Namen stehend ergaebe das "(J) Maximilian M.".
+            const zusaetze = [];
+            const ohne = roh.replace(/\(([^)]*)\)/g, function (_, z) {
+                if (z.trim()) zusaetze.push('(' + z.trim() + ')');
+                return ' ';
+            }).replace(/\s+/g, ' ').trim();
 
-        function dartRenderPlanSeite(seite, seitenIndex) {
-            const team = DART_CLUB[seite.teamKey];
-            const naechstes = dartNaechstesSpiel(seite.teamKey);
-            const heute = dartHeuteMitternacht();
+            const w = ohne.split(/\s+/);
+            if (w.length < 2) return roh;
+            const nach = w[0];
+            const vor = w.slice(1).join(' ');
+            if (/[a-zäöü]/.test(nach) || !vor) return roh;   // unerwartetes Format: unveraendert lassen
+            return vor + ' ' + nach.charAt(0) + '.' + (zusaetze.length ? ' ' + zusaetze.join(' ') : '');
+        }
 
-            // Ohne Emoji: das Logo steht als eigenes Element daneben und wuerde
-            // von einem textContent-Schreiber hier mit weggeraeumt.
-            document.getElementById('dart-plan-titel').textContent = `City Flyers "${team.kurz}" · Spielplan`;
-            document.getElementById('dart-plan-untertitel').textContent =
-                `${team.liga} · KEDSV E-Liga · Saison 26/27 · Spielbeginn ${DART_SPIELBEGINN} Uhr`;
-            document.getElementById('dart-plan-seite').textContent = `Seite ${seitenIndex + 1}/${DART_PLAN_SEITEN.length}`;
+        // ---------- Slot 3: Einzelwertung der Klasse ----------
+        function dartEinzelwertung(teamKey) {
+            const team = dartLigaTeam(teamKey);
+            return (team && Array.isArray(team.einzelwertung)) ? team.einzelwertung : [];
+        }
+        function dartKader(teamKey) {
+            const team = dartLigaTeam(teamKey);
+            return (team && Array.isArray(team.kader)) ? team.kader : [];
+        }
 
-            document.getElementById('dart-plan-liste').innerHTML = seite.zeilen.map(s => {
-                const istNaechstes = naechstes && s.runde === naechstes.runde;
-                const vorbei = s.datum < heute;
-                const klassen = ['ds-row'];
-                if (s.freilos) klassen.push('is-frei');
-                else if (istNaechstes) klassen.push('is-naechstes');
-                else if (vorbei) klassen.push('is-gespielt');
+        // Wie viele Seiten die laengere der beiden Listen braucht.
+        function dartEinzelSeiten() {
+            const laengste = Math.max(...Object.keys(DART_CLUB).map(k => dartEinzelwertung(k).length), 0);
+            return Math.max(1, Math.ceil(laengste / DART_EINZEL_PRO_SEITE));
+        }
 
-                const erg = dartErgebnisAnzeige(s);
-                return `<div class="${klassen.join(' ')}">
-                    <div>
-                        <div class="ds-datum">${dartDatumKurz(s.datum)}</div>
-                        ${istNaechstes ? '<div class="ds-marker">Nächstes</div>' : ''}
+        function dartEinzelSlotVerfuegbar() {
+            return Object.keys(DART_CLUB).some(k => dartEinzelwertung(k).length > 0);
+        }
+
+        function dartRenderEinzelSeite(seitenIndex) {
+            const seiten = dartEinzelSeiten();
+            document.getElementById('dart-einzel-seite').textContent =
+                `Seite ${seitenIndex + 1}/${seiten}`;
+
+            document.getElementById('dart-einzel-grid').innerHTML = Object.keys(DART_CLUB).map(key => {
+                const team = DART_CLUB[key];
+                const alle = dartEinzelwertung(key);
+                // Der Kader entscheidet, wer zu uns gehoert - die Liste umfasst
+                // die ganze Klasse, auf den vorderen Plaetzen stehen oft Gegner.
+                const unsere = dartKader(key).map(dartNameKey);
+                const zeilen = alle.slice(seitenIndex * DART_EINZEL_PRO_SEITE,
+                                          (seitenIndex + 1) * DART_EINZEL_PRO_SEITE);
+                const kopf = `
+                    <div class="ew-col-kopf">
+                        <span class="ew-col-team">${team.kurz}</span>
+                        <span class="ew-col-liga">${team.liga}</span>
+                    </div>`;
+
+                if (!alle.length) {
+                    return `<div class="ew-col" style="--dn-akzent: ${team.akzent};">
+                        ${kopf}
+                        <div class="dn-leer">
+                            <div class="dn-leer-icon">🎯</div>
+                            <div class="dn-leer-text">Wertung folgt</div>
+                        </div>
+                    </div>`;
+                }
+
+                return `<div class="ew-col" style="--dn-akzent: ${team.akzent};">
+                    ${kopf}
+                    <div class="ew-head">
+                        <span style="text-align: center;">#</span>
+                        <span>Spieler</span>
+                        <span style="text-align: center;">Sp</span>
+                        <span style="text-align: center;">S</span>
+                        <span style="text-align: center;">N</span>
+                        <span style="text-align: center;">Pkt</span>
                     </div>
-                    <div class="ds-runde">Rd. ${s.runde}</div>
-                    <div class="ds-gegner">${s.freilos
-                        ? '<span class="ds-vs">—</span>spielfrei'
-                        : `<span class="ds-vs">${s.istHeim ? 'vs.' : '@'}</span>${s.gegner}`}</div>
-                    <div class="ds-ha ${s.freilos ? 'is-frei' : (s.istHeim ? 'is-heim' : 'is-aus')}">${s.freilos ? '—' : (s.istHeim ? 'Heim' : 'Ausw.')}</div>
-                    <div class="ds-erg ${erg.klasse}">${erg.text}</div>
+                    ${zeilen.map(z => {
+                        const wir = unsere.indexOf(dartNameKey(z.spieler)) !== -1;
+                        return `<div class="ew-row ${wir ? 'is-wir' : ''}">
+                            <div class="ew-rang">${z.rang}</div>
+                            <div class="ew-name">${dartKurzName(z.spieler)}</div>
+                            <div class="ew-zahl">${z.spiele}</div>
+                            <div class="ew-zahl">${z.siege}</div>
+                            <div class="ew-zahl">${z.niederlagen}</div>
+                            <div class="ew-pkt">${z.punkte}</div>
+                        </div>`;
+                    }).join('')}
                 </div>`;
             }).join('');
         }
 
-        function runDartScheduleState(nextStateIndex) {
-            document.getElementById('media-view-dart-schedule').classList.add('active');
-            let seitenIdx = 0;
+        function runDartEinzelState(nextStateIndex) {
+            document.getElementById('media-view-dart-einzel').classList.add('active');
+            const seiten = dartEinzelSeiten();
+            let idx = 0;
 
             function zeigeSeite() {
-                if (seitenIdx >= DART_PLAN_SEITEN.length) {
+                if (idx >= seiten) {
                     mediaStateIndex = nextStateIndex;
                     runMasterSequence();
                     return;
                 }
-                dartRenderPlanSeite(DART_PLAN_SEITEN[seitenIdx], seitenIdx);
-                const rows = document.querySelectorAll('#dart-plan-liste .ds-row');
-                let rowIdx = 0;
-
-                function highlightNext() {
-                    rows.forEach(r => r.classList.remove('ds-row-active'));
-                    if (rowIdx >= rows.length) {
-                        seitenIdx++;
-                        zeigeSeite();
-                        return;
-                    }
-                    rows[rowIdx].classList.add('ds-row-active');
-                    rowIdx++;
-                    later(highlightNext, DART_PLAN_ROW_MS);
-                }
-                highlightNext();
+                dartRenderEinzelSeite(idx);
+                idx++;
+                later(zeigeSeite, DART_EINZEL_SEITE_MS);
             }
             zeigeSeite();
+        }
+
+        // ---------- Slot 4: Letztes Spiel mit seinen zehn Paarungen ----------
+        function dartLetztesSpiel(teamKey) {
+            const team = dartLigaTeam(teamKey);
+            const l = team && team.letztes_spiel;
+            return (l && Array.isArray(l.paarungen) && l.paarungen.length) ? l : null;
+        }
+
+        // Mannschaften, fuer die ein Spiel-Detail vorliegt. Sind es zwei,
+        // wechselt die Ansicht von Durchlauf zu Durchlauf - so bleibt der Slot
+        // immer gleich lang, statt beide hintereinander zu zeigen.
+        function dartSpielSlotTeams() {
+            return Object.keys(DART_CLUB).filter(k => dartLetztesSpiel(k) !== null);
+        }
+        function dartSpielSlotVerfuegbar() { return dartSpielSlotTeams().length > 0; }
+        let dartSpielIndex = 0;
+
+        function dartRenderSpiel(teamKey) {
+            const team = DART_CLUB[teamKey];
+            const letztes = dartLetztesSpiel(teamKey);
+            if (!letztes) return;
+
+            // Aus dem Spielplan kommt, gegen wen und ob daheim - die Detailseite
+            // selbst nennt nur "Spieler 1" und "Spieler 2".
+            const spiel = DART_SPIELE[teamKey].filter(s => s.runde === letztes.runde)[0];
+            const istHeim = spiel ? spiel.istHeim : true;
+            const gegner = spiel ? spiel.gegner : 'Gegner';
+            const unser = istHeim ? letztes.heim : letztes.auswaerts;
+            const gegen = istHeim ? letztes.auswaerts : letztes.heim;
+
+            document.getElementById('dart-spiel-titel').textContent =
+                `City Flyers "${team.kurz}" · Letztes Spiel`;
+            document.getElementById('dart-spiel-untertitel').textContent =
+                `${team.liga} · Runde ${letztes.runde}` +
+                (spiel ? ` · ${dartDatumLang(spiel.datum)} · ${istHeim ? 'Heimspiel' : 'auswärts'}` : '');
+
+            const badge = document.getElementById('dart-spiel-endstand');
+            badge.classList.remove('is-live', 'is-sieg', 'is-nied');
+            if (unser > gegen) badge.classList.add('is-sieg');
+            else if (unser < gegen) badge.classList.add('is-nied');
+            badge.innerHTML = `<span class="sd-endstand">${unser}:${gegen}</span> ` +
+                (unser > gegen ? 'gewonnen' : (unser < gegen ? 'verloren' : 'unentschieden'));
+
+            document.getElementById('dart-spiel-kopf-links').textContent = team.kurz;
+            document.getElementById('dart-spiel-kopf-rechts').textContent = gegner;
+
+            document.getElementById('dart-spiel-liste').innerHTML = letztes.paarungen.map(p => {
+                // Spieler 1 ist immer die Heimmannschaft. Stehen wir auswaerts,
+                // gehoert also die rechte Spalte uns.
+                const unsLinks = istHeim;
+                const legsUns = unsLinks ? p.legs1 : p.legs2;
+                const legsGegen = unsLinks ? p.legs2 : p.legs1;
+                const klasse = legsUns > legsGegen ? 'is-sieg' : (legsUns < legsGegen ? 'is-nied' : '');
+                const doppel = p.art === 'MD' || p.art === 'OD';
+                return `<div class="sd-row">
+                    <div class="sd-art ${doppel ? 'is-doppel' : ''}">${p.art || '–'}</div>
+                    <div class="sd-spieler ${unsLinks ? 'is-wir' : ''}">${dartKurzName(p.spieler1)}</div>
+                    <div class="sd-legs ${klasse}">${p.legs1}:${p.legs2}</div>
+                    <div class="sd-spieler is-rechts ${unsLinks ? '' : 'is-wir'}">${dartKurzName(p.spieler2)}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function runDartSpielState(nextStateIndex) {
+            const teams = dartSpielSlotTeams();
+            const teamKey = teams[dartSpielIndex % teams.length];
+            dartSpielIndex++;
+            dartRenderSpiel(teamKey);
+            document.getElementById('media-view-dart-spiel').classList.add('active');
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = later(runMasterSequence, DART_SPIEL_SLOT_MS);
         }
 
         // ---------- Phase 2: Ergebnisse & Tabelle aus dart_liga.json ----------
@@ -5629,9 +5798,9 @@
             dartAnsichtAuffrischen();
         }
 
-        // Nur die gerade sichtbare Dart-Ansicht neu zeichnen. Der Spielplan
-        // bleibt bewusst aussen vor: er wird Seite fuer Seite durchgeschaltet,
-        // ein Neuaufbau mittendrin wuerde das wandernde Aufleuchten zerreissen.
+        // Nur die gerade sichtbare Dart-Ansicht neu zeichnen. Die Einzelwertung
+        // bleibt bewusst aussen vor: sie wird Seite fuer Seite durchgeschaltet,
+        // ein Neuaufbau mittendrin wuerde mitten im Blaettern die Seite tauschen.
         function dartAnsichtAuffrischen() {
             const sichtbar = id => {
                 const el = document.getElementById(id);
@@ -6419,7 +6588,8 @@
         // stehen absteigend genau in der Reihenfolge, in der die Slots laufen.
         const DART_SLOT_INDEX = -2;       // Naechstes Spiel
         const DART_FOTO_INDEX = -1.9;     // Mannschaftsfoto
-        const DART_PLAN_INDEX = -1.8;     // Spielplan
+        const DART_EINZEL_INDEX = -1.8;   // Einzelwertung
+        const DART_SPIEL_INDEX = -1.75;   // letztes Spiel im Detail
         const DART_TABELLE_INDEX = -1.7;  // Tabelle
 
         let djGepuffert = [];        // Eintraege, fuer die gerade Player im DOM stehen
@@ -8274,9 +8444,9 @@
             djStopPlayer();
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
 
-            // Die vier Dart-Slots des Hausvereins City Flyers eroeffnen den
-            // Zyklus: erst wann als naechstes gespielt wird, dann das
-            // Mannschaftsfoto, der komplette Spielplan und die Tabelle.
+            // Die fuenf Dart-Slots des Hausvereins City Flyers eroeffnen den
+            // Zyklus: wann als naechstes gespielt wird, das Mannschaftsfoto,
+            // die Einzelwertung, das letzte Spiel im Detail und die Tabelle.
             // Danach geht es beim bisherigen Zyklusanfang (Nightlife) weiter.
             if (mediaStateIndex === DART_SLOT_INDEX) {
                 // Nach dem letzten Spieltag beider Mannschaften hat die Karte
@@ -8292,14 +8462,29 @@
                 // Zwischenfolie mit Mannschaftsfoto - ohne die Bilddatei
                 // ueberspringt sie sich selbst.
                 if (dartFotoSlotVerfuegbar()) {
-                    runDartTeamFotoState(DART_PLAN_INDEX); // -> Dart-Spielplan
+                    runDartTeamFotoState(DART_EINZEL_INDEX); // -> Einzelwertung
                 } else {
-                    mediaStateIndex = DART_PLAN_INDEX;
+                    mediaStateIndex = DART_EINZEL_INDEX;
                     runMasterSequence();
                 }
 
-            } else if (mediaStateIndex === DART_PLAN_INDEX) {
-                runDartScheduleState(DART_TABELLE_INDEX); // -> Dart-Tabelle
+            } else if (mediaStateIndex === DART_EINZEL_INDEX) {
+                // Ohne Einzelwertung in dart_liga.json faellt der Slot aus.
+                if (dartEinzelSlotVerfuegbar()) {
+                    runDartEinzelState(DART_SPIEL_INDEX); // -> letztes Spiel
+                } else {
+                    mediaStateIndex = DART_SPIEL_INDEX;
+                    runMasterSequence();
+                }
+
+            } else if (mediaStateIndex === DART_SPIEL_INDEX) {
+                // Solange noch nicht gespielt wurde, gibt es kein Detail.
+                if (dartSpielSlotVerfuegbar()) {
+                    runDartSpielState(DART_TABELLE_INDEX); // -> Dart-Tabelle
+                } else {
+                    mediaStateIndex = DART_TABELLE_INDEX;
+                    runMasterSequence();
+                }
 
             } else if (mediaStateIndex === DART_TABELLE_INDEX) {
                 // Ohne dart_liga.json gibt es keine Tabelle - dann direkt weiter.

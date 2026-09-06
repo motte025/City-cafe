@@ -143,15 +143,42 @@ function dartLigaAktualisieren() {
       Logger.log('WARNUNG: keine Tabelle fuer ' + t.name + ' (Turnier ' + t.turnierid + ') - Mannschaft uebersprungen.');
       return;
     }
+    const einzel = dartParseEinzelwertung(dartSeiteHolen('team_einzelwertung.php', t.turnierid));
+    const kader = dartParseKader(dartSeiteHolen('spieler.php', t.turnierid), t.name);
+
+    // Letzter Mannschaftsabend samt seinen zehn Paarungen. Kostet zwei
+    // zusaetzliche Abrufe (Session + Detailseite) und wird deshalb nur geholt,
+    // wenn ueberhaupt schon gespielt wurde.
+    let letztes = null;
+    const runde = dartLetzteGespielteRunde(ergebnisse);
+    if (runde !== null && ergebnisse[String(runde)].id) {
+      const paarungen = dartHoleSpielDetail(t.turnierid, ergebnisse[String(runde)].id);
+      if (paarungen.length) {
+        letztes = {
+          runde: runde,
+          heim: ergebnisse[String(runde)].heim,
+          auswaerts: ergebnisse[String(runde)].auswaerts,
+          paarungen: paarungen
+        };
+      }
+    }
+
     teams[t.key] = {
       turnierid: t.turnierid,
       liga: t.liga,
       tabelle: tabelle,
-      ergebnisse: ergebnisse
+      ergebnisse: ergebnisse,
+      einzelwertung: einzel,
+      kader: kader,
+      letztes_spiel: letztes
     };
     Logger.log(t.name + ': ' + tabelle.length + ' Tabellenplaetze, ' +
                Object.keys(ergebnisse).length + ' Runden mit Gegner, ' +
-               dartGespielte(ergebnisse) + ' davon gespielt.');
+               dartGespielte(ergebnisse) + ' davon gespielt, ' +
+               einzel.length + ' in der Einzelwertung, ' +
+               kader.length + ' im Kader' +
+               (letztes ? ', letztes Spiel Runde ' + letztes.runde + ' mit ' + letztes.paarungen.length + ' Paarungen.'
+                        : ', noch kein Spiel-Detail.'));
   });
 
   if (!Object.keys(teams).length) {
@@ -315,9 +342,157 @@ function dartParseVorrunde(html, eigenerName) {
     // zaehlte jede Diagnose sie als gespieltes Match mit.
     if (dartIstFreilos(heim) || dartIstFreilos(aus)) return;
 
-    ergebnisse[String(runde)] = { heim: parseInt(m[1], 10), auswaerts: parseInt(m[2], 10) };
+    const eintrag = { heim: parseInt(m[1], 10), auswaerts: parseInt(m[2], 10) };
+    // Die teamSpielId steht im onclick des "Spiele"-Knopfes derselben Zeile.
+    // Ueber sie kommt spaeter die Detailseite mit den zehn Paarungen.
+    const id = z.match(/teamSpielId=(\d+)/);
+    if (id) eintrag.id = parseInt(id[1], 10);
+    ergebnisse[String(runde)] = eintrag;
   });
   return ergebnisse;
+}
+
+// ---------------------------------------------------------------------------
+//  team_einzelwertung.php - Einzelwertung der ganzen Klasse
+// ---------------------------------------------------------------------------
+// Spalten: # | Spieler | S | Sieg | NL | L+ | L- | +/- | D | P
+// Die Liste umfasst ALLE Spieler der Klasse, nicht nur die eigenen - wer zu
+// uns gehoert, entscheidet der Kader aus spieler.php.
+function dartParseEinzelwertung(html) {
+  const out = [];
+  dartTabellenZeilen(html).forEach(function (z) {
+    if (/<th[\s>]/i.test(z)) return;
+    const c = dartZellen(z);
+    if (c.length < 10) return;
+    const rang = parseInt(c[0], 10);
+    if (!isFinite(rang) || !c[1]) return;
+    out.push({
+      rang: rang,
+      spieler: c[1],
+      spiele: parseInt(c[2], 10) || 0,
+      siege: parseInt(c[3], 10) || 0,
+      niederlagen: parseInt(c[4], 10) || 0,
+      legs_plus: parseInt(c[5], 10) || 0,
+      legs_minus: parseInt(c[6], 10) || 0,
+      punkte: parseInt(c[9], 10) || 0
+    });
+  });
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+//  spieler.php - Kader je Verein
+// ---------------------------------------------------------------------------
+// Die Seite listet alle Vereine der Klasse untereinander: eine Zeile mit dem
+// Vereinsnamen, darunter dessen Spieler - jeweils als einzelne Zelle. Gesucht
+// sind nur die Namen unter der eigenen Mannschaft, bis der naechste Verein
+// beginnt.
+function dartParseKader(html, eigenerName) {
+  const eigen = dartSchluessel(eigenerName);
+  const kader = [];
+  let drin = false;
+
+  dartTabellenZeilen(html).forEach(function (z) {
+    if (/<th[\s>]/i.test(z)) return;
+    const c = dartZellen(z);
+    if (c.length !== 1 || !c[0]) return;
+    const wert = c[0];
+
+    // Ein Spielername ist "NACHNAME Vorname" - alles andere ist ein Verein.
+    if (dartIstSpielername(wert)) {
+      if (drin) kader.push(wert);
+    } else {
+      drin = (dartSchluessel(wert) === eigen);
+    }
+  });
+  return kader;
+}
+
+// "NACHNAME Vorname": genau zwei Woerter, das erste ohne Kleinbuchstaben.
+// Das ss-Zeichen zaehlt dabei nicht als Kleinbuchstabe - sonst fiele
+// "FRIEssNEGGER Gerhard" durch und der Spieler waere ploetzlich ein Verein.
+function dartIstSpielername(wert) {
+  const w = String(wert).trim().split(/\s+/);
+  return w.length === 2 && !/[a-zäöü]/.test(w[0]) && /[a-zäöü]/.test(w[1]);
+}
+
+// ---------------------------------------------------------------------------
+//  Spiel-Detailseite - die zehn Paarungen eines Mannschaftsabends
+// ---------------------------------------------------------------------------
+// Diese eine Seite hoert NICHT auf turnierid, sondern nur auf die Session:
+// ein direkter Aufruf liefert die Kopfzeile und sonst nichts, weil der Server
+// dann das Default-Turnier ("Training") annimmt. Erst ein vorheriger Aufruf
+// von spieler.php?turnierid=<id> mit demselben Cookie stellt das Turnier ein.
+//
+// UrlFetchApp fuehrt kein Cookie-Glas mit - das Set-Cookie der ersten Antwort
+// muss deshalb von Hand in den Header der zweiten wandern.
+function dartSessionCookie(turnierid) {
+  const res = UrlFetchApp.fetch(DART_BASIS + 'spieler.php?turnierid=' + encodeURIComponent(turnierid),
+    { method: 'get', muteHttpExceptions: true });
+  if (res.getResponseCode() !== 200) return '';
+
+  const kopf = res.getAllHeaders();
+  let roh = kopf['Set-Cookie'] || kopf['set-cookie'] || [];
+  if (!Array.isArray(roh)) roh = [roh];
+  return roh.map(function (c) { return String(c).split(';')[0]; }).join('; ');
+}
+
+/**
+ * Holt die Paarungen eines Mannschaftsspiels.
+ * Ohne Cookie oder bei leerer Seite kommt ein leeres Array zurueck - der
+ * Slot faellt dann aus, statt eine leere Tabelle zu zeigen.
+ */
+function dartHoleSpielDetail(turnierid, spielId) {
+  const cookie = dartSessionCookie(turnierid);
+  if (!cookie) {
+    Logger.log('WARNUNG: keine Session fuer Turnier ' + turnierid + ' - Spiel-Detail uebersprungen.');
+    return [];
+  }
+  const url = DART_BASIS + 'vorrunde.php?teamSpielId=' + encodeURIComponent(spielId) +
+              '&turnierId=' + encodeURIComponent(turnierid) + '&route=vorrunde.php';
+  const res = UrlFetchApp.fetch(url, { method: 'get', muteHttpExceptions: true, headers: { Cookie: cookie } });
+  if (res.getResponseCode() !== 200) return [];
+  return dartParseSpielDetail(res.getContentText('UTF-8'));
+}
+
+// Spalten: # | (leer) | (leer) | Spieler 1 | Erg | Spieler 2 | Schreiber | Diff | Bof | B
+// Die Kennung sieht aus wie "100101.H_DE1 - G_DE1"; die zwei Buchstaben darin
+// nennen die Disziplin: DE Damen-Einzel, HE Herren-Einzel, OE Offen-Einzel,
+// MD Mixed-Doppel, OD Offen-Doppel.
+function dartParseSpielDetail(html) {
+  const out = [];
+  dartTabellenZeilen(html).forEach(function (z) {
+    if (/<th[\s>]/i.test(z)) return;
+    const c = dartZellen(z);
+    if (c.length < 6) return;
+    if (!c[3] || !c[5]) return;
+
+    const erg = String(c[4]).match(/^(\d+)\s*:\s*(\d+)$/);
+    if (!erg) return;
+
+    const art = String(c[0]).match(/\.[HG]_([A-Z]{2})/);
+    out.push({
+      art: art ? art[1] : '',
+      spieler1: c[3],
+      spieler2: c[5],
+      legs1: parseInt(erg[1], 10),
+      legs2: parseInt(erg[2], 10)
+    });
+  });
+  return out;
+}
+
+// Hoechste Runde, in der wirklich gespielt wurde - das ist der letzte
+// Mannschaftsabend. Freilos-Runden stehen gar nicht erst in ergebnisse.
+function dartLetzteGespielteRunde(ergebnisse) {
+  let beste = null;
+  Object.keys(ergebnisse).forEach(function (r) {
+    const e = ergebnisse[r];
+    if (e.heim + e.auswaerts <= 0) return;
+    const n = parseInt(r, 10);
+    if (beste === null || n > beste) beste = n;
+  });
+  return beste;
 }
 
 // Die spielfreie Runde heisst im KEDSV-System "Freilos" mit angehaengter

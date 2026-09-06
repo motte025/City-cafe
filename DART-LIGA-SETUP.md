@@ -1,27 +1,43 @@
 # Dart-Widgets: City Flyers (Chaoten & Fraggles)
 
-Vier Slots im grossen Media-Bereich, **ganz am Anfang des Zyklus** - noch vor
+Fuenf Slots im grossen Media-Bereich, **ganz am Anfang des Zyklus** - noch vor
 Nightlife und dem Tag/Nacht-Plakat:
 
 | # | Slot | Dauer | Inhalt |
 | --- | --- | --- | --- |
-| 1 | Naechstes Spiel | 22 s | je Mannschaft eine Karte: Datum, Runde, Gegner, Heim/Auswaerts, Spielort |
+| 1 | Naechstes Spiel | 22 s | je Mannschaft eine Karte: Datum, Anwurf, Runde, Gegner, Heim/Auswaerts, Spielort |
 | 2 | Mannschaftsfoto | 15 s | Foto als Zwischenfolie - **nur wenn die Bilddatei vorhanden ist** |
-| 3 | Spielplan | ~48 s | alle 28 Spiele, 7 Zeilen x 4 Seiten, wanderndes Aufleuchten |
-| 4 | Tabelle | 26 s | Rang, Team, Sp, S, N, Pkt - **nur mit Daten aus `dart_liga.json`** |
+| 3 | Einzelwertung | ~36 s | ganze Klasse, 10 Zeilen x 3 Seiten, eigene Spieler hervorgehoben |
+| 4 | Letztes Spiel | 26 s | die zehn Paarungen des letzten Abends, Mannschaften im Wechsel |
+| 5 | Tabelle | 26 s | Rang, Team, Sp, S, N, Pkt |
+
+Slot 3 bis 5 brauchen Daten aus `dart_liga.json` und fallen ohne sie aus.
+
+## Spielernamen
+
+Auf dem Schirm steht **"Vorname N."** statt des vollen Namens - MDT liefert
+"NACHNAME Vorname", gekuerzt wird im Dashboard (`dartKurzName`), nicht im
+Scraper. Die Rohdaten in `dart_liga.json` bleiben also vollstaendig; wer die
+Darstellung aendern will, muss den Scraper nicht neu einspielen.
+
+Zwei Sonderfaelle stecken drin: ein Nachname mit scharfem s
+("FRIE(ss)NEGGER Gerhard" -> "Gerhard F.") faellt bei einem naiven
+Grossschreibungs-Test durch, weil toUpperCase() daraus ein doppeltes s macht.
+Und MDT markiert einzelne Spieler mitten im Namen ("MARKTL (J) Maximilian");
+der Zusatz wandert ans Ende: "Maximilian M. (J)".
 
 Danach laeuft die Rotation unveraendert weiter: Nightlife, Tag/Nacht-Plakat,
 Calamari, DJ-Live und der Rest bis zum Trinkspiel - von dort geht es wieder
 zurueck an den Anfang zur Dart-Strecke.
 
 Die Reihenfolge steckt in `runMasterSequence` (`index.html`) und haengt an
-vier Positionsmarken: `DART_SLOT_INDEX` (-2), `DART_FOTO_INDEX` (-1.9),
-`DART_PLAN_INDEX` (-1.8) und `DART_TABELLE_INDEX` (-1.7). Sie liegen bewusst
-vor Nightlife (-0.5) und dem Hos'n Obe-Testslot (-1), damit die Zahlen in
-derselben Reihenfolge stehen wie die Slots laufen. Soll die Dart-Strecke
-woanders hin, sind nur drei Stellen zu aendern: der Startwert von
-`mediaStateIndex` am Ende des Skripts, der Nachfolger des Tabellen-Slots und
-der Ruecksprung aus dem Trinkspiel V1.
+fuenf Positionsmarken: `DART_SLOT_INDEX` (-2), `DART_FOTO_INDEX` (-1.9),
+`DART_EINZEL_INDEX` (-1.8), `DART_SPIEL_INDEX` (-1.75) und
+`DART_TABELLE_INDEX` (-1.7). Sie liegen bewusst vor Nightlife (-0.5) und dem
+Hos'n Obe-Testslot (-1), damit die Zahlen in derselben Reihenfolge stehen wie
+die Slots laufen. Soll die Dart-Strecke woanders hin, sind nur drei Stellen zu
+aendern: der Startwert von `mediaStateIndex` am Ende des Skripts, der
+Nachfolger des Tabellen-Slots und der Ruecksprung aus dem Trinkspiel V1.
 
 ## Bilder (optional)
 
@@ -46,27 +62,25 @@ Durchlauf zwischen den Mannschaften - der Slot bleibt dabei immer 15 Sekunden
 lang. Mehr ist nicht einzustellen: die Dateien werden beim Seitenstart
 geprueft, Titel und Liga stehen automatisch darunter.
 
-Zuschnitt: die Folie fuellt 1280x815 im Format `cover` und zeigt vom Bild den
-Ausschnitt um **32 % Hoehe** - passend fuer ein Mannschaftsfoto, bei dem die
-Leute im oberen Drittel stehen. Steht die Mannschaft auf einem neuen Foto
-deutlich anders im Bild, laesst sich das ueber `object-position` in der
-Regel `.df-foto` nachziehen.
+Zuschnitt: die Folie fuellt 1280x815 im Format `cover` und zeigt die
+**Bildmitte** (`object-position: 50% 50%`). Steht die Mannschaft auf einem
+neuen Foto deutlich anders im Bild, laesst sich das ueber `object-position` in
+der Regel `.df-foto` nachziehen.
 
 ## Was ohne jede Einrichtung laeuft
 
-Slot 1 und 2 brauchen **nichts** - Spielplan, Gegner und Spielorte stehen fest
-in `index.html` (`DART_CLUB`, `DART_SPIELORTE`). Die Erg-Spalte zeigt dann `–`
-und Slot 3 ueberspringt sich selbst.
+Slot 1 und 2 brauchen **nichts** - Termine, Gegner und Spielorte stehen fest
+in `index.html` (`DART_CLUB`, `DART_SPIELORTE`). Slot 3 bis 5 ueberspringen
+sich selbst, solange `dart_liga.json` leer ist.
 
 Automatisches Verhalten:
 
 - **Spielbeginn ist immer 19:00 Uhr.** Die Uhrzeit steht deshalb nicht an
-  jedem der 28 Spiele, sondern einmal auf der Karte "Naechstes Spiel" und
-  einmal im Kopf des Spielplans. Aendert sich das, reicht die Konstante
-  `DART_SPIELBEGINN` in `index.html` - beide Stellen ziehen mit.
-- **Freilos-Runden** stehen im Spielplan als *spielfrei*, werden im
-  "Naechstes Spiel" aber uebersprungen - dort interessiert nur, wann wirklich
-  gespielt wird.
+  jedem der 28 Spiele, sondern einmal auf der Karte "Naechstes Spiel".
+  Aendert sich das, reicht die Konstante `DART_SPIELBEGINN` in `index.html`.
+- **Freilos-Runden** werden im "Naechstes Spiel" uebersprungen - dort
+  interessiert nur, wann wirklich gespielt wird. In der Tabelle stehen sie
+  trotzdem als gewertete Siege, siehe die Fussnote unter der Tabelle.
 - **Nach dem letzten Spieltag** (08.05.2027) zeigt jede Karte "Saison beendet";
   sind beide Mannschaften durch, faellt Slot 1 ganz aus der Rotation.
 - **Heim/Auswaerts** ergibt sich aus dem Spielplan: Team 1 ist Heimteam. Bei
@@ -144,6 +158,10 @@ in die Nacht. Deshalb laeuft der Abruf zweistufig:
 | Spieltag 19:00 - 01:00 | jede Minute | jede Minute |
 | sonst | alle 6 Stunden | alle 30 Minuten |
 
+Je Lauf holt der Scraper vier bis sechs Seiten pro Mannschaft: Tabelle,
+Spielplan, Einzelwertung, Kader und - sobald gespielt wurde - die
+Detailseite des letzten Abends (die kostet zwei Abrufe, siehe unten).
+
 Waehrend des Fensters steht im Kopf der Dart-Ansichten ein rotes **LIVE** mit
 Pulspunkt, bei der Tabelle zusaetzlich die Uhrzeit des Stands - daran sieht
 man auf einen Blick, ob die Zahlen wirklich mitlaufen oder irgendwo
@@ -171,8 +189,17 @@ so viele, wie Saetze eingetragen werden; ausserhalb der Spieltage gar keine.
 **Was MDT live wirklich hergibt:** `livescore.php` waere die naheliegende
 Quelle, ist aber unbrauchbar - die Seite ignoriert `turnierid`, ignoriert auch
 eine ueber `spieler.php` gesetzte Session und zeigt immer das Test-Turnier;
-ausserdem will sie einen Login. Geholt werden deshalb `vorrunde.php` und
-`tabelle.php`, die beide sauber auf `turnierid` hoeren. Wie feinkoernig MDT
+ausserdem will sie einen Login. Geholt werden deshalb `vorrunde.php`,
+`tabelle.php`, `team_einzelwertung.php` und `spieler.php` - die hoeren alle
+sauber auf `turnierid`.
+
+**Die Spiel-Detailseite ist die eine Ausnahme.** Sie zeigt die zehn Paarungen
+eines Mannschaftsabends und hoert NICHT auf `turnierid`: ein direkter Aufruf
+liefert nur die Kopfzeile, weil der Server dann das Default-Turnier annimmt.
+Erst ein vorheriger Aufruf von `spieler.php?turnierid=<id>` mit demselben
+Cookie stellt das Turnier ein. UrlFetchApp fuehrt kein Cookie-Glas mit - das
+`Set-Cookie` der ersten Antwort wandert deshalb von Hand in den Header der
+zweiten (`dartSessionCookie`). Wie feinkoernig MDT
 dort waehrend eines laufenden Matches nachtraegt (nach jedem Satz oder erst am
 Ende), zeigt sich erst am ersten Spielabend - der Minutentakt holt in jedem
 Fall ab, sobald etwas eingetragen ist.
@@ -192,7 +219,19 @@ Fall ab, sobald etwas eingetragen ist.
           "siege": 1, "unentschieden": 0, "niederlagen": 0, "punkte": 2 }
       ],
       "ergebnisse": {
-        "1": { "heim": 7, "auswaerts": 3 }
+        "1": { "heim": 7, "auswaerts": 3, "id": 109433 }
+      },
+      "einzelwertung": [
+        { "rang": 1, "spieler": "RAINER Gerald", "spiele": 1, "siege": 3,
+          "niederlagen": 0, "legs_plus": 6, "legs_minus": 1, "punkte": 6 }
+      ],
+      "kader": ["RAINER Gerald", "KLEINHAPPEL Ernestine"],
+      "letztes_spiel": {
+        "runde": 1, "heim": 7, "auswaerts": 3,
+        "paarungen": [
+          { "art": "HE", "spieler1": "RAINER Gerald",
+            "spieler2": "BÄCKER Josef", "legs1": 3, "legs2": 1 }
+        ]
       }
     }
   }
@@ -202,6 +241,17 @@ Fall ab, sobald etwas eingetragen ist.
 - `ergebnisse` ist nach **Rundennummer** verschluesselt und immer in
   Heim:Auswaerts-Richtung gespeichert. Das Dashboard dreht die Anzeige selbst
   auf die Sicht der eigenen Mannschaft und faerbt Sieg gruen, Niederlage rot.
+  Die `id` ist die `teamSpielId` aus dem Spielplan - ueber sie kommt die
+  Detailseite des Abends.
+- `einzelwertung` enthaelt **die ganze Klasse**, nicht nur die eigenen Leute;
+  `kader` sagt, wer davon zu uns gehoert. Das Dashboard markiert die eigenen
+  Zeilen damit und kuerzt die Namen erst beim Anzeigen.
+- `letztes_spiel` ist der zuletzt ausgetragene Mannschaftsabend mit seinen zehn
+  Paarungen. `spieler1` ist immer das Heimteam; welche Mannschaft das ist und
+  wie der Gegner heisst, weiss die Detailseite nicht - das ergaenzt das
+  Dashboard aus `DART_CLUB`. `art` ist die Disziplin (HE Herren-Einzel,
+  DE Damen-Einzel, OE Offen-Einzel, MD Mixed-Doppel, OD Offen-Doppel).
+  `null`, solange noch nicht gespielt wurde.
 - Ein `0:0` gilt als **noch nicht gespielt**, nicht als Unentschieden - MDT
   traegt kommende Spiele so vor. Ein wirklich ausgetragenes E-Dart-Match kann
   nicht 0:0 enden, es werden zehn Sets gespielt.
@@ -226,7 +276,10 @@ Fuer die Erg-Spalte reicht das; der Tabellen-Slot braucht zusaetzlich einen
 | --- | --- |
 | Tabellen-Slot kommt nie | `teams` leer oder `tabelle` leer - Scraper laeuft nicht |
 | Fremde Vereine in der Tabelle | falsche `turnierid` (Server liefert dann "Training") |
-| Erg-Spalte bleibt `–` | Runde fehlt in `ergebnisse`, oder Eintrag ist `0:0` |
+| Ergebnis fehlt | Runde fehlt in `ergebnisse`, oder Eintrag ist `0:0` |
+| Einzelwertung/Spiel-Detail kommen nie | alte Skriptfassung in Apps Script - `dart-liga-scraper.gs` neu einspielen, die Felder `einzelwertung`, `kader` und `letztes_spiel` sind neu |
+| Einzelwertung ohne eigene Markierung | `kader` leer - Vereinsname in `DART_TEAMS` weicht von der Schreibweise in `spieler.php` ab |
+| Spiel-Detail bleibt leer | Session nicht zustande gekommen; das Protokoll meldet "keine Session fuer Turnier ..." |
 | Tabelle veraltet | Trigger geloescht - `dartTriggerEinrichten()` erneut ausfuehren |
 
 `dartTestLauf()` meldet ausdruecklich, wenn die eigene Mannschaft **nicht** in
