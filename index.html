@@ -1852,16 +1852,17 @@
            gleichzeitig; bei drei Live-Kanaelen dekodierte die Box also drei
            Streams parallel.
 
-           Der Player laeuft intern in 1280x720 (DJ_LIVE_CONFIG.spielerBreite)
+           Der Player laeuft intern in 1920x1080 (DJ_LIVE_CONFIG.spielerBreite)
            und wird per CSS auf die 1200px breite Buehne heruntergerechnet:
            Twitch und YouTube waehlen die Streamqualitaet nach der Layoutgroesse
            des Players, und bei 1200x675 blieb die immer unter 720p. Die Werte
-           setzt djGroesseAnwenden() als CSS-Variablen. */
+           setzt djGroesseAnwenden() als CSS-Variablen - die Angaben hier sind
+           nur die Rueckfallwerte, falls das Skript nicht dazu kommt. */
         .dj-player-frame {
             position: absolute; top: 0; left: 0; z-index: 2;
-            width: var(--dj-breite, 1280px); height: var(--dj-hoehe, 720px);
+            width: var(--dj-breite, 1920px); height: var(--dj-hoehe, 1080px);
             border: 0; display: block;
-            transform: scale(var(--dj-scale, 0.9375));   /* 1280 -> 1200 Buehnenbreite */
+            transform: scale(var(--dj-scale, 0.625));   /* 1920 -> 1200 Buehnenbreite */
             transform-origin: top left;
             opacity: 0; pointer-events: none;
             transition: opacity 0.4s ease-in-out;
@@ -6701,18 +6702,25 @@
             // Interne Groesse des Players. Twitch und YouTube waehlen die
             // Streamqualitaet nach der LAYOUTGROESSE des Players, nicht nach der
             // des Bildschirms - die Buehne mass 1200x675 und lag damit unter
-            // 1280x720, also gab es nie echtes 720p. Der Player laeuft jetzt
-            // intern in 1280x720 und wird per CSS auf die Buehne heruntergerechnet.
-            // Mehr als 720p bringt hier nichts: die Buehne ist am 1080p-Fernseher
-            // rund 1200 Pixel breit, ein 1080p-Stream wuerde nur wieder
-            // heruntergerechnet - kostete aber die doppelte Bandbreite und bei
-            // 60 fps auch die doppelte Rechenzeit.
-            spielerBreite: 1280,
-            spielerHoehe: 720,
+            // 1280x720, also gab es nie echtes 720p. Der Player laeuft deshalb
+            // intern groesser und wird per CSS auf die Buehne heruntergerechnet.
+            //
+            // Jetzt 1080p, gleicher Stand wie das Nightlife-Widget (NL_CONFIG
+            // laeuft auf hd1080). Die Buehne ist mit 1200 Pixeln schmaler als
+            // 1920 - das Bild wird also heruntergerechnet, statt Pixel fuer
+            // Pixel zu treffen. Das kostet gegenueber 720p rund die doppelte
+            // Bandbreite und bei 60 fps auch mehr Rechenzeit auf der Box;
+            // gewonnen wird ein sichtbar schaerferes Bild, weil die Quelle
+            // hoeher aufgeloest ist als die Anzeigeflaeche. Ruckelt es oder
+            // haengt der Stream am Puffer, sind 1280/720/720 hier wieder der
+            // richtige Satz - mehr ist nicht umzustellen, Massstab und
+            // Qualitaetsgrenze ziehen mit.
+            spielerBreite: 1920,
+            spielerHoehe: 1080,
 
             // Obergrenze fuer die Qualitaet, die dem Twitch-Player aktiv
             // vorgegeben wird (in Bildzeilen). Passend zu spielerHoehe.
-            maxQualitaetHoehe: 720,
+            maxQualitaetHoehe: 1080,
             // Twitchs Embed-SDK. Der iframe allein kennt keinen quality-Parameter
             // (offiziell bestaetigt) - die Qualitaet laesst sich ausschliesslich
             // ueber Twitch.Player.setQuality() setzen. Wird erst geladen, wenn

@@ -304,8 +304,8 @@ Alle in `index.html`, Block `DJ_LIVE_CONFIG`:
 | `sekundenProKanal` | `180` | Standzeit je Live-Kanal |
 | `maxStatusAlterMinuten` | `45` | älterer Stand → Slot aus |
 | `abrufTaktSekunden` | `180` | wie oft `live_status.json` neu geholt wird |
-| `spielerBreite` / `spielerHoehe` | `1280` / `720` | interne Playergröße, siehe unten |
-| `maxQualitaetHoehe` | `720` | Obergrenze für die erzwungene Twitch-Qualität |
+| `spielerBreite` / `spielerHoehe` | `1920` / `1080` | interne Playergröße, siehe unten |
+| `maxQualitaetHoehe` | `1080` | Obergrenze für die erzwungene Twitch-Qualität |
 | `showOriginDebug` | `false` | Origin-Diagnose einblenden (Abschnitt 5) |
 
 ### Bildqualität
@@ -316,14 +316,21 @@ Zwei Dinge bestimmen, was Twitch liefert:
 danach, wie groß der Player im Layout ist — nicht danach, wie groß der
 Bildschirm ist. Die Bühne ist 1200 × 675 Pixel groß und lag damit *unter*
 1280 × 720; es gab deshalb nie echtes 720p. Der Player läuft jetzt intern in
-`spielerBreite × spielerHoehe` (1280 × 720) und wird per CSS auf die Bühne
-heruntergerechnet.
+`spielerBreite × spielerHoehe` (**1920 × 1080**) und wird per CSS auf die Bühne
+heruntergerechnet — derselbe Stand wie beim Nightlife-Widget, das ohnehin auf
+`hd1080` läuft.
 
-Mehr als 720p bringt hier nichts: die Bühne ist am 1080p-Fernseher rund 1200
-Pixel breit, ein 1080p-Stream würde also nur wieder heruntergerechnet — kostet
-aber die doppelte Bandbreite und bei 60 fps auch die doppelte Rechenzeit. Wer
-es trotzdem will, setzt `spielerBreite`/`spielerHoehe` auf 1920/1080 und
-`maxQualitaetHoehe` auf 1080.
+Die Bühne ist mit 1200 Pixeln schmaler als 1920, das Bild wird also
+heruntergerechnet statt Pixel für Pixel zu treffen. Gegenüber 720p kostet das
+etwa die doppelte Bandbreite und bei 60 fps mehr Rechenzeit auf der Box;
+gewonnen wird ein sichtbar schärferes Bild, weil die Quelle höher aufgelöst ist
+als die Anzeigefläche.
+
+**Zurück auf 720p**, falls es ruckelt oder der Stream am Puffer hängt:
+`spielerBreite`/`spielerHoehe` auf `1280`/`720` und `maxQualitaetHoehe` auf
+`720`. Mehr ist nicht umzustellen — Maßstab und CSS-Größe rechnet
+`djGroesseAnwenden()` aus diesen Werten aus, die Bühne bleibt in beiden Fällen
+1200 × 675.
 
 **2. Die aktiv gesetzte Qualität.** Der reine iframe kennt *keinen*
 `quality`-Parameter — Twitch dokumentiert für `player.twitch.tv` nur `channel`,
