@@ -1907,6 +1907,121 @@
         /* ---------- Nightlife-Widget (feste Stadt-Videos, kein Livestream) ---------- */
         /* Eigene Buehne, aber dieselbe Bauweise wie .dj-stage - beide zeigen einen
            16:9-Player mit Kopfzeile, das soll sich nicht fremd anfuehlen. */
+        /* ---------- QR-Widget: alles zum Mitmachen auf einen Blick ---------- */
+        /* Bewusst als eigener Slot ganz vorne im Zyklus und nicht als Ecke in
+           einem anderen Widget: die Codes sollen gross und ungestoert stehen,
+           damit sie vom Tisch aus scannbar sind. Die Karten kommen aus
+           qrEintraege() - weitere Codes lassen sich dort ergaenzen, das Layout
+           passt sich der Anzahl selbst an. */
+        .qr-stage {
+            width: 1280px; height: 815px; position: relative; box-sizing: border-box;
+            background: linear-gradient(155deg, #10082a 0%, #1a0b33 50%, #0a1030 100%);
+            border-radius: 22px; overflow: hidden; padding: 30px 40px 34px;
+            display: flex; flex-direction: column;
+        }
+        .qr-stage::before {
+            content: ''; position: absolute; top: -160px; left: -100px; width: 680px; height: 420px;
+            background: radial-gradient(ellipse at center, rgba(145,70,255,0.20) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+        .qr-stage::after {
+            content: ''; position: absolute; bottom: -200px; right: -120px; width: 720px; height: 480px;
+            background: radial-gradient(ellipse at center, rgba(0,242,254,0.14) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+        .qr-stage > * { position: relative; z-index: 2; }
+
+        .qr-header { text-align: center; margin-bottom: 22px; flex-shrink: 0; }
+        .qr-header h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900; color: #ffffff;
+            text-transform: uppercase; letter-spacing: 2px; margin: 0;
+        }
+        .qr-header p {
+            font-size: 19px; color: #a99cc4; font-weight: 700;
+            letter-spacing: 1px; margin: 8px 0 0;
+        }
+
+        /* Countdown: zeigt, wie lange die Codes noch stehen. Wichtig, weil man
+           sonst nicht weiss, ob sich das Zuecken des Handys noch lohnt. */
+        .qr-countdown {
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+            margin-top: 16px;
+        }
+        .qr-balken {
+            width: 420px; height: 8px; border-radius: 4px;
+            background: rgba(255,255,255,0.12); overflow: hidden;
+        }
+        .qr-balken span {
+            display: block; height: 100%; width: 100%;
+            background: linear-gradient(90deg, #9146ff, #00f2fe);
+            /* Die Breite setzt qrCountdownTakt() im Sekundentakt - bewusst per
+               transform statt width, das macht der Compositor allein. */
+            transform-origin: left center;
+        }
+        .qr-rest {
+            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            color: #ffffff; min-width: 54px; text-align: left;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Eine Reihe, gleichmaessig verteilt. Bei zwei Karten sind sie gross,
+           bei vier ruecken sie zusammen - deshalb feste Bildgroessen je Anzahl
+           weiter unten statt einer Prozentrechnung. */
+        .qr-grid {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            gap: 30px; flex-wrap: wrap; align-content: center;
+        }
+        .qr-karte {
+            display: flex; flex-direction: column; align-items: center; gap: 14px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 20px; padding: 24px 26px 22px;
+        }
+        .qr-bild {
+            background: #ffffff; border-radius: 14px; padding: 10px;
+            display: block; flex-shrink: 0;
+        }
+        .qr-bild img { display: block; width: 100%; height: 100%; }
+        .qr-titel {
+            font-family: 'Orbitron', sans-serif; font-weight: 900; color: #ffffff;
+            text-transform: uppercase; letter-spacing: 1px; text-align: center;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .qr-text {
+            font-size: 16px; color: #a99cc4; font-weight: 600;
+            text-align: center; max-width: 320px; line-height: 1.4;
+        }
+        /* Groessen nach Anzahl: zwei Karten duerfen gross sein, ab drei wird es
+           enger. Ueber Datenattribut statt Media Query - die Buehne hat ja immer
+           dieselbe Groesse, nur der Inhalt wechselt. */
+        .qr-grid[data-anzahl="1"] .qr-bild,
+        .qr-grid[data-anzahl="2"] .qr-bild { width: 340px; height: 340px; }
+        .qr-grid[data-anzahl="1"] .qr-titel,
+        .qr-grid[data-anzahl="2"] .qr-titel { font-size: 25px; }
+        .qr-grid[data-anzahl="3"] .qr-bild { width: 280px; height: 280px; }
+        .qr-grid[data-anzahl="3"] .qr-titel { font-size: 21px; }
+        /* Vier Karten in einer Reihe: die Buehne bietet innen 1200px, abzueglich
+           drei Luecken und je 52px Kartenrand bleiben rund 225px pro Bild.
+           210px lassen etwas Luft - mit 250px lief die Reihe ueber. */
+        .qr-grid[data-anzahl="4"] .qr-bild { width: 210px; height: 210px; }
+        .qr-grid[data-anzahl="4"] .qr-titel { font-size: 18px; }
+        .qr-grid[data-anzahl="4"] .qr-text { font-size: 13px; max-width: 230px; }
+        .qr-grid[data-anzahl="4"] .qr-karte { padding: 18px 20px 16px; gap: 11px; }
+        /* Ab fuenf Karten bricht die Reihe um: drei oben, der Rest darunter.
+           Zwei Reihen muessen in rund 600px Hoehe passen, deshalb deutlich
+           kleiner. */
+        .qr-grid[data-anzahl="5"] .qr-bild,
+        .qr-grid[data-anzahl="6"] .qr-bild { width: 170px; height: 170px; }
+        .qr-grid[data-anzahl="5"] .qr-titel,
+        .qr-grid[data-anzahl="6"] .qr-titel { font-size: 16px; }
+        .qr-grid[data-anzahl="5"] .qr-text,
+        .qr-grid[data-anzahl="6"] .qr-text { font-size: 12px; max-width: 200px; }
+        .qr-grid[data-anzahl="5"] .qr-karte,
+        .qr-grid[data-anzahl="6"] .qr-karte { padding: 14px 16px 12px; gap: 8px; }
+        .qr-grid[data-anzahl="5"], .qr-grid[data-anzahl="6"] { gap: 20px 24px; }
+
+        /* Der Starter-QR fuer Hos'n Obe waere hier doppelt. */
+        #media-view-qr.active ~ .kt-launcher { display: none !important; }
+
         .nl-stage {
             width: 1280px; height: 815px; position: relative; box-sizing: border-box;
             background: linear-gradient(160deg, #2a0a2e 0%, #0d0a20 55%, #0a1430 100%);
@@ -2400,6 +2515,23 @@
                 <!-- Nightlife: feste Stadt-Videos, kein Livestream. Alle paar Wochen
                      eine andere Stadt (nightlife.json). Bei jedem Durchlauf laeuft
                      ein anderer 5-Minuten-Abschnitt, damit sich nichts wiederholt. -->
+                <!-- QR-Codes: eroeffnet den Zyklus. Die Karten baut qrRender()
+                     aus qrEintraege(); der Slot faellt aus, wenn nichts
+                     eingerichtet ist. -->
+                <div class="media-inner-view" id="media-view-qr">
+                    <div class="qr-stage">
+                        <div class="qr-header">
+                            <h2>📱 Mitmachen</h2>
+                            <p id="qr-untertitel">Einfach mit dem Handy scannen</p>
+                            <div class="qr-countdown">
+                                <div class="qr-balken"><span id="qr-balken-fuellung"></span></div>
+                                <div class="qr-rest" id="qr-rest">60</div>
+                            </div>
+                        </div>
+                        <div class="qr-grid" id="qr-grid" data-anzahl="0"></div>
+                    </div>
+                </div>
+
                 <div class="media-inner-view" id="media-view-nightlife">
                     <div class="nl-stage">
                         <div class="nl-header">
@@ -6893,6 +7025,10 @@
         // deshalb noch vor Nightlife (-0.5) und dem Hos'n Obe-Testslot (-1).
         // Die vier Werte sind reine Positionsmarken in runMasterSequence; sie
         // stehen absteigend genau in der Reihenfolge, in der die Slots laufen.
+        // Das QR-Widget eroeffnet den Zyklus - noch vor der Dart-Strecke.
+        const QR_SLOT_INDEX = -3;
+        const QR_SLOT_SEKUNDEN = 60;
+
         const DART_SLOT_INDEX = -2;       // Naechstes Spiel
         const DART_FOTO_INDEX = -1.9;     // Mannschaftsfoto
         const DART_EINZEL_INDEX = -1.8;   // Einzelwertung
@@ -9548,6 +9684,150 @@
             }, ((KT.botIdleStartSeconds || 60) + 25) * 1000);
         }
 
+        // ==================================================================
+        //  QR-Widget: alles zum Mitmachen auf einen Blick
+        // ==================================================================
+        // Sammelt die Codes, die gerade wirklich nutzbar sind. Ist keiner
+        // eingerichtet, faellt der Slot ersatzlos aus - genau wie die
+        // Fussball-Slots ausserhalb der Saison.
+        //
+        // WEITERE CODES kommen in qrFesteCodes: ein Eintrag pro Zeile, fertig.
+        // Alles andere - Groesse, Anordnung, Countdown - passt sich selbst an.
+        const qrFesteCodes = [
+            // Beispiel fuer spaeter, einfach einkommentieren und anpassen:
+            // { id: 'karte',     icon: '🍕', titel: 'Speisekarte',
+            //   text: 'Alles, was es bei uns gibt',
+            //   url:  'https://example.com/karte' },
+            // { id: 'instagram', icon: '📷', titel: 'Instagram',
+            //   text: 'Bilder vom letzten Abend',
+            //   url:  'https://instagram.com/…' }
+        ];
+
+        function qrEintraege() {
+            const liste = [];
+
+            // Hos'n Obe: der Code traegt die Sitzungs-id, es geht also erst,
+            // wenn die Verbindung steht und die Sitzung angelegt ist.
+            if (typeof ktSessionId !== 'undefined' && ktSessionId &&
+                window.KtNet && KtNet.isConfigured() && KT.mobileUrl) {
+                liste.push({
+                    id: 'hosnobe', icon: '🃏', titel: 'Hos\'n Obe spielen',
+                    text: 'Kartenspiel am Tisch — scannen und mitspielen',
+                    url: KT.mobileUrl + '?session=' + encodeURIComponent(ktSessionId)
+                });
+            }
+
+            // DJ-Fernbedienung: erst anzeigen, wenn die Verbindung wirklich
+            // steht - ein Code, der ins Leere fuehrt, aergert mehr als keiner.
+            if (djFernVerb && window.DJ_REMOTE_CONFIG && DJ_REMOTE_CONFIG.mobileUrl) {
+                liste.push({
+                    id: 'djremote', icon: '🎧', titel: 'DJ-Stream steuern',
+                    text: 'Kanal, Auflösung und Laufzeit vom Handy aus',
+                    url: DJ_REMOTE_CONFIG.mobileUrl
+                });
+            }
+
+            qrFesteCodes.forEach(e => { if (e && e.url) liste.push(e); });
+            return liste;
+        }
+
+        function qrQrUrl(ziel) {
+            return 'https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=0&data=' +
+                   encodeURIComponent(ziel);
+        }
+
+        // Baut die Karten neu. Titel und Texte stehen im Code, nicht in fremden
+        // Daten - trotzdem per textContent, damit ein spaeter aus einer Datei
+        // geladener Eintrag nicht zum Einfallstor wird.
+        function qrRender(eintraege) {
+            const grid = document.getElementById('qr-grid');
+            if (!grid) return 0;
+            grid.innerHTML = '';
+            grid.dataset.anzahl = String(eintraege.length);
+
+            eintraege.forEach(e => {
+                const karte = document.createElement('div');
+                karte.className = 'qr-karte';
+
+                const bild = document.createElement('div');
+                bild.className = 'qr-bild';
+                const img = document.createElement('img');
+                img.src = qrQrUrl(e.url);
+                img.alt = 'QR-Code ' + (e.titel || '');
+                bild.appendChild(img);
+                karte.appendChild(bild);
+
+                const titel = document.createElement('div');
+                titel.className = 'qr-titel';
+                const icon = document.createElement('span');
+                icon.textContent = e.icon || '📱';
+                titel.appendChild(icon);
+                const wort = document.createElement('span');
+                wort.textContent = e.titel || '';
+                titel.appendChild(wort);
+                karte.appendChild(titel);
+
+                if (e.text) {
+                    const text = document.createElement('div');
+                    text.className = 'qr-text';
+                    text.textContent = e.text;
+                    karte.appendChild(text);
+                }
+
+                grid.appendChild(karte);
+            });
+            return eintraege.length;
+        }
+
+        let qrCountdown = null;
+
+        function qrCountdownStoppen() {
+            if (qrCountdown) { clearInterval(qrCountdown); qrCountdown = null; }
+        }
+
+        function qrCountdownStarten(sekunden) {
+            qrCountdownStoppen();
+            const rest = document.getElementById('qr-rest');
+            const fuellung = document.getElementById('qr-balken-fuellung');
+            let uebrig = sekunden;
+
+            const zeichnen = () => {
+                if (rest) rest.textContent = String(Math.max(0, uebrig));
+                if (fuellung) fuellung.style.transform = 'scaleX(' + Math.max(0, uebrig / sekunden) + ')';
+            };
+            zeichnen();
+            qrCountdown = setInterval(() => {
+                uebrig--;
+                zeichnen();
+                if (uebrig <= 0) qrCountdownStoppen();
+            }, 1000);
+        }
+
+        function runQrState(nextStateIndex) {
+            const eintraege = qrEintraege();
+            if (!eintraege.length) {
+                // Nichts eingerichtet - Slot ueberspringen, statt eine leere
+                // Buehne zu zeigen.
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
+
+            qrRender(eintraege);
+            const unter = document.getElementById('qr-untertitel');
+            if (unter) {
+                unter.textContent = eintraege.length > 1
+                    ? 'Einfach mit dem Handy scannen — beides geht gleichzeitig'
+                    : 'Einfach mit dem Handy scannen';
+            }
+
+            document.getElementById('media-view-qr').classList.add('active');
+            qrCountdownStarten(QR_SLOT_SEKUNDEN);
+
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = later(runMasterSequence, QR_SLOT_SEKUNDEN * 1000);
+        }
+
         function runMasterSequence() {
             // Erst alle Timer der vorherigen Ansicht abraeumen, dann die neue starten.
             // Verhindert, dass eine abgeloeste Sequenz im Hintergrund weiterlaeuft.
@@ -9558,6 +9838,14 @@
             // bei jedem Ansichtswechsel wirklich aus dem DOM.
             djStopPlayer();
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
+            if (mediaStateIndex !== QR_SLOT_INDEX) qrCountdownStoppen();
+
+            // Das QR-Widget eroeffnet den Zyklus: alles zum Mitmachen zuerst,
+            // eine Minute lang mit Countdown.
+            if (mediaStateIndex === QR_SLOT_INDEX) {
+                runQrState(DART_SLOT_INDEX);
+                return;
+            }
 
             // Die fuenf Dart-Slots des Hausvereins City Flyers eroeffnen den
             // Zyklus: wann als naechstes gespielt wird, das Mannschaftsfoto,
@@ -9712,7 +10000,7 @@
                 runMusicSlidesState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
-                runPhotoTrinkspielV1(DART_SLOT_INDEX); // -> wieder an den Zyklusanfang (Dart)
+                runPhotoTrinkspielV1(QR_SLOT_INDEX); // -> wieder an den Zyklusanfang (QR-Codes)
             }
         }
         (function initialPoster() {
@@ -9725,7 +10013,7 @@
             // Der Zyklus beginnt mit der Dart-Strecke, danach folgt Nightlife;
             // Hos'n Obe kommt im Testmodus direkt dahinter. Die Anlaufzeit bleibt im
             // Testmodus kurz, damit sich das Kartenspiel beim Ausprobieren schnell zeigt.
-            mediaStateIndex = DART_SLOT_INDEX;
+            mediaStateIndex = QR_SLOT_INDEX;
             globalMasterTimer = later(runMasterSequence, KT.testFirstInCycle ? 6000 : 35000);
         }
 
