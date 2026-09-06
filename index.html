@@ -6782,6 +6782,20 @@
             // zu hoch: zurueck auf Twitchs eigene Anpassung.
             stillstandSekunden: 8,
 
+            // Laeuft der vorgepufferte Stream nach dem Einblenden nicht von
+            // selbst an, wird der Player neu gebaut - dann aber in der
+            // SICHTBAREN Ansicht.
+            //
+            // Anstupsen allein genuegt dafuer nicht. Der Player entsteht im Slot
+            // davor, waehrend die Ansicht noch visibility:hidden ist; Chrome
+            // laesst ihn dort gar nicht erst anlaufen, und aus diesem Zustand
+            // holt ihn ein spaeteres play() nicht mehr heraus - am Screen stand
+            // dann dauerhaft das Play-Symbol. Ein frisch in der sichtbaren
+            // Ansicht gebauter Player startet dagegen ganz normal von allein,
+            // weil er stumm startet.
+            neustartNachSekunden: 6,
+            maxNeustarts: 2,
+
             // Ton im DJ-Slot. 0 = stumm, sonst 0…1 als Lautstaerke.
             //
             // Der Player MUSS stumm starten: Autoplay mit Ton lehnt jeder Browser
@@ -7211,8 +7225,18 @@
             djQualiLage.tonBlockiert = true;      // kein zweiter Versuch
         }
 
-        // Laeuft nur waehrend des DJ-Slots und macht drei Dinge: die Wiedergabe
-        // am Laufen halten, den Ton nachziehen, und im Modus 'mindestens' die
+        // Genau die Bedingung, an der der Autostart haengt: erst wenn die Ansicht
+        // wirklich sichtbar ist, laesst Chrome den Player anlaufen. Bewusst die
+        // berechnete visibility und nicht die active-Klasse - die sitzt sofort,
+        // die Sichtbarkeit kommt erst nach der Ueberblendung.
+        function djSlotSichtbar() {
+            const v = document.getElementById('media-view-djlive');
+            return !!v && getComputedStyle(v).visibility === 'visible';
+        }
+
+        // Laeuft nur waehrend des DJ-Slots und macht vier Dinge: die Wiedergabe
+        // am Laufen halten, einen nie angelaufenen Player in der sichtbaren
+        // Ansicht neu bauen, den Ton nachziehen, und im Modus 'mindestens' die
         // Qualitaet anheben, wenn Twitch zu niedrig eingestiegen ist.
         function djWaechterTakt() {
             djAnstupsen();
@@ -7232,8 +7256,32 @@
             } catch (e) { return; }
 
             const takt = DJ_LIVE_CONFIG.waechterTaktSekunden;
-            const laeuft = !pausiert && zeit > djQualiLage.letzteZeit;
+            // Der allererste Takt liefert nur den Ausgangswert: letzteZeit steht
+            // auf -1, und ein noch gar nicht gestarteter Player meldet 0 - das
+            // waere sonst faelschlich ein Fortschritt.
+            const laeuft = !pausiert && djQualiLage.letzteZeit >= 0
+                                     && zeit > djQualiLage.letzteZeit;
             djQualiLage.letzteZeit = zeit;
+
+            // Ist der Stream ueberhaupt je angelaufen? Wenn nicht, hilft nur ein
+            // Neuaufbau in der sichtbaren Ansicht - siehe neustartNachSekunden.
+            if (!djQualiLage.jeGelaufen) {
+                if (laeuft) {
+                    djQualiLage.jeGelaufen = true;
+                } else if (djSlotSichtbar()) {
+                    djQualiLage.totSekunden += takt;
+                    if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.neustartNachSekunden &&
+                        djQualiLage.neustarts < DJ_LIVE_CONFIG.maxNeustarts) {
+                        const bisher = djQualiLage.neustarts;
+                        // Baut neu und setzt djQualiLage frisch auf - der
+                        // Zaehler muss den Neuaufbau ueberleben, sonst
+                        // versuchte es der Waechter endlos.
+                        djSpielerAufbauen(djGepuffert[djAktiverIndex]);
+                        if (djQualiLage) djQualiLage.neustarts = bisher + 1;
+                        return;
+                    }
+                }
+            }
 
             djTonNachziehen(laeuft);
 
@@ -7295,7 +7343,8 @@
             // Jeder neue Player faengt mit frischen Messwerten an.
             djQualiLage = { laufSekunden: 0, letzteZeit: -1, stillSekunden: 0,
                             hochgesetzt: false, erledigt: false,
-                            tonAn: false, tonBlockiert: false };
+                            tonAn: false, tonBlockiert: false,
+                            jeGelaufen: false, totSekunden: 0, neustarts: 0 };
 
             const host = djEmbedHost();
             if (entry.platform === 'twitch' && entry.channel && host) {
