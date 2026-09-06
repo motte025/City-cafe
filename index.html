@@ -8410,10 +8410,10 @@
                 }).catch(err => console.warn('[Hos’n Obe] Ergebnis nicht schreibbar:', err))
                   .then(() => {
                       ktRender();
-                      // Mindestens zehn Sekunden: so lange soll der weinende
-                      // Smiley beim Zahler stehen bleiben. Kuerzer stellen
-                      // laesst sich das bewusst nicht - die Traenen sollen
-                      // jeder am Tisch gesehen haben.
+                      // Wie lange das Ergebnis samt weinendem Smiley steht,
+                      // bevor das Widget weiterschaltet: revealSeconds (30).
+                      // Die zehn Sekunden sind nur die Untergrenze, damit die
+                      // Traenen-Animation auf keinen Fall abgeschnitten wird.
                       ktPhaseTimer = setTimeout(() => {
                           ktResolving = false;
                           ktResetSession();

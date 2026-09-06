@@ -32,7 +32,7 @@ window.HOSN_OBE_CONFIG = {
     hostSelectSeconds: 20,   // so lange wartet der TV auf die Spieleranzahl, sonst zurück in die Rotation
     lobbySeconds: 60,        // Countdown, in dem die übrigen Gäste scannen können
     turnTimeoutSeconds: 120, // wer zwei Minuten nicht zieht, wird übersprungen
-    revealSeconds: 10,       // wie lange das Ergebnis samt weinendem Smiley am TV steht
+    revealSeconds: 30,       // wie lange das Ergebnis samt weinendem Smiley am TV steht
     starterSeconds: 7,       // Anzeige „wer beginnt“: jeder zieht eine Karte, die höchste fängt an
     swapWindowSeconds: 6,    // nach dem Tausch bleibt so lange Zeit zum Aufgehen
     roundTargetSeconds: 95,  // Ziel-Spieldauer einer Runde; danach wird aufgedeckt
