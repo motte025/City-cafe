@@ -60,14 +60,27 @@ Handys und ist weg, sobald du den Tab schließt.
 **Das ist der Schritt, ohne den nichts geht.** Die vorhandenen Regeln decken
 nur `games/` ab, alles andere ist standardmäßig gesperrt.
 
-**Firebase-Konsole → Realtime Database → Reiter „Regeln"** — den Block
-`djremote` **zusätzlich** zum vorhandenen `games`-Block einfügen:
+**Firebase-Konsole → Realtime Database → Reiter „Regeln"** → **alles markieren
+und durch das Folgende ersetzen.** Es enthält die bestehenden `games`-Regeln
+bereits mit — nicht darunter oder darüber einfügen, sondern den ganzen Inhalt
+austauschen:
 
 ```json
 {
   "rules": {
     "games": {
-      "…": "unverändert lassen, siehe HOSN-OBE-SETUP.md"
+      "$sessionId": {
+        "public": {
+          ".read": true,
+          ".write": "auth != null"
+        },
+        "private": {
+          "$seatIndex": {
+            ".read": "auth != null && root.child('games/' + $sessionId + '/public/seats/' + $seatIndex + '/uid').val() === auth.uid",
+            ".write": "auth != null && (root.child('games/' + $sessionId + '/public/seats/' + $seatIndex + '/uid').val() === auth.uid || root.child('games/' + $sessionId + '/public/dealerUid').val() === auth.uid)"
+          }
+        }
+      }
     },
     "djremote": {
       "$raum": {
@@ -80,6 +93,10 @@ nur `games/` ab, alles andere ist standardmäßig gesperrt.
 ```
 
 Auf **Veröffentlichen** klicken.
+
+> **`Line 19: Parse error`?** Dann steht der neue Block *unter* dem alten, und
+> die Datei enthält zwei JSON-Objekte hintereinander. Erlaubt ist genau eines:
+> alles markieren, löschen, den Block oben einmal komplett einfügen.
 
 `auth != null` heißt: nur angemeldete Geräte. Beide Seiten melden sich anonym
 an — das passiert von selbst, niemand muss ein Konto anlegen. Wer die
