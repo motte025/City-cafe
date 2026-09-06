@@ -405,6 +405,15 @@ in einem unsichtbaren Rahmen an**. Beim Einblenden stand deshalb das Play-Symbol
 im Bild, obwohl der Stream längst geladen war. Ein Wächter stupst den Player
 beim Einblenden wieder an und hält ihn danach am Laufen.
 
+**Die Autoplay-Freigabe ist dabei der entscheidende Punkt.** Chrome lässt
+Wiedergabe in einem *fremden* Rahmen nur zu, wenn dieser `allow="autoplay"`
+trägt. Unseren eigenen iframe stellen wir so ein — den Rahmen für das SDK baut
+aber Twitch selbst, und ohne die Freigabe blockiert Chrome den Start. Genau
+daran lag es auf der Box: Play-Symbol im Bild, und auch ein Neuaufbau half
+nicht, weil dem neuen Rahmen dieselbe Freigabe fehlte. Das Dashboard rüstet sie
+jetzt nach, bevor der Rahmen lädt (danach wäre es zu spät — die Freigabe wird
+beim Navigieren ausgewertet).
+
 Reicht das Anstupsen nicht — Chrome lässt einen im unsichtbaren Rahmen
 erzeugten Player teils gar nicht mehr anlaufen —, wird der Player nach
 `neustartNachSekunden` **neu gebaut**, dann aber in der sichtbaren Ansicht. Dort
@@ -414,7 +423,12 @@ startet er ganz normal von allein, weil er stumm startet. Höchstens
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
 | `neustartNachSekunden` | `6` | so lange darf der Stream nach dem Einblenden tot bleiben |
-| `maxNeustarts` | `2` | danach kein weiterer Versuch |
+| `maxNeustarts` | `2` | danach der letzte Ausweg (siehe unten) |
+
+Läuft er auch nach `maxNeustarts` SDK-Versuchen nicht, stellt das Dashboard auf
+den **eigenen iframe** um — der trägt `allow="autoplay"` garantiert. Ton und
+Qualitätssteuerung fallen dabei weg (die gehen nur über das SDK), aber ein
+laufendes Bild ohne Ton ist besser als ein Play-Symbol.
 
 Der **Ton** hängt an derselben Mechanik: Autoplay *mit* Ton lehnt jeder Browser
 ohne Klick ab — der Stream liefe dann gar nicht erst an. Der Player startet
