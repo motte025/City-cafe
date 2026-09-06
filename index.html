@@ -1982,6 +1982,15 @@
             color: #00f2fe; font-family: 'Courier New', monospace; font-size: 16px;
             line-height: 1.55; white-space: pre-wrap; word-break: break-all;
         }
+        /* Live-Messwerte des Twitch-Players (?djstats=1). Sitzt rechts, damit sie
+           die Origin-Diagnose links nicht ueberdeckt. */
+        #dj-stats-debug {
+            display: none; position: fixed; top: 14px; right: 14px; z-index: 99999;
+            min-width: 420px; padding: 14px 18px; border-radius: 12px;
+            background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(145, 70, 255, 0.65);
+            color: #c9adff; font-family: 'Courier New', monospace; font-size: 16px;
+            line-height: 1.55; white-space: pre;
+        }
 
         .hype-vignette {
             position: absolute; inset: 0; z-index: 5; pointer-events: none;
@@ -2609,6 +2618,11 @@
          Einschalten: DJ_LIVE_CONFIG.showOriginDebug = true oder ?origincheck=1 an
          die Dashboard-URL haengen. Standardmaessig unsichtbar. -->
     <div id="dj-origin-debug"></div>
+
+    <!-- Live-Messwerte des Twitch-Players: ?djstats=1 an die Dashboard-URL.
+         Zeigt, WARUM ein Stream hakt - zu schmale Leitung (Puffer bei 0) oder
+         zu langsame Box (uebersprungene Bilder steigen). Standardmaessig aus. -->
+    <div id="dj-stats-debug"></div>
 
     <!-- Hos’n Obe (Trinkspiel V3): Konfiguration, Spiel-Logik und Firebase.
          Das "compat"-SDK statt der ES-Module, weil der WebView der Odroid-Box alt
@@ -6718,8 +6732,28 @@
             spielerBreite: 1920,
             spielerHoehe: 1080,
 
-            // Obergrenze fuer die Qualitaet, die dem Twitch-Player aktiv
-            // vorgegeben wird (in Bildzeilen). Passend zu spielerHoehe.
+            // Wie die Qualitaet bestimmt wird.
+            //
+            //   'auto' - Twitch entscheidet und passt LAUFEND an. Das ist der
+            //            Normalfall: der Player misst die Leitung mit und faellt
+            //            bei Engpaessen selbst eine Stufe zurueck, statt zu
+            //            puffern. Wie hoch er dabei zielt, haengt an der
+            //            Layoutgroesse - deshalb laeuft der Player intern in
+            //            1920x1080 und bekommt so 1080p, wenn die Leitung es
+            //            hergibt.
+            //   'fest' - genau eine Stufe, festgenagelt auf maxQualitaetHoehe.
+            //            Damit ist Twitchs eigene Anpassung ausgeschaltet: reicht
+            //            die Bandbreite nicht, puffert der Player endlos, statt
+            //            herunterzuschalten. Nur nehmen, wenn die Leitung sicher
+            //            traegt.
+            //
+            // Genau daran hing das Ruckeln auf der Box: die Stufe war fest
+            // gesetzt, und bei zu schmaler Leitung kam der Player nie aus dem
+            // Puffern heraus ("zappelt, laeuft aber nicht").
+            qualitaetModus: 'auto',
+
+            // Obergrenze fuer die Qualitaet - nur bei qualitaetModus 'fest'
+            // wirksam (in Bildzeilen). Passend zu spielerHoehe.
             maxQualitaetHoehe: 1080,
             // Twitchs Embed-SDK. Der iframe allein kennt keinen quality-Parameter
             // (offiziell bestaetigt) - die Qualitaet laesst sich ausschliesslich
@@ -6995,7 +7029,12 @@
                 }
                 djTwitchSpieler = spieler;
 
+                // Im Normalfall ('auto') wird die Stufe NICHT angefasst: Twitchs
+                // eigene Anpassung ist besser als alles, was hier nachgebaut
+                // werden koennte - sie misst die Leitung laufend mit. Ein fest
+                // gesetzter Wert schaltet genau das ab.
                 const stufeSetzen = () => {
+                    if (DJ_LIVE_CONFIG.qualitaetModus !== 'fest') return;
                     try {
                         const wunsch = djBesteQualitaet(spieler.getQualities && spieler.getQualities());
                         if (wunsch && spieler.setQuality) spieler.setQuality(wunsch);
@@ -7164,6 +7203,51 @@
                 '\norigin:        ' + (location.origin || 'null') +
                 '\nTwitch-parent: ' + (djEmbedHost() || '(nicht moeglich - Embeds bleiben aus)');
             box.style.display = 'block';
+        })();
+
+        // Live-Messwerte des Twitch-Players (?djstats=1). Twitch laesst Puffer
+        // und Latenz nicht einstellen - offiziell bestaetigt -, aber getPlaybackStats()
+        // liest sie aus. Damit ist auf der Box selbst ablesbar, woran ein
+        // hakender Stream liegt:
+        //
+        //   Puffer faellt gegen 0, Bilder OK  -> die Leitung ist zu schmal
+        //   uebersprungene Bilder steigen     -> die Box dekodiert zu langsam
+        //
+        // Beides sieht am Schirm gleich aus ("zappelt, laeuft aber nicht"),
+        // braucht aber gegenteilige Antworten.
+        (function djStatsDebug() {
+            if (!/(?:^|[?&])djstats=1(?:&|$)/.test(location.search)) return;
+            const box = document.getElementById('dj-stats-debug');
+            if (!box) return;
+            box.style.display = 'block';
+
+            let letzteSkipped = null;
+            setInterval(() => {
+                const p = djTwitchSpieler;
+                if (!p || !p.getPlaybackStats) {
+                    box.textContent = 'kein Twitch-Player aktiv';
+                    return;
+                }
+                let s;
+                try { s = p.getPlaybackStats(); } catch (e) { s = null; }
+                if (!s) { box.textContent = 'keine Messwerte'; return; }
+
+                // Nur der Zuwachs sagt etwas: der Gesamtzaehler waechst auch
+                // durch einen einzigen Haenger vor zehn Minuten.
+                const skipped = Number(s.skippedFrames) || 0;
+                const zuwachs = letzteSkipped === null ? 0 : skipped - letzteSkipped;
+                letzteSkipped = skipped;
+
+                const puffer = Number(s.bufferSize) || 0;
+                box.textContent =
+                    'Modus:        ' + DJ_LIVE_CONFIG.qualitaetModus +
+                    '\nVideo:        ' + (s.videoResolution || '?') + ' @ ' + (s.fps || '?') + ' fps' +
+                    '\nAnzeige:      ' + (s.displayResolution || '?') +
+                    '\nCodec:        ' + (s.codecs || '?') +
+                    '\nPuffer:       ' + puffer.toFixed(1) + ' s' + (puffer < 1 ? '   << Leitung zu schmal' : '') +
+                    '\nLatenz:       ' + (s.hlsLatencyBroadcaster != null ? Number(s.hlsLatencyBroadcaster).toFixed(1) + ' s' : '?') +
+                    '\nBilder weg:   ' + skipped + '  (+' + zuwachs + ')' + (zuwachs > 5 ? '   << Box zu langsam' : '');
+            }, 1000);
         })();
 
         // ==================================================================

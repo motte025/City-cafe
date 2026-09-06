@@ -305,7 +305,8 @@ Alle in `index.html`, Block `DJ_LIVE_CONFIG`:
 | `maxStatusAlterMinuten` | `45` | älterer Stand → Slot aus |
 | `abrufTaktSekunden` | `180` | wie oft `live_status.json` neu geholt wird |
 | `spielerBreite` / `spielerHoehe` | `1920` / `1080` | interne Playergröße, siehe unten |
-| `maxQualitaetHoehe` | `1080` | Obergrenze für die erzwungene Twitch-Qualität |
+| `qualitaetModus` | `'auto'` | `'auto'` = Twitch passt laufend an, `'fest'` = eine Stufe festnageln |
+| `maxQualitaetHoehe` | `1080` | Obergrenze — **nur bei `'fest'` wirksam** |
 | `showOriginDebug` | `false` | Origin-Diagnose einblenden (Abschnitt 5) |
 
 ### Bildqualität
@@ -332,14 +333,50 @@ als die Anzeigefläche.
 `djGroesseAnwenden()` aus diesen Werten aus, die Bühne bleibt in beiden Fällen
 1200 × 675.
 
-**2. Die aktiv gesetzte Qualität.** Der reine iframe kennt *keinen*
-`quality`-Parameter — Twitch dokumentiert für `player.twitch.tv` nur `channel`,
-`parent`, `autoplay`, `muted` und `time`. Die Qualität lässt sich ausschließlich
-über das Embed-SDK (`Twitch.Player.setQuality()`) setzen. Das Dashboard lädt
-dieses SDK deshalb nach — aber **erst dann, wenn wirklich ein Twitch-Kanal
-dran ist**. Läuft niemand live, wird es nie geholt. Schlägt das Laden fehl
-(kein Netz, blockiert), fällt der Kanal automatisch auf den einfachen iframe
-zurück; dann entscheidet Twitch die Qualität selbst.
+**2. Wer die Qualität wählt.** Standard ist `qualitaetModus: 'auto'` — Twitch
+entscheidet und **passt laufend an**: Der Player misst die Leitung mit und geht
+bei einem Engpass selbst eine Stufe zurück, statt zu puffern. Zusammen mit der
+1920 × 1080 großen Layoutfläche liefert das 1080p, wenn die Leitung es hergibt,
+und ein laufendes Bild, wenn nicht.
+
+> **Warum nicht festnageln:** Genau daran hing das Ruckeln auf der Box. Eine
+> fest gesetzte Stufe schaltet Twitchs eigene Anpassung ab — reicht die
+> Bandbreite dann nicht, puffert der Player endlos, statt herunterzuschalten.
+> Am Schirm sieht das aus wie „zappelt, läuft aber nicht", und Twitch blendet
+> seinen eigenen Hinweis auf den Low-Latency-Modus ein. `'fest'` gehört nur an
+> eine Leitung, die sicher trägt.
+
+Der reine iframe kennt *keinen* `quality`-Parameter — Twitch dokumentiert für
+`player.twitch.tv` nur `channel`, `parent`, `autoplay`, `muted` und `time`. Eine
+Stufe lässt sich ausschließlich über das Embed-SDK
+(`Twitch.Player.setQuality()`) setzen. Das Dashboard lädt dieses SDK deshalb
+nach — aber **erst dann, wenn wirklich ein Twitch-Kanal dran ist**. Läuft
+niemand live, wird es nie geholt. Schlägt das Laden fehl (kein Netz, blockiert),
+fällt der Kanal automatisch auf den einfachen iframe zurück.
+
+**Puffer und Latenz sind nicht einstellbar.** Twitch bestätigt das ausdrücklich:
+weder über iframe-Parameter noch über das SDK lässt sich die Puffergröße ändern
+oder der Low-Latency-Modus abschalten
+([Dev-Forum](https://discuss.dev.twitch.com/t/is-there-any-way-to-increase-embedded-player-buffer-size/63032)).
+Der Hinweis, den Twitch im Player einblendet, richtet sich an den *Zuschauer* in
+dessen eigenen Kontoeinstellungen — von hier aus ist er nicht erreichbar. Der
+einzige Hebel bleibt die Qualität, und die überlässt man am besten Twitch.
+
+### Warum hakt der Stream? (`?djstats=1`)
+
+`?djstats=1` an die Dashboard-URL blendet rechts oben die Messwerte des laufenden
+Twitch-Players ein (`getPlaybackStats()`) — Auflösung, fps, Codec, Puffer,
+Latenz und übersprungene Bilder, im Sekundentakt. Am Schirm sehen die zwei
+möglichen Ursachen gleich aus, brauchen aber gegenteilige Antworten:
+
+| Messwert | Bedeutung | Was hilft |
+|---|---|---|
+| **Puffer** fällt gegen 0, Bilder bleiben ruhig | die Leitung ist zu schmal | Netz prüfen; notfalls `'fest'` auf eine niedrige Stufe |
+| **Bilder weg** steigt je Sekunde deutlich | die Box dekodiert zu langsam | niedrigere Stufe, 60 fps meiden |
+
+Der Zähler „Bilder weg" zeigt zusätzlich den Zuwachs pro Sekunde in Klammern —
+nur der sagt etwas aus, der Gesamtwert wächst auch durch einen einzigen Hänger
+von vor zehn Minuten.
 
 > **Kleine Kanäle:** Twitch stellt Transcodes (720p, 480p, …) nur Partnern und
 > Affiliates zuverlässig bereit. Bei kleinen Kanälen gibt es oft **nur die
