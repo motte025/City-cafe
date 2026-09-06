@@ -1854,11 +1854,11 @@
         .dj-tap-hinweis {
             position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%);
             z-index: 5; display: none; align-items: center; gap: 14px;
-            padding: 16px 30px; border-radius: 16px;
+            padding: 16px 30px; border-radius: 16px; max-width: 1100px;
             background: rgba(10, 7, 20, 0.92); border: 2px solid rgba(145, 70, 255, 0.8);
-            font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900;
             letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff;
-            white-space: nowrap;
+            text-align: left;
         }
         .dj-tap-hinweis.is-an { display: flex; }
         /* QR zur Handy-Fernbedienung. Sitzt in der Kopfzeile neben den Chips,
@@ -1876,8 +1876,8 @@
         .dj-tap-hinweis span { font-size: 34px; }
         .dj-tap-sub {
             display: block; font-family: 'Inter', sans-serif; font-size: 15px;
-            font-weight: 700; letter-spacing: 0.5px; text-transform: none;
-            color: #c9adff; margin-top: 3px;
+            font-weight: 700; letter-spacing: 0.3px; text-transform: none;
+            color: #c9adff; margin-top: 5px; line-height: 1.4; white-space: normal;
         }
         /* Es existiert immer nur EIN Rahmen - der des gerade gezeigten Kanals.
            Frueher lag fuer jeden Live-Kanal einer im DOM und alle liefen
@@ -2587,9 +2587,9 @@
                              wenn der Stream klemmt und die Seite noch nie bedient
                              wurde. -->
                         <div class="dj-tap-hinweis" id="dj-tap-hinweis">
-                            <span>👆</span>
-                            <div>Zum Starten tippen
-                                <span class="dj-tap-sub">Einmal pro Sitzung — danach laufen alle Streams von allein</span>
+                            <span>🎛️</span>
+                            <div>Taste auf der Fernbedienung drücken
+                                <span class="dj-tap-sub">Chrome verlangt einmal pro Sitzung eine Bedienung. Dauerhaft aus der Welt: chrome://flags → „Autoplay policy" → „No user gesture is required"</span>
                             </div>
                         </div>
                     </div>
@@ -7152,14 +7152,60 @@
             }
         }
 
+        // Was der Player WIRKLICH gerade tut. Geht mit in den Status, damit auf
+        // dem Handy steht, woran es haengt - statt dass man am Screen steht und
+        // raet. Nach drei Anlaeufen am Autostart war das noetig.
+        function djSpielerLage() {
+            const lage = {
+                gebaut:   !!djTwitchSpieler,
+                freigabe: djFreigabeErteilt,
+                spielt:   null, stumm: null, quali: '', zeit: 0,
+                rahmen:   document.querySelectorAll('#dj-live-player .dj-player-frame').length,
+                erlaubt:  ''
+            };
+            const rahmen = document.querySelector('#dj-live-player .dj-player-frame iframe');
+            if (rahmen) lage.erlaubt = rahmen.getAttribute('allow') || '';
+            if (!djTwitchSpieler) return lage;
+            try {
+                if (typeof djTwitchSpieler.isPaused === 'function') lage.spielt = !djTwitchSpieler.isPaused();
+                if (typeof djTwitchSpieler.getMuted === 'function') lage.stumm = djTwitchSpieler.getMuted();
+                if (djTwitchSpieler.getQuality) lage.quali = djTwitchSpieler.getQuality() || '';
+                if (djTwitchSpieler.getCurrentTime) lage.zeit = Math.round(djTwitchSpieler.getCurrentTime() || 0);
+            } catch (e) {}
+            return lage;
+        }
+
+        // Kurzer Klartext fuer die Handy-Seite. Die Reihenfolge ist die der
+        // wahrscheinlichsten Ursachen - der erste Treffer gewinnt.
+        function djFernBefund(lage) {
+            if (!djFernAktiv()) return '';
+            if (!lage.rahmen)          return 'Player wird noch gebaut …';
+            if (!lage.gebaut)          return 'Twitch-SDK nicht geladen — läuft im einfachen Modus';
+            if (!/autoplay/.test(lage.erlaubt))
+                                       return 'Rahmen hat keine Autoplay-Freigabe';
+            if (lage.spielt === false && !lage.freigabe)
+                                       return 'Chrome am Screen verlangt eine Bedienung: eine Taste auf der TV-Fernbedienung drücken. Dauerhaft: chrome://flags → Autoplay policy → No user gesture is required';
+            if (lage.spielt === false) return 'Player ist angehalten';
+            if (lage.zeit === 0)       return 'Verbunden, aber noch kein Bild';
+            if (lage.stumm === true)   return 'Läuft stumm — Ton hat der Browser abgelehnt';
+            return '';
+        }
+
         function djFernStatusMelden() {
             if (!djFernVerb || !window.DJ_REMOTE_NET) return;
+            const lage = djSpielerLage();
             DJ_REMOTE_NET.statusMelden(djFernVerb, {
                 laeuft:  djFernAktiv(),
                 kanal:   djFern ? djFern.kanal : '',
                 name:    djFern ? (djFern.name || djFern.kanal) : '',
                 quali:   djFern ? djFern.quali : 0,
-                bisWann: djFern ? djFern.bisWann : 0
+                bisWann: djFern ? djFern.bisWann : 0,
+                // Der echte Zustand am Screen:
+                spielt:  lage.spielt,
+                stumm:   lage.stumm,
+                istQuali: lage.quali,
+                freigabe: lage.freigabe,
+                befund:  djFernBefund(lage)
             }).catch(() => {});
         }
 
@@ -7543,6 +7589,7 @@
             // solange sie noch "frisch" ist.
             djAnstupsen();
             if (djQualiLage) { djQualiLage.tonAn = false; djQualiLage.tonBlockiert = false; }
+            djFernStatusMelden();
         }
 
         // Auf window und in der Aufnahmephase (capture), damit auch ein Klick
@@ -7714,6 +7761,10 @@
             }
 
             djTonNachziehen(laeuft);
+
+            // Bei jedem Takt melden, solange die Fernbedienung laeuft: das Handy
+            // soll sehen, wenn sich am Screen etwas aendert.
+            if (djFernAktiv()) djFernStatusMelden();
 
             if (DJ_LIVE_CONFIG.qualitaetModus !== 'mindestens') return;
             if (djQualiLage.erledigt) return;

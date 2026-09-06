@@ -101,6 +101,24 @@
             daten.ts = global.firebase.database.ServerValue.TIMESTAMP;
             return verb.db.ref(raumPfad() + '/befehl').set(daten);
         },
+        // Die Folge-Liste einmal hinterlegen, damit sie ALLE sehen, die scannen -
+        // ohne dass sich jeder Gast selbst bei Twitch anmelden muss. Schreibt
+        // nur, wer angemeldet ist; alle anderen lesen mit.
+        kanaeleTeilen: function (verb, liste) {
+            return verb.db.ref(raumPfad() + '/kanaele').set({
+                liste: (liste || []).slice(0, 100),
+                ts: global.firebase.database.ServerValue.TIMESTAMP
+            });
+        },
+        kanaeleLesen: function (verb) {
+            return verb.db.ref(raumPfad() + '/kanaele').once('value')
+                .then(function (s) {
+                    var w = s.val();
+                    return (w && Array.isArray(w.liste)) ? w.liste : null;
+                })
+                .catch(function () { return null; });
+        },
+
         aufStatusHoeren: function (verb, rueckruf) {
             var ref = verb.db.ref(raumPfad() + '/status');
             ref.on('value', function (schnappschuss) {
