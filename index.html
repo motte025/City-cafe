@@ -1645,10 +1645,15 @@
             50%      { transform: scale(1.06); }
         }
         .kt-starter-item.is-winner .kt-starter-name { color: #00f2fe; }
-        /* Der coole Smiley liegt gross mitten auf der Gewinnerkarte. */
+        /* Der coole Smiley liegt gross mitten auf der Gewinnerkarte - aber
+           NICHT in der Karte: .kt-starter-card schneidet mit overflow:hidden
+           ab, dort waere er angeschnitten. Er haengt deshalb am Item darueber
+           und wird nie beschnitten, auch wenn er breiter ist als die Karte.
+           Bezugspunkt ist die Kartenmitte (Karte 156px hoch, darunter steht
+           noch der Name). */
         .kt-starter-smiley {
-            position: absolute; left: 50%; top: 50%;
-            width: 86px; height: 86px; margin: -43px 0 0 -43px;
+            position: absolute; left: 50%; top: 78px;
+            width: 116px; height: 116px; margin: -58px 0 0 -58px;
             z-index: 5; pointer-events: none;
             animation: ktSmileyPop 0.45s cubic-bezier(.2,.9,.3,1.4) both;
             animation-delay: var(--kt-in, 0ms);
@@ -7598,14 +7603,15 @@
 
                 // Der Gewinner pulst erst, wenn alle Karten liegen - sonst
                 // zappelt er, waehrend die anderen noch hereinkommen.
+                item.appendChild(card);
                 if (seat === winner) {
                     item.style.setProperty('--kt-pulse', (seats.length * STEP + 200) + 'ms');
                     const smiley = ktMakeSmiley('kt-starter-smiley');
                     smiley.style.setProperty('--kt-in', (seats.length * STEP + 120) + 'ms');
                     ktShowSmiley(smiley, 'cool');
-                    card.appendChild(smiley);
+                    // Ans Item, nicht an die Karte: die schneidet ab.
+                    item.appendChild(smiley);
                 }
-                item.appendChild(card);
 
                 const name = document.createElement('div');
                 name.className = 'kt-starter-name';
@@ -8404,13 +8410,14 @@
                 }).catch(err => console.warn('[Hos’n Obe] Ergebnis nicht schreibbar:', err))
                   .then(() => {
                       ktRender();
-                      // Mindestens drei Sekunden, damit die Traenen-Animation
-                      // des weinenden Smileys einmal ganz durchlaeuft, bevor
-                      // die naechste Runde starten kann.
+                      // Mindestens zehn Sekunden: so lange soll der weinende
+                      // Smiley beim Zahler stehen bleiben. Kuerzer stellen
+                      // laesst sich das bewusst nicht - die Traenen sollen
+                      // jeder am Tisch gesehen haben.
                       ktPhaseTimer = setTimeout(() => {
                           ktResolving = false;
                           ktResetSession();
-                      }, Math.max(3, KT.revealSeconds || 12) * 1000);
+                      }, Math.max(10, KT.revealSeconds || 12) * 1000);
                   });
             }, 3500);
         }
