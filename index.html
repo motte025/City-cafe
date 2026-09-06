@@ -7063,6 +7063,37 @@
             return beste;
         }
 
+        // Chrome laesst Autoplay in einem FREMDEN Rahmen nur zu, wenn der Rahmen
+        // die Freigabe ausdruecklich traegt: allow="autoplay". Unseren eigenen
+        // iframe stellen wir so ein (djBaueIframe) - den Rahmen fuer das SDK baut
+        // aber Twitch selbst, und ohne die Freigabe blockiert Chrome den Start.
+        //
+        // Genau das war auf der Box zu sehen: Play-Symbol im Bild, und selbst der
+        // Neuaufbau half nicht, weil dem neuen Rahmen dieselbe Freigabe fehlte.
+        //
+        // Der Beobachter haengt sich VOR dem Bauen an den Container. Seine
+        // Rueckrufe laufen als Microtask, also noch bevor der frisch eingehaengte
+        // Rahmen tatsaechlich laedt - nur dann greift die Freigabe, denn sie wird
+        // beim Navigieren des Rahmens ausgewertet, nicht spaeter.
+        function djFreigabeNachruesten(rahmen) {
+            const freigabe = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+            const setzen = (el) => {
+                if (!el || el.dataset.djFreigabe) return true;
+                el.dataset.djFreigabe = '1';
+                el.setAttribute('allow', freigabe);
+                return true;
+            };
+            const beobachter = new MutationObserver(() => {
+                if (setzen(rahmen.querySelector('iframe'))) beobachter.disconnect();
+            });
+            beobachter.observe(rahmen, { childList: true, subtree: true });
+            // Steht der Rahmen wider Erwarten schon, direkt setzen.
+            setzen(rahmen.querySelector('iframe'));
+            // Kein Beobachter soll an einem laengst abgeraeumten Rahmen haengen.
+            setTimeout(() => beobachter.disconnect(), 15000);
+            return beobachter;
+        }
+
         function djBaueTwitch(rahmen, entry, host) {
             // Das SDK adressiert seinen Container ueber getElementById.
             rahmen.id = 'dj-twitch-' + (++djRahmenZaehler);
@@ -7070,6 +7101,9 @@
                 // Bis das SDK da ist, kann der Slot laengst weitergelaufen sein.
                 if (!rahmen.isConnected) return;
                 if (!daIst) { djBaueIframe(rahmen, entry); return; }
+
+                // Muss vor dem Bauen stehen - danach ist es zu spaet.
+                djFreigabeNachruesten(rahmen);
 
                 let spieler;
                 try {
@@ -7271,13 +7305,27 @@
                 } else if (djSlotSichtbar()) {
                     djQualiLage.totSekunden += takt;
                     if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.neustartNachSekunden &&
-                        djQualiLage.neustarts < DJ_LIVE_CONFIG.maxNeustarts) {
+                        !djQualiLage.iframeErzwungen) {
                         const bisher = djQualiLage.neustarts;
-                        // Baut neu und setzt djQualiLage frisch auf - der
-                        // Zaehler muss den Neuaufbau ueberleben, sonst
-                        // versuchte es der Waechter endlos.
-                        djSpielerAufbauen(djGepuffert[djAktiverIndex]);
-                        if (djQualiLage) djQualiLage.neustarts = bisher + 1;
+                        // Nach maxNeustarts vergeblichen SDK-Versuchen der letzte
+                        // Ausweg: unser eigener Rahmen. Der traegt allow="autoplay"
+                        // garantiert - Ton und Qualitaetssteuerung fallen dabei
+                        // weg, aber das Bild laeuft.
+                        const letzterAusweg = bisher >= DJ_LIVE_CONFIG.maxNeustarts;
+                        // Baut neu und setzt djQualiLage frisch auf - Zaehler und
+                        // Merker muessen den Neuaufbau ueberleben, sonst versuchte
+                        // es der Waechter endlos.
+                        //
+                        // djAktiverIndex ebenso: der Abbau setzt ihn auf -1, und
+                        // ohne Wiederherstellung liefe schon der zweite Versuch
+                        // auf djGepuffert[-1] und damit ins Leere.
+                        const idx = djAktiverIndex;
+                        djSpielerAufbauen(djGepuffert[idx], letzterAusweg);
+                        djAktiverIndex = idx;
+                        if (djQualiLage) {
+                            djQualiLage.neustarts = bisher + 1;
+                            djQualiLage.iframeErzwungen = letzterAusweg;
+                        }
                         return;
                     }
                 }
@@ -7329,7 +7377,12 @@
             if (djWaechter) { clearInterval(djWaechter); djWaechter = null; }
         }
 
-        function djSpielerAufbauen(entry) {
+        // nurIframe erzwingt unseren eigenen Rahmen statt des SDK. Letzter Ausweg,
+        // wenn der SDK-Player partout nicht anlaeuft: unser iframe traegt
+        // allow="autoplay" garantiert. Der Preis ist, dass Ton und Qualitaet
+        // dann nicht mehr steuerbar sind - ein laufendes Bild ohne Ton ist
+        // trotzdem besser als ein Play-Symbol.
+        function djSpielerAufbauen(entry, nurIframe) {
             const buehne = document.getElementById('dj-live-player');
             if (!buehne || !entry) return;
             djSpielerAbbauen();
@@ -7344,10 +7397,11 @@
             djQualiLage = { laufSekunden: 0, letzteZeit: -1, stillSekunden: 0,
                             hochgesetzt: false, erledigt: false,
                             tonAn: false, tonBlockiert: false,
-                            jeGelaufen: false, totSekunden: 0, neustarts: 0 };
+                            jeGelaufen: false, totSekunden: 0, neustarts: 0,
+                            iframeErzwungen: false };
 
             const host = djEmbedHost();
-            if (entry.platform === 'twitch' && entry.channel && host) {
+            if (!nurIframe && entry.platform === 'twitch' && entry.channel && host) {
                 djBaueTwitch(rahmen, entry, host);
             } else {
                 djBaueIframe(rahmen, entry);
