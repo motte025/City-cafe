@@ -378,10 +378,48 @@ Der Zähler „Bilder weg" zeigt zusätzlich den Zuwachs pro Sekunde in Klammern
 nur der sagt etwas aus, der Gesamtwert wächst auch durch einen einzigen Hänger
 von vor zehn Minuten.
 
+`qualitaetModus` steuert, wie eingegriffen wird:
+
+| Modus | Verhalten |
+|---|---|
+| `mindestens` (Standard) | Twitch entscheidet selbst. Bleibt der Player unter `minQualitaetHoehe` hängen, wird **einmal** hochgesetzt. Steht das Bild danach still, geht die Steuerung an Twitch zurück und bleibt dort. |
+| `auto` | Twitch entscheidet allein, es wird nie eingegriffen. |
+| `fest` | Genau eine Stufe, festgenagelt auf `maxQualitaetHoehe`. Twitchs eigene Anpassung ist damit aus: reicht die Leitung nicht, puffert der Player endlos statt herunterzuschalten. Nur nehmen, wenn die Leitung sicher trägt. |
+
+Warum es `mindestens` überhaupt braucht: der Player wird im Slot davor gebaut,
+während die Ansicht noch unsichtbar ist. Twitch misst in dem Moment die
+Playergröße — an einem unsichtbaren Rahmen fällt die Schätzung niedrig aus, und
+der Stream blieb dann bei **360p** stehen, obwohl der Player intern 1920 × 1080
+groß ist.
+
 > **Kleine Kanäle:** Twitch stellt Transcodes (720p, 480p, …) nur Partnern und
 > Affiliates zuverlässig bereit. Bei kleinen Kanälen gibt es oft **nur die
 > Quelle** — dann ist jede Qualitätswahl wirkungslos, egal was hier eingestellt
 > ist. Das ist kein Fehler im Dashboard.
+
+### Autostart und Ton
+
+Der Player wird schon im Slot davor gebaut (siehe unten) — dort ist die
+DJ-Ansicht aber noch `visibility: hidden`, und der Browser **hält die Wiedergabe
+in einem unsichtbaren Rahmen an**. Beim Einblenden stand deshalb das Play-Symbol
+im Bild, obwohl der Stream längst geladen war. Ein Wächter stupst den Player
+beim Einblenden wieder an und hält ihn danach am Laufen.
+
+Der **Ton** hängt an derselben Mechanik: Autoplay *mit* Ton lehnt jeder Browser
+ohne Klick ab — der Stream liefe dann gar nicht erst an. Der Player startet
+deshalb stumm und wird erst aufgedreht, wenn das Bild nachweislich läuft.
+Verweigert der Browser auch das, geht es stumm weiter; ein stehendes Bild wäre
+der schlechtere Tausch.
+
+| Einstellung | Standard | Bedeutung |
+|---|---|---|
+| `tonLautstaerke` | `0.7` | 0 = stumm, sonst 0…1 |
+
+Auf der Box lohnt sich dafür der Chrome-Schalter: `chrome://flags` →
+**Autoplay policy** → *No user gesture is required*.
+
+Der Ton endet mit dem Slot, weil der Player dann abgeräumt wird — die übrigen
+Widgets bleiben still.
 
 ### Nur ein Player gleichzeitig
 
