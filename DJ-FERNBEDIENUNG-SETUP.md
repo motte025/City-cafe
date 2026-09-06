@@ -176,7 +176,14 @@ Token abgelaufen (nach dem Schließen des Tabs normal) — einfach neu anmelden.
 Die Seite fällt in dem Fall selbst auf die festen Kanäle zurück.
 
 **Stream startet am Screen nicht von allein**
-Das ist eine andere Baustelle — siehe *Einmal tippen, dann läuft es* in
-DJ-LIVESTREAM-SETUP.md. Kurz: Chrome verlangt, dass die Dashboard-Seite einmal
-bedient wurde. Ein Tipp irgendwo aufs Dashboard pro Chrome-Start genügt,
-danach laufen alle Streams von allein.
+Die Fernbedienung sagt dir jetzt selbst, woran es hängt — der Befund steht in
+der roten Zeile der Statuskarte, samt Bild-, Ton- und Qualitätsmerkmalen.
+
+Steht dort *„Chrome am Screen verlangt eine Bedienung"*: Chrome lässt
+Wiedergabe erst zu, wenn die Seite einmal bedient wurde. **Am Fernseher gibt es
+nichts zu tippen** — dort zählt ein Tastendruck auf der TV-Fernbedienung,
+während das Dashboard im Vordergrund ist. Einmal pro Chrome-Start.
+
+**Dauerhaft aus der Welt** (und der einzige Weg im echten Signage-Betrieb, wo
+niemand am Gerät steht): `chrome://flags` → **Autoplay policy** → *No user
+gesture is required*, danach Chrome komplett schließen und neu starten.

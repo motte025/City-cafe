@@ -33,7 +33,7 @@
         min-height: 100dvh;
         /* Unten so viel Luft, dass der feste Aktionsbalken nie den letzten
            Inhalt verdeckt: Balkenhoehe (ca. 86px) plus Sicherheitsabstand. */
-        padding: max(16px, env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom));
+        padding: max(16px, env(safe-area-inset-top)) 16px calc(136px + env(safe-area-inset-bottom));
         background:
             radial-gradient(ellipse 80% 50% at 50% 0%, rgba(145,70,255,0.22) 0%, rgba(0,0,0,0) 70%),
             var(--grund);
@@ -43,39 +43,63 @@
 
     header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
     header h1 {
-        font-family: 'Orbitron', sans-serif; font-size: 21px; font-weight: 900;
+        font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900;
         letter-spacing: 1px; margin: 0; text-transform: uppercase;
     }
-    header .kopf-icon { font-size: 26px; }
+    header .kopf-icon { font-size: 32px; }
 
-    /* Statuszeile: was der Fernseher gerade tut. */
+    /* Statuskarte: das Wichtigste auf der Seite - was der Fernseher gerade
+       wirklich tut. Bewusst gross und ganz oben; wer die Fernbedienung in der
+       Hand hat, will als Erstes wissen, ob etwas passiert ist. */
     .stand {
-        display: flex; align-items: center; gap: 10px;
-        background: var(--karte); border: 1px solid var(--rand); border-radius: 14px;
-        padding: 12px 14px; margin: 12px 0 20px; font-size: 15px; font-weight: 600;
+        background: var(--karte); border: 2px solid var(--rand); border-radius: 18px;
+        padding: 18px 18px 16px; margin: 14px 0 4px;
     }
+    .stand-kopf { display: flex; align-items: center; gap: 12px; }
     .stand-punkt {
-        width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0;
+        width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
         background: var(--text-leise);
     }
-    .stand.laeuft .stand-punkt { background: var(--gruen); box-shadow: 0 0 10px var(--gruen); }
+    .stand.laeuft { border-color: rgba(34,197,94,0.55); }
+    .stand.laeuft .stand-punkt { background: var(--gruen); box-shadow: 0 0 14px var(--gruen); }
+    .stand.fehler { border-color: rgba(239,68,68,0.55); }
     .stand.fehler .stand-punkt { background: var(--rot); }
-    .stand-text { flex: 1; min-width: 0; }
-    .stand-rest { color: var(--lila-hell); font-variant-numeric: tabular-nums; font-weight: 800; }
+    .stand-text { flex: 1; min-width: 0; font-size: 19px; font-weight: 800; }
+    .stand-rest {
+        color: var(--lila-hell); font-variant-numeric: tabular-nums;
+        font-weight: 900; font-size: 19px; white-space: nowrap;
+    }
+    /* Klartext, woran es haengt - kommt direkt vom Screen. */
+    .stand-befund {
+        display: none; margin-top: 14px; padding: 13px 15px;
+        background: rgba(239,68,68,0.14); border: 1px solid rgba(239,68,68,0.45);
+        border-radius: 12px; font-size: 16px; font-weight: 700; line-height: 1.45;
+        color: #ffb4b4;
+    }
+    .stand-befund.is-an { display: block; }
+    /* Kleine Merkmale: Bild, Ton, Stufe. */
+    .stand-marken { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .stand-marke {
+        font-size: 14px; font-weight: 800; padding: 7px 12px; border-radius: 9px;
+        background: rgba(255,255,255,0.07); border: 1px solid var(--rand);
+        color: var(--text-leise);
+    }
+    .stand-marke.gut  { background: rgba(34,197,94,0.16);  border-color: rgba(34,197,94,0.5);  color: #86efac; }
+    .stand-marke.warn { background: rgba(239,68,68,0.14);  border-color: rgba(239,68,68,0.45); color: #ffb4b4; }
 
     h2 {
-        font-size: 13px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
-        color: var(--text-leise); margin: 24px 0 10px;
+        font-size: 16px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
+        color: var(--text-leise); margin: 30px 0 12px;
     }
 
     /* Auswahlknoepfe: Laufzeit und Qualitaet. Mindestens 48px hoch, damit sie
        sich am Handy sicher treffen lassen. */
-    .wahl { display: flex; flex-wrap: wrap; gap: 8px; }
+    .wahl { display: flex; flex-wrap: wrap; gap: 10px; }
     .wahl button {
-        flex: 1 1 auto; min-width: 84px; min-height: 48px;
+        flex: 1 1 auto; min-width: 96px; min-height: 62px;
         background: var(--karte); color: var(--text);
-        border: 2px solid var(--rand); border-radius: 12px;
-        font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+        border: 2px solid var(--rand); border-radius: 14px;
+        font-family: inherit; font-size: 19px; font-weight: 800; cursor: pointer;
         transition: background 0.15s, border-color 0.15s;
     }
     .wahl button[aria-pressed="true"] {
@@ -84,16 +108,16 @@
 
     /* Kanalliste */
     .suche {
-        width: 100%; min-height: 50px; margin-bottom: 10px;
+        width: 100%; min-height: 60px; margin-bottom: 12px;
         background: var(--karte); color: var(--text);
         border: 2px solid var(--rand); border-radius: 12px;
-        padding: 0 14px; font-family: inherit; font-size: 16px;
+        padding: 0 16px; font-family: inherit; font-size: 18px;
     }
     .suche::placeholder { color: var(--text-leise); }
     .kanaele { display: flex; flex-direction: column; gap: 8px; }
     .kanal {
-        display: flex; align-items: center; gap: 12px; width: 100%;
-        min-height: 62px; padding: 8px 12px; text-align: left;
+        display: flex; align-items: center; gap: 14px; width: 100%;
+        min-height: 76px; padding: 10px 14px; text-align: left;
         background: var(--karte); color: var(--text);
         border: 2px solid var(--rand); border-radius: 14px;
         font-family: inherit; cursor: pointer;
@@ -101,25 +125,25 @@
     }
     .kanal[aria-pressed="true"] { background: rgba(145,70,255,0.22); border-color: var(--lila); }
     .kanal img {
-        width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+        width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
         background: var(--karte-hoch); object-fit: cover;
     }
     .kanal-text { flex: 1; min-width: 0; }
     .kanal-name {
-        font-size: 16px; font-weight: 700;
+        font-size: 19px; font-weight: 700;
         overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .kanal-sub {
-        font-size: 13px; color: var(--text-leise); margin-top: 2px;
+        font-size: 15px; color: var(--text-leise); margin-top: 3px;
         overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .kanal-live {
-        flex-shrink: 0; font-size: 11px; font-weight: 900; letter-spacing: 1px;
-        text-transform: uppercase; padding: 5px 10px; border-radius: 8px;
+        flex-shrink: 0; font-size: 13px; font-weight: 900; letter-spacing: 1px;
+        text-transform: uppercase; padding: 7px 12px; border-radius: 9px;
         background: rgba(239,68,68,0.18); border: 1px solid rgba(239,68,68,0.6); color: #ff8080;
     }
     .kanal-offline {
-        flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 1px;
+        flex-shrink: 0; font-size: 13px; font-weight: 800; letter-spacing: 1px;
         text-transform: uppercase; color: var(--text-leise);
     }
 
@@ -134,12 +158,12 @@
         backdrop-filter: blur(8px);
         display: flex; gap: 10px;
     }
-    .aktionen > * { max-width: 300px; }
+    .aktionen > * { max-width: 340px; }
     /* Tablet: Knoepfe mittig statt ueber die ganze Breite gezogen. */
     .aktionen { justify-content: center; }
     .aktionen button {
-        flex: 1; min-height: 58px; border: 0; border-radius: 14px;
-        font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
+        flex: 1; min-height: 70px; border: 0; border-radius: 16px;
+        font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900;
         letter-spacing: 1px; text-transform: uppercase; cursor: pointer; color: #fff;
     }
     #starten { background: linear-gradient(135deg, var(--lila), var(--pink)); flex: 2; }
@@ -148,23 +172,23 @@
 
     .hinweis {
         background: var(--karte); border: 1px solid var(--rand); border-left: 4px solid var(--lila);
-        border-radius: 12px; padding: 13px 15px; margin: 14px 0;
-        font-size: 14px; line-height: 1.55; color: var(--text-leise);
+        border-radius: 12px; padding: 15px 17px; margin: 14px 0;
+        font-size: 16px; line-height: 1.55; color: var(--text-leise);
     }
     .hinweis b { color: var(--text); }
     .hinweis a { color: var(--lila-hell); }
 
     .twitch-knopf {
-        width: 100%; min-height: 54px; margin-bottom: 12px;
-        background: var(--lila); color: #fff; border: 0; border-radius: 12px;
-        font-family: inherit; font-size: 16px; font-weight: 800; cursor: pointer;
+        width: 100%; min-height: 66px; margin-bottom: 12px;
+        background: var(--lila); color: #fff; border: 0; border-radius: 14px;
+        font-family: inherit; font-size: 18px; font-weight: 800; cursor: pointer;
     }
     .abmelden {
         background: none; border: 0; color: var(--text-leise);
-        font-family: inherit; font-size: 13px; text-decoration: underline;
+        font-family: inherit; font-size: 15px; text-decoration: underline;
         cursor: pointer; padding: 6px 0;
     }
-    .lade { color: var(--text-leise); font-size: 14px; padding: 10px 2px; }
+    .lade { color: var(--text-leise); font-size: 16px; padding: 12px 2px; }
     [hidden] { display: none !important; }
 </style>
 </head>
@@ -177,9 +201,13 @@
     </header>
 
     <div class="stand" id="stand">
-        <span class="stand-punkt"></span>
-        <span class="stand-text" id="stand-text">Verbinde mit dem Screen …</span>
-        <span class="stand-rest" id="stand-rest"></span>
+        <div class="stand-kopf">
+            <span class="stand-punkt"></span>
+            <span class="stand-text" id="stand-text">Verbinde mit dem Screen …</span>
+            <span class="stand-rest" id="stand-rest"></span>
+        </div>
+        <div class="stand-befund" id="stand-befund"></div>
+        <div class="stand-marken" id="stand-marken"></div>
     </div>
 
     <div class="hinweis" id="hinweis-firebase" hidden>
@@ -191,8 +219,8 @@
     <h2>Kanal</h2>
     <button class="twitch-knopf" id="twitch-login" hidden>Mit Twitch anmelden — zeigt, wem du folgst</button>
     <div class="hinweis" id="hinweis-twitch" hidden>
-        <b>Ohne Anmeldung</b> siehst du nur die fest eingetragenen Kanäle. Nach der
-        Anmeldung erscheinen alle, denen du folgst — wer gerade live ist, steht oben.
+        <b>Anmelden muss sich nur einer.</b> Danach sehen alle, die den Code scannen,
+        dieselbe Kanalliste — ohne eigenen Twitch-Zugang. Wer gerade live ist, steht oben.
     </div>
     <input class="suche" id="suche" type="search" inputmode="search"
            placeholder="Kanal suchen oder Namen eintippen …" autocomplete="off" autocapitalize="off">
@@ -250,6 +278,34 @@
         s.classList.toggle('fehler', art === 'fehler');
         textSetzen(el('stand-text'), text);
         textSetzen(el('stand-rest'), rest || '');
+    }
+
+    // Klartext vom Screen: woran haengt es gerade? Kommt fertig formuliert
+    // herueber, damit hier nicht dieselbe Logik ein zweites Mal steht.
+    function befundSetzen(text) {
+        var b = el('stand-befund');
+        textSetzen(b, text || '');
+        b.classList.toggle('is-an', !!text);
+    }
+
+    // Bild / Ton / Stufe als kleine Merkmale. null heisst "weiss der Screen
+    // gerade selbst nicht" - dann bleibt das Merkchen weg statt zu raten.
+    function markenSetzen(status) {
+        var m = el('stand-marken');
+        m.innerHTML = '';
+        if (!status || !status.laeuft) return;
+
+        var zeigen = function (text, art) {
+            var e = document.createElement('span');
+            e.className = 'stand-marke' + (art ? ' ' + art : '');
+            textSetzen(e, text);
+            m.appendChild(e);
+        };
+        if (status.spielt === true)  zeigen('▶ Bild läuft', 'gut');
+        if (status.spielt === false) zeigen('⏸ Bild steht', 'warn');
+        if (status.stumm === false)  zeigen('🔊 Ton an', 'gut');
+        if (status.stumm === true)   zeigen('🔇 stumm', 'warn');
+        if (status.istQuali) zeigen('📺 ' + status.istQuali);
     }
 
     function restZeit(bisWann) {
@@ -469,12 +525,27 @@
 
         return (angemeldet ? folgeListeLaden() : Promise.resolve(null))
             .then(function (vonTwitch) {
-                if (vonTwitch && vonTwitch.length) return vonTwitch;
-                // Kein Login, leere Folge-Liste oder Twitch antwortet nicht:
-                // die fest eingetragenen Kanaele sind der Rueckfall.
-                el('twitch-login').hidden = false;
-                el('hinweis-twitch').hidden = false;
-                return festeKanaeleLaden();
+                if (vonTwitch && vonTwitch.length) {
+                    // Einmal angemeldet, alle haben was davon: die Liste liegt
+                    // ab jetzt fuer jeden bereit, der den Code scannt.
+                    if (verbindung) NET.kanaeleTeilen(verbindung, vonTwitch).catch(function () {});
+                    return vonTwitch;
+                }
+                // Nicht angemeldet: erst nachsehen, ob jemand anders die Liste
+                // schon hinterlegt hat - dann braucht dieses Handy gar keinen
+                // Twitch-Zugang.
+                return (verbindung ? NET.kanaeleLesen(verbindung) : Promise.resolve(null))
+                    .then(function (geteilt) {
+                        if (geteilt && geteilt.length) {
+                            el('hinweis-twitch').hidden = true;
+                            el('twitch-login').hidden = false;
+                            return geteilt;
+                        }
+                        // Auch das nicht: die fest eingetragenen Kanaele.
+                        el('twitch-login').hidden = false;
+                        el('hinweis-twitch').hidden = false;
+                        return festeKanaeleLaden();
+                    });
             })
             .then(function (liste) {
                 kanalListe = liste;
@@ -501,16 +572,31 @@
     var restTicker = null;
     function statusAnzeigen(status) {
         if (restTicker) { clearInterval(restTicker); restTicker = null; }
-        if (!status) { standSetzen('', 'Screen meldet sich noch nicht'); return; }
+        markenSetzen(status);
 
-        if (!status.laeuft) { standSetzen('', 'Screen läuft in der normalen Rotation'); return; }
+        if (!status) {
+            standSetzen('', 'Screen meldet sich noch nicht');
+            befundSetzen('');
+            return;
+        }
+        if (!status.laeuft) {
+            standSetzen('', 'Screen läuft in der normalen Rotation');
+            befundSetzen('');
+            return;
+        }
 
         var name = status.name || status.kanal || 'Stream';
+        // "laeuft" heisst hier: der Screen ist auf diesem Kanal. Ob das Bild
+        // wirklich laeuft, sagt status.spielt - deshalb der Unterschied in der
+        // Farbe und im Text.
+        var art = status.spielt === false ? 'fehler' : 'laeuft';
+        var wort = status.spielt === false ? ' — Bild steht' : ' läuft am Screen';
         var zeigen = function () {
-            standSetzen('laeuft', name + ' läuft am Screen',
+            standSetzen(art, name + wort,
                 status.bisWann === -1 ? 'bis offline' : restZeit(status.bisWann));
         };
         zeigen();
+        befundSetzen(status.befund || '');
         if (status.bisWann && status.bisWann > 0) restTicker = setInterval(zeigen, 1000);
     }
 
@@ -535,11 +621,11 @@
         el('stoppen').addEventListener('click', function () { senden('stop'); });
 
         twitchTokenAusUrlHolen();
-        kanaeleLaden();
 
         if (!NET || !NET.istEingerichtet()) {
             el('hinweis-firebase').hidden = false;
             standSetzen('fehler', 'Keine Verbindung eingerichtet');
+            kanaeleLaden();
             return;
         }
 
@@ -547,10 +633,13 @@
             if (!verb) {
                 el('hinweis-firebase').hidden = false;
                 standSetzen('fehler', 'Keine Verbindung zum Screen');
+                kanaeleLaden();
                 return;
             }
             verbindung = verb;
             NET.aufStatusHoeren(verb, statusAnzeigen);
+            // Erst jetzt: die geteilte Kanalliste braucht die Verbindung.
+            kanaeleLaden();
         });
     }
 
