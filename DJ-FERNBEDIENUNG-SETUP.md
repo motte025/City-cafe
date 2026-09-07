@@ -188,8 +188,12 @@ Token abgelaufen (nach dem Schließen des Tabs normal) — einfach neu anmelden.
 Die Seite fällt in dem Fall selbst auf die festen Kanäle zurück.
 
 **Stream startet am Screen nicht von allein**
-Die Fernbedienung sagt dir jetzt selbst, woran es hängt — der Befund steht in
-der roten Zeile der Statuskarte, samt Bild-, Ton- und Qualitätsmerkmalen.
+Die eigentliche Ursache ist behoben: der vorgepufferte Player lag in einer
+Ansicht, die Chrome gar nicht gezeichnet hat — dort läuft ein fremder Rahmen nie
+an (Details in DJ-LIVESTREAM-SETUP.md, „Autostart und Ton").
+
+Klemmt trotzdem etwas, sagt die Fernbedienung selbst, woran — der Befund steht
+in der roten Zeile der Statuskarte, samt Bild-, Ton- und Qualitätsmerkmalen.
 
 Steht dort *„Chrome am Screen verlangt eine Bedienung"*: Chrome lässt
 Wiedergabe erst zu, wenn die Seite einmal bedient wurde. **Am Fernseher gibt es
