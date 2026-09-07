@@ -3,8 +3,14 @@
 Steuert den DJ-Slot am Screen vom Handy oder Tablet: **Kanal**, **Auflösung**,
 **Laufzeit** — und startet ihn sofort, ohne die Rotation abzuwarten.
 
-Auf dem Screen steht dafür ein kleiner QR-Code in der Kopfzeile des
-DJ-Widgets. Scannen, Kanal antippen, *Auf den Screen*.
+Zwei Wege zum Code auf dem Screen:
+
+* das **QR-Widget** eröffnet jede Runde und zeigt alle Codes eine Minute lang
+* im **DJ-Widget** liegt der Code die ersten 20 Sekunden groß über dem Player
+  und blendet sich danach aus, damit der Stream frei steht
+
+Beide sind rund 300 Pixel groß — kleiner lässt sich ein Code vom Fernseher aus
+nicht scannen. Scannen, Kanal antippen, *Auf den Screen*.
 
 ---
 
@@ -160,6 +166,12 @@ ein Screen eingerichtet.
 **Kein QR-Code am Screen**
 Firebase nicht erreichbar oder Regeln fehlen — Schritt 2 prüfen. Das Dashboard
 läuft dann bewusst ohne Fernbedienung weiter, statt Fehler zu werfen.
+
+**Code lässt sich nicht scannen**
+Sollte nicht mehr vorkommen: beide Codes sind rund 300 Pixel groß. Faustregel
+für einen Fernseher — ein Code braucht ungefähr ein Sechstel der Bildhöhe,
+damit eine Handykamera ihn aus zwei bis drei Metern noch auflöst. Die Größen
+stehen in `index.html` bei `.dj-fern-qr img` und `.qr-grid … .qr-bild`.
 
 **Handy zeigt „Konnte nicht senden — Datenbank-Regeln prüfen"**
 Der `djremote`-Block fehlt oder ist falsch geschrieben. Schritt 2.
