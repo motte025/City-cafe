@@ -233,6 +233,18 @@
            Browser die Wiedergabe drosseln - dann waere der Vorlauf hinueber. */
         #media-view-nightlife { visibility: visible; }
 
+        /* Dieselbe Ausnahme, und aus demselben Grund - hier war sie 35 Sekunden
+           lang der ganze Unterschied: der DJ-Slot baut seinen Twitch-Player schon
+           waehrend des Plakats davor (djVorpuffern). Unter visibility:hidden nimmt
+           Chrome den fremden Rahmen komplett aus dem Rendering; der Twitch-Player
+           faellt darin nie an, zeigt sein Play-Symbol - und bleibt auch dabei,
+           wenn die Ansicht spaeter aufblendet. Genau das war "er probiert's, aber
+           es laeuft nicht an". opacity:0 bleibt: zu sehen ist nach wie vor nichts,
+           der Rahmen wird nur weiter gezeichnet.
+           Achtung beim Aendern: djSlotSichtbar() darf sich deshalb nicht mehr auf
+           die visibility verlassen, sondern misst die Deckkraft. */
+        #media-view-djlive { visibility: visible; }
+
         /* Was niemand sieht, muss auch nicht animieren. Jede laufende Animation
            zwingt den Browser, das Bild neu zusammenzusetzen - genau die Leistung,
            die dem Video im Nightlife-Slot fehlt. */
@@ -7475,21 +7487,26 @@
         // Chrome laesst Autoplay in einem FREMDEN Rahmen nur zu, wenn der Rahmen
         // die Freigabe ausdruecklich traegt: allow="autoplay". Unseren eigenen
         // iframe stellen wir so ein (djBaueIframe) - den Rahmen fuer das SDK baut
-        // aber Twitch selbst, und ohne die Freigabe blockiert Chrome den Start.
+        // aber Twitch selbst.
         //
-        // Genau das war auf der Box zu sehen: Play-Symbol im Bild, und selbst der
-        // Neuaufbau half nicht, weil dem neuen Rahmen dieselbe Freigabe fehlte.
+        // Nachgesehen im ausgelieferten embed/v1.js: das SDK setzt dort selbst
+        // allow="autoplay; fullscreen", noch bevor der Rahmen im Dokument haengt.
+        // Der Autostart hing also NICHT hieran - das war die falsche Faehrte, die
+        // Ursache lag bei visibility:hidden (siehe CSS zu #media-view-djlive).
         //
-        // Der Beobachter haengt sich VOR dem Bauen an den Container. Seine
-        // Rueckrufe laufen als Microtask, also noch bevor der frisch eingehaengte
-        // Rahmen tatsaechlich laedt - nur dann greift die Freigabe, denn sie wird
-        // beim Navigieren des Rahmens ausgewertet, nicht spaeter.
+        // Die Absicherung bleibt trotzdem: faellt die Zeile bei Twitch irgendwann
+        // weg, steht der Slot sonst wieder still. Ergaenzt wird nur, wenn autoplay
+        // fehlt - der SDK-Wert wird nie ueberschrieben. Zaehne hat der Nachtrag
+        // ohnehin nur, solange der Rahmen noch nicht navigiert ist; die Freigabe
+        // wird beim Navigieren ausgewertet, nicht spaeter.
         function djFreigabeNachruesten(rahmen) {
             const freigabe = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
             const setzen = (el) => {
                 if (!el || el.dataset.djFreigabe) return true;
                 el.dataset.djFreigabe = '1';
-                el.setAttribute('allow', freigabe);
+                if (!/autoplay/.test(el.getAttribute('allow') || '')) {
+                    el.setAttribute('allow', freigabe);
+                }
                 return true;
             };
             const beobachter = new MutationObserver(() => {
@@ -7642,13 +7659,11 @@
 
         // Stupst einen bereits gebauten Player wieder an.
         //
-        // Noetig, weil der Player schon im Slot davor gebaut wird - dort ist die
-        // Ansicht aber noch visibility:hidden, und der Browser haelt die
-        // Wiedergabe in einem unsichtbaren Rahmen an. Ohne diesen Anstupser stand
-        // beim Einblenden das Play-Symbol im Bild, obwohl der Stream laengst
-        // geladen war. Bis zum Umbau auf einen einzigen Player erledigte das die
-        // postMessage-Zeile in djZeigeEintrag; die griff nur nicht mehr, seit der
-        // Player beim Wiederanzeigen nicht mehr neu gebaut wird.
+        // Seit die DJ-Ansicht dauerhaft gerendert wird (visibility im CSS), sollte
+        // der vorgepufferte Player von selbst laufen. Der Anstupser bleibt als
+        // Netz: er kostet nichts, greift bei jedem Waechtertakt und faengt die
+        // Faelle ab, in denen der Player aus anderen Gruenden steht - Netz kurz
+        // weg, Werbeblock, Reload nach einem Kanalwechsel.
         function djAnstupsen() {
             if (djTwitchSpieler) {
                 try {
@@ -7721,13 +7736,19 @@
             djQualiLage.tonBlockiert = true;      // kein zweiter Versuch
         }
 
-        // Genau die Bedingung, an der der Autostart haengt: erst wenn die Ansicht
-        // wirklich sichtbar ist, laesst Chrome den Player anlaufen. Bewusst die
-        // berechnete visibility und nicht die active-Klasse - die sitzt sofort,
-        // die Sichtbarkeit kommt erst nach der Ueberblendung.
+        // Steht der Slot wirklich auf dem Schirm? Danach richtet sich, ob der
+        // Waechter Totzeit zaehlt und neu baut.
+        //
+        // Gemessen wird die berechnete Deckkraft, nicht die visibility: die steht
+        // bei #media-view-djlive dauerhaft auf visible, damit der vorgepufferte
+        // Player ueberhaupt anlaufen darf (siehe CSS). Und nicht die
+        // active-Klasse: die sitzt sofort, waehrend die Ueberblendung noch laeuft.
+        // Waehrend einer Transition liefert getComputedStyle den animierten Wert -
+        // "fast ganz da" genuegt.
         function djSlotSichtbar() {
             const v = document.getElementById('media-view-djlive');
-            return !!v && getComputedStyle(v).visibility === 'visible';
+            if (!v || !v.classList.contains('active')) return false;
+            return parseFloat(getComputedStyle(v).opacity || '0') >= 0.9;
         }
 
         // Laeuft nur waehrend des DJ-Slots und macht vier Dinge: die Wiedergabe
@@ -7925,8 +7946,8 @@
                 djSpielerAufbauen(entry);
                 djAktiverIndex = index;
             } else {
-                // Schon gebaut - aber im Slot davor, wo die Ansicht noch
-                // unsichtbar war und der Browser die Wiedergabe angehalten hat.
+                // Schon im Slot davor gebaut und laeuft im Idealfall bereits -
+                // ein Anstupser schadet dann nicht und holt ihn sonst ab.
                 djAnstupsen();
             }
 

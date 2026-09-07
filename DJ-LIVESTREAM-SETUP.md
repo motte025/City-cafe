@@ -399,11 +399,26 @@ groß ist.
 
 ### Autostart und Ton
 
-Der Player wird schon im Slot davor gebaut (siehe unten) — dort ist die
-DJ-Ansicht aber noch `visibility: hidden`, und der Browser **hält die Wiedergabe
-in einem unsichtbaren Rahmen an**. Beim Einblenden stand deshalb das Play-Symbol
-im Bild, obwohl der Stream längst geladen war. Ein Wächter stupst den Player
-beim Einblenden wieder an und hält ihn danach am Laufen.
+Der Player wird schon im Slot davor gebaut (siehe unten) — 35 Sekunden vor dem
+DJ-Slot. Genau daran lag der Autostart, und zwar an einer einzigen CSS-Zeile:
+
+Ausgeblendete Ansichten stehen auf `visibility: hidden`, damit die Box sie nicht
+umsonst zeichnet. Chrome nimmt einen **fremden Rahmen** darin aber komplett aus
+dem Rendering — der Twitch-Player lief dort nie an, zeigte sein Play-Symbol und
+blieb auch dabei, als die Ansicht später aufblendete. Auf dem Screen sah das so
+aus, als würde das Dashboard es zwar versuchen, aber nichts anspringen.
+
+`#media-view-djlive` ist deshalb von der Regel ausgenommen und wird dauerhaft
+gezeichnet — dieselbe Ausnahme, die der Nightlife-Player aus demselben Grund
+schon hatte. **Zu sehen ist trotzdem nichts:** `opacity: 0` bleibt, die Ansicht
+ist nur nicht mehr aus dem Rendering genommen.
+
+> Wer hier etwas ändert, muss `djSlotSichtbar()` mitdenken: die Funktion darf
+> sich nicht mehr auf die `visibility` verlassen (die steht jetzt immer auf
+> `visible`) und misst stattdessen die Deckkraft.
+
+Ein Wächter stupst den Player zusätzlich beim Einblenden an und hält ihn danach
+am Laufen — als Netz für Netzaussetzer und Werbeblöcke.
 
 ### Einmal tippen, dann läuft es
 
@@ -425,20 +440,17 @@ Hinweis läge dort ständig über dem Dashboard.
 Chrome-Schalter auf der Box: `chrome://flags` → **Autoplay policy** → *No user
 gesture is required*. Chrome danach komplett schließen und neu starten.
 
-**Die Autoplay-Freigabe ist dabei der entscheidende Punkt.** Chrome lässt
+**Zur Autoplay-Freigabe**, weil sie lange als Verdächtiger galt: Chrome lässt
 Wiedergabe in einem *fremden* Rahmen nur zu, wenn dieser `allow="autoplay"`
 trägt. Unseren eigenen iframe stellen wir so ein — den Rahmen für das SDK baut
-aber Twitch selbst, und ohne die Freigabe blockiert Chrome den Start. Genau
-daran lag es auf der Box: Play-Symbol im Bild, und auch ein Neuaufbau half
-nicht, weil dem neuen Rahmen dieselbe Freigabe fehlte. Das Dashboard rüstet sie
-jetzt nach, bevor der Rahmen lädt (danach wäre es zu spät — die Freigabe wird
-beim Navigieren ausgewertet).
+Twitch selbst. Im ausgelieferten `embed/v1.js` nachgesehen: **das SDK setzt
+`allow="autoplay; fullscreen"` selbst**, noch bevor der Rahmen im Dokument
+hängt. Daran lag es also nicht. Das Dashboard ergänzt die Freigabe nur noch,
+falls sie einmal fehlen sollte — der SDK-Wert wird nie überschrieben.
 
-Reicht das Anstupsen nicht — Chrome lässt einen im unsichtbaren Rahmen
-erzeugten Player teils gar nicht mehr anlaufen —, wird der Player nach
-`neustartNachSekunden` **neu gebaut**, dann aber in der sichtbaren Ansicht. Dort
-startet er ganz normal von allein, weil er stumm startet. Höchstens
-`maxNeustarts` Versuche, danach bleibt es dabei.
+Reicht das Anstupsen nicht, wird der Player nach `neustartNachSekunden` **neu
+gebaut**, dann im laufenden, sichtbaren Slot. Höchstens `maxNeustarts` Versuche,
+danach bleibt es dabei.
 
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
