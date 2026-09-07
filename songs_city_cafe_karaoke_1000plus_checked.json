@@ -49922,16 +49922,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Velvet",
-    "title": "Chemistry",
+    "artist": "Los Fastidios",
+    "title": "Antifa Hooligans",
     "album": "",
-    "category": "Dance & Party",
+    "category": "Deutsch Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Latin",
-      "Dance",
-      "Retro"
+      "Party",
+      "Karaoke",
+      "Deutsch Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Irene Cara",
+    "title": "Flashdance...What a Feeling",
+    "album": "",
+    "category": "80s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "80s",
+      "Pop",
+      "Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
