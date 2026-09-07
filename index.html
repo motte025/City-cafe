@@ -1861,17 +1861,25 @@
             text-align: left;
         }
         .dj-tap-hinweis.is-an { display: flex; }
-        /* QR zur Handy-Fernbedienung. Sitzt in der Kopfzeile neben den Chips,
-           damit er den Player nicht verdeckt. Bleibt aus, solange Firebase
-           nicht eingerichtet ist - djFernQrZeichnen blendet ihn erst dann ein. */
+        /* QR zur Handy-Fernbedienung, ueber dem Player.
+           In der Kopfzeile hatte er nur 74px - aus zwei Metern vom Fernseher aus
+           chancenlos. Ein Code braucht auf dem Screen rund 300px, damit ihn eine
+           Handykamera aus dem Raum noch aufloest. So gross verdeckt er zwangs-
+           laeufig Bild, deshalb blendet er sich nach djFernQrSekunden wieder aus:
+           lange genug zum Scannen, kurz genug, um nicht zu stoeren. */
         .dj-fern-qr {
-            display: none; flex-direction: column; align-items: center; gap: 4px;
-            background: #ffffff; border-radius: 10px; padding: 6px 6px 4px;
+            position: absolute; right: 62px; bottom: 62px; z-index: 6;
+            display: none; flex-direction: column; align-items: center; gap: 8px;
+            background: #ffffff; border-radius: 16px; padding: 14px 14px 11px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            opacity: 0; transition: opacity 0.6s ease-in-out;
         }
-        .dj-fern-qr img { width: 74px; height: 74px; display: block; }
+        .dj-fern-qr.is-da { display: flex; opacity: 1; }
+        .dj-fern-qr.is-weg { display: flex; opacity: 0; }
+        .dj-fern-qr img { width: 300px; height: 300px; display: block; }
         .dj-fern-qr span {
-            font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 800;
-            letter-spacing: 0.6px; text-transform: uppercase; color: #12071f;
+            font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
+            letter-spacing: 1px; text-transform: uppercase; color: #12071f;
         }
         .dj-tap-hinweis span { font-size: 34px; }
         .dj-tap-sub {
@@ -2575,13 +2583,18 @@
                                 <div class="dj-counter" id="dj-live-counter" style="display: none;">1/1</div>
                                 <div class="dj-platform-chip is-twitch" id="dj-live-platform">Twitch</div>
                                 <div class="dj-live-badge"><span class="dj-live-dot"></span>Live</div>
-                                <div class="dj-fern-qr" id="dj-fern-qr" style="display: none;">
-                                    <img id="dj-fern-qr-img" src="" alt="QR-Code DJ-Fernbedienung">
-                                    <span>Steuern</span>
-                                </div>
                             </div>
                         </div>
                         <div class="dj-player" id="dj-live-player"></div>
+                        <!-- Bewusst NEBEN dem Player, nicht darin: djStopPlayer
+                             leert den Player-Container komplett aus. Liegt per
+                             absoluter Position trotzdem darueber. Gross genug zum
+                             Scannen und nur am Anfang des Slots sichtbar - danach
+                             soll der Stream frei stehen. -->
+                        <div class="dj-fern-qr" id="dj-fern-qr">
+                            <img id="dj-fern-qr-img" src="" alt="QR-Code DJ-Fernbedienung">
+                            <span>Stream steuern</span>
+                        </div>
                         <!-- Bewusst NEBEN dem Player, nicht darin: djStopPlayer
                              leert den Player-Container komplett aus. Sichtbar nur,
                              wenn der Stream klemmt und die Seite noch nie bedient
@@ -7029,6 +7042,10 @@
         const QR_SLOT_INDEX = -3;
         const QR_SLOT_SEKUNDEN = 60;
 
+        // So lange steht der grosse QR ueber dem Stream, danach blendet er aus.
+        // Zum Scannen reicht das locker; laenger wuerde er nur das Bild verdecken.
+        const DJ_FERN_QR_SEKUNDEN = 20;
+
         const DART_SLOT_INDEX = -2;       // Naechstes Spiel
         const DART_FOTO_INDEX = -1.9;     // Mannschaftsfoto
         const DART_EINZEL_INDEX = -1.8;   // Einzelwertung
@@ -7260,17 +7277,39 @@
             });
         }
 
+        let djFernQrTimer = null;
+
+        // Legt das Bild an, blendet aber noch nichts ein - das macht
+        // djFernQrZeigen(), sobald der DJ-Slot laeuft.
         function djFernQrZeichnen() {
             const bild = document.getElementById('dj-fern-qr-img');
-            const kasten = document.getElementById('dj-fern-qr');
-            if (!bild || !kasten) return;
+            if (!bild) return;
             const ziel = (DJ_REMOTE_CONFIG.mobileUrl || '');
             if (!ziel) return;
-            bild.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=' +
+            bild.src = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=0&data=' +
                        encodeURIComponent(ziel);
-            // Ausdruecklich flex: ein leerer Wert wuerde auf die Stylesheet-Regel
-            // zurueckfallen, und die steht auf display:none.
-            kasten.style.display = 'flex';
+        }
+
+        function djFernQrZeigen() {
+            const kasten = document.getElementById('dj-fern-qr');
+            const bild = document.getElementById('dj-fern-qr-img');
+            if (!kasten || !bild || !bild.getAttribute('src')) return;
+            if (djFernQrTimer) { clearTimeout(djFernQrTimer); djFernQrTimer = null; }
+            kasten.classList.remove('is-weg');
+            kasten.classList.add('is-da');
+            djFernQrTimer = setTimeout(() => {
+                // is-weg statt Klasse ganz weg: so laeuft die Ausblendung noch,
+                // statt dass der Kasten schlagartig verschwindet.
+                kasten.classList.remove('is-da');
+                kasten.classList.add('is-weg');
+                djFernQrTimer = null;
+            }, DJ_FERN_QR_SEKUNDEN * 1000);
+        }
+
+        function djFernQrVerstecken() {
+            const kasten = document.getElementById('dj-fern-qr');
+            if (djFernQrTimer) { clearTimeout(djFernQrTimer); djFernQrTimer = null; }
+            if (kasten) kasten.classList.remove('is-da', 'is-weg');
         }
 
         djFernStarten();
@@ -7328,6 +7367,7 @@
             const buehne = document.getElementById('dj-live-player');
             djWaechterStoppen();
             djTapHinweis(false);
+            djFernQrVerstecken();
             // Abgelaufene Fernsteuerung aufraeumen, damit das Handy nicht
             // weiter "laeuft" anzeigt und die Qualitaet nicht festgenagelt bleibt.
             if (djFern && !djFernAktiv()) {
@@ -7925,6 +7965,7 @@
 
             document.getElementById('media-view-djlive').classList.add('active');
             djWaechterStarten();
+            djFernQrZeigen();
             let idx = 0;
 
             const zeigeNaechsten = () => {
