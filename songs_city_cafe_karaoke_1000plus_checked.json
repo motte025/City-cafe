@@ -50897,5 +50897,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Global Deejays",
+    "title": "What a Feeling (Flashdance)",
+    "album": "",
+    "category": "2000s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "2000s",
+      "Dance",
+      "Cover"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
