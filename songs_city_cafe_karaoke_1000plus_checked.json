@@ -51198,36 +51198,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Tonbandgerät",
-    "title": "Irgendwie anders",
+    "artist": "Silly",
+    "title": "Bataillon d'amour",
     "album": "",
     "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
       "Party",
-      "Karaoke",
-      "Schlager"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Gadjo",
-    "title": "So Many Times",
-    "album": "",
-    "category": "Electro House",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Electro",
-      "House",
-      "Party"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
