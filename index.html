@@ -7039,6 +7039,21 @@
         // heruntergerechnet wird.
         const DJ_BUEHNE_BREITE = 1200;
 
+        // ---- Ein/Aus fuer zwei Slots -----------------------------------------
+        // false = der Slot kommt in der Rotation nicht vor. Der gesamte Code
+        // bleibt stehen; ein true holt ihn unveraendert zurueck.
+        //
+        // DJ_SLOT_AN haengt alles am Twitch-Widget ab: den Slot, das Vorpuffern,
+        // den Statusabruf und die Fernbedienung - die ohne Slot ins Leere zielte.
+        //
+        // Zum kurzen Ansehen, ohne hier etwas zu aendern, genuegt ?djan=1 bzw.
+        // ?qran=1 an der Dashboard-Adresse. Am Screen selbst bleibt beides aus.
+        function slotSchalter(fest, name) {
+            return fest || new RegExp('(?:^|[?&])' + name + '=1(?:&|$)').test(location.search);
+        }
+        const DJ_SLOT_AN = slotSchalter(false, 'djan');
+        const QR_SLOT_AN = slotSchalter(false, 'qran');
+
         // Position des DJ-Slots in der Rotation. Steht als Konstante hier, weil
         // sowohl runMasterSequence als auch djStopPlayer sie kennen muessen.
         const DJ_SLOT_INDEX = 0.9;
@@ -7127,6 +7142,8 @@
         // Schlaegt der Abruf fehl, bleibt der alte Stand stehen - checked_at wandert
         // dann nicht mit, und nach maxStatusAlterMinuten faellt der Slot von selbst aus.
         async function loadDjLiveStatus() {
+            // Slot aus: dann braucht es auch den regelmaessigen Abruf nicht.
+            if (!DJ_SLOT_AN) return;
             let daten = await djFetchStatus(DJ_LIVE_CONFIG.statusUrl);
             if (!daten && DJ_LIVE_CONFIG.statusFallbackUrl) {
                 daten = await djFetchStatus(DJ_LIVE_CONFIG.statusFallbackUrl);
@@ -7279,6 +7296,10 @@
         }
 
         function djFernStarten() {
+            // Ohne DJ-Slot hat die Fernbedienung nichts zu steuern: kein QR am
+            // Screen, kein Zuhoerer, keine Statusmeldung. Das Handy zeigt dann
+            // "Screen meldet sich noch nicht" - richtig so, er tut es ja nicht.
+            if (!DJ_SLOT_AN) return;
             if (!window.DJ_REMOTE_NET || !DJ_REMOTE_NET.istEingerichtet()) return;
             DJ_REMOTE_NET.bereit().then(verb => {
                 if (!verb) return;
@@ -7922,6 +7943,7 @@
         // ueberhaupt Daten hat. Die weiteren Kanaele bekommen ihren Player erst,
         // wenn sie an der Reihe sind - frueher liefen alle gleichzeitig.
         function djVorpuffern() {
+            if (!DJ_SLOT_AN) return;
             const eintraege = djUsableEntries();
             const buehne = document.getElementById('dj-live-player');
             if (!buehne || !eintraege.length) return;
@@ -7969,6 +7991,13 @@
         }
 
         function runDjLiveState(nextStateIndex) {
+            // Widget abgeschaltet - weiter wie bei "niemand live".
+            if (!DJ_SLOT_AN) {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
+
             // Fuer den naechsten Durchlauf frisch machen; blockiert diesen hier nicht.
             // Die Entscheidung faellt bewusst synchron auf dem zuletzt geholten Stand,
             // damit ein haengender Abruf nie die ganze Rotation aufhaelt.
@@ -9806,6 +9835,10 @@
         //
         // WEITERE CODES kommen in qrFesteCodes: ein Eintrag pro Zeile, fertig.
         // Alles andere - Groesse, Anordnung, Countdown - passt sich selbst an.
+        //
+        // ACHTUNG: Der Slot ist zurzeit abgeschaltet (QR_SLOT_AN). Eintraege
+        // hier sind trotzdem richtig aufgehoben - sie erscheinen, sobald der
+        // Schalter wieder auf true steht. Zum Ansehen: ?qran=1 an die Adresse.
         const qrFesteCodes = [
             // Beispiel fuer spaeter, einfach einkommentieren und anpassen:
             // { id: 'karte',     icon: '🍕', titel: 'Speisekarte',
@@ -9918,9 +9951,9 @@
 
         function runQrState(nextStateIndex) {
             const eintraege = qrEintraege();
-            if (!eintraege.length) {
-                // Nichts eingerichtet - Slot ueberspringen, statt eine leere
-                // Buehne zu zeigen.
+            if (!QR_SLOT_AN || !eintraege.length) {
+                // Abgeschaltet oder nichts eingerichtet - Slot ueberspringen,
+                // statt eine leere Buehne zu zeigen.
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
                 return;

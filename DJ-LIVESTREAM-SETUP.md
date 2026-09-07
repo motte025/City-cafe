@@ -1,5 +1,22 @@
 # DJ-Livestream-Widget — Einrichtung
 
+> ## ⏸️ Zurzeit abgeschaltet
+>
+> Das Widget ist **aus**: kein Slot in der Rotation, kein Vorpuffern, kein
+> Statusabruf, keine Fernbedienung. Der gesamte Code bleibt unverändert stehen.
+>
+> **Wieder einschalten:** in `index.html` bei den Slot-Schaltern
+>
+> ```js
+> const DJ_SLOT_AN = slotSchalter(false, 'djan');   // false -> true
+> ```
+>
+> **Nur kurz ansehen**, ohne etwas zu ändern: `?djan=1` an die Dashboard-Adresse
+> hängen. Am Screen selbst bleibt es dabei aus.
+>
+> Alles Weitere in dieser Anleitung gilt unverändert, sobald der Schalter
+> wieder auf `true` steht.
+
 Das Dashboard kann Live-Streams von DJs (Twitch und YouTube Live) einblenden.
 Der Slot erscheint **nur, wenn wirklich jemand live ist** — sonst überspringt
 die Rotation ihn ersatzlos und läuft direkt zum nächsten Widget weiter. Sind
