@@ -50282,16 +50282,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Overground",
-    "title": "Aus Und Vorbei",
+    "artist": "Kim Wilde",
+    "title": "You Came",
     "album": "",
-    "category": "Deutsch-Pop",
+    "category": "80s Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Deutsch-Pop"
+      "80s Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Lizzo",
+    "title": "Juice",
+    "album": "",
+    "category": "Funk / Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Funk",
+      "Pop",
+      "Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
