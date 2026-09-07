@@ -49760,5 +49760,24 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Gloria Gaynor",
+    "title": "Never Can Say Goodbye",
+    "album": "",
+    "category": "70s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Disco",
+      "Hymne"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
