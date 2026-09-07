@@ -49882,16 +49882,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Asa de Águia",
-    "title": "Serena",
+    "artist": "Justin Bieber",
+    "title": "Anyone",
     "album": "",
-    "category": "Après-Ski & Ballermann",
+    "category": "Internationale Party-Hits",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Après-Ski & Ballermann"
+      "Internationale Party-Hits"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Blümchen",
+    "title": "Nur geträumt",
+    "album": "",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "90s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
