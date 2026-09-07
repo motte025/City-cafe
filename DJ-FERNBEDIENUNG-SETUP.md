@@ -1,5 +1,15 @@
 # DJ-Fernbedienung — Einrichtung
 
+> ## ⏸️ Zurzeit abgeschaltet
+>
+> Die Fernbedienung hängt am DJ-Slot, und der ist aus (`DJ_SLOT_AN = false` in
+> `index.html`). Das Dashboard verbindet sich deshalb gar nicht erst mit
+> Firebase: kein QR-Code am Screen, kein Zuhörer, keine Statusmeldung. Die
+> Handy-Seite zeigt dann *„Screen meldet sich noch nicht"* — richtig so.
+>
+> Mit `DJ_SLOT_AN = true` (oder `?djan=1` zum Ansehen) ist alles unverändert
+> wieder da; siehe DJ-LIVESTREAM-SETUP.md.
+
 Steuert den DJ-Slot am Screen vom Handy oder Tablet: **Kanal**, **Auflösung**,
 **Laufzeit** — und startet ihn sofort, ohne die Rotation abzuwarten.
 
