@@ -51198,16 +51198,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Silly",
-    "title": "Bataillon d'amour",
+    "artist": "Tonbandgerät",
+    "title": "Irgendwie anders",
     "album": "",
     "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
       "Party",
-      "Karaoke"
+      "Karaoke",
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "PA69",
+    "title": "Ran an die Buletten",
+    "album": "",
+    "category": "Party-Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Party-Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
