@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-09-06T14:57:58Z",
-  "live": []
+  "checked_at": "2026-09-08T12:32:57Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wilder Dienstag !!! <3 -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    }
+  ]
 }
