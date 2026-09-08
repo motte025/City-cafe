@@ -52072,5 +52072,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Dayglow",
+    "title": "Can I Call You Tonight?",
+    "album": "",
+    "category": "2010s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Pop",
+      "Indie",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
