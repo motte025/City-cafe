@@ -7344,7 +7344,17 @@
                 stumm:   lage.stumm,
                 istQuali: lage.quali,
                 freigabe: lage.freigabe,
-                befund:  djFernBefund(lage)
+                befund:  djFernBefund(lage),
+                // Und was der Waechter bisher versucht hat. Ohne diese vier
+                // Zahlen laesst sich am Handy nicht unterscheiden, ob der
+                // Neuaufbau gar nicht greift oder ob er greift und nichts
+                // bringt - genau daran haben wir uns schon einmal verrannt.
+                technik: djQualiLage ? {
+                    neustarts:  djQualiLage.neustarts,
+                    iframe:     !!djQualiLage.iframeErzwungen,
+                    jeGelaufen: !!djQualiLage.jeGelaufen,
+                    tot:        djQualiLage.totSekunden
+                } : null
             }).catch(() => {});
         }
 

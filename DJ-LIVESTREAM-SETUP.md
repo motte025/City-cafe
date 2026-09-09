@@ -442,6 +442,12 @@ ist nur nicht mehr aus dem Rendering genommen.
 Ein Wächter stupst den Player zusätzlich beim Einblenden an und hält ihn danach
 am Laufen — als Netz für Netzaussetzer und Werbeblöcke.
 
+> **Am Gerät bestätigt (09.09.2026):** In Chrome auf der Box läuft das Bild
+> seitdem von allein an, ohne jedes Zutun. Was dort noch fehlte, war
+> ausschließlich der **Ton** — dafür musste einmal von Hand die Stummschaltung
+> im Player aufgehoben werden. Siehe den nächsten Abschnitt: genau dafür ist
+> die installierte App da.
+
 ### Einmal tippen, dann läuft es
 
 Chrome lässt Wiedergabe erst zu, wenn die Seite **einmal bedient** wurde
