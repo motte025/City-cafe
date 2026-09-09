@@ -1,5 +1,21 @@
 # Nightlife-Widget
 
+> ## ⏸️ Zurzeit abgeschaltet
+>
+> Der Slot ist **aus**: keine Videos in der Rotation, kein Abruf von
+> `nightlife.json`, kein Vorladen — die Box zieht dafür also auch keine
+> Bandbreite mehr.
+>
+> **Wieder einschalten:** in `index.html` bei `NL_SLOT_AN`
+>
+> ```js
+> const NL_SLOT_AN = slotSchalter(false, 'nlan');   // false -> true
+> ```
+>
+> **Nur kurz ansehen**, ohne etwas zu ändern: `?nlan=1` an die Dashboard-Adresse.
+>
+> Inhalt, Player und alles in dieser Anleitung bleiben unverändert stehen.
+
 Zeigt Nachtleben-Videos einer Stadt. Steht an **erster Stelle** im Zyklus,
 laeuft **5 Minuten** pro Auftritt, Tag und Nacht.
 
