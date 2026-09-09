@@ -1869,20 +1869,20 @@
            pulsiert, damit man sieht, dass OK jetzt etwas bewirkt. */
         .dj-ton-knopf {
             position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%);
-            z-index: 7; display: none; align-items: center; gap: 20px;
-            padding: 22px 40px; border-radius: 18px; max-width: 1100px;
+            z-index: 7; display: none; align-items: center; gap: 13px;
+            padding: 12px 22px; border-radius: 13px; max-width: 620px;
             background: linear-gradient(135deg, rgba(145, 70, 255, 0.96), rgba(243, 85, 218, 0.96));
             border: 3px solid rgba(255, 255, 255, 0.55);
             box-shadow: 0 14px 46px rgba(0, 0, 0, 0.65);
-            font-family: 'Orbitron', sans-serif; font-size: 30px; font-weight: 900;
-            letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-size: 19px; font-weight: 900;
+            letter-spacing: 1px; text-transform: uppercase; color: #ffffff;
             text-align: left; cursor: pointer;
         }
         .dj-ton-knopf.is-an { display: flex; }
-        .dj-ton-zeichen { font-size: 44px; line-height: 1; }
+        .dj-ton-zeichen { font-size: 26px; line-height: 1; }
         .dj-ton-text { display: block; }
         .dj-ton-knopf:focus-visible, .dj-ton-knopf:focus {
-            outline: 5px solid #00f2fe; outline-offset: 6px;
+            outline: 4px solid #00f2fe; outline-offset: 4px;
             animation: djTonPuls 1.4s ease-in-out infinite;
         }
         @keyframes djTonPuls {
@@ -1911,9 +1911,9 @@
         }
         
         .dj-ton-sub {
-            display: block; font-family: 'Inter', sans-serif; font-size: 15px;
+            display: block; font-family: 'Inter', sans-serif; font-size: 12px;
             font-weight: 700; letter-spacing: 0.3px; text-transform: none;
-            color: #c9adff; margin-top: 5px; line-height: 1.4; white-space: normal;
+            color: #e6d7ff; margin-top: 2px; line-height: 1.35; white-space: normal;
         }
         /* Es existiert immer nur EIN Rahmen - der des gerade gezeigten Kanals.
            Frueher lag fuer jeden Live-Kanal einer im DOM und alle liefen
@@ -2630,9 +2630,9 @@
                              mit OK ausloesen. Und genau dieser Tastendruck ist die
                              Bedienung, die der Browser fuer Ton verlangt. -->
                         <button class="dj-ton-knopf" id="dj-ton-knopf" type="button">
-                            <span class="dj-ton-zeichen">🔊</span>
-                            <span class="dj-ton-text">Ton einschalten
-                                <span class="dj-ton-sub">OK auf der Fernbedienung drücken — gilt dann für den ganzen Abend</span>
+                            <span class="dj-ton-zeichen">▶</span>
+                            <span class="dj-ton-text">Stream starten
+                                <span class="dj-ton-sub">Bild und Ton · OK auf der Fernbedienung</span>
                             </span>
                         </button>
                     </div>
@@ -7037,7 +7037,7 @@
             // dann dauerhaft das Play-Symbol. Ein frisch in der sichtbaren
             // Ansicht gebauter Player startet dagegen ganz normal von allein,
             // weil er stumm startet.
-            neustartNachSekunden: 6,
+            neustartNachSekunden: 15,
             maxNeustarts: 2,
 
             // Ton im DJ-Slot. 0 = stumm, sonst 0…1 als Lautstaerke.
@@ -7066,6 +7066,12 @@
             // wirklich ein Twitch-Kanal dran ist.
             twitchSdkUrl: 'https://player.twitch.tv/js/embed/v1.js',
             sdkTimeoutMs: 6000,          // danach: einfacher iframe statt SDK
+
+            // So lange darf ein frischer Player pausiert bleiben, bevor er neu
+            // gebaut wird. Grosszuegig: Twitch braucht nach einem Kanalwechsel
+            // regelmaessig acht Sekunden und mehr, bis das erste Bild steht.
+            // Der Knopf erscheint frueher - er stoert niemanden und hilft sofort.
+            knopfNachSekunden: 6,
 
             // Bild lief schon, steht dann aber still: ab hier gilt es als
             // Haenger und der Player wird neu aufgebaut. Hoch genug, dass ein
@@ -7344,7 +7350,8 @@
                 // Als App gestartet? Daran haengt der Ton: nur dafuer laesst
                 // Chrome Wiedergabe mit Ton ohne jede Bedienung zu.
                 app:      djAlsAppGestartet(),
-                tonGeht:  djTonMoeglich()
+                tonGeht:  djTonMoeglich(),
+                qualiZurueck: !!(djQualiLage && djQualiLage.qualiZurueck)
             };
             const rahmen = document.querySelector('#dj-live-player .dj-player-frame iframe');
             if (rahmen) lage.erlaubt = rahmen.getAttribute('allow') || '';
@@ -7373,6 +7380,8 @@
                                        return 'Rahmen hat keine Autoplay-Freigabe';
             if (lage.spielt === false && !lage.freigabe)
                                        return 'Der Browser am Screen verlangt eine Bedienung: eine Taste auf der TV-Fernbedienung drücken. Dauerhaft hilft nur, das Dashboard direkt in Chrome und als App installiert zu starten.';
+            if (lage.qualiZurueck)
+                                       return 'Die feste Auflösung hat die Leitung überfordert — zurück auf Auto. Bei „Auto" passt Twitch die Schärfe laufend an, das ist auf diesem Anschluss die bessere Wahl.';
             if (lage.spielt === false) return 'Player ist angehalten';
             if (lage.zeit === 0)       return 'Verbunden, aber noch kein Bild';
             // Bild laeuft, Ton nicht - und der Grund ist bekannt, statt ihn als
@@ -7840,14 +7849,36 @@
         // Alter Name, damit der Waechter unveraendert bleibt.
         function djTapHinweis(zeigen) { djTonKnopf(zeigen); }
 
+        // Bild UND Ton in einem Zug starten - und zwar sofort, im Tastendruck.
+        //
+        // Nicht dem Waechter ueberlassen: der kommt erst im naechsten Takt, also
+        // bis zu drei Sekunden spaeter, und bis dahin ist die "frische" Bedienung
+        // laengst abgelaufen. Am Geraet fuehlte sich das an, als taete der Knopf
+        // nichts. Was hier passiert, passiert waehrend der Browser die Bedienung
+        // noch anerkennt - der beste Moment, den es gibt.
+        function djSofortStarten() {
+            if (!djTwitchSpieler) { djAnstupsen(); return; }
+            const wunsch = DJ_LIVE_CONFIG.tonLautstaerke;
+            try {
+                // Erst stumm anwerfen: das laesst jeder Browser zu, und der Player
+                // haengt danach nicht mehr im Pausezustand fest.
+                djTwitchSpieler.setMuted(true);
+                djTwitchSpieler.play();
+            } catch (e) {}
+            if (!(wunsch > 0)) return;
+            try {
+                djTwitchSpieler.setMuted(false);
+                if (djTwitchSpieler.setVolume) djTwitchSpieler.setVolume(wunsch);
+            } catch (e) { return; }
+            // Als erledigt vermerken, sonst drehte djTonNachziehen gleich noch
+            // einmal auf und pruefte danach auf einen Fehlschlag, den es nicht gab.
+            if (djQualiLage) { djQualiLage.tonAn = true; djQualiLage.tonBlockiert = false; }
+        }
+
         function djFreigabeEinsammeln() {
             if (djFreigabeErteilt) return;
             djFreigabeErteilt = true;
             djTonKnopf(false);
-            // Der Tastendruck selbst ist die Freigabe - jetzt gleich nutzen,
-            // solange sie noch "frisch" ist.
-            djAnstupsen();
-            if (djQualiLage) { djQualiLage.tonAn = false; djQualiLage.tonBlockiert = false; }
             // Web Audio haengt an derselben Freigabe und bleibt sonst "suspended".
             // Nicht fuer uns selbst - aber es ist die ehrlichste Probe darauf, ob
             // der Browser hoerbare Wiedergabe jetzt wirklich zulaesst.
@@ -7856,6 +7887,8 @@
                 if (AC && !djTonProbe) djTonProbe = new AC();
                 if (djTonProbe && djTonProbe.state === 'suspended') djTonProbe.resume();
             } catch (e) {}
+            if (djQualiLage) { djQualiLage.tonAn = false; djQualiLage.tonBlockiert = false; }
+            djSofortStarten();
             djFernStatusMelden();
         }
         let djTonProbe = null;
@@ -7890,9 +7923,15 @@
                                    ? djTwitchSpieler.isPaused() : true;
                     if (!pausiert) return;
                     // Stumm ist die einzige Art zu starten, die der Browser ohne
-                    // Klick erlaubt. Der Ton kommt dazu, sobald das Bild laeuft -
-                    // siehe djTonNachziehen.
-                    djTwitchSpieler.setMuted(true);
+                    // Bedienung erlaubt. Der Ton kommt dazu, sobald das Bild
+                    // laeuft - siehe djTonNachziehen.
+                    //
+                    // ABER: nur solange Ton ueberhaupt nicht zulaessig ist. Ist
+                    // die Bedienung schon erfolgt, wuerde dieser Anstupser den
+                    // gerade aufgedrehten Ton bei jedem Takt wieder abschalten -
+                    // und weil ein puffernder Player sich als pausiert meldet,
+                    // passierte das nach jedem Kanalwechsel im Sekundentakt.
+                    if (!djTonMoeglich()) djTwitchSpieler.setMuted(true);
                     djTwitchSpieler.play();
                     // tonAn bleibt bewusst stehen: genau daran erkennt
                     // djTonNachziehen im naechsten Takt, dass das Aufdrehen den
@@ -7979,7 +8018,17 @@
                 stumm = typeof djTwitchSpieler.getMuted === 'function'
                       ? djTwitchSpieler.getMuted() : false;
             } catch (e) { return; }
-            if (!pausiert && !stumm) return;      // laeuft mit Ton, alles gut
+            if (!pausiert && !stumm) {            // laeuft mit Ton, alles gut
+                djQualiLage.tonZweifel = 0;
+                return;
+            }
+
+            // Einen Takt Nachsicht: direkt nach dem Aufdrehen puffert der Player
+            // oft kurz und meldet sich dabei als pausiert. Wer das sofort als
+            // Ablehnung wertet, schaltet einen voellig gesunden Ton dauerhaft ab -
+            // genau das passierte nach jedem Kanalwechsel.
+            djQualiLage.tonZweifel = (djQualiLage.tonZweifel || 0) + 1;
+            if (djQualiLage.tonZweifel < 2) return;
 
             try {
                 djTwitchSpieler.setMuted(true);
@@ -8056,11 +8105,20 @@
                     djQualiLage.jeGelaufen = true;
                     djTapHinweis(false);
                 } else if (djSlotSichtbar()) {
-                    djQualiLage.totSekunden += takt;
-                    // Klemmt es und die Seite wurde noch nie bedient, ist das der
-                    // wahrscheinlichste Grund - dann den Hinweis zeigen. Ist die
-                    // Freigabe schon da, blendet djTapHinweis von selbst nichts ein.
-                    if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.neustartNachSekunden) {
+                    // NUR echten Stillstand zaehlen, nicht das Puffern.
+                    //
+                    // Ein Player, der nicht pausiert ist, arbeitet gerade: er holt
+                    // sich die ersten Sekunden Stream. Frueher zaehlte auch das als
+                    // tot, und ein frisch gewechselter Kanal wurde nach sechs
+                    // Sekunden abgewuergt - kurz bevor er angelaufen waere. Dann
+                    // dasselbe von vorn, und nach zwei Runden der Rueckfall auf den
+                    // einfachen Rahmen, der keinen Ton kann. Am Screen sah das aus
+                    // wie ein Player, der zuckt und dann verstummt.
+                    if (pausiert) djQualiLage.totSekunden += takt;
+
+                    // Der Knopf darf frueher kommen als der Neuaufbau: er kostet
+                    // nichts und ist genau dann richtig, wenn der Player haengt.
+                    if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.knopfNachSekunden) {
                         djTapHinweis(true);
                     }
                     if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.neustartNachSekunden &&
@@ -8131,8 +8189,28 @@
             // soll sehen, wenn sich am Screen etwas aendert.
             if (djFernAktiv()) djFernStatusMelden();
 
-            if (DJ_LIVE_CONFIG.qualitaetModus !== 'mindestens') return;
             if (djQualiLage.erledigt) return;
+
+            // Feste Stufe (per Fernbedienung gewaehlt): dieselbe Notbremse wie im
+            // Modus "mindestens", die es hier bisher NICHT gab.
+            //
+            // Eine feste Stufe schaltet Twitchs eigene Anpassung ab. Reicht die
+            // Leitung nicht - und fuer 1080p reicht sie oft nicht -, puffert der
+            // Player endlos, statt herunterzuschalten: das Bild zuckt, der Ton
+            // stottert mit. Bleibt das Bild stehen, geht die Stufe deshalb zurueck
+            // auf auto. Lieber etwas weniger scharf als ruckelnd.
+            if (DJ_LIVE_CONFIG.qualitaetModus === 'fest') {
+                djQualiLage.stillSekunden = laeuft ? 0 : djQualiLage.stillSekunden + takt;
+                if (djQualiLage.stillSekunden >= DJ_LIVE_CONFIG.stillstandSekunden) {
+                    try { djTwitchSpieler.setQuality('auto'); } catch (e) {}
+                    djQualiLage.erledigt = true;       // kein zweiter Versuch
+                    djQualiLage.qualiZurueck = true;   // fuers Handy: warum es jetzt anders aussieht
+                    if (djFernAktiv()) djFernStatusMelden();
+                }
+                return;
+            }
+
+            if (DJ_LIVE_CONFIG.qualitaetModus !== 'mindestens') return;
 
             if (!djQualiLage.hochgesetzt) {
                 // Erst messen, wenn der Stream eine Weile sichtbar gelaufen ist:
@@ -8163,6 +8241,8 @@
             if (djQualiLage.stillSekunden >= DJ_LIVE_CONFIG.stillstandSekunden) {
                 try { djTwitchSpieler.setQuality('auto'); } catch (e) {}
                 djQualiLage.erledigt = true;   // kein zweiter Versuch
+                djQualiLage.qualiZurueck = true;
+                if (djFernAktiv()) djFernStatusMelden();
             }
         }
 
@@ -8193,8 +8273,8 @@
 
             // Jeder neue Player faengt mit frischen Messwerten an.
             djQualiLage = { laufSekunden: 0, letzteZeit: -1, stillSekunden: 0,
-                            hochgesetzt: false, erledigt: false,
-                            tonAn: false, tonBlockiert: false,
+                            hochgesetzt: false, erledigt: false, qualiZurueck: false,
+                            tonAn: false, tonBlockiert: false, tonZweifel: 0,
                             jeGelaufen: false, totSekunden: 0, neustarts: 0,
                             iframeErzwungen: false,
                             // Haenger nach dem Anlaufen - siehe djWaechterTakt.

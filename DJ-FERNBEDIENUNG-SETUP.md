@@ -150,9 +150,15 @@ selbst über sein `OFFLINE`-Ereignis, es braucht dafür keinen API-Abruf. Bleibt
 das Ereignis aus (Netz weg, Player hängt), greift nach acht Stunden eine
 Notbremse und die Rotation läuft weiter.
 
-**Auflösung:** *Auto* ist meist die beste Wahl — Twitch passt laufend an die
-Leitung an. Eine feste Stufe schaltet das ab: reicht die Bandbreite nicht,
-bleibt das Bild stehen statt herunterzuschalten.
+**Auflösung: nimm Auto.** Twitch passt die Schärfe dann laufend an die Leitung
+an. Eine feste Stufe schaltet genau das ab — und wenn die Bandbreite nicht
+reicht, puffert der Player endlos, statt herunterzuschalten: **das Bild zuckt
+und der Ton stottert mit.** Am Screen gemessen: mit *1080p* zuckt es, mit *Auto*
+nicht.
+
+Damit das nicht dauerhaft so bleibt, greift jetzt eine Notbremse: bleibt das Bild
+nach einer festen Stufe stehen, geht die Auflösung von selbst zurück auf *Auto* —
+und die Statuskarte am Handy sagt auch, warum.
 
 Während die Fernbedienung läuft, hat sie **Vorrang** vor dem Checker und vor
 `?djtest`. Nach Ablauf oder nach *Stopp* übernimmt wieder der Automatismus.

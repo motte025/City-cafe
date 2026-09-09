@@ -458,12 +458,17 @@ Deshalb genügt **ein Tipp irgendwo auf dem Dashboard pro Chrome-Start** — nic
 pro Slot. Danach starten alle weiteren Streams von allein, mit Ton. Ein
 Tastendruck zählt genauso (Fernbedienung am Fernseher).
 
-### Der Ton-Knopf für die Fernbedienung
+### Der Start-Knopf für die Fernbedienung
 
-Läuft das Bild, fehlt aber der Ton, blendet das Widget unten im Player einen
-großen Knopf **„Ton einschalten"** ein. Ein Druck auf **OK** der TV-Fernbedienung
-genügt — danach ist Ton für die **ganze Sitzung** frei, auch für alle folgenden
-Kanäle.
+Läuft der Stream nicht von allein an — kein Bild oder kein Ton —, blendet das
+Widget unten im Player den Knopf **„Stream starten"** ein. Ein Druck auf **OK**
+der TV-Fernbedienung startet **beides**, und die Freigabe gilt danach für die
+**ganze Sitzung**, auch für alle folgenden Kanäle.
+
+Bild und Ton werden dabei **sofort im Tastendruck** gestartet, nicht im nächsten
+Wächtertakt: bis dahin vergingen bis zu drei Sekunden, und die „frische"
+Bedienung war längst abgelaufen — am Gerät fühlte es sich an, als täte der Knopf
+nichts.
 
 Drei Dinge daran sind wichtig und leicht zu übersehen:
 
