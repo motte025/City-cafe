@@ -7028,6 +7028,12 @@
             twitchSdkUrl: 'https://player.twitch.tv/js/embed/v1.js',
             sdkTimeoutMs: 6000,          // danach: einfacher iframe statt SDK
 
+            // Bild lief schon, steht dann aber still: ab hier gilt es als
+            // Haenger und der Player wird neu aufgebaut. Hoch genug, dass ein
+            // Werbeblock nicht faelschlich dazwischenfunkt.
+            haengerSekunden: 45,
+            maxHaengerNeustarts: 2,
+
             // Zusaetzliche Domains fuer Twitchs parent-Parameter, von Hand.
             // Normalerweise leer: djEmbedHosts() findet die umgebenden Seiten
             // selbst. Nur noetig, wenn das nicht geht - siehe dort.
@@ -7295,7 +7301,11 @@
                 // die uns ueberhaupt abspielen? Der wichtigste Befund im
                 // Lumify-Betrieb - alles andere ist dann zweitrangig.
                 drin:     djEingebettet(),
-                darf:     djAutoplayErlaubt()
+                darf:     djAutoplayErlaubt(),
+                // Als App gestartet? Daran haengt der Ton: nur dafuer laesst
+                // Chrome Wiedergabe mit Ton ohne jede Bedienung zu.
+                app:      djAlsAppGestartet(),
+                tonGeht:  djTonMoeglich()
             };
             const rahmen = document.querySelector('#dj-live-player .dj-player-frame iframe');
             if (rahmen) lage.erlaubt = rahmen.getAttribute('allow') || '';
@@ -7326,6 +7336,10 @@
                                        return 'Der Browser am Screen verlangt eine Bedienung: eine Taste auf der TV-Fernbedienung drücken. Dauerhaft hilft nur, das Dashboard direkt in Chrome und als App installiert zu starten.';
             if (lage.spielt === false) return 'Player ist angehalten';
             if (lage.zeit === 0)       return 'Verbunden, aber noch kein Bild';
+            // Bild laeuft, Ton nicht - und der Grund ist bekannt, statt ihn als
+            // "vom Browser abgelehnt" abzutun.
+            if (lage.stumm === true && !lage.tonGeht)
+                                       return 'Bild läuft, Ton bleibt aus: das Dashboard läuft als Tab. Über Chrome-Menü → „Zum Startbildschirm hinzufügen" installieren und über das Symbol starten, dann kommt der Ton von allein.';
             if (lage.stumm === true)   return 'Läuft stumm — Ton hat der Browser abgelehnt';
             return '';
         }
@@ -7353,7 +7367,9 @@
                     neustarts:  djQualiLage.neustarts,
                     iframe:     !!djQualiLage.iframeErzwungen,
                     jeGelaufen: !!djQualiLage.jeGelaufen,
-                    tot:        djQualiLage.totSekunden
+                    tot:        djQualiLage.totSekunden,
+                    haengt:     djQualiLage.haengtSekunden,
+                    app:        lage.app
                 } : null
             }).catch(() => {});
         }
@@ -7822,6 +7838,35 @@
             }
         }
 
+        // Laeuft das Dashboard als installierte App?
+        //
+        // Wichtig fuer den Ton: fuer eine zum Startbildschirm hinzugefuegte
+        // Seite laesst Chrome Wiedergabe MIT Ton ohne jede Bedienung zu. Im
+        // normalen Tab nicht. Das Manifest gibt display:fullscreen vor, aeltere
+        // Chrome-Fassungen melden standalone - deshalb beide fragen.
+        function djAlsAppGestartet() {
+            try {
+                return window.matchMedia('(display-mode: fullscreen)').matches ||
+                       window.matchMedia('(display-mode: standalone)').matches ||
+                       window.matchMedia('(display-mode: minimal-ui)').matches;
+            } catch (e) { return false; }
+        }
+
+        // Wuerde der Browser den Ton ueberhaupt durchlassen?
+        //
+        // Ohne diese Frage kostet jeder Slot einen sichtbaren Aussetzer: das
+        // Aufdrehen haelt die Wiedergabe an, wir merken es einen Takt spaeter
+        // und schalten zurueck - Bild weg, Bild wieder da, und das jedes Mal
+        // aufs Neue. Wenn von vornherein feststeht, dass es nicht klappt,
+        // bleibt es lieber gleich stumm und das Bild laeuft ruhig durch.
+        function djTonMoeglich() {
+            if (djFreigabeErteilt) return true;
+            try {
+                if (navigator.userActivation && navigator.userActivation.hasBeenActive) return true;
+            } catch (e) {}
+            return djAlsAppGestartet();
+        }
+
         // Dreht den Ton auf, sobald das Bild laeuft.
         //
         // Warum nicht gleich beim Bauen: Autoplay MIT Ton lehnt jeder Browser
@@ -7838,6 +7883,10 @@
 
             if (!djQualiLage.tonAn) {
                 if (!laeuft) return;              // erst muss das Bild sicher laufen
+                // Chancenlos? Dann gar nicht erst versuchen - siehe djTonMoeglich.
+                // Kein tonBlockiert setzen: kommt spaeter doch eine Bedienung,
+                // soll der naechste Takt sofort aufdrehen.
+                if (!djTonMoeglich()) return;
                 try {
                     djTwitchSpieler.setMuted(false);
                     if (djTwitchSpieler.setVolume) djTwitchSpieler.setVolume(wunsch);
@@ -7876,6 +7925,23 @@
             const v = document.getElementById('media-view-djlive');
             if (!v || !v.classList.contains('active')) return false;
             return parseFloat(getComputedStyle(v).opacity || '0') >= 0.9;
+        }
+
+        // Baut den Player neu und rettet die Zaehler ueber den Neuaufbau.
+        //
+        // djSpielerAufbauen setzt djQualiLage komplett frisch auf - sonst faenge
+        // jeder Versuch wieder bei null an und der Waechter liefe endlos. Beide
+        // Zaehler muessen dabei mit: solange jeder Pfad nur seinen eigenen
+        // rettete, setzte er den anderen auf 0 zurueck und schenkte ihm damit
+        // neues Budget.
+        //
+        // djAktiverIndex ebenso: der Abbau setzt ihn auf -1, und ohne
+        // Wiederherstellung liefe schon der zweite Versuch auf djGepuffert[-1].
+        function djNeuAufbauen(zaehler, nurIframe) {
+            const idx = djAktiverIndex;
+            djSpielerAufbauen(djGepuffert[idx], nurIframe);
+            djAktiverIndex = idx;
+            if (djQualiLage) Object.assign(djQualiLage, zaehler);
         }
 
         // Laeuft nur waehrend des DJ-Slots und macht vier Dinge: die Wiedergabe
@@ -7936,15 +8002,38 @@
                         // djAktiverIndex ebenso: der Abbau setzt ihn auf -1, und
                         // ohne Wiederherstellung liefe schon der zweite Versuch
                         // auf djGepuffert[-1] und damit ins Leere.
-                        const idx = djAktiverIndex;
-                        djSpielerAufbauen(djGepuffert[idx], letzterAusweg);
-                        djAktiverIndex = idx;
-                        if (djQualiLage) {
-                            djQualiLage.neustarts = bisher + 1;
-                            djQualiLage.iframeErzwungen = letzterAusweg;
-                        }
+                        djNeuAufbauen({ neustarts: bisher + 1,
+                                        iframeErzwungen: letzterAusweg,
+                                        haengerNeustarts: djQualiLage.haengerNeustarts },
+                                      letzterAusweg);
                         return;
                     }
+                }
+            }
+
+            // Lief schon, steht jetzt aber still.
+            //
+            // Bisher war das eine Sackgasse: jeGelaufen schaltet den Block oben
+            // ab, und der Anstupser allein holt einen Player nicht zurueck, der
+            // die Verbindung verloren hat. Auf einem Screen, der stundenlang
+            // durchlaeuft, ist genau das der haeufige Fall - Netz kurz weg,
+            // Streamer startet neu, Player haengt. Dann half nur Neuladen.
+            //
+            // Die Schwelle liegt bewusst hoch: ein Werbeblock darf nicht als
+            // Haenger gelten. Und der Zaehler begrenzt das Ganze, damit ein
+            // toter Kanal nicht endlos neu aufgebaut wird.
+            if (djQualiLage.jeGelaufen && djSlotSichtbar()) {
+                djQualiLage.haengtSekunden = laeuft ? 0 : djQualiLage.haengtSekunden + takt;
+                if (djQualiLage.haengtSekunden >= DJ_LIVE_CONFIG.haengerSekunden &&
+                    djQualiLage.haengerNeustarts < DJ_LIVE_CONFIG.maxHaengerNeustarts) {
+                    // jeGelaufen bleibt beim frischen Player absichtlich falsch:
+                    // er muss sich neu beweisen, und bis dahin greift wieder der
+                    // Block oben mitsamt Rueckfall auf den einfachen Rahmen.
+                    djNeuAufbauen({ neustarts: djQualiLage.neustarts,
+                                    iframeErzwungen: djQualiLage.iframeErzwungen,
+                                    haengerNeustarts: djQualiLage.haengerNeustarts + 1 },
+                                  djQualiLage.iframeErzwungen);
+                    return;
                 }
             }
 
@@ -8019,7 +8108,9 @@
                             hochgesetzt: false, erledigt: false,
                             tonAn: false, tonBlockiert: false,
                             jeGelaufen: false, totSekunden: 0, neustarts: 0,
-                            iframeErzwungen: false };
+                            iframeErzwungen: false,
+                            // Haenger nach dem Anlaufen - siehe djWaechterTakt.
+                            haengtSekunden: 0, haengerNeustarts: 0 };
 
             const host = djEmbedHost();
             if (!nurIframe && entry.platform === 'twitch' && entry.channel && host) {
@@ -8165,6 +8256,9 @@
                 '\nprotocol:      ' + location.protocol +
                 '\norigin:        ' + (location.origin || 'null') +
                 '\neingebettet:   ' + (djEingebettet() ? 'JA - laeuft in einer fremden Seite' : 'nein') +
+                '\nals App:       ' + (djAlsAppGestartet()
+                    ? 'JA - Ton ist ohne Bedienung erlaubt'
+                    : 'nein, normaler Tab - Ton braucht eine Bedienung') +
                 '\nAutoplay:      ' + (darf === true  ? 'erlaubt'
                                      : darf === false ? 'GESPERRT - die umgebende Seite reicht es nicht durch'
                                                       : 'nicht feststellbar') +

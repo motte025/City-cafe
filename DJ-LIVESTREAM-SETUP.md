@@ -512,8 +512,43 @@ der schlechtere Tausch.
 |---|---|---|
 | `tonLautstaerke` | `0.7` | 0 = stumm, sonst 0…1 |
 
+**Aufgedreht wird nur, wenn es eine Chance hat.** Das Dashboard fragt vorher, ob
+der Browser den Ton überhaupt durchlässt — Seite schon bedient
+(`navigator.userActivation`) oder als App gestartet (`display-mode`). Ist beides
+nicht der Fall, bleibt es gleich stumm.
+
+Der Grund: jeder aussichtslose Versuch kostete einen sichtbaren Aussetzer. Das
+Aufdrehen hielt die Wiedergabe an, einen Takt später schaltete der Wächter
+zurück — Bild weg, Bild wieder da, und das in jedem Slot aufs Neue, ohne je Ton
+zu bekommen. Kommt später doch eine Bedienung, dreht der nächste Takt sofort auf.
+
+> **Ein Klick *im* Player zählt nicht.** Er landet in Twitchs eigenem Rahmen und
+> erreicht das Dashboard nie. Das Bild bekommt dann Ton, die Seite aber keine
+> Freigabe — beim nächsten Kanal ist wieder alles stumm. Wer von Hand nachhelfen
+> will, tippt **neben** den Player: Uhr, Ticker, Rand.
+
 Ohne Bedienung gibt es Ton nur, wenn Chrome die Seite als **installierte App**
 kennt — siehe oben unter „Einmal tippen, dann läuft es".
+
+### Wenn das Bild nach Stunden einfriert
+
+Ein Screen läuft die ganze Nacht. Netz kurz weg, Streamer startet neu, Player
+verhakt sich — dann stand das Bild, und nur ein Neuladen half. Der Grund: sobald
+ein Stream einmal lief, war der Neuaufbau oben abgeschaltet, und der Anstupser
+allein holt keinen Player zurück, der die Verbindung verloren hat.
+
+Steht das Bild jetzt länger als `haengerSekunden` **still**, obwohl es schon
+lief, baut der Wächter den Player neu auf.
+
+| Einstellung | Standard | Bedeutung |
+|---|---|---|
+| `haengerSekunden` | `45` | so lange darf ein gelaufenes Bild stillstehen |
+| `maxHaengerNeustarts` | `2` | danach bleibt es dabei — ein toter Kanal wird nicht endlos neu gebaut |
+
+Die 45 Sekunden sind bewusst großzügig: ein Werbeblock darf nicht als Hänger
+gelten. Alle Zähler überleben den Neuaufbau (`djNeuAufbauen`) — solange jeder
+Pfad nur seinen eigenen rettete, setzte er den anderen auf 0 zurück und schenkte
+ihm damit neues Budget.
 
 Der Ton endet mit dem Slot, weil der Player dann abgeräumt wird — die übrigen
 Widgets bleiben still.
