@@ -6307,6 +6307,16 @@
         // haelt an - bis zum naechsten Auftritt ist die Rotation einmal herum, das
         // Video liegt lokal und startet ohne Verzoegerung.
 
+        // Ein/Aus fuer den Nightlife-Slot (die Miami-Videos aus nightlife.json).
+        // Aus: kein Slot, kein Abruf, kein Vorladen - das spart der Box auch die
+        // Bandbreite. Ansehen mit ?nlan=1; Inhalt und Player bleiben unveraendert.
+        //
+        // Steht bewusst HIER und nicht bei DJ_SLOT_AN/QR_SLOT_AN weiter unten:
+        // nlStart() laeuft schon ein paar hundert Zeilen frueher, und ein const,
+        // das dort noch nicht initialisiert ist, reisst das ganze Skript mit.
+        // slotSchalter ist eine Funktionsdeklaration und damit hochgezogen.
+        const NL_SLOT_AN = slotSchalter(false, 'nlan');
+
         const NL_CONFIG = {
             quelle: 'nightlife.json',
             sekundenProVideo: 300,       // 5 Minuten Standzeit
@@ -6753,6 +6763,12 @@
         }
 
         function runNightlifeState(nextStateIndex) {
+            // Widget abgeschaltet - weiter wie bei "kein Video eingerichtet".
+            if (!NL_SLOT_AN) {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
             nlLadeVideos();   // fuer den naechsten Durchlauf frisch machen
             clearTimeout(nlVorladeTimer);
 
@@ -6877,6 +6893,11 @@
                 const wunsch = frage.get('nlq');
                 if (wunsch && NL_GROESSEN[wunsch]) NL_CONFIG.maxAufloesung = wunsch;
             } catch (e) {}
+
+            // Abgeschaltet: hier endet es. Kein Abruf von nightlife.json, kein
+            // YouTube-Player, kein Vorladen - sonst zoege die Box weiter Videos,
+            // die niemand zu sehen bekommt.
+            if (!NL_SLOT_AN) return;
 
             nlGroesseAnwenden();
             nlStandLaden();
