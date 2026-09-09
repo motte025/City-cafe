@@ -137,6 +137,22 @@ Erscheint **kein QR-Code**, ist Firebase nicht erreichbar — meist fehlt der
 
 ---
 
+## 3b. Was die Seite von selbst tut
+
+**Die Kanalliste aktualisiert sich.** Wer live ist, ändert sich ständig — eine
+Liste von vor einer halben Stunde ist wertlos. Deshalb lädt die Seite alle 60
+Sekunden nach, **und** immer dann, wenn das Handy wieder in den Vordergrund
+kommt: genau in dem Moment schaut man drauf. Im Hintergrund passiert nichts,
+das wäre verschwendet. Rechts neben *Kanal* steht, wann zuletzt geladen wurde.
+
+Suche und getroffene Auswahl überleben das Nachladen.
+
+**Der Anmeldestatus steht in derselben Zeile** — grün *angemeldet* oder grau
+*nicht angemeldet*, mehr nicht. Den langen Erklärtext gibt es nur, solange
+niemand angemeldet ist.
+
+---
+
 ## 4. Was eingestellt werden kann
 
 | Einstellung | Auswahl |
