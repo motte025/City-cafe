@@ -306,6 +306,16 @@
         if (status.stumm === false)  zeigen('🔊 Ton an', 'gut');
         if (status.stumm === true)   zeigen('🔇 stumm', 'warn');
         if (status.istQuali) zeigen('📺 ' + status.istQuali);
+
+        // Was der Wächter bisher versucht hat. Sieht nach Kleingedrucktem aus,
+        // beantwortet aber die Frage, an der wir uns festgebissen haben:
+        // greift der Neuaufbau überhaupt, oder greift er und bringt nichts?
+        var t = status.technik;
+        if (!t) return;
+        zeigen('↻ ' + (t.neustarts || 0) + ' Neuaufbau' + ((t.neustarts || 0) === 1 ? '' : 'ten'));
+        if (t.iframe)     zeigen('einfacher Modus');
+        if (t.jeGelaufen) zeigen('lief schon mal', 'gut');
+        if (t.tot)        zeigen('tot: ' + t.tot + ' s', 'warn');
     }
 
     function restZeit(bisWann) {
