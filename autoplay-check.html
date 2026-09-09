@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autoplay-Check · City Cafe</title>
+
+<!--
+  Prueft in einem Rutsch, ob eine Kiosk-App / ein Browser auf dem Screen
+  Wiedergabe OHNE Bedienung erlaubt - Bild und Ton getrennt.
+
+  Warum als eigene Seite und nicht im Dashboard: um eine App zu beurteilen,
+  will man eine Adresse aufmachen und nach fuenf Sekunden Bescheid wissen,
+  ohne die halbe Rotation abzuwarten und ohne dass ein zweiter Fehler
+  (Netz, Kanal offline, Widget abgeschaltet) das Ergebnis verfaelscht.
+
+  Der Tontest laeuft ueber Web Audio statt ueber eine Mediendatei: der
+  Zustand eines frisch angelegten AudioContext ist genau das Signal, auf das
+  es ankommt - "running" heisst, die App verlangt keine Bedienung, sonst
+  "suspended". Kein Download, kein Codec, keine Leitung im Spiel.
+-->
+
+<style>
+    :root {
+        color-scheme: dark;
+        --gut:  #34d399;
+        --warn: #fbbf24;
+        --bad:  #ff5470;
+        --grau: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0; padding: 28px 34px 60px;
+        background: #0a1020;
+        color: #f1f5f9;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+    h1 { font-size: 30px; margin: 0 0 4px; letter-spacing: 0.5px; }
+    .unter { color: var(--grau); font-size: 17px; margin: 0 0 26px; }
+
+    /* Das Urteil soll man vom Fernseher aus lesen koennen, ohne aufzustehen. */
+    .urteil {
+        border-radius: 16px; padding: 22px 26px; margin-bottom: 18px;
+        background: rgba(255,255,255,0.05);
+        border: 2px solid rgba(255,255,255,0.12);
+        display: flex; align-items: center; gap: 20px;
+    }
+    .urteil .zeichen { font-size: 54px; line-height: 1; flex-shrink: 0; }
+    .urteil .text { flex: 1; min-width: 0; }
+    .urteil .frage { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+    .urteil .antwort { font-size: 20px; font-weight: 700; }
+    .urteil .hinweis { font-size: 16px; color: var(--grau); margin-top: 8px; line-height: 1.45; }
+    .urteil.ja   { border-color: var(--gut);  background: rgba(52,211,153,0.10); }
+    .urteil.ja   .antwort { color: var(--gut); }
+    .urteil.nein { border-color: var(--bad);  background: rgba(255,84,112,0.10); }
+    .urteil.nein .antwort { color: var(--bad); }
+    .urteil.offen { border-color: var(--warn); background: rgba(251,191,36,0.10); }
+    .urteil.offen .antwort { color: var(--warn); }
+
+    h2 { font-size: 19px; margin: 28px 0 10px; color: var(--grau);
+         text-transform: uppercase; letter-spacing: 1.2px; }
+    table { width: 100%; border-collapse: collapse; font-size: 17px; }
+    td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+    td:first-child { color: var(--grau); width: 42%; }
+    td:last-child { font-weight: 700; font-family: ui-monospace, 'Courier New', monospace; }
+
+    .knopf {
+        display: inline-block; margin: 22px 10px 0 0; padding: 16px 26px;
+        border-radius: 12px; border: 0; cursor: pointer;
+        font-size: 18px; font-weight: 800; color: #04121f;
+        background: linear-gradient(135deg, #00f2fe, #7c3aed);
+    }
+    .fuss { margin-top: 30px; font-size: 15px; color: var(--grau); line-height: 1.6; }
+    code { background: rgba(255,255,255,0.09); padding: 2px 7px; border-radius: 5px;
+           font-size: 0.95em; }
+    #twitch-rahmen { width: 100%; max-width: 640px; aspect-ratio: 16/9;
+                     margin-top: 12px; border-radius: 12px; overflow: hidden;
+                     background: #000; }
+    #twitch-rahmen iframe { width: 100%; height: 100%; border: 0; }
+</style>
+</head>
+<body>
+
+<h1>Autoplay-Check</h1>
+<p class="unter">Läuft Wiedergabe hier ohne Bedienung an – und darf sie Ton machen?
+   Nichts antippen, die Seite prüft sich selbst.</p>
+
+<div class="urteil offen" id="u-bild">
+    <div class="zeichen">…</div>
+    <div class="text">
+        <div class="frage">Bild ohne Bedienung</div>
+        <div class="antwort">wird geprüft …</div>
+        <div class="hinweis"></div>
+    </div>
+</div>
+
+<div class="urteil offen" id="u-ton">
+    <div class="zeichen">…</div>
+    <div class="text">
+        <div class="frage">Ton ohne Bedienung</div>
+        <div class="antwort">wird geprüft …</div>
+        <div class="hinweis"></div>
+    </div>
+</div>
+
+<h2>Was der Browser meldet</h2>
+<table id="fakten"></table>
+
+<button class="knopf" id="ton-hoeren">Testton abspielen (kurz &amp; leise)</button>
+
+<h2 id="tw-titel" hidden>Twitch-Gegenprobe</h2>
+<div id="twitch-rahmen" hidden></div>
+
+<p class="fuss">
+    <strong>Bild ohne Bedienung</strong> ist die Grundlage: stummes Abspielen
+    erlauben fast alle Browser von selbst. Steht hier <em>nein</em>, sperrt die
+    App Medien grundsätzlich – dann hilft an ihr keine Einstellung im Dashboard.<br>
+    <strong>Ton ohne Bedienung</strong> ist die eigentliche Hürde. Steht hier
+    <em>ja</em>, taugt diese App für den Screen.<br>
+    Twitch-Gegenprobe: <code>?kanal=name</code> an die Adresse hängen, mit einem
+    Kanal, der gerade live ist.
+</p>
+
+<script>
+(function () {
+    'use strict';
+
+    function setzen(id, art, antwort, hinweis) {
+        var box = document.getElementById(id);
+        box.className = 'urteil ' + art;
+        box.querySelector('.zeichen').textContent =
+            art === 'ja' ? '✅' : art === 'nein' ? '⛔' : '❓';
+        box.querySelector('.antwort').textContent = antwort;
+        box.querySelector('.hinweis').textContent = hinweis || '';
+    }
+
+    function zeile(name, wert) {
+        var tr = document.createElement('tr');
+        var a = document.createElement('td'), b = document.createElement('td');
+        a.textContent = name;
+        b.textContent = wert;
+        tr.appendChild(a); tr.appendChild(b);
+        document.getElementById('fakten').appendChild(tr);
+    }
+
+    // ---- Umfeld ---------------------------------------------------------
+    var eingebettet = (function () {
+        try { return window.top !== window.self; } catch (e) { return true; }
+    })();
+
+    var alsApp = (function () {
+        try {
+            return window.matchMedia('(display-mode: fullscreen)').matches ||
+                   window.matchMedia('(display-mode: standalone)').matches ||
+                   window.matchMedia('(display-mode: minimal-ui)').matches;
+        } catch (e) { return false; }
+    })();
+
+    var bedientBisher = (function () {
+        try {
+            return navigator.userActivation
+                 ? !!navigator.userActivation.hasBeenActive : null;
+        } catch (e) { return null; }
+    })();
+
+    var freigabePolicy = (function () {
+        try {
+            var pr = document.featurePolicy || document.permissionsPolicy;
+            if (pr && typeof pr.allowsFeature === 'function') return pr.allowsFeature('autoplay');
+        } catch (e) {}
+        return null;
+    })();
+
+    // ---- Ton: der eigentliche Test --------------------------------------
+    // Ein frisch angelegter AudioContext startet nur dann im Zustand
+    // "running", wenn der Browser hoerbare Wiedergabe ohne Bedienung
+    // zulaesst. Sonst "suspended". Genauer und schneller als jede Datei.
+    var AC = window.AudioContext || window.webkitAudioContext;
+    var ctx = null, tonZustand = 'kein Web Audio';
+    if (AC) {
+        try { ctx = new AC(); tonZustand = ctx.state; } catch (e) { tonZustand = 'Fehler'; }
+    }
+
+    // ---- Bild: stummes Abspielen ----------------------------------------
+    // Ohne Mediendatei auskommen: ein Canvas liefert einen echten Videostrom,
+    // damit misst der Test die Sperre der App und nicht die Leitung.
+    var bildErgebnis = { art: 'offen', text: 'wird geprüft …', hinweis: '' };
+
+    function bildPruefen(fertig) {
+        var video = document.createElement('video');
+        video.muted = true;
+        video.setAttribute('playsinline', '');
+        video.autoplay = true;
+        video.style.cssText = 'position:fixed;left:-9999px;width:2px;height:2px';
+        document.body.appendChild(video);
+
+        var strom = null;
+        try {
+            var leinwand = document.createElement('canvas');
+            leinwand.width = 32; leinwand.height = 18;
+            var stift = leinwand.getContext('2d');
+            setInterval(function () {
+                stift.fillStyle = '#' + Math.floor(Math.random() * 4096).toString(16);
+                stift.fillRect(0, 0, 32, 18);
+            }, 100);
+            strom = leinwand.captureStream ? leinwand.captureStream(10) : null;
+        } catch (e) {}
+
+        if (!strom) { fertig('offen', 'nicht feststellbar', 'Dieser Browser kann keinen Teststrom erzeugen.'); return; }
+        video.srcObject = strom;
+
+        var p = video.play();
+        if (p && p.then) {
+            p.then(function () {
+                fertig('ja', 'ja – läuft von allein an',
+                       'Stumme Wiedergabe startet hier ohne Zutun.');
+            }).catch(function (e) {
+                fertig('nein', 'nein – blockiert',
+                       'Die App verlangt eine Bedienung, bevor überhaupt etwas läuft (' + (e && e.name) + ').');
+            });
+        } else {
+            setTimeout(function () {
+                fertig(video.paused ? 'nein' : 'ja',
+                       video.paused ? 'nein – blockiert' : 'ja – läuft von allein an', '');
+            }, 600);
+        }
+    }
+
+    // ---- Ausgeben --------------------------------------------------------
+    bildPruefen(function (art, text, hinweis) { setzen('u-bild', art, text, hinweis); });
+
+    if (tonZustand === 'running') {
+        setzen('u-ton', 'ja', 'ja – Ton ist erlaubt',
+               'Diese App/dieser Browser lässt hörbare Wiedergabe ohne Bedienung zu. Genau das brauchen wir für den Screen.');
+    } else if (tonZustand === 'suspended') {
+        setzen('u-ton', 'nein', 'nein – erst nach einer Bedienung',
+               'Der Browser hält den Ton an, bis jemand die Seite bedient. Für einen Screen, an dem niemand steht, taugt das nicht.');
+    } else {
+        setzen('u-ton', 'offen', 'nicht feststellbar', 'Web Audio steht hier nicht zur Verfügung (' + tonZustand + ').');
+    }
+
+    zeile('Adresse', location.href);
+    zeile('AudioContext beim Laden', tonZustand);
+    zeile('eingebettet in fremde Seite', eingebettet ? 'JA' : 'nein');
+    zeile('als App gestartet', alsApp ? 'JA' : 'nein, normaler Tab');
+    zeile('schon bedient (userActivation)',
+          bedientBisher === null ? 'unbekannt' : (bedientBisher ? 'JA' : 'nein'));
+    zeile('Autoplay-Freigabe (Policy)',
+          freigabePolicy === null ? 'nicht feststellbar' : (freigabePolicy ? 'erlaubt' : 'GESPERRT'));
+    zeile('Browserkennung', navigator.userAgent);
+
+    // Zum Nachhoeren von Hand - bewusst kurz und leise, es steht ein Lokal drumherum.
+    document.getElementById('ton-hoeren').addEventListener('click', function () {
+        if (!ctx) return;
+        if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
+        try {
+            var osz = ctx.createOscillator(), lautst = ctx.createGain();
+            osz.frequency.value = 440;
+            lautst.gain.value = 0.05;
+            osz.connect(lautst); lautst.connect(ctx.destination);
+            osz.start(); osz.stop(ctx.currentTime + 0.4);
+        } catch (e) {}
+    });
+
+    // ---- Optional: echte Twitch-Gegenprobe -------------------------------
+    var kanal = (new URLSearchParams(location.search).get('kanal') || '').trim();
+    if (kanal && location.hostname) {
+        document.getElementById('tw-titel').hidden = false;
+        var kasten = document.getElementById('twitch-rahmen');
+        kasten.hidden = false;
+        var rahmen = document.createElement('iframe');
+        // Alle umgebenden Ebenen als parent - sonst verweigert Twitch die
+        // Einbettung wortlos (dieselbe Falle wie im Dashboard).
+        var wirte = [location.hostname];
+        try {
+            var drumherum = location.ancestorOrigins;
+            for (var i = 0; drumherum && i < drumherum.length; i++) {
+                var h = new URL(drumherum[i]).hostname;
+                if (wirte.indexOf(h) < 0) wirte.push(h);
+            }
+        } catch (e) {}
+        rahmen.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+        rahmen.src = 'https://player.twitch.tv/?channel=' + encodeURIComponent(kanal) +
+                     wirte.map(function (h) { return '&parent=' + encodeURIComponent(h); }).join('') +
+                     '&muted=true&autoplay=true';
+        kasten.appendChild(rahmen);
+    }
+})();
+</script>
+</body>
+</html>

@@ -19,6 +19,79 @@ einen eigenen, leeren Cookie-Speicher, ist also nicht im Premium-Konto).
 Steht Chrome dort nicht zur Auswahl: **Play Store → „Android System WebView" →
 Aktualisieren**, dann neu versuchen.
 
+
+---
+
+## Kiosk-App suchen, die Ton ohne Bedienung erlaubt
+
+Der Autostart des Bildes ist geloest. Was bleibt, ist der **Ton**: Chrome laesst
+hoerbare Wiedergabe erst zu, wenn die Seite einmal bedient wurde - und am
+Screen steht niemand. Das ist eine Browserregel, im Dashboard nicht zu umgehen.
+
+### Womit man eine App in 30 Sekunden beurteilt
+
+`autoplay-check.html` im Repo faellt das Urteil selbst:
+
+```
+https://motte025.github.io/City-cafe/autoplay-check.html
+```
+
+Kandidaten-App installieren, diese Adresse aufmachen, **nichts antippen**. Oben
+stehen zwei Zeilen, gross genug fuer den Fernseher:
+
+| Zeile | Bedeutung |
+|---|---|
+| **Bild ohne Bedienung: ja** | Grundlage in Ordnung - stumm laeuft alles |
+| **Bild ohne Bedienung: nein** | Die App sperrt Medien grundsaetzlich. Unbrauchbar. |
+| **Ton ohne Bedienung: ja** | **Gesucht.** Diese App taugt fuer den Screen. |
+| **Ton ohne Bedienung: nein** | Dieselbe Sperre wie in Chrome. Bringt nichts. |
+
+Gemessen wird der Zustand eines frisch angelegten `AudioContext`: `running`
+heisst, die App verlangt keine Bedienung, `suspended` heisst, sie tut es. Kein
+Video, kein Codec, keine Leitung im Spiel - das Ergebnis kann also nicht durch
+einen zweiten Fehler verfaelscht werden. Mit `?kanal=name` haengt die Seite
+zusaetzlich einen echten Twitch-Player an.
+
+### Was die Suche bisher ergeben hat
+
+**Fully Kiosk Browser** - der naheliegende Kandidat, aber nach eigener Doku
+nicht geeignet: seine Einstellung *Autoplay Videos* wirkt ausdruecklich nur
+bei Seiten *"having a static `<video>` tag, not with Youtube"*. Twitch ist
+derselbe Fall - ein fremder Rahmen mit eigenem Player, den ein Skript von
+aussen nicht anfassen kann. Dazu warnt die Seite selbst, auf Android TV koenne
+es *"restricted feature set or serious issues"* geben.
+
+**Was technisch wirklich hilft:** Android-WebView kennt den Schalter
+`setMediaPlaybackRequiresUserGesture(false)`. Im AOSP-Quelltext steht dazu nur
+ein Satz - *"Sets whether the WebView requires a user gesture to play media.
+The default is true."* Er gilt fuer die **ganze** WebView, fremde Rahmen
+eingeschlossen, und wuerde damit Bild und Ton in einem Zug loesen. Eine
+Kiosk-App, die diesen Schalter nach aussen gibt, ist die gesuchte App. Genau
+danach muss die Suche gehen - nicht nach dem Wort "Autoplay" in der
+Beschreibung, das meint meist nur den `<video>`-Trick von oben.
+
+**Ohne neue App: Chrome per Kommandozeile.** Chrome auf Android liest Schalter
+aus `/data/local/tmp/chrome-command-line`, wenn man es ihm erlaubt:
+
+1. `chrome://flags/#enable-command-line-on-non-rooted-devices` → **Enabled**
+2. Per adb (einmalig, USB oder `adb connect <ip>:5555`):
+   ```
+   adb shell "echo '_ --autoplay-policy=no-user-gesture-required' > /data/local/tmp/chrome-command-line"
+   ```
+   Der Unterstrich am Anfang muss sein - das erste Wort gilt als Programmname
+   und wird verworfen.
+3. Chrome komplett schliessen und neu starten, dann `autoplay-check.html`
+   aufmachen: steht dort **Ton: ja**, ist es geschafft.
+
+Das ist derselbe Schalter, den es frueher unter `chrome://flags` gab; aus der
+Oberflaeche ist er verschwunden, als Kommandozeilenschalter existiert er
+weiter. Es gibt Berichte, dass neuere Chrome-Fassungen ihn ignorieren - deshalb
+misst man das Ergebnis, statt es anzunehmen.
+
+> **Der Vollstaendigkeit halber:** Die Box ist ein Odroid. Laeuft darauf Linux
+> statt Android, erledigt `chromium --kiosk --autoplay-policy=no-user-gesture-required`
+> die Sache ohne jeden Umweg. Groesserer Umbau, aber der sicherste Weg.
+
 ---
 
 ## Variante A - Lumify Web Player in Chrome
