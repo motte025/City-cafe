@@ -7566,7 +7566,7 @@
             if (mediaStateIndex === DJ_SLOT_INDEX) return;
             const buehne = document.getElementById('dj-live-player');
             djWaechterStoppen();
-            djTapHinweis(false);
+            djTonKnopf(false);
             djFernQrVerstecken();
             // Abgelaufene Fernsteuerung aufraeumen, damit das Handy nicht
             // weiter "laeuft" anzeigt und die Qualitaet nicht festgenagelt bleibt.
@@ -7833,7 +7833,11 @@
         function djTonKnopf(zeigen) {
             const el = document.getElementById('dj-ton-knopf');
             if (!el) return;
-            const an = !!zeigen && !djFreigabeErteilt;
+            // Bewusst NICHT mehr "&& !djFreigabeErteilt": auf einem Tablet tippt
+            // man beim Bedienen unweigerlich irgendwo hin, damit galt die Freigabe
+            // als erteilt und der Knopf blendete sich aus - obwohl der Stream noch
+            // stand und es keinen anderen Weg gab, ihn anzuwerfen.
+            const an = !!zeigen;
             const warVorher = el.classList.contains('is-an');
             el.classList.toggle('is-an', an);
             if (an && !warVorher) {
@@ -7845,9 +7849,6 @@
                 try { el.blur(); } catch (e) {}
             }
         }
-
-        // Alter Name, damit der Waechter unveraendert bleibt.
-        function djTapHinweis(zeigen) { djTonKnopf(zeigen); }
 
         // Bild UND Ton in einem Zug starten - und zwar sofort, im Tastendruck.
         //
@@ -7904,9 +7905,18 @@
         // Der Knopf zusaetzlich direkt: ein <button> loest bei OK/Enter der
         // Fernbedienung von sich aus click aus, und dieser Weg haengt an keinem
         // anderen Zuhoerer.
+        // Jeder Druck muss wirken, nicht nur der erste: djFreigabeEinsammeln
+        // steigt beim zweiten Mal sofort wieder aus, und der Knopf waere danach
+        // tot gewesen.
+        function djKnopfGedrueckt() {
+            djFreigabeEinsammeln();   // beim ersten Mal: Freigabe holen
+            djSofortStarten();        // bei jedem Mal: Bild und Ton anwerfen
+            djTonKnopf(false);
+        }
+
         (function djTonKnopfVerdrahten() {
             const el = document.getElementById('dj-ton-knopf');
-            if (el) el.addEventListener('click', djFreigabeEinsammeln);
+            if (el) el.addEventListener('click', djKnopfGedrueckt);
         })();
 
         // Stupst einen bereits gebauten Player wieder an.
@@ -8081,13 +8091,15 @@
             // "laeuft" heisst: nicht pausiert und die Wiedergabezeit ist seit dem
             // letzten Takt weitergewandert. Ein Player, der puffert, meldet sich
             // nicht als pausiert, bleibt aber in der Zeit stehen.
-            let zeit = 0, pausiert = true, stufen = null, aktuell = '';
+            let zeit = 0, pausiert = true, stufen = null, aktuell = '', stumm = null;
             try {
                 zeit = djTwitchSpieler.getCurrentTime ? djTwitchSpieler.getCurrentTime() : 0;
                 pausiert = typeof djTwitchSpieler.isPaused === 'function'
                          ? djTwitchSpieler.isPaused() : false;
                 stufen = djTwitchSpieler.getQualities ? djTwitchSpieler.getQualities() : null;
                 aktuell = djTwitchSpieler.getQuality ? djTwitchSpieler.getQuality() : '';
+                stumm = typeof djTwitchSpieler.getMuted === 'function'
+                      ? djTwitchSpieler.getMuted() : null;
             } catch (e) { return; }
 
             const takt = DJ_LIVE_CONFIG.waechterTaktSekunden;
@@ -8103,7 +8115,6 @@
             if (!djQualiLage.jeGelaufen) {
                 if (laeuft) {
                     djQualiLage.jeGelaufen = true;
-                    djTapHinweis(false);
                 } else if (djSlotSichtbar()) {
                     // NUR echten Stillstand zaehlen, nicht das Puffern.
                     //
@@ -8116,11 +8127,6 @@
                     // wie ein Player, der zuckt und dann verstummt.
                     if (pausiert) djQualiLage.totSekunden += takt;
 
-                    // Der Knopf darf frueher kommen als der Neuaufbau: er kostet
-                    // nichts und ist genau dann richtig, wenn der Player haengt.
-                    if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.knopfNachSekunden) {
-                        djTapHinweis(true);
-                    }
                     if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.neustartNachSekunden &&
                         !djQualiLage.iframeErzwungen) {
                         const bisher = djQualiLage.neustarts;
@@ -8173,15 +8179,23 @@
 
             djTonNachziehen(laeuft);
 
-            // Der eigentliche Fall auf dem Screen: das Bild laeuft, nur der Ton
-            // fehlt, und der Browser gibt ihn ohne Bedienung nicht her. Dann den
-            // Knopf zeigen - ein Druck auf OK der Fernbedienung schaltet ihn frei,
-            // und zwar fuer die ganze Sitzung. Bisher kam der Hinweis nur, wenn
-            // gar nichts lief; genau dieser Fall blieb unbedient.
-            if (laeuft && DJ_LIVE_CONFIG.tonLautstaerke > 0 && djSlotSichtbar() &&
-                !djTonMoeglich()) {
-                djTonKnopf(true);
-            } else if (laeuft && djTonMoeglich()) {
+            // ---- Der Knopf: eine einzige Regel ------------------------------
+            //
+            // Sichtbar, sobald im laufenden Slot etwas fehlt - kein Bild ODER Bild
+            // ohne Ton. Bewusst NICHT daran geknuepft, wie der Player seinen
+            // Zustand benennt: "pausiert" meldet er mal, mal nicht, und an dieser
+            // Unterscheidung hing der Knopf vorher. Auf dem Tablet kam er deshalb
+            // gar nicht. Was zaehlt, ist allein: laeuft Bild, kommt Ton.
+            //
+            // Die Karenz verhindert, dass er bei jedem normalen Start kurz
+            // aufblitzt - ein Twitch-Player braucht ein paar Sekunden.
+            if (djSlotSichtbar()) {
+                djQualiLage.sichtbarSekunden += takt;
+                const tonFehlt = DJ_LIVE_CONFIG.tonLautstaerke > 0 && stumm === true;
+                djTonKnopf(djQualiLage.sichtbarSekunden >= DJ_LIVE_CONFIG.knopfNachSekunden &&
+                           (!laeuft || tonFehlt));
+            } else {
+                djQualiLage.sichtbarSekunden = 0;
                 djTonKnopf(false);
             }
 
@@ -8276,6 +8290,7 @@
                             hochgesetzt: false, erledigt: false, qualiZurueck: false,
                             tonAn: false, tonBlockiert: false, tonZweifel: 0,
                             jeGelaufen: false, totSekunden: 0, neustarts: 0,
+                            sichtbarSekunden: 0,
                             iframeErzwungen: false,
                             // Haenger nach dem Anlaufen - siehe djWaechterTakt.
                             haengtSekunden: 0, haengerNeustarts: 0 };
