@@ -14,6 +14,11 @@
 > **Nur kurz ansehen**, ohne etwas zu ändern: `?djan=1` an die Dashboard-Adresse
 > hängen. Am Screen selbst bleibt es dabei aus.
 >
+> **Zum Prüfen am schnellsten:** `?djnow=1&djtest=kanalname` — springt nach
+> anderthalb Sekunden direkt in den DJ-Slot, statt den halben Zyklus abzuwarten,
+> und schaltet ihn dabei selbst ein. Der `djtest`-Kanal muss gerade live sein,
+> sonst ist der Slot leer und reicht durch.
+>
 > Alles Weitere in dieser Anleitung gilt unverändert, sobald der Schalter
 > wieder auf `true` steht.
 
