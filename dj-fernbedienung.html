@@ -316,6 +316,9 @@
         if (t.iframe)     zeigen('einfacher Modus');
         if (t.jeGelaufen) zeigen('lief schon mal', 'gut');
         if (t.tot)        zeigen('tot: ' + t.tot + ' s', 'warn');
+        if (t.haengt)     zeigen('hängt: ' + t.haengt + ' s', 'warn');
+        // Der entscheidende Punkt für den Ton, deshalb in beiden Fällen sichtbar.
+        zeigen(t.app ? '📲 als App' : '📲 nur Tab', t.app ? 'gut' : 'warn');
     }
 
     function restZeit(bisWann) {
