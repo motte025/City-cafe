@@ -40,10 +40,19 @@ Proof-of-Play) und bekommst trotzdem Chromes Engine.
 
 Dann unten weiter bei **Vollbild** und **Selbststart**.
 
-> Achtung: Das Dashboard laeuft hier als Seite *innerhalb* der Lumify-Seite. Fuer
-> die Nightlife-Videos ist das egal. Falls der DJ-Live-Slot wieder aktiviert
-> wird, muss `sign.lumifysignage.co.uk` zusaetzlich in den Twitch-`parent`
-> eingetragen werden - dann Bescheid sagen.
+> Achtung: Das Dashboard laeuft hier als Seite *innerhalb* der Lumify-Seite.
+> Fuer die Nightlife-Videos ist das egal, fuer den DJ-Live-Slot nicht:
+>
+> * **Twitch-`parent`** - erledigt sich von selbst. Das Dashboard traegt jetzt
+>   alle umgebenden Domains ein (`djEmbedHosts()`), `sign.lumifysignage.co.uk`
+>   steht zusaetzlich als Reserve in `DJ_LIVE_CONFIG.zusaetzlicheParents`.
+> * **Autoplay** - erledigt sich *nicht* von selbst. Ob wir abspielen duerfen,
+>   entscheidet Lumifys Rahmen: ohne `allow="autoplay"` dort geht gar nichts,
+>   auch nicht stumm. Pruefen mit `?origincheck=1` (Zeile `Autoplay:`).
+>   **Ton** ist in dieser Variante praktisch nicht zu bekommen - dafuer muesste
+>   die *oberste* Seite als App installiert sein, und das ist hier Lumify.
+>
+> Wer Ton am Screen will, nimmt Variante B.
 
 ---
 

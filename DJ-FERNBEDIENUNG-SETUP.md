@@ -205,11 +205,21 @@ an (Details in DJ-LIVESTREAM-SETUP.md, „Autostart und Ton").
 Klemmt trotzdem etwas, sagt die Fernbedienung selbst, woran — der Befund steht
 in der roten Zeile der Statuskarte, samt Bild-, Ton- und Qualitätsmerkmalen.
 
-Steht dort *„Chrome am Screen verlangt eine Bedienung"*: Chrome lässt
+Steht dort *„Die Seite, in der das Dashboard steckt (Lumify), erlaubt keine
+Wiedergabe"*: dann läuft das Dashboard eingebettet, und die umgebende Seite
+reicht die Freigabe nicht durch. **Das ist von hier aus nicht zu beheben** —
+siehe DJ-LIVESTREAM-SETUP.md, *„In einer fremden Seite (Lumify-Betrieb)"*.
+
+Steht dort *„Der Browser am Screen verlangt eine Bedienung"*: der Browser lässt
 Wiedergabe erst zu, wenn die Seite einmal bedient wurde. **Am Fernseher gibt es
 nichts zu tippen** — dort zählt ein Tastendruck auf der TV-Fernbedienung,
-während das Dashboard im Vordergrund ist. Einmal pro Chrome-Start.
+während das Dashboard im Vordergrund ist. Einmal pro Sitzung.
 
 **Dauerhaft aus der Welt** (und der einzige Weg im echten Signage-Betrieb, wo
-niemand am Gerät steht): `chrome://flags` → **Autoplay policy** → *No user
-gesture is required*, danach Chrome komplett schließen und neu starten.
+niemand am Gerät steht): das Dashboard direkt in Chrome öffnen und über
+*Menü → „Zum Startbildschirm hinzufügen"* installieren, danach über dieses
+Symbol starten. Für eine installierte Seite erlaubt Chrome die Wiedergabe von
+sich aus. Schritt für Schritt in KIOSK-SETUP.md unter *Weg 1*.
+
+> Der früher hier genannte Schalter `chrome://flags` → **Autoplay policy** gibt
+> es in der Flags-Oberfläche nicht mehr — er hilft nicht weiter.

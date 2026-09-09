@@ -453,9 +453,21 @@ irgendwo getippt wurde, und kommt danach nicht wieder. Bewusst **kein**
 Vollbild-Overlay: auf dem Signage-Screen wird nie getippt, ein dauerhafter
 Hinweis läge dort ständig über dem Dashboard.
 
-**Ganz ohne Bedienung** (echter Signage-Betrieb, Lumify) hilft nur der
-Chrome-Schalter auf der Box: `chrome://flags` → **Autoplay policy** → *No user
-gesture is required*. Chrome danach komplett schließen und neu starten.
+**Ganz ohne Bedienung** geht es nur so: das Dashboard **direkt in Chrome**
+öffnen und über *Menü → „Zum Startbildschirm hinzufügen" / „App installieren"*
+installieren, danach über dieses Symbol starten. Für eine so installierte Seite
+erlaubt Chrome die Wiedergabe von sich aus — das ist die dokumentierte Regel für
+Mobilgeräte. Das Manifest dafür liegt bereits im Repo, die Schritte stehen in
+KIOSK-SETUP.md unter *Weg 1*.
+
+> **Veralteter Rat, hier zur Klarstellung:** Früher stand an dieser Stelle
+> `chrome://flags` → **Autoplay policy** → *No user gesture is required*. Diesen
+> Schalter gibt es in der Flags-Oberfläche nicht mehr. Er hilft nicht mehr
+> weiter, auch wenn er in älteren Anleitungen im Netz noch auftaucht.
+
+**Im Lumify-Betrieb greift das alles nicht.** Dort läuft das Dashboard als Seite
+*innerhalb* der Lumify-Seite — für Chrome zählt dann deren Installation und
+deren Freigabe, nicht unsere. Siehe „In einer fremden Seite" weiter unten.
 
 **Zur Autoplay-Freigabe**, weil sie lange als Verdächtiger galt: Chrome lässt
 Wiedergabe in einem *fremden* Rahmen nur zu, wenn dieser `allow="autoplay"`
@@ -489,11 +501,49 @@ der schlechtere Tausch.
 |---|---|---|
 | `tonLautstaerke` | `0.7` | 0 = stumm, sonst 0…1 |
 
-Auf der Box lohnt sich dafür der Chrome-Schalter: `chrome://flags` →
-**Autoplay policy** → *No user gesture is required*.
+Ohne Bedienung gibt es Ton nur, wenn Chrome die Seite als **installierte App**
+kennt — siehe oben unter „Einmal tippen, dann läuft es".
 
 Der Ton endet mit dem Slot, weil der Player dann abgeräumt wird — die übrigen
 Widgets bleiben still.
+
+### In einer fremden Seite (Lumify-Betrieb)
+
+In Variante A aus KIOSK-SETUP.md läuft das Dashboard als Seite **innerhalb** der
+Lumify-Seite. Der Twitch-Player steckt dann in einem Rahmen in einem Rahmen, und
+daran hängen zwei Dinge, die im Direktbetrieb nie auffallen.
+
+**1. Twitch will jede Ebene kennen.** Der `parent`-Parameter muss **alle**
+umgebenden Domains enthalten, nicht nur die eigene. Fehlt eine, verweigert Twitch
+die Einbettung — und zwar wortlos: der Rahmen bleibt einfach leer. Twitchs eigenes
+Beispiel zeigt genau diesen Fall (`parent=aussen.example.com&parent=innen.example.com`).
+
+Das Dashboard baut die Kette jetzt selbst: `djEmbedHosts()` liest die umgebenden
+Seiten über `location.ancestorOrigins`, fällt sonst auf `document.referrer`
+zurück und hängt zuletzt noch `zusaetzlicheParents` aus `DJ_LIVE_CONFIG` an
+(dort steht `sign.lumifysignage.co.uk` als Reserve). Zusätzliche Einträge
+schaden nicht — Twitch prüft nur, ob die tatsächliche Seite in der Liste steht.
+
+**2. Wiedergabe muss durchgereicht werden.** Ob wir überhaupt abspielen dürfen,
+entscheidet der Rahmen, in dem wir stecken: ohne `allow="autoplay"` **dort** ist
+selbst stummes Abspielen gesperrt. Daran kann kein Code im Dashboard etwas
+ändern — niemand kann ein Recht weiterreichen, das er selbst nicht hat.
+
+Feststellen lässt es sich aber, statt zu raten:
+
+* am Screen: `?origincheck=1` an die Adresse → Zeile **`Autoplay:`**
+* am Handy: der Befund in der Statuskarte nennt diesen Fall zuerst
+
+Steht dort *GESPERRT*, hilft nur eins von beidem:
+
+* Lumify dazu bringen, sein Einbettungs-`iframe` mit `allow="autoplay"` zu
+  versehen (Frage an deren Support — von uns aus nicht machbar), oder
+* auf **Variante B** wechseln: Dashboard direkt in Chrome, als App installiert.
+  Dann ist unsere Seite die oberste, und Bild **und** Ton laufen ohne Zutun.
+
+**Ton ist im Lumify-Betrieb praktisch nicht zu bekommen**, selbst wenn das Bild
+läuft: die „installierte App"-Regel gilt für die oberste Seite, und das ist dort
+Lumify, nicht das Dashboard.
 
 ### Nur ein Player gleichzeitig
 
