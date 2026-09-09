@@ -7062,7 +7062,9 @@
         function slotSchalter(fest, name) {
             return fest || new RegExp('(?:^|[?&])' + name + '=1(?:&|$)').test(location.search);
         }
-        const DJ_SLOT_AN = slotSchalter(false, 'djan');
+        // ?djnow=1 (Direktstart in den DJ-Slot) schaltet den Slot gleich mit ein -
+        // sonst muesste man beide Parameter anhaengen, und genau das vergisst man.
+        const DJ_SLOT_AN = slotSchalter(false, 'djan') || slotSchalter(false, 'djnow');
         const QR_SLOT_AN = slotSchalter(false, 'qran');
 
         // Position des DJ-Slots in der Rotation. Steht als Konstante hier, weil
@@ -10258,8 +10260,16 @@
             // Der Zyklus beginnt mit der Dart-Strecke, danach folgt Nightlife;
             // Hos'n Obe kommt im Testmodus direkt dahinter. Die Anlaufzeit bleibt im
             // Testmodus kurz, damit sich das Kartenspiel beim Ausprobieren schnell zeigt.
-            mediaStateIndex = QR_SLOT_INDEX;
-            globalMasterTimer = later(runMasterSequence, KT.testFirstInCycle ? 6000 : 35000);
+            //
+            // ?djnow=1 springt stattdessen sofort in den DJ-Slot. Nur zum Pruefen
+            // gedacht: bis der Slot im normalen Zyklus drankommt, vergehen
+            // mehrere Minuten - zu lang, wenn man dieselbe Messung mehrfach
+            // braucht. Schaltet den Slot gleich mit ein, damit eine Adresse
+            // genuegt, und wirkt ausschliesslich ueber die URL.
+            const djSofort = DJ_SLOT_AN && /(?:^|[?&])djnow=1(?:&|$)/.test(location.search);
+            mediaStateIndex = djSofort ? DJ_SLOT_INDEX : QR_SLOT_INDEX;
+            globalMasterTimer = later(runMasterSequence,
+                djSofort ? 1500 : (KT.testFirstInCycle ? 6000 : 35000));
         }
 
         function weatherCodeToIcon(code) {
