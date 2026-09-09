@@ -2614,7 +2614,7 @@
                         <div class="dj-tap-hinweis" id="dj-tap-hinweis">
                             <span>🎛️</span>
                             <div>Taste auf der Fernbedienung drücken
-                                <span class="dj-tap-sub">Chrome verlangt einmal pro Sitzung eine Bedienung. Dauerhaft aus der Welt: chrome://flags → „Autoplay policy" → „No user gesture is required"</span>
+                                <span class="dj-tap-sub">Der Browser verlangt einmal pro Sitzung eine Bedienung. Dauerhaft aus der Welt: das Dashboard direkt in Chrome öffnen und als App installieren</span>
                             </div>
                         </div>
                     </div>
@@ -7009,8 +7009,14 @@
             // Browser auch das, geht es stumm weiter - ein stehendes Bild waere
             // der schlechtere Tausch.
             //
-            // Auf der Box lohnt sich dafuer der Chrome-Schalter:
-            // chrome://flags -> "Autoplay policy" -> "No user gesture is required".
+            // Ohne Bedienung geht Ton nur, wenn Chrome die Seite als
+            // INSTALLIERTE App kennt ("Zum Startbildschirm hinzufuegen") - so
+            // steht es in Chromes Autoplay-Regeln fuer Mobilgeraete. Der
+            // frueher hier genannte Schalter chrome://flags -> Autoplay policy
+            // existiert in der Flags-Oberflaeche nicht mehr.
+            // Wichtig: das gilt fuer die OBERSTE Seite. Laeuft das Dashboard in
+            // einer fremden Seite (Lumify), zaehlt deren Installation, nicht
+            // unsere - siehe djAutoplayErlaubt.
             //
             // Der Ton endet mit dem Slot, weil der Player dann abgeraeumt wird -
             // die uebrigen Widgets bleiben still.
@@ -7021,6 +7027,11 @@
             // wirklich ein Twitch-Kanal dran ist.
             twitchSdkUrl: 'https://player.twitch.tv/js/embed/v1.js',
             sdkTimeoutMs: 6000,          // danach: einfacher iframe statt SDK
+
+            // Zusaetzliche Domains fuer Twitchs parent-Parameter, von Hand.
+            // Normalerweise leer: djEmbedHosts() findet die umgebenden Seiten
+            // selbst. Nur noetig, wenn das nicht geht - siehe dort.
+            zusaetzlicheParents: ['sign.lumifysignage.co.uk'],
 
             // Auf true stellen, um auf dem echten Screen abzulesen, unter welcher
             // Adresse das Dashboard dort laeuft (Lumify-WebView!). Danach wieder
@@ -7101,12 +7112,82 @@
             return (httpArtig && location.hostname) ? location.hostname : '';
         }
 
+        // Alle Domains, die Twitch im parent-Parameter sehen muss.
+        //
+        // Twitch prueft nicht nur die Seite direkt um den Player, sondern JEDE
+        // Ebene darueber. Steckt das Dashboard selbst in einer fremden Seite -
+        // im Lumify-Betrieb ist genau das der Fall, das Dashboard laeuft dort
+        // als Seite innerhalb der Lumify-Seite -, muss deren Domain mit hinein.
+        // Fehlt sie, verweigert Twitch die Einbettung, und zwar wortlos: der
+        // Rahmen bleibt einfach leer. Twitchs eigenes Beispiel zeigt genau
+        // diesen Fall (parent=aussen.example.com&parent=innen.example.com).
+        //
+        // Zusaetzliche Eintraege schaden nicht - Twitch prueft nur, ob die
+        // tatsaechliche Seite in der Liste steht.
+        function djEmbedHosts() {
+            const liste = [];
+            const dazu = (h) => {
+                h = String(h || '').trim().toLowerCase();
+                if (h && liste.indexOf(h) < 0) liste.push(h);
+            };
+            dazu(djEmbedHost());
+
+            // Dafuer ist ancestorOrigins da: die Seiten, in denen wir stecken,
+            // von innen nach aussen. In Chrome vorhanden - also auch im
+            // WebView der Box.
+            try {
+                const drumherum = location.ancestorOrigins;
+                for (let i = 0; drumherum && i < drumherum.length; i++) {
+                    dazu(new URL(drumherum[i]).hostname);
+                }
+            } catch (e) {}
+
+            // Rueckfall ohne ancestorOrigins: wer uns eingebettet hat, steht
+            // im Verweis. Nur sinnvoll, wenn wir ueberhaupt eingebettet sind.
+            if (liste.length < 2 && window.top !== window.self && document.referrer) {
+                try { dazu(new URL(document.referrer).hostname); } catch (e) {}
+            }
+
+            // Letzte Reserve, falls eine strenge Referrer-Regel auch das noch
+            // verschluckt: die von Hand eingetragenen Domains.
+            (DJ_LIVE_CONFIG.zusaetzlicheParents || []).forEach(dazu);
+            return liste;
+        }
+
+        function djParentKette() {
+            return djEmbedHosts()
+                .map(h => '&parent=' + encodeURIComponent(h))
+                .join('');
+        }
+
+        // Darf diese Seite ueberhaupt Wiedergabe starten?
+        //
+        // Steckt das Dashboard in einer fremden Seite, entscheidet DEREN
+        // allow-Attribut darueber. Fehlt dort autoplay, ist selbst stummes
+        // Abspielen gesperrt - und kein Code hier drin kann daran etwas
+        // aendern, weil sich niemand ein Recht weiterreichen kann, das er
+        // selbst nicht hat. Genau das laesst sich aber feststellen, statt es
+        // zu vermuten.
+        function djAutoplayErlaubt() {
+            try {
+                const pr = document.featurePolicy || document.permissionsPolicy;
+                if (pr && typeof pr.allowsFeature === 'function') {
+                    return pr.allowsFeature('autoplay');
+                }
+            } catch (e) {}
+            return null;   // nicht feststellbar
+        }
+
+        function djEingebettet() {
+            try { return window.top !== window.self; } catch (e) { return true; }
+        }
+
         function djEmbedUrl(entry) {
             const host = djEmbedHost();
             if (!host || !entry) return '';
             if (entry.platform === 'twitch' && entry.channel) {
                 return 'https://player.twitch.tv/?channel=' + encodeURIComponent(entry.channel) +
-                       '&parent=' + encodeURIComponent(host) + '&muted=true&autoplay=true';
+                       djParentKette() + '&muted=true&autoplay=true';
             }
             // videoId liefert der Checker gleich mit - kein zweiter Lookup noetig.
             // enablejsapi: erlaubt es, den Player spaeter per postMessage wieder
@@ -7207,7 +7288,12 @@
                 freigabe: djFreigabeErteilt,
                 spielt:   null, stumm: null, quali: '', zeit: 0,
                 rahmen:   document.querySelectorAll('#dj-live-player .dj-player-frame').length,
-                erlaubt:  ''
+                erlaubt:  '',
+                // Steckt das Dashboard selbst in einer fremden Seite, und laesst
+                // die uns ueberhaupt abspielen? Der wichtigste Befund im
+                // Lumify-Betrieb - alles andere ist dann zweitrangig.
+                drin:     djEingebettet(),
+                darf:     djAutoplayErlaubt()
             };
             const rahmen = document.querySelector('#dj-live-player .dj-player-frame iframe');
             if (rahmen) lage.erlaubt = rahmen.getAttribute('allow') || '';
@@ -7225,12 +7311,17 @@
         // wahrscheinlichsten Ursachen - der erste Treffer gewinnt.
         function djFernBefund(lage) {
             if (!djFernAktiv()) return '';
+            // Zuerst das, was alles andere aussticht: erlaubt uns die Seite,
+            // in der das Dashboard steckt, ueberhaupt abzuspielen? Wenn nicht,
+            // ist jeder weitere Befund nur Folgeerscheinung.
+            if (lage.drin && lage.darf === false)
+                                       return 'Die Seite, in der das Dashboard steckt (Lumify), erlaubt keine Wiedergabe — ihr Rahmen müsste allow="autoplay" tragen. Vom Dashboard aus nicht zu ändern.';
             if (!lage.rahmen)          return 'Player wird noch gebaut …';
             if (!lage.gebaut)          return 'Twitch-SDK nicht geladen — läuft im einfachen Modus';
             if (!/autoplay/.test(lage.erlaubt))
                                        return 'Rahmen hat keine Autoplay-Freigabe';
             if (lage.spielt === false && !lage.freigabe)
-                                       return 'Chrome am Screen verlangt eine Bedienung: eine Taste auf der TV-Fernbedienung drücken. Dauerhaft: chrome://flags → Autoplay policy → No user gesture is required';
+                                       return 'Der Browser am Screen verlangt eine Bedienung: eine Taste auf der TV-Fernbedienung drücken. Dauerhaft hilft nur, das Dashboard direkt in Chrome und als App installiert zu starten.';
             if (lage.spielt === false) return 'Player ist angehalten';
             if (lage.zeit === 0)       return 'Verbunden, aber noch kein Bild';
             if (lage.stumm === true)   return 'Läuft stumm — Ton hat der Browser abgelehnt';
@@ -7541,7 +7632,7 @@
             return beobachter;
         }
 
-        function djBaueTwitch(rahmen, entry, host) {
+        function djBaueTwitch(rahmen, entry) {
             // Das SDK adressiert seinen Container ueber getElementById.
             rahmen.id = 'dj-twitch-' + (++djRahmenZaehler);
             djTwitchSdkLaden().then(daIst => {
@@ -7556,7 +7647,8 @@
                 try {
                     spieler = new Twitch.Player(rahmen.id, {
                         channel: entry.channel,
-                        parent: [host],
+                        // Alle Ebenen, nicht nur die eigene - siehe djEmbedHosts.
+                        parent: djEmbedHosts(),
                         width: DJ_LIVE_CONFIG.spielerBreite,
                         height: DJ_LIVE_CONFIG.spielerHoehe,
                         autoplay: true,
@@ -7650,8 +7742,10 @@
         // wenn ein Player tatsaechlich klemmt. Einmal pro Chrome-Start genuegt,
         // danach laufen alle weiteren Slots von allein.
         //
-        // Ganz ohne Bedienung hilft nur der Chrome-Schalter auf der Box:
-        // chrome://flags -> "Autoplay policy" -> "No user gesture is required".
+        // Ganz ohne Bedienung hilft nur, das Dashboard direkt in Chrome zu
+        // oeffnen und als App zu installieren - dann erlaubt Chrome die
+        // Wiedergabe von sich aus. In einer fremden Seite eingebettet (Lumify)
+        // geht das nicht: dort entscheidet deren Seite, nicht unsere.
         let djFreigabeErteilt = false;
 
         function djTapHinweis(zeigen) {
@@ -7917,7 +8011,7 @@
 
             const host = djEmbedHost();
             if (!nurIframe && entry.platform === 'twitch' && entry.channel && host) {
-                djBaueTwitch(rahmen, entry, host);
+                djBaueTwitch(rahmen, entry);
             } else {
                 djBaueIframe(rahmen, entry);
             }
@@ -8052,12 +8146,17 @@
             if (!DJ_LIVE_CONFIG.showOriginDebug && !perUrl) return;
             const box = document.getElementById('dj-origin-debug');
             if (!box) return;
+            const darf = djAutoplayErlaubt();
             box.textContent =
                 'href:          ' + location.href +
                 '\nhostname:      ' + (location.hostname || '(leer)') +
                 '\nprotocol:      ' + location.protocol +
                 '\norigin:        ' + (location.origin || 'null') +
-                '\nTwitch-parent: ' + (djEmbedHost() || '(nicht moeglich - Embeds bleiben aus)');
+                '\neingebettet:   ' + (djEingebettet() ? 'JA - laeuft in einer fremden Seite' : 'nein') +
+                '\nAutoplay:      ' + (darf === true  ? 'erlaubt'
+                                     : darf === false ? 'GESPERRT - die umgebende Seite reicht es nicht durch'
+                                                      : 'nicht feststellbar') +
+                '\nTwitch-parent: ' + (djEmbedHosts().join(', ') || '(nicht moeglich - Embeds bleiben aus)');
             box.style.display = 'block';
         })();
 
