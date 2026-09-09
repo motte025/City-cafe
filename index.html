@@ -1863,16 +1863,32 @@
            wurde. Bewusst kein dauerhaftes Overlay: auf dem Signage-Screen wird
            nie getippt, ein Vollbild-Hinweis laege dort staendig ueber dem
            Dashboard und waere schlimmer als das Problem selbst. */
-        .dj-tap-hinweis {
+        /* Der Knopf, mit dem sich Ton per Fernbedienung freischalten laesst.
+           Absichtlich gross und mittig: er muss aus mehreren Metern lesbar sein,
+           und das Steuerkreuz muss ihn ohne Zielen treffen. Der Fokusrahmen
+           pulsiert, damit man sieht, dass OK jetzt etwas bewirkt. */
+        .dj-ton-knopf {
             position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%);
-            z-index: 5; display: none; align-items: center; gap: 14px;
-            padding: 16px 30px; border-radius: 16px; max-width: 1100px;
-            background: rgba(10, 7, 20, 0.92); border: 2px solid rgba(145, 70, 255, 0.8);
-            font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900;
+            z-index: 7; display: none; align-items: center; gap: 20px;
+            padding: 22px 40px; border-radius: 18px; max-width: 1100px;
+            background: linear-gradient(135deg, rgba(145, 70, 255, 0.96), rgba(243, 85, 218, 0.96));
+            border: 3px solid rgba(255, 255, 255, 0.55);
+            box-shadow: 0 14px 46px rgba(0, 0, 0, 0.65);
+            font-family: 'Orbitron', sans-serif; font-size: 30px; font-weight: 900;
             letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff;
-            text-align: left;
+            text-align: left; cursor: pointer;
         }
-        .dj-tap-hinweis.is-an { display: flex; }
+        .dj-ton-knopf.is-an { display: flex; }
+        .dj-ton-zeichen { font-size: 44px; line-height: 1; }
+        .dj-ton-text { display: block; }
+        .dj-ton-knopf:focus-visible, .dj-ton-knopf:focus {
+            outline: 5px solid #00f2fe; outline-offset: 6px;
+            animation: djTonPuls 1.4s ease-in-out infinite;
+        }
+        @keyframes djTonPuls {
+            0%, 100% { box-shadow: 0 14px 46px rgba(0,0,0,0.65), 0 0 0 0 rgba(0, 242, 254, 0.55); }
+            50%      { box-shadow: 0 14px 46px rgba(0,0,0,0.65), 0 0 0 18px rgba(0, 242, 254, 0); }
+        }
         /* QR zur Handy-Fernbedienung, ueber dem Player.
            In der Kopfzeile hatte er nur 74px - aus zwei Metern vom Fernseher aus
            chancenlos. Ein Code braucht auf dem Screen rund 300px, damit ihn eine
@@ -1893,8 +1909,8 @@
             font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
             letter-spacing: 1px; text-transform: uppercase; color: #12071f;
         }
-        .dj-tap-hinweis span { font-size: 34px; }
-        .dj-tap-sub {
+        
+        .dj-ton-sub {
             display: block; font-family: 'Inter', sans-serif; font-size: 15px;
             font-weight: 700; letter-spacing: 0.3px; text-transform: none;
             color: #c9adff; margin-top: 5px; line-height: 1.4; white-space: normal;
@@ -2608,15 +2624,17 @@
                             <span>Stream steuern</span>
                         </div>
                         <!-- Bewusst NEBEN dem Player, nicht darin: djStopPlayer
-                             leert den Player-Container komplett aus. Sichtbar nur,
-                             wenn der Stream klemmt und die Seite noch nie bedient
-                             wurde. -->
-                        <div class="dj-tap-hinweis" id="dj-tap-hinweis">
-                            <span>🎛️</span>
-                            <div>Taste auf der Fernbedienung drücken
-                                <span class="dj-tap-sub">Der Browser verlangt einmal pro Sitzung eine Bedienung. Dauerhaft aus der Welt: das Dashboard direkt in Chrome öffnen und als App installieren</span>
-                            </div>
-                        </div>
+                             leert den Player-Container komplett aus.
+                             Ein echter <button>, kein Hinweiskaesten: nur den kann
+                             das Steuerkreuz einer TV-Fernbedienung anspringen und
+                             mit OK ausloesen. Und genau dieser Tastendruck ist die
+                             Bedienung, die der Browser fuer Ton verlangt. -->
+                        <button class="dj-ton-knopf" id="dj-ton-knopf" type="button">
+                            <span class="dj-ton-zeichen">🔊</span>
+                            <span class="dj-ton-text">Ton einschalten
+                                <span class="dj-ton-sub">OK auf der Fernbedienung drücken — gilt dann für den ganzen Abend</span>
+                            </span>
+                        </button>
                     </div>
                 </div>
 
@@ -7797,21 +7815,50 @@
         // geht das nicht: dort entscheidet deren Seite, nicht unsere.
         let djFreigabeErteilt = false;
 
-        function djTapHinweis(zeigen) {
-            const el = document.getElementById('dj-tap-hinweis');
-            if (el) el.classList.toggle('is-an', !!zeigen && !djFreigabeErteilt);
+        // Blendet den Ton-Knopf ein oder aus.
+        //
+        // Und holt ihn in den Fokus, sobald er erscheint: auf einer
+        // TV-Fernbedienung gibt es keinen Mauszeiger, das Steuerkreuz springt nur
+        // zwischen fokussierbaren Elementen. Steht der Fokus schon auf dem Knopf,
+        // genuegt ein einziger Druck auf OK - ohne vorher hinnavigieren zu muessen.
+        function djTonKnopf(zeigen) {
+            const el = document.getElementById('dj-ton-knopf');
+            if (!el) return;
+            const an = !!zeigen && !djFreigabeErteilt;
+            const warVorher = el.classList.contains('is-an');
+            el.classList.toggle('is-an', an);
+            if (an && !warVorher) {
+                // Erst im naechsten Rahmen: ein display:none-Element nimmt keinen
+                // Fokus an, und die Klasse ist gerade erst gesetzt.
+                requestAnimationFrame(() => { try { el.focus(); } catch (e) {} });
+            }
+            if (!an && document.activeElement === el) {
+                try { el.blur(); } catch (e) {}
+            }
         }
+
+        // Alter Name, damit der Waechter unveraendert bleibt.
+        function djTapHinweis(zeigen) { djTonKnopf(zeigen); }
 
         function djFreigabeEinsammeln() {
             if (djFreigabeErteilt) return;
             djFreigabeErteilt = true;
-            djTapHinweis(false);
+            djTonKnopf(false);
             // Der Tastendruck selbst ist die Freigabe - jetzt gleich nutzen,
             // solange sie noch "frisch" ist.
             djAnstupsen();
             if (djQualiLage) { djQualiLage.tonAn = false; djQualiLage.tonBlockiert = false; }
+            // Web Audio haengt an derselben Freigabe und bleibt sonst "suspended".
+            // Nicht fuer uns selbst - aber es ist die ehrlichste Probe darauf, ob
+            // der Browser hoerbare Wiedergabe jetzt wirklich zulaesst.
+            try {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC && !djTonProbe) djTonProbe = new AC();
+                if (djTonProbe && djTonProbe.state === 'suspended') djTonProbe.resume();
+            } catch (e) {}
             djFernStatusMelden();
         }
+        let djTonProbe = null;
 
         // Auf window und in der Aufnahmephase (capture), damit auch ein Klick
         // greift, den ein Widget sonst selbst abfangen wuerde. Absichtlich nicht
@@ -7820,6 +7867,14 @@
         ['pointerdown', 'touchstart', 'keydown', 'click'].forEach(art => {
             window.addEventListener(art, djFreigabeEinsammeln, { capture: true, passive: true });
         });
+
+        // Der Knopf zusaetzlich direkt: ein <button> loest bei OK/Enter der
+        // Fernbedienung von sich aus click aus, und dieser Weg haengt an keinem
+        // anderen Zuhoerer.
+        (function djTonKnopfVerdrahten() {
+            const el = document.getElementById('dj-ton-knopf');
+            if (el) el.addEventListener('click', djFreigabeEinsammeln);
+        })();
 
         // Stupst einen bereits gebauten Player wieder an.
         //
@@ -8059,6 +8114,18 @@
             }
 
             djTonNachziehen(laeuft);
+
+            // Der eigentliche Fall auf dem Screen: das Bild laeuft, nur der Ton
+            // fehlt, und der Browser gibt ihn ohne Bedienung nicht her. Dann den
+            // Knopf zeigen - ein Druck auf OK der Fernbedienung schaltet ihn frei,
+            // und zwar fuer die ganze Sitzung. Bisher kam der Hinweis nur, wenn
+            // gar nichts lief; genau dieser Fall blieb unbedient.
+            if (laeuft && DJ_LIVE_CONFIG.tonLautstaerke > 0 && djSlotSichtbar() &&
+                !djTonMoeglich()) {
+                djTonKnopf(true);
+            } else if (laeuft && djTonMoeglich()) {
+                djTonKnopf(false);
+            }
 
             // Bei jedem Takt melden, solange die Fernbedienung laeuft: das Handy
             // soll sehen, wenn sich am Screen etwas aendert.

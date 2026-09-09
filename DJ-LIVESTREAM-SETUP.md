@@ -458,11 +458,31 @@ Deshalb genügt **ein Tipp irgendwo auf dem Dashboard pro Chrome-Start** — nic
 pro Slot. Danach starten alle weiteren Streams von allein, mit Ton. Ein
 Tastendruck zählt genauso (Fernbedienung am Fernseher).
 
-Klemmt ein Stream und wurde noch nicht getippt, blendet das Widget unten im
-Player den Hinweis **„Zum Starten tippen"** ein. Er verschwindet, sobald
-irgendwo getippt wurde, und kommt danach nicht wieder. Bewusst **kein**
-Vollbild-Overlay: auf dem Signage-Screen wird nie getippt, ein dauerhafter
-Hinweis läge dort ständig über dem Dashboard.
+### Der Ton-Knopf für die Fernbedienung
+
+Läuft das Bild, fehlt aber der Ton, blendet das Widget unten im Player einen
+großen Knopf **„Ton einschalten"** ein. Ein Druck auf **OK** der TV-Fernbedienung
+genügt — danach ist Ton für die **ganze Sitzung** frei, auch für alle folgenden
+Kanäle.
+
+Drei Dinge daran sind wichtig und leicht zu übersehen:
+
+* Es ist ein echter `<button>`. Nur den kann das **Steuerkreuz** einer
+  Fernbedienung anspringen — ein Hinweiskästchen aus `<div>` ist für sie nicht
+  vorhanden.
+* Er **holt sich den Fokus selbst**, sobald er erscheint. Sonst müsste man erst
+  hinnavigieren, und auf einem Dashboard voller Kacheln weiß niemand, wie oft
+  man dafür drücken muss.
+* Er liegt **neben** dem Player, nicht darin — `djStopPlayer` leert den
+  Player-Container komplett aus.
+
+> **Ein Klick *im* Twitch-Player zählt nicht.** Der landet in Twitchs eigenem
+> Rahmen und erreicht das Dashboard nie: das Bild bekommt Ton, die Seite aber
+> keine Freigabe, und beim nächsten Kanal ist wieder alles stumm. Deshalb der
+> eigene Knopf.
+
+Er verschwindet, sobald Ton läuft, und kommt in derselben Sitzung nicht wieder.
+Bewusst **kein** Vollbild-Overlay: es läge sonst ständig über dem Dashboard.
 
 **Ganz ohne Bedienung** geht es nur so: das Dashboard **direkt in Chrome**
 öffnen und über *Menü → „Zum Startbildschirm hinzufügen" / „App installieren"*
