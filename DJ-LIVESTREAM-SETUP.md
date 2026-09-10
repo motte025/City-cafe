@@ -493,6 +493,31 @@ laden. Chrome schickt dann eine Desktop-Browserkennung, und zwar auch für alle
 eingebetteten Rahmen — Twitchs Mobil-Erkennung greift nicht mehr, und der Player
 startet wie auf einem PC. Die Einstellung merkt sich Chrome pro Seite.
 
+> **Am Fernseher hängt kein Zeiger.** Das ist wichtig, weil es die zweite Hälfte
+> der Antwort entwertet: „einmal in die Bildmitte klicken" setzt Maus oder
+> Touch voraus, und ein Signage-Screen hat beides nicht. **„Desktop-Website"
+> dagegen ist ein Menüpunkt** — mit dem Steuerkreuz erreichbar, ohne jeden
+> Zeiger. Das ist der einzige Weg, der mit einer Fernbedienung allein
+> funktioniert.
+>
+> Wer doch klicken will: eine **USB-Maus oder Air-Mouse** an die Box. Einmal
+> genügt, danach hält der Start die ganze Sitzung.
+>
+> Das Dashboard fragt das selbst ab (`djZeigerDa()`, `pointer: none`) und
+> schreibt auf den Knopf, was am jeweiligen Gerät überhaupt geht — statt zum
+> Klicken zu raten, wo niemand klicken kann.
+
+### Und in Lumify?
+
+Dort ist Twitch eine Sackgasse. Lumify bietet **kein Browsermenü**, also keine
+Desktop-Kennung, und **keinen Zeiger**, also keinen Klick in den Player. Beide
+Wege sind zu, und das Dashboard kommt an Twitchs Entscheidung nicht heran.
+
+Wer Twitch am Screen will, muss das Dashboard **in Chrome** betreiben —
+Variante B in `KIOSK-SETUP.md`, die aus anderen Gründen ohnehin die bessere
+ist (keine Werbung, keine Ruckler). Alternativ eine Kiosk-App mit eigener
+User-Agent-Zeile.
+
 Ob es gewirkt hat, sagt die Prüfseite: `autoplay-check.html` hat dafür die Karte
 **„Twitch ohne Bedienung"**. Steht dort *nein — Twitch verweigert es hier*, gilt
 das Gerät noch als mobil. In der Handy-Fernbedienung erscheint derselbe Befund

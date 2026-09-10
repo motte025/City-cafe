@@ -44,12 +44,20 @@ keine App heran.
 **Was hilft: eine Desktop-Browserkennung.**
 
 * In Chrome: Menue **⋮ → „Desktop-Website"**, Seite neu laden. Merkt sich Chrome
-  pro Seite.
+  pro Seite. Das ist ein **Menuepunkt** - mit dem Steuerkreuz der Fernbedienung
+  erreichbar, ohne Maus und ohne Touch. Am Signage-Screen der einzige Weg, der
+  ganz ohne Zeiger auskommt.
 * In einer Kiosk-App: die App braucht eine Einstellung fuer die
   **User-Agent-Zeile** (Fully Kiosk hat sie). Dort eine Desktop-Kennung
   eintragen, z. B.
   `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36`.
 * In **Lumify** geht beides nicht - dort laesst sich die Kennung nicht setzen.
+  Und weil am Fernseher auch kein Zeiger haengt, faellt der Notweg "einmal in
+  die Bildmitte klicken" ebenfalls aus. **Twitch im Lumify-Betrieb ist damit
+  eine Sackgasse** - wer Twitch will, betreibt das Dashboard in Chrome
+  (Variante B unten) oder in einer Kiosk-App mit eigener User-Agent-Zeile.
+* Ohne Zeiger, aber mit Klickwunsch: eine **USB-Maus oder Air-Mouse** an die
+  Box. Einmal klicken genuegt, der Start haelt danach die ganze Sitzung.
 
 Ob es gewirkt hat, sagt `autoplay-check.html` mit der Karte
 **„Twitch ohne Bedienung"**. Ohne Desktop-Kennung steht dort
