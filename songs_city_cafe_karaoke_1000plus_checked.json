@@ -54166,5 +54166,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Kraftklub",
+    "title": "Fallen in Liebe feat. Nina Chuba",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Deutsch",
+      "Pop",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
