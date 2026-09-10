@@ -54945,16 +54945,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Conny Froboess",
-    "title": "Ein kleines Einfamilienhaus (feat. Peter Weck)",
+    "artist": "Alcoholic Sunrise",
+    "title": "Alcoholic Sunrise",
     "album": "",
-    "category": "Party-Hit",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Ballermann",
-      "Comedy",
-      "Party"
+      "Party",
+      "Karaoke",
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Black Box",
+    "title": "Strike It Up",
+    "album": "",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "90s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
