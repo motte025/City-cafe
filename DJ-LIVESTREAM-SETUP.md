@@ -470,6 +470,29 @@ Wächtertakt: bis dahin vergingen bis zu drei Sekunden, und die „frische"
 Bedienung war längst abgelaufen — am Gerät fühlte es sich an, als täte der Knopf
 nichts.
 
+**Und wenn das nicht reicht, baut der Knopf den Player neu.** `play()` geht als
+Nachricht an Twitchs Rahmen, und dort entscheidet Twitchs Player, ob er sie
+befolgt — zeigt er schon sein eigenes Play-Symbol, verpufft sie. Beim einfachen
+Rahmen ohne SDK gibt es überhaupt keinen Befehl, den Twitch verstünde. Deshalb
+prüft der Knopf nach `knopfNachfassenMs` nach: läuft es immer noch nicht, wird
+der Player neu aufgebaut. Ein frischer startet von sich aus mit `autoplay=true`,
+und die Bedienung von eben gilt für den Rest der Sitzung — der neue Rahmen
+bekommt die Wiedergabefreigabe also mit auf den Weg. Läuft es dagegen schon,
+passiert nichts: der Knopf soll keinen laufenden Stream abwürgen.
+
+### Kanalwechsel
+
+Ein Wechsel baut immer einen **frischen** Player. Der stand bisher still, bis
+jemand im Player selbst auf Play drückte — der Wächter kommt erst Sekunden
+später, und sein Anstupser greift nur, wenn der Player sich als *pausiert*
+meldet. Jetzt wirft sich jeder neue Player an, sobald er Befehle annimmt
+(`Twitch.Player.READY`), und bringt den Ton gleich mit, falls der schon
+freigeschaltet ist. **Man muss also nicht bei jedem Wechsel neu freischalten.**
+
+Ohne Freigabe läuft derselbe Weg trotzdem — dann eben stumm. Aufgedreht wird nur,
+wenn der Browser es zulässt; sonst hielte er die Wiedergabe an und der Wechsel
+machte es schlimmer statt besser.
+
 Drei Dinge daran sind wichtig und leicht zu übersehen:
 
 * Es ist ein echter `<button>`. Nur den kann das **Steuerkreuz** einer
