@@ -53211,16 +53211,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Jordin Sparks",
-    "title": "Tattoo",
+    "artist": "Peter Orloff",
+    "title": "Schlagerparty",
     "album": "",
-    "category": "Karaoke Classics",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Karaoke Classics"
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Bläck Fööss",
+    "title": "Am Bickendorfer Büdche",
+    "album": "",
+    "category": "Ballermann & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Ballermann & Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
