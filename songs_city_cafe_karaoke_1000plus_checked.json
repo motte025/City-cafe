@@ -53249,5 +53249,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Lady Gaga",
+    "title": "Die with a Smile",
+    "album": "",
+    "category": "International Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "International Party",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
