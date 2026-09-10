@@ -54565,16 +54565,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "M People",
-    "title": "One Night in Heaven",
+    "artist": "Jürgen Drews",
+    "title": "Ne Was Is Das Schön",
     "album": "",
-    "category": "90s Party",
+    "category": "Party-Hit",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Karaoke",
-      "90s Party"
+      "Mitmach-Hit",
+      "Kult"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Nelly",
+    "title": "Ride Wit Me",
+    "album": "",
+    "category": "Hip Hop / Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Hip Hop",
+      "Groove",
+      "Pop"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
