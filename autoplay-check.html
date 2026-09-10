@@ -268,9 +268,20 @@
         return ud || /Android|iPhone|iPad|iPod|IEMobile|Mobile|Silk|Kindle/i.test(navigator.userAgent || '');
     })();
 
+    // Gibt es hier überhaupt einen Zeiger? Am Fernseher hängt eine
+    // Fernbedienung – der Rat „in den Player klicken“ ist dort nicht ausführbar.
+    var zeiger = (function () {
+        try {
+            return window.matchMedia('(pointer: fine)').matches ||
+                   window.matchMedia('(pointer: coarse)').matches;
+        } catch (e) { return true; }
+    })();
+
     if (mobil) {
         setzen('u-twitch', 'nein', 'nein – Twitch verweigert es hier',
-               'Dieses Gerät gilt für Twitch als Mobilgerät. Twitch startet dort grundsätzlich nicht von selbst, unabhängig vom Browser und von allem, was das Dashboard tut. Abhilfe: im Browsermenü „Desktop-Website“ einschalten und die Seite neu laden – dann diese Prüfung wiederholen.');
+               'Dieses Gerät gilt für Twitch als Mobilgerät. Twitch startet dort grundsätzlich nicht von selbst, unabhängig vom Browser und von allem, was das Dashboard tut. ' +
+               (zeiger ? '' : 'Und es hängt kein Zeiger dran – ein Klick in den Player ist hier gar nicht möglich. ') +
+               'Der Weg ohne Klick: Chrome-Menü ⋮ → „Desktop-Website“ → Seite neu laden, dann diese Prüfung wiederholen. In Lumify gibt es dieses Menü nicht.');
     } else {
         setzen('u-twitch', 'ja', 'ja – Twitch erlaubt Autostart',
                'Dieses Gerät gilt für Twitch nicht als Mobilgerät. Ob es dann wirklich läuft, hängt nur noch an den beiden Urteilen oben.');
@@ -278,6 +289,7 @@
 
     zeile('Adresse', location.href);
     zeile('gilt für Twitch als Mobilgerät', mobil ? 'JA – kein Autostart' : 'nein');
+    zeile('Zeiger vorhanden', zeiger ? 'ja – Klicken möglich' : 'NEIN – nur Tasten');
     zeile('AudioContext beim Laden', tonZustand);
     zeile('eingebettet in fremde Seite', eingebettet ? 'JA' : 'nein');
     zeile('als App gestartet', alsApp ? 'JA' : 'nein, normaler Tab');

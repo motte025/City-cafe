@@ -7360,6 +7360,9 @@
                 // Gilt das Geraet fuer Twitch als mobil? Dann startet der
                 // Player grundsaetzlich nicht von selbst - siehe djMobilgeraet.
                 mobil:    djMobilgeraet(),
+                // Gibt es am Screen ueberhaupt einen Zeiger? Ohne den ist jeder
+                // Rat, "in den Player zu klicken", nicht ausfuehrbar.
+                zeiger:   djZeigerDa(),
                 qualiZurueck: !!(djQualiLage && djQualiLage.qualiZurueck)
             };
             const rahmen = document.querySelector('#dj-live-player .dj-player-frame iframe');
@@ -7393,7 +7396,11 @@
             // sonst schickt der Befund jemanden auf die falsche Fährte, und
             // genau daran haben wir uns lange festgebissen.
             if (lage.spielt !== true && lage.mobil)
-                                       return 'Twitch startet auf diesem Gerät grundsätzlich nicht von selbst — das ist Twitchs eigene Regel für Mobilgeräte, nicht der Browser (YouTube hat sie nicht, deshalb läuft das Nightlife-Widget). Am Screen ▶ in der Bildmitte drücken. Dauerhafte Abhilfe: im Browsermenü „Desktop-Website" einschalten.';
+                                       return 'Twitch startet auf diesem Gerät grundsätzlich nicht von selbst — das ist Twitchs eigene Regel für Mobilgeräte, nicht der Browser (YouTube hat sie nicht, deshalb läuft das Nightlife-Widget). ' +
+                                              (lage.zeiger
+                                                ? 'Am Screen ▶ in der Bildmitte anklicken. '
+                                                : 'Am Screen hängt kein Zeiger, nur eine Fernbedienung — ein Klick in den Player ist dort gar nicht möglich. ') +
+                                              'Der Weg ohne Klick: am Screen in Chrome das Menü ⋮ → „Desktop-Website" → Seite neu laden. In Lumify gibt es dieses Menü nicht, dort bleibt Twitch stehen.';
             if (lage.spielt === false && !lage.freigabe)
                                        return 'Der Browser am Screen verlangt eine Bedienung: eine Taste auf der TV-Fernbedienung drücken. Dauerhaft hilft nur, das Dashboard direkt in Chrome und als App installiert zu starten.';
             if (lage.qualiZurueck)
@@ -8000,12 +8007,31 @@
             const zeichen = document.getElementById('dj-ton-zeichen');
             const haupt   = document.getElementById('dj-ton-haupt');
             const sub     = document.getElementById('dj-ton-sub');
-            if (zeichen) zeichen.textContent = djKnopfStur ? '👆' : '▶';
-            if (haupt)   haupt.textContent   = djKnopfStur ? 'Bitte ▶ in der Bildmitte'
-                                                           : 'Stream starten';
+            const zeiger = djZeigerDa();
+            if (zeichen) zeichen.textContent = djKnopfStur ? (zeiger ? '👆' : '🕹') : '▶';
+            if (haupt)   haupt.textContent   = !djKnopfStur ? 'Stream starten'
+                                             : zeiger ? 'Bitte ▶ in der Bildmitte anklicken'
+                                                      : 'Steuerkreuz ↓ dann OK — der Druck muss IM Player landen';
             if (sub)     sub.textContent     = djKnopfStur
-                ? 'Twitch startet auf diesem Gerät nur über die eigene Play-Taste. Dauerhafte Abhilfe: im Browsermenü „Desktop-Website“ einschalten.'
+                ? 'Twitch startet hier nur über seine eigene Play-Taste. Ohne Klick geht das dauerhaft nur so: Chrome-Menü ⋮ → „Desktop-Website“ → Seite neu laden. In Lumify gibt es dieses Menü nicht.'
                 : 'Bild und Ton · OK auf der Fernbedienung';
+        }
+
+        // Gibt es an diesem Gerät ueberhaupt einen Zeiger?
+        //
+        // Am Fernseher haengt eine Fernbedienung, kein Mauszeiger und kein
+        // Touchscreen - der Hinweis "in die Bildmitte klicken" ist dort schlicht
+        // nicht ausfuehrbar. Genau das kam aus dem Betrieb zurueck: "Was soll
+        // ich andruecken, ich habe kein Touch-TV". Also erst fragen, dann raten.
+        //
+        // pointer: fine  = Maus oder Air-Mouse
+        // pointer: coarse = Finger
+        // pointer: none  = nur Tasten. Der uebliche Fall am Signage-Screen.
+        function djZeigerDa() {
+            try {
+                return window.matchMedia('(pointer: fine)').matches ||
+                       window.matchMedia('(pointer: coarse)').matches;
+            } catch (e) { return true; }   // im Zweifel den harmloseren Text
         }
 
         // Legt den Fokus in Twitchs Rahmen.
@@ -8786,6 +8812,9 @@
                 '\nTwitch-Regel:  ' + (djMobilgeraet()
                     ? 'MOBILGERAET - Twitch startet hier NIE von selbst. Abhilfe: "Desktop-Website"'
                     : 'Desktop - Twitch erlaubt hier Autostart') +
+                '\nZeiger:        ' + (djZeigerDa()
+                    ? 'vorhanden - ein Klick in den Player ist moeglich'
+                    : 'KEINER - nur Tasten. Ein Klick in den Player geht hier nicht.') +
                 '\nTwitch-parent: ' + (djEmbedHosts().join(', ') || '(nicht moeglich - Embeds bleiben aus)');
             box.style.display = 'block';
         })();
