@@ -7876,23 +7876,27 @@
         // laengst abgelaufen. Am Geraet fuehlte sich das an, als taete der Knopf
         // nichts. Was hier passiert, passiert waehrend der Browser die Bedienung
         // noch anerkennt - der beste Moment, den es gibt.
+        // Wirft den Player an - STUMM, und sonst nichts.
+        //
+        // Hier stand einmal, dass gleich mit aufgedreht wird. Das war der Fehler,
+        // der den Start ueberhaupt erst kaputtgemacht hat: stumm laeuft der
+        // Player los, und das Aufdrehen einen Wimpernschlag spaeter laesst
+        // Chrome ihn wieder anhalten, wenn hoerbare Wiedergabe nicht erlaubt
+        // ist. Von aussen sah das aus, als taete der Knopf gar nichts - dabei
+        // hat er gestartet und wir haben es selbst wieder abgewuergt.
+        //
+        // Den Ton uebernimmt djTonNachziehen. Der dreht erst auf, wenn das Bild
+        // nachweislich laeuft, und dreht zurueck, wenn der Browser es ablehnt -
+        // statt den Player im Pausezustand zurueckzulassen.
         function djSofortStarten() {
             if (!djTwitchSpieler) { djAnstupsen(); return; }
-            const wunsch = DJ_LIVE_CONFIG.tonLautstaerke;
             try {
-                // Erst stumm anwerfen: das laesst jeder Browser zu, und der Player
-                // haengt danach nicht mehr im Pausezustand fest.
                 djTwitchSpieler.setMuted(true);
                 djTwitchSpieler.play();
             } catch (e) {}
-            if (!(wunsch > 0) || !djTonMoeglich()) return;
-            try {
-                djTwitchSpieler.setMuted(false);
-                if (djTwitchSpieler.setVolume) djTwitchSpieler.setVolume(wunsch);
-            } catch (e) { return; }
-            // Als erledigt vermerken, sonst drehte djTonNachziehen gleich noch
-            // einmal auf und pruefte danach auf einen Fehlschlag, den es nicht gab.
-            if (djQualiLage) { djQualiLage.tonAn = true; djQualiLage.tonBlockiert = false; }
+            // Ton ist wieder offen: djTonNachziehen soll es im naechsten Takt
+            // regulaer versuchen duerfen.
+            if (djQualiLage) { djQualiLage.tonAn = false; djQualiLage.tonBlockiert = false; }
         }
 
         function djFreigabeEinsammeln() {
@@ -8051,7 +8055,19 @@
         // aufs Neue. Wenn von vornherein feststeht, dass es nicht klappt,
         // bleibt es lieber gleich stumm und das Bild laeuft ruhig durch.
         function djTonMoeglich() {
-            if (djFreigabeErteilt) return true;
+            // Der ehrlichste Zeuge zuerst: ein AudioContext laeuft nur, wenn der
+            // Browser hoerbare Wiedergabe wirklich zulaesst.
+            //
+            // djFreigabeErteilt heisst bloss "es wurde irgendwo getippt" - und
+            // genau daran hat sich diese Stelle verhoben. Am Geraet gemessen
+            // bleibt der AudioContext auch nach einem Tipp "suspended": der
+            // Browser laesst Ton eben nicht zu. Wer das fuer eine Freigabe haelt,
+            // dreht auf und wuergt den gerade gestarteten Player wieder ab.
+            if (djTonProbe) {
+                if (djTonProbe.state === 'running') return true;
+                if (djTonProbe.state === 'suspended') return false;
+            }
+            // Noch keine Probe (vor der ersten Bedienung): dann die Indizien.
             try {
                 if (navigator.userActivation && navigator.userActivation.hasBeenActive) return true;
             } catch (e) {}
@@ -8257,7 +8273,11 @@
             // aufblitzt - ein Twitch-Player braucht ein paar Sekunden.
             if (djSlotSichtbar()) {
                 djQualiLage.sichtbarSekunden += takt;
-                const tonFehlt = DJ_LIVE_CONFIG.tonLautstaerke > 0 && stumm === true;
+                // Hat der Browser den Ton nachweislich abgelehnt, hoert der
+                // Knopf auf, danach zu fragen - sonst laege er dauerhaft ueber
+                // einem Bild, das einwandfrei laeuft.
+                const tonFehlt = DJ_LIVE_CONFIG.tonLautstaerke > 0 && stumm === true &&
+                                 !djQualiLage.tonBlockiert;
                 djTonKnopf(djQualiLage.sichtbarSekunden >= DJ_LIVE_CONFIG.knopfNachSekunden &&
                            (!laeuft || tonFehlt));
             } else {

@@ -465,10 +465,33 @@ Widget unten im Player den Knopf **„Stream starten"** ein. Ein Druck auf **OK*
 der TV-Fernbedienung startet **beides**, und die Freigabe gilt danach für die
 **ganze Sitzung**, auch für alle folgenden Kanäle.
 
-Bild und Ton werden dabei **sofort im Tastendruck** gestartet, nicht im nächsten
-Wächtertakt: bis dahin vergingen bis zu drei Sekunden, und die „frische"
-Bedienung war längst abgelaufen — am Gerät fühlte es sich an, als täte der Knopf
-nichts.
+Der Druck startet den Player **sofort — und zwar stumm.** Der Ton kommt einen
+Wächtertakt später über `djTonNachziehen`.
+
+> **Warum nicht beides auf einmal?** Genau daran ist es einmal gescheitert. Stumm
+> läuft der Player los, und das Aufdrehen einen Wimpernschlag später lässt Chrome
+> ihn wieder **anhalten**, wenn hörbare Wiedergabe nicht erlaubt ist. Von außen
+> sah das aus, als täte der Knopf gar nichts — dabei hatte er gestartet, und wir
+> haben es selbst wieder abgewürgt. `djTonNachziehen` dreht erst auf, wenn das
+> Bild nachweislich läuft, und dreht **zurück**, wenn der Browser ablehnt.
+
+### Woran man erkennt, ob Ton überhaupt erlaubt ist
+
+`djFreigabeErteilt` heißt bloß *„es wurde irgendwo getippt"*. Ob der Browser
+daraufhin Ton zulässt, ist eine andere Frage — am Gerät gemessen bleibt der
+`AudioContext` auch nach einem Tipp `suspended`.
+
+`djTonMoeglich()` fragt deshalb zuerst diesen Kontext:
+
+| `djTonProbe.state` | Bedeutung |
+|---|---|
+| `running` | hörbare Wiedergabe ist erlaubt |
+| `suspended` | ist sie nicht — **gar nicht erst aufdrehen** |
+| (noch keine Probe) | Indizien: `navigator.userActivation`, `display-mode` |
+
+Lehnt der Browser den Ton nachweislich ab (`tonBlockiert`), hört auch der Knopf
+auf, danach zu fragen — er läge sonst dauerhaft über einem Bild, das einwandfrei
+läuft.
 
 **Und wenn das nicht reicht, baut der Knopf den Player neu.** `play()` geht als
 Nachricht an Twitchs Rahmen, und dort entscheidet Twitchs Player, ob er sie
