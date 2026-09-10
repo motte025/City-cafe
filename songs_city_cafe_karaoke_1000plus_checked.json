@@ -53151,15 +53151,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Bee Gees",
-    "title": "Night Fever",
+    "artist": "Alvin Stardust",
+    "title": "My Coo Ca Choo",
     "album": "",
-    "category": "70s Party",
+    "category": "Party-Hit",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Disco",
-      "Hymne"
+      "Schlager",
+      "Kult",
+      "Retro"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Herbert Grönemeyer",
+    "title": "Du bist die",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
