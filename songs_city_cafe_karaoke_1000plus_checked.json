@@ -54526,16 +54526,35 @@
     "auto_discovered": true
   },
   {
-    "artist": "Nik P.",
-    "title": "Hundertmal",
+    "artist": "Vincent & Fernando",
+    "title": "Mein Mädchen Number One",
     "album": "",
-    "category": "Schlager & Party",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Schlager",
-      "Charts",
-      "German"
+      "Kult"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Per Gessle",
+    "title": "I'll Be Alright",
+    "album": "",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "90s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
