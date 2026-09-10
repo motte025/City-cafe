@@ -341,6 +341,10 @@
         if (t.haengt)     zeigen('hängt: ' + t.haengt + ' s', 'warn');
         // Der entscheidende Punkt für den Ton, deshalb in beiden Fällen sichtbar.
         zeigen(t.app ? '📲 als App' : '📲 nur Tab', t.app ? 'gut' : 'warn');
+        // Und der entscheidende Punkt für den Start: gilt der Screen für Twitch
+        // als Mobilgerät, startet der Player dort grundsätzlich nicht von
+        // selbst – Twitchs eigene Regel, kein Browser-Problem.
+        if (t.mobil) zeigen('📱 Twitch: kein Autostart', 'warn');
     }
 
     function restZeit(bisWann) {

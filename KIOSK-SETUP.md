@@ -22,6 +22,41 @@ Aktualisieren**, dann neu versuchen.
 
 ---
 
+## Wichtig vorweg: Twitch ist ein Sonderfall
+
+Fuer den **Twitch**-Player loest keine Kiosk-App das Startproblem, und keine
+Browser-Einstellung. Twitch verweigert Autoplay auf Mobilgeraeten von sich aus.
+Woertlich aus der offiziellen Embed-Doku zum Parameter `autoplay`:
+
+> „The exception is mobile devices, on which video cannot be played without user
+> interaction."
+> — <https://dev.twitch.tv/docs/embed/video-and-clips/>
+
+Die Box laeuft unter Android und meldet sich als Android-Geraet - also greift
+die Ausnahme. Das erklaert, warum das **YouTube**-Widget (Nightlife) auf
+demselben Screen stumm von allein anlaeuft: YouTube kennt diese Ausnahme nicht.
+
+Kiosk-Einstellungen wie *Autoplay Videos* oder
+`setMediaPlaybackRequiresUserGesture(false)` heben die Sperre des **Browsers**
+auf. Twitch entscheidet aber innerhalb seines eigenen Rahmens, und da kommt
+keine App heran.
+
+**Was hilft: eine Desktop-Browserkennung.**
+
+* In Chrome: Menue **⋮ → „Desktop-Website"**, Seite neu laden. Merkt sich Chrome
+  pro Seite.
+* In einer Kiosk-App: die App braucht eine Einstellung fuer die
+  **User-Agent-Zeile** (Fully Kiosk hat sie). Dort eine Desktop-Kennung
+  eintragen, z. B.
+  `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36`.
+* In **Lumify** geht beides nicht - dort laesst sich die Kennung nicht setzen.
+
+Ob es gewirkt hat, sagt `autoplay-check.html` mit der Karte
+**„Twitch ohne Bedienung"**. Ohne Desktop-Kennung steht dort
+*nein - Twitch verweigert es hier*.
+
+---
+
 ## Kiosk-App suchen, die Ton ohne Bedienung erlaubt
 
 Der Autostart des Bildes ist geloest. Was bleibt, ist der **Ton**: Chrome laesst

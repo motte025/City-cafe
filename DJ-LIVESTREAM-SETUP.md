@@ -19,6 +19,13 @@
 > und schaltet ihn dabei selbst ein. Der `djtest`-Kanal muss gerade live sein,
 > sonst ist der Slot leer und reicht durch.
 >
+> **Warum es aus ist:** der Stream lief am Screen nicht von allein an. Der Grund
+> ist inzwischen geklärt und liegt nicht am Dashboard — **Twitch startet auf
+> Mobilgeräten grundsätzlich nicht von selbst**, das ist Twitchs eigene Regel.
+> Genau deshalb läuft das YouTube-Widget auf demselben Screen und Twitch nicht.
+> Was hilft, steht im Abschnitt
+> [*Warum YouTube von allein läuft und Twitch nicht*](#warum-youtube-von-allein-läuft-und-twitch-nicht).
+>
 > Alles Weitere in dieser Anleitung gilt unverändert, sobald der Schalter
 > wieder auf `true` steht.
 
@@ -448,6 +455,60 @@ am Laufen — als Netz für Netzaussetzer und Werbeblöcke.
 > im Player aufgehoben werden. Siehe den nächsten Abschnitt: genau dafür ist
 > die installierte App da.
 
+### Warum YouTube von allein läuft und Twitch nicht
+
+Auf demselben Screen, im selben Chrome, in derselben Seite: das
+Nightlife-Widget startet sein YouTube-Video stumm von allein, und der
+Twitch-Player daneben bleibt mit seiner Play-Taste stehen. Das ist kein Fehler
+im Dashboard und keine Browser-Einstellung, die noch fehlt. Es ist **Twitchs
+eigene Regel.** Wörtlich aus der offiziellen Embed-Doku, zum Parameter
+`autoplay`:
+
+> „If true, the video starts playing automatically, without the viewer clicking
+> play. Minimum size requirements and visibility are necessary for autoplay to
+> begin. **The exception is mobile devices, on which video cannot be played
+> without user interaction.** Default: true."
+>
+> — <https://dev.twitch.tv/docs/embed/video-and-clips/>
+
+Die Odroid-Box läuft unter Android und meldet sich dem Netz als Android-Gerät.
+Für Twitch ist sie damit ein **Mobilgerät**, und die Ausnahme greift. YouTube
+kennt keine solche Ausnahme: stumm startet dort jedes Video, auf jedem Gerät.
+
+Das erklärt rückwirkend alles, woran wir uns festgebissen haben:
+
+| Versucht | Warum es nichts geändert hat |
+|---|---|
+| `autoplay: true`, `muted: true` am Player | Twitch liest die Parameter und ignoriert sie auf Mobilgeräten. |
+| `allow="autoplay"` am Rahmen | Regelt, was der **Browser** erlaubt. Twitch entscheidet innerhalb seines Rahmens selbst. |
+| `player.play()` über das SDK | Wird als Nachricht an Twitchs Rahmen geschickt — und dort verworfen. |
+| Player neu bauen | Der neue fängt bei null an und zeigt dieselbe Play-Taste. **Genau das war die Schleife.** |
+| Kiosk-App mit `setMediaPlaybackRequiresUserGesture(false)` | Hebt die Sperre des **Browsers** auf, nicht die von Twitch. |
+| `--autoplay-policy=no-user-gesture-required` | Dasselbe. |
+
+**Was tatsächlich hilft: dem Gerät die Desktop-Kennung geben.**
+
+In Chrome auf der Box: Menü **⋮ → „Desktop-Website"** ankreuzen, Seite neu
+laden. Chrome schickt dann eine Desktop-Browserkennung, und zwar auch für alle
+eingebetteten Rahmen — Twitchs Mobil-Erkennung greift nicht mehr, und der Player
+startet wie auf einem PC. Die Einstellung merkt sich Chrome pro Seite.
+
+Ob es gewirkt hat, sagt die Prüfseite: `autoplay-check.html` hat dafür die Karte
+**„Twitch ohne Bedienung"**. Steht dort *nein — Twitch verweigert es hier*, gilt
+das Gerät noch als mobil. In der Handy-Fernbedienung erscheint derselbe Befund
+als Chip **📱 Twitch: kein Autostart**.
+
+> Läuft das Dashboard über **Lumify** statt in Chrome, lässt sich die
+> Browserkennung von außen nicht setzen — dann bleibt nur eine Kiosk-App, die
+> eine eigene *User-Agent-Zeile* anbietet (Fully Kiosk kann das), oder der
+> Betrieb über Chrome. Siehe `KIOSK-SETUP.md`.
+
+**Solange das Gerät als mobil gilt, baut das Widget den Player nicht mehr neu**
+(`djNeuaufbauErlaubt()`). Ein Neuaufbau kann dort nichts starten, wirft aber
+jede bereits erfolgte Bedienung weg — er kann also nur verlieren. Am Screen sah
+genau das so aus: kurz „Stream wird geladen", danach wieder die Play-Taste, und
+das immer wieder.
+
 ### Einmal tippen, dann läuft es
 
 Chrome lässt Wiedergabe erst zu, wenn die Seite **einmal bedient** wurde
@@ -493,24 +554,80 @@ Lehnt der Browser den Ton nachweislich ab (`tonBlockiert`), hört auch der Knopf
 auf, danach zu fragen — er läge sonst dauerhaft über einem Bild, das einwandfrei
 läuft.
 
-**Und wenn das nicht reicht, baut der Knopf den Player neu.** `play()` geht als
-Nachricht an Twitchs Rahmen, und dort entscheidet Twitchs Player, ob er sie
-befolgt — zeigt er schon sein eigenes Play-Symbol, verpufft sie. Beim einfachen
-Rahmen ohne SDK gibt es überhaupt keinen Befehl, den Twitch verstünde. Deshalb
-prüft der Knopf nach `knopfNachfassenMs` nach: läuft es immer noch nicht, wird
-der Player neu aufgebaut. Ein frischer startet von sich aus mit `autoplay=true`,
-und die Bedienung von eben gilt für den Rest der Sitzung — der neue Rahmen
-bekommt die Wiedergabefreigabe also mit auf den Weg. Läuft es dagegen schon,
-passiert nichts: der Knopf soll keinen laufenden Stream abwürgen.
+**Und wenn Twitch nicht reagiert, sagt der Knopf die Wahrheit.** `play()` geht
+als Nachricht an Twitchs Rahmen, und dort entscheidet Twitchs Player, ob er sie
+befolgt — auf einem Mobilgerät tut er es nicht (siehe *Warum YouTube von allein
+läuft und Twitch nicht*). Deshalb prüft der Knopf nach `knopfNachfassenMs` nach:
+
+* **Es läuft** → der Knopf bleibt weg, fertig.
+* **Es läuft nicht** → der Knopf kommt zurück, aber mit anderer Aufschrift:
+  **„Bitte ▶ in der Bildmitte"**, dazu der Hinweis auf „Desktop-Website".
+  Gleichzeitig wandert der Fokus in Twitchs Rahmen — ein Tastendruck, der
+  **dort** ankommt, ist die einzige Bedienung, die Twitchs Player als seine
+  eigene anerkennt.
+
+Gilt das Gerät von vornherein als mobil und lief noch kein Bild, steht die
+ehrliche Aufschrift **sofort** da — der Knopf verspricht dann gar nicht erst
+etwas, das er nicht halten kann.
+
+> **Hier stand einmal: „baut der Knopf den Player neu".** Das war der Fehler,
+> der uns im Kreis hat drehen lassen. Ein frischer Player startet auf einem
+> Mobilgerät genauso wenig — der Knopf zeigte also kurz „Stream wird geladen"
+> und danach wieder die Play-Taste. Der Neuaufbau ist deshalb aus dem Knopf
+> entfernt und auf Mobilgeräten auch aus dem Wächter.
 
 ### Kanalwechsel
 
-Ein Wechsel baut immer einen **frischen** Player. Der stand bisher still, bis
-jemand im Player selbst auf Play drückte — der Wächter kommt erst Sekunden
-später, und sein Anstupser greift nur, wenn der Player sich als *pausiert*
-meldet. Jetzt wirft sich jeder neue Player an, sobald er Befehle annimmt
-(`Twitch.Player.READY`), und bringt den Ton gleich mit, falls der schon
-freigeschaltet ist. **Man muss also nicht bei jedem Wechsel neu freischalten.**
+**Ein Wechsel baut keinen neuen Player mehr.** Derselbe Rahmen bleibt stehen und
+bekommt nur einen anderen Kanal gesagt — `djKanalWechseln()` über
+`Twitch.Player.setChannel()`, offiziell dokumentiert. Das gilt für alle drei
+Wege in den Wechsel: die Rotation (`djZeigeEintrag`), eine geänderte Live-Liste
+(`djVorpuffern`) und „Auf den Screen" von der Handy-Fernbedienung
+(`djFernBefehlAusfuehren`).
+
+Der Grund ist derselbe wie überall auf dieser Seite: ein **frisch gebauter**
+Player fängt bei null an und zeigt auf einem Mobilgerät wieder Twitchs eigene
+Play-Taste. Dass eben noch jemand gedrückt hat, hilft ihm nichts — die Bedienung
+galt dem alten Rahmen, der gerade weggeworfen wurde. Genau das war die Meldung
+aus dem Betrieb: *„wenn ich den Live-Stream wechsle, muss ich wieder am
+Play-Zeichen starten, das ist ärgerlich."*
+
+Bleibt der Player stehen, gilt die Bedienung weiter: **einmal starten genügt für
+den ganzen Abend**, über alle Kanalwechsel hinweg.
+
+Neu gebaut wird nur noch, wenn es nicht anders geht — YouTube-Eintrag, einfacher
+Rahmen ohne SDK, oder es läuft noch gar kein Player. `djKanalWechseln()` meldet
+das mit `false` zurück, und der Aufrufer baut dann wie früher.
+
+### Und über die Rotation hinweg: der Player schläft, statt zu verschwinden
+
+Ohne das wäre der Rest umsonst. Die Rotation **verlässt** den DJ-Slot alle paar
+Minuten, und bisher räumte `djStopPlayer()` den Player dabei ab — die nächste
+Runde baute einen neuen, und der zeigte auf einem Mobilgerät wieder Twitchs
+Play-Taste. Einmal *pro Runde* von Hand starten ist keine Lösung.
+
+Auf einem Gerät, das für Twitch als mobil gilt, wird der Player deshalb nicht
+mehr weggeworfen, sondern **schlafen gelegt** (`djSpielerSchlafen()`): erst
+stumm, dann anhalten — in dieser Reihenfolge, damit aus einem unsichtbaren Slot
+nie Ton kommt. Kommt der Slot wieder, weckt ihn der übliche Anstupser.
+
+Der Preis ist ein ruhender Rahmen im DOM. Stumm und angehalten kostet der so gut
+wie nichts, und die DJ-Ansicht wird ohnehin dauerhaft gezeichnet (`opacity: 0`,
+siehe *Autostart und Ton*).
+
+> **Eine Falle, die dabei entsteht:** Früher hat `djStopPlayer()` auch
+> `djGepuffert` geleert. Bleibt der Player liegen, bleibt die Liste liegen — und
+> ein Slot ohne Live-Kanäle hätte beim nächsten Durchlauf einen längst beendeten
+> Stream gezeigt. `djVorpuffern()` räumt deshalb ausdrücklich ab, wenn niemand
+> mehr live ist.
+
+**Am Desktop bleibt alles wie bisher:** dort startet Twitch von selbst, der
+Player wird beim Verlassen des Slots abgeräumt und beim nächsten Mal neu
+gebaut — das spart die Ressourcen und kostet nichts.
+
+Der frisch gebaute Player wirft sich weiterhin selbst an, sobald er Befehle
+annimmt (`Twitch.Player.READY`), und bringt den Ton gleich mit, falls der schon
+freigeschaltet ist.
 
 Ohne Freigabe läuft derselbe Weg trotzdem — dann eben stumm. Aufgedreht wird nur,
 wenn der Browser es zulässt; sonst hielte er die Wiedergabe an und der Wechsel

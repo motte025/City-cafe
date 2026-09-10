@@ -2630,9 +2630,9 @@
                              mit OK ausloesen. Und genau dieser Tastendruck ist die
                              Bedienung, die der Browser fuer Ton verlangt. -->
                         <button class="dj-ton-knopf" id="dj-ton-knopf" type="button">
-                            <span class="dj-ton-zeichen">▶</span>
-                            <span class="dj-ton-text">Stream starten
-                                <span class="dj-ton-sub">Bild und Ton · OK auf der Fernbedienung</span>
+                            <span class="dj-ton-zeichen" id="dj-ton-zeichen">▶</span>
+                            <span class="dj-ton-text"><span id="dj-ton-haupt">Stream starten</span>
+                                <span class="dj-ton-sub" id="dj-ton-sub">Bild und Ton · OK auf der Fernbedienung</span>
                             </span>
                         </button>
                     </div>
@@ -7357,6 +7357,9 @@
                 // Chrome Wiedergabe mit Ton ohne jede Bedienung zu.
                 app:      djAlsAppGestartet(),
                 tonGeht:  djTonMoeglich(),
+                // Gilt das Geraet fuer Twitch als mobil? Dann startet der
+                // Player grundsaetzlich nicht von selbst - siehe djMobilgeraet.
+                mobil:    djMobilgeraet(),
                 qualiZurueck: !!(djQualiLage && djQualiLage.qualiZurueck)
             };
             const rahmen = document.querySelector('#dj-live-player .dj-player-frame iframe');
@@ -7384,6 +7387,13 @@
             if (!lage.gebaut)          return 'Twitch-SDK nicht geladen — läuft im einfachen Modus';
             if (!/autoplay/.test(lage.erlaubt))
                                        return 'Rahmen hat keine Autoplay-Freigabe';
+            // Twitchs eigene Regel sticht jeden Browser-Befund: auf einem Gerät,
+            // das für Twitch als mobil gilt, startet der Player NIE von selbst.
+            // Deshalb steht das vor allem, was nach Browser-Einstellung klingt -
+            // sonst schickt der Befund jemanden auf die falsche Fährte, und
+            // genau daran haben wir uns lange festgebissen.
+            if (lage.spielt !== true && lage.mobil)
+                                       return 'Twitch startet auf diesem Gerät grundsätzlich nicht von selbst — das ist Twitchs eigene Regel für Mobilgeräte, nicht der Browser (YouTube hat sie nicht, deshalb läuft das Nightlife-Widget). Am Screen ▶ in der Bildmitte drücken. Dauerhafte Abhilfe: im Browsermenü „Desktop-Website" einschalten.';
             if (lage.spielt === false && !lage.freigabe)
                                        return 'Der Browser am Screen verlangt eine Bedienung: eine Taste auf der TV-Fernbedienung drücken. Dauerhaft hilft nur, das Dashboard direkt in Chrome und als App installiert zu starten.';
             if (lage.qualiZurueck)
@@ -7423,7 +7433,8 @@
                     jeGelaufen: !!djQualiLage.jeGelaufen,
                     tot:        djQualiLage.totSekunden,
                     haengt:     djQualiLage.haengtSekunden,
-                    app:        lage.app
+                    app:        lage.app,
+                    mobil:      lage.mobil
                 } : null
             }).catch(() => {});
         }
@@ -7462,7 +7473,10 @@
             // Sofort hinschalten - wer am Handy auf "Auf den Screen" tippt, will
             // nicht erst die halbe Rotation abwarten.
             cancelSequenceTimers();
-            djSpielerAbbauen();
+            // Bewusst KEIN djSpielerAbbauen mehr: laeuft der Slot gerade, wird
+            // der bestehende Player gleich per djKanalWechseln umgeschaltet.
+            // Ihn hier wegzuwerfen hiesse auf dem Screen, dass nach jedem
+            // "Auf den Screen" wieder von Hand gestartet werden muss.
             djGepuffert = [];
             mediaStateIndex = DJ_SLOT_INDEX;
             runMasterSequence();
@@ -7573,6 +7587,7 @@
             const buehne = document.getElementById('dj-live-player');
             djWaechterStoppen();
             djTonKnopf(false);
+            djKnopfBeschriften(false);
             djFernQrVerstecken();
             // Abgelaufene Fernsteuerung aufraeumen, damit das Handy nicht
             // weiter "laeuft" anzeigt und die Qualitaet nicht festgenagelt bleibt.
@@ -7581,10 +7596,45 @@
                 djFernQualitaetAnwenden(0);
             }
             djFernStatusMelden();
-            if (buehne && buehne.firstChild) {
-                djSpielerAbbauen();
-                buehne.innerHTML = '';
-                djGepuffert = [];
+            if (!buehne || !buehne.firstChild) return;
+
+            // Auf einem Geraet, das fuer Twitch als mobil gilt, wird der Player
+            // NICHT abgeraeumt - er wird schlafen gelegt.
+            //
+            // Ohne das waere alles andere umsonst: die Rotation verlaesst den
+            // DJ-Slot alle paar Minuten, und ein danach neu gebauter Player
+            // zeigt wieder Twitchs Play-Taste. Einmal pro Runde von Hand
+            // starten ist keine Loesung. Bleibt derselbe Rahmen stehen, gilt
+            // die Bedienung weiter - und "einmal starten reicht fuer den Abend"
+            // stimmt dann auch ueber die Rotation hinweg.
+            //
+            // Der Preis ist ein ruhender Rahmen im DOM. Stumm und angehalten
+            // kostet der so gut wie nichts, und die Ansicht ist ohnehin
+            // dauerhaft gezeichnet (opacity 0, siehe djSlotSichtbar).
+            if (djTwitchSpieler && !djNeuaufbauErlaubt()) {
+                djSpielerSchlafen();
+                return;
+            }
+            djSpielerAbbauen();
+            buehne.innerHTML = '';
+            djGepuffert = [];
+        }
+
+        // Legt den laufenden Player still, ohne ihn wegzuwerfen.
+        // Erst stumm, dann anhalten - in dieser Reihenfolge, damit aus einem
+        // unsichtbaren Slot nie Ton kommt.
+        function djSpielerSchlafen() {
+            try { djTwitchSpieler.setMuted(true); } catch (e) {}
+            try {
+                if (typeof djTwitchSpieler.pause === 'function') djTwitchSpieler.pause();
+            } catch (e) {}
+            if (djQualiLage) {
+                djQualiLage.tonAn = false;
+                djQualiLage.sichtbarSekunden = 0;
+                // Die Schlafzeit darf nicht als Haenger oder Stillstand zaehlen.
+                djQualiLage.haengtSekunden = 0;
+                djQualiLage.totSekunden = 0;
+                djQualiLage.letzteZeit = -1;
             }
         }
 
@@ -7849,7 +7899,11 @@
         // TV-Fernbedienung gibt es keinen Mauszeiger, das Steuerkreuz springt nur
         // zwischen fokussierbaren Elementen. Steht der Fokus schon auf dem Knopf,
         // genuegt ein einziger Druck auf OK - ohne vorher hinnavigieren zu muessen.
-        function djTonKnopf(zeigen) {
+        // ohneFokus: der Knopf wird nur gezeigt, der Fokus bleibt, wo er ist.
+        // Gebraucht in der zweiten Stufe (siehe djKnopfGedrueckt): dort soll der
+        // Fokus in Twitchs Rahmen wandern, und ein Knopf, der ihn sich im
+        // naechsten Rahmen zurueckholt, machte genau das zunichte.
+        function djTonKnopf(zeigen, ohneFokus) {
             const el = document.getElementById('dj-ton-knopf');
             if (!el) return;
             // Bewusst NICHT mehr "&& !djFreigabeErteilt": auf einem Tablet tippt
@@ -7859,7 +7913,7 @@
             const an = !!zeigen;
             const warVorher = el.classList.contains('is-an');
             el.classList.toggle('is-an', an);
-            if (an && !warVorher) {
+            if (an && !warVorher && !ohneFokus) {
                 // Erst im naechsten Rahmen: ein display:none-Element nimmt keinen
                 // Fokus an, und die Klasse ist gerade erst gesetzt.
                 requestAnimationFrame(() => { try { el.focus(); } catch (e) {} });
@@ -7933,28 +7987,60 @@
         // tot gewesen.
         let djNachfassen = null;
 
+        // Die zweite Stufe des Knopfes.
+        //
+        // Beim ersten Druck verspricht er, was er kann: starten. Reagiert Twitch
+        // nicht, waere ein zweites "Stream starten" eine Luege - dann sagt der
+        // Knopf stattdessen, was tatsaechlich hilft. Genau daran hat sich der
+        // Betrieb im Kreis gedreht: der Knopf behauptete etwas, das auf diesem
+        // Geraet niemand einloesen kann.
+        let djKnopfStur = false;
+        function djKnopfBeschriften(stur) {
+            djKnopfStur = !!stur;
+            const zeichen = document.getElementById('dj-ton-zeichen');
+            const haupt   = document.getElementById('dj-ton-haupt');
+            const sub     = document.getElementById('dj-ton-sub');
+            if (zeichen) zeichen.textContent = djKnopfStur ? '👆' : '▶';
+            if (haupt)   haupt.textContent   = djKnopfStur ? 'Bitte ▶ in der Bildmitte'
+                                                           : 'Stream starten';
+            if (sub)     sub.textContent     = djKnopfStur
+                ? 'Twitch startet auf diesem Gerät nur über die eigene Play-Taste. Dauerhafte Abhilfe: im Browsermenü „Desktop-Website“ einschalten.'
+                : 'Bild und Ton · OK auf der Fernbedienung';
+        }
+
+        // Legt den Fokus in Twitchs Rahmen.
+        //
+        // Der einzige Tastendruck, den Twitchs Player als seine eigene Bedienung
+        // anerkennt, ist einer, der IN seinem Rahmen ankommt - unserer landet in
+        // unserem. Mit dem Fokus im Rahmen hat das Steuerkreuz der Fernbedienung
+        // wenigstens eine Chance, Twitchs eigene Play-Taste zu erreichen.
+        function djInPlayerFokussieren() {
+            const f = document.querySelector('#dj-live-player .dj-player-frame iframe');
+            if (!f) return false;
+            try { f.focus(); } catch (e) { return false; }
+            return true;
+        }
+
         function djKnopfGedrueckt() {
             djFreigabeEinsammeln();   // beim ersten Mal: Freigabe holen
             djSofortStarten();        // der billige Weg: play() per postMessage
             djTonKnopf(false);
 
-            // Und der Weg, der nicht scheitern kann.
-            //
             // play() geht als Nachricht an Twitchs Rahmen, und dort entscheidet
             // Twitchs Player, ob er sie befolgt. Zeigt er schon sein eigenes
             // Play-Symbol, verpufft sie - am Tablet passierte auf den Knopf
             // deshalb sichtbar nichts, waehrend ein Klick MITTEN in den Player
             // sofort wirkte: der landet in Twitchs Rahmen, unserer nicht.
-            // Beim einfachen Rahmen ohne SDK gibt es ueberhaupt keinen Befehl,
-            // den Twitch verstehen wuerde.
             //
-            // Ein neu gebauter Player umgeht das ganz: er startet von sich aus
-            // mit autoplay=true, und die Bedienung von eben gilt fuer das
-            // restliche Leben der Seite - der frische Rahmen bekommt die
-            // Wiedergabefreigabe also mit auf den Weg.
+            // Hier stand einmal ein Neuaufbau als "Weg, der nicht scheitern
+            // kann". Er war das Gegenteil. Auf einem Geraet, das fuer Twitch als
+            // mobil gilt, startet auch ein frischer Player nicht von selbst
+            // (siehe djMobilgeraet) - der Knopf zeigte also kurz "Stream wird
+            // geladen" und danach wieder die Play-Taste. Das war die Schleife,
+            // in der wir uns gedreht haben.
             //
-            // Nur wenn das Billige nicht schon gereicht hat: sonst wuerde der
-            // Knopf einen laufenden Stream abwuergen.
+            // Deshalb jetzt: einmal ehrlich versuchen, und wenn Twitch nicht
+            // reagiert, sagen, was hilft - statt es zu verschleiern.
             let vorher = -1;
             try {
                 if (djTwitchSpieler && djTwitchSpieler.getCurrentTime) {
@@ -7974,13 +8060,19 @@
                         }
                     }
                 } catch (e) {}
-                // Ohne SDK (einfacher Rahmen) laesst sich nichts messen - dann
-                // ist der Neuaufbau ohnehin der einzige Hebel.
-                if (djTwitchSpieler && !pausiert && vorher >= 0 && jetzt > vorher) return;
+                // Es laeuft - der Knopf hat getan, was er sollte, und bleibt weg.
+                if (djTwitchSpieler && !pausiert && vorher >= 0 && jetzt > vorher) {
+                    djKnopfBeschriften(false);
+                    return;
+                }
 
-                const idx = djAktiverIndex;
-                if (idx < 0 || !djGepuffert[idx]) return;
-                djNeuAufbauen({ neustarts: 0, iframeErzwungen: false, haengerNeustarts: 0 }, false);
+                // Twitch hat nicht reagiert. Kein Neuaufbau mehr: der Knopf kommt
+                // mit der ehrlichen Ansage zurueck, und der Fokus wandert in
+                // Twitchs Rahmen, damit die Fernbedienung dort etwas ausrichten
+                // kann.
+                djKnopfBeschriften(true);
+                djTonKnopf(true, true);
+                djInPlayerFokussieren();
             }, DJ_LIVE_CONFIG.knopfNachfassenMs);
         }
 
@@ -8047,6 +8139,39 @@
             } catch (e) { return false; }
         }
 
+        // Gilt dieses Geraet fuer Twitch als Mobilgeraet?
+        //
+        // DAS ist der Unterschied zum YouTube-Widget, das auf genau demselben
+        // Screen stumm von allein anlaeuft. Es liegt nicht am Browser und nicht
+        // an unserem Code - es ist Twitchs eigene Regel. Woertlich aus der
+        // offiziellen Embed-Doku zum Parameter autoplay:
+        //
+        //   "If true, the video starts playing automatically, without the
+        //    viewer clicking play. Minimum size requirements and visibility are
+        //    necessary for autoplay to begin. THE EXCEPTION IS MOBILE DEVICES,
+        //    ON WHICH VIDEO CANNOT BE PLAYED WITHOUT USER INTERACTION."
+        //   https://dev.twitch.tv/docs/embed/video-and-clips/
+        //
+        // YouTube kennt diese Ausnahme nicht: stumm startet dort jedes Video,
+        // auf jedem Geraet. Twitch verweigert es im eigenen Rahmen, und dagegen
+        // hilft kein Chrome-Schalter, keine Kiosk-App und kein play() von uns -
+        // wir kommen an die Entscheidung gar nicht heran.
+        //
+        // Die Odroid-Box meldet sich als Android-Geraet, also greift die
+        // Ausnahme. Was wirklich hilft, steht in DJ-LIVESTREAM-SETUP.md:
+        // dem Browser die Desktop-Kennung geben (Chrome-Menue ->
+        // "Desktop-Website"), dann faellt Twitchs Mobil-Erkennung weg.
+        //
+        // Wozu wir es hier wissen muessen: solange das Geraet als mobil gilt,
+        // ist JEDER Neuaufbau des Players schaedlich. Er kann nichts starten,
+        // aber er wirft eine bereits erfolgte Bedienung weg.
+        function djMobilgeraet() {
+            let ud = false;
+            try { ud = !!(navigator.userAgentData && navigator.userAgentData.mobile); } catch (e) {}
+            const ua = String(navigator.userAgent || '');
+            return ud || /Android|iPhone|iPad|iPod|IEMobile|Mobile|Silk|Kindle/i.test(ua);
+        }
+
         // Wuerde der Browser den Ton ueberhaupt durchlassen?
         //
         // Ohne diese Frage kostet jeder Slot einen sichtbaren Aussetzer: das
@@ -8054,7 +8179,21 @@
         // und schalten zurueck - Bild weg, Bild wieder da, und das jedes Mal
         // aufs Neue. Wenn von vornherein feststeht, dass es nicht klappt,
         // bleibt es lieber gleich stumm und das Bild laeuft ruhig durch.
+
+        // Hat in diesem Chrome-Start schon einmal hoerbar Ton aus dem Player
+        // gespielt? Das ist der staerkste Beweis, den es gibt - staerker als
+        // jede Probe bei uns.
+        //
+        // Der Grund: unser AudioContext misst UNSEREN Rahmen. Twitchs Player
+        // sitzt in seinem eigenen, und wenn dort jemand von Hand auf das
+        // Lautsprechersymbol getippt hat, ist hoerbare Wiedergabe DORT erlaubt -
+        // ganz gleich, was unsere Probe meldet. Ohne dieses Gedaechtnis war der
+        // von Hand eingeschaltete Ton nach dem naechsten Kanalwechsel wieder
+        // weg, weil djTonNachziehen sich fuer chancenlos hielt.
+        let djTonJeGehoert = false;
+
         function djTonMoeglich() {
+            if (djTonJeGehoert) return true;
             // Der ehrlichste Zeuge zuerst: ein AudioContext laeuft nur, wenn der
             // Browser hoerbare Wiedergabe wirklich zulaesst.
             //
@@ -8144,6 +8283,23 @@
             return parseFloat(getComputedStyle(v).opacity || '0') >= 0.9;
         }
 
+        // Darf der Waechter den Player von sich aus neu bauen?
+        //
+        // Auf einem Geraet, das fuer Twitch als mobil gilt: nein, nie. Ein
+        // frischer Player startet dort ohnehin nicht von allein - das ist
+        // Twitchs eigene Regel, siehe djMobilgeraet - er wirft aber eine
+        // bereits erfolgte Bedienung weg. Der Neuaufbau kann also nur
+        // verlieren, und genau so sah es am Screen auch aus: kurz "Stream wird
+        // geladen", danach wieder die Play-Taste in der Bildmitte, und das
+        // immer wieder. Bleibt der Rahmen dagegen stehen, bleibt auch das Bild
+        // stehen, das jemand einmal gestartet hat.
+        //
+        // Auf einem Desktop-Browser aendert sich nichts: dort startet Twitch
+        // von selbst, und der Neuaufbau ist das bewaehrte Netz.
+        function djNeuaufbauErlaubt() {
+            return !djMobilgeraet();
+        }
+
         // Baut den Player neu und rettet die Zaehler ueber den Neuaufbau.
         //
         // djSpielerAufbauen setzt djQualiLage komplett frisch auf - sonst faenge
@@ -8192,6 +8348,13 @@
                                      && zeit > djQualiLage.letzteZeit;
             djQualiLage.letzteZeit = zeit;
 
+            // Laeuft Bild UND ist nicht stumm, dann kommt gerade hoerbar Ton -
+            // ob wir ihn aufgedreht haben oder jemand von Hand im Player. Das
+            // merken wir uns fuer den Rest der Sitzung (siehe djTonJeGehoert):
+            // danach muss der Ton nach einem Wechsel nicht mehr von Hand
+            // eingeschaltet werden.
+            if (laeuft && stumm === false) djTonJeGehoert = true;
+
             // Ist der Stream ueberhaupt je angelaufen? Wenn nicht, hilft nur ein
             // Neuaufbau in der sichtbaren Ansicht - siehe neustartNachSekunden.
             if (!djQualiLage.jeGelaufen) {
@@ -8210,7 +8373,7 @@
                     if (pausiert) djQualiLage.totSekunden += takt;
 
                     if (djQualiLage.totSekunden >= DJ_LIVE_CONFIG.neustartNachSekunden &&
-                        !djQualiLage.iframeErzwungen) {
+                        !djQualiLage.iframeErzwungen && djNeuaufbauErlaubt()) {
                         const bisher = djQualiLage.neustarts;
                         // Nach maxNeustarts vergeblichen SDK-Versuchen der letzte
                         // Ausweg: unser eigener Rahmen. Der traegt allow="autoplay"
@@ -8247,7 +8410,8 @@
             if (djQualiLage.jeGelaufen && djSlotSichtbar()) {
                 djQualiLage.haengtSekunden = laeuft ? 0 : djQualiLage.haengtSekunden + takt;
                 if (djQualiLage.haengtSekunden >= DJ_LIVE_CONFIG.haengerSekunden &&
-                    djQualiLage.haengerNeustarts < DJ_LIVE_CONFIG.maxHaengerNeustarts) {
+                    djQualiLage.haengerNeustarts < DJ_LIVE_CONFIG.maxHaengerNeustarts &&
+                    djNeuaufbauErlaubt()) {
                     // jeGelaufen bleibt beim frischen Player absichtlich falsch:
                     // er muss sich neu beweisen, und bis dahin greift wieder der
                     // Block oben mitsamt Rueckfall auf den einfachen Rahmen.
@@ -8271,6 +8435,10 @@
             //
             // Die Karenz verhindert, dass er bei jedem normalen Start kurz
             // aufblitzt - ein Twitch-Player braucht ein paar Sekunden.
+            // Laeuft das Bild, war der zweite Stufe-Text erledigt: beim naechsten
+            // Mal soll wieder das Versprechen dastehen, nicht die Notausschrift.
+            if (laeuft && djKnopfStur) djKnopfBeschriften(false);
+
             if (djSlotSichtbar()) {
                 djQualiLage.sichtbarSekunden += takt;
                 // Hat der Browser den Ton nachweislich abgelehnt, hoert der
@@ -8278,6 +8446,14 @@
                 // einem Bild, das einwandfrei laeuft.
                 const tonFehlt = DJ_LIVE_CONFIG.tonLautstaerke > 0 && stumm === true &&
                                  !djQualiLage.tonBlockiert;
+                // Steht das Bild auf einem Geraet, das fuer Twitch als mobil
+                // gilt, und ist es noch nie gelaufen, dann WISSEN wir schon
+                // jetzt, dass unser play() nichts ausrichtet. Dann gleich die
+                // ehrliche Ansage - nicht erst, nachdem der Knopf einmal ins
+                // Leere gegriffen hat.
+                if (!laeuft && !djQualiLage.jeGelaufen && djMobilgeraet()) {
+                    djKnopfBeschriften(true);
+                }
                 djTonKnopf(djQualiLage.sichtbarSekunden >= DJ_LIVE_CONFIG.knopfNachSekunden &&
                            (!laeuft || tonFehlt));
             } else {
@@ -8389,6 +8565,58 @@
             }
         }
 
+        // Kanalwechsel OHNE Neuaufbau - der wichtigste Hebel gegen das
+        // Play-Symbol in der Bildmitte.
+        //
+        // Bisher bekam jeder Kanal seinen eigenen, frisch gebauten Player. Auf
+        // einem Geraet, das fuer Twitch als mobil gilt (siehe djMobilgeraet),
+        // ist das der sichere Weg zum Stillstand: der neue Player faengt bei
+        // null an und zeigt wieder seine eigene Play-Taste. Dass eben noch
+        // jemand gedrueckt hat, hilft ihm nicht - die Bedienung galt dem alten
+        // Rahmen, der gerade weggeworfen wurde. Genau das hat der Betrieb
+        // gemeldet: "wenn ich den Live-Stream wechsle, muss ich wieder am
+        // Play-Zeichen starten".
+        //
+        // Twitchs SDK kann den Kanal im laufenden Player umschalten
+        // (setChannel, offiziell dokumentiert). Dann bleibt derselbe Rahmen
+        // stehen, und die einmal erteilte Bedienung gilt weiter: einmal starten
+        // genuegt fuer den ganzen Abend.
+        //
+        // Rueckgabe: true, wenn der Wechsel im Player erledigt ist. false heisst
+        // "geht hier nicht" - dann baut der Aufrufer wie bisher neu.
+        function djKanalWechseln(entry) {
+            if (!entry || entry.platform !== 'twitch' || !entry.channel) return false;
+            if (!djTwitchSpieler || typeof djTwitchSpieler.setChannel !== 'function') return false;
+            // Ein Player, der auf den einfachen Rahmen zurueckgefallen ist, kann
+            // gar nichts umschalten - und der Rahmen muss noch stehen.
+            const rahmen = document.querySelector('#dj-live-player .dj-player-frame');
+            if (!rahmen || !rahmen.isConnected) return false;
+            try {
+                const soll = String(entry.channel).toLowerCase();
+                if (typeof djTwitchSpieler.getChannel === 'function') {
+                    const ist = String(djTwitchSpieler.getChannel() || '').toLowerCase();
+                    if (ist === soll) { djAnstupsen(); return true; }
+                }
+                djTwitchSpieler.setChannel(entry.channel);
+            } catch (e) { return false; }
+
+            // Messwerte gelten dem neuen Kanal - aber jeGelaufen und die
+            // Neustartzaehler bleiben stehen: es ist derselbe Player, und was er
+            // bisher gezeigt hat, zaehlt weiter.
+            if (djQualiLage) {
+                djQualiLage.laufSekunden   = 0;
+                djQualiLage.letzteZeit     = -1;
+                djQualiLage.stillSekunden  = 0;
+                djQualiLage.totSekunden    = 0;
+                djQualiLage.haengtSekunden = 0;
+                djQualiLage.tonZweifel     = 0;
+                djQualiLage.hochgesetzt    = false;
+                djQualiLage.erledigt       = false;
+                djQualiLage.qualiZurueck   = false;
+            }
+            return true;
+        }
+
         function djSpielerAbbauen() {
             const buehne = document.getElementById('dj-live-player');
             djAktiverIndex = -1;
@@ -8412,7 +8640,21 @@
             if (!DJ_SLOT_AN) return;
             const eintraege = djUsableEntries();
             const buehne = document.getElementById('dj-live-player');
-            if (!buehne || !eintraege.length) return;
+            if (!buehne) return;
+
+            // Niemand mehr live: ein schlafender Player und seine Liste muessen
+            // weg. Frueher erledigte das djStopPlayer beim Verlassen des Slots -
+            // seit der Player auf Mobilgeraeten liegen bleibt (siehe dort),
+            // zeigte der Slot sonst beim naechsten Durchlauf einen laengst
+            // beendeten Stream.
+            if (!eintraege.length) {
+                if (djGepuffert.length || buehne.firstChild) {
+                    djSpielerAbbauen();
+                    buehne.innerHTML = '';
+                    djGepuffert = [];
+                }
+                return;
+            }
 
             // Unveraenderte Liste und es laeuft schon ein Player? Dann nichts
             // anfassen - ein Neuaufbau wuerde den laufenden Stream abwuergen.
@@ -8421,6 +8663,13 @@
             if (gleich && djAktiverIndex >= 0) return;
 
             djGepuffert = eintraege.slice();
+            // Laeuft schon ein Player, bekommt er nur den neuen Kanal gesagt -
+            // ein Neuaufbau kostete auf Mobilgeraeten die bereits erteilte
+            // Bedienung und damit das Bild (siehe djKanalWechseln).
+            if (djAktiverIndex >= 0 && djKanalWechseln(djGepuffert[0])) {
+                djAktiverIndex = 0;
+                return;
+            }
             djSpielerAufbauen(djGepuffert[0]);
             djAktiverIndex = 0;
         }
@@ -8431,7 +8680,10 @@
             if (!entry) return;
 
             if (index !== djAktiverIndex) {
-                djSpielerAufbauen(entry);
+                // Erst der schonende Weg: denselben Player weiterlaufen lassen
+                // und ihm nur einen anderen Kanal sagen. Nur wenn das nicht
+                // geht (YouTube, einfacher Rahmen, kein SDK), wird gebaut.
+                if (!djKanalWechseln(entry)) djSpielerAufbauen(entry);
                 djAktiverIndex = index;
             } else {
                 // Schon im Slot davor gebaut und laeuft im Idealfall bereits -
@@ -8531,6 +8783,9 @@
                 '\nAutoplay:      ' + (darf === true  ? 'erlaubt'
                                      : darf === false ? 'GESPERRT - die umgebende Seite reicht es nicht durch'
                                                       : 'nicht feststellbar') +
+                '\nTwitch-Regel:  ' + (djMobilgeraet()
+                    ? 'MOBILGERAET - Twitch startet hier NIE von selbst. Abhilfe: "Desktop-Website"'
+                    : 'Desktop - Twitch erlaubt hier Autostart') +
                 '\nTwitch-parent: ' + (djEmbedHosts().join(', ') || '(nicht moeglich - Embeds bleiben aus)');
             box.style.display = 'block';
         })();
