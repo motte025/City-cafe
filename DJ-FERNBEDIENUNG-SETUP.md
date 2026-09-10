@@ -151,6 +151,20 @@ Suche und getroffene Auswahl überleben das Nachladen.
 *nicht angemeldet*, mehr nicht. Den langen Erklärtext gibt es nur, solange
 niemand angemeldet ist.
 
+**Der Chip 📱 Twitch: kein Autostart** meldet den wichtigsten Befund vom Screen:
+das Gerät dort gilt für Twitch als Mobilgerät, und Twitch startet auf
+Mobilgeräten grundsätzlich nicht von selbst — das ist Twitchs eigene Regel, kein
+Browser-Problem und nichts, was das Dashboard beheben kann. Am Screen muss dann
+einmal die **▶-Taste in der Bildmitte** gedrückt werden; danach hält der Start
+über alle Kanalwechsel hinweg, weil der Player nicht mehr neu gebaut wird.
+Dauerhafte Abhilfe: im Browser am Screen **„Desktop-Website"** einschalten.
+Ausführlich in `DJ-LIVESTREAM-SETUP.md`, Abschnitt *Warum YouTube von allein
+läuft und Twitch nicht*.
+
+**„Auf den Screen" räumt den laufenden Player nicht mehr ab.** Der Screen
+schaltet den Kanal im bestehenden Player um. Wer dort einmal gestartet hat, muss
+das nach einem Wechsel nicht wiederholen.
+
 ---
 
 ## 4. Was eingestellt werden kann

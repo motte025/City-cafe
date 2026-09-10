@@ -103,6 +103,15 @@
     </div>
 </div>
 
+<div class="urteil offen" id="u-twitch">
+    <div class="zeichen">…</div>
+    <div class="text">
+        <div class="frage">Twitch ohne Bedienung</div>
+        <div class="antwort">wird geprüft …</div>
+        <div class="hinweis"></div>
+    </div>
+</div>
+
 <h2>Was der Browser meldet</h2>
 <table id="fakten"></table>
 
@@ -117,6 +126,11 @@
     App Medien grundsätzlich – dann hilft an ihr keine Einstellung im Dashboard.<br>
     <strong>Ton ohne Bedienung</strong> ist die eigentliche Hürde. Steht hier
     <em>ja</em>, taugt diese App für den Screen.<br>
+    <strong>Twitch ohne Bedienung</strong> ist eine ganz andere Frage: sie hängt
+    nicht am Browser, sondern an Twitch. Twitch startet auf Mobilgeräten
+    grundsätzlich nicht von selbst – so steht es in ihrer eigenen Doku. YouTube
+    kennt diese Ausnahme nicht, deshalb läuft das Nightlife-Widget auf demselben
+    Screen von allein.<br>
     Twitch-Gegenprobe: <code>?kanal=name</code> an die Adresse hängen, mit einem
     Kanal, der gerade live ist.
 </p>
@@ -239,7 +253,31 @@
         setzen('u-ton', 'offen', 'nicht feststellbar', 'Web Audio steht hier nicht zur Verfügung (' + tonZustand + ').');
     }
 
+    // ---- Twitch: die Regel, die keinen Browser fragt ---------------------
+    // Twitch verweigert Autoplay auf Mobilgeraeten von sich aus. Woertlich aus
+    // der offiziellen Embed-Doku zum Parameter autoplay:
+    //   "The exception is mobile devices, on which video cannot be played
+    //    without user interaction."
+    //   https://dev.twitch.tv/docs/embed/video-and-clips/
+    // Das erklaert, warum das YouTube-Widget auf demselben Screen stumm von
+    // allein laeuft und Twitch daneben mit seiner Play-Taste stehenbleibt -
+    // YouTube kennt diese Ausnahme nicht.
+    var mobil = (function () {
+        var ud = false;
+        try { ud = !!(navigator.userAgentData && navigator.userAgentData.mobile); } catch (e) {}
+        return ud || /Android|iPhone|iPad|iPod|IEMobile|Mobile|Silk|Kindle/i.test(navigator.userAgent || '');
+    })();
+
+    if (mobil) {
+        setzen('u-twitch', 'nein', 'nein – Twitch verweigert es hier',
+               'Dieses Gerät gilt für Twitch als Mobilgerät. Twitch startet dort grundsätzlich nicht von selbst, unabhängig vom Browser und von allem, was das Dashboard tut. Abhilfe: im Browsermenü „Desktop-Website“ einschalten und die Seite neu laden – dann diese Prüfung wiederholen.');
+    } else {
+        setzen('u-twitch', 'ja', 'ja – Twitch erlaubt Autostart',
+               'Dieses Gerät gilt für Twitch nicht als Mobilgerät. Ob es dann wirklich läuft, hängt nur noch an den beiden Urteilen oben.');
+    }
+
     zeile('Adresse', location.href);
+    zeile('gilt für Twitch als Mobilgerät', mobil ? 'JA – kein Autostart' : 'nein');
     zeile('AudioContext beim Laden', tonZustand);
     zeile('eingebettet in fremde Seite', eingebettet ? 'JA' : 'nein');
     zeile('als App gestartet', alsApp ? 'JA' : 'nein, normaler Tab');
