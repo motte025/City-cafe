@@ -7073,6 +7073,12 @@
             // Der Knopf erscheint frueher - er stoert niemanden und hilft sofort.
             knopfNachSekunden: 6,
 
+            // So lange bekommt der billige Weg (play() per Nachricht) nach einem
+            // Knopfdruck Zeit, bevor der Player neu gebaut wird. Lang genug, dass
+            // ein reagierender Player nicht unnoetig neu startet; kurz genug,
+            // dass es sich wie "der Knopf tut was" anfuehlt.
+            knopfNachfassenMs: 1800,
+
             // Bild lief schon, steht dann aber still: ab hier gilt es als
             // Haenger und der Player wird neu aufgebaut. Hoch genug, dass ein
             // Werbeblock nicht faelschlich dazwischenfunkt.
@@ -7748,6 +7754,19 @@
                     } catch (e) {}
                 };
                 try {
+                    // Frisch gebauter Player: sofort anwerfen, sobald er
+                    // Befehle annimmt.
+                    //
+                    // Genau das fehlte beim Kanalwechsel. Der neue Player stand
+                    // still, bis jemand IM Player auf Play drueckte: der
+                    // Waechter kommt erst Sekunden spaeter, und sein Anstupser
+                    // greift nur, wenn der Player sich als pausiert meldet.
+                    // Ist die Bedienung schon erfolgt, kommt hier auch der Ton
+                    // gleich mit - man soll nicht bei jedem Wechsel neu
+                    // freischalten muessen.
+                    spieler.addEventListener(Twitch.Player.READY, function () {
+                        if (djTwitchSpieler === spieler) djSofortStarten();
+                    });
                     // Nach READY stehen die Stufen noch nicht immer fest, deshalb
                     // beim ersten Bild noch einmal nachsetzen.
                     spieler.addEventListener(Twitch.Player.READY, stufeSetzen);
@@ -7866,7 +7885,7 @@
                 djTwitchSpieler.setMuted(true);
                 djTwitchSpieler.play();
             } catch (e) {}
-            if (!(wunsch > 0)) return;
+            if (!(wunsch > 0) || !djTonMoeglich()) return;
             try {
                 djTwitchSpieler.setMuted(false);
                 if (djTwitchSpieler.setVolume) djTwitchSpieler.setVolume(wunsch);
@@ -7908,10 +7927,57 @@
         // Jeder Druck muss wirken, nicht nur der erste: djFreigabeEinsammeln
         // steigt beim zweiten Mal sofort wieder aus, und der Knopf waere danach
         // tot gewesen.
+        let djNachfassen = null;
+
         function djKnopfGedrueckt() {
             djFreigabeEinsammeln();   // beim ersten Mal: Freigabe holen
-            djSofortStarten();        // bei jedem Mal: Bild und Ton anwerfen
+            djSofortStarten();        // der billige Weg: play() per postMessage
             djTonKnopf(false);
+
+            // Und der Weg, der nicht scheitern kann.
+            //
+            // play() geht als Nachricht an Twitchs Rahmen, und dort entscheidet
+            // Twitchs Player, ob er sie befolgt. Zeigt er schon sein eigenes
+            // Play-Symbol, verpufft sie - am Tablet passierte auf den Knopf
+            // deshalb sichtbar nichts, waehrend ein Klick MITTEN in den Player
+            // sofort wirkte: der landet in Twitchs Rahmen, unserer nicht.
+            // Beim einfachen Rahmen ohne SDK gibt es ueberhaupt keinen Befehl,
+            // den Twitch verstehen wuerde.
+            //
+            // Ein neu gebauter Player umgeht das ganz: er startet von sich aus
+            // mit autoplay=true, und die Bedienung von eben gilt fuer das
+            // restliche Leben der Seite - der frische Rahmen bekommt die
+            // Wiedergabefreigabe also mit auf den Weg.
+            //
+            // Nur wenn das Billige nicht schon gereicht hat: sonst wuerde der
+            // Knopf einen laufenden Stream abwuergen.
+            let vorher = -1;
+            try {
+                if (djTwitchSpieler && djTwitchSpieler.getCurrentTime) {
+                    vorher = djTwitchSpieler.getCurrentTime();
+                }
+            } catch (e) {}
+
+            if (djNachfassen) clearTimeout(djNachfassen);
+            djNachfassen = setTimeout(function () {
+                djNachfassen = null;
+                let jetzt = -1, pausiert = true;
+                try {
+                    if (djTwitchSpieler) {
+                        if (djTwitchSpieler.getCurrentTime) jetzt = djTwitchSpieler.getCurrentTime();
+                        if (typeof djTwitchSpieler.isPaused === 'function') {
+                            pausiert = djTwitchSpieler.isPaused();
+                        }
+                    }
+                } catch (e) {}
+                // Ohne SDK (einfacher Rahmen) laesst sich nichts messen - dann
+                // ist der Neuaufbau ohnehin der einzige Hebel.
+                if (djTwitchSpieler && !pausiert && vorher >= 0 && jetzt > vorher) return;
+
+                const idx = djAktiverIndex;
+                if (idx < 0 || !djGepuffert[idx]) return;
+                djNeuAufbauen({ neustarts: 0, iframeErzwungen: false, haengerNeustarts: 0 }, false);
+            }, DJ_LIVE_CONFIG.knopfNachfassenMs);
         }
 
         (function djTonKnopfVerdrahten() {
