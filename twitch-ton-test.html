@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Twitch-Tontest · City Cafe</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:20px;background:#091223;color:#edf5ff;font:18px system-ui,sans-serif}h1{margin:0 0 8px;font-size:28px}p{margin:8px 0 16px;color:#c9d7ec}main{display:flex;gap:20px;align-items:flex-start}#player{width:100%;height:420px;min-width:400px;background:#000}.video{flex:2;min-width:400px}.info{flex:1;min-width:260px}#status{padding:16px;background:#16273f;border:1px solid #6784ae;border-radius:10px;white-space:pre-wrap;font-size:20px;line-height:1.6}#log{white-space:pre-wrap;overflow-wrap:anywhere;background:#101d30;padding:12px;border-radius:10px;max-height:240px;overflow:auto;font-size:14px}button,a{display:inline-block;margin:8px 8px 0 0;padding:12px;background:#65d9f2;color:#071222;border:0;border-radius:8px;font-size:17px;text-decoration:none}details{margin-top:14px;overflow-wrap:anywhere}small{color:#bdcde3}button:focus,a:focus{outline:3px solid white}@media(max-width:800px){main{display:block}.info{margin-top:16px}body{padding:10px}}
+</style>
+</head>
+<body>
+<h1>Twitch: automatischer Start mit Ton</h1>
+<p id="intro">30 Sekunden nichts antippen. Medienlautstärke vorher niedrig einstellen.</p>
+<main>
+<section class="video">
+<div id="player"></div>
+<p><small>Der Player kann „nicht stumm“ melden, ohne dass am Lautsprecher Ton ankommt. Bitte selbst hören. Eine Berührung des Players verändert die Testbedingungen.</small></p>
+</section>
+<section class="info">
+<div id="status">Twitch-Schnittstelle wird geladen …</div>
+<button id="manual" disabled>Erst danach: Ton manuell starten</button>
+<a id="other">Anderen Startmodus testen</a>
+<pre id="log" aria-label="Player-Protokoll"></pre>
+</section>
+</main>
+<details><summary>Gerät und Testbedingungen</summary><pre id="env" style="white-space:pre-wrap"></pre></details>
+<script>
+(function(){
+'use strict';
+var q=new URLSearchParams(location.search);
+var raw=(q.get('kanal')||'djmissshelton').trim().toLowerCase();
+var channel=/^[a-z0-9_]{1,25}$/.test(raw)?raw:'djmissshelton';
+var staged=q.get('modus')==='nachziehen';
+var t0=Date.now(),player=null,ready=false,lastEvent='Noch keine Meldung';
+var attempted=false,finished=false,unmuteTimer=null,poll=null,logs=[];
+var parents=[location.hostname],initialActivation=active(),ctx=null;
+function active(){return navigator.userActivation?String(navigator.userActivation.hasBeenActive):'unbekannt';}
+try{for(var i=0;i<(location.ancestorOrigins||[]).length;i++){var host=new URL(location.ancestorOrigins[i]).hostname;if(parents.indexOf(host)<0)parents.push(host);}}catch(e){}
+function log(s){logs.push(((Date.now()-t0)/1000).toFixed(1)+' s: '+s);if(logs.length>60)logs.shift();document.getElementById('log').textContent=logs.join('\n');}
+function get(name){try{return player[name]();}catch(e){return 'unbekannt';}}
+function render(){
+if(!ready)return;
+document.getElementById('status').textContent=
+'Kanal: '+channel+'\n'+
+'Modus: '+(staged?'Stumm starten → Ton nachziehen':'Direkt mit Ton')+'\n'+
+'Letztes Ereignis: '+lastEvent+'\n'+
+'Player pausiert: '+get('isPaused')+'\n'+
+'Stummgeschaltet: '+get('getMuted')+'\n'+
+'Lautstärke: '+get('getVolume')+'\n'+
+'Automatischer Test: '+(finished?'30 Sekunden abgeschlossen':'läuft');
+}
+document.getElementById('intro').textContent='Kanal '+channel+' · '+(staged?'Start stumm, Ton 2 Sekunden nach PLAYING einschalten.':'Start mit eingeschaltetem Ton (35 % bei READY).')+' 30 Sekunden nichts antippen.';
+document.getElementById('other').href='?kanal='+encodeURIComponent(channel)+'&modus='+(staged?'direkt':'nachziehen');
+document.getElementById('other').textContent=staged?'Neuer Test: direkt mit Ton':'Neuer Test: Ton nach Bildstart';
+var audioState='nicht verfügbar';
+try{var AC=window.AudioContext||window.webkitAudioContext;if(AC){ctx=new AC();audioState=ctx.state;ctx.close();}}catch(e){audioState='Fehler';}
+document.getElementById('env').textContent='Version: 1\nAudioContext beim Laden: '+audioState+' (kein Twitch-Tonnachweis)\nBedienung beim Laden: '+initialActivation+'\nBrowser: '+navigator.userAgent+'\nParents: '+parents.join(', ');
+function start(){
+try{
+player=new Twitch.Player('player',{width:'100%',height:'100%',channel:channel,parent:parents,autoplay:true,muted:staged});
+['READY','PLAY','PLAYING','PAUSE','PLAYBACK_BLOCKED','ONLINE','OFFLINE','ENDED'].forEach(function(name){
+if(!Twitch.Player[name])return;
+player.addEventListener(Twitch.Player[name],function(){
+lastEvent=name;log(name);
+if(name==='READY'&&!ready){
+ready=true;document.getElementById('manual').disabled=false;
+player.setVolume(0.35);
+if(!staged)player.setMuted(false);
+player.play();log('Einmaliger Startbefehl; muted='+staged);
+poll=setInterval(render,1000);
+}
+if(name==='PLAYING'&&staged&&!attempted&&!finished){
+attempted=true;unmuteTimer=setTimeout(function(){
+if(finished)return;
+player.setVolume(0.35);player.setMuted(false);log('Ton automatisch angefordert (35 %)');render();
+},2000);
+}
+render();
+});
+});
+}catch(e){document.getElementById('status').textContent='Player konnte nicht erstellt werden: '+e.message;log('Fehler: '+e.message);}
+}
+document.getElementById('manual').onclick=function(){
+if(!ready)return;
+log('MANUELLE BEDIENUNG – ab hier kein Autoplay-Nachweis');
+player.setVolume(0.35);player.setMuted(false);player.play();render();
+};
+setTimeout(function(){
+finished=true;clearTimeout(unmuteTimer);
+log('30 Sekunden beendet. Ob Ton hörbar ist, muss am Gerät beurteilt werden.');
+if(!ready)document.getElementById('status').textContent='Nach 30 Sekunden kein READY. Netzwerk, Player-Anzeige und Einbettung prüfen.';
+else render();
+},30000);
+var sdk=document.createElement('script');sdk.src='https://player.twitch.tv/js/embed/v1.js';
+sdk.onload=start;sdk.onerror=function(){document.getElementById('status').textContent='Twitch-Schnittstelle konnte nicht geladen werden.';log('SDK-Ladefehler');};
+document.head.appendChild(sdk);
+window.addEventListener('pagehide',function(){clearInterval(poll);clearTimeout(unmuteTimer);});
+})();
+</script>
+</body>
+</html>
