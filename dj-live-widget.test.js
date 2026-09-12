@@ -21,7 +21,9 @@ assert.match(dashboard, /Gefolgte Twitch-DJs werden geprüft/);
 assert.match(checker, /helix\/streams\/followed\?user_id=/);
 assert.match(checker, /const DJ_TWITCH_MUSIC_GAME_ID = '26936'/);
 assert.match(checker, /TWITCH_USER_REFRESH_TOKEN/);
+assert.match(checker, /djTwitchUserIdErmitteln/);
+assert.match(checker, /props\.setProperty\('TWITCH_USER_ID'/);
 assert.match(checker, /user:read:follows/);
 
 assert.doesNotMatch(remote, /🔊 Ton an|🔇 stumm/);
-console.log('DJ-Live-Vertrag: 15 Prüfungen bestanden.');
+console.log('DJ-Live-Vertrag: 17 Prüfungen bestanden.');

@@ -16,7 +16,7 @@
  *                              (im Song-Collector-Projekt schon vorhanden)
  *      TWITCH_CLIENT_ID      = <Client-ID der Twitch-Anwendung>
  *      TWITCH_CLIENT_SECRET  = <Client-Secret der Twitch-Anwendung>
- *      TWITCH_USER_ID        = <numerische Twitch-ID von motte025>
+ *      TWITCH_USER_ID        = optionaler Cache; wird automatisch ermittelt
  *      TWITCH_USER_ACCESS_TOKEN  = <User-Token mit user:read:follows>
  *      TWITCH_USER_REFRESH_TOKEN = <zugehoeriger Refresh-Token>
  *    Die Werte gehoeren NICHT ins Repo - dieses ist oeffentlich einsehbar.
@@ -88,6 +88,7 @@ function djPruefeLiveStatus() {
 // Ein App-Access-Token reicht dafuer ausdruecklich nicht. Access- und Refresh-
 // Token bleiben in den geschuetzten Script Properties.
 const DJ_TWITCH_MUSIC_GAME_ID = '26936';
+const DJ_TWITCH_LOGIN = 'motte025';
 
 function djTwitchUserTokenErneuern(props) {
   const refresh = props.getProperty('TWITCH_USER_REFRESH_TOKEN');
@@ -129,13 +130,30 @@ function djTwitchApiAbruf(url, props, token, zweiterVersuch) {
   return JSON.parse(res.getContentText());
 }
 
+function djTwitchUserIdErmitteln(props, token) {
+  const gespeichert = props.getProperty('TWITCH_USER_ID');
+  if (gespeichert) return gespeichert;
+
+  // GET /users ohne id/login liefert den Benutzer des User-Tokens. Dadurch muss
+  // die numerische ID nicht von Hand gesucht werden und ein Token des falschen
+  // Twitch-Kontos faellt sofort mit einer verstaendlichen Meldung auf.
+  const antwort = djTwitchApiAbruf('https://api.twitch.tv/helix/users', props, token, false);
+  const nutzer = antwort.data && antwort.data[0];
+  if (!nutzer || !nutzer.id) throw new Error('Twitch-Konto zum User-Token nicht gefunden');
+  if (String(nutzer.login || '').toLowerCase() !== DJ_TWITCH_LOGIN) {
+    throw new Error('User-Token gehoert zu ' + (nutzer.login || 'unbekannt') +
+      ', erwartet wird ' + DJ_TWITCH_LOGIN);
+  }
+  props.setProperty('TWITCH_USER_ID', String(nutzer.id));
+  return String(nutzer.id);
+}
+
 function djPruefeGefolgteTwitch(props) {
   let token = props.getProperty('TWITCH_USER_ACCESS_TOKEN');
-  const userId = props.getProperty('TWITCH_USER_ID');
-  if (!userId) return { live: [], fehler: 'TWITCH_USER_ID fuer motte025 fehlt' };
 
   try {
     if (!token) token = djTwitchUserTokenErneuern(props);
+    const userId = djTwitchUserIdErmitteln(props, token);
     const live = [];
     let cursor = '';
     do {

@@ -35,7 +35,7 @@ lesen. Diese Werte müssen als Google-Apps-Script-Properties gesetzt werden:
 | `GITHUB_TOKEN` | PAT mit Schreibrecht auf dieses Repository |
 | `TWITCH_CLIENT_ID` | Client-ID der Twitch-Anwendung |
 | `TWITCH_CLIENT_SECRET` | Client-Secret der Twitch-Anwendung |
-| `TWITCH_USER_ID` | numerische Twitch-User-ID von `motte025` |
+| `TWITCH_USER_ID` | optional; wird beim ersten Test automatisch ermittelt und gespeichert |
 | `TWITCH_USER_ACCESS_TOKEN` | User-Access-Token mit `user:read:follows` |
 | `TWITCH_USER_REFRESH_TOKEN` | zugehöriger Refresh-Token |
 
@@ -78,7 +78,7 @@ Handy-Fernbedienung ausgewählt werden.
 
    Reine Datei im Branch:
    <https://raw.githubusercontent.com/motte025/City-cafe/work/google-apps-script/dj-live-checker.gs>
-2. Die sechs oben genannten Script Properties setzen.
+2. Die fünf Zugangsdaten setzen. `TWITCH_USER_ID` leer lassen; sie wird beim ersten Lauf automatisch ermittelt.
 3. `djTestLauf()` ausführen und prüfen, ob die erwarteten live gefolgten
    Music-Kanäle im Protokoll stehen.
 4. `djTriggerEinrichten()` ausführen. Der Trigger aktualisiert den Status alle
