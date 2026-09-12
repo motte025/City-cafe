@@ -70,7 +70,7 @@ function djPruefeLiveStatus() {
   // Ausschliesslich die aktuell live sendenden Musik-Kanaele, denen motte025
   // auf Twitch folgt. Die User-Berechtigung bleibt serverseitig in den Script
   // Properties; niemals einen User-Token ins oeffentliche Dashboard schreiben.
-  const twitchErgebnis = djPruefeGefolgteTwitch(props);
+  const twitchErgebnis = djPruefeGefolgteTwitch_(props);
   if (twitchErgebnis.fehler) {
     Logger.log('Twitch-Abfrage fehlgeschlagen (' + twitchErgebnis.fehler + ') - Lauf wird verworfen.');
     return;
@@ -90,12 +90,16 @@ function djPruefeLiveStatus() {
 const DJ_TWITCH_MUSIC_GAME_ID = '26936';
 const DJ_TWITCH_LOGIN = 'motte025';
 
-function djTwitchUserTokenErneuern(props) {
+function djTwitchUserTokenErneuern_(props) {
   const refresh = props.getProperty('TWITCH_USER_REFRESH_TOKEN');
   const clientId = props.getProperty('TWITCH_CLIENT_ID');
   const clientSecret = props.getProperty('TWITCH_CLIENT_SECRET');
-  if (!refresh || !clientId || !clientSecret) {
-    throw new Error('TWITCH_USER_REFRESH_TOKEN / TWITCH_CLIENT_ID / TWITCH_CLIENT_SECRET fehlen');
+  const fehlt = [];
+  if (!refresh) fehlt.push('TWITCH_USER_REFRESH_TOKEN');
+  if (!clientId) fehlt.push('TWITCH_CLIENT_ID');
+  if (!clientSecret) fehlt.push('TWITCH_CLIENT_SECRET');
+  if (fehlt.length) {
+    throw new Error('Skripteigenschaften fehlen: ' + fehlt.join(', '));
   }
   const res = UrlFetchApp.fetch('https://id.twitch.tv/oauth2/token', {
     method: 'post',
@@ -114,7 +118,7 @@ function djTwitchUserTokenErneuern(props) {
   return daten.access_token;
 }
 
-function djTwitchApiAbruf(url, props, token, zweiterVersuch) {
+function djTwitchApiAbruf_(url, props, token, zweiterVersuch) {
   const clientId = props.getProperty('TWITCH_CLIENT_ID');
   const res = UrlFetchApp.fetch(url, {
     method: 'get',
@@ -122,7 +126,7 @@ function djTwitchApiAbruf(url, props, token, zweiterVersuch) {
     muteHttpExceptions: true
   });
   if (res.getResponseCode() === 401 && !zweiterVersuch) {
-    return djTwitchApiAbruf(url, props, djTwitchUserTokenErneuern(props), true);
+    return djTwitchApiAbruf_(url, props, djTwitchUserTokenErneuern_(props), true);
   }
   if (res.getResponseCode() !== 200) {
     throw new Error('Helix HTTP ' + res.getResponseCode() + ': ' + res.getContentText());
@@ -130,14 +134,14 @@ function djTwitchApiAbruf(url, props, token, zweiterVersuch) {
   return JSON.parse(res.getContentText());
 }
 
-function djTwitchUserIdErmitteln(props, token) {
+function djTwitchUserIdErmitteln_(props, token) {
   const gespeichert = props.getProperty('TWITCH_USER_ID');
   if (gespeichert) return gespeichert;
 
   // GET /users ohne id/login liefert den Benutzer des User-Tokens. Dadurch muss
   // die numerische ID nicht von Hand gesucht werden und ein Token des falschen
   // Twitch-Kontos faellt sofort mit einer verstaendlichen Meldung auf.
-  const antwort = djTwitchApiAbruf('https://api.twitch.tv/helix/users', props, token, false);
+  const antwort = djTwitchApiAbruf_('https://api.twitch.tv/helix/users', props, token, false);
   const nutzer = antwort.data && antwort.data[0];
   if (!nutzer || !nutzer.id) throw new Error('Twitch-Konto zum User-Token nicht gefunden');
   if (String(nutzer.login || '').toLowerCase() !== DJ_TWITCH_LOGIN) {
@@ -148,19 +152,19 @@ function djTwitchUserIdErmitteln(props, token) {
   return String(nutzer.id);
 }
 
-function djPruefeGefolgteTwitch(props) {
+function djPruefeGefolgteTwitch_(props) {
   let token = props.getProperty('TWITCH_USER_ACCESS_TOKEN');
 
   try {
-    if (!token) token = djTwitchUserTokenErneuern(props);
-    const userId = djTwitchUserIdErmitteln(props, token);
+    if (!token) token = djTwitchUserTokenErneuern_(props);
+    const userId = djTwitchUserIdErmitteln_(props, token);
     const live = [];
     let cursor = '';
     do {
       const url = 'https://api.twitch.tv/helix/streams/followed?user_id=' +
         encodeURIComponent(userId) + '&first=100' +
         (cursor ? '&after=' + encodeURIComponent(cursor) : '');
-      const antwort = djTwitchApiAbruf(url, props, token, false);
+      const antwort = djTwitchApiAbruf_(url, props, token, false);
       (antwort.data || []).forEach(stream => {
         // "DJ" ist bei Twitch keine API-Eigenschaft. Fuer die automatische,
         // reproduzierbare Auswahl gilt deshalb die offizielle Kategorie Music.
@@ -561,6 +565,6 @@ function djYoutubeDebug(kanal) {
 // Zeigt, was der Checker gerade sehen wuerde - ohne irgendetwas zu committen.
 function djTestLauf() {
   const props = PropertiesService.getScriptProperties();
-  const twitch = djPruefeGefolgteTwitch(props);
+  const twitch = djPruefeGefolgteTwitch_(props);
   Logger.log('Gefolgte Twitch-Musikkanaele live -> ' + JSON.stringify(twitch));
 }

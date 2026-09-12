@@ -11,18 +11,47 @@
 > Die Handy-Fernbedienung bleibt aktiv. Der QR-Code zur Fernbedienung erscheint zu Beginn des
 > Twitch-Slots; eine Auswahl am Handy hat Vorrang vor der Zufallsauswahl.
 
-### Vor dem produktiven Merge testen
+### Testadresse
 
-Live-Kanal direkt und unabhängig vom Checker testen:
+Der frühere `raw.githack.com/.../work/...`-Link funktioniert hier nicht: Der
+Codex-Arbeitsbranch wird nicht als öffentlicher GitHub-Branch veröffentlicht und
+der Dienst antwortet deshalb korrekt mit 404. Diesen Link nicht mehr verwenden.
 
-<https://raw.githack.com/motte025/City-cafe/work/index.html?djnow=1&djtest=djmissshelton>
+Der Player lässt sich unabhängig vom neuen Follow-Checker auf der bestehenden
+GitHub-Pages-Seite mit einem erzwungenen Kanal prüfen:
 
-30-Sekunden-Leerfall mit dem aktuellen `live_status.json` testen:
+<https://motte025.github.io/City-cafe/?djnow=1&djtest=djmissshelton>
 
-<https://raw.githack.com/motte025/City-cafe/work/index.html?djnow=1>
+Der vollständige automatische Follow-Modus kann erst geprüft werden, nachdem
+`djTestLauf()` erfolgreich war, `live_status.json` aktualisiert wurde und die
+Dashboard-Änderung auf GitHub Pages veröffentlicht ist.
 
-`raw.githack.com` dient nur der Branch-Vorschau. Nach dem Merge bleibt die
-Produktivadresse `https://motte025.github.io/City-cafe/`.
+
+### Wenn „TWITCH_USER_REFRESH_TOKEN / TWITCH_CLIENT_ID / TWITCH_CLIENT_SECRET fehlen“ erscheint
+
+Das ist kein Programmfehler und `djTestLauf` ist die richtige Funktion. Die
+Skripteigenschaften des **aktuellen Apps-Script-Projekts** fehlen. Sie gelten
+pro Projekt und werden nicht durch das Einfügen der `.gs`-Datei übernommen.
+
+1. Links unten auf das Zahnrad **Projekteinstellungen** tippen.
+2. Bis **Skripteigenschaften** scrollen.
+3. **Skripteigenschaft hinzufügen** wählen und exakt diese Namen anlegen:
+   `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`, `TWITCH_USER_ACCESS_TOKEN` und
+   `TWITCH_USER_REFRESH_TOKEN`. Für den späteren Schreibvorgang muss außerdem
+   `GITHUB_TOKEN` vorhanden sein.
+4. Werte aus der registrierten Twitch-Anwendung beziehungsweise dem
+   Authorization-Code-Flow für `motte025` einsetzen. Der User-Token muss den
+   Scope `user:read:follows` besitzen. Client-Secret oder Token niemals hier im
+   Repository, Chat oder Screenshot veröffentlichen.
+5. Speichern, zum Code zurückkehren und erneut **nur `djTestLauf`** ausführen.
+   `djTwitchUserIdErmitteln_` ist eine Hilfsfunktion und darf nicht direkt über
+   das Funktionsmenü gestartet werden; direkt gestartet bekäme sie keine
+   Argumente und meldet deshalb `Cannot read properties of undefined`.
+6. Erst bei `"fehler":null` einmal `djTriggerEinrichten` ausführen.
+
+`TWITCH_USER_ID` wird automatisch ermittelt. Ein Ergebnis mit `"live":[]` und
+`"fehler":null` ist erfolgreich und bedeutet nur, dass gerade kein gefolgter
+Music-Kanal live ist.
 
 ### Twitch-Zugriff für `motte025`
 
