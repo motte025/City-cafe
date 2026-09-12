@@ -325,8 +325,8 @@
         };
         if (status.spielt === true)  zeigen('▶ Bild läuft', 'gut');
         if (status.spielt === false) zeigen('⏸ Bild steht', 'warn');
-        if (status.stumm === false)  zeigen('🔊 Ton an', 'gut');
-        if (status.stumm === true)   zeigen('🔇 stumm', 'warn');
+        // Der TV-Player laeuft absichtlich immer stumm; die Fernbedienung
+        // bewertet deshalb nur Bild, Qualitaet und Verbindung.
         if (status.istQuali) zeigen('📺 ' + status.istQuali);
 
         // Was der Wächter bisher versucht hat. Sieht nach Kleingedrucktem aus,
@@ -339,12 +339,6 @@
         if (t.jeGelaufen) zeigen('lief schon mal', 'gut');
         if (t.tot)        zeigen('tot: ' + t.tot + ' s', 'warn');
         if (t.haengt)     zeigen('hängt: ' + t.haengt + ' s', 'warn');
-        // Der entscheidende Punkt für den Ton, deshalb in beiden Fällen sichtbar.
-        zeigen(t.app ? '📲 als App' : '📲 nur Tab', t.app ? 'gut' : 'warn');
-        // Und der entscheidende Punkt für den Start: gilt der Screen für Twitch
-        // als Mobilgerät, startet der Player dort grundsätzlich nicht von
-        // selbst – Twitchs eigene Regel, kein Browser-Problem.
-        if (t.mobil) zeigen('📱 Twitch: kein Autostart', 'warn');
     }
 
     function restZeit(bisWann) {

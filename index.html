@@ -2595,9 +2595,9 @@
                     </div>
                 </div>
 
-                <!-- DJ-Live (Twitch / YouTube Live). Diese Ansicht wird nur aktiv,
-                     wenn live_status.json wirklich jemanden als live meldet -
-                     sonst ueberspringt runDjLiveState den Slot ersatzlos.
+                <!-- DJ-Live (zufälliger gefolgter Twitch-Musikkanal). Diese Ansicht wird nur aktiv,
+                     wenn live_status.json einen gefolgten Musikkanal als live meldet;
+                     sonst sucht runDjLiveState 30 Sekunden und geht dann weiter.
                      Der Player wird pro Kanal frisch erzeugt und beim Verlassen
                      wieder aus dem DOM genommen (djStopPlayer). -->
                 <div class="media-inner-view" id="media-view-djlive">
@@ -2632,7 +2632,7 @@
                         <button class="dj-ton-knopf" id="dj-ton-knopf" type="button">
                             <span class="dj-ton-zeichen" id="dj-ton-zeichen">▶</span>
                             <span class="dj-ton-text"><span id="dj-ton-haupt">Stream starten</span>
-                                <span class="dj-ton-sub" id="dj-ton-sub">Bild und Ton · OK auf der Fernbedienung</span>
+                                <span class="dj-ton-sub" id="dj-ton-sub">Bild starten · OK auf der Fernbedienung</span>
                             </span>
                         </button>
                     </div>
@@ -6946,7 +6946,8 @@
             // Notnagel, falls raw nicht erreichbar ist (und fuer lokale Kopien des
             // Dashboards ohne Netz-Zugriff auf GitHub): dieselbe Datei nebenan.
             statusFallbackUrl: 'live_status.json',
-            sekundenProKanal: 180,       // Standzeit je Live-Kanal, dann der naechste
+            sekundenProKanal: 180,       // pro Zyklus genau ein zufaellig gewaehlter Live-DJ
+            leerWarteSekunden: 30,       // ohne Live-DJ so lange suchen, dann ueberspringen
             // Tageszeit-Steuerung: Eintraege in dj_channels.json koennen
             // "zeigen": "tag" oder "zeigen": "nacht" tragen. Ohne Angabe laeuft
             // ein Kanal rund um die Uhr. Gedacht fuer Urlaubs-Cams am Tag und
@@ -7040,26 +7041,10 @@
             neustartNachSekunden: 15,
             maxNeustarts: 2,
 
-            // Ton im DJ-Slot. 0 = stumm, sonst 0…1 als Lautstaerke.
-            //
-            // Der Player MUSS stumm starten: Autoplay mit Ton lehnt jeder Browser
-            // ohne Klick ab, der Stream liefe sonst gar nicht erst an. Aufgedreht
-            // wird deshalb erst, wenn das Bild nachweislich laeuft. Verweigert der
-            // Browser auch das, geht es stumm weiter - ein stehendes Bild waere
-            // der schlechtere Tausch.
-            //
-            // Ohne Bedienung geht Ton nur, wenn Chrome die Seite als
-            // INSTALLIERTE App kennt ("Zum Startbildschirm hinzufuegen") - so
-            // steht es in Chromes Autoplay-Regeln fuer Mobilgeraete. Der
-            // frueher hier genannte Schalter chrome://flags -> Autoplay policy
-            // existiert in der Flags-Oberflaeche nicht mehr.
-            // Wichtig: das gilt fuer die OBERSTE Seite. Laeuft das Dashboard in
-            // einer fremden Seite (Lumify), zaehlt deren Installation, nicht
-            // unsere - siehe djAutoplayErlaubt.
-            //
-            // Der Ton endet mit dem Slot, weil der Player dann abgeraeumt wird -
-            // die uebrigen Widgets bleiben still.
-            tonLautstaerke: 0.7,
+            // Bewusst nur Bild: Twitch startet stumm zuverlaessiger und im Lokal
+            // soll keine automatische Audioquelle mehr entstehen. Die Handy-
+            // Fernbedienung steuert weiterhin Kanal, Laufzeit und Bildqualitaet.
+            tonLautstaerke: 0,
             // Twitchs Embed-SDK. Der iframe allein kennt keinen quality-Parameter
             // (offiziell bestaetigt) - die Qualitaet laesst sich ausschliesslich
             // ueber Twitch.Player.setQuality() setzen. Wird erst geladen, wenn
@@ -7121,7 +7106,7 @@
         }
         // ?djnow=1 (Direktstart in den DJ-Slot) schaltet den Slot gleich mit ein -
         // sonst muesste man beide Parameter anhaengen, und genau das vergisst man.
-        const DJ_SLOT_AN = slotSchalter(false, 'djan') || slotSchalter(false, 'djnow');
+        const DJ_SLOT_AN = slotSchalter(true, 'djan') || slotSchalter(false, 'djnow');
         const QR_SLOT_AN = slotSchalter(false, 'qran');
 
         // Position des DJ-Slots in der Rotation. Steht als Konstante hier, weil
@@ -7159,6 +7144,8 @@
         let djLiveEntries = [];      // zuletzt gemeldete Live-Kanaele
         let djLiveCheckedAt = null;  // Date des Checker-Laufs, oder null
         let djStatusGeladen = false; // erst nach dem ersten erfolgreichen Abruf true
+        let djZufallsEintrag = null; // bleibt fuer genau einen Dashboard-Zyklus stabil
+        let djLetzterZufallsSchluessel = ''; // vermeidet direkte Wiederholung, wenn moeglich
 
         // Twitch prueft den parent-Parameter gegen den Hostnamen der einbettenden
         // Seite, YouTube verweigert die Einbettung bei Origin "null". Ueber file://
@@ -7407,11 +7394,7 @@
                                        return 'Die feste Auflösung hat die Leitung überfordert — zurück auf Auto. Bei „Auto" passt Twitch die Schärfe laufend an, das ist auf diesem Anschluss die bessere Wahl.';
             if (lage.spielt === false) return 'Player ist angehalten';
             if (lage.zeit === 0)       return 'Verbunden, aber noch kein Bild';
-            // Bild laeuft, Ton nicht - und der Grund ist bekannt, statt ihn als
-            // "vom Browser abgelehnt" abzutun.
-            if (lage.stumm === true && !lage.tonGeht)
-                                       return 'Bild läuft, Ton bleibt aus: das Dashboard läuft als Tab. Über Chrome-Menü → „Zum Startbildschirm hinzufügen" installieren und über das Symbol starten, dann kommt der Ton von allein.';
-            if (lage.stumm === true)   return 'Läuft stumm — Ton hat der Browser abgelehnt';
+            // Stumm ist jetzt der gewollte Normalbetrieb und kein Fehler.
             return '';
         }
 
@@ -7494,6 +7477,10 @@
             // Screen, kein Zuhoerer, keine Statusmeldung. Das Handy zeigt dann
             // "Screen meldet sich noch nicht" - richtig so, er tut es ja nicht.
             if (!DJ_SLOT_AN) return;
+            // Der QR-Code ist Teil des Widgets und darf nicht davon abhaengen,
+            // wie schnell Firebase verbindet. Ohne Verbindung oeffnet er die
+            // Fernbedienung trotzdem; diese zeigt dort ihren Verbindungsstatus.
+            djFernQrZeichnen();
             if (!window.DJ_REMOTE_NET || !DJ_REMOTE_NET.istEingerichtet()) return;
             DJ_REMOTE_NET.bereit().then(verb => {
                 if (!verb) return;
@@ -7513,8 +7500,13 @@
             if (!bild) return;
             const ziel = (DJ_REMOTE_CONFIG.mobileUrl || '');
             if (!ziel) return;
+            // Als URL erzeugen: keine Binaer-/SVG-Datei im Aenderungssatz,
+            // damit der Branch auch in der Codex-Oberflaeche aktualisiert werden kann.
+            const raum = DJ_REMOTE_CONFIG.raum || 'city-cafe';
+            const fernUrl = ziel + (ziel.indexOf('?') >= 0 ? '&' : '?') +
+                            'raum=' + encodeURIComponent(raum);
             bild.src = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=0&data=' +
-                       encodeURIComponent(ziel);
+                       encodeURIComponent(fernUrl);
         }
 
         function djFernQrZeigen() {
@@ -7567,9 +7559,22 @@
                 const alterMinuten = (Date.now() - djLiveCheckedAt.getTime()) / 60000;
                 if (alterMinuten > DJ_LIVE_CONFIG.maxStatusAlterMinuten) return [];
             }
-            // Nur Eintraege behalten, aus denen sich ueberhaupt ein Player bauen
-            // laesst und die zur aktuellen Tageszeit passen.
-            return djLiveEntries.filter(e => djEmbedUrl(e) && djZeitfensterPasst(e));
+            // Der Checker liefert die live gefolgten Musik-Kanaele. Pro
+            // Dashboard-Zyklus wird genau einer zufaellig gezogen und fuer alle
+            // Vorpuffer-/Render-Aufrufe stabil gehalten.
+            const live = djLiveEntries.filter(e => djEmbedUrl(e) && djZeitfensterPasst(e));
+            if (!live.length) { djZufallsEintrag = null; return []; }
+            if (djZufallsEintrag && live.some(e => djSchluessel(e) === djSchluessel(djZufallsEintrag))) {
+                return [djZufallsEintrag];
+            }
+            let pool = live;
+            if (live.length > 1) {
+                const ohneLetzten = live.filter(e => djSchluessel(e) !== djLetzterZufallsSchluessel);
+                if (ohneLetzten.length) pool = ohneLetzten;
+            }
+            djZufallsEintrag = pool[Math.floor(Math.random() * pool.length)];
+            djLetzterZufallsSchluessel = djSchluessel(djZufallsEintrag);
+            return [djZufallsEintrag];
         }
 
         // "zeigen": "tag" laeuft zwischen tagVonStunde und tagBisStunde,
@@ -8014,7 +8019,7 @@
                                                       : 'Steuerkreuz ↓ dann OK — der Druck muss IM Player landen';
             if (sub)     sub.textContent     = djKnopfStur
                 ? 'Twitch startet hier nur über seine eigene Play-Taste. Ohne Klick geht das dauerhaft nur so: Chrome-Menü ⋮ → „Desktop-Website“ → Seite neu laden. In Lumify gibt es dieses Menü nicht.'
-                : 'Bild und Ton · OK auf der Fernbedienung';
+                : 'Bild starten · OK auf der Fernbedienung';
         }
 
         // Gibt es an diesem Gerät ueberhaupt einen Zeiger?
@@ -8735,53 +8740,63 @@
         }
 
         function runDjLiveState(nextStateIndex) {
-            // Widget abgeschaltet - weiter wie bei "niemand live".
             if (!DJ_SLOT_AN) {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
                 return;
             }
 
-            // Fuer den naechsten Durchlauf frisch machen; blockiert diesen hier nicht.
-            // Die Entscheidung faellt bewusst synchron auf dem zuletzt geholten Stand,
-            // damit ein haengender Abruf nie die ganze Rotation aufhaelt.
-            loadDjLiveStatus();
+            const view = document.getElementById('media-view-djlive');
+            const name = document.getElementById('dj-live-name');
+            const titel = document.getElementById('dj-live-title');
+            const deadline = Date.now() + DJ_LIVE_CONFIG.leerWarteSekunden * 1000;
+            let frischGeladen = false;
 
-            // Falls das Vorpuffern nicht lief (z. B. Status kam erst danach herein),
-            // hier nachholen - dann eben ohne Vorlauf.
-            djVorpuffern();
-
-            if (!djGepuffert.length) {
-                mediaStateIndex = nextStateIndex;
-                runMasterSequence();
-                return;
-            }
-
-            document.getElementById('media-view-djlive').classList.add('active');
-            djWaechterStarten();
+            // Die Fernbedienung samt QR bleibt auch waehrend der 30-Sekunden-
+            // Suche erreichbar. Kommt ein Befehl, springt deren bestehende Logik
+            // sofort in den gewaehlten Stream.
+            view.classList.add('active');
             djFernQrZeigen();
-            let idx = 0;
 
-            const zeigeNaechsten = () => {
-                if (idx >= djGepuffert.length) {
-                    mediaStateIndex = nextStateIndex;
-                    runMasterSequence();   // raeumt den Player ueber djStopPlayer ab
+            const startenOderWarten = () => {
+                djVorpuffern();
+                if (djGepuffert.length) {
+                    djWaechterStarten();
+                    djZeigeEintrag(0);
+                    const dauer = djFernAktiv()
+                        ? (djFern.bisWann === -1
+                            ? DJ_FERN_NOTBREMSE_MS
+                            : Math.max(5000, djFern.bisWann - Date.now()))
+                        : DJ_LIVE_CONFIG.sekundenProKanal * 1000;
+                    globalMasterTimer = later(() => {
+                        djZufallsEintrag = null;
+                        mediaStateIndex = nextStateIndex;
+                        runMasterSequence();
+                    }, dauer);
                     return;
                 }
-                djZeigeEintrag(idx);
-                idx++;
-                // Per Fernbedienung gilt die dort gewaehlte Laufzeit statt der
-                // ueblichen Standzeit. "Bis offline" wird gar nicht ueber die
-                // Uhr beendet, sondern vom OFFLINE-Ereignis des Players -
-                // deshalb hier eine bewusst grosse Wartezeit als Notbremse,
-                // falls das Ereignis ausbleibt.
-                later(zeigeNaechsten, djFernAktiv()
-                    ? (djFern.bisWann === -1
-                        ? DJ_FERN_NOTBREMSE_MS
-                        : Math.max(5000, djFern.bisWann - Date.now()))
-                    : DJ_LIVE_CONFIG.sekundenProKanal * 1000);
+
+                const rest = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+                name.textContent = '🎧 Live-DJ wird gesucht';
+                titel.textContent = rest > 0
+                    ? 'Gefolgte Twitch-DJs werden geprüft · noch ' + rest + ' s'
+                    : 'Gerade ist keiner deiner gefolgten DJs live';
+                if (rest <= 0) {
+                    djZufallsEintrag = null;
+                    mediaStateIndex = nextStateIndex;
+                    runMasterSequence();
+                    return;
+                }
+                if (!frischGeladen) {
+                    frischGeladen = true;
+                    loadDjLiveStatus().finally(() => {
+                        globalMasterTimer = later(startenOderWarten, 1000);
+                    });
+                } else {
+                    globalMasterTimer = later(startenOderWarten, 1000);
+                }
             };
-            zeigeNaechsten();
+            startenOderWarten();
         }
 
         loadDjLiveStatus();
