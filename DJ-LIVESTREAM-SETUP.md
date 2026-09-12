@@ -1,5 +1,17 @@
 # DJ-Livestream-Widget — Einrichtung
 
+> ## Sicherheitsstopp nach veröffentlichtem Screenshot
+>
+> Ein Screenshot vom 12.09.2026 zeigt einen vollständigen GitHub-PAT, ein
+> Twitch-Client-Secret und einen Twitch-App-Token. Diese Werte gelten als
+> kompromittiert. **Nicht weiterverwenden:** GitHub-PAT auf GitHub widerrufen,
+> Twitch-Client-Secret in der Developer Console neu erzeugen und die sichtbaren
+> Token-Werte aus den Script Properties löschen. Erst danach mit neuen Werten
+> fortfahren. Neue Secrets niemals per Screenshot oder Chat übertragen.
+>
+> Das Repository kann diese Schritte nicht selbst ausführen: Widerruf und
+> OAuth-Zustimmung benötigen eine Anmeldung in den Konten des Betreibers.
+
 > ## Neuer Betrieb: gefolgte Twitch-DJs, nur Bild
 >
 > Das Widget läuft bewusst **stumm**. Der Checker fragt serverseitig die gerade
@@ -52,6 +64,18 @@ pro Projekt und werden nicht durch das Einfügen der `.gs`-Datei übernommen.
 `TWITCH_USER_ID` wird automatisch ermittelt. Ein Ergebnis mit `"live":[]` und
 `"fehler":null` ist erfolgreich und bedeutet nur, dass gerade kein gefolgter
 Music-Kanal live ist.
+
+### Klare Aufgabenteilung
+
+**Im Repository erledigt:** Follow-Endpunkt, Music-Filter, Token-Erneuerung,
+automatische User-ID, Zufallsauswahl, 3-Minuten-Laufzeit, 30-Sekunden-Leerfall,
+stummer Player und Fernbedienungs-QR.
+
+**Einmalig vom Kontoinhaber zu erledigen:** kompromittierte Zugangsdaten
+widerrufen, neue Client-/GitHub-Zugangsdaten erzeugen und einen Twitch-User-Token
+für `motte025` per Authorization-Code-Flow mit `user:read:follows` genehmigen.
+Ohne diese persönliche Zustimmung darf und kann kein Repository-Code die private
+Follow-Liste abrufen.
 
 ### Twitch-Zugriff für `motte025`
 
