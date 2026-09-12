@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-06T04:08:48Z",
+  "aktualisiert": "2026-09-12T17:15:09Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -144,7 +144,7 @@
       "einzelwertung": [
         {
           "rang": 1,
-          "spieler": "RAINER Gerald",
+          "spieler": "DOUJAK Siegfried",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -154,7 +154,7 @@
         },
         {
           "rang": 2,
-          "spieler": "DOUJAK Siegfried",
+          "spieler": "RAINER Gerald",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -184,7 +184,7 @@
         },
         {
           "rang": 5,
-          "spieler": "FELLNER Johann",
+          "spieler": "SCHNEIDER Thomas",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -194,7 +194,7 @@
         },
         {
           "rang": 6,
-          "spieler": "SCHNEIDER Thomas",
+          "spieler": "FELLNER Johann",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -324,7 +324,7 @@
         },
         {
           "rang": 19,
-          "spieler": "JAHN Christian",
+          "spieler": "PROVNIK Gabriele",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -334,7 +334,7 @@
         },
         {
           "rang": 20,
-          "spieler": "PROVNIK Gabriele",
+          "spieler": "JAHN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -651,16 +651,6 @@
         },
         {
           "rang": 7,
-          "spieler": "BRUNNER Peter",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 3,
-          "punkte": 6
-        },
-        {
-          "rang": 8,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 3,
           "siege": 2,
@@ -670,17 +660,17 @@
           "punkte": 6
         },
         {
-          "rang": 9,
-          "spieler": "FRADL Ingemar",
+          "rang": 8,
+          "spieler": "BRUNNER Peter",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
           "legs_plus": 6,
-          "legs_minus": 5,
+          "legs_minus": 3,
           "punkte": 6
         },
         {
-          "rang": 10,
+          "rang": 9,
           "spieler": "STINGLER Engelbert",
           "spiele": 3,
           "siege": 2,
@@ -690,8 +680,18 @@
           "punkte": 6
         },
         {
-          "rang": 11,
+          "rang": 10,
           "spieler": "SCHMALNAUER Daniel",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 5,
+          "punkte": 6
+        },
+        {
+          "rang": 11,
+          "spieler": "FRADL Ingemar",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -861,7 +861,7 @@
         },
         {
           "rang": 28,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -871,7 +871,7 @@
         },
         {
           "rang": 29,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
