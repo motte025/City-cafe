@@ -53,7 +53,49 @@ Daher werden hier keine entsprechenden Menüpunkte erfunden. Ebenso wird keine
 kostenpflichtige Kiosk-App empfohlen, bevor deren Testversion exakt den unten
 beschriebenen Kaltstarttest bestanden hat.
 
-## Aussichtsreichster nächster Versuch: eigener Wrapper als Diagnose
+## Neues Ergebnis: Chrome akzeptiert „Ton nachziehen“
+
+Der Screenshot vom 12. September zeigt den Test auf dem Samsung SM-X610 in
+**Chrome** mit `modus=nachziehen`: `PLAYING`, `isPaused() === false`,
+`getMuted() === false`, Lautstärke `0.35` und der Ton war nach Angabe des
+Testers hörbar. Das belegt, sofern vor dem Tonstart wirklich nichts angetippt
+wurde, dass der vorhandene SDK-Ablauf in dieser Chrome-Sitzung funktioniert.
+Es ist zugleich ein wichtiger Gegenbeweis gegen einen allgemeinen Fehler in
+`setMuted(false)`, Kanal, `parent` oder Audioausgang.
+
+Der Screenshot ist **noch kein Lumify- oder ODROID-Nachweis**: Sichtbar sind
+Chromes Tab- und Adressleiste auf dem Tablet. Das frühere Lumify-Ergebnis
+`getMuted() === true` bleibt deshalb gültig. Die neue Hypothese lautet nun nicht
+mehr „braucht Twitch eine andere Verzögerung?“, sondern: **Unterscheidet sich
+die Wiedergabeumgebung Chrome von Lumifys WebView?**
+
+### Unmittelbar nächster Test
+
+Installiere beziehungsweise öffne **Chrome auf dem ODROID-N2Plus** und lade dort
+direkt, außerhalb von Lumify und noch ohne Dashboard-Rotation:
+
+```text
+https://motte025.github.io/City-cafe/twitch-ton-test.html?kanal=djmissshelton&modus=nachziehen
+```
+
+Vorher Chrome vollständig beenden oder seine App-Daten löschen, danach das
+Gerät neu starten und bis zum Ende der 30 Sekunden nichts bedienen. Notiere nur:
+`getMuted`, „Ton tatsächlich hörbar: ja/nein“ und ob Chrome nach dem Neustart
+automatisch auf diese Seite zurückkehrt. Dieser Test wiederholt **nicht** den
+fehlgeschlagenen Lumify-Versuch; er überträgt den jetzt erfolgreichen
+Chrome-Ablauf auf die echte Box und entscheidet, ob Chrome/Kiosk dort eine
+praktische Alternative ist.
+
+* **Ton auf dem ODROID in Chrome hörbar:** Danach Chrome-Autostart/Vollbild
+  einrichten und die fünf Betriebsfälle prüfen. Ein eigener Wrapper ist dann
+  zunächst unnötig.
+* **Ton auf dem ODROID in Chrome stumm:** Erst dann den unten beschriebenen
+  Wrapper mit `mediaPlaybackRequiresUserGesture = false` testen.
+* **Lumify soll zwingend bleiben:** Das Chrome-Ergebnis zusammen mit dem
+  gegenteiligen Lumify-Protokoll an den Support senden; genau dieser A/B-Vergleich
+  belegt eine Abweichung der Lumify-Wiedergabeumgebung.
+
+## Falls Chrome auf dem ODROID scheitert: eigener Wrapper als Diagnose
 
 Der Wrapper ist nicht sofort die endgültige Ablösung, sondern der sauberste
 kontrollierte Vergleich auf **derselben Box und derselben System-WebView**. Er
