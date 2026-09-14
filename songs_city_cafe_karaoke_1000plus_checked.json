@@ -58514,48 +58514,8 @@
     "auto_discovered": true
   },
   {
-    "artist": "Trio",
-    "title": "Turaluraluralu - Ich mach Bubu was machst du",
-    "album": "",
-    "category": "Schlager",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Schlager",
-      "Party",
-      "Karaoke"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Dendemann",
-    "title": "Abersowasvon",
-    "album": "",
-    "category": "Deutsch Party",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Karaoke",
-      "Deutsch Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Bryan Ferry",
-    "title": "Slave to Love",
+    "artist": "Fiction Factory",
+    "title": "Feels Like Heaven",
     "album": "",
     "category": "80s Party",
     "chart": "",
@@ -58564,6 +58524,26 @@
       "Party",
       "Karaoke",
       "80s Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Alabama Shakes",
+    "title": "I Feel Hope Coming",
+    "album": "",
+    "category": "Party & Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Rock",
+      "Anthem"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
