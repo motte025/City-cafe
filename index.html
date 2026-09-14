@@ -2890,6 +2890,7 @@
         // (pauseRotation/resumeRotation) - das laufende Widget haelt an, statt
         // uebersprungen zu werden.
         const sequenceTimers = new Map();   // stabiles Handle -> Datensatz
+        let sequenceGeneration = 0;
         let rotationIsPaused = false;
 
         function armTimer(rec) {
@@ -3006,6 +3007,7 @@
         }
 
         function cancelSequenceTimers() {
+            sequenceGeneration++;
             sequenceTimers.forEach(rec => { rec.cancelled = true; stopNative(rec); });
             sequenceTimers.clear();
         }
@@ -8751,6 +8753,7 @@
             const titel = document.getElementById('dj-live-title');
             const deadline = Date.now() + DJ_LIVE_CONFIG.leerWarteSekunden * 1000;
             let frischGeladen = false;
+            const generation = sequenceGeneration;
 
             // Die Fernbedienung samt QR bleibt auch waehrend der 30-Sekunden-
             // Suche erreichbar. Kommt ein Befehl, springt deren bestehende Logik
@@ -8759,6 +8762,7 @@
             djFernQrZeigen();
 
             const startenOderWarten = () => {
+                if (generation !== sequenceGeneration || mediaStateIndex !== DJ_SLOT_INDEX) return;
                 djVorpuffern();
                 if (djGepuffert.length) {
                     djWaechterStarten();
@@ -8790,6 +8794,7 @@
                 if (!frischGeladen) {
                     frischGeladen = true;
                     loadDjLiveStatus().finally(() => {
+                        if (generation !== sequenceGeneration || mediaStateIndex !== DJ_SLOT_INDEX) return;
                         globalMasterTimer = later(startenOderWarten, 1000);
                     });
                 } else {

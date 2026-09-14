@@ -280,6 +280,14 @@
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var NET = window.DJ_REMOTE_NET;
 
+    // Der QR-Code enthaelt den Raum des aufrufenden Screens. Nur einfache,
+    // fuer Firebase-Pfade sichere Namen akzeptieren; ohne gueltigen Parameter
+    // bleibt der konfigurierte Standardraum aktiv.
+    try {
+        var raumAusUrl = new URLSearchParams(location.search).get('raum');
+        if (raumAusUrl && /^[A-Za-z0-9_-]{1,64}$/.test(raumAusUrl)) CFG.raum = raumAusUrl;
+    } catch (e) {}
+
     var el = function (id) { return document.getElementById(id); };
     var verbindung = null;
 

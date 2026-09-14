@@ -17,6 +17,8 @@ assert.match(dashboard, /djFernQrZeigen\(\)/);
 assert.match(dashboard, /api\.qrserver\.com\/v1\/create-qr-code/);
 assert.match(dashboard, /raum=' \+ encodeURIComponent\(raum\)/);
 assert.match(dashboard, /Gefolgte Twitch-DJs werden geprüft/);
+assert.match(dashboard, /let sequenceGeneration = 0/);
+assert.match(dashboard, /generation !== sequenceGeneration \|\| mediaStateIndex !== DJ_SLOT_INDEX/);
 
 assert.match(checker, /helix\/streams\/followed\?user_id=/);
 assert.match(checker, /const DJ_TWITCH_MUSIC_GAME_ID = '26936'/);
@@ -26,4 +28,6 @@ assert.match(checker, /props\.setProperty\('TWITCH_USER_ID'/);
 assert.match(checker, /user:read:follows/);
 
 assert.doesNotMatch(remote, /🔊 Ton an|🔇 stumm/);
-console.log('DJ-Live-Vertrag: 17 Prüfungen bestanden.');
+assert.match(remote, /new URLSearchParams\(location\.search\)\.get\('raum'\)/);
+assert.match(remote, /\^\[A-Za-z0-9_-\]\{1,64\}\$/);
+console.log('DJ-Live-Vertrag: 21 Prüfungen bestanden.');
