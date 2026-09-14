@@ -1868,7 +1868,7 @@
            und das Steuerkreuz muss ihn ohne Zielen treffen. Der Fokusrahmen
            pulsiert, damit man sieht, dass OK jetzt etwas bewirkt. */
         .dj-ton-knopf {
-            position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%);
+            position: absolute; left: 62px; right: 430px; bottom: 62px; transform: none;
             z-index: 7; display: none; align-items: center; gap: 13px;
             padding: 12px 22px; border-radius: 13px; max-width: 620px;
             background: linear-gradient(135deg, rgba(145, 70, 255, 0.96), rgba(243, 85, 218, 0.96));
@@ -1898,12 +1898,12 @@
         .dj-fern-qr {
             position: absolute; right: 62px; bottom: 62px; z-index: 6;
             display: none; flex-direction: column; align-items: center; gap: 8px;
-            background: #ffffff; border-radius: 16px; padding: 14px 14px 11px;
+            background: #ffffff; border-radius: 16px; padding: 20px 20px 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             opacity: 0; transition: opacity 0.6s ease-in-out;
         }
         .dj-fern-qr.is-da { display: flex; opacity: 1; }
-        .dj-fern-qr.is-weg { display: flex; opacity: 0; }
+        .dj-fern-qr.is-weg { display: flex; opacity: 0; pointer-events: none; }
         .dj-fern-qr img { width: 300px; height: 300px; display: block; }
         .dj-fern-qr span {
             font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
@@ -7805,6 +7805,19 @@
                     return;
                 }
                 djTwitchSpieler = spieler;
+                let stummVersucht = false;
+                spieler.addEventListener(Twitch.Player.PLAYING, () => {
+                    if (djTwitchSpieler !== spieler || !djQualiLage) return;
+                    djQualiLage.bildGestartet = true;
+                    djQualiLage.jeGelaufen = true;
+                    djKnopfBeschriften(false);
+                    djTonKnopf(false);
+                });
+                [Twitch.Player.PAUSE, Twitch.Player.OFFLINE, Twitch.Player.ENDED].forEach(art => {
+                    spieler.addEventListener(art, () => {
+                        if (djTwitchSpieler === spieler && djQualiLage) djQualiLage.bildGestartet = false;
+                    });
+                });
 
                 // Im Normalfall ('auto') wird die Stufe NICHT angefasst: Twitchs
                 // eigene Anpassung ist besser als alles, was hier nachgebaut
@@ -7850,6 +7863,8 @@
                     });
                     // Blockiert der Browser das Autoplay doch, hier nachhelfen.
                     spieler.addEventListener(Twitch.Player.PLAYBACK_BLOCKED, () => {
+                        if (djTwitchSpieler !== spieler || stummVersucht) return;
+                        stummVersucht = true;
                         try { spieler.setMuted(true); spieler.play(); } catch (e) {}
                     });
                 } catch (e) {}
@@ -8020,7 +8035,7 @@
                                              : zeiger ? 'Bitte ▶ in der Bildmitte anklicken'
                                                       : 'Steuerkreuz ↓ dann OK — der Druck muss IM Player landen';
             if (sub)     sub.textContent     = djKnopfStur
-                ? 'Twitch startet hier nur über seine eigene Play-Taste. Ohne Klick geht das dauerhaft nur so: Chrome-Menü ⋮ → „Desktop-Website“ → Seite neu laden. In Lumify gibt es dieses Menü nicht.'
+                ? 'Auf Mobilgeräten verlangt Twitch einen Start direkt im Video. Für den automatischen Screen-Betrieb muss der Wiedergabebrowser passend eingerichtet sein.'
                 : 'Bild starten · OK auf der Fernbedienung';
         }
 
@@ -8074,27 +8089,19 @@
             //
             // Deshalb jetzt: einmal ehrlich versuchen, und wenn Twitch nicht
             // reagiert, sagen, was hilft - statt es zu verschleiern.
-            let vorher = -1;
-            try {
-                if (djTwitchSpieler && djTwitchSpieler.getCurrentTime) {
-                    vorher = djTwitchSpieler.getCurrentTime();
-                }
-            } catch (e) {}
-
             if (djNachfassen) clearTimeout(djNachfassen);
             djNachfassen = setTimeout(function () {
                 djNachfassen = null;
-                let jetzt = -1, pausiert = true;
+                let pausiert = true;
                 try {
                     if (djTwitchSpieler) {
-                        if (djTwitchSpieler.getCurrentTime) jetzt = djTwitchSpieler.getCurrentTime();
                         if (typeof djTwitchSpieler.isPaused === 'function') {
                             pausiert = djTwitchSpieler.isPaused();
                         }
                     }
                 } catch (e) {}
                 // Es laeuft - der Knopf hat getan, was er sollte, und bleibt weg.
-                if (djTwitchSpieler && !pausiert && vorher >= 0 && jetzt > vorher) {
+                if (djTwitchSpieler && !pausiert && djQualiLage && djQualiLage.bildGestartet) {
                     djKnopfBeschriften(false);
                     return;
                 }
@@ -8359,12 +8366,9 @@
             if (!djTwitchSpieler || !djQualiLage) return;
 
             // Laufzustand EINMAL ermitteln - Ton und Qualitaet haengen beide daran.
-            // "laeuft" heisst: nicht pausiert und die Wiedergabezeit ist seit dem
-            // letzten Takt weitergewandert. Ein Player, der puffert, meldet sich
-            // nicht als pausiert, bleibt aber in der Zeit stehen.
-            let zeit = 0, pausiert = true, stufen = null, aktuell = '', stumm = null;
+            // PLAYING bestaetigt das erste Live-Bild; keine VOD-Zeitmessung.
+            let pausiert = true, stufen = null, aktuell = '', stumm = null;
             try {
-                zeit = djTwitchSpieler.getCurrentTime ? djTwitchSpieler.getCurrentTime() : 0;
                 pausiert = typeof djTwitchSpieler.isPaused === 'function'
                          ? djTwitchSpieler.isPaused() : false;
                 stufen = djTwitchSpieler.getQualities ? djTwitchSpieler.getQualities() : null;
@@ -8374,12 +8378,9 @@
             } catch (e) { return; }
 
             const takt = DJ_LIVE_CONFIG.waechterTaktSekunden;
-            // Der allererste Takt liefert nur den Ausgangswert: letzteZeit steht
-            // auf -1, und ein noch gar nicht gestarteter Player meldet 0 - das
-            // waere sonst faelschlich ein Fortschritt.
-            const laeuft = !pausiert && djQualiLage.letzteZeit >= 0
-                                     && zeit > djQualiLage.letzteZeit;
-            djQualiLage.letzteZeit = zeit;
+            // getCurrentTime ist nur fuer VODs definiert. Bei Live-Streams
+            // bestaetigt PLAYING das erste Bild; PAUSE/OFFLINE setzen es zurueck.
+            const laeuft = !pausiert && !!djQualiLage.bildGestartet;
 
             // Laeuft Bild UND ist nicht stumm, dann kommt gerade hoerbar Ton -
             // ob wir ihn aufgedreht haben oder jemand von Hand im Player. Das
@@ -8638,6 +8639,7 @@
             // bisher gezeigt hat, zaehlt weiter.
             if (djQualiLage) {
                 djQualiLage.laufSekunden   = 0;
+                djQualiLage.bildGestartet  = false;
                 djQualiLage.letzteZeit     = -1;
                 djQualiLage.stillSekunden  = 0;
                 djQualiLage.totSekunden    = 0;

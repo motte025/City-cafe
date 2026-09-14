@@ -1,0 +1,56 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const html = fs.readFileSync(__dirname + '/index.html', 'utf8');
+function fn(name) {
+    const start = html.indexOf('        function ' + name + '(');
+    const end = html.indexOf('\n        }', start) + 10;
+    assert(start >= 0 && end > start);
+    return html.slice(start, end);
+}
+async function run() {
+    let player, button, starts = 0;
+    class Player {
+        constructor(id, options) { this.handlers = {}; this.paused = true; player = this; assert.equal(options.muted, true); assert.equal(options.autoplay, true); }
+        addEventListener(event, handler) { (this.handlers[event] ||= []).push(handler); }
+        emit(event) { for (const cb of this.handlers[event] || []) cb(); }
+        play() { starts++; this.emit(Player.PLAYBACK_BLOCKED); }
+        setMuted(value) { assert.equal(value, true); }
+        isPaused() { return this.paused; }
+        getCurrentTime() { throw Error('Live playback must not use the VOD clock'); }
+    }
+    for (const event of ['READY', 'PLAYING', 'PAUSE', 'OFFLINE', 'ENDED', 'PLAYBACK_BLOCKED']) Player[event] = event;
+    const context = vm.createContext({
+        Twitch: { Player }, djRahmenZaehler: 0, djTwitchSpieler: null,
+        djQualiLage: { sichtbarSekunden: 10, haengtSekunden: 0, totSekunden: 0 },
+        DJ_LIVE_CONFIG: { waechterTaktSekunden: 1, knopfNachSekunden: 1, tonLautstaerke: 0, neustartNachSekunden: 20 },
+        djTwitchSdkLaden: async () => true, djFreigabeNachruesten() {}, djEmbedHosts: () => ['localhost'],
+        djSofortStarten: () => player.play(), djKnopfBeschriften() {}, djTonKnopf: value => { button = value; },
+        djAnstupsen() {}, djSlotSichtbar: () => true, djMobilgeraet: () => false, djNeuaufbauErlaubt: () => false,
+        djTonNachziehen() {}, djKnopfStur: false, djFernAktiv: () => false, djFern: null
+    });
+    vm.runInContext(fn('djBaueTwitch') + '\n' + fn('djWaechterTakt'), context);
+    context.djBaueTwitch({ isConnected: true }, { channel: 'example' });
+    await Promise.resolve();
+    player.emit(Player.READY);
+    assert.equal(starts, 2, 'Blocked playback retries once without an event loop');
+    player.paused = false;
+    player.emit(Player.PLAYING);
+    for (let i = 0; i < 100; i++) context.djWaechterTakt();
+    assert.equal(button, false, 'Live video with no VOD clock hides the prompt');
+    assert.equal(context.djQualiLage.haengtSekunden, 0);
+    player.paused = true;
+    player.emit(Player.PAUSE);
+    context.djWaechterTakt();
+    assert.equal(button, true, 'A paused stream offers a restart');
+    player.paused = false;
+    player.emit(Player.PLAYING);
+    player.emit(Player.OFFLINE);
+    assert.equal(context.djQualiLage.bildGestartet, false);
+    context.djTwitchSpieler = {};
+    player.emit(Player.PLAYING);
+    assert.equal(context.djQualiLage.bildGestartet, false, 'Old player events cannot mark a new player as running');
+    console.log('DJ playback regression tests passed.');
+}
+run().catch(error => { console.error(error); process.exitCode = 1; });
