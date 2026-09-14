@@ -58694,16 +58694,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Chris Roberts",
-    "title": "Du kannst nicht immer siebzehn sein",
+    "artist": "Cora",
+    "title": "Liebe pur Radio Edit",
     "album": "",
     "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
+      "Klassiker",
+      "ESC-Sieger"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Goombay Dance Band",
+    "title": "Island in the Sun",
+    "album": "",
+    "category": "Ballermann & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
       "Party",
       "Karaoke",
-      "Schlager"
+      "Ballermann & Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
