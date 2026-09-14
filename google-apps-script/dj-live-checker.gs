@@ -1,8 +1,8 @@
 /**
  * City Cafe Klagenfurt Fischl - DJ-Live-Status-Checker
  *
- * Prueft im Minutentakt-Trigger, welche der in dj_channels.json hinterlegten
- * DJ-Kanaele gerade live senden, und schreibt das Ergebnis als live_status.json
+ * Prueft im Minutentakt-Trigger, welche Twitch-Musikkanaele, denen
+ * der Account motte025 folgt, gerade live senden, und schreibt das Ergebnis als live_status.json
  * zurueck ins GitHub-Repo. Das Dashboard (index.html) liest nur diese eine Datei
  * und blendet den DJ-Live-Slot genau dann ein, wenn "live" nicht leer ist.
  *
@@ -16,6 +16,9 @@
  *                              (im Song-Collector-Projekt schon vorhanden)
  *      TWITCH_CLIENT_ID      = <Client-ID der Twitch-Anwendung>
  *      TWITCH_CLIENT_SECRET  = <Client-Secret der Twitch-Anwendung>
+ *      TWITCH_USER_ID        = optionaler Cache; wird automatisch ermittelt
+ *      TWITCH_USER_ACCESS_TOKEN  = <User-Token mit user:read:follows>
+ *      TWITCH_USER_REFRESH_TOKEN = <zugehoeriger Refresh-Token>
  *    Die Werte gehoeren NICHT ins Repo - dieses ist oeffentlich einsehbar.
  * 3. Einmal djTriggerEinrichten() ausfuehren -> legt den 5-Minuten-Trigger an.
  * 4. Zum Testen djTestLauf() ausfuehren und ins Ausfuehrungsprotokoll schauen.
@@ -58,156 +61,129 @@ const DJ_TRIGGER_MINUTEN = 5; // erlaubt sind 1, 5, 10, 15 oder 30
 
 function djPruefeLiveStatus() {
   const props = PropertiesService.getScriptProperties();
-  const token = props.getProperty('GITHUB_TOKEN');
-  if (!token) {
+  const githubToken = props.getProperty('GITHUB_TOKEN');
+  if (!githubToken) {
     Logger.log('FEHLER: Script Property GITHUB_TOKEN fehlt.');
     return;
   }
 
-  const kanalDatei = djGithubLies(DJ_KANAL_DATEI, token);
-  if (!kanalDatei) {
-    Logger.log('FEHLER: ' + DJ_KANAL_DATEI + ' nicht im Repo gefunden.');
-    return;
-  }
-
-  let kanaele;
-  try {
-    kanaele = JSON.parse(kanalDatei.text);
-  } catch (fehler) {
-    Logger.log('FEHLER: ' + DJ_KANAL_DATEI + ' ist kein gueltiges JSON: ' + fehler);
-    return;
-  }
-  if (!Array.isArray(kanaele)) {
-    Logger.log('FEHLER: ' + DJ_KANAL_DATEI + ' muss eine Liste sein.');
-    return;
-  }
-
-  const twitchKanaele = kanaele.filter(k => k && k.platform === 'twitch' && k.channel);
-  const youtubeKanaele = kanaele.filter(k => k && k.platform === 'youtube' && (k.channelId || k.handle || k.videoId));
-
-  // Ein Ausfall auf einer Plattform darf nicht als "alle offline" durchgehen -
-  // sonst reisst eine kurze API-Stoerung einen laufenden Stream vom Screen.
-  // Dann wird lieber gar nichts geschrieben: der alte Stand bleibt stehen und
-  // faellt nach 45 Minuten ueber die Altersgrenze im Dashboard von selbst aus.
-  const twitchErgebnis = djPruefeTwitch(twitchKanaele, props);
+  // Ausschliesslich die aktuell live sendenden Musik-Kanaele, denen motte025
+  // auf Twitch folgt. Die User-Berechtigung bleibt serverseitig in den Script
+  // Properties; niemals einen User-Token ins oeffentliche Dashboard schreiben.
+  const twitchErgebnis = djPruefeGefolgteTwitch_(props);
   if (twitchErgebnis.fehler) {
     Logger.log('Twitch-Abfrage fehlgeschlagen (' + twitchErgebnis.fehler + ') - Lauf wird verworfen.');
     return;
   }
 
-  const youtubeErgebnis = djPruefeYoutube(youtubeKanaele);
-  if (youtubeErgebnis.fehler) {
-    Logger.log('YouTube-Abfrage fehlgeschlagen (' + youtubeErgebnis.fehler + ') - Lauf wird verworfen.');
-    return;
-  }
-
-  const live = twitchErgebnis.live.concat(youtubeErgebnis.live);
-  Logger.log('Live: ' + live.length + ' von ' + kanaele.length + ' Kanaelen.');
-
-  djSchreibeStatusWennNoetig(live, token);
+  Logger.log('Live gefolgte DJs: ' + twitchErgebnis.live.length + '.');
+  djSchreibeStatusWennNoetig(twitchErgebnis.live, githubToken);
 }
 
 // ===========================================================================
 //  Twitch
 // ===========================================================================
 
-// App Access Token (Client-Credentials-Flow). Gilt rund 60 Tage, wird deshalb in
-// den Script Properties zwischengespeichert und erst kurz vor Ablauf erneuert.
-function djTwitchToken(props) {
-  const gespeichert = props.getProperty('TWITCH_APP_TOKEN');
-  const ablauf = Number(props.getProperty('TWITCH_APP_TOKEN_ABLAUF') || 0);
-  // 10 Minuten Sicherheitsabstand, damit kein Lauf mitten im Ablauf steht.
-  if (gespeichert && Date.now() < ablauf - 10 * 60 * 1000) return gespeichert;
+// Get Followed Streams benoetigt einen USER-Token mit user:read:follows.
+// Ein App-Access-Token reicht dafuer ausdruecklich nicht. Access- und Refresh-
+// Token bleiben in den geschuetzten Script Properties.
+const DJ_TWITCH_MUSIC_GAME_ID = '26936';
+const DJ_TWITCH_LOGIN = 'motte025';
 
+function djTwitchUserTokenErneuern_(props) {
+  const refresh = props.getProperty('TWITCH_USER_REFRESH_TOKEN');
   const clientId = props.getProperty('TWITCH_CLIENT_ID');
   const clientSecret = props.getProperty('TWITCH_CLIENT_SECRET');
-  if (!clientId || !clientSecret) {
-    throw new Error('Script Properties TWITCH_CLIENT_ID / TWITCH_CLIENT_SECRET fehlen');
+  const fehlt = [];
+  if (!refresh) fehlt.push('TWITCH_USER_REFRESH_TOKEN');
+  if (!clientId) fehlt.push('TWITCH_CLIENT_ID');
+  if (!clientSecret) fehlt.push('TWITCH_CLIENT_SECRET');
+  if (fehlt.length) {
+    throw new Error('Skripteigenschaften fehlen: ' + fehlt.join(', '));
   }
-
   const res = UrlFetchApp.fetch('https://id.twitch.tv/oauth2/token', {
     method: 'post',
     payload: {
-      client_id: clientId,
-      client_secret: clientSecret,
-      grant_type: 'client_credentials'
+      grant_type: 'refresh_token', refresh_token: refresh,
+      client_id: clientId, client_secret: clientSecret
     },
     muteHttpExceptions: true
   });
   if (res.getResponseCode() !== 200) {
-    throw new Error('Token-Abruf HTTP ' + res.getResponseCode() + ': ' + res.getContentText());
+    throw new Error('User-Token-Refresh HTTP ' + res.getResponseCode() + ': ' + res.getContentText());
   }
-
   const daten = JSON.parse(res.getContentText());
-  props.setProperty('TWITCH_APP_TOKEN', daten.access_token);
-  props.setProperty('TWITCH_APP_TOKEN_ABLAUF', String(Date.now() + Number(daten.expires_in || 0) * 1000));
+  props.setProperty('TWITCH_USER_ACCESS_TOKEN', daten.access_token);
+  if (daten.refresh_token) props.setProperty('TWITCH_USER_REFRESH_TOKEN', daten.refresh_token);
   return daten.access_token;
 }
 
-function djPruefeTwitch(kanaele, props) {
-  if (!kanaele.length) return { live: [], fehler: null };
+function djTwitchApiAbruf_(url, props, token, zweiterVersuch) {
+  const clientId = props.getProperty('TWITCH_CLIENT_ID');
+  const res = UrlFetchApp.fetch(url, {
+    method: 'get',
+    headers: { 'Client-Id': clientId, 'Authorization': 'Bearer ' + token },
+    muteHttpExceptions: true
+  });
+  if (res.getResponseCode() === 401 && !zweiterVersuch) {
+    return djTwitchApiAbruf_(url, props, djTwitchUserTokenErneuern_(props), true);
+  }
+  if (res.getResponseCode() !== 200) {
+    throw new Error('Helix HTTP ' + res.getResponseCode() + ': ' + res.getContentText());
+  }
+  return JSON.parse(res.getContentText());
+}
 
-  let token, clientId;
+function djTwitchUserIdErmitteln_(props, token) {
+  const gespeichert = props.getProperty('TWITCH_USER_ID');
+  if (gespeichert) return gespeichert;
+
+  // GET /users ohne id/login liefert den Benutzer des User-Tokens. Dadurch muss
+  // die numerische ID nicht von Hand gesucht werden und ein Token des falschen
+  // Twitch-Kontos faellt sofort mit einer verstaendlichen Meldung auf.
+  const antwort = djTwitchApiAbruf_('https://api.twitch.tv/helix/users', props, token, false);
+  const nutzer = antwort.data && antwort.data[0];
+  if (!nutzer || !nutzer.id) throw new Error('Twitch-Konto zum User-Token nicht gefunden');
+  if (String(nutzer.login || '').toLowerCase() !== DJ_TWITCH_LOGIN) {
+    throw new Error('User-Token gehoert zu ' + (nutzer.login || 'unbekannt') +
+      ', erwartet wird ' + DJ_TWITCH_LOGIN);
+  }
+  props.setProperty('TWITCH_USER_ID', String(nutzer.id));
+  return String(nutzer.id);
+}
+
+function djPruefeGefolgteTwitch_(props) {
+  let token = props.getProperty('TWITCH_USER_ACCESS_TOKEN');
+
   try {
-    token = djTwitchToken(props);
-    clientId = props.getProperty('TWITCH_CLIENT_ID');
+    if (!token) token = djTwitchUserTokenErneuern_(props);
+    const userId = djTwitchUserIdErmitteln_(props, token);
+    const live = [];
+    let cursor = '';
+    do {
+      const url = 'https://api.twitch.tv/helix/streams/followed?user_id=' +
+        encodeURIComponent(userId) + '&first=100' +
+        (cursor ? '&after=' + encodeURIComponent(cursor) : '');
+      const antwort = djTwitchApiAbruf_(url, props, token, false);
+      (antwort.data || []).forEach(stream => {
+        // "DJ" ist bei Twitch keine API-Eigenschaft. Fuer die automatische,
+        // reproduzierbare Auswahl gilt deshalb die offizielle Kategorie Music.
+        if (String(stream.game_id || '') !== DJ_TWITCH_MUSIC_GAME_ID) return;
+        if (stream.type && stream.type !== 'live') return;
+        live.push({
+          platform: 'twitch',
+          channel: stream.user_login,
+          name: stream.user_name || stream.user_login,
+          title: stream.title || '',
+          game: stream.game_name || 'Music'
+        });
+      });
+      cursor = antwort.pagination && antwort.pagination.cursor || '';
+    } while (cursor);
+    return { live: live, fehler: null };
   } catch (fehler) {
     return { live: [], fehler: String(fehler) };
   }
-
-  // Kleinschreibung, weil Twitch die Antwort ueber user_login zurueckgibt und
-  // wir sie den Eintraegen aus dj_channels.json wieder zuordnen muessen.
-  const nachLogin = {};
-  kanaele.forEach(k => { nachLogin[String(k.channel).toLowerCase()] = k; });
-
-  const live = [];
-  const logins = Object.keys(nachLogin);
-
-  for (let i = 0; i < logins.length; i += DJ_TWITCH_BATCH) {
-    const teil = logins.slice(i, i + DJ_TWITCH_BATCH);
-    const url = 'https://api.twitch.tv/helix/streams?' +
-      teil.map(l => 'user_login=' + encodeURIComponent(l)).join('&');
-
-    let res;
-    try {
-      res = UrlFetchApp.fetch(url, {
-        method: 'get',
-        headers: { 'Client-Id': clientId, 'Authorization': 'Bearer ' + token },
-        muteHttpExceptions: true
-      });
-    } catch (fehler) {
-      return { live: [], fehler: String(fehler) };
-    }
-
-    if (res.getResponseCode() === 401) {
-      // Token abgelaufen oder zurueckgezogen: verwerfen, naechster Lauf holt ein neues.
-      props.deleteProperty('TWITCH_APP_TOKEN');
-      props.deleteProperty('TWITCH_APP_TOKEN_ABLAUF');
-      return { live: [], fehler: 'HTTP 401 (Token verworfen)' };
-    }
-    if (res.getResponseCode() !== 200) {
-      return { live: [], fehler: 'HTTP ' + res.getResponseCode() + ': ' + res.getContentText() };
-    }
-
-    // Das Feld "data" enthaelt ausschliesslich Kanaele, die tatsaechlich senden -
-    // ein leeres Array heisst also: alle abgefragten Kanaele sind offline.
-    const daten = JSON.parse(res.getContentText()).data || [];
-    daten.forEach(stream => {
-      if (stream.type && stream.type !== 'live') return; // z. B. "vodcast"
-      const quelle = nachLogin[String(stream.user_login).toLowerCase()];
-      if (!quelle) return;
-      const eintrag = { platform: 'twitch', channel: quelle.channel };
-      const name = quelle.name || stream.user_name;
-      if (name) eintrag.name = name;
-      if (stream.title) eintrag.title = stream.title;
-      if (stream.game_name) eintrag.game = stream.game_name;
-      // Tageszeit-Wunsch unveraendert durchreichen - siehe djPruefeYoutube.
-      if (quelle.zeigen) eintrag.zeigen = quelle.zeigen;
-      live.push(eintrag);
-    });
-  }
-
-  return { live: live, fehler: null };
 }
 
 // ===========================================================================
@@ -589,18 +565,6 @@ function djYoutubeDebug(kanal) {
 // Zeigt, was der Checker gerade sehen wuerde - ohne irgendetwas zu committen.
 function djTestLauf() {
   const props = PropertiesService.getScriptProperties();
-  const token = props.getProperty('GITHUB_TOKEN');
-  if (!token) { Logger.log('GITHUB_TOKEN fehlt.'); return; }
-
-  const datei = djGithubLies(DJ_KANAL_DATEI, token);
-  if (!datei) { Logger.log(DJ_KANAL_DATEI + ' nicht gefunden.'); return; }
-
-  const kanaele = JSON.parse(datei.text);
-  Logger.log('Kanaele in ' + DJ_KANAL_DATEI + ': ' + kanaele.length);
-
-  const twitch = djPruefeTwitch(kanaele.filter(k => k && k.platform === 'twitch' && k.channel), props);
-  Logger.log('Twitch -> ' + JSON.stringify(twitch));
-
-  const youtube = djPruefeYoutube(kanaele.filter(k => k && k.platform === 'youtube' && (k.channelId || k.handle || k.videoId)));
-  Logger.log('YouTube -> ' + JSON.stringify(youtube));
+  const twitch = djPruefeGefolgteTwitch_(props);
+  Logger.log('Gefolgte Twitch-Musikkanaele live -> ' + JSON.stringify(twitch));
 }

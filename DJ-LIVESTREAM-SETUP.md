@@ -1,52 +1,104 @@
 # DJ-Livestream-Widget — Einrichtung
 
-> ## ⏸️ Zurzeit abgeschaltet
+> ## Sicherheitsstopp nach veröffentlichtem Screenshot
 >
-> Das Widget ist **aus**: kein Slot in der Rotation, kein Vorpuffern, kein
-> Statusabruf, keine Fernbedienung. Der gesamte Code bleibt unverändert stehen.
+> Ein Screenshot vom 12.09.2026 zeigt einen vollständigen GitHub-PAT, ein
+> Twitch-Client-Secret und einen Twitch-App-Token. Diese Werte gelten als
+> kompromittiert. **Nicht weiterverwenden:** GitHub-PAT auf GitHub widerrufen,
+> Twitch-Client-Secret in der Developer Console neu erzeugen und die sichtbaren
+> Token-Werte aus den Script Properties löschen. Erst danach mit neuen Werten
+> fortfahren. Neue Secrets niemals per Screenshot oder Chat übertragen.
 >
-> **Wieder einschalten:** in `index.html` bei den Slot-Schaltern
->
-> ```js
-> const DJ_SLOT_AN = slotSchalter(false, 'djan');   // false -> true
-> ```
->
-> **Nur kurz ansehen**, ohne etwas zu ändern: `?djan=1` an die Dashboard-Adresse
-> hängen. Am Screen selbst bleibt es dabei aus.
->
-> **Zum Prüfen am schnellsten:** `?djnow=1&djtest=kanalname` — springt nach
-> anderthalb Sekunden direkt in den DJ-Slot, statt den halben Zyklus abzuwarten,
-> und schaltet ihn dabei selbst ein. Der `djtest`-Kanal muss gerade live sein,
-> sonst ist der Slot leer und reicht durch.
->
-> **Warum es aus ist:** der Stream lief am Screen nicht von allein an. Der Grund
-> ist inzwischen geklärt und liegt nicht am Dashboard — **Twitch startet auf
-> Mobilgeräten grundsätzlich nicht von selbst**, das ist Twitchs eigene Regel.
-> Genau deshalb läuft das YouTube-Widget auf demselben Screen und Twitch nicht.
-> Was hilft, steht im Abschnitt
-> [*Warum YouTube von allein läuft und Twitch nicht*](#warum-youtube-von-allein-läuft-und-twitch-nicht).
->
-> Alles Weitere in dieser Anleitung gilt unverändert, sobald der Schalter
-> wieder auf `true` steht.
+> Das Repository kann diese Schritte nicht selbst ausführen: Widerruf und
+> OAuth-Zustimmung benötigen eine Anmeldung in den Konten des Betreibers.
 
-Das Dashboard kann Live-Streams von DJs (Twitch und YouTube Live) einblenden.
-Der Slot erscheint **nur, wenn wirklich jemand live ist** — sonst überspringt
-die Rotation ihn ersatzlos und läuft direkt zum nächsten Widget weiter. Sind
-mehrere Kanäle gleichzeitig live, wird jeder 3 Minuten gezeigt und danach
-automatisch zum nächsten geschaltet.
+> ## Neuer Betrieb: gefolgte Twitch-DJs, nur Bild
+>
+> Das Widget läuft bewusst **stumm**. Der Checker fragt serverseitig die gerade
+> live sendenden Twitch-Kanäle ab, denen `motte025` folgt, und behält davon nur
+> die Twitch-Kategorie **Music** (`game_id=26936`). Pro Dashboard-Zyklus wird
+> genau ein DJ zufällig gewählt und drei Minuten gezeigt. Wenn keiner live ist,
+> sucht das Widget 30 Sekunden lang und setzt danach die normale Rotation fort.
+>
+> Die Handy-Fernbedienung bleibt aktiv. Der QR-Code zur Fernbedienung erscheint zu Beginn des
+> Twitch-Slots; eine Auswahl am Handy hat Vorrang vor der Zufallsauswahl.
 
-Bis die Einrichtung fertig ist, passiert **gar nichts**: `live_status.json`
-meldet niemanden, der Slot fällt aus. Das Repo kann also jederzeit so bleiben,
-ohne dass am Dashboard etwas kaputtgeht.
+### Testadresse
 
-> **Sofort ausprobieren, ohne Einrichtung:** `?djtest=kanalname` an die
-> Dashboard-URL hängen, zum Beispiel
-> <https://motte025.github.io/City-cafe/?djtest=linaaarr>.
-> Damit läuft genau dieser Twitch-Kanal im Slot, ganz ohne Checker und ohne
-> `live_status.json`. Der Schalter wirkt nur über die URL — im Normalbetrieb
-> ist er also nicht aktiv und kann nichts dauerhaft verstellen. Gut geeignet,
-> um Player, Bildqualität und Einbettung zu prüfen, bevor die Apps-Script-Seite
-> überhaupt steht.
+Der frühere `raw.githack.com/.../work/...`-Link funktioniert hier nicht: Der
+Codex-Arbeitsbranch wird nicht als öffentlicher GitHub-Branch veröffentlicht und
+der Dienst antwortet deshalb korrekt mit 404. Diesen Link nicht mehr verwenden.
+
+Der Player lässt sich unabhängig vom neuen Follow-Checker auf der bestehenden
+GitHub-Pages-Seite mit einem erzwungenen Kanal prüfen:
+
+<https://motte025.github.io/City-cafe/?djnow=1&djtest=djmissshelton>
+
+Der vollständige automatische Follow-Modus kann erst geprüft werden, nachdem
+`djTestLauf()` erfolgreich war, `live_status.json` aktualisiert wurde und die
+Dashboard-Änderung auf GitHub Pages veröffentlicht ist.
+
+
+### Wenn „TWITCH_USER_REFRESH_TOKEN / TWITCH_CLIENT_ID / TWITCH_CLIENT_SECRET fehlen“ erscheint
+
+Das ist kein Programmfehler und `djTestLauf` ist die richtige Funktion. Die
+Skripteigenschaften des **aktuellen Apps-Script-Projekts** fehlen. Sie gelten
+pro Projekt und werden nicht durch das Einfügen der `.gs`-Datei übernommen.
+
+1. Links unten auf das Zahnrad **Projekteinstellungen** tippen.
+2. Bis **Skripteigenschaften** scrollen.
+3. **Skripteigenschaft hinzufügen** wählen und exakt diese Namen anlegen:
+   `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`, `TWITCH_USER_ACCESS_TOKEN` und
+   `TWITCH_USER_REFRESH_TOKEN`. Für den späteren Schreibvorgang muss außerdem
+   `GITHUB_TOKEN` vorhanden sein.
+4. Werte aus der registrierten Twitch-Anwendung beziehungsweise dem
+   Authorization-Code-Flow für `motte025` einsetzen. Der User-Token muss den
+   Scope `user:read:follows` besitzen. Client-Secret oder Token niemals hier im
+   Repository, Chat oder Screenshot veröffentlichen.
+5. Speichern, zum Code zurückkehren und erneut **nur `djTestLauf`** ausführen.
+   `djTwitchUserIdErmitteln_` ist eine Hilfsfunktion und darf nicht direkt über
+   das Funktionsmenü gestartet werden; direkt gestartet bekäme sie keine
+   Argumente und meldet deshalb `Cannot read properties of undefined`.
+6. Erst bei `"fehler":null` einmal `djTriggerEinrichten` ausführen.
+
+`TWITCH_USER_ID` wird automatisch ermittelt. Ein Ergebnis mit `"live":[]` und
+`"fehler":null` ist erfolgreich und bedeutet nur, dass gerade kein gefolgter
+Music-Kanal live ist.
+
+### Klare Aufgabenteilung
+
+**Im Repository erledigt:** Follow-Endpunkt, Music-Filter, Token-Erneuerung,
+automatische User-ID, Zufallsauswahl, 3-Minuten-Laufzeit, 30-Sekunden-Leerfall,
+stummer Player und Fernbedienungs-QR.
+
+**Einmalig vom Kontoinhaber zu erledigen:** kompromittierte Zugangsdaten
+widerrufen, neue Client-/GitHub-Zugangsdaten erzeugen und einen Twitch-User-Token
+für `motte025` per Authorization-Code-Flow mit `user:read:follows` genehmigen.
+Ohne diese persönliche Zustimmung darf und kann kein Repository-Code die private
+Follow-Liste abrufen.
+
+### Twitch-Zugriff für `motte025`
+
+Twitchs Endpunkt **Get Followed Streams** benötigt einen User-Token mit dem
+Scope `user:read:follows`; ein App-Token kann die persönliche Folge-Liste nicht
+lesen. Diese Werte müssen als Google-Apps-Script-Properties gesetzt werden:
+
+| Property | Inhalt |
+|---|---|
+| `GITHUB_TOKEN` | PAT mit Schreibrecht auf dieses Repository |
+| `TWITCH_CLIENT_ID` | Client-ID der Twitch-Anwendung |
+| `TWITCH_CLIENT_SECRET` | Client-Secret der Twitch-Anwendung |
+| `TWITCH_USER_ID` | optional; wird beim ersten Test automatisch ermittelt und gespeichert |
+| `TWITCH_USER_ACCESS_TOKEN` | User-Access-Token mit `user:read:follows` |
+| `TWITCH_USER_REFRESH_TOKEN` | zugehöriger Refresh-Token |
+
+Access- und Refresh-Token dürfen **niemals** in GitHub-Dateien oder in die
+Browser-Konfiguration eingetragen werden. Der Checker erneuert einen
+abgelaufenen Access-Token serverseitig und speichert einen von Twitch rotierten
+Refresh-Token wieder in den Script Properties.
+
+Danach in Apps Script einmal `djTestLauf()` ausführen. Im Protokoll müssen nur
+live gefolgte Music-Kanäle erscheinen. Erst dann `djTriggerEinrichten()` starten.
 
 ---
 
@@ -54,187 +106,39 @@ ohne dass am Dashboard etwas kaputtgeht.
 
 | Teil | Wo | Aufgabe |
 |---|---|---|
-| `dj_channels.json` | dieses Repo | Liste der DJ-Kanäle. Von Hand gepflegt. |
-| `dj-live-checker.gs` | Google Apps Script | prüft alle 5 Minuten, wer live ist |
-| `live_status.json` | dieses Repo | Ergebnis des Checkers. Wird vom Skript committet. |
-| DJ-Live-Slot | `index.html` | liest nur `live_status.json` und zeigt den Player |
+| Follow-Checker | `google-apps-script/dj-live-checker.gs` | liest mit dem User-Token die live gefolgten Music-Kanäle |
+| Statusdatei | `live_status.json` | enthält ausschließlich die aktuell live gefolgten DJs |
+| DJ-Live-Slot | `index.html` | zieht pro Zyklus einen Eintrag und zeigt ihn stumm für 180 Sekunden |
+| Fernbedienung | `dj-fernbedienung.html` + Firebase | überschreibt die automatische Auswahl auf Wunsch vom Handy |
 
-Das Dashboard fragt **keine** API selbst ab. Es liest ausschließlich
-`live_status.json` — deshalb liegen die Zugangsdaten auch nirgends im
-öffentlich einsehbaren Repo, sondern nur in den Script Properties bei Google.
+Das Dashboard fragt Twitch absichtlich **nicht direkt** ab. Ein User-Token im
+Browser wäre für jeden Besucher lesbar. Nur das Apps Script kennt Token und
+Secret; das Dashboard lädt ausschließlich `live_status.json`.
 
-Was der Checker je Plattform braucht:
+### Was als DJ gilt
 
-| Plattform | Zugangsdaten | Wie geprüft wird |
-|---|---|---|
-| Twitch | Client-ID + Secret (Abschnitt 2) | Helix-API `streams`, alle Kanäle in einem Aufruf |
-| YouTube | API-Key (Abschnitt 2b) | Vanity-URL `/live` liefert die videoId, `videos.list` bestätigt den Live-Status |
+Twitch liefert kein Feld „ist DJ“. Die automatische Auswahl verwendet deshalb
+die Twitch-Kategorie **Music** (`game_id=26936`). Ein gefolgter Kanal in einer
+anderen Kategorie wird nicht automatisch gezeigt, kann aber weiterhin über die
+Handy-Fernbedienung ausgewählt werden.
 
----
+### Einmalige Einrichtung
 
-## 1. Kanäle eintragen
+1. In Apps Script den bisherigen Inhalt von `Dj live checker.gs` vollständig
+   markieren und löschen. Danach **nur den reinen Dateiinhalt** aus
+   `google-apps-script/dj-live-checker.gs` einfügen – nicht die Git-Diff-Ansicht
+   und keine Zeilen mit `+`, `-`, `diff --git` oder andere Diff-Markierungen übernehmen.
 
-`dj_channels.json` im Repo bearbeiten. Format:
-
-```json
-[
-  { "platform": "youtube", "videoId": "abcdefghijk", "name": "Palma Hafen", "zeigen": "tag" },
-  { "platform": "twitch",  "channel": "kanalname",   "name": "DJ Nitewave", "zeigen": "nacht" },
-  { "platform": "youtube", "channelId": "UCxxxxxxxxxxxxxxxxxxxxxx", "name": "DJ Tube" }
-]
-```
-
-* `platform` — `"twitch"` oder `"youtube"`
-* `channel` — bei Twitch der Kanalname aus der URL
-  (`twitch.tv/**kanalname**`), Groß-/Kleinschreibung egal
-* `videoId` — bei YouTube die ID **eines bestimmten Streams**, aus der URL
-  `youtube.com/watch?v=**abcdefghijk**` oder `youtube.com/live/**abcdefghijk**`.
-  **Für feste Cams der richtige Weg** (siehe Kasten unten).
-* `channelId` — bei YouTube die Kanal-ID, beginnt mit `UC…`.
-  Zu finden über die Kanalseite → *Teilen* → *Kanal-ID kopieren*, oder in der
-  URL `youtube.com/channel/**UC…**`. Zeigt, was der Kanal *gerade* sendet.
-* `handle` — Alternative zu `channelId`: das `@handle` aus der URL
-  (`youtube.com/**@djtube**`). Eins der drei Felder reicht.
-* `name` — **optional**, aber empfohlen: der Anzeigename im Widget. Ohne ihn
-  steht dort bei Twitch der Kanalname und bei YouTube die kryptische `UC…`-ID.
-* `zeigen` — **optional**: `"tag"`, `"nacht"` oder weglassen (dann rund um die
-  Uhr). Siehe Abschnitt *Tageszeit* unten.
-
-> **`videoId` oder `channelId`/`handle`?**
-> Über Kanal-ID oder Handle bekommst du das, was der Kanal **gerade** sendet.
-> Bei Kanälen mit mehreren parallelen Livestreams — Hafen-Cams zum Beispiel —
-> ist das mal die eine und mal die andere Kamera, nicht steuerbar. Willst du
-> eine **bestimmte** Cam, trag deren `videoId` ein. Der Checker prüft dann nur
-> noch, ob genau dieser Stream läuft, und spart sich sogar einen Abruf.
-
-### Tageszeit
-
-Mit `"zeigen"` lässt sich pro Eintrag festlegen, wann er überhaupt in Frage
-kommt — gedacht für Urlaubs-Cams tagsüber und DJ-Streams am Abend:
-
-| Wert | wann |
-|---|---|
-| `"tag"` | 8:00 – 19:59 |
-| `"nacht"` | 20:00 – 7:59 |
-| weggelassen | immer |
-
-Die Grenzen stehen in `index.html` unter `DJ_LIVE_CONFIG` als `tagVonStunde`
-und `tagBisStunde`. Maßgeblich ist die Uhrzeit des Geräts, auf dem das
-Dashboard läuft.
-
-Gefiltert wird im Dashboard, nicht im Checker: `live_status.json` enthält immer
-alle Kanäle, die tatsächlich senden. So lässt sich die Zeitsteuerung ändern,
-ohne auf den nächsten Checker-Lauf zu warten.
-
-Änderungen an `dj_channels.json` wirken ab dem nächsten Checker-Lauf, also nach
-spätestens 5 Minuten.
-
----
-
-## 2. Twitch-Zugangsdaten anlegen
-
-Nur nötig, wenn Twitch-Kanäle in der Liste stehen. YouTube braucht nichts davon.
-
-1. Auf <https://dev.twitch.tv/console/apps> anmelden → **Anwendung registrieren**
-2. Name frei wählen, OAuth-Redirect-URL `http://localhost`, Kategorie
-   *Application Integration*
-3. **Client-ID** notieren und einmalig ein **Client-Secret** erzeugen
-   (das Secret wird nur einmal angezeigt)
-
-Die beiden Werte kommen in Schritt 3 in die Script Properties — **nicht** in
-dieses Repo, es ist öffentlich einsehbar.
-
----
-
-## 2b. YouTube-API-Key anlegen
-
-Nur nötig, wenn YouTube-Kanäle in der Liste stehen. Twitch braucht nichts davon.
-
-Der Key ist kostenlos und ohne Kreditkarte zu haben:
-
-1. <https://console.cloud.google.com/> öffnen, oben ein **Projekt anlegen**
-   (Name egal, z. B. `city-cafe-dj`)
-2. Links **APIs & Dienste → Bibliothek** → nach *YouTube Data API v3* suchen
-   → **Aktivieren**
-3. Links **APIs & Dienste → Anmeldedaten** → **Anmeldedaten erstellen**
-   → **API-Schlüssel**
-4. Den angezeigten Schlüssel kopieren — kommt in Schritt 3 als
-   `YOUTUBE_API_KEY` in die Script Properties
-5. Empfohlen: beim Schlüssel auf **Schlüssel einschränken** → unter
-   *API-Einschränkungen* nur *YouTube Data API v3* zulassen. Dann ist der
-   Schlüssel selbst bei einem Leck nur für diese eine API brauchbar.
-
-**Warum überhaupt ein Key?** Ursprünglich sollte der Live-Status ohne API direkt
-aus dem Seiten-HTML gelesen werden. Das funktioniert von Apps Script aus
-nachweislich nicht: YouTube liefert Anfragen aus der Google-Infrastruktur nur
-eine abgespeckte Seite ohne Live-Merkmale (~570 KB, Seitentitel bloß „YouTube"),
-während dieselbe URL von einer externen IP ~1,2 MB inklusive `"isLive":true`
-zurückgibt. Getestet mit verschiedenen User-Agents, Sec-Fetch-/Accept-Headern
-und ganz ohne Header — immer dasselbe. Das hängt am Absender, nicht an den
-Headern, und ist vom Skript aus nicht zu umgehen.
-
-**Quota:** Der Checker ruft `videos.list` auf — **1 Einheit** pro Abfrage, nicht
-100 wie das ursprünglich angedachte `search.list`. Bei 10.000 Einheiten pro Tag
-und 5-Minuten-Takt sind das 288 Abrufe pro Kanal und Tag; selbst ein Dutzend
-Kanäle bleibt weit unter dem Limit. Abgefragt wird ohnehin nur, wenn die
-kostenlose Vorstufe überhaupt einen Kandidaten gefunden hat.
-
-**Ohne Key** meldet der Checker YouTube-Kanäle grundsätzlich als nicht live und
-schreibt einen Hinweis ins Ausführungsprotokoll. Twitch läuft davon unberührt
-weiter.
-
----
-
-## 3. Apps Script einrichten
-
-Der Checker läuft in **einem eigenen Apps-Script-Projekt** oder im bestehenden
-des Song-Collectors — beides funktioniert. Der Unterschied ist nur der
-GitHub-Token: Script Properties gelten pro Projekt, im Song-Collector liegt
-`GITHUB_TOKEN` schon, in einem eigenen Projekt muss er neu hinein.
-
-1. <https://script.google.com> → **Neues Projekt** (oder das Song-Collector-Projekt öffnen)
-2. Bei *Dateien* auf **+** → **Skript** → Datei z. B. `dj-live-checker`
-3. Den kompletten Inhalt von `google-apps-script/dj-live-checker.gs` einfügen
-   und speichern
-4. Zahnrad → **Projekteinstellungen** → ganz unten **Skripteigenschaften**
-   → **Skripteigenschaft hinzufügen**:
-
-   | Eigenschaft | Wert |
-   |---|---|
-   | `GITHUB_TOKEN` | PAT mit Schreibrecht auf `motte025/City-cafe` |
-   | `TWITCH_CLIENT_ID` | Client-ID aus Schritt 2 |
-   | `TWITCH_CLIENT_SECRET` | Client-Secret aus Schritt 2 |
-   | `YOUTUBE_API_KEY` | API-Schlüssel aus Schritt 2b |
-
-   Nur eintragen, was gebraucht wird: reine Twitch-Nutzung kommt ohne
-   `YOUTUBE_API_KEY` aus, reine YouTube-Nutzung ohne die beiden Twitch-Werte.
-   **Wichtig:** Links steht der *Name* (`TWITCH_CLIENT_ID`), rechts der Wert —
-   nicht verwechseln, sonst findet das Skript die Eigenschaft nicht.
-
-   Im Song-Collector-Projekt ist `GITHUB_TOKEN` schon da — dann nur die beiden
-   Twitch-Werte ergänzen. Für ein eigenes Projekt: entweder den vorhandenen Wert
-   aus den Script Properties des Song-Collectors kopieren oder einen neuen PAT
-   erzeugen (fine-grained: Repository-Berechtigung *Contents: Read and write*;
-   klassisch: Scope `repo`).
-
-5. Oben die Funktion **`djTriggerEinrichten`** auswählen und **Ausführen**.
-   Beim ersten Mal fragt Google nach Berechtigungen → *Erweitert* →
-   *Zu [Projektname] (unsicher)* → zulassen.
-   Danach läuft `djPruefeLiveStatus` automatisch alle 5 Minuten.
-
-> **Warum alle Namen mit `dj`/`DJ_` beginnen:** Apps Script teilt sich **einen**
-> globalen Namensraum über alle `.gs`-Dateien eines Projekts. Eine schlichte
-> Konstante `GITHUB_REPO` würde mit derselben Konstante im Song-Collector
-> kollidieren — das Projekt ließe sich dann gar nicht mehr ausführen
-> (`SyntaxError: Identifier 'GITHUB_REPO' has already been declared`). Die
-> Präfixe halten den Checker in jedem Projekt verträglich. Die Script-Property-
-> *Schlüssel* (`GITHUB_TOKEN` & Co.) sind davon nicht betroffen — das sind
-> Strings, keine Bezeichner.
-
-### Prüfen, ob es läuft
-
-Funktion **`djTestLauf`** ausführen und ins **Ausführungsprotokoll** schauen. Dort
-steht pro Plattform, was gefunden wurde — ganz ohne etwas zu committen.
+   Reine Datei im Branch:
+   <https://raw.githubusercontent.com/motte025/City-cafe/work/google-apps-script/dj-live-checker.gs>
+2. Die fünf Zugangsdaten setzen. `TWITCH_USER_ID` leer lassen; sie wird beim ersten Lauf automatisch ermittelt.
+3. `djTestLauf()` ausführen und prüfen, ob die erwarteten live gefolgten
+   Music-Kanäle im Protokoll stehen.
+4. `djTriggerEinrichten()` ausführen. Der Trigger aktualisiert den Status alle
+   fünf Minuten.
+5. Erst nach einem erfolgreichen Checker-Lauf die Branch-Vorschau ohne
+   `djtest` öffnen; dann wird wirklich die Follow-Liste statt eines erzwungenen
+   Testkanals verwendet.
 
 ---
 
@@ -330,7 +234,8 @@ Alle in `index.html`, Block `DJ_LIVE_CONFIG`:
 
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
-| `sekundenProKanal` | `180` | Standzeit je Live-Kanal |
+| `sekundenProKanal` | `180` | Standzeit des zufällig gewählten Live-DJs |
+| `leerWarteSekunden` | `30` | Wartezeit ohne Live-DJ vor dem Überspringen |
 | `maxStatusAlterMinuten` | `45` | älterer Stand → Slot aus |
 | `abrufTaktSekunden` | `180` | wie oft `live_status.json` neu geholt wird |
 | `spielerBreite` / `spielerHoehe` | `1920` / `1080` | interne Playergröße, siehe unten |

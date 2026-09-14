@@ -14,10 +14,9 @@
   ohne die halbe Rotation abzuwarten und ohne dass ein zweiter Fehler
   (Netz, Kanal offline, Widget abgeschaltet) das Ergebnis verfaelscht.
 
-  Der Tontest laeuft ueber Web Audio statt ueber eine Mediendatei: der
-  Zustand eines frisch angelegten AudioContext ist genau das Signal, auf das
-  es ankommt - "running" heisst, die App verlangt keine Bedienung, sonst
-  "suspended". Kein Download, kein Codec, keine Leitung im Spiel.
+  Der Web-Audio-Status ist nur eine Teilmessung. Ein laufender AudioContext
+  beweist nicht, dass ein fremder Twitch-iframe hörbare Medienwiedergabe
+  automatisch beginnen oder programmgesteuert entstummen darf.
 -->
 
 <style>
@@ -97,7 +96,7 @@
 <div class="urteil offen" id="u-ton">
     <div class="zeichen">…</div>
     <div class="text">
-        <div class="frage">Ton ohne Bedienung</div>
+        <div class="frage">Web Audio ohne Bedienung</div>
         <div class="antwort">wird geprüft …</div>
         <div class="hinweis"></div>
     </div>
@@ -124,13 +123,11 @@
     <strong>Bild ohne Bedienung</strong> ist die Grundlage: stummes Abspielen
     erlauben fast alle Browser von selbst. Steht hier <em>nein</em>, sperrt die
     App Medien grundsätzlich – dann hilft an ihr keine Einstellung im Dashboard.<br>
-    <strong>Ton ohne Bedienung</strong> ist die eigentliche Hürde. Steht hier
-    <em>ja</em>, taugt diese App für den Screen.<br>
-    <strong>Twitch ohne Bedienung</strong> ist eine ganz andere Frage: sie hängt
-    nicht am Browser, sondern an Twitch. Twitch startet auf Mobilgeräten
-    grundsätzlich nicht von selbst – so steht es in ihrer eigenen Doku. YouTube
-    kennt diese Ausnahme nicht, deshalb läuft das Nightlife-Widget auf demselben
-    Screen von allein.<br>
+    <strong>Web Audio ohne Bedienung</strong> ist nur eine Teilmessung. Ein
+    laufender AudioContext ist kein Beweis für hörbaren Twitch-Ton.<br>
+    <strong>Twitch ohne Bedienung</strong> wird auf dieser Seite nicht aus der
+    Browserkennung erraten. Entscheidend sind Player-Ereignisse, Player-Zustand
+    und als letzter Nachweis tatsächlich hörbarer Ton am Gerät.<br>
     Twitch-Gegenprobe: <code>?kanal=name</code> an die Adresse hängen, mit einem
     Kanal, der gerade live ist.
 </p>
@@ -185,10 +182,9 @@
         return null;
     })();
 
-    // ---- Ton: der eigentliche Test --------------------------------------
-    // Ein frisch angelegter AudioContext startet nur dann im Zustand
-    // "running", wenn der Browser hoerbare Wiedergabe ohne Bedienung
-    // zulaesst. Sonst "suspended". Genauer und schneller als jede Datei.
+    // ---- Web Audio: nur eine Teilmessung --------------------------------
+    // Der Zustand sagt nichts Verlässliches über die Autoplay-Entscheidung
+    // eines cross-origin Twitch-Players aus.
     var AC = window.AudioContext || window.webkitAudioContext;
     var ctx = null, tonZustand = 'kein Web Audio';
     if (AC) {
@@ -244,32 +240,25 @@
     bildPruefen(function (art, text, hinweis) { setzen('u-bild', art, text, hinweis); });
 
     if (tonZustand === 'running') {
-        setzen('u-ton', 'ja', 'ja – Ton ist erlaubt',
-               'Diese App/dieser Browser lässt hörbare Wiedergabe ohne Bedienung zu. Genau das brauchen wir für den Screen.');
+        setzen('u-ton', 'offen', 'AudioContext läuft – Twitch-Ton weiter offen',
+               'Das belegt nur Web Audio in dieser Seite, nicht hörbare Medienwiedergabe im Twitch-iframe.');
     } else if (tonZustand === 'suspended') {
-        setzen('u-ton', 'nein', 'nein – erst nach einer Bedienung',
-               'Der Browser hält den Ton an, bis jemand die Seite bedient. Für einen Screen, an dem niemand steht, taugt das nicht.');
+        setzen('u-ton', 'offen', 'AudioContext wartet auf Bedienung',
+               'Das ist ein Indiz für eine Autoplay-Sperre, aber noch kein Twitch-Messergebnis.');
     } else {
         setzen('u-ton', 'offen', 'nicht feststellbar', 'Web Audio steht hier nicht zur Verfügung (' + tonZustand + ').');
     }
 
-    // ---- Twitch: die Regel, die keinen Browser fragt ---------------------
-    // Twitch verweigert Autoplay auf Mobilgeraeten von sich aus. Woertlich aus
-    // der offiziellen Embed-Doku zum Parameter autoplay:
-    //   "The exception is mobile devices, on which video cannot be played
-    //    without user interaction."
-    //   https://dev.twitch.tv/docs/embed/video-and-clips/
-    // Das erklaert, warum das YouTube-Widget auf demselben Screen stumm von
-    // allein laeuft und Twitch daneben mit seiner Play-Taste stehenbleibt -
-    // YouTube kennt diese Ausnahme nicht.
+    // ---- Twitch: kein Urteil aus dem User-Agent -------------------------
+    // Eine mobile Kennung ist Kontext, aber kein gemessener Playerfehler.
+    // Der bereits beobachtete Bildstart darf dadurch nicht als Fehlschlag
+    // umgedeutet werden. Für Ton ist die SDK-Testseite zuständig.
     var mobil = (function () {
         var ud = false;
         try { ud = !!(navigator.userAgentData && navigator.userAgentData.mobile); } catch (e) {}
         return ud || /Android|iPhone|iPad|iPod|IEMobile|Mobile|Silk|Kindle/i.test(navigator.userAgent || '');
     })();
 
-    // Gibt es hier überhaupt einen Zeiger? Am Fernseher hängt eine
-    // Fernbedienung – der Rat „in den Player klicken“ ist dort nicht ausführbar.
     var zeiger = (function () {
         try {
             return window.matchMedia('(pointer: fine)').matches ||
@@ -277,18 +266,12 @@
         } catch (e) { return true; }
     })();
 
-    if (mobil) {
-        setzen('u-twitch', 'nein', 'nein – Twitch verweigert es hier',
-               'Dieses Gerät gilt für Twitch als Mobilgerät. Twitch startet dort grundsätzlich nicht von selbst, unabhängig vom Browser und von allem, was das Dashboard tut. ' +
-               (zeiger ? '' : 'Und es hängt kein Zeiger dran – ein Klick in den Player ist hier gar nicht möglich. ') +
-               'Der Weg ohne Klick: Chrome-Menü ⋮ → „Desktop-Website“ → Seite neu laden, dann diese Prüfung wiederholen. In Lumify gibt es dieses Menü nicht.');
-    } else {
-        setzen('u-twitch', 'ja', 'ja – Twitch erlaubt Autostart',
-               'Dieses Gerät gilt für Twitch nicht als Mobilgerät. Ob es dann wirklich läuft, hängt nur noch an den beiden Urteilen oben.');
-    }
+    setzen('u-twitch', 'offen', 'nicht automatisch gemessen',
+           'Die Browserkennung lautet ' + (mobil ? 'mobil' : 'Desktop') +
+           '. Das ist kein Ergebnis. Nutze die Twitch-Tontest-Seite und bestätige Ton nur, wenn er ohne Bedienung hörbar ist.');
 
     zeile('Adresse', location.href);
-    zeile('gilt für Twitch als Mobilgerät', mobil ? 'JA – kein Autostart' : 'nein');
+    zeile('mobile Browserkennung (nur Kontext)', mobil ? 'ja' : 'nein');
     zeile('Zeiger vorhanden', zeiger ? 'ja – Klicken möglich' : 'NEIN – nur Tasten');
     zeile('AudioContext beim Laden', tonZustand);
     zeile('eingebettet in fremde Seite', eingebettet ? 'JA' : 'nein');
