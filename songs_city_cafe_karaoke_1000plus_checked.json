@@ -59933,16 +59933,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Joe",
-    "title": "I Wanna Know",
+    "artist": "Kristina Bach",
+    "title": "... es kribbelt und es prickelt...",
     "album": "",
-    "category": "2000s",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "2000s",
       "Party",
-      "Karaoke"
+      "Karaoke",
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Barbra Streisand",
+    "title": "I Finally Found Someone (feat. Bryan Adams)",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
