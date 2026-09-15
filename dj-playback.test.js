@@ -51,6 +51,40 @@ async function run() {
     context.djTwitchSpieler = {};
     player.emit(Player.PLAYING);
     assert.equal(context.djQualiLage.bildGestartet, false, 'Old player events cannot mark a new player as running');
+
+    let sichtbar = false, gebaut = 0;
+    const buehne = { firstChild: null, innerHTML: '' };
+    const visibilityContext = vm.createContext({
+        DJ_SLOT_AN: true,
+        DJ_LIVE_CONFIG: {},
+        djGepuffert: [],
+        djAktiverIndex: -1,
+        djUsableEntries: () => [{ platform: 'twitch', channel: 'live-dj' }],
+        djSchluessel: entry => entry.platform + ':' + entry.channel,
+        djSlotSichtbar: () => sichtbar,
+        djSpielerAufbauen: () => { gebaut++; },
+        djSpielerAbbauen() {},
+        djKanalWechseln: () => false,
+        djAnstupsen() {},
+        djAnzeigeName: entry => entry.channel,
+        document: {
+            getElementById: id => id === 'dj-live-player' ? buehne : {
+                textContent: '', style: {}, classList: { toggle() {} }
+            },
+            querySelector: () => null
+        }
+    });
+    vm.runInContext(fn('djVorpuffern') + '\n' + fn('djZeigeEintrag'), visibilityContext);
+    visibilityContext.djVorpuffern();
+    assert.equal(visibilityContext.djGepuffert.length, 1, 'Live list is prepared before the slot');
+    assert.equal(gebaut, 0, 'Twitch player is not created while the slot is hidden');
+    sichtbar = true;
+    visibilityContext.djVorpuffern();
+    assert.equal(gebaut, 1, 'Twitch player is created once the slot is visible');
+
+    visibilityContext.djAktiverIndex = 0;
+    visibilityContext.djZeigeEintrag(0);
+    assert.equal(gebaut, 2, 'A missing player frame is rebuilt even when the index is unchanged');
     console.log('DJ playback regression tests passed.');
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

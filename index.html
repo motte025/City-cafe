@@ -233,18 +233,6 @@
            Browser die Wiedergabe drosseln - dann waere der Vorlauf hinueber. */
         #media-view-nightlife { visibility: visible; }
 
-        /* Dieselbe Ausnahme, und aus demselben Grund - hier war sie 35 Sekunden
-           lang der ganze Unterschied: der DJ-Slot baut seinen Twitch-Player schon
-           waehrend des Plakats davor (djVorpuffern). Unter visibility:hidden nimmt
-           Chrome den fremden Rahmen komplett aus dem Rendering; der Twitch-Player
-           faellt darin nie an, zeigt sein Play-Symbol - und bleibt auch dabei,
-           wenn die Ansicht spaeter aufblendet. Genau das war "er probiert's, aber
-           es laeuft nicht an". opacity:0 bleibt: zu sehen ist nach wie vor nichts,
-           der Rahmen wird nur weiter gezeichnet.
-           Achtung beim Aendern: djSlotSichtbar() darf sich deshalb nicht mehr auf
-           die visibility verlassen, sondern misst die Deckkraft. */
-        #media-view-djlive { visibility: visible; }
-
         /* Was niemand sieht, muss auch nicht animieren. Jede laufende Animation
            zwingt den Browser, das Bild neu zusammenzusetzen - genau die Leistung,
            die dem Video im Nightlife-Slot fehlt. */
@@ -7749,8 +7737,9 @@
         //
         // Nachgesehen im ausgelieferten embed/v1.js: das SDK setzt dort selbst
         // allow="autoplay; fullscreen", noch bevor der Rahmen im Dokument haengt.
-        // Der Autostart hing also NICHT hieran - das war die falsche Faehrte, die
-        // Ursache lag bei visibility:hidden (siehe CSS zu #media-view-djlive).
+        // Der Autostart hing also nicht hieran. Twitch verlangt beim Erzeugen des
+        // Players zusaetzlich einen sichtbar gezeichneten Rahmen; darum wird der
+        // Player erst nach der Einblendung des DJ-Slots gebaut.
         //
         // Die Absicherung bleibt trotzdem: faellt die Zeile bei Twitch irgendwann
         // weg, steht der Slot sonst wieder still. Ergaenzt wird nur, wenn autoplay
@@ -8311,15 +8300,14 @@
         // Steht der Slot wirklich auf dem Schirm? Danach richtet sich, ob der
         // Waechter Totzeit zaehlt und neu baut.
         //
-        // Gemessen wird die berechnete Deckkraft, nicht die visibility: die steht
-        // bei #media-view-djlive dauerhaft auf visible, damit der vorgepufferte
-        // Player ueberhaupt anlaufen darf (siehe CSS). Und nicht die
-        // active-Klasse: die sitzt sofort, waehrend die Ueberblendung noch laeuft.
+        // Gemessen wird neben der visibility die berechnete Deckkraft. Die
+        // active-Klasse sitzt sofort, waehrend die Ueberblendung noch laeuft.
         // Waehrend einer Transition liefert getComputedStyle den animierten Wert -
         // "fast ganz da" genuegt.
         function djSlotSichtbar() {
             const v = document.getElementById('media-view-djlive');
             if (!v || !v.classList.contains('active')) return false;
+            if (getComputedStyle(v).visibility !== 'visible') return false;
             return parseFloat(getComputedStyle(v).opacity || '0') >= 0.9;
         }
 
@@ -8666,11 +8654,10 @@
             buehne.querySelectorAll('.dj-player-frame').forEach(el => el.remove());
         }
 
-        // Baut den Player des ERSTEN Kanals schon im Slot davor. Das ist der
-        // eigentliche Zweck des Vorpufferns: Twitch startete sonst haeufig gar
-        // nicht, weil der Player die Autoplay-Entscheidung faellt, bevor er
-        // ueberhaupt Daten hat. Die weiteren Kanaele bekommen ihren Player erst,
-        // wenn sie an der Reihe sind - frueher liefen alle gleichzeitig.
+        // Aktualisiert die Liste schon im Slot davor, baut den Player aber erst,
+        // wenn die DJ-Ansicht sichtbar ist. Twitch lehnt Autoplay dauerhaft ab,
+        // wenn sein Embed in einer ausgeblendeten oder transparenten Ansicht
+        // erzeugt wird ("minimum requirements: style visibility").
         function djVorpuffern() {
             if (!DJ_SLOT_AN) return;
             const eintraege = djUsableEntries();
@@ -8698,6 +8685,11 @@
             if (gleich && djAktiverIndex >= 0) return;
 
             djGepuffert = eintraege.slice();
+
+            // Daten duerfen vorab geladen werden, der fremde Twitch-Rahmen nicht.
+            // Die Autoplay-Entscheidung faellt beim Erzeugen des Players.
+            if (!djSlotSichtbar()) return;
+
             // Laeuft schon ein Player, bekommt er nur den neuen Kanal gesagt -
             // ein Neuaufbau kostete auf Mobilgeraeten die bereits erteilte
             // Bedienung und damit das Bild (siehe djKanalWechseln).
@@ -8714,7 +8706,12 @@
             const entry = djGepuffert[index];
             if (!entry) return;
 
-            if (index !== djAktiverIndex) {
+            const hatRahmen = !!document.querySelector('#dj-live-player .dj-player-frame');
+
+            if (!hatRahmen || djAktiverIndex < 0) {
+                djSpielerAufbauen(entry);
+                djAktiverIndex = index;
+            } else if (index !== djAktiverIndex) {
                 // Erst der schonende Weg: denselben Player weiterlaufen lassen
                 // und ihm nur einen anderen Kanal sagen. Nur wenn das nicht
                 // geht (YouTube, einfacher Rahmen, kein SDK), wird gebaut.
@@ -8767,6 +8764,13 @@
                 if (generation !== sequenceGeneration || mediaStateIndex !== DJ_SLOT_INDEX) return;
                 djVorpuffern();
                 if (djGepuffert.length) {
+                    // Erst nach der Ueberblendung erzeugen. Twitch prueft die
+                    // Sichtbarkeit genau beim Player-Start und versucht nach einer
+                    // Ablehnung nicht verlaesslich noch einmal automatisch.
+                    if (!djSlotSichtbar()) {
+                        globalMasterTimer = later(startenOderWarten, 100);
+                        return;
+                    }
                     djWaechterStarten();
                     djZeigeEintrag(0);
                     const dauer = djFernAktiv()
@@ -10842,9 +10846,9 @@
                 // Calamari-Grill-Event (12.09., Dartverein City Flyers), direkt nach dem Tag/Nacht-Plakat
                 showPosterImage(CALAMARI_EVENT_URL);
 
-                // Den ersten Stream schon hier anwerfen: der DJ-Slot kommt als
-                // naechstes, und die 35 Sekunden Plakat geben ihm genug Vorlauf,
-                // um beim Einblenden bereits zu laufen statt erst zu puffern.
+                // Die aktuelle Live-Liste schon hier laden. Der Twitch-Player wird
+                // erst im sichtbaren DJ-Slot erzeugt, weil Twitch Autoplay in einer
+                // ausgeblendeten Ansicht ablehnt.
                 djVorpuffern();
 
                 mediaStateIndex = DJ_SLOT_INDEX;
