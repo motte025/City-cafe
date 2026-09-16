@@ -61427,16 +61427,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Inna",
-    "title": "10 Minutes",
+    "artist": "blink-182",
+    "title": "First Date",
     "album": "",
-    "category": "Party",
+    "category": "Deutsch Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Party",
-      "Karaoke"
+      "Karaoke",
+      "Deutsch Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "T. Rex",
+    "title": "Hot Love - A Side",
+    "album": "",
+    "category": "Party-Hit",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Kult",
+      "Retro"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
