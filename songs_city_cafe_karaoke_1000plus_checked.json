@@ -60630,16 +60630,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Das Gezeichnete Ich",
-    "title": "Du, Es Und Ich",
+    "artist": "Caroline Polachek",
+    "title": "So Hot You're Hurting My Feelings",
     "album": "",
-    "category": "Party-Schlager",
+    "category": "Party & Rock",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Karaoke",
-      "Party-Schlager"
+      "Rock",
+      "Anthem"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Selena Gomez",
+    "title": "Slow Down",
+    "album": "",
+    "category": "Rock Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Rock",
+      "Pop",
+      "Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
