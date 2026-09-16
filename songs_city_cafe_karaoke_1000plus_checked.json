@@ -60490,34 +60490,14 @@
     "auto_discovered": true
   },
   {
-    "artist": "Illegal 2001",
-    "title": "A7 (Ich Lauf Durch Jede Wüste)",
+    "artist": "Van Morrison",
+    "title": "Brown Eyed Girl",
     "album": "",
-    "category": "Party-Schlager",
+    "category": "Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Party",
       "Karaoke",
-      "Party-Schlager"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Bad Bunny",
-    "title": "EoO",
-    "album": "",
-    "category": "International Party",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "International Party",
       "Party",
       "Karaoke"
     ],
