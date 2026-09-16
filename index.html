@@ -1873,6 +1873,17 @@
             left: 36px; right: 36px; bottom: 26px; width: auto; max-width: none;
             transform: none; z-index: 12; font-size: 16px;
         }
+        .widget-rotator.dj-controls-active {
+            background: radial-gradient(circle at 50% 35%, #32204d 0%, #171129 58%, #0c1020 100%) !important;
+            border: 1px solid rgba(145, 70, 255, 0.55) !important;
+            border-radius: 24px;
+        }
+        .widget-rotator.dj-controls-active::before {
+            content: 'DJ FERNBEDIENUNG'; position: absolute; top: 23px; left: 0; right: 0;
+            color: #e6d8ff; text-align: center; font: 900 20px 'Orbitron', sans-serif;
+            letter-spacing: 1.5px;
+        }
+        .widget-rotator.dj-controls-active .rotator-view { visibility: hidden; }
         .dj-ton-zeichen { font-size: 26px; line-height: 1; }
         .dj-ton-text { display: block; }
         .dj-ton-knopf:focus-visible, .dj-ton-knopf:focus {
@@ -1883,12 +1894,8 @@
             0%, 100% { box-shadow: 0 14px 46px rgba(0,0,0,0.65), 0 0 0 0 rgba(0, 242, 254, 0.55); }
             50%      { box-shadow: 0 14px 46px rgba(0,0,0,0.65), 0 0 0 18px rgba(0, 242, 254, 0); }
         }
-        /* QR zur Handy-Fernbedienung, ueber dem Player.
-           In der Kopfzeile hatte er nur 74px - aus zwei Metern vom Fernseher aus
-           chancenlos. Ein Code braucht auf dem Screen rund 300px, damit ihn eine
-           Handykamera aus dem Raum noch aufloest. So gross verdeckt er zwangs-
-           laeufig Bild, deshalb blendet er sich nach djFernQrSekunden wieder aus:
-           lange genug zum Scannen, kurz genug, um nicht zu stoeren. */
+        /* QR zur Handy-Fernbedienung in der rechten Seitenkarte. Der Code bleibt
+           aus mehreren Metern lesbar, ohne Twitchs Player zu verdecken. */
         .dj-fern-qr {
             position: absolute; right: 62px; bottom: 62px; z-index: 6;
             display: none; flex-direction: column; align-items: center; gap: 8px;
@@ -1899,7 +1906,7 @@
         .dj-fern-qr.is-da { display: flex; opacity: 1; }
         .dj-fern-qr.is-weg { display: flex; opacity: 0; pointer-events: none; }
         .widget-rotator > .dj-fern-qr {
-            left: 50%; right: auto; top: 34px; bottom: auto;
+            left: 50%; right: auto; top: 82px; bottom: auto;
             transform: translateX(-50%); z-index: 11;
         }
         .dj-fern-qr img { width: 300px; height: 300px; display: block; }
@@ -7484,6 +7491,16 @@
 
         let djFernQrTimer = null;
 
+        function djSidebarAktualisieren() {
+            const karte = document.getElementById('card-rotator');
+            if (!karte) return;
+            const qr = document.getElementById('dj-fern-qr');
+            const knopf = document.getElementById('dj-ton-knopf');
+            karte.classList.toggle('dj-controls-active',
+                !!(qr && qr.classList.contains('is-da')) ||
+                !!(knopf && knopf.classList.contains('is-an')));
+        }
+
         // Legt das Bild an, blendet aber noch nichts ein - das macht
         // djFernQrZeigen(), sobald der DJ-Slot laeuft.
         function djFernQrZeichnen() {
@@ -7507,11 +7524,13 @@
             if (djFernQrTimer) { clearTimeout(djFernQrTimer); djFernQrTimer = null; }
             kasten.classList.remove('is-weg');
             kasten.classList.add('is-da');
+            djSidebarAktualisieren();
             djFernQrTimer = setTimeout(() => {
                 // is-weg statt Klasse ganz weg: so laeuft die Ausblendung noch,
                 // statt dass der Kasten schlagartig verschwindet.
                 kasten.classList.remove('is-da');
                 kasten.classList.add('is-weg');
+                djSidebarAktualisieren();
                 djFernQrTimer = null;
             }, DJ_FERN_QR_SEKUNDEN * 1000);
         }
@@ -7520,6 +7539,7 @@
             const kasten = document.getElementById('dj-fern-qr');
             if (djFernQrTimer) { clearTimeout(djFernQrTimer); djFernQrTimer = null; }
             if (kasten) kasten.classList.remove('is-da', 'is-weg');
+            djSidebarAktualisieren();
         }
 
         djFernStarten();
@@ -7918,10 +7938,10 @@
         // wenn ein Player tatsaechlich klemmt. Einmal pro Chrome-Start genuegt,
         // danach laufen alle weiteren Slots von allein.
         //
-        // Ganz ohne Bedienung hilft nur, das Dashboard direkt in Chrome zu
-        // oeffnen und als App zu installieren - dann erlaubt Chrome die
-        // Wiedergabe von sich aus. In einer fremden Seite eingebettet (Lumify)
-        // geht das nicht: dort entscheidet deren Seite, nicht unsere.
+        // Auf Android verlangt Twitch laut Embed-Dokumentation trotzdem einen
+        // Druck direkt im Videobild. Das wurde am ODROID auch mit Chromes
+        // Desktopwebsite-Modus nach einem Neuladen bestaetigt. Weder der
+        // Seitenknopf noch ein installierter App-Rahmen heben das verlaesslich auf.
         let djFreigabeErteilt = false;
 
         // Blendet den Ton-Knopf ein oder aus.
@@ -7952,6 +7972,7 @@
             if (!an && document.activeElement === el) {
                 try { el.blur(); } catch (e) {}
             }
+            djSidebarAktualisieren();
         }
 
         // Bild UND Ton in einem Zug starten - und zwar sofort, im Tastendruck.
