@@ -1830,6 +1830,8 @@
             width: 11px; height: 11px; border-radius: 50%; background: var(--live-red); flex-shrink: 0;
             animation: blLivePulse 1.4s ease-in-out infinite;
         }
+        .dj-live-badge.is-offline { color: #cbd5e1; border-color: #64748b; background: rgba(30,41,59,0.7); box-shadow: none; }
+        .dj-live-badge.is-offline .dj-live-dot { background: #94a3b8; animation: none; }
         /* 1200x675 = exakt 16:9 und genau die Breite zwischen den Buehnen-Raendern.
            box-sizing zwingend: ohne das legt der 1px-Rahmen 2px drauf, und die
            Buehne (overflow: hidden) schneidet sie rechts wieder ab. */
@@ -1867,6 +1869,21 @@
             text-align: left; cursor: pointer;
         }
         .dj-ton-knopf.is-an { display: flex; }
+        .widget-rotator > .dj-ton-knopf {
+            left: 36px; right: 36px; bottom: 26px; width: auto; max-width: none;
+            transform: none; z-index: 12; font-size: 16px;
+        }
+        .widget-rotator.dj-controls-active {
+            background: radial-gradient(circle at 50% 35%, #32204d 0%, #171129 58%, #0c1020 100%) !important;
+            border: 1px solid rgba(145, 70, 255, 0.55) !important;
+            border-radius: 24px;
+        }
+        .widget-rotator.dj-controls-active::before {
+            content: 'DJ FERNBEDIENUNG'; position: absolute; top: 23px; left: 0; right: 0;
+            color: #e6d8ff; text-align: center; font: 900 20px 'Orbitron', sans-serif;
+            letter-spacing: 1.5px;
+        }
+        .widget-rotator.dj-controls-active .rotator-view { visibility: hidden; }
         .dj-ton-zeichen { font-size: 26px; line-height: 1; }
         .dj-ton-text { display: block; }
         .dj-ton-knopf:focus-visible, .dj-ton-knopf:focus {
@@ -1877,12 +1894,8 @@
             0%, 100% { box-shadow: 0 14px 46px rgba(0,0,0,0.65), 0 0 0 0 rgba(0, 242, 254, 0.55); }
             50%      { box-shadow: 0 14px 46px rgba(0,0,0,0.65), 0 0 0 18px rgba(0, 242, 254, 0); }
         }
-        /* QR zur Handy-Fernbedienung, ueber dem Player.
-           In der Kopfzeile hatte er nur 74px - aus zwei Metern vom Fernseher aus
-           chancenlos. Ein Code braucht auf dem Screen rund 300px, damit ihn eine
-           Handykamera aus dem Raum noch aufloest. So gross verdeckt er zwangs-
-           laeufig Bild, deshalb blendet er sich nach djFernQrSekunden wieder aus:
-           lange genug zum Scannen, kurz genug, um nicht zu stoeren. */
+        /* QR zur Handy-Fernbedienung in der rechten Seitenkarte. Der Code bleibt
+           aus mehreren Metern lesbar, ohne Twitchs Player zu verdecken. */
         .dj-fern-qr {
             position: absolute; right: 62px; bottom: 62px; z-index: 6;
             display: none; flex-direction: column; align-items: center; gap: 8px;
@@ -1892,6 +1905,10 @@
         }
         .dj-fern-qr.is-da { display: flex; opacity: 1; }
         .dj-fern-qr.is-weg { display: flex; opacity: 0; pointer-events: none; }
+        .widget-rotator > .dj-fern-qr {
+            left: 50%; right: auto; top: 82px; bottom: auto;
+            transform: translateX(-50%); z-index: 11;
+        }
         .dj-fern-qr img { width: 300px; height: 300px; display: block; }
         .dj-fern-qr span {
             font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 900;
@@ -2598,31 +2615,10 @@
                             <div class="dj-header-right">
                                 <div class="dj-counter" id="dj-live-counter" style="display: none;">1/1</div>
                                 <div class="dj-platform-chip is-twitch" id="dj-live-platform">Twitch</div>
-                                <div class="dj-live-badge"><span class="dj-live-dot"></span>Live</div>
+                                <div class="dj-live-badge" id="dj-live-badge"><span class="dj-live-dot"></span><span id="dj-live-badge-text">Live</span></div>
                             </div>
                         </div>
                         <div class="dj-player" id="dj-live-player"></div>
-                        <!-- Bewusst NEBEN dem Player, nicht darin: djStopPlayer
-                             leert den Player-Container komplett aus. Liegt per
-                             absoluter Position trotzdem darueber. Gross genug zum
-                             Scannen und nur am Anfang des Slots sichtbar - danach
-                             soll der Stream frei stehen. -->
-                        <div class="dj-fern-qr" id="dj-fern-qr">
-                            <img id="dj-fern-qr-img" src="" alt="QR-Code DJ-Fernbedienung">
-                            <span>Stream steuern</span>
-                        </div>
-                        <!-- Bewusst NEBEN dem Player, nicht darin: djStopPlayer
-                             leert den Player-Container komplett aus.
-                             Ein echter <button>, kein Hinweiskaesten: nur den kann
-                             das Steuerkreuz einer TV-Fernbedienung anspringen und
-                             mit OK ausloesen. Und genau dieser Tastendruck ist die
-                             Bedienung, die der Browser fuer Ton verlangt. -->
-                        <button class="dj-ton-knopf" id="dj-ton-knopf" type="button">
-                            <span class="dj-ton-zeichen" id="dj-ton-zeichen">▶</span>
-                            <span class="dj-ton-text"><span id="dj-ton-haupt">Stream starten</span>
-                                <span class="dj-ton-sub" id="dj-ton-sub">Bild starten · OK auf der Fernbedienung</span>
-                            </span>
-                        </button>
                     </div>
                 </div>
 
@@ -2756,6 +2752,18 @@
                         </div>
                     </div>
                 </div>
+                <!-- Twitch verlangt einen unbedeckten Player. QR und Startknopf
+                     stehen deshalb in der rechten Seitenkarte statt ueber dem Video. -->
+                <div class="dj-fern-qr" id="dj-fern-qr">
+                    <img id="dj-fern-qr-img" src="" alt="QR-Code DJ-Fernbedienung">
+                    <span>Stream steuern</span>
+                </div>
+                <button class="dj-ton-knopf" id="dj-ton-knopf" type="button">
+                    <span class="dj-ton-zeichen" id="dj-ton-zeichen">▶</span>
+                    <span class="dj-ton-text"><span id="dj-ton-haupt">Stream starten</span>
+                        <span class="dj-ton-sub" id="dj-ton-sub">Bild starten · OK auf der Fernbedienung</span>
+                    </span>
+                </button>
             </div>
         </div>
 
@@ -7483,6 +7491,16 @@
 
         let djFernQrTimer = null;
 
+        function djSidebarAktualisieren() {
+            const karte = document.getElementById('card-rotator');
+            if (!karte) return;
+            const qr = document.getElementById('dj-fern-qr');
+            const knopf = document.getElementById('dj-ton-knopf');
+            karte.classList.toggle('dj-controls-active',
+                !!(qr && qr.classList.contains('is-da')) ||
+                !!(knopf && knopf.classList.contains('is-an')));
+        }
+
         // Legt das Bild an, blendet aber noch nichts ein - das macht
         // djFernQrZeigen(), sobald der DJ-Slot laeuft.
         function djFernQrZeichnen() {
@@ -7506,11 +7524,13 @@
             if (djFernQrTimer) { clearTimeout(djFernQrTimer); djFernQrTimer = null; }
             kasten.classList.remove('is-weg');
             kasten.classList.add('is-da');
+            djSidebarAktualisieren();
             djFernQrTimer = setTimeout(() => {
                 // is-weg statt Klasse ganz weg: so laeuft die Ausblendung noch,
                 // statt dass der Kasten schlagartig verschwindet.
                 kasten.classList.remove('is-da');
                 kasten.classList.add('is-weg');
+                djSidebarAktualisieren();
                 djFernQrTimer = null;
             }, DJ_FERN_QR_SEKUNDEN * 1000);
         }
@@ -7519,6 +7539,7 @@
             const kasten = document.getElementById('dj-fern-qr');
             if (djFernQrTimer) { clearTimeout(djFernQrTimer); djFernQrTimer = null; }
             if (kasten) kasten.classList.remove('is-da', 'is-weg');
+            djSidebarAktualisieren();
         }
 
         djFernStarten();
@@ -7673,6 +7694,13 @@
             hinweis.textContent = 'Stream wird geladen …';
         }
 
+        function djLiveBadgeSetzen(offline) {
+            const badge = document.getElementById('dj-live-badge');
+            const text = document.getElementById('dj-live-badge-text');
+            if (badge) badge.classList.toggle('is-offline', !!offline);
+            if (text) text.textContent = offline ? 'Offline' : 'Live';
+        }
+
         // ---- Twitch-SDK ------------------------------------------------------
         // Der reine iframe kennt keinen quality-Parameter - Twitch dokumentiert
         // fuer player.twitch.tv nur channel, parent, autoplay, muted und time.
@@ -7799,6 +7827,7 @@
                     if (djTwitchSpieler !== spieler || !djQualiLage) return;
                     djQualiLage.bildGestartet = true;
                     djQualiLage.jeGelaufen = true;
+                    djLiveBadgeSetzen(false);
                     djKnopfBeschriften(false);
                     djTonKnopf(false);
                 });
@@ -7837,10 +7866,14 @@
                     // beim ersten Bild noch einmal nachsetzen.
                     spieler.addEventListener(Twitch.Player.READY, stufeSetzen);
                     spieler.addEventListener(Twitch.Player.PLAYING, stufeSetzen);
-                    // Geht der Streamer offline, endet "bis offline" - genau
-                    // dafuer gibt es das Ereignis, ein API-Abruf eruebrigt sich.
+                    // Ein Offline-Kanal darf weder als LIVE beschriftet bleiben
+                    // noch eine Fernwahl bis zum Ablauf der Dauer festhalten.
                     spieler.addEventListener(Twitch.Player.OFFLINE, () => {
-                        if (!djFern || djFern.bisWann !== -1) return;
+                        if (djTwitchSpieler !== spieler) return;
+                        djLiveBadgeSetzen(true);
+                        let kanal = entry.channel;
+                        try { if (spieler.getChannel) kanal = spieler.getChannel() || kanal; } catch (e) {}
+                        if (!djFern || String(djFern.kanal).toLowerCase() !== String(kanal).toLowerCase()) return;
                         djFern = null;
                         djFernQualitaetAnwenden(0);
                         djFernStatusMelden();
@@ -7905,10 +7938,10 @@
         // wenn ein Player tatsaechlich klemmt. Einmal pro Chrome-Start genuegt,
         // danach laufen alle weiteren Slots von allein.
         //
-        // Ganz ohne Bedienung hilft nur, das Dashboard direkt in Chrome zu
-        // oeffnen und als App zu installieren - dann erlaubt Chrome die
-        // Wiedergabe von sich aus. In einer fremden Seite eingebettet (Lumify)
-        // geht das nicht: dort entscheidet deren Seite, nicht unsere.
+        // Auf Android verlangt Twitch laut Embed-Dokumentation trotzdem einen
+        // Druck direkt im Videobild. Das wurde am ODROID auch mit Chromes
+        // Desktopwebsite-Modus nach einem Neuladen bestaetigt. Weder der
+        // Seitenknopf noch ein installierter App-Rahmen heben das verlaesslich auf.
         let djFreigabeErteilt = false;
 
         // Blendet den Ton-Knopf ein oder aus.
@@ -7939,6 +7972,7 @@
             if (!an && document.activeElement === el) {
                 try { el.blur(); } catch (e) {}
             }
+            djSidebarAktualisieren();
         }
 
         // Bild UND Ton in einem Zug starten - und zwar sofort, im Tastendruck.
@@ -8705,6 +8739,8 @@
         function djZeigeEintrag(index) {
             const entry = djGepuffert[index];
             if (!entry) return;
+
+            djLiveBadgeSetzen(false);
 
             const hatRahmen = !!document.querySelector('#dj-live-player .dj-player-frame');
 
