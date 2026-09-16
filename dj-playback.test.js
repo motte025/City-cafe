@@ -10,14 +10,15 @@ function fn(name) {
     return html.slice(start, end);
 }
 async function run() {
-    let player, button, starts = 0;
+    let player, button, starts = 0, offlineBadge = false, sequenceRuns = 0;
     class Player {
-        constructor(id, options) { this.handlers = {}; this.paused = true; player = this; assert.equal(options.muted, true); assert.equal(options.autoplay, true); }
+        constructor(id, options) { this.handlers = {}; this.paused = true; this.channel = options.channel; player = this; assert.equal(options.muted, true); assert.equal(options.autoplay, true); }
         addEventListener(event, handler) { (this.handlers[event] ||= []).push(handler); }
         emit(event) { for (const cb of this.handlers[event] || []) cb(); }
         play() { starts++; this.emit(Player.PLAYBACK_BLOCKED); }
         setMuted(value) { assert.equal(value, true); }
         isPaused() { return this.paused; }
+        getChannel() { return this.channel; }
         getCurrentTime() { throw Error('Live playback must not use the VOD clock'); }
     }
     for (const event of ['READY', 'PLAYING', 'PAUSE', 'OFFLINE', 'ENDED', 'PLAYBACK_BLOCKED']) Player[event] = event;
@@ -28,7 +29,11 @@ async function run() {
         djTwitchSdkLaden: async () => true, djFreigabeNachruesten() {}, djEmbedHosts: () => ['localhost'],
         djSofortStarten: () => player.play(), djKnopfBeschriften() {}, djTonKnopf: value => { button = value; },
         djAnstupsen() {}, djSlotSichtbar: () => true, djMobilgeraet: () => false, djNeuaufbauErlaubt: () => false,
-        djTonNachziehen() {}, djKnopfStur: false, djFernAktiv: () => false, djFern: null
+        djTonNachziehen() {}, djKnopfStur: false, djFernAktiv: () => false, djFern: null,
+        djLiveBadgeSetzen: value => { offlineBadge = value; },
+        djFernQualitaetAnwenden() {}, djFernStatusMelden() {},
+        mediaStateIndex: 1, DJ_SLOT_INDEX: 1, cancelSequenceTimers() {},
+        runMasterSequence: () => { sequenceRuns++; }
     });
     vm.runInContext(fn('djBaueTwitch') + '\n' + fn('djWaechterTakt'), context);
     context.djBaueTwitch({ isConnected: true }, { channel: 'example' });
@@ -48,6 +53,15 @@ async function run() {
     player.emit(Player.PLAYING);
     player.emit(Player.OFFLINE);
     assert.equal(context.djQualiLage.bildGestartet, false);
+    assert.equal(offlineBadge, true, 'Offline channel is no longer labelled LIVE');
+    context.djFern = { kanal: 'example', bisWann: Date.now() + 15 * 60 * 1000 };
+    player.emit(Player.OFFLINE);
+    assert.equal(context.djFern, null, 'Offline ends a timed remote selection');
+    assert.equal(sequenceRuns, 1, 'Offline remote channel returns to the normal sequence');
+    player.channel = 'another-dj';
+    context.djFern = { kanal: 'another-dj', bisWann: Date.now() + 15 * 60 * 1000 };
+    player.emit(Player.OFFLINE);
+    assert.equal(context.djFern, null, 'Offline follows a channel switch within the existing player');
     context.djTwitchSpieler = {};
     player.emit(Player.PLAYING);
     assert.equal(context.djQualiLage.bildGestartet, false, 'Old player events cannot mark a new player as running');
@@ -66,6 +80,7 @@ async function run() {
         djSpielerAbbauen() {},
         djKanalWechseln: () => false,
         djAnstupsen() {},
+        djLiveBadgeSetzen() {},
         djAnzeigeName: entry => entry.channel,
         document: {
             getElementById: id => id === 'dj-live-player' ? buehne : {
