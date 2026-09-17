@@ -61707,16 +61707,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Roger Whittaker",
-    "title": "Doch tanzen will ich nur mit dir allein",
+    "artist": "Andrea Jürgens",
+    "title": "Mach mit mir was du willst",
     "album": "",
     "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
       "Party",
-      "Karaoke",
-      "Schlager"
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Mara Kayser",
+    "title": "Mein Herz, das ruft nach Liebe",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
