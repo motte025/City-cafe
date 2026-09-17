@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-17T14:32:46Z",
+  "checked_at": "2026-09-17T14:52:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Thursday !!! <3 -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -31,9 +24,23 @@
     },
     {
       "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 86 😈 | HARDER STYLES! | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
