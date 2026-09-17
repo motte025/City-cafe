@@ -87,7 +87,25 @@ function djPruefeLiveStatus() {
 // Get Followed Streams benoetigt einen USER-Token mit user:read:follows.
 // Ein App-Access-Token reicht dafuer ausdruecklich nicht. Access- und Refresh-
 // Token bleiben in den geschuetzten Script Properties.
-const DJ_TWITCH_MUSIC_GAME_ID = '26936';
+// Welche Twitch-Kategorien gelten als "DJ"?
+//
+// Hier stand lange nur '26936' (Music) - und genau daran ist es gescheitert:
+// MusikInfection war live, die Handy-Fernbedienung zeigte ihn, der Checker
+// nicht. Die Fernbedienung filtert gar nicht, der Checker liess alles ausser
+// Music fallen.
+//
+// Twitch hat inzwischen eine eigene Kategorie "DJs" (1669431183), in die viele
+// Musikstreamer gewechselt sind. Deshalb jetzt eine Liste statt eines einzelnen
+// Wertes - neue Kategorien lassen sich hier ohne weiteren Eingriff ergaenzen.
+//
+// Welche Kategorie ein Kanal tatsaechlich benutzt, zeigt djTestLauf: es
+// protokolliert JEDEN live gefolgten Kanal samt Kategorie und markiert, ob er
+// den Filter passiert hat. Fehlt ein Kanal, steht die fehlende ID dort direkt
+// zum Nachtragen.
+const DJ_TWITCH_KATEGORIEN = [
+  '26936',       // Music
+  '1669431183'   // DJs
+];
 const DJ_TWITCH_LOGIN = 'motte025';
 
 function djTwitchUserTokenErneuern_(props) {
@@ -152,8 +170,12 @@ function djTwitchUserIdErmitteln_(props, token) {
   return String(nutzer.id);
 }
 
-function djPruefeGefolgteTwitch_(props) {
+// gesehen: optionales Array. Wird es uebergeben, traegt die Funktion JEDEN
+// live gefolgten Kanal ein - auch die weggefilterten. djTestLauf nutzt das
+// fuer die Diagnose; der Trigger-Pfad laesst es weg und bleibt unveraendert.
+function djPruefeGefolgteTwitch_(props, gesehen) {
   let token = props.getProperty('TWITCH_USER_ACCESS_TOKEN');
+  if (!gesehen) gesehen = [];
 
   try {
     if (!token) token = djTwitchUserTokenErneuern_(props);
@@ -166,9 +188,19 @@ function djPruefeGefolgteTwitch_(props) {
         (cursor ? '&after=' + encodeURIComponent(cursor) : '');
       const antwort = djTwitchApiAbruf_(url, props, token, false);
       (antwort.data || []).forEach(stream => {
+        // Fuer die Diagnose ALLES mitschreiben, auch das Aussortierte - siehe
+        // djTestLauf. Ohne diese Liste laesst sich ein fehlender Kanal nur
+        // raten, und genau das hat uns einen Abend gekostet.
+        gesehen.push({
+          channel: stream.user_login,
+          kategorie: stream.game_name || '(keine)',
+          gameId: String(stream.game_id || ''),
+          passt: DJ_TWITCH_KATEGORIEN.indexOf(String(stream.game_id || '')) >= 0
+        });
         // "DJ" ist bei Twitch keine API-Eigenschaft. Fuer die automatische,
-        // reproduzierbare Auswahl gilt deshalb die offizielle Kategorie Music.
-        if (String(stream.game_id || '') !== DJ_TWITCH_MUSIC_GAME_ID) return;
+        // reproduzierbare Auswahl gelten deshalb die Kategorien aus
+        // DJ_TWITCH_KATEGORIEN (Music und DJs).
+        if (DJ_TWITCH_KATEGORIEN.indexOf(String(stream.game_id || '')) < 0) return;
         if (stream.type && stream.type !== 'live') return;
         live.push({
           platform: 'twitch',
@@ -563,8 +595,31 @@ function djYoutubeDebug(kanal) {
 }
 
 // Zeigt, was der Checker gerade sehen wuerde - ohne irgendetwas zu committen.
+//
+// Protokolliert bewusst auch die AUSSORTIERTEN Kanaele mit ihrer Kategorie.
+// Ohne das sieht ein fehlender Kanal genauso aus wie "niemand live", und die
+// Ursache (falsche Kategorie, leere Follow-Liste, toter Token) laesst sich
+// nicht auseinanderhalten.
 function djTestLauf() {
   const props = PropertiesService.getScriptProperties();
-  const twitch = djPruefeGefolgteTwitch_(props);
-  Logger.log('Gefolgte Twitch-Musikkanaele live -> ' + JSON.stringify(twitch));
+  const gesehen = [];
+  const twitch = djPruefeGefolgteTwitch_(props, gesehen);
+
+  Logger.log('Live gefolgte Kanaele insgesamt: ' + gesehen.length);
+  gesehen.forEach(k => {
+    Logger.log((k.passt ? '  [genommen]   ' : '  [aussortiert]') + ' ' + k.channel +
+               '  -  Kategorie: ' + k.kategorie + ' (game_id ' + (k.gameId || 'leer') + ')');
+  });
+
+  const uebrig = gesehen.filter(k => !k.passt);
+  if (uebrig.length) {
+    Logger.log('Aussortiert, weil die Kategorie nicht in DJ_TWITCH_KATEGORIEN steht.');
+    Logger.log('Soll einer davon gezeigt werden, seine game_id dort ergaenzen: ' +
+               uebrig.map(k => k.gameId + ' (' + k.kategorie + ')').join(', '));
+  }
+  if (!gesehen.length && !twitch.fehler) {
+    Logger.log('Kein einziger gefolgter Kanal ist live - das ist kein Fehler.');
+  }
+
+  Logger.log('Ergebnis fuer das Dashboard -> ' + JSON.stringify(twitch));
 }
