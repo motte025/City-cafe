@@ -284,6 +284,89 @@ Pruefen laesst sich das vorab, indem man
 `https://www.youtube.com/embed/<videoId>` direkt im Browser aufruft. Kommt dort
 "Video ist nicht verfuegbar", geht es auch im Dashboard nicht.
 
+## Pausenzeichen klebt mitten im Bild fest
+
+Ab September 2026 gemeldet: mitten im Nightlife-Video steht dauerhaft ein
+Pause/Play-Symbol, obwohl das Video ganz normal weiterlaeuft (Ton, Bild,
+Zeitstempel - alles bewegt sich). Am ODROID per Chrome-DevTools-Protocol
+(`--remote-debugging-port=9222`) direkt am YouTube-Embed-iframe gemessen:
+
+- Es ist **nicht** `.ytp-bezel` (der alte YouTube-Skin). Dieser Player-Skin
+  zeigt stattdessen ein neues UI-Element: `.player-controls-middle` mit
+  darin `.player-control-play-pause-icon` (ein custom element
+  `player-middle-controls`).
+- Dieses Element steht bei **jedem** frisch geladenen Video sofort auf
+  `opacity: 1`, `visibility: visible` - auch mit `controls: 0` im Player.
+  `controls: 0` blendet nur die untere Leiste aus, dieses UI-Teil nicht.
+- Ueber 90 Sekunden durchgehende, sichtbare, unpausierte Wiedergabe
+  (`video.paused === false`, `currentTime` laeuft normal mit,
+  `.html5-video-player` traegt korrekt die Klasse `playing-mode`) bleibt die
+  Deckkraft unveraendert bei `1`. Es ist also **keine** haengengebliebene
+  Ausblend-Animation (die These "Chromium drosselt Timer in einem
+  unsichtbaren iframe" liess sich damit widerlegen: das Element blieb genauso
+  sichtbar, waehrend die Ansicht komplett unproblematisch, sichtbar und
+  ungedrosselt lief).
+- Ein synthetisches `mousemove`-Event auf den Player loest das Verschwinden
+  ebenfalls nicht aus.
+- Folge: Ohne echte Maus- oder Touch-Eingabe startet YouTubes eigener
+  Ausblend-Timer fuer dieses Element nie - und genau das hat dieser Kiosk nie
+  (kein Zeiger, keine Fernbedienung am Bildschirm).
+
+**Fix:** Das Element laesst sich aus unserer eigenen Seite heraus nicht
+entfernen (fremde Herkunft, `youtube.com`-iframe). Es braucht die Chromium-
+Erweiterung auf der Box, dieselbe Stelle, die schon `force-h264.js` fuer den
+Codec-Trick nutzt. Neue Erweiterung `/opt/citycafe/youtube-kiosk-ui/`:
+
+`manifest.json`:
+```json
+{
+  "manifest_version": 3,
+  "name": "City Cafe YouTube Kiosk UI",
+  "version": "1.0.0",
+  "content_scripts": [{
+    "matches": ["https://www.youtube.com/embed/*"],
+    "css": ["hide-middle-controls.css"],
+    "all_frames": true,
+    "run_at": "document_start"
+  }]
+}
+```
+
+`hide-middle-controls.css`:
+```css
+.player-controls-middle,
+player-middle-controls {
+    display: none !important;
+}
+```
+
+Eingebunden in `/usr/local/bin/citycafe-browser` ueber
+`--load-extension=...,/opt/citycafe/youtube-kiosk-ui`. Nach dem Einspielen
+per CDP bestaetigt: `.player-controls-middle` steht auf `display: none`,
+`offsetParent` des Buttons ist `null` (nicht mehr gerendert), Wiedergabe
+laeuft unveraendert weiter.
+
+**Zweiter, zusammenhaengender Fund:** `nlVorladen()` puffert ein zufaelliges
+Video vor (spielt kurz anspielt, pausiert nach `vorladeSekunden`).
+`runNightlifeState()` rief bisher beim tatsaechlichen Start **erneut**
+`nlNaechsterEintrag()` auf - ein zweiter, unabhaengiger Zufallsgriff. Bei N
+Videos im Pool passt der Puffer nur mit Wahrscheinlichkeit 1/N; in drei
+Testlaeufen dreimal ein anderes Video als das gepufferte, dreimal ein
+frischer `loadVideoById()`-Aufruf statt eines nahtlosen Weiterspielens.
+Behoben: `nlVorladen()` legt das gewaehlte Video jetzt mit in `nlGeladen`
+ab (`nlGeladen.video`), `runNightlifeState()` verwendet genau das wieder,
+statt neu zu wuerfeln - gepruft durch zwei Live-Zyklen am Geraet
+(`nlStopPlayer()` → `runNightlifeState()`), beide Male exakt das vorgeladene
+Video ohne Neuladen uebernommen.
+
+Die beiden Fixes haengen zusammen: das Pause-Symbol entsteht schon beim
+allerersten `pauseVideo()` waehrend des Vorladens und bleibt danach fuer den
+Rest der Sitzung stehen - unabhaengig davon, ob spaeter neu geladen oder nur
+weitergespielt wird. Der Puffer-Fix allein haette daran nichts geaendert;
+er sorgt nur dafuer, dass fast jeder Auftritt kuenftig ohne Neuladen beginnt,
+also dass sich das Symbol (waere es nicht per CSS versteckt) staendig statt
+nur gelegentlich gezeigt haette. Deshalb beide Aenderungen zusammen.
+
 ## Stellschrauben
 
 In `index.html` in `NL_CONFIG`:
