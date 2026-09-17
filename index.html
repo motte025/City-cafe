@@ -6383,7 +6383,7 @@
         let nlPlayerBereit = false;
         let nlApiAngefordert = false;
         let nlVideoEl = null;         // <video> fuer selbst gehostete Dateien
-        let nlGeladen = null;         // { schluessel, start, datei } - was bereitliegt
+        let nlGeladen = null;         // { schluessel, start, datei, video } - was bereitliegt
         let nlLaeuft = null;          // { schluessel, abschnitt } - was der Slot zeigt
         let nlAktiv = false;          // Slot gerade sichtbar?
         let nlVorladeTimer = null;    // bewusst kein later(): ueberlebt cancelSequenceTimers
@@ -6751,7 +6751,7 @@
             if (eintrag.datei) {
                 const el = nlVideoElement();
                 if (!el) return;
-                nlGeladen = { schluessel: eintrag.schluessel, start: eintrag.start, datei: true };
+                nlGeladen = { schluessel: eintrag.schluessel, start: eintrag.start, datei: true, video: eintrag.video };
                 if (el.getAttribute('src') !== eintrag.video.datei) {
                     el.setAttribute('src', eintrag.video.datei);
                     el.load();
@@ -6762,7 +6762,7 @@
             }
 
             if (!nlPlayerBereit) return;
-            nlGeladen = { schluessel: eintrag.schluessel, start: eintrag.start, datei: false };
+            nlGeladen = { schluessel: eintrag.schluessel, start: eintrag.start, datei: false, video: eintrag.video };
             try {
                 nlPlayer.mute();
                 nlPlayer.loadVideoById({ videoId: eintrag.video.videoId, startSeconds: eintrag.start });
@@ -6807,7 +6807,16 @@
             nlLadeVideos();   // fuer den naechsten Durchlauf frisch machen
             clearTimeout(nlVorladeTimer);
 
-            const eintrag = nlNaechsterEintrag();
+            // nlVorladen() hat schon ein Video ausgesucht und angespielt - das hier
+            // wiederverwenden, statt per nlNaechsterEintrag() ein zweites Mal zu
+            // wuerfeln. Sonst passt der Puffer nur zufaellig (1 von so vielen Videos
+            // wie im Pool stehen) und praktisch jeder Auftritt beginnt mit einem
+            // kompletten Neuladen statt mit dem bereits gepufferten Video.
+            const vorgeladen = !!(nlGeladen && nlGeladen.video && !nlDefekt[nlGeladen.schluessel]);
+            const eintrag = vorgeladen
+                ? { video: nlGeladen.video, schluessel: nlGeladen.schluessel,
+                    datei: nlGeladen.datei, start: nlGeladen.start }
+                : nlNaechsterEintrag();
             const spielbar = eintrag && (eintrag.datei ? !!nlVideoElement() : nlPlayerBereit);
             if (!spielbar) {
                 mediaStateIndex = nextStateIndex;
@@ -6846,10 +6855,9 @@
             nlAnsichtUmschalten(eintrag.datei);
             videoRuheModus(true);
 
-            // Im Normalfall liegt genau dieses Video schon gepuffert bereit -
-            // dann reicht Abspielen und das Bild ist sofort da.
-            const passt = nlGeladen && nlGeladen.schluessel === eintrag.schluessel &&
-                          Math.abs(nlGeladen.start - start) < 2;
+            // Liegt das Video schon gepuffert bereit (vorgeladen), reicht Abspielen
+            // und das Bild ist sofort da - sonst muss jetzt neu geladen werden.
+            const passt = vorgeladen;
 
             if (eintrag.datei) {
                 const el = nlVideoEl;
@@ -6873,7 +6881,7 @@
                     nlQualitaetSetzen();
                 } catch (e) {}
             }
-            nlGeladen = { schluessel: eintrag.schluessel, start: start, datei: eintrag.datei };
+            nlGeladen = { schluessel: eintrag.schluessel, start: start, datei: eintrag.datei, video: video };
 
             mediaStateIndex = nextStateIndex;
             globalMasterTimer = later(runMasterSequence, NL_CONFIG.sekundenProVideo * 1000);
