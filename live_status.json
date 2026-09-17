@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-17T21:47:47Z",
+  "checked_at": "2026-09-17T21:57:49Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Mixed Music - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
