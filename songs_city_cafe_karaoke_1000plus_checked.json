@@ -62387,16 +62387,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Doja Cat",
-    "title": "Candy",
+    "artist": "Schweizer",
+    "title": "13 Tage",
     "album": "",
-    "category": "Internationale Party-Hits",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Internationale Party-Hits"
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Apache 207",
+    "title": "Roller",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
