@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-17T12:47:45Z",
+  "checked_at": "2026-09-17T13:02:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Thursday !!! <3 -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Melodic, Indie, 80s ✨ !charity",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Melodic, Indie, 80s ✨ !charity",
       "game": "DJs"
     }
   ]
