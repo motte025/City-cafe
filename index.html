@@ -245,6 +245,24 @@
            ausserhalb der Medienansichten - die kommen fuer die Dauer ganz raus. */
         body.video-laeuft #weather-effects { display: none !important; }
 
+        /* Und die Laufschrift. Sie ist die EINZIGE Animation, die waehrend eines
+           Videoslots ueberhaupt noch laeuft: der grosse Effekte-Block weiter
+           unten schaltet alle anderen per "animation: none" ab, und was in einer
+           nicht aktiven Medienansicht liegt, pausiert ohnehin. Die Laufschrift
+           sitzt aber in der Ticker-Leiste ausserhalb davon und laeuft durch.
+           Billig ist sie (nur transform), umsonst nicht: sie ist eine weitere
+           Ebene, die der Compositor ueber dem skalierten Video in jedem Bild
+           neu zusammensetzen muss.
+
+           "html body" statt nur "body": der Effekte-Block setzt die Animation
+           mit !important und gleicher Spezifitaet, steht aber SPAETER in der
+           Datei - ohne das zusaetzliche html gewinnt er und die Laufschrift
+           liefe weiter. */
+        html body.video-laeuft .ticker-move,
+        html body.video-laeuft .bl-ticker-move {
+            animation-play-state: paused !important;
+        }
+
         /* ==================================================================
            Dauerhaft sparsam gerendert
            ==================================================================
@@ -6688,7 +6706,7 @@
                 // Nicht fuenf Minuten schwarz stehen bleiben - sofort weiterschalten.
                 nlAktiv = false;
                 nlLaeuft = null;
-                nlRuheModus(false);
+                videoRuheModus(false);
                 cancelTimer(globalMasterTimer);
                 globalMasterTimer = later(runMasterSequence, 400);
             } else {
@@ -6700,7 +6718,13 @@
         // animiert. Auf der Box entscheidet nicht der Dekoder ueber ruckelfreie
         // Wiedergabe, sondern wie viel der Browser pro Bild neu zusammensetzen
         // muss - 4K-Videos laufen dort in nativen Playern problemlos.
-        function nlRuheModus(an) {
+        //
+        // Hiess frueher nlRuheModus und wurde nur vom Nightlife-Slot gerufen.
+        // Der DJ-Slot zeigt aber genauso ein Video, und dort lief der Regen des
+        // Wetter-Widgets waehrend des ganzen Twitch-Streams weiter - Dutzende
+        // einzeln animierte Elemente ueber einem skalierten Video. Deshalb jetzt
+        // neutral benannt und von beiden Slots gerufen.
+        function videoRuheModus(an) {
             document.body.classList.toggle('video-laeuft', !!an);
         }
 
@@ -6760,7 +6784,7 @@
             if (!nlAktiv) return;
             nlAktiv = false;
 
-            nlRuheModus(false);
+            videoRuheModus(false);
             nlWerbungSeit = 0;
             if (nlVideoEl) { try { nlVideoEl.pause(); } catch (e) {} }
             if (nlPlayerBereit) { try { nlPlayer.pauseVideo(); } catch (e) {} }
@@ -6816,7 +6840,7 @@
                         eintrag.datei ? 'Video wird geladen …' : 'gleich geht es weiter …');
             nlWerbungSeit = 0;
             nlAnsichtUmschalten(eintrag.datei);
-            nlRuheModus(true);
+            videoRuheModus(true);
 
             // Im Normalfall liegt genau dieses Video schon gepuffert bereit -
             // dann reicht Abspielen und das Bild ist sofort da.
@@ -7602,6 +7626,7 @@
             djWaechterStoppen();
             djTonKnopf(false);
             djKnopfBeschriften(false);
+            videoRuheModus(false);   // Gegenstueck zu runDjLiveState
             djFernQrVerstecken();
             // Abgelaufene Fernsteuerung aufraeumen, damit das Handy nicht
             // weiter "laeuft" anzeigt und die Qualitaet nicht festgenagelt bleibt.
@@ -8785,6 +8810,9 @@
             // Suche erreichbar. Kommt ein Befehl, springt deren bestehende Logik
             // sofort in den gewaehlten Stream.
             view.classList.add('active');
+            // Auch der DJ-Slot zeigt ein Video - also derselbe Ruhemodus wie im
+            // Nightlife-Slot. Abgeschaltet wird er in djStopPlayer.
+            videoRuheModus(true);
             djFernQrZeigen();
 
             const startenOderWarten = () => {
