@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-17T14:57:48Z",
+  "checked_at": "2026-09-17T15:17:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 86 😈 | HARDER STYLES! | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
@@ -17,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 86 😈 | HARDER STYLES! | !insta !holy !SF #Werbung",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🎶GOOD VIBES🔥 | !subtember !powerups🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🎶GOOD VIBES🔥 | !subtember !powerups🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
