@@ -3167,8 +3167,6 @@
         const POSTER_NACHT_URL = 'plakat_nacht.webp';
         const JAEGER_PUNTIGAMER_URL = 'jaeger.webp';
         const JAEGER_PUNTIGAMER_SECONDS = 30;
-        const CALAMARI_EVENT_URL = 'calamari.webp';
-        const CALAMARI_EVENT_SECONDS = 35;
 
         // Musik-Atmosphäre-Slides (5 Bilder, je 6s mit Crossfade, im großen Media-Widget)
         const MUSIC_SLIDES_URLS = [
@@ -4968,7 +4966,7 @@
             // im Notfall-Pool sind keine Gaeste-Fotos - dafuer gibt's kein Datum.
             const pool = (visitorGalleryData && visitorGalleryData.length > 0)
                 ? visitorGalleryData.map(d => ({ src: d.src, date: d.date }))
-                : [POSTER_TAG_URL, POSTER_NACHT_URL, CALAMARI_EVENT_URL].map(src => ({ src, date: null }));
+                : [POSTER_TAG_URL, POSTER_NACHT_URL].map(src => ({ src, date: null }));
             // Immer genau 10 Fotos fürs Spiel - bei kleiner Galerie notfalls mit Wiederholung auffüllen
             let shots = shuffleArray(pool);
             while (shots.length < 10) shots = shots.concat(shuffleArray(pool));
@@ -6336,7 +6334,7 @@
 
         const NL_CONFIG = {
             quelle: 'nightlife.json',
-            sekundenProVideo: 300,       // 5 Minuten Standzeit
+            sekundenProVideo: 180,       // 3 Minuten Standzeit, dann naechstes Widget
             vorladeSekunden: 30,         // so lange puffert das naechste YouTube-Video vor
             maxAufloesung: 'hd1080',     // 'hd1080' oder 'hd720' - siehe NL_GROESSEN
             werbungGeduldSekunden: 45,   // so lange wird ein Werbeblock ueberdeckt
@@ -6355,9 +6353,7 @@
         const NL_BUEHNE_BREITE = 1200;
 
         let nlDaten = null;       // { stadt, untertitel, videos: [...] }
-        let nlVideoIndex = 0;     // welches Video ist als naechstes dran
-        let nlAbschnitte = {};    // Schluessel -> naechster 5-Minuten-Abschnitt
-        let nlDauern = {};        // Schluessel -> Laenge in Sekunden
+        let nlDauern = {};        // Schluessel -> Laenge in Sekunden, fuer den Zufalls-Startpunkt
 
         let nlPlayer = null;          // der eine, dauerhafte YT.Player
         let nlPlayerBereit = false;
@@ -6400,8 +6396,6 @@
                 if (!roh) return;
                 const stand = JSON.parse(roh);
                 if (stand && typeof stand === 'object') {
-                    nlVideoIndex = Number(stand.videoIndex) || 0;
-                    nlAbschnitte = stand.abschnitte || {};
                     nlDauern = stand.dauern || {};
                 }
             } catch (e) {}
@@ -6409,10 +6403,15 @@
 
         function nlStandSpeichern() {
             try {
-                localStorage.setItem(NL_CONFIG.speicherSchluessel, JSON.stringify({
-                    videoIndex: nlVideoIndex, abschnitte: nlAbschnitte, dauern: nlDauern
-                }));
+                localStorage.setItem(NL_CONFIG.speicherSchluessel, JSON.stringify({ dauern: nlDauern }));
             } catch (e) {}
+        }
+
+        // Tagesabschnitt zwischen 07:00 und 19:00, sonst Nachtabschnitt - dieselbe
+        // Geraetezeit, die auch die Uhr oben rechts anzeigt.
+        function nlIstTag() {
+            const stunde = new Date().getHours();
+            return stunde >= 7 && stunde < 19;
         }
 
         async function nlLadeVideos() {
@@ -6422,7 +6421,8 @@
                 const res = await fetch(NL_CONFIG.quelle + '?v=' + Date.now(),
                                         { signal: controller.signal, cache: 'no-store' });
                 if (!res.ok) return;
-                const daten = await res.json();
+                const rohDaten = await res.json();
+                const daten = rohDaten && (nlIstTag() ? rohDaten.tag : rohDaten.nacht);
                 if (daten && Array.isArray(daten.videos) && daten.videos.length) nlDaten = daten;
             } catch (e) {
             } finally {
@@ -6441,39 +6441,26 @@
             return alle.filter(v => nlSchluessel(v) && !nlDefekt[nlSchluessel(v)]);
         }
 
-        // Startsekunde fuer diesen Durchlauf. Ohne bekannte Laenge (erster Auftritt)
-        // wird bei 0 begonnen - dann meldet der Player die Dauer und ab dem
-        // naechsten Mal wandert der Startpunkt weiter.
+        // Zufaellige Startsekunde fuer diesen Durchlauf - jeder Auftritt eines
+        // Videos soll woanders einsteigen, nicht immer am Anfang. Ohne bekannte
+        // Laenge (erster Auftritt) wird bei 0 begonnen, danach kennt der Player
+        // die Dauer und es kann irgendwo im Video losgehen.
         function nlStartSekunde(schluessel) {
             const laenge = nlDauern[schluessel];
-            const abschnitt = nlAbschnitte[schluessel] || 0;
             if (!laenge) return 0;
-
-            const start = abschnitt * NL_CONFIG.sekundenProVideo;
-            // Nie so spaet einsteigen, dass die 5 Minuten nicht mehr hineinpassen -
+            // Nie so spaet einsteigen, dass die Slot-Dauer nicht mehr hineinpasst -
             // sonst laeuft das Video mitten im Slot ins Ende.
-            if (start + NL_CONFIG.sekundenProVideo > laenge) return 0;
-            return start;
+            const spielraum = laenge - NL_CONFIG.sekundenProVideo;
+            if (spielraum <= 0) return 0;
+            return Math.floor(Math.random() * spielraum);
         }
 
-        // Nach dem Abspielen den Abschnitt weiterruecken. Passt der naechste nicht
-        // mehr ganz ins Video, geht es wieder von vorne los. Laeuft bewusst erst am
-        // Slot-Ende: da kennt der Player die Laenge, beim Slot-Start unter Umstaenden
-        // noch nicht.
-        function nlAbschnittWeiter(schluessel, gespielterAbschnitt) {
-            const laenge = nlDauern[schluessel];
-            const naechster = gespielterAbschnitt + 1;
-            const passt = laenge && (naechster * NL_CONFIG.sekundenProVideo +
-                                     NL_CONFIG.sekundenProVideo <= laenge);
-            nlAbschnitte[schluessel] = passt ? naechster : 0;
-        }
-
-        // Was als naechstes drankommt - ohne den Zeiger schon zu bewegen.
+        // Was als naechstes drankommt: ein zufaelliges Video aus dem aktuellen
+        // Tag-/Nacht-Pool, ab einem zufaelligen Startpunkt.
         function nlNaechsterEintrag() {
             const videos = nlBrauchbareVideos();
             if (!videos.length) return null;
-            if (!(nlVideoIndex >= 0) || nlVideoIndex >= videos.length) nlVideoIndex = 0;
-            const video = videos[nlVideoIndex];
+            const video = videos[Math.floor(Math.random() * videos.length)];
             const schluessel = nlSchluessel(video);
             const start = nlStartSekunde(schluessel);
             return {
@@ -6481,7 +6468,6 @@
                 schluessel: schluessel,
                 datei: nlIstDatei(video),
                 start: start,
-                abschnitt: Math.round(start / NL_CONFIG.sekundenProVideo),
                 anzahl: videos.length
             };
         }
@@ -6543,7 +6529,7 @@
                 width: String(masse[0]), height: String(masse[1]),
                 playerVars: {
                     autoplay: 0, controls: 0, mute: 1, rel: 0, modestbranding: 1,
-                    playsinline: 1, iv_load_policy: 3, disablekb: 1, fs: 0,
+                    playsinline: 1, iv_load_policy: 3, cc_load_policy: 0, disablekb: 1, fs: 0,
                     origin: location.origin
                 },
                 events: {
@@ -6574,9 +6560,13 @@
         function nlZustandsWechsel(ev) {
             nlDauerMerken();
             if (ev.data === 1) {
-                // Nur aufdecken, wenn wirklich das gewuenschte Video laeuft -
-                // sonst stuende hier der Werbeblock im Bild.
-                if (nlAktiv && !nlWerbungLaeuft()) nlHinweisAus();
+                // Nur aufdecken und Ton geben, wenn wirklich das gewuenschte Video
+                // laeuft - sonst stuende hier der Werbeblock im Bild und waere zu
+                // hoeren, obwohl er nur abgedeckt ist.
+                if (nlAktiv && !nlWerbungLaeuft()) {
+                    nlHinweisAus();
+                    try { nlPlayer.unMute(); } catch (e) {}
+                }
                 nlQualitaetSetzen();
             }
             if (ev.data === 0 && nlAktiv && nlLaeuft && !nlLaeuft.datei) {
@@ -6770,9 +6760,7 @@
             if (nlPlayerBereit) { try { nlPlayer.pauseVideo(); } catch (e) {} }
 
             if (nlLaeuft) {
-                // Jetzt kennt der Player die Laenge - erst hier den Abschnitt weiterruecken.
                 nlDauerMerken();
-                nlAbschnittWeiter(nlLaeuft.schluessel, nlLaeuft.abschnitt);
                 nlLaeuft = null;
                 nlStandSpeichern();
             }
@@ -6800,24 +6788,25 @@
             const video = eintrag.video;
             const start = eintrag.start;
             nlAktiv = true;
-            nlLaeuft = { schluessel: eintrag.schluessel, abschnitt: eintrag.abschnitt,
-                         datei: eintrag.datei };
+            nlLaeuft = { schluessel: eintrag.schluessel, datei: eintrag.datei };
 
+            const nlSymbol = nlIstTag() ? '🌍' : '🌃';
             document.getElementById('nl-stadt').textContent =
-                '🌃 ' + ((nlDaten && nlDaten.stadt) || 'Nightlife');
+                nlSymbol + ' ' + ((nlDaten && nlDaten.stadt) || (nlIstTag() ? 'Urlaubsziele' : 'Nightlife'));
             document.getElementById('nl-untertitel').textContent =
-                video.titel || (nlDaten && nlDaten.untertitel) || 'Unterwegs in der Nacht';
+                video.titel || (nlDaten && nlDaten.untertitel) ||
+                (nlIstTag() ? 'Unterwegs am Traumziel' : 'Unterwegs in der Nacht');
 
-            const zaehler = document.getElementById('nl-counter');
-            zaehler.textContent = (nlVideoIndex + 1) + '/' + eintrag.anzahl;
-            zaehler.style.display = eintrag.anzahl > 1 ? '' : 'none';
+            // Zufallsauswahl statt fester Reihenfolge - eine Positionsanzeige
+            // ("2/5") waere hier irrefuehrend, deshalb bleibt der Zaehler weg.
+            document.getElementById('nl-counter').style.display = 'none';
 
             document.getElementById('media-view-nightlife').classList.add('active');
 
             // Der Player bleibt zugedeckt, bis feststeht, dass wirklich das
             // Video laeuft und keine Werbung. Die Tafel nennt die Stadt, damit
             // sie wie Teil der Gestaltung aussieht und nicht wie ein Fehler.
-            nlHinweisAn('🌃 ' + ((nlDaten && nlDaten.stadt) || 'Nightlife'),
+            nlHinweisAn(nlSymbol + ' ' + ((nlDaten && nlDaten.stadt) || (nlIstTag() ? 'Urlaubsziele' : 'Nightlife')),
                         eintrag.datei ? 'Video wird geladen …' : 'gleich geht es weiter …');
             nlWerbungSeit = 0;
             nlAnsichtUmschalten(eintrag.datei);
@@ -6851,11 +6840,6 @@
                 } catch (e) {}
             }
             nlGeladen = { schluessel: eintrag.schluessel, start: start, datei: eintrag.datei };
-
-            // Fuer den naechsten Durchlauf auf das andere Video weiterruecken. Der
-            // Abschnitt dieses Videos wandert erst am Slot-Ende (nlStopPlayer).
-            nlVideoIndex = (nlVideoIndex + 1) % eintrag.anzahl;
-            nlStandSpeichern();
 
             mediaStateIndex = nextStateIndex;
             globalMasterTimer = later(runMasterSequence, NL_CONFIG.sekundenProVideo * 1000);
@@ -10876,20 +10860,13 @@
             } else if (mediaStateIndex === 0) {
                 showPosterImage(getDayNightPoster());
 
-                mediaStateIndex = 0.85;
-                globalMasterTimer = later(runMasterSequence, 35000);
-
-            } else if (mediaStateIndex === 0.85) {
-                // Calamari-Grill-Event (12.09., Dartverein City Flyers), direkt nach dem Tag/Nacht-Plakat
-                showPosterImage(CALAMARI_EVENT_URL);
-
                 // Die aktuelle Live-Liste schon hier laden. Der Twitch-Player wird
                 // erst im sichtbaren DJ-Slot erzeugt, weil Twitch Autoplay in einer
                 // ausgeblendeten Ansicht ablehnt.
                 djVorpuffern();
 
                 mediaStateIndex = DJ_SLOT_INDEX;
-                globalMasterTimer = later(runMasterSequence, CALAMARI_EVENT_SECONDS * 1000);
+                globalMasterTimer = later(runMasterSequence, 35000);
 
             } else if (mediaStateIndex === DJ_SLOT_INDEX) {
                 // DJ-Live liegt bewusst weit vorne im Zyklus: geht jemand live, soll
@@ -10906,7 +10883,9 @@
                 runDrinksState(3); // -> Hype-Reel
 
             } else if (mediaStateIndex === 3) {
-                runCardTrinkspielV2(4); // -> Getränke (nach Trinkspiel V2)
+                // Trinkspiel V2 (Kartenspiel) ist abgeschaltet - Slot wird uebersprungen.
+                mediaStateIndex = 4;
+                runMasterSequence();
 
             } else if (mediaStateIndex === 4) {
                 runDrinksState(6); // -> Musik

@@ -27,8 +27,8 @@ Und MDT markiert einzelne Spieler mitten im Namen ("MARKTL (J) Maximilian");
 der Zusatz wandert ans Ende: "Maximilian M. (J)".
 
 Danach laeuft die Rotation unveraendert weiter: Nightlife, Tag/Nacht-Plakat,
-Calamari, DJ-Live und der Rest bis zum Trinkspiel - von dort geht es wieder
-zurueck an den Anfang zur Dart-Strecke.
+DJ-Live und der Rest bis zum Trinkspiel - von dort geht es wieder zurueck an
+den Anfang zur Dart-Strecke.
 
 Die Reihenfolge steckt in `runMasterSequence` (`index.html`) und haengt an
 fuenf Positionsmarken: `DART_SLOT_INDEX` (-2), `DART_FOTO_INDEX` (-1.9),

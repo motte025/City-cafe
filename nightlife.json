@@ -1,10 +1,77 @@
 {
-  "stadt": "Miami · Brickell",
-  "untertitel": "Nightlife-Tour durch den Luxusbezirk",
-  "videos": [
-    {
-      "datei": "https://github.com/motte025/City-cafe/releases/download/videos-nightlife/Miami-Nightlife-Saturday-Night30fps.mp4",
-      "titel": "Samstagnacht in Brickell"
-    }
-  ]
+  "tag": {
+    "stadt": "Urlaubsziele",
+    "untertitel": "Bekannte Urlaubsorte der Welt",
+    "videos": [
+      { "videoId": "7kB39FcZ3ss", "titel": "Ibiza · Dalt Vila Walking Tour" },
+      { "videoId": "PRr7Yx373bI", "titel": "Mykonos · Walking Tour 4K 60fps" },
+      { "videoId": "0w0Ca_sLYOk", "titel": "Santorini · The Most Beautiful Island" },
+      { "videoId": "PAxhIQiYbPo", "titel": "Santorini · Scenic Walking Tour" },
+      { "videoId": "IGP-MVShdWY", "titel": "Santorini · Summer Walking Tour" },
+      { "videoId": "44yrpbNAzQw", "titel": "Tokyo · Roppongi Walking Tour" },
+      { "videoId": "I9XB1gHvF74", "titel": "Dubai · Burj Khalifa & Marina" },
+      { "videoId": "thqo0uKZMJM", "titel": "Phuket · Patong Beach & Bangla Road" },
+      { "videoId": "nCDi_LN9zMo", "titel": "New York · 5th Avenue Walking Tour" },
+      { "videoId": "vfB6rAlV9Xc", "titel": "New York City Walking Tour" },
+      { "videoId": "5iWimpf4QSM", "titel": "Positano · Walking Tour" },
+      { "videoId": "ZUUwIw9R0jg", "titel": "Barcelona · Barceloneta Beach Walk" },
+      { "videoId": "_j1xVap8KQU", "titel": "Rom · Kolosseum, Pantheon & St. Peter" },
+      { "videoId": "WvkbixIgPPQ", "titel": "London City Tour" },
+      { "videoId": "_umzwSK4cGc", "titel": "London · Rain Walk" },
+      { "videoId": "IMpquRX1mwM", "titel": "London · Spring Walk" },
+      { "videoId": "AyK9ZlmIdeU", "titel": "Budapest · Walking Tour" },
+      { "videoId": "2BfHMnDOteA", "titel": "Venedig · Rialto & San Marco" },
+      { "videoId": "XMw8oiX4LMY", "titel": "Kairo · Ägyptisches Museum" },
+      { "videoId": "-mGveaZ9iP4", "titel": "Kapstadt · City Bowl & V&A Waterfront" },
+      { "videoId": "sbPYCIXoD_Y", "titel": "Singapur · Walking Tour" },
+      { "videoId": "2uDR4nPnKCg", "titel": "Hongkong · Walking Tour" },
+      { "videoId": "TxvWyDJA92E", "titel": "Wien · Innenstadt Walking Tour" },
+      { "videoId": "UZFv-N1DjSE", "titel": "Wien · Walking Tour" },
+      { "videoId": "IM5nn6lY6PU", "titel": "Punta Cana · Beach Walk" },
+      { "videoId": "Jj6-QntvhCw", "titel": "Cancún · Hotel Zone" },
+      { "videoId": "slkBdZTd2pc", "titel": "Zakynthos · Argassi Walking Tour" },
+      { "videoId": "CJYUB8T9RSY", "titel": "Lissabon · Walking Tour" },
+      { "videoId": "MTkX0_htW-I", "titel": "Malta · Valletta Walking Tour" },
+      { "videoId": "0JdC4P7RT8E", "titel": "Portugal · Lissabon & Porto" },
+      { "videoId": "B5hl8b-I2vU", "titel": "Monte Carlo, Monaco · Walking Tour" },
+      { "videoId": "1hpA1NJHpiM", "titel": "Miami · Beach Paradise" }
+    ]
+  },
+  "nacht": {
+    "stadt": "Nightlife",
+    "untertitel": "Nachtleben & Party",
+    "videos": [
+      { "videoId": "_ewro7BrsMY", "titel": "Puerto Banús · Nightlife Marbella" },
+      { "videoId": "-GXw6MzFXeA", "titel": "Puerto Banús · Luxe & Glamour" },
+      { "videoId": "lBqqYawdLU8", "titel": "Mykonos bei Nacht" },
+      { "videoId": "idUmaB0btHo", "titel": "Ibiza · Nightlife um 1 Uhr" },
+      { "videoId": "xyvQKA70MqE", "titel": "Magaluf · Nightlife" },
+      { "videoId": "xJ7n71_GPUQ", "titel": "Las Vegas Strip · Samstagnacht" },
+      { "videoId": "75YLT39IVyc", "titel": "Miami Brickell · Nightlife" },
+      { "videoId": "pFa2ymjiatw", "titel": "Pattaya · Beach Road bei Nacht" },
+      { "videoId": "Yj0pCTPTVBU", "titel": "Bangkok · Khao San Road" },
+      { "videoId": "gUUobckrxg8", "titel": "Phuket · Bangla Road bei Nacht" },
+      { "videoId": "aZ3_-6-Hd8E", "titel": "Khon Kaen · Nightlife" },
+      { "videoId": "0WYlR8p4GDQ", "titel": "Liverpool · Nightlife" },
+      { "videoId": "VXVJteA7E5Q", "titel": "Manchester · Nightlife" },
+      { "videoId": "rE8fdI3w9GQ", "titel": "Manchester bei Nacht" },
+      { "videoId": "FMgSLEmju50", "titel": "Manchester · Nightlife um 2:30 Uhr" },
+      { "videoId": "C0fGGWshyTo", "titel": "Manchester · Nightlife um 0:30 Uhr" },
+      { "videoId": "JRD1fbFXmY8", "titel": "Liverpool · Nightlife um 4 Uhr" },
+      { "videoId": "ANanX0Ugnag", "titel": "Liverpool · Nightlife nach 3 Uhr" },
+      { "videoId": "8_s-f28_aXs", "titel": "Liverpool · Nightlife am Wochenende" },
+      { "videoId": "0Wo2qbeZwds", "titel": "Amsterdam · Nightlife" },
+      { "videoId": "Oksdic7O4HI", "titel": "Pattaya · Night Walk Soi 6" },
+      { "videoId": "kXGt1NS-w_s", "titel": "Pattaya · Nightlife 22 Uhr" },
+      { "videoId": "9KnOTkwHyss", "titel": "Ayia Napa · Nightlife" },
+      { "videoId": "O8-cLSUwQVU", "titel": "Cancún · Nightlife nach Sonnenuntergang" },
+      { "videoId": "QrBzCmBz3uo", "titel": "Berlin · Rave The Planet" },
+      { "videoId": "gSV-ArwafK0", "titel": "Neapel · Nightlife" },
+      { "videoId": "lA1maz3On-g", "titel": "München · Nightwalk Marienplatz" },
+      { "videoId": "_dcUgZN_Q9w", "titel": "Köln · Nightwalk" },
+      { "videoId": "Lthq2r0kZT8", "titel": "Kavos · Nightlife um Mitternacht" },
+      { "videoId": "EK2JDSPigc4", "titel": "Sunny Beach · Nightlife" },
+      { "videoId": "bOL2ySk1SY0", "titel": "Pattaya · Soi 5, Soi 6 & Beach Road" }
+    ]
+  }
 }

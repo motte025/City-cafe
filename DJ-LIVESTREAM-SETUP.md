@@ -723,7 +723,7 @@ Twitch sonst häufig gar nicht startete. Beim Wechsel von Kanal zu Kanal gibt es
 dafür jetzt eine kurze Ladepause, die der Hinweis „Stream wird geladen …“
 überbrückt.
 
-Position in der Rotation: direkt nach dem Calamari-Event-Plakat und vor dem
+Position in der Rotation: direkt nach dem Tag/Nacht-Plakat und vor dem
 ersten Musik-Slot (`mediaStateIndex === 0.9` in `runMasterSequence`) — bewusst
 weit vorne, damit ein gerade gestarteter Stream nicht erst nach der halben
 Rotation auf dem Screen ankommt.
