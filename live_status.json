@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-09-17T09:57:46Z",
+  "checked_at": "2026-09-17T10:02:48Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🎶GOOD VIBES🔥 | !subtember !powerups🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
