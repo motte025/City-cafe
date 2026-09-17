@@ -16,7 +16,7 @@
 >
 > Das Widget läuft bewusst **stumm**. Der Checker fragt serverseitig die gerade
 > live sendenden Twitch-Kanäle ab, denen `motte025` folgt, und behält davon nur
-> die Twitch-Kategorie **Music** (`game_id=26936`). Pro Dashboard-Zyklus wird
+> die Twitch-Kategorien **Music** und **DJs**. Pro Dashboard-Zyklus wird
 > genau ein DJ zufällig gewählt und drei Minuten gezeigt. Wenn keiner live ist,
 > sucht das Widget 30 Sekunden lang und setzt danach die normale Rotation fort.
 >
@@ -63,11 +63,11 @@ pro Projekt und werden nicht durch das Einfügen der `.gs`-Datei übernommen.
 
 `TWITCH_USER_ID` wird automatisch ermittelt. Ein Ergebnis mit `"live":[]` und
 `"fehler":null` ist erfolgreich und bedeutet nur, dass gerade kein gefolgter
-Music-Kanal live ist.
+Kanal in einer der DJ-Kategorien live ist.
 
 ### Klare Aufgabenteilung
 
-**Im Repository erledigt:** Follow-Endpunkt, Music-Filter, Token-Erneuerung,
+**Im Repository erledigt:** Follow-Endpunkt, Kategorienfilter (Music + DJs), Token-Erneuerung,
 automatische User-ID, Zufallsauswahl, 3-Minuten-Laufzeit, 30-Sekunden-Leerfall,
 stummer Player und Fernbedienungs-QR.
 
@@ -97,8 +97,8 @@ Browser-Konfiguration eingetragen werden. Der Checker erneuert einen
 abgelaufenen Access-Token serverseitig und speichert einen von Twitch rotierten
 Refresh-Token wieder in den Script Properties.
 
-Danach in Apps Script einmal `djTestLauf()` ausführen. Im Protokoll müssen nur
-live gefolgte Music-Kanäle erscheinen. Erst dann `djTriggerEinrichten()` starten.
+Danach in Apps Script einmal `djTestLauf()` ausführen. Im Protokoll stehen alle live gefolgten
+Kanäle samt Kategorie, markiert als genommen oder aussortiert. Erst dann `djTriggerEinrichten()` starten.
 
 ---
 
@@ -106,7 +106,7 @@ live gefolgte Music-Kanäle erscheinen. Erst dann `djTriggerEinrichten()` starte
 
 | Teil | Wo | Aufgabe |
 |---|---|---|
-| Follow-Checker | `google-apps-script/dj-live-checker.gs` | liest mit dem User-Token die live gefolgten Music-Kanäle |
+| Follow-Checker | `google-apps-script/dj-live-checker.gs` | liest mit dem User-Token die live gefolgten Kanäle in Music und DJs |
 | Statusdatei | `live_status.json` | enthält ausschließlich die aktuell live gefolgten DJs |
 | DJ-Live-Slot | `index.html` | zieht pro Zyklus einen Eintrag und zeigt ihn stumm für 180 Sekunden |
 | Fernbedienung | `dj-fernbedienung.html` + Firebase | überschreibt die automatische Auswahl auf Wunsch vom Handy |
@@ -117,10 +117,36 @@ Secret; das Dashboard lädt ausschließlich `live_status.json`.
 
 ### Was als DJ gilt
 
-Twitch liefert kein Feld „ist DJ“. Die automatische Auswahl verwendet deshalb
-die Twitch-Kategorie **Music** (`game_id=26936`). Ein gefolgter Kanal in einer
-anderen Kategorie wird nicht automatisch gezeigt, kann aber weiterhin über die
-Handy-Fernbedienung ausgewählt werden.
+Twitch liefert kein Feld „ist DJ“. Die automatische Auswahl geht deshalb über
+die Kategorie — und zwar über **zwei**, in `DJ_TWITCH_KATEGORIEN`:
+
+| Kategorie | `game_id` |
+|---|---|
+| Music | `26936` |
+| DJs | `1669431183` |
+
+> **Warum zwei.** Anfangs stand dort nur `26936`. Am 17.09. war MusikInfection
+> live, die Handy-Fernbedienung zeigte ihn, der Checker fand ihn nicht — er
+> sendete in der Kategorie **DJs**, die Twitch inzwischen eigens dafür
+> eingeführt hat. Die Fernbedienung filtert gar nicht (sie zeigt jeden live
+> gefolgten Kanal samt `game_name`), der Checker ließ alles außer Music fallen.
+
+Ein gefolgter Kanal in einer anderen Kategorie wird nicht automatisch gezeigt,
+kann aber weiterhin über die Handy-Fernbedienung ausgewählt werden.
+
+**Fehlt ein Kanal, muss man das nicht mehr raten.** `djTestLauf()` protokolliert
+jeden live gefolgten Kanal mit seiner Kategorie und markiert, ob er den Filter
+passiert hat:
+
+```
+Live gefolgte Kanaele insgesamt: 3
+  [genommen]    musikinfection  -  Kategorie: DJs (game_id 1669431183)
+  [genommen]    djmissshelton   -  Kategorie: Music (game_id 26936)
+  [aussortiert] zockerheinz     -  Kategorie: Fortnite (game_id 33214)
+Soll einer davon gezeigt werden, seine game_id dort ergaenzen: 33214 (Fortnite)
+```
+
+Die fehlende ID steht damit direkt zum Nachtragen in `DJ_TWITCH_KATEGORIEN`.
 
 ### Einmalige Einrichtung
 
@@ -132,8 +158,8 @@ Handy-Fernbedienung ausgewählt werden.
    Reine Datei im Branch:
    <https://raw.githubusercontent.com/motte025/City-cafe/work/google-apps-script/dj-live-checker.gs>
 2. Die fünf Zugangsdaten setzen. `TWITCH_USER_ID` leer lassen; sie wird beim ersten Lauf automatisch ermittelt.
-3. `djTestLauf()` ausführen und prüfen, ob die erwarteten live gefolgten
-   Music-Kanäle im Protokoll stehen.
+3. `djTestLauf()` ausführen und prüfen, ob die erwarteten Kanäle im Protokoll
+   als `[genommen]` stehen.
 4. `djTriggerEinrichten()` ausführen. Der Trigger aktualisiert den Status alle
    fünf Minuten.
 5. Erst nach einem erfolgreichen Checker-Lauf die Branch-Vorschau ohne
