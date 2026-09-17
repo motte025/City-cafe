@@ -62647,15 +62647,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Die großen 3 der Volksmusik",
-    "title": "Ciao Amore",
+    "artist": "Andrea Berg",
+    "title": "Die Gefuehle Haben Schweigepflicht",
+    "album": "",
+    "category": "Schlager & Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager & Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Ulli Martin",
+    "title": "Du musst nicht weinen",
     "album": "",
     "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
-      "Kult"
+      "Party",
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
