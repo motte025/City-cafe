@@ -4930,6 +4930,15 @@
             labelA.style.opacity = '1';
             labelB.style.opacity = '0';
             countdownOverlay.style.display = 'flex';
+
+            // Polaroid-Momente (V1) verzichtet auf den 60-Sekunden-Countdown - die
+            // Fotos landen sofort. Das Banner-Label bleibt trotzdem sichtbar.
+            if (version === 'V1') {
+                countdownTimer.style.display = 'none';
+                onComplete();
+                return;
+            }
+
             countdownTimer.style.display = 'block';
 
             let showingA = true;
@@ -6930,7 +6939,7 @@
             // Dashboards ohne Netz-Zugriff auf GitHub): dieselbe Datei nebenan.
             statusFallbackUrl: 'live_status.json',
             sekundenProKanal: 180,       // pro Zyklus genau ein zufaellig gewaehlter Live-DJ
-            leerWarteSekunden: 30,       // ohne Live-DJ so lange suchen, dann ueberspringen
+            leerWarteSekunden: 180,      // ohne Fernbedienungs-Auswahl 3 Minuten suchen, dann ueberspringen
             // Tageszeit-Steuerung: Eintraege in dj_channels.json koennen
             // "zeigen": "tag" oder "zeigen": "nacht" tragen. Ohne Angabe laeuft
             // ein Kanal rund um die Uhr. Gedacht fuer Urlaubs-Cams am Tag und
