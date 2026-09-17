@@ -62047,15 +62047,35 @@
     "auto_discovered": true
   },
   {
-    "artist": "McFadden & Whitehead",
-    "title": "Ain't No Stoppin' Us Now",
+    "artist": "Zillertaler Schürzenjäger",
+    "title": "Timple Boarischer",
     "album": "",
-    "category": "70s Party",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Disco",
-      "Hymne"
+      "Schlager",
+      "Kult"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Stevie Nicks",
+    "title": "Edge of Seventeen",
+    "album": "",
+    "category": "Rock Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Rock Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
