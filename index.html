@@ -6332,14 +6332,11 @@
         // Video liegt lokal und startet ohne Verzoegerung.
 
         // Ein/Aus fuer den Nightlife-Slot (die Miami-Videos aus nightlife.json).
-        // Aus: kein Slot, kein Abruf, kein Vorladen - das spart der Box auch die
-        // Bandbreite. Ansehen mit ?nlan=1; Inhalt und Player bleiben unveraendert.
-        //
         // Steht bewusst HIER und nicht bei DJ_SLOT_AN/QR_SLOT_AN weiter unten:
         // nlStart() laeuft schon ein paar hundert Zeilen frueher, und ein const,
         // das dort noch nicht initialisiert ist, reisst das ganze Skript mit.
         // slotSchalter ist eine Funktionsdeklaration und damit hochgezogen.
-        const NL_SLOT_AN = slotSchalter(false, 'nlan');
+        const NL_SLOT_AN = slotSchalter(true, 'nlan');
 
         const NL_CONFIG = {
             quelle: 'nightlife.json',
