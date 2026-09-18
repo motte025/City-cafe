@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T11:57:45Z",
+  "checked_at": "2026-09-18T12:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "!POWERUPS LAST DAY🎶LOST IN SPACE, FOUND IN MUSIC🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     }
   ]
