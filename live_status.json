@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-09-18T17:32:45Z",
+  "checked_at": "2026-09-18T17:47:48Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 Mute Marathon Tag 87 😈 | HC/French Quicky | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !Suptember !Ziele ⭐ !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -17,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "🪩 VINYL CLASSCIS - Dance & HandsUp | !subtember | !tip ✨",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "🪩 VINYL CLASSCIS - Dance & HandsUp | !subtember | !tip ✨",
       "game": "DJs"
     },
     {
@@ -48,13 +55,6 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !Suptember !Ziele ⭐ !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
