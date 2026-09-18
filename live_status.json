@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T22:22:45Z",
+  "checked_at": "2026-09-18T22:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "roice",
+      "name": "roice",
+      "title": "I lost my job :( BUT THAT MEANS MORE STREMS?! !bewbs !trainwreck !morestreams",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -55,13 +55,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Mixed Music - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "I lost my job :( BUT THAT MEANS MORE STREMS?! !bewbs !trainwreck !morestreams",
       "game": "DJs"
     }
   ]
