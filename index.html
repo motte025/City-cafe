@@ -258,10 +258,13 @@
            mit !important und gleicher Spezifitaet, steht aber SPAETER in der
            Datei - ohne das zusaetzliche html gewinnt er und die Laufschrift
            liefe weiter. */
-        html body.video-laeuft .ticker-move,
-        html body.video-laeuft .bl-ticker-move {
+        html body.video-laeuft:not(.video-extern) .ticker-move,
+        html body.video-laeuft:not(.video-extern) .bl-ticker-move {
             animation-play-state: paused !important;
         }
+        /* .video-extern: der Nightlife-Slot laeuft im Kiosk ueber mpv (eigener
+           Prozess, siehe nlExtern()) - Chromium dekodiert dann nichts, die
+           Laufschrift darf weiterlaufen. */
 
         /* ==================================================================
            Dauerhaft sparsam gerendert
@@ -6724,8 +6727,20 @@
         // Wetter-Widgets waehrend des ganzen Twitch-Streams weiter - Dutzende
         // einzeln animierte Elemente ueber einem skalierten Video. Deshalb jetzt
         // neutral benannt und von beiden Slots gerufen.
-        function videoRuheModus(an) {
+        function videoRuheModus(an, extern) {
             document.body.classList.toggle('video-laeuft', !!an);
+            document.body.classList.toggle('video-extern', !!an && !!extern);
+        }
+
+        // Kiosk (ODROID): Ein Supervisor-Prozess spielt YouTube-Slots mit mpv in
+        // einem Fenster genau ueber dem Widget und meldet sich dazu per
+        // DevTools-Protokoll alle halbe Sekunde mit window.nlExternBis
+        // (Zeitstempel, bis wann die Meldung gilt) - aber nur, wenn er das
+        // vorgeladene Video wirklich abspielen kann. Dann muss das Embed nicht
+        // erst anlaufen, bis mpv sein erstes Bild hat. Bleibt die Meldung aus
+        // (Supervisor weg, Video nicht aufloesbar), spielt das Embed wie immer.
+        function nlExtern() {
+            return typeof window.nlExternBis === 'number' && window.nlExternBis > Date.now();
         }
 
         // Welche Quelle ist gerade zu sehen: Datei oder YouTube.
@@ -6857,7 +6872,8 @@
                         eintrag.datei ? 'Video wird geladen …' : 'gleich geht es weiter …');
             nlWerbungSeit = 0;
             nlAnsichtUmschalten(eintrag.datei);
-            videoRuheModus(true);
+            const extern = !eintrag.datei && nlExtern();
+            videoRuheModus(true, extern);
 
             // Liegt das Video schon gepuffert bereit (vorgeladen), reicht Abspielen
             // und das Bild ist sofort da - sonst muss jetzt neu geladen werden.
@@ -6875,13 +6891,20 @@
                 try {
                     nlPlayer.mute();
                     if (!passt) {
-                        nlPlayer.loadVideoById({ videoId: video.videoId, startSeconds: start });
+                        // Mit mpv nur bereitlegen (cue) statt abspielen - der
+                        // Supervisor startet es per playVideo(), falls mpv ausfaellt.
+                        const auftrag = { videoId: video.videoId, startSeconds: start };
+                        if (extern) nlPlayer.cueVideoById(auftrag);
+                        else nlPlayer.loadVideoById(auftrag);
                     } else {
                         let stelle = 0;
                         try { stelle = nlPlayer.getCurrentTime() || 0; } catch (e) {}
                         if (Math.abs(stelle - start) > 3) nlPlayer.seekTo(start, true);
                     }
-                    nlPlayer.playVideo();
+                    // Mit mpv bleibt das Embed stehen; die Tafel mit dem Ortsnamen
+                    // bleibt dann sichtbar, bis das mpv-Fenster darueber liegt.
+                    if (extern) nlPlayer.pauseVideo();
+                    else nlPlayer.playVideo();
                     nlQualitaetSetzen();
                 } catch (e) {}
             }
