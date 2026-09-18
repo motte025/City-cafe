@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T16:07:45Z",
+  "checked_at": "2026-09-18T16:17:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "🔥 FREITAGSMODUS AKTIV / Quicky (Harderstyles) !Socials !pchm !prep  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "🔥 FREITAGSMODUS AKTIV / Quicky (Harderstyles) !Socials !pchm !prep  #Werbung",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -41,6 +41,13 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 87 😈 | HC/French Quicky | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
