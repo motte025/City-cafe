@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T06:52:45Z",
+  "checked_at": "2026-09-18T06:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ PARTY: TWITCH BITS BONUS FINALE ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     }
   ]
