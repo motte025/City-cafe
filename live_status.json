@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T14:27:48Z",
+  "checked_at": "2026-09-18T14:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,13 +31,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "🔥 FREITAGSMODUS AKTIV / Quicky (Harderstyles) !Socials !pchm !prep  #Werbung",
@@ -45,9 +38,16 @@
     },
     {
       "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
-      "title": "🪩 VINYL CLASSCIS - Dance & HandsUp | !subathon | !tip ✨",
+      "title": "🪩 VINYL CLASSCIS - Dance & HandsUp | !subtember | !tip ✨",
       "game": "DJs"
     }
   ]
