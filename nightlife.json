@@ -11,7 +11,14 @@
       { "videoId": "LGBXmjscasg", "titel": "Monaco · Supersportwagen & Luxus", "ort": "Monaco", "land": "Monaco" },
       { "videoId": "qUCBbF4P4-o", "titel": "Sardinien · Orosei & Küste von Baunei", "ort": "Orosei (Sardinien)", "land": "Italien" },
       { "videoId": "AIwhujtDK70", "titel": "Mykonos · Blaues Wasser & weiße Dörfer", "ort": "Mykonos", "land": "Griechenland" },
-      { "videoId": "dmzqus3zEwo", "titel": "Phi Phi Island · Krabi", "ort": "Phi Phi Island", "land": "Thailand" }
+      { "videoId": "dmzqus3zEwo", "titel": "Phi Phi Island · Krabi", "ort": "Phi Phi Island", "land": "Thailand" },
+      { "videoId": "1JRF2mBov18", "titel": "Icon of the Seas · Karibik-Kreuzfahrt", "ort": "Icon of the Seas", "land": "Karibik" },
+      { "videoId": "jZC55t7Q0Ls", "titel": "Monaco · Superyacht-Partys im Port Hercule", "ort": "Monaco", "land": "Monaco" },
+      { "videoId": "V2wnTI7oVBc", "titel": "Rio de Janeiro · Strände von oben", "ort": "Rio de Janeiro", "land": "Brasilien" },
+      { "videoId": "g7pNQTbjC08", "titel": "Tahiti · Lagunen & Vulkanberge von oben", "ort": "Tahiti", "land": "Französisch-Polynesien" },
+      { "videoId": "xzdZylLMJX0", "titel": "Punta Cana · Resorts & Karibikmeer von oben", "ort": "Punta Cana", "land": "Dominikanische Republik" },
+      { "videoId": "E1DNrLn8Vjk", "titel": "Puerto Banús · Luxus-Spaziergang", "ort": "Puerto Banús (Marbella)", "land": "Spanien" },
+      { "videoId": "TR9skY92ne8", "titel": "Dubai · Skyline & Palm Islands von oben", "ort": "Dubai", "land": "Vereinigte Arabische Emirate" }
     ]
   },
   "nacht": {
@@ -29,7 +36,10 @@
       { "videoId": "04BnxlvUCJw", "titel": "Nightlife · USA, UK, Kanada & Europa" },
       { "videoId": "b5tmGEL5KpI", "titel": "Pattaya · Soi 6 bei Nacht", "ort": "Pattaya", "land": "Thailand" },
       { "videoId": "EcTZ87AKYxI", "titel": "Magaluf · Party-Sommer", "ort": "Magaluf (Mallorca)", "land": "Spanien" },
-      { "videoId": "pS9_F5ABJik", "titel": "Mykonos · Tag, Nacht & Party", "ort": "Mykonos", "land": "Griechenland" }
+      { "videoId": "pS9_F5ABJik", "titel": "Mykonos · Tag, Nacht & Party", "ort": "Mykonos", "land": "Griechenland" },
+      { "videoId": "wvExZUaZ0Sg", "titel": "Singapur · Clarke Quay bis Merlion", "ort": "Singapur", "land": "Singapur" },
+      { "videoId": "eQI_N8qCjmw", "titel": "Pattaya · Fieber in der Soi 6", "ort": "Pattaya", "land": "Thailand" },
+      { "videoId": "QlN-NuVf7z8", "titel": "Bali · Beach Clubs & Bars", "ort": "Bali", "land": "Indonesien" }
     ]
   }
 }
