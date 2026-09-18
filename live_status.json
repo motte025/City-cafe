@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T17:47:48Z",
+  "checked_at": "2026-09-18T17:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !Suptember !Ziele ⭐ !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 ROCK WAY - last day !bittember  ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
@@ -45,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 ROCK WAY - last day !bittember  ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
@@ -55,6 +48,20 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 18✨Ruhiger Freitach?✨ | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
