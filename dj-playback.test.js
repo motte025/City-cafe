@@ -10,7 +10,7 @@ function fn(name) {
     return html.slice(start, end);
 }
 async function run() {
-    let player, button, starts = 0, offlineBadge = false, sequenceRuns = 0;
+    let player, button, starts = 0, offlineBadge = false, sequenceRuns = 0, rueckfall = null;
     class Player {
         constructor(id, options) { this.handlers = {}; this.paused = true; this.channel = options.channel; player = this; assert.equal(options.muted, true); assert.equal(options.autoplay, true); }
         addEventListener(event, handler) { (this.handlers[event] ||= []).push(handler); }
@@ -33,7 +33,9 @@ async function run() {
         djLiveBadgeSetzen: value => { offlineBadge = value; },
         djFernQualitaetAnwenden() {}, djFernStatusMelden() {},
         mediaStateIndex: 1, DJ_SLOT_INDEX: 1, cancelSequenceTimers() {},
-        runMasterSequence: () => { sequenceRuns++; }
+        runMasterSequence: () => { sequenceRuns++; },
+        djExternEintrag: null, djExtern: () => false, djAktiverIndex: 0,
+        djSpielerAufbauen: entry => { rueckfall = entry; }, videoRuheModus() {}
     });
     vm.runInContext(fn('djBaueTwitch') + '\n' + fn('djWaechterTakt'), context);
     context.djBaueTwitch({ isConnected: true }, { channel: 'example' });
@@ -66,7 +68,16 @@ async function run() {
     player.emit(Player.PLAYING);
     assert.equal(context.djQualiLage.bildGestartet, false, 'Old player events cannot mark a new player as running');
 
-    let sichtbar = false, gebaut = 0;
+    // mpv (Kiosk-Supervisor) sollte spielen, meldet sich aber nicht mehr:
+    // der Waechter baut den Twitch-Player fuer genau diesen Kanal.
+    context.djExternEintrag = { platform: 'twitch', channel: 'mpv-dj' };
+    context.djAktiverIndex = 2;
+    context.djWaechterTakt();
+    assert.equal(rueckfall && rueckfall.channel, 'mpv-dj', 'Without the supervisor the Twitch player comes back');
+    assert.equal(context.djExternEintrag, null);
+    assert.equal(context.djAktiverIndex, 2, 'The fallback keeps the selected entry');
+
+    let sichtbar = false, gebaut = 0, extern = false;
     const buehne = { firstChild: null, innerHTML: '' };
     const visibilityContext = vm.createContext({
         DJ_SLOT_AN: true,
@@ -82,6 +93,7 @@ async function run() {
         djAnstupsen() {},
         djLiveBadgeSetzen() {},
         djAnzeigeName: entry => entry.channel,
+        djExternEintrag: null, djExtern: () => extern, djTonKnopf() {}, videoRuheModus() {},
         document: {
             getElementById: id => id === 'dj-live-player' ? buehne : {
                 textContent: '', style: {}, classList: { toggle() {} }
@@ -100,6 +112,12 @@ async function run() {
     visibilityContext.djAktiverIndex = 0;
     visibilityContext.djZeigeEintrag(0);
     assert.equal(gebaut, 2, 'A missing player frame is rebuilt even when the index is unchanged');
+
+    // Kiosk-Supervisor meldet sich: mpv zeigt den Kanal, kein Twitch-Player.
+    extern = true;
+    visibilityContext.djZeigeEintrag(0);
+    assert.equal(gebaut, 2, 'With mpv taking over no Twitch player is built');
+    assert.equal(visibilityContext.djExternEintrag.channel, 'live-dj');
     console.log('DJ playback regression tests passed.');
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

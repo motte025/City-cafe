@@ -7225,6 +7225,18 @@
         let djStatusGeladen = false; // erst nach dem ersten erfolgreichen Abruf true
         let djZufallsEintrag = null; // bleibt fuer genau einen Dashboard-Zyklus stabil
         let djLetzterZufallsSchluessel = ''; // vermeidet direkte Wiederholung, wenn moeglich
+        // Kiosk (ODROID): Wie beim Nightlife-Slot (siehe nlExtern) kann der
+        // Supervisor-Prozess Twitch-Kanaele per streamlink + mpv abspielen, in
+        // einem Fenster genau ueber der Buehne. Er meldet sich per DevTools mit
+        // window.djExternBis (bis wann gueltig) und window.djExternLaeuft (Bild
+        // da). Dann baut der Slot KEINEN Twitch-Player - kein Play-Knopf, keine
+        // Ton-Sperre, der Waechter hat nichts zu tun. djExternEintrag ist der
+        // Kanal, den mpv gerade zeigen soll. Bleibt die Meldung aus, baut
+        // djWaechterTakt den Twitch-Player wie gewohnt.
+        let djExternEintrag = null;
+        function djExtern() {
+            return typeof window.djExternBis === 'number' && window.djExternBis > Date.now();
+        }
 
         // Twitch prueft den parent-Parameter gegen den Hostnamen der einbettenden
         // Seite, YouTube verweigert die Einbettung bei Origin "null". Ueber file://
@@ -7431,6 +7443,12 @@
                 zeiger:   djZeigerDa(),
                 qualiZurueck: !!(djQualiLage && djQualiLage.qualiZurueck)
             };
+            if (djExternEintrag) {
+                lage.extern = true;
+                lage.spielt = window.djExternLaeuft === true;
+                lage.stumm = false;
+                return lage;
+            }
             const rahmen = document.querySelector('#dj-live-player .dj-player-frame iframe');
             if (rahmen) lage.erlaubt = rahmen.getAttribute('allow') || '';
             if (!djTwitchSpieler) return lage;
@@ -7452,6 +7470,7 @@
             // ist jeder weitere Befund nur Folgeerscheinung.
             if (lage.drin && lage.darf === false)
                                        return 'Die Seite, in der das Dashboard steckt (Lumify), erlaubt keine Wiedergabe — ihr Rahmen müsste allow="autoplay" tragen. Vom Dashboard aus nicht zu ändern.';
+            if (lage.extern)           return lage.spielt ? '' : 'Stream wird geladen … (Werbung am Anfang wird übersprungen)';
             if (!lage.rahmen)          return 'Player wird noch gebaut …';
             if (!lage.gebaut)          return 'Twitch-SDK nicht geladen — läuft im einfachen Modus';
             if (!/autoplay/.test(lage.erlaubt))
@@ -7688,6 +7707,8 @@
         // an dieser Stelle bereits auf den kommenden Zustand.
         function djStopPlayer() {
             if (mediaStateIndex === DJ_SLOT_INDEX) return;
+            // Slot vorbei: der Supervisor sieht das und beendet mpv.
+            djExternEintrag = null;
             const buehne = document.getElementById('dj-live-player');
             djWaechterStoppen();
             djTonKnopf(false);
@@ -8466,6 +8487,16 @@
         // Ansicht neu bauen, den Ton nachziehen, und im Modus 'mindestens' die
         // Qualitaet anheben, wenn Twitch zu niedrig eingestiegen ist.
         function djWaechterTakt() {
+            // mpv sollte spielen, aber der Supervisor meldet sich nicht mehr
+            // (abgestuerzt, Kanal nicht abspielbar): dann doch der Twitch-Player.
+            if (djExternEintrag && !djExtern()) {
+                const eintrag = djExternEintrag, index = djAktiverIndex;
+                djExternEintrag = null;
+                djSpielerAufbauen(eintrag);
+                djAktiverIndex = index;
+                videoRuheModus(true);
+                return;
+            }
             djAnstupsen();
             if (!djTwitchSpieler || !djQualiLage) return;
 
@@ -8826,7 +8857,17 @@
 
             const hatRahmen = !!document.querySelector('#dj-live-player .dj-player-frame');
 
-            if (!hatRahmen || djAktiverIndex < 0) {
+            if (entry.platform === 'twitch' && entry.channel && djExtern()) {
+                // mpv uebernimmt (siehe djExternEintrag): kein Twitch-Player.
+                // Ein schlafender von frueher wird abgebaut, damit nichts
+                // doppelt Ton gibt. Die Laufschrift darf dann weiterlaufen.
+                if (hatRahmen) djSpielerAbbauen();
+                djExternEintrag = entry;
+                djAktiverIndex = index;
+                djTonKnopf(false);
+                videoRuheModus(true, true);
+            } else if (!hatRahmen || djAktiverIndex < 0) {
+                djExternEintrag = null;
                 djSpielerAufbauen(entry);
                 djAktiverIndex = index;
             } else if (index !== djAktiverIndex) {
@@ -8840,6 +8881,8 @@
                 // ein Anstupser schadet dann nicht und holt ihn sonst ab.
                 djAnstupsen();
             }
+            // Spielt der Browser selbst, gehoert die Bildrate wieder dem Video.
+            if (!djExternEintrag) videoRuheModus(true);
 
             // Kanal- und Streamtitel kommen ueber Twitch/YouTube von fremden Nutzern -
             // deshalb ausschliesslich per textContent ins DOM, nie per innerHTML.
