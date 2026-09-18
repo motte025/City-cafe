@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T21:07:45Z",
+  "checked_at": "2026-09-18T21:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "✨DAY 18✨Ruhiger Freitach?✨ | !bier | !zug | !prep | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ FRIDAY FEEL GOOD WITH THE YAPPIEST DJ ALIVE 🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     },
     {
@@ -48,13 +55,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Mixed Music - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ FRIDAY FEEL GOOD WITH THE YAPPIEST DJ ALIVE 🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     }
   ]
