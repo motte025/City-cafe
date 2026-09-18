@@ -143,6 +143,14 @@
             opacity: 0; transition: opacity 1s ease;
         }
         .card.border-shimmer-active::after { opacity: 1; }
+        /* Sparmodus: Der Glanz-Schatten (25 px + 120 px Weichzeichnung) hebelte
+           mit seinem !important das "box-shadow: none" des Sparmodus aus - die
+           glaenzende Karte bekam doch einen Schatten, 1 s lang Bild fuer Bild
+           ueberblendet. Und das Rahmen-Overlay braucht eine feste eigene Ebene
+           (will-change), sonst malt Chromium die Karte beim Ueberblenden in
+           jedem Bild neu (gemessen: 404 statt 183 Malvorgaenge in 20 s). */
+        html:not([data-fx="1"]) .card.border-shimmer-active { box-shadow: none !important; }
+        html:not([data-fx="1"]) .card::after { will-change: opacity !important; }
 
         .left-main-column {
             position: absolute; left: 40px; top: 20px;
@@ -11410,7 +11418,16 @@
         async function loadDriveFolderImages() {
             try {
                 const response = await fetch(googleScriptUrl);
-                const data = await response.json();
+                const roh = await response.json();
+                // galerie.gs liefert die Fotos in 1920 px Breite - angezeigt werden
+                // sie in 520x670 (Polaroids noch kleiner). Die volle Groesse zu
+                // dekodieren und auf die GPU zu laden liess am ODROID bei jedem
+                // Bildwechsel die Laufschrift stocken. s1000 = laengste Seite
+                // 1000 px, deckt die Flaeche weiterhin scharf ab.
+                const data = Array.isArray(roh)
+                    ? roh.map(d => (d && typeof d.src === 'string')
+                        ? { ...d, src: d.src.replace(/([?&]sz=)w\d+/, '$1s1000') } : d)
+                    : roh;
                 if(data && data.length > 0) {
                     const bekannteSrcs = new Set(visitorGalleryData.map(d => d.src));
                     const neueKaraokeBilder = data.filter(d => d.isKaraoke && !bekannteSrcs.has(d.src));
