@@ -122,14 +122,27 @@
             border-radius: 24px;
             box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 50px 120px -20px rgba(0, 0, 0, 0.85), inset 0 1px 1px rgba(255, 255, 255, 0.15);
             padding: 25px 35px;
-            transition: border-color 1s ease, box-shadow 1s ease;
+            transition: box-shadow 1s ease;
             position: relative; overflow: hidden;
         }
 
         .card.border-shimmer-active {
-            border-color: rgba(255, 255, 255, 0.45) !important;
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.2), 0 50px 120px -20px rgba(0, 0, 0, 0.85), inset 0 0 15px rgba(255, 255, 255, 0.2) !important;
         }
+
+        /* Der helle Glanzrahmen ist eine eigene Ebene, die nur per Deckkraft
+           einblendet. Frueher blendete die border-color der Karte selbst ueber -
+           dafuer muss Chromium die ganze Karte (Medienbereich 1280x815) eine
+           Sekunde lang in jedem Bild neu malen und rastern. Am ODROID gemessen:
+           alle 6-12 s ein 1-1,5 s langer Schub Aussetzer, die Laufschrift
+           stockte. Deckkraft macht die GPU allein, gerastert wird einmal. */
+        .card::after {
+            content: ''; position: absolute; inset: 0; z-index: 20;
+            border-radius: inherit; pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            opacity: 0; transition: opacity 1s ease;
+        }
+        .card.border-shimmer-active::after { opacity: 1; }
 
         .left-main-column {
             position: absolute; left: 40px; top: 20px;
