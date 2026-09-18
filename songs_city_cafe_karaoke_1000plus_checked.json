@@ -62827,15 +62827,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Original Naabtal Duo",
-    "title": "Vergiss Deine Eltern Net",
+    "artist": "Ronald",
+    "title": "M'n Schoonmoeder",
     "album": "",
-    "category": "Schlager",
+    "category": "Après-Ski & Ballermann",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
-      "Kult"
+      "Party",
+      "Karaoke",
+      "Après-Ski & Ballermann"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Vicky Leandros",
+    "title": "Rot ist die Liebe",
+    "album": "",
+    "category": "Party-Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Party-Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
