@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T17:52:45Z",
+  "checked_at": "2026-09-18T18:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 ROCK WAY - last day !bittember  ☆ !holy !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "🪩 VINYL CLASSCIS - Dance & HandsUp | !subtember | !tip ✨",
@@ -38,9 +45,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 ROCK WAY - last day !bittember  ☆ !holy !naturtreu 🔴🔴",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 18✨Ruhiger Freitach?✨ | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -59,9 +66,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 18✨Ruhiger Freitach?✨ | !bier | !zug | !prep | !holy | #werbung",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Mixed Music - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
