@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T10:17:46Z",
+  "checked_at": "2026-09-18T10:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "!POWERUPS LAST DAY🎶LOST IN SPACE, FOUND IN MUSIC🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     }
   ]
