@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-18T13:02:46Z",
+  "checked_at": "2026-09-18T13:22:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "🔴FREITAG RAVE | !holy !drohne #werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
@@ -10,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "🔴FREITAG RAVE | !holy !drohne #werbung",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
