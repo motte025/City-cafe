@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T12:22:45Z",
+  "checked_at": "2026-09-18T12:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "🔴FREITAG RAVE | !holy !drohne #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "!POWERUPS LAST DAY🎶LOST IN SPACE, FOUND IN MUSIC🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -38,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "🔴FREITAG RAVE | !holy !drohne #werbung",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "!POWERUPS LAST DAY🎶LOST IN SPACE, FOUND IN MUSIC🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
