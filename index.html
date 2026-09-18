@@ -6794,6 +6794,10 @@
                 nlLaeuft = null;
                 nlStandSpeichern();
             }
+            // Das gerade gespielte Video gilt nicht mehr als vorgeladen - sonst
+            // wuerde runNightlifeState() es erneut zeigen, falls nlVorladen()
+            // gleich kein neues Video findet.
+            nlGeladen = null;
             nlVorladen();
         }
 
