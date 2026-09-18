@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-18T07:12:48Z",
+  "checked_at": "2026-09-18T07:32:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ PARTY: TWITCH BITS BONUS FINALE ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "chazz",
@@ -13,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ PARTY: TWITCH BITS BONUS FINALE ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     }
   ]
