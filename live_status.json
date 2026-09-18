@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T09:47:45Z",
+  "checked_at": "2026-09-18T10:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "!POWERUPS LAST DAY🎶LOST IN SPACE, FOUND IN MUSIC🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
