@@ -3135,7 +3135,10 @@
         // Element mit will-change:transform, also eine riesige Compositor-Ebene.
         // Jetzt: pro Durchlauf eine zufaellige Auswahl, die bei jedem Schleifenende neu
         // gezogen wird. Kleinere Ebene, und es wiederholt sich nicht mehr immer gleich.
-        const TICKER_PIXEL_PRO_SEKUNDE = 115;
+        // 120 = genau 2 Pixel pro Bild bei 60 Hz. Mit 115 (1,92 px/Bild) lag die
+        // Schrift jedes Bild auf einer anderen Teilpixel-Position - sichtbar als
+        // feines Stottern/Flimmern.
+        const TICKER_PIXEL_PRO_SEKUNDE = 120;
         const TICKER_ITEMS_PRO_DURCHLAUF = 25;
 
         function generateDynamicPartyTicker() {
@@ -3155,12 +3158,15 @@
         }
 
         function applyTickerSpeed(container) {
-            const breite = container.scrollWidth;
+            // translate(-100%) bezieht sich auf die Rahmenbreite des Elements.
+            const breite = container.getBoundingClientRect().width;
             if (!breite) return;
             // Als Variable, nicht als animation-duration: die Regel im Stylesheet
             // steht auf !important und wuerde einen Inline-Stil schlagen.
+            // Millisekundengenau statt auf ganze Sekunden gerundet - sonst waere
+            // das Tempo nicht exakt 2 px/Bild (9995 px / 87 s = 114,9 px/s).
             container.style.setProperty('--ticker-dauer',
-                                        Math.round(breite / TICKER_PIXEL_PRO_SEKUNDE) + 's');
+                                        Math.round(breite / TICKER_PIXEL_PRO_SEKUNDE * 1000) + 'ms');
         }
 
         // Bei jedem Durchlauf neu mischen - vorher wiederholte sich immer dieselbe
