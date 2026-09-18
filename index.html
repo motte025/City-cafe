@@ -6463,9 +6463,17 @@
 
         // Tagesabschnitt zwischen 07:00 und 19:00, sonst Nachtabschnitt - dieselbe
         // Geraetezeit, die auch die Uhr oben rechts anzeigt.
+        // Tagsueber (7-18 Uhr) laufen Tag- UND Nacht-Videos gemischt, ab 18 Uhr
+        // bis zum Morgen nur Nacht-Videos.
         function nlIstTag() {
             const stunde = new Date().getHours();
-            return stunde >= 7 && stunde < 19;
+            return stunde >= 7 && stunde < 18;
+        }
+
+        // Tag- oder Nacht-Video? Steht seit der Mischung am Eintrag selbst
+        // (_art, gesetzt in nlLadeVideos) statt an der Uhrzeit.
+        function nlTagVideo(video) {
+            return video && video._art ? video._art === 'tag' : nlIstTag();
         }
 
         async function nlLadeVideos() {
@@ -6476,8 +6484,15 @@
                                         { signal: controller.signal, cache: 'no-store' });
                 if (!res.ok) return;
                 const rohDaten = await res.json();
-                const daten = rohDaten && (nlIstTag() ? rohDaten.tag : rohDaten.nacht);
-                if (daten && Array.isArray(daten.videos) && daten.videos.length) nlDaten = daten;
+                if (!rohDaten) return;
+                const markiert = (teil, art) => (teil && Array.isArray(teil.videos) ? teil.videos : [])
+                    .map(v => ({ ...v, _art: art }));
+                const nacht = rohDaten.nacht || {};
+                const daten = nlIstTag()
+                    ? { ...(rohDaten.tag || {}),
+                        videos: markiert(rohDaten.tag, 'tag').concat(markiert(nacht, 'nacht')) }
+                    : { ...nacht, videos: markiert(nacht, 'nacht') };
+                if (daten.videos.length) nlDaten = daten;
             } catch (e) {
             } finally {
                 clearTimeout(abbruch);
@@ -6614,6 +6629,10 @@
         function nlZustandsWechsel(ev) {
             nlDauerMerken();
             if (ev.data === 1) {
+                // Untertitel nie zeigen. cc_load_policy:0 allein reicht nicht:
+                // das Kiosk-Geraet ist bei Google angemeldet, und die Konto-
+                // Einstellung "Untertitel immer anzeigen" wuerde es uebersteuern.
+                try { if (nlPlayer.unloadModule) nlPlayer.unloadModule('captions'); } catch (e) {}
                 // Nur aufdecken und Ton geben, wenn wirklich das gewuenschte Video
                 // laeuft - sonst stuende hier der Werbeblock im Bild und waere zu
                 // hoeren, obwohl er nur abgedeckt ist.
@@ -6694,7 +6713,7 @@
             }
 
             if (!nlWerbungSeit) nlWerbungSeit = Date.now();
-            nlHinweisAn('🌃 ' + ((nlDaten && nlDaten.stadt) || 'Nightlife'), 'gleich geht es weiter …');
+            nlHinweisAn(document.getElementById('nl-stadt').textContent || '🌃 Nightlife', 'gleich geht es weiter …');
 
             // Zieht sich die Werbung hin, ist der Slot nicht zu retten -
             // dann lieber weiterschalten als minutenlang eine Tafel zeigen.
@@ -6875,16 +6894,17 @@
             nlAktiv = true;
             nlLaeuft = { schluessel: eintrag.schluessel, datei: eintrag.datei };
 
-            const nlSymbol = nlIstTag() ? '🌍' : '🌃';
+            const istTag = nlTagVideo(video);
+            const nlSymbol = istTag ? '🌍' : '🌃';
+            const nlStandard = istTag ? 'Urlaubsziele' : 'Nightlife';
             // Statt der generischen Ueberschrift "Urlaubsziele" steht hier der
             // tatsaechliche Urlaubsort samt Land aus nightlife.json (Tag und
             // Nacht; fehlt "ort", bleibt es bei "Urlaubsziele"/"Nightlife").
             const nlOrtLand = video.ort ? (video.land ? `${video.ort}, ${video.land}` : video.ort) : null;
             document.getElementById('nl-stadt').textContent =
-                nlSymbol + ' ' + (nlOrtLand || (nlDaten && nlDaten.stadt) || (nlIstTag() ? 'Urlaubsziele' : 'Nightlife'));
+                nlSymbol + ' ' + (nlOrtLand || nlStandard);
             document.getElementById('nl-untertitel').textContent =
-                video.titel || (nlDaten && nlDaten.untertitel) ||
-                (nlIstTag() ? 'Unterwegs am Traumziel' : 'Unterwegs in der Nacht');
+                video.titel || (istTag ? 'Unterwegs am Traumziel' : 'Unterwegs in der Nacht');
 
             // Zufallsauswahl statt fester Reihenfolge - eine Positionsanzeige
             // ("2/5") waere hier irrefuehrend, deshalb bleibt der Zaehler weg.
@@ -6895,7 +6915,7 @@
             // Der Player bleibt zugedeckt, bis feststeht, dass wirklich das
             // Video laeuft und keine Werbung. Die Tafel nennt die Stadt, damit
             // sie wie Teil der Gestaltung aussieht und nicht wie ein Fehler.
-            nlHinweisAn(nlSymbol + ' ' + (nlOrtLand || (nlDaten && nlDaten.stadt) || (nlIstTag() ? 'Urlaubsziele' : 'Nightlife')),
+            nlHinweisAn(nlSymbol + ' ' + (nlOrtLand || nlStandard),
                         eintrag.datei ? 'Video wird geladen …' : 'gleich geht es weiter …');
             nlWerbungSeit = 0;
             nlAnsichtUmschalten(eintrag.datei);
