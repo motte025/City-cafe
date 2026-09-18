@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T14:12:47Z",
+  "checked_at": "2026-09-18T14:27:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 ROCK WAY - last day !bittember  ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 ROCK WAY - last day !bittember  ☆ !holy !naturtreu 🔴🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
