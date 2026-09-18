@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-09-18T16:02:48Z",
+  "checked_at": "2026-09-18T16:07:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "🔴FREITAG RAVE | !holy !drohne #werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "colaway",
@@ -41,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
