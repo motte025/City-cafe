@@ -63442,8 +63442,28 @@
     "auto_discovered": true
   },
   {
-    "artist": "Fotos",
-    "title": "Giganten",
+    "artist": "Räuber",
+    "title": "Denn Wenn Et Trömmelche Jeht",
+    "album": "",
+    "category": "Party-Hit",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Mitmach-Hit",
+      "Kult"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Ulla Meinecke",
+    "title": "Ein Schritt vor und zwei zurück (One Step Up And Two Steps Back)",
     "album": "",
     "category": "Schlager",
     "chart": "",
