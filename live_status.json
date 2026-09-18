@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T19:02:46Z",
+  "checked_at": "2026-09-18T19:17:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 87 😈 | HC/French Quicky | !insta !holy !SF #Werbung",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "THE GRANGE",
       "game": "DJs"
     },
     {
@@ -55,13 +55,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Mixed Music - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "THE GRANGE",
       "game": "DJs"
     }
   ]
