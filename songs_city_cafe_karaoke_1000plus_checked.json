@@ -63005,5 +63005,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Kygo",
+    "title": "Lose Somebody",
+    "album": "",
+    "category": "Dance & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Disco",
+      "House",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
