@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-18T13:47:46Z",
+  "checked_at": "2026-09-18T13:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "🔥 FREITAGSMODUS AKTIV / Quicky (Harderstyles) !Socials !pchm !prep  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴HARD BASS ONLY ☆ !holy !naturtreu !bittember🔴🔴",
       "game": "DJs"
     }
   ]
