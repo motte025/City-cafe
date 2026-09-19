@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-19T07:17:47Z",
+  "checked_at": "2026-09-19T07:37:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Classics mit @ericssl",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
@@ -20,13 +27,6 @@
       "channel": "asot",
       "name": "ASOT",
       "title": "24/7 the best in trance and progressive, A State of Trance !discord",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Classics mit @ericssl",
       "game": "DJs"
     }
   ]
