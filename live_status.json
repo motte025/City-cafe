@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T22:02:45Z",
+  "checked_at": "2026-09-19T22:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -45,16 +45,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "asot",
-      "name": "ASOT",
-      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SCHRANZ IS BACK | FELIX KRÖCHER",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "SCHRANZ IS BACK | FELIX KRÖCHER",
+      "channel": "asot",
+      "name": "ASOT",
+      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
       "game": "DJs"
     }
   ]
