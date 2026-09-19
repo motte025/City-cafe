@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T10:47:46Z",
+  "checked_at": "2026-09-19T10:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "asot",
       "name": "ASOT",
       "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "THIRD AND FOURTH SPACE ARE VOIBINNN W FRIENDS ❤️‍🔥 EMO NITE TOMORROWWWW !tip !patreon !youtube !merch",
       "game": "DJs"
     }
   ]
