@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T00:02:45Z",
+  "checked_at": "2026-09-19T00:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 18✨Ruhiger Freitach?✨ | !bier | !zug | !prep | !holy | #werbung",
+      "channel": "roice",
+      "name": "roice",
+      "title": "I lost my job :( BUT THAT MEANS MORE STREMS?! !bewbs !trainwreck !morestreams",
       "game": "DJs"
     },
     {
@@ -34,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "I lost my job :( BUT THAT MEANS MORE STREMS?! !bewbs !trainwreck !morestreams",
       "game": "DJs"
     }
   ]
