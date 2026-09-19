@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T14:52:45Z",
+  "checked_at": "2026-09-19T15:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 HARDSTYLE BABY  ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 HARDSTYLE BABY  ☆ !holy !naturtreu 🔴🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -48,6 +48,13 @@
       "channel": "asot",
       "name": "ASOT",
       "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "The Trainwreck | Up Next: @Fathomn Incoming Raider: @DjayLSD !BEWBS !trainwreck !morestreams",
       "game": "DJs"
     }
   ]
