@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T19:17:50Z",
+  "checked_at": "2026-09-19T19:27:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "🔥 Samstag Quicky (Harderstyles) !Socials !pchm !prep  #Werbung",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 HARDSTYLE BABY  ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
@@ -38,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 HARDSTYLE BABY  ☆ !holy !naturtreu 🔴🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -48,13 +48,6 @@
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
       "title": "🍒✨💋🌈  Lazy relaxed Saturday 🍒✨💞💋🌈 | !challenge | TY Raiders: @solidflow8, @minnecent",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
