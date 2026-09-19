@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T19:42:45Z",
+  "checked_at": "2026-09-19T19:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Lazy relaxed Saturday 🍒✨💞💋🌈 | !challenge | TY Raiders: @solidflow8, @minnecent",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed Saturday 🍒✨💞💋🌈 | !challenge | TY Raiders: @solidflow8, @minnecent",
       "game": "DJs"
     },
     {
