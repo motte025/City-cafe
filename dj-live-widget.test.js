@@ -9,7 +9,8 @@ const remote = fs.readFileSync('dj-fernbedienung.html', 'utf8');
 
 assert.match(dashboard, /sekundenProKanal:\s*180/);
 assert.match(dashboard, /leerWarteSekunden:\s*30/);
-assert.match(dashboard, /tonLautstaerke:\s*0/);
+// Seit September 2026 mit Ton (wie im Kiosk ueber mpv) - Wunsch des Betriebs.
+assert.match(dashboard, /tonLautstaerke:\s*1/);
 assert.match(dashboard, /const DJ_SLOT_AN = slotSchalter\(true, 'djan'\)/);
 assert.match(dashboard, /Math\.floor\(Math\.random\(\) \* pool\.length\)/);
 assert.match(dashboard, /return \[djZufallsEintrag\]/);

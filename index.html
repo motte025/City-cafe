@@ -7190,10 +7190,11 @@
             neustartNachSekunden: 15,
             maxNeustarts: 2,
 
-            // Bewusst nur Bild: Twitch startet stumm zuverlaessiger und im Lokal
-            // soll keine automatische Audioquelle mehr entstehen. Die Handy-
-            // Fernbedienung steuert weiterhin Kanal, Laufzeit und Bildqualitaet.
-            tonLautstaerke: 0,
+            // Mit Ton (Twitch-SDK: 0..1), wie im Kiosk ueber mpv auch. Der Player
+            // startet trotzdem stumm und dreht erst auf, wenn das Bild laeuft und
+            // der Browser Ton zulaesst (djTonNachziehen). Die Handy-Fernbedienung
+            // steuert weiterhin Kanal, Laufzeit und Bildqualitaet.
+            tonLautstaerke: 1,
             // Twitchs Embed-SDK. Der iframe allein kennt keinen quality-Parameter
             // (offiziell bestaetigt) - die Qualitaet laesst sich ausschliesslich
             // ueber Twitch.Player.setQuality() setzen. Wird erst geladen, wenn
