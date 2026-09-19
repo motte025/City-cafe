@@ -64621,36 +64621,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Taylor Swift",
-    "title": "Lavender Haze",
+    "artist": "Ibo",
+    "title": "1000 Türen fallen zu",
     "album": "",
-    "category": "Internationale Party-Hits",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Pop",
-      "Dance",
-      "Karaoke"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Duran Duran",
-    "title": "A View to a Kill",
-    "album": "",
-    "category": "80s Party",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "80s Party"
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
