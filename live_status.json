@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T06:47:45Z",
+  "checked_at": "2026-09-19T06:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "asot",
       "name": "ASOT",
       "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     }
   ]
