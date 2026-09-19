@@ -191,6 +191,12 @@
             box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
         }
         .bl-top-datum:empty { display: none; }
+        /* Label und Datum in den Farben der Liga des gerade gezeigten Spiels
+           (Klasse setzt blRenderTopWidget): Bundesliga-Rot, Champions-League-Blau. */
+        .liga-bl .bl-top-label  { background: linear-gradient(135deg, #e30613 0%, #9e0010 100%); }
+        .liga-bl .bl-top-datum  { background: linear-gradient(135deg, #9e0010 0%, #e30613 100%); }
+        .liga-ucl .bl-top-label { background: linear-gradient(135deg, #1e3a9e 0%, #0b1a4f 100%); }
+        .liga-ucl .bl-top-datum { background: linear-gradient(135deg, #0b1a4f 0%, #1e3a9e 100%); }
         .bl-top-ticker-move {
             display: flex; align-items: center; justify-content: center;
             width: 100%; height: 100%; transform-origin: center;
@@ -4476,7 +4482,14 @@
             if (!el) return;
 
             const matches = blTopOrderedMatches();
+            const leiste = document.getElementById('card-top-custom');
+            const ligaFarbe = liga => {
+                if (!leiste) return;
+                leiste.classList.toggle('liga-bl', liga === 'bl');
+                leiste.classList.toggle('liga-ucl', liga === 'ucl');
+            };
             if (!matches.length) {
+                ligaFarbe('bl');
                 if (label) label.textContent = '⚽ Spieltag';
                 if (datum) datum.textContent = '';
                 el.style.transform = 'scale(1)';
@@ -4485,6 +4498,7 @@
             }
             if (blTopMatchIdx >= matches.length) blTopMatchIdx = 0;
             const m = matches[blTopMatchIdx];
+            ligaFarbe(m._liga);
             // Ohne "Bundesliga": das Wort kostete im schmalen Balken Platz, den
             // die Spielpaarung besser gebrauchen kann.
             if (label) {
