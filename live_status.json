@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T00:07:45Z",
+  "checked_at": "2026-09-19T00:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,13 +27,6 @@
       "channel": "roice",
       "name": "roice",
       "title": "I lost my job :( BUT THAT MEANS MORE STREMS?! !bewbs !trainwreck !morestreams",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
