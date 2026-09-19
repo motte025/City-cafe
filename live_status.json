@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-18T23:47:45Z",
+  "checked_at": "2026-09-19T00:02:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "THE GRANGE",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !Suptember !Ziele ⭐ !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -24,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !Suptember !Ziele ⭐ !Shakes !Holy !Moumint !Shop !Socials",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "✨DAY 18✨Ruhiger Freitach?✨ | !bier | !zug | !prep | !holy | #werbung",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "I lost my job :( BUT THAT MEANS MORE STREMS?! !bewbs !trainwreck !morestreams",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "roice",
+      "name": "roice",
+      "title": "I lost my job :( BUT THAT MEANS MORE STREMS?! !bewbs !trainwreck !morestreams",
       "game": "DJs"
     }
   ]
