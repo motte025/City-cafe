@@ -1398,7 +1398,9 @@
             position: absolute; left: 40px; top: 980px; width: 1840px;
         }
         .ticker-label-left {
-            height: 80px; padding: 0 35px; background: linear-gradient(135deg, #f355da 0%, #00f2fe 100%);
+            /* Neutral (Anthrazit statt Pink/Tuerkis) - passt zur oberen Leiste mit
+               den Ligafarben. Schriftgroessen unveraendert. */
+            height: 80px; padding: 0 35px; background: linear-gradient(135deg, #3a3f47 0%, #1c1f24 100%);
             display: flex; align-items: center; gap: 12px; color: #ffffff; font-weight: 900; font-size: 31px;
             letter-spacing: 1.5px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
             border-top-left-radius: 15px; border-bottom-left-radius: 15px; box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3); z-index: 5;
@@ -1411,9 +1413,11 @@
             font-weight: 700; color: #ffffff; text-shadow: 0 1px 0 rgba(0,0,0,0.8), 0 2px 4px rgba(0, 0, 0, 0.9); font-size: 34px; 
         }
         .ticker-item { display: inline-block; padding: 0 35px; }
-        .ticker-highlight-yellow { color: #00f2fe; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(0,242,254,0.5); }
-        .ticker-highlight-pink { color: #f355da; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 12px rgba(243,85,218,0.5); }
-        .ticker-separator { color: rgba(0, 242, 254, 0.9); font-weight: 900; margin: 0 15px; }
+        /* Klassennamen historisch - die Farben sind jetzt neutral: abwechselnd
+           Weiss und helles Grau statt Tuerkis/Pink. */
+        .ticker-highlight-yellow { color: #ffffff; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.95); }
+        .ticker-highlight-pink { color: #d6d9de; font-weight: 900; text-shadow: 0 2px 8px rgba(0,0,0,0.95); }
+        .ticker-separator { color: rgba(255, 255, 255, 0.45); font-weight: 900; margin: 0 15px; }
 
         @keyframes tickerMove { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
         @keyframes premiumPosterBreathing { 0% { transform: scale(1.00) translate(0px, 0px); } 50% { transform: scale(1.02) translate(2px, -1px); } 100% { transform: scale(1.01) translate(-1px, 1px); } }
