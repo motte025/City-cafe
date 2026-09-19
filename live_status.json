@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T15:17:46Z",
+  "checked_at": "2026-09-19T15:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "channel": "roice",
+      "name": "roice",
+      "title": "The Trainwreck | Up Next: @Fathomn Incoming Raider: @DjayLSD !BEWBS !trainwreck !morestreams",
       "game": "DJs"
     },
     {
@@ -52,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "The Trainwreck | Up Next: @Fathomn Incoming Raider: @DjayLSD !BEWBS !trainwreck !morestreams",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
     }
   ]
