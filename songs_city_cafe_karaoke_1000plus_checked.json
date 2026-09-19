@@ -64639,5 +64639,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "The Chainsmokers",
+    "title": "Something Just Like This",
+    "album": "",
+    "category": "Dance & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Dance",
+      "Pop",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
