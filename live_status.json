@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-09-19T12:17:45Z",
+  "checked_at": "2026-09-19T12:32:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 Mute Marathon Tag 88 😈 | Mixed Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "🔴Samstagsbass | TECHNO & (HARD)TRANCE | !holy !drohne #werbung",
       "game": "DJs"
     },
     {
@@ -27,13 +34,6 @@
       "channel": "asot",
       "name": "ASOT",
       "title": "24/7 the best in trance and progressive, A State of Trance !discord",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "🔴Samstagsbass | TECHNO & (HARD)TRANCE | !holy !drohne #werbung",
       "game": "DJs"
     }
   ]
