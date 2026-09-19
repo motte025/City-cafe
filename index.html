@@ -1232,7 +1232,10 @@
             display: flex; flex-direction: column; gap: 20px; width: 520px; height: 940px;
             position: absolute; left: 1360px; top: 20px;
         }
-        .widget-clock { flex: 0 0 auto; text-align: center; background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; box-shadow: none !important; padding: 15px 20px; height: 120px; }
+        .widget-clock { flex: 0 0 auto; text-align: center; background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; box-shadow: none !important; padding: 10px 20px; height: 105px; }
+        /* Uhr 105 statt 120 px hoch (Inhalt: 66 px Zeit + 18 px Datum): so beginnt
+           das Wetter-Widget auf 145 px - buendig mit dem grossen Widget links. Die
+           gewonnenen 15 px bekommt die Galerie darunter (685 statt 670 px). */
         .time-display { font-family: 'Orbitron', sans-serif; font-size: 52px; font-weight: 900; color: #ffffff; text-shadow: 0 1px 0 #cccccc, 0 2px 0 #b3b3b3, 0 3px 0 #999999, 0 4px 0 #7f7f7f, 0 5px 10px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.4); letter-spacing: 2px; margin-bottom: 2px; }
         .date-display { font-size: 14px; font-weight: 700; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9); }
 
@@ -1315,10 +1318,10 @@
         .widget-rotator { 
             flex: 1; padding: 0 !important; position: relative; overflow: hidden; 
             background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-            border: none !important; box-shadow: none !important; display: flex; flex-direction: column; justify-content: space-between; height: 670px;
+            border: none !important; box-shadow: none !important; display: flex; flex-direction: column; justify-content: space-between; height: 685px;
         }
         .rotator-view {
-            position: absolute; top: 0; left: 0; width: 520px; height: 670px; padding: 0 !important; 
+            position: absolute; top: 0; left: 0; width: 520px; height: 685px; padding: 0 !important; 
             display: flex; flex-direction: column; justify-content: space-between; opacity: 0; pointer-events: none; transition: opacity 1.2s ease-in-out; z-index: 1;
         }
         .rotator-view.active { opacity: 1; pointer-events: auto; z-index: 2; }
@@ -1332,8 +1335,8 @@
         .rotator-title h2 { font-size: 34px; font-weight: 900; letter-spacing: 0.8px; color: #ffffff; text-shadow: 0 3px 10px rgba(0,0,0,0.95), 0 0 20px rgba(0,242,254,0.3); }
         .rotator-title p { font-size: 14px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.95); }
 
-        .view-gallery-style { border-radius: 24px; overflow: hidden; width: 520px; height: 670px; }
-        .gallery-image-container { width: 520px; height: 670px; position: relative; background: #020617; }
+        .view-gallery-style { border-radius: 24px; overflow: hidden; width: 520px; height: 685px; }
+        .gallery-image-container { width: 520px; height: 685px; position: relative; background: #020617; }
         @keyframes textRevealSlide {
             0% { opacity: 0; transform: translateY(45px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -1344,7 +1347,7 @@
             100% { transform: scale(1.03) translate(3px, -3px); }
         }
         .gallery-img { 
-            position: absolute; top: 0; left: 0; width: 520px; height: 670px; object-fit: cover; opacity: 0;
+            position: absolute; top: 0; left: 0; width: 520px; height: 685px; object-fit: cover; opacity: 0;
             transition: opacity 1.8s ease-in-out; z-index: 1;
             animation: kenBurnsPan 18s ease-in-out infinite alternate;
         }
@@ -1357,10 +1360,10 @@
             border-radius: 24px; background: radial-gradient(circle at center, rgba(3, 7, 15, 0.85) 0%, rgba(8, 16, 32, 0.65) 65%, rgba(0, 242, 254, 0.25) 100%) !important;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0, 242, 254, 0.55);
             box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), inset 0 0 50px rgba(0, 0, 0, 0.8), inset 0 1px 3px rgba(255, 255, 255, 0.35);
-            padding: 0 !important; overflow: hidden; position: absolute; top: 0; left: 0; width: 520px; height: 670px;
+            padding: 0 !important; overflow: hidden; position: absolute; top: 0; left: 0; width: 520px; height: 685px;
         }
 
-        .widget-inner-padded-wrapper { width: 520px; height: 670px; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 20px 26px; position: relative; z-index: 5; }
+        .widget-inner-padded-wrapper { width: 520px; height: 685px; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 20px 26px; position: relative; z-index: 5; }
         .news-content-block, .music-content-block { display: flex; flex-direction: column; justify-content: flex-start; gap: 14px; overflow: hidden; width: 100%; }
 
         .char-particle { display: inline-block; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease, filter 0.6s ease; will-change: transform, opacity, filter; }
