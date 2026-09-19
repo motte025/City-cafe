@@ -6460,6 +6460,8 @@
 
         let nlDaten = null;       // { stadt, untertitel, videos: [...] }
         let nlDauern = {};        // Schluessel -> Laenge in Sekunden, fuer den Zufalls-Startpunkt
+        let nlStapel = [];        // gemischte Schluessel, die in dieser Runde noch drankommen
+        let nlZuletzt = '';       // zuletzt gezogener Schluessel (keine Wiederholung ueber Rundengrenzen)
 
         let nlPlayer = null;          // der eine, dauerhafte YT.Player
         let nlPlayerBereit = false;
@@ -6503,13 +6505,16 @@
                 const stand = JSON.parse(roh);
                 if (stand && typeof stand === 'object') {
                     nlDauern = stand.dauern || {};
+                    nlStapel = Array.isArray(stand.stapel) ? stand.stapel : [];
+                    nlZuletzt = typeof stand.zuletzt === 'string' ? stand.zuletzt : '';
                 }
             } catch (e) {}
         }
 
         function nlStandSpeichern() {
             try {
-                localStorage.setItem(NL_CONFIG.speicherSchluessel, JSON.stringify({ dauern: nlDauern }));
+                localStorage.setItem(NL_CONFIG.speicherSchluessel,
+                    JSON.stringify({ dauern: nlDauern, stapel: nlStapel, zuletzt: nlZuletzt }));
             } catch (e) {}
         }
 
@@ -6576,13 +6581,27 @@
             return Math.floor(Math.random() * spielraum);
         }
 
-        // Was als naechstes drankommt: ein zufaelliges Video aus dem aktuellen
-        // Tag-/Nacht-Pool, ab einem zufaelligen Startpunkt.
+        // Was als naechstes drankommt - nach dem Kartenstapel-Prinzip: jedes Video
+        // des aktuellen Pools kommt einmal dran, bevor sich eines wiederholt; die
+        // Reihenfolge wird jede Runde neu gemischt. Vorher war es ein Zufallszug
+        // ohne Gedaechtnis (dasselbe Video konnte zweimal hintereinander kommen,
+        // ein anderes lange gar nicht). Startpunkt weiterhin zufaellig.
         function nlNaechsterEintrag() {
             const videos = nlBrauchbareVideos();
             if (!videos.length) return null;
-            const video = videos[Math.floor(Math.random() * videos.length)];
-            const schluessel = nlSchluessel(video);
+            const nachSchluessel = new Map(videos.map(v => [nlSchluessel(v), v]));
+            // Nur was es im Pool noch gibt (Tag/Nacht-Wechsel, geaenderte Liste,
+            // defekt gemeldete Videos).
+            nlStapel = nlStapel.filter(s => nachSchluessel.has(s));
+            if (!nlStapel.length) {
+                nlStapel = shuffleArray([...nachSchluessel.keys()]);
+                // Die neue Runde nicht mit dem zuletzt gezeigten Video beginnen.
+                if (nlStapel.length > 1 && nlStapel[0] === nlZuletzt) nlStapel.push(nlStapel.shift());
+            }
+            const schluessel = nlStapel.shift();
+            nlZuletzt = schluessel;
+            nlStandSpeichern();
+            const video = nachSchluessel.get(schluessel);
             const start = nlStartSekunde(schluessel);
             return {
                 video: video,
@@ -11535,14 +11554,14 @@
             try {
                 const response = await fetch(googleScriptUrl);
                 const roh = await response.json();
-                // galerie.gs liefert die Fotos in 1920 px Breite - angezeigt werden
-                // sie in 520x670 (Polaroids noch kleiner). Die volle Groesse zu
-                // dekodieren und auf die GPU zu laden liess am ODROID bei jedem
-                // Bildwechsel die Laufschrift stocken. s1000 = laengste Seite
-                // 1000 px, deckt die Flaeche weiterhin scharf ab.
+                // galerie.gs liefert die Fotos in 1920 px Breite (1920x2560) -
+                // angezeigt werden sie in 520x685. s1600 = laengste Seite 1600 px
+                // (1200x1600, 40 % der Pixel): wird noch gut zweifach verkleinert
+                // und bleibt dadurch sauber. s1000 (750x1000) war zu knapp -
+                // Googles Kompressionsspuren fielen sichtbar auf.
                 const data = Array.isArray(roh)
                     ? roh.map(d => (d && typeof d.src === 'string')
-                        ? { ...d, src: d.src.replace(/([?&]sz=)w\d+/, '$1s1000') } : d)
+                        ? { ...d, src: d.src.replace(/([?&]sz=)w\d+/, '$1s1600') } : d)
                     : roh;
                 if(data && data.length > 0) {
                     const bekannteSrcs = new Set(visitorGalleryData.map(d => d.src));
