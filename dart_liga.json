@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-12T23:16:05Z",
+  "aktualisiert": "2026-09-19T17:31:07Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -174,7 +174,7 @@
         },
         {
           "rang": 4,
-          "spieler": "REGENFELDNER Rene",
+          "spieler": "URANK Romeo",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -184,7 +184,7 @@
         },
         {
           "rang": 5,
-          "spieler": "URANK Romeo",
+          "spieler": "REGENFELDNER Rene",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -264,7 +264,7 @@
         },
         {
           "rang": 13,
-          "spieler": "KREUZER Silvia",
+          "spieler": "HOPFGARTNER Joachim",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -274,7 +274,7 @@
         },
         {
           "rang": 14,
-          "spieler": "FRIEßNEGGER Sarah",
+          "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -284,7 +284,7 @@
         },
         {
           "rang": 15,
-          "spieler": "HOPFGARTNER Joachim",
+          "spieler": "FRIEßNEGGER Sarah",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -334,7 +334,7 @@
         },
         {
           "rang": 20,
-          "spieler": "ROSSMANN Christoph",
+          "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -344,7 +344,7 @@
         },
         {
           "rang": 21,
-          "spieler": "FRIEßNEGGER Gerhard",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -414,7 +414,7 @@
         },
         {
           "rang": 28,
-          "spieler": "PROVNIK Gabriele",
+          "spieler": "JAHN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -424,7 +424,7 @@
         },
         {
           "rang": 29,
-          "spieler": "JAHN Christian",
+          "spieler": "PROVNIK Gabriele",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -751,16 +751,6 @@
         },
         {
           "rang": 7,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 3,
-          "punkte": 6
-        },
-        {
-          "rang": 8,
           "spieler": "BRUNNER Peter",
           "spiele": 3,
           "siege": 2,
@@ -770,8 +760,18 @@
           "punkte": 6
         },
         {
+          "rang": 8,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 3,
+          "punkte": 6
+        },
+        {
           "rang": 9,
-          "spieler": "STINGLER Engelbert",
+          "spieler": "FRADL Ingemar",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -781,7 +781,7 @@
         },
         {
           "rang": 10,
-          "spieler": "SCHMALNAUER Daniel",
+          "spieler": "STINGLER Engelbert",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -791,7 +791,7 @@
         },
         {
           "rang": 11,
-          "spieler": "FRADL Ingemar",
+          "spieler": "SCHMALNAUER Daniel",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -961,7 +961,7 @@
         },
         {
           "rang": 28,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -971,7 +971,7 @@
         },
         {
           "rang": 29,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
