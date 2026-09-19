@@ -1,20 +1,6 @@
 {
-  "checked_at": "2026-09-19T17:12:45Z",
+  "checked_at": "2026-09-19T17:17:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 88 😈 | Mixed Styles | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "🔴Samstagsbass | TECHNO & (HARD)TRANCE | !holy !drohne #werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "colaway",
@@ -31,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wer hat Bock? Endlich Wochenende! Wir reißen ab! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Lazy relaxed Saturday 🍒✨💞💋🌈 | !challenge | TY Raiders: @minnecent",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     },
     {
@@ -52,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wer hat Bock? Endlich Wochenende! Wir reißen ab! <3 !release @just_jenny_official @two_crazy_girls",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed Saturday 🍒✨💞💋🌈 | !challenge | TY Raiders: @minnecent",
       "game": "DJs"
     },
     {
