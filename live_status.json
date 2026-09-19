@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-19T22:17:45Z",
+  "checked_at": "2026-09-19T22:22:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "PRETTY WOMAN",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 19✨ROCK METAL🎸 | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -34,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ SUNSET SATURDAY WITH AN ORDER OF YAPPUCINO🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     },
     {
