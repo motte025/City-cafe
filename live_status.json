@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T23:02:46Z",
+  "checked_at": "2026-09-19T23:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Schlager & Party - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Schlager & Party - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
