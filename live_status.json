@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T22:22:45Z",
+  "checked_at": "2026-09-19T22:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ SUNSET SATURDAY WITH AN ORDER OF YAPPUCCINO🔥 !tip !NEWSONG🔥 !mods !mercy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ SUNSET SATURDAY WITH AN ORDER OF YAPPUCINO🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     },
     {
