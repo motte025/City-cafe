@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T01:02:45Z",
+  "checked_at": "2026-09-19T01:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,23 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ FRIDAY FEEL GOOD WITH THE YAPPIEST DJ ALIVE 🔥 !tip !NEWSONG🔥 !mods !mercy",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !Suptember !Ziele ⭐ !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "roice",
       "name": "roice",
       "title": "I lost my job :( BUT THAT MEANS MORE STREMS?! !bewbs !trainwreck !morestreams",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ FRIDAY FEEL GOOD WITH THE YAPPIEST DJ ALIVE 🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     },
     {
