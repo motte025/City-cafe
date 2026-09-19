@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-19T19:02:45Z",
+  "checked_at": "2026-09-19T19:17:50Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "PRETTY WOMAN",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
@@ -55,13 +62,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "PRETTY WOMAN",
       "game": "DJs"
     },
     {
