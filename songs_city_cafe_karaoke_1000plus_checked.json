@@ -64761,16 +64761,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Nino de Angelo",
-    "title": "Ich Kann Nicht Leben Damit",
+    "artist": "Kastelruther Spatzen",
+    "title": "Herzschlag für Herzschlag",
     "album": "",
-    "category": "Schlager",
+    "category": "Schlager & Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Schlager"
+      "Schlager & Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Jon Secada",
+    "title": "Otro Día Más Sin Verte",
+    "album": "",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "90s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
