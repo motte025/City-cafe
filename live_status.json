@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-19T11:42:45Z",
+  "checked_at": "2026-09-19T11:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "THIRD AND FOURTH SPACE ARE VOIBINNN W FRIENDS ❤️‍🔥 EMO NITE TOMORROWWWW !tip !patreon !youtube !merch",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 88 😈 | Mixed Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
