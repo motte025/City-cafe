@@ -65599,34 +65599,14 @@
     "auto_discovered": true
   },
   {
-    "artist": "Demi Lovato",
-    "title": "Here All Night",
+    "artist": "Udo Lindenberg",
+    "title": "Reeperbahn",
     "album": "",
-    "category": "Modern Party",
+    "category": "Deutsch Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Party",
-      "Karaoke",
-      "Modern Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Huey Lewis & The News",
-    "title": "Do You Believe in Love",
-    "album": "",
-    "category": "80s",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "80s",
+      "Deutsch Karaoke",
       "Party",
       "Karaoke"
     ],
