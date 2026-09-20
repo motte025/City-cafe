@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T13:07:46Z",
+  "checked_at": "2026-09-20T13:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed Sunday w/ @alexvaganza 🍒✨💞💋🌈 | !challenge | TY Raiders: @juuuwels",
       "game": "DJs"
     },
     {
@@ -31,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Lazy relaxed Sunday w/ @alexvaganza 🍒✨💞💋🌈 | !challenge",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "!SUBATHON🎶CYBER RAVE: FUTURE BEATS🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
@@ -45,16 +45,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "asot",
-      "name": "ASOT",
-      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "channel": "asot",
+      "name": "ASOT",
+      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
       "game": "DJs"
     }
   ]
