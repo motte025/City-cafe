@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T04:32:50Z",
+  "checked_at": "2026-09-20T04:52:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🖤🕷️💀 EMO NITEEE 💀🕷️🖤  @officedrummer @riptidesan 🔥 LIVE DRUMS AND BASS REQUESTS OPEN !request !tip !patreon !youtube  !birthday",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🖤🕷️💀 EMO NITEEE 💀🕷️🖤  @officedrummer @riptidesan 🔥 LIVE DRUMS AND BASS REQUESTS OPEN !request !tip !patreon !youtube  !birthday",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
