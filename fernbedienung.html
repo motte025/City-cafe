@@ -19,6 +19,7 @@
 <style>
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     html, body { height: 100%; }
     body {
         margin: 0; background: #0b1020; color: #f2f5ff; display: flex; flex-direction: column;
@@ -38,6 +39,10 @@
     button.aktiv { background: #2f6bff; color: #fff; }
     .screen { font-size: 21px; color: #8ea0c8; padding: 8px 2px 0; text-align: center; }
     iframe { flex: 1; width: 100%; border: 0; background: #0b1020; }
+    .hinweis {
+        flex: 1; display: flex; flex-direction: column; justify-content: center;
+        text-align: center; padding: 24px; color: #8ea0c8; line-height: 1.5;
+    }
 </style>
 </head>
 <body>
@@ -47,6 +52,10 @@
     <div class="zeile" id="boxen"></div>
     <div class="screen" id="screen">Screen wird gesucht …</div>
 </header>
+<div id="hinweis" class="hinweis" hidden>
+    Der Screen meldet gerade keine Hos’n-Obe-Runde.<br>
+    Sobald das Kartenspiel am Screen läuft, öffnet es sich hier von selbst.
+</div>
 <iframe id="rahmen" title="Fernbedienung"></iframe>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -60,30 +69,66 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-09-21a';
+    var FASSUNG = '2026-09-21b';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 
     var SEITEN = [
         { schluessel: 'yt', text: '🎬 Videos', datei: 'yt-fernbedienung.html', raumParameter: true },
         { schluessel: 'dj', text: '🎧 DJ', datei: 'dj-fernbedienung.html', raumParameter: true },
-        { schluessel: 'spiel', text: '🃏 Hos’n Obe', datei: 'hosn-obe.html', raumParameter: false }
+        // Das Kartenspiel braucht die Kennung der laufenden Runde - dieselbe,
+        // die sonst im QR-Code am Screen steht. Der Screen meldet sie im Status
+        // mit, hier wird sie als ?session=... angehaengt.
+        { schluessel: 'spiel', text: '🃏 Hos’n Obe', datei: 'hosn-obe.html', raumParameter: false,
+          brauchtSpiel: true }
     ];
+
+    var spielSession = '';      // laufende Hos'n-Obe-Runde des gewaehlten Screens
 
     var raum = (abfrage.get('raum') || '').trim()
         || (function () { try { return localStorage.getItem('fbRaum') || ''; } catch (e) { return ''; } })()
         || CFG.raum || 'city-cafe';
     var raumFest = !!(abfrage.get('raum') || '').trim();
+    var verbindung = null;
     var aktiv = (abfrage.get('teil') || '').trim() || 'yt';
+
+    // Merkt sich je Reiter, was zuletzt geladen wurde. Ohne das wuerde jeder
+    // Status vom Screen den Rahmen neu laden (der Zeitstempel gegen den Cache
+    // ist ja jedes Mal ein anderer) - man haette staendig eine leere Seite.
+    var geladen = {};
 
     function rahmenSetzen() {
         var seite = SEITEN.filter(function (s) { return s.schluessel === aktiv; })[0] || SEITEN[0];
-        var ziel = seite.datei + '?v=' + Date.now() + (seite.raumParameter ? '&raum=' + encodeURIComponent(raum) : '');
-        if (el('rahmen').getAttribute('src') !== ziel) el('rahmen').setAttribute('src', ziel);
         [].forEach.call(el('tabs').children, function (k) {
             k.className = k.dataset.teil === aktiv ? 'aktiv' : '';
         });
         try { localStorage.setItem('fbTeil', aktiv); } catch (e) {}
+
+        if (seite.brauchtSpiel && !spielSession) {
+            el('hinweis').hidden = false;
+            el('rahmen').hidden = true;
+            return;
+        }
+        el('hinweis').hidden = true;
+        el('rahmen').hidden = false;
+
+        var kennung = seite.schluessel + '|' + raum + '|' + (seite.brauchtSpiel ? spielSession : '');
+        if (geladen[seite.schluessel] === kennung) return;
+        geladen = {};                       // nur der sichtbare Rahmen zaehlt
+        geladen[seite.schluessel] = kennung;
+        var ziel = seite.datei + '?v=' + Date.now()
+            + (seite.raumParameter ? '&raum=' + encodeURIComponent(raum) : '')
+            + (seite.brauchtSpiel ? '&session=' + encodeURIComponent(spielSession) : '');
+        el('rahmen').setAttribute('src', ziel);
+    }
+
+    // Kommt eine neue Spielkennung herein, waehrend das Kartenspiel offen ist,
+    // laedt es sich damit von selbst.
+    function spielSessionSetzen(neu) {
+        neu = String(neu || '');
+        if (neu === spielSession) return;
+        spielSession = neu;
+        if (aktiv === 'spiel') rahmenSetzen();
     }
 
     SEITEN.forEach(function (s) {
@@ -117,15 +162,28 @@
                 try { localStorage.setItem('fbRaum', raum); } catch (e) {}
                 screenText(b.name, 'von Hand gewählt');
                 boxenKnoepfe(boxen);
+                if (verbindung) statusAbo(verbindung);
                 rahmenSetzen();
             });
             box.appendChild(k);
         });
     }
 
+    // Status des gewaehlten Screens mithoeren - daraus kommt die Spielkennung.
+    var statusAus = null;
+    function statusAbo(verb) {
+        if (statusAus) { try { statusAus(); } catch (e) {} statusAus = null; }
+        spielSessionSetzen('');
+        statusAus = YT_REMOTE_NET.aufStatusHoeren(verb, raum, function (s) {
+            spielSessionSetzen(s && s.spiel);
+        });
+    }
+
     if (window.YT_REMOTE_NET && YT_REMOTE_NET.istEingerichtet()) {
         YT_REMOTE_NET.bereit().then(function (verb) {
             if (!verb) { screenText(raum, 'keine Verbindung'); return; }
+            verbindung = verb;
+            statusAbo(verb);
             Promise.all([
                 YT_REMOTE_NET.boxenLesen(verb),
                 fetch('https://api.ipify.org?format=json', { cache: 'no-store' })
@@ -138,6 +196,7 @@
                     raum = passend[0].raum;
                     try { localStorage.setItem('fbRaum', raum); } catch (e) {}
                     screenText(passend[0].name, 'im selben Netz erkannt');
+                    statusAbo(verb);
                     rahmenSetzen();
                 } else {
                     var eigene = boxen.filter(function (b) { return b.raum === raum; })[0];

@@ -474,17 +474,43 @@
         var t = p.get('access_token');
         if (t) twitchTokenSetzen(t);
         history.replaceState(null, '', location.pathname + location.search);
+        // Kam die Anmeldung im kleinen Extra-Fenster zurueck (siehe unten), dann
+        // reichen wir das Token an die Seite weiter, die es geoeffnet hat, und
+        // machen uns wieder zu. Die sessionStorage des Extra-Fensters gilt nur
+        // dort - ohne diese Uebergabe waere das Token fuer die Hauptseite weg.
+        if (t && window.opener && window.opener !== window) {
+            try {
+                window.opener.postMessage({ typ: 'dj-twitch-token', token: t }, location.origin);
+                window.close();
+            } catch (e) {}
+        }
         return !!t;
     }
 
+    // Anmeldung IMMER in einem eigenen Fenster: id.twitch.tv verbietet die
+    // Anzeige im Rahmen (X-Frame-Options), in der Sammel-Fernbedienung laeuft
+    // diese Seite aber genau dort - dann bliebe nur eine weisse Flaeche.
     function twitchAnmelden() {
         var url = 'https://id.twitch.tv/oauth2/authorize' +
             '?client_id=' + encodeURIComponent(CFG.twitchClientId || '') +
             '&redirect_uri=' + encodeURIComponent(location.origin + location.pathname) +
             '&response_type=token' +
             '&scope=' + encodeURIComponent('user:read:follows');
-        location.href = url;
+        var fenster = null;
+        try { fenster = window.open(url, 'twitch-anmeldung', 'width=520,height=760'); } catch (e) {}
+        if (fenster) { try { fenster.focus(); } catch (e) {} return; }
+        // Fenster blockiert: dann eben die ganze Seite umschalten (im Rahmen die
+        // oberste, sonst die eigene).
+        try { window.top.location.href = url; } catch (e) { location.href = url; }
     }
+
+    window.addEventListener('message', function (ev) {
+        if (ev.origin !== location.origin) return;
+        var d = ev.data || {};
+        if (d.typ !== 'dj-twitch-token' || !d.token) return;
+        twitchTokenSetzen(d.token);
+        kanaeleLaden();
+    });
 
     function twitchAbfrage(pfad, token) {
         return fetch('https://api.twitch.tv/helix/' + pfad, {

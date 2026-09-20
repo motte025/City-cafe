@@ -7017,7 +7017,11 @@
                 // Videolaengen, die das Dashboard schon kennt (aus nlDauern) -
                 // damit die Handy-Liste die Laufzeit anzeigen kann, ohne sie
                 // selbst bei YouTube abzufragen.
-                laengen: nlDauern
+                laengen: nlDauern,
+                // Laufende Hos'n-Obe-Runde: dieselbe Kennung wie im QR-Code am
+                // Screen. Damit kann die Sammel-Fernbedienung das Kartenspiel
+                // oeffnen, ohne dass jemand den Code abfotografiert.
+                spiel: window.ktSessionAktuell || ''
             }).catch(() => {});
         }
 
@@ -11071,6 +11075,10 @@
                 ktDb = conn.db;
                 ktUid = conn.uid;
                 ktSessionId = KtNet.newSessionId();
+                // Auch nach aussen sichtbar: der Status an die Fernbedienung
+                // meldet diese Kennung mit (siehe nlFernStatusMelden), damit das
+                // Handy ohne QR-Code ins Spiel kommt.
+                window.ktSessionAktuell = ktSessionId;
 
                 ktEl('kt-launcher-img').src = ktQrUrl(300);
                 ktEl('kt-launcher').style.display = '';

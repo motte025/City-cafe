@@ -215,7 +215,7 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
-    var FASSUNG = '2026-09-20e';   // steht sichtbar unter dem Titel
+    var FASSUNG = '2026-09-21b';   // steht sichtbar unter dem Titel
     var ersteTrefferGesehen = false, letzteFremdId = null, keineAntwort = null;
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
@@ -425,22 +425,28 @@
         });
     }
 
-    el('suchform').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var text = el('suchtext').value.trim();
-        if (!text) return;
-        var id = videoIdAus(text);
-        if (id) {                       // Link oder Video-Kennung eingefügt
-            gewaehlt = { videoId: id, titel: '' };
-            zeigeTreffer([{ videoId: id, titel: 'Eingefügter Link', kanal: '', dauer: '' }]);
-            el('treffer').firstChild.classList.add('gewaehlt');
-            el('auswahl').hidden = false;
-            return;
-        }
-        el('status').textContent = 'Suche läuft …';
+    // Vorschlaege ohne Tippen: beim Oeffnen sucht die Seite von selbst mit
+    // einem zufaellig gezogenen Stichwort. Zufaellig deshalb, weil sonst nach
+    // jedem Aktualisieren dieselben Videos oben stuenden.
+    var VORSCHLAG_SUCHEN = [
+        'nightlife 4k walk', 'club dj set live', 'ibiza beach club 4k',
+        'tokyo night walk 4k', 'miami south beach 4k', 'dubai night drive 4k',
+        'techno festival aftermovie 4k', 'new york night walk 4k',
+        'mallorca strand 4k', 'las vegas strip night 4k', 'rio de janeiro 4k',
+        'bangkok night market 4k', 'amsterdam night walk 4k', 'kreuzfahrt schiff 4k',
+        'santorini 4k', 'dj live set rooftop'
+    ];
+
+    function sucheStarten(text, istVorschlag) {
+        el('status').textContent = istVorschlag
+            ? 'Vorschläge werden geholt …' : 'Suche läuft …';
         el('treffer').innerHTML = '';
-        if (verb) YT_REMOTE_NET.diagnose(verb, RAUM, 'suche-gedrueckt', text);
-        senden({ aktion: 'suche', text: text }).then(function (id) {
+        // Ab jetzt ist jede Antwort unsere - der Altstand vom Verbinden ist
+        // damit abgehakt.
+        ersteTrefferGesehen = true;
+        if (verb) YT_REMOTE_NET.diagnose(verb, RAUM,
+            istVorschlag ? 'vorschlaege-geholt' : 'suche-gedrueckt', text);
+        return senden({ aktion: 'suche', text: text }).then(function (id) {
             suchId = id || '';
             if (!id) {
                 el('status').innerHTML = '<span class="fehler">Suchauftrag konnte nicht '
@@ -458,6 +464,21 @@
                 }
             }, 25000);
         });
+    }
+
+    el('suchform').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var text = el('suchtext').value.trim();
+        if (!text) return;
+        var id = videoIdAus(text);
+        if (id) {                       // Link oder Video-Kennung eingefügt
+            gewaehlt = { videoId: id, titel: '' };
+            zeigeTreffer([{ videoId: id, titel: 'Eingefügter Link', kanal: '', dauer: '' }]);
+            el('treffer').firstChild.classList.add('gewaehlt');
+            el('auswahl').hidden = false;
+            return;
+        }
+        sucheStarten(text, false);
     });
 
     el('startknopf').addEventListener('click', function () {
@@ -646,6 +667,13 @@
                 if (!t.liste.length) el('status').textContent = 'Nichts gefunden.';
             });
             zeigeStatus(null);
+            // Erst nach dem Altstand der Treffer starten, sonst wuerde unsere
+            // Antwort fuer eben diesen Altstand gehalten und verworfen.
+            setTimeout(function () {
+                if (el('treffer').children.length || el('suchtext').value.trim()) return;
+                sucheStarten(VORSCHLAG_SUCHEN[Math.floor(Math.random() * VORSCHLAG_SUCHEN.length)],
+                    true);
+            }, 1500);
         });
     }
 })();
