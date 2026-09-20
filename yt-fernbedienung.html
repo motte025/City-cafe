@@ -1,9 +1,28 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <title>City Cafe · YouTube-Fernbedienung</title>
+<script>
+    /* GitHub Pages erlaubt 10 Minuten Zwischenspeicher. Am Handy hiess das:
+       nach einer Aenderung kam weiter die alte Seite. Kommt sie aus dem Cache
+       (transferSize 0) und traegt noch keine Fassungsnummer, wird sie einmal
+       frisch geholt. Mit ?v=… ist der Fall erledigt, es kann keine Schleife
+       entstehen. */
+    (function () {
+        try {
+            if (new URLSearchParams(location.search).has('v')) return;
+            var n = performance.getEntriesByType('navigation')[0];
+            if (n && n.transferSize === 0) {
+                var trenner = location.search ? '&' : '?';
+                location.replace(location.href + trenner + 'v=' + Date.now());
+            }
+        } catch (e) {}
+    })();
+</script>
 <!--
     YOUTUBE-FERNBEDIENUNG (Handy)
 
@@ -21,30 +40,30 @@
        Eile und im Dunkeln. Lieber scrollen als kneifen. */
     body {
         margin: 0; padding: 22px 16px 60px; background: #0b1020; color: #f2f5ff;
-        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 27px;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 34px;
         padding-top: calc(22px + env(safe-area-inset-top, 0px));
         -webkit-text-size-adjust: 100%;
     }
-    h1 { font-size: 40px; margin: 0 0 8px; letter-spacing: 0.3px; line-height: 1.15; }
-    .raum { font-size: 22px; color: #8ea0c8; margin-bottom: 22px; }
+    h1 { font-size: 48px; margin: 0 0 8px; letter-spacing: 0.3px; line-height: 1.15; }
+    .raum { font-size: 26px; color: #8ea0c8; margin-bottom: 22px; }
     .status {
         background: #131a33; border: 1px solid #27325c; border-radius: 14px;
-        padding: 18px 18px; font-size: 26px; line-height: 1.4; margin-bottom: 22px;
+        padding: 18px 18px; font-size: 32px; line-height: 1.4; margin-bottom: 22px;
     }
     .status b { color: #7ee3ff; font-weight: 700; }
     .suche { display: flex; gap: 10px; margin-bottom: 10px; }
     input[type=search] {
-        flex: 1; min-width: 0; padding: 18px 18px; font-size: 27px; border-radius: 14px;
+        flex: 1; min-width: 0; padding: 18px 18px; font-size: 34px; border-radius: 14px;
         border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
     }
     button {
-        font: inherit; font-size: 26px; font-weight: 700; border: 0; border-radius: 14px;
+        font: inherit; font-size: 31px; font-weight: 700; border: 0; border-radius: 14px;
         padding: 18px 22px; background: #2f6bff; color: #fff; cursor: pointer;
     }
     button.still { background: #1d2647; color: #cdd7f5; }
     button.stopp { background: #b3243a; width: 100%; margin-top: 18px; }
     button:disabled { opacity: 0.45; }
-    .hinweis { font-size: 20px; color: #8ea0c8; margin: 10px 2px 18px; line-height: 1.4; }
+    .hinweis { font-size: 24px; color: #8ea0c8; margin: 10px 2px 18px; line-height: 1.4; }
     .treffer { display: flex; flex-direction: column; gap: 12px; }
     .video {
         display: flex; gap: 14px; align-items: center; text-align: left; width: 100%;
@@ -53,26 +72,26 @@
     }
     .video.gewaehlt { border-color: #2f6bff; background: #17224a; }
     .video img { width: 168px; height: 94px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #000; }
-    .video .titel { font-size: 25px; font-weight: 700; line-height: 1.25; }
-    .video .meta { font-size: 21px; color: #8ea0c8; margin-top: 6px; }
+    .video .titel { font-size: 30px; font-weight: 700; line-height: 1.25; }
+    .video .meta { font-size: 25px; color: #8ea0c8; margin-top: 6px; }
     details { margin-top: 18px; background: #131a33; border: 1px solid #27325c; border-radius: 16px; padding: 16px 16px; }
-    summary { font-size: 28px; font-weight: 700; cursor: pointer; padding: 6px 0; }
+    summary { font-size: 33px; font-weight: 700; cursor: pointer; padding: 6px 0; }
     details .treffer { margin-top: 16px; }
-    .feldname { font-size: 20px; color: #8ea0c8; margin: 20px 2px 10px; text-transform: uppercase; letter-spacing: 0.6px; }
-    .gewaehltName { font-size: 25px; font-weight: 700; margin: 18px 2px 0; line-height: 1.25; }
+    .feldname { font-size: 24px; color: #8ea0c8; margin: 20px 2px 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .gewaehltName { font-size: 30px; font-weight: 700; margin: 18px 2px 0; line-height: 1.25; }
     button.breit { width: 100%; margin-top: 14px; }
     input[type=range] { width: 100%; margin: 6px 0 4px; accent-color: #2f6bff; height: 48px; }
     input[type=text] {
-        width: 100%; padding: 16px 16px; font-size: 25px; border-radius: 12px; margin-bottom: 10px;
+        width: 100%; padding: 16px 16px; font-size: 30px; border-radius: 12px; margin-bottom: 10px;
         border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
     }
     .eigenZeile { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #27325c; }
-    .eigenZeile span { flex: 1; font-size: 23px; line-height: 1.3; }
+    .eigenZeile span { flex: 1; font-size: 27px; line-height: 1.3; }
     .eigenZeile button { background: #b3243a; padding: 12px 20px; }
     .zeiten { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
     .zeiten button { flex: 1 1 30%; background: #1d2647; color: #cdd7f5; }
     .zeiten button.aktiv { background: #2f6bff; color: #fff; }
-    .start { width: 100%; margin-top: 20px; padding: 26px; font-size: 32px; }
+    .start { width: 100%; margin-top: 20px; padding: 26px; font-size: 38px; }
     .fehler { color: #ff9b9b; }
 </style>
 </head>
@@ -182,6 +201,7 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
+    var geladenSeit = Date.now();
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
     var gewaehlt = null;      // { videoId, titel }
@@ -510,8 +530,9 @@
             YT_REMOTE_NET.aufTrefferHoeren(v, RAUM, function (t) {
                 if (!t || !t.liste) return;
                 // Nur die Antwort auf die eigene Suche zeigen, nicht die eines
-                // anderen Gastes von vorhin.
-                if (suchId && t.id !== suchId) return;
+                // anderen Gastes und nicht die alte aus der Datenbank: sonst
+                // standen nach jedem Neuladen wieder dieselben Vorschlaege da.
+                if (suchId ? t.id !== suchId : (!t.ts || t.ts < geladenSeit)) return;
                 zeigeTreffer(t.liste);
                 if (!t.liste.length) el('status').textContent = 'Nichts gefunden.';
             });
