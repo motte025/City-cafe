@@ -105,6 +105,7 @@
 
 <h1>🎬 YouTube-Fernbedienung</h1>
 <div class="raum" id="raum">City Cafe</div>
+<div class="zeiten" id="boxen"></div>
 
 <div class="status" id="status">Verbinde …</div>
 
@@ -184,7 +185,14 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var RAUM = (new URLSearchParams(location.search).get('raum') || '').trim() || CFG.raum || 'city-cafe';
+    // Raum = welcher Screen gesteuert wird. Reihenfolge: ?raum= in der Adresse,
+    // sonst die zuletzt von Hand gewaehlte Box, sonst der Standard. Steht die
+    // Box im selben Netz (gleiche oeffentliche IP), schaltet die Seite gleich
+    // nach dem Verbinden automatisch dorthin - siehe boxenPruefen().
+    var RAUM = (new URLSearchParams(location.search).get('raum') || '').trim()
+        || (function () { try { return localStorage.getItem('ytFbRaum') || ''; } catch (e) { return ''; } })()
+        || CFG.raum || 'city-cafe';
+    var RAUM_FEST = !!(new URLSearchParams(location.search).get('raum') || '').trim();
     var LAUFZEITEN = [
         { sek: 300, text: '5 Min' },
         { sek: 600, text: '10 Min' },
@@ -216,7 +224,58 @@
     var suchId = '';
     var el = function (id) { return document.getElementById(id); };
 
-    el('raum').textContent = 'Screen: ' + RAUM + ' · Fassung ' + FASSUNG;
+    var boxName = RAUM;
+    function raumAnzeigen(zusatz) {
+        el('raum').textContent = 'Screen: ' + boxName + (zusatz ? ' · ' + zusatz : '')
+            + ' · Fassung ' + FASSUNG;
+    }
+    raumAnzeigen('');
+
+    // --- Boxen: die im selben Netz automatisch waehlen ----------------------
+    // Beide Screens haengen an derselben Datenbank im Internet, ein Befehl
+    // wuerde sonst auf beiden landen. Jede Box traegt ihre oeffentliche IP ein;
+    // stimmt sie mit der des Handys ueberein, stehen beide am selben Anschluss.
+    function boxenPruefen() {
+        if (!verb) return;
+        Promise.all([
+            YT_REMOTE_NET.boxenLesen(verb),
+            fetch('https://api.ipify.org?format=json', { cache: 'no-store' })
+                .then(function (r) { return r.json(); }).then(function (d) { return d.ip; })
+                .catch(function () { return ''; })
+        ]).then(function (erg) {
+            var boxen = erg[0], meineIp = erg[1];
+            if (!boxen.length) return;
+            var passend = meineIp && boxen.filter(function (b) { return b.ip && b.ip === meineIp; });
+            if (!RAUM_FEST && passend && passend.length === 1 && passend[0].raum !== RAUM) {
+                raumWechseln(passend[0], 'im selben Netz erkannt');
+            } else if (passend && passend.length) {
+                boxName = (passend[0].raum === RAUM ? passend[0].name : boxName);
+                raumAnzeigen('im selben Netz');
+            }
+            boxenKnoepfe(boxen);
+        });
+    }
+
+    function boxenKnoepfe(boxen) {
+        var box = el('boxen');
+        box.innerHTML = '';
+        if (boxen.length < 2) return;     // nur eine Box: keine Auswahl noetig
+        boxen.forEach(function (b) {
+            var k = document.createElement('button');
+            k.type = 'button';
+            k.textContent = b.name;
+            k.className = b.raum === RAUM ? 'aktiv' : '';
+            k.addEventListener('click', function () { raumWechseln(b, 'von Hand gewählt'); });
+            box.appendChild(k);
+        });
+    }
+
+    function raumWechseln(b, grund) {
+        try { localStorage.setItem('ytFbRaum', b.raum); } catch (e) {}
+        var ziel = location.pathname + '?raum=' + encodeURIComponent(b.raum)
+            + '&v=' + Date.now();
+        location.replace(ziel);
+    }
 
     // --- Auswahlreihen (Laufzeit, Aufloesung, Bildrate) ---------------------
     function reihe(boxId, eintraege, start, setzen) {
@@ -552,6 +611,7 @@
             }
             verb = v;
             YT_REMOTE_NET.diagnose(v, RAUM, 'seite-geladen', 'Fassung ' + FASSUNG);
+            boxenPruefen();
             YT_REMOTE_NET.aufStatusHoeren(v, RAUM, zeigeStatus);
             YT_REMOTE_NET.aufListeHoeren(v, RAUM, function (d) {
                 eigeneListe = (d && Array.isArray(d.eintraege)) ? d.eintraege : [];

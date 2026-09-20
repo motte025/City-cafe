@@ -7125,6 +7125,21 @@
             nlFernStatusMelden();
         }
 
+        // Diesen Screen im Boxen-Verzeichnis eintragen: Raumname, Anzeigename und
+        // die oeffentliche IP des Anschlusses. Daran erkennt die Handy-Seite,
+        // welcher Screen im selben Netz steht (siehe yt-fernbedienung.html).
+        // Klappt der IP-Abruf nicht, steht die Box trotzdem im Verzeichnis und
+        // laesst sich von Hand waehlen.
+        function nlBoxMelden(verb) {
+            const name = (new URLSearchParams(location.search).get('boxname') || '').trim()
+                || (NL_FERN_RAUM === 'city-cafe' ? 'City Cafe' : NL_FERN_RAUM);
+            fetch('https://api.ipify.org?format=json', { cache: 'no-store' })
+                .then(r => r.json())
+                .then(d => YT_REMOTE_NET.boxMelden(verb, NL_FERN_RAUM, name, d.ip || ''))
+                .catch(() => YT_REMOTE_NET.boxMelden(verb, NL_FERN_RAUM, name, ''))
+                .catch(() => {});
+        }
+
         // Vom Handy hinzugefuegte Videos. Sie liegen in Firebase (nicht im Repo),
         // gelten also sofort und ueberleben Neustarts - nightlife.json bleibt die
         // gepflegte Grundliste.
@@ -7150,6 +7165,8 @@
                 nlFernVerb = verb;
                 YT_REMOTE_NET.aufBefehlHoeren(verb, NL_FERN_RAUM, nlFernBefehlAusfuehren);
                 YT_REMOTE_NET.aufListeHoeren(verb, NL_FERN_RAUM, nlZusatzUebernehmen);
+                nlBoxMelden(verb);
+                setInterval(() => nlBoxMelden(verb), 15 * 60 * 1000);
                 nlFernStatusMelden();
                 // Eigene Intervalle: sollen den Ansichtswechsel ueberleben.
                 setInterval(nlFernStatusMelden, 5000);

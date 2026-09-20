@@ -83,6 +83,28 @@
         // Liegt in Firebase statt im Repo: so kann das Handy Videos hinzufuegen,
         // ohne dass jemand am Rechner etwas einchecken muss. nightlife.json
         // bleibt die gepflegte Grundliste, beide zusammen ergeben den Pool.
+        // --- Boxen-Verzeichnis ----------------------------------------------
+        // Jeder Screen traegt sich mit Raumname und oeffentlicher IP ein. Das
+        // Handy waehlt daraus die Box mit derselben oeffentlichen IP - das ist
+        // die im selben Netz. So genuegt EIN gespeicherter Link fuer beide
+        // Screens, und ein Befehl von zu Hause landet nicht im Gasthaus.
+        boxMelden: function (verb, raum, name, ip) {
+            return verb.db.ref('djremote/boxen/' + raum).set({
+                name: name || raum,
+                ip: ip || '',
+                ts: global.firebase.database.ServerValue.TIMESTAMP
+            });
+        },
+        boxenLesen: function (verb) {
+            return verb.db.ref('djremote/boxen').once('value').then(function (s) {
+                var w = s.val() || {};
+                return Object.keys(w).map(function (raum) {
+                    return { raum: raum, name: w[raum].name || raum, ip: w[raum].ip || '',
+                             ts: w[raum].ts || 0 };
+                });
+            }).catch(function () { return []; });
+        },
+
         // --- Diagnose --------------------------------------------------------
         // Kurze Spur der letzten Schritte eines Handys, damit sich Probleme aus
         // der Ferne einkreisen lassen (kommt die Suche ueberhaupt an?). Nur
