@@ -25,6 +25,8 @@ const ctx = vm.createContext({
     // Wunsch der Handy-Fernbedienung (yt-fernbedienung.html) - standardmaessig keiner.
     nlFern: null,
     nlFernAktiv: () => !!ctxFern,
+    // Nachschlagetabelle beider Listen (siehe nlLadeVideos).
+    nlAlleVideos: { tag3: { videoId: 'tag3', titel: 'Bekanntes Video', ort: 'Mykonos', land: 'Griechenland' } },
     Math, Map
 });
 let ctxFern = null;
@@ -64,6 +66,14 @@ const wunsch = ctx.nlNaechsterEintrag();
 assert.equal(wunsch.schluessel, 'wunsch123', 'der Wunsch vom Handy wird gespielt');
 assert.equal(wunsch.start, 0, 'der Wunsch beginnt am Anfang');
 assert.equal(ctx.nlStapel.length, restVorher, 'der Stapel bleibt unberuehrt');
+
+// Wunsch aus der Dauerliste: der Eintrag aus nightlife.json gewinnt, damit Ort
+// und Land in der Ueberschrift stehen - auch wenn das Handy nur die Kennung schickt.
+ctx.nlFern = { videoId: 'tag3', titel: 'Titel vom Handy' };
+const ausListe = ctx.nlNaechsterEintrag();
+assert.equal(ausListe.video.ort, 'Mykonos', 'Ort aus nightlife.json');
+assert.equal(ausListe.video.land, 'Griechenland', 'Land aus nightlife.json');
+assert.equal(ausListe.video.titel, 'Bekanntes Video', 'Titel aus nightlife.json');
 ctxFern = null;
 
 console.log('Nightlife-Kartenstapel: Tests bestanden.');

@@ -6461,6 +6461,7 @@
 
         let nlDaten = null;       // { stadt, untertitel, videos: [...] }
         let nlDauern = {};        // Schluessel -> Laenge in Sekunden, fuer den Zufalls-Startpunkt
+        let nlAlleVideos = {};    // videoId -> Eintrag aus nightlife.json (beide Listen)
         let nlStapel = [];        // gemischte Schluessel, die in dieser Runde noch drankommen
         let nlZuletzt = '';       // zuletzt gezogener Schluessel (keine Wiederholung ueber Rundengrenzen)
 
@@ -6551,6 +6552,13 @@
                         videos: markiert(rohDaten.tag, 'tag').concat(markiert(nacht, 'nacht')) }
                     : { ...nacht, videos: markiert(nacht, 'nacht') };
                 if (daten.videos.length) nlDaten = daten;
+                // Alle Videos beider Listen nachschlagbar halten: ein Wunsch der
+                // Handy-Fernbedienung soll auch dann Ort und Land in der
+                // Ueberschrift bekommen, wenn er aus der anderen Tageszeit stammt.
+                nlAlleVideos = {};
+                markiert(rohDaten.tag, 'tag').concat(markiert(nacht, 'nacht')).forEach(v => {
+                    if (v && v.videoId) nlAlleVideos[v.videoId] = v;
+                });
             } catch (e) {
             } finally {
                 clearTimeout(abbruch);
@@ -6591,8 +6599,11 @@
             // Wunsch vom Handy geht vor - er kommt von vorn und laeuft, bis die
             // gewaehlte Zeit um ist (siehe nlFernBefehlAusfuehren).
             if (nlFernAktiv()) {
+                // Steht das Video in nightlife.json, gilt dessen Eintrag - dann
+                // stimmen Ort, Land und Titel in der Ueberschrift.
+                const bekannt = nlAlleVideos[nlFern.videoId];
                 return {
-                    video: { videoId: nlFern.videoId, titel: nlFern.titel || 'Wunsch vom Handy' },
+                    video: bekannt || { videoId: nlFern.videoId, titel: nlFern.titel || 'Wunsch vom Handy' },
                     schluessel: nlFern.videoId,
                     datei: false,
                     start: 0,
