@@ -2925,6 +2925,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
     <script src="hosn-obe-net.js"></script>
     <script src="dj-fernbedienung-net.js"></script>
+    <script src="yt-fernbedienung-net.js"></script>
 
     <script>
         function autoScaleDashboard() {
@@ -6587,6 +6588,17 @@
         // ohne Gedaechtnis (dasselbe Video konnte zweimal hintereinander kommen,
         // ein anderes lange gar nicht). Startpunkt weiterhin zufaellig.
         function nlNaechsterEintrag() {
+            // Wunsch vom Handy geht vor - er kommt von vorn und laeuft, bis die
+            // gewaehlte Zeit um ist (siehe nlFernBefehlAusfuehren).
+            if (nlFernAktiv()) {
+                return {
+                    video: { videoId: nlFern.videoId, titel: nlFern.titel || 'Wunsch vom Handy' },
+                    schluessel: nlFern.videoId,
+                    datei: false,
+                    start: 0,
+                    anzahl: 1
+                };
+            }
             const videos = nlBrauchbareVideos();
             if (!videos.length) return null;
             const nachSchluessel = new Map(videos.map(v => [nlSchluessel(v), v]));
@@ -6933,6 +6945,108 @@
             nlVorladen();
         }
 
+        // ------------------------------------------------------------------
+        //  YouTube-Fernbedienung vom Handy (yt-fernbedienung.html)
+        // ------------------------------------------------------------------
+        // Ohne Anmeldung, ueber dieselbe anonyme Firebase-Verbindung wie die
+        // DJ-Fernbedienung (siehe yt-fernbedienung-net.js).
+        //
+        // Gesucht wird NICHT hier: das Dashboard legt den Suchauftrag in
+        // window.nlSucheAuftrag ab, der Kiosk-Supervisor sucht mit yt-dlp und
+        // traegt die Treffer in window.nlSucheTreffer ein. So braucht es weder
+        // einen API-Schluessel noch ein Google-Konto. Laeuft das Dashboard im
+        // Browser ohne Supervisor, bleibt die Suche einfach ohne Ergebnis.
+        let nlFern = null;            // { videoId, titel, bisWann } - Wunsch vom Handy
+        let nlFernVerb = null;
+        let nlFernLetzteId = '';
+        let nlTrefferLetzteId = '';
+        const NL_FERN_RAUM = (new URLSearchParams(location.search).get('raum') || '').trim()
+            || ((window.DJ_REMOTE_CONFIG || {}).raum || 'city-cafe');
+
+        function nlFernAktiv() {
+            return !!(nlFern && (nlFern.bisWann === -1 || nlFern.bisWann > Date.now()));
+        }
+
+        function nlFernStatusMelden() {
+            if (!nlFernVerb || !window.YT_REMOTE_NET) return;
+            const offen = !!(window.nlSucheAuftrag && window.nlSucheAuftrag.id !== nlTrefferLetzteId);
+            YT_REMOTE_NET.statusMelden(nlFernVerb, NL_FERN_RAUM, {
+                laeuft: nlFernAktiv(),
+                videoId: nlFern ? nlFern.videoId : '',
+                titel: nlFern ? (nlFern.titel || '') : '',
+                bisWann: nlFern ? nlFern.bisWann : 0,
+                imSlot: !!nlAktiv,
+                suchtGerade: offen,
+                ueberMpv: nlExtern()
+            }).catch(() => {});
+        }
+
+        function nlFernBefehlAusfuehren(befehl) {
+            if (!befehl || !befehl.id || befehl.id === nlFernLetzteId) return;
+            nlFernLetzteId = befehl.id;
+            // Beim Start des Dashboards liegt der zuletzt gesendete Befehl noch
+            // in der Datenbank - der darf keinen alten Wunsch neu starten.
+            if (befehl.ts && Date.now() - Number(befehl.ts) > 120000) return;
+
+            if (befehl.aktion === 'suche') {
+                const text = String(befehl.text || '').trim().slice(0, 100);
+                if (!text) return;
+                window.nlSucheAuftrag = { id: befehl.id, text: text };
+                nlFernStatusMelden();
+                return;
+            }
+
+            if (befehl.aktion === 'stop') {
+                nlFern = null;
+                nlFernStatusMelden();
+                if (mediaStateIndex === NL_SLOT_INDEX || nlAktiv) {
+                    cancelSequenceTimers();
+                    mediaStateIndex = KT.testFirstInCycle ? -1 : 0;
+                    runMasterSequence();
+                }
+                return;
+            }
+
+            if (befehl.aktion !== 'start' || !befehl.videoId) return;
+            const dauer = Number(befehl.dauerSek);
+            nlFern = {
+                videoId: String(befehl.videoId).trim().slice(0, 20),
+                titel: String(befehl.titel || '').slice(0, 120),
+                bisWann: dauer === -1 ? -1 : Date.now() + (dauer > 0 ? dauer : 600) * 1000
+            };
+            nlFernStatusMelden();
+            // Sofort hinschalten - wer am Handy tippt, will nicht die halbe
+            // Rotation abwarten. Der Puffer wird verworfen, der Wunsch zaehlt.
+            cancelSequenceTimers();
+            nlGeladen = null;
+            mediaStateIndex = NL_SLOT_INDEX;
+            runMasterSequence();
+        }
+
+        // Treffer des Supervisors ans Handy weiterreichen.
+        function nlTrefferWeiterreichen() {
+            const t = window.nlSucheTreffer;
+            if (!t || !t.id || t.id === nlTrefferLetzteId || !nlFernVerb) return;
+            nlTrefferLetzteId = t.id;
+            YT_REMOTE_NET.trefferMelden(nlFernVerb, NL_FERN_RAUM, t.id, t.liste || [])
+                .catch(() => {});
+            nlFernStatusMelden();
+        }
+
+        function nlFernStarten() {
+            if (!window.YT_REMOTE_NET || !YT_REMOTE_NET.istEingerichtet()) return;
+            YT_REMOTE_NET.bereit().then(verb => {
+                if (!verb) return;
+                nlFernVerb = verb;
+                YT_REMOTE_NET.aufBefehlHoeren(verb, NL_FERN_RAUM, nlFernBefehlAusfuehren);
+                nlFernStatusMelden();
+                // Eigene Intervalle: sollen den Ansichtswechsel ueberleben.
+                setInterval(nlFernStatusMelden, 5000);
+                setInterval(nlTrefferWeiterreichen, 1000);
+            }).catch(() => {});
+        }
+        nlFernStarten();
+
         function runNightlifeState(nextStateIndex) {
             // Widget abgeschaltet - weiter wie bei "kein Video eingerichtet".
             if (!NL_SLOT_AN) {
@@ -6948,7 +7062,11 @@
             // wuerfeln. Sonst passt der Puffer nur zufaellig (1 von so vielen Videos
             // wie im Pool stehen) und praktisch jeder Auftritt beginnt mit einem
             // kompletten Neuladen statt mit dem bereits gepufferten Video.
-            const vorgeladen = !!(nlGeladen && nlGeladen.video && !nlDefekt[nlGeladen.schluessel]);
+            // Bei einem Wunsch vom Handy zaehlt der Puffer nicht - es soll genau
+            // das gewuenschte Video kommen.
+            const fernWunsch = nlFernAktiv();
+            const vorgeladen = !fernWunsch &&
+                !!(nlGeladen && nlGeladen.video && !nlDefekt[nlGeladen.schluessel]);
             const eintrag = vorgeladen
                 ? { video: nlGeladen.video, schluessel: nlGeladen.schluessel,
                     datei: nlGeladen.datei, start: nlGeladen.start }
@@ -7029,7 +7147,18 @@
             nlGeladen = { schluessel: eintrag.schluessel, start: start, datei: eintrag.datei, video: video };
 
             mediaStateIndex = nextStateIndex;
-            globalMasterTimer = later(runMasterSequence, NL_CONFIG.sekundenProVideo * 1000);
+            // Wunsch vom Handy laeuft so lange wie dort gewaehlt, sonst gilt die
+            // normale Standzeit des Slots.
+            const standzeit = (fernWunsch && nlFern.bisWann !== -1)
+                ? Math.max(5000, nlFern.bisWann - Date.now())
+                : NL_CONFIG.sekundenProVideo * 1000;
+            globalMasterTimer = later(() => {
+                if (fernWunsch && nlFern && nlFern.bisWann !== -1 && nlFern.bisWann <= Date.now()) {
+                    nlFern = null;           // Wunsch abgelaufen, zurueck in die Rotation
+                    nlFernStatusMelden();
+                }
+                runMasterSequence();
+            }, standzeit);
         }
 
         // ------------------------------------------------------------------

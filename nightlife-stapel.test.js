@@ -22,8 +22,12 @@ const ctx = vm.createContext({
     nlSchluessel: v => v.videoId,
     nlIstDatei: () => false,
     nlStandSpeichern: () => { gespeichert++; },
+    // Wunsch der Handy-Fernbedienung (yt-fernbedienung.html) - standardmaessig keiner.
+    nlFern: null,
+    nlFernAktiv: () => !!ctxFern,
     Math, Map
 });
+let ctxFern = null;
 vm.runInContext(fn('shuffleArray') + '\n' + fn('nlStartSekunde') + '\n' + fn('nlNaechsterEintrag'), ctx);
 
 // Zwei volle Runden: jedes Video genau zweimal, nie zweimal hintereinander.
@@ -48,5 +52,18 @@ pool = nacht;
 const danach = [];
 for (let i = 0; i < 15; i++) danach.push(ctx.nlNaechsterEintrag().schluessel);
 assert(danach.every(s => s.startsWith('nacht')), 'nach dem Wechsel nur noch Nacht-Videos');
+
+// Wunsch vom Handy geht vor und ruehrt den Stapel nicht an.
+pool = tag.concat(nacht);
+ctx.nlStapel = []; ctx.nlZuletzt = '';
+ctx.nlNaechsterEintrag();
+const restVorher = ctx.nlStapel.length;
+ctxFern = true;
+ctx.nlFern = { videoId: 'wunsch123', titel: 'Wunsch' };
+const wunsch = ctx.nlNaechsterEintrag();
+assert.equal(wunsch.schluessel, 'wunsch123', 'der Wunsch vom Handy wird gespielt');
+assert.equal(wunsch.start, 0, 'der Wunsch beginnt am Anfang');
+assert.equal(ctx.nlStapel.length, restVorher, 'der Stapel bleibt unberuehrt');
+ctxFern = null;
 
 console.log('Nightlife-Kartenstapel: Tests bestanden.');

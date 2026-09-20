@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>City Cafe · YouTube-Fernbedienung</title>
+<!--
+    YOUTUBE-FERNBEDIENUNG (Handy)
+
+    Ohne Anmeldung: die Seite meldet sich anonym bei Firebase an und spricht
+    ueber djremote/<raum>/yt mit dem Dashboard (siehe yt-fernbedienung-net.js).
+
+    Gesucht wird nicht hier, sondern auf dem Kiosk-Rechner mit yt-dlp. Die
+    Seite schickt nur den Suchtext und bekommt die Trefferliste zurueck - so
+    braucht es keinen YouTube-API-Schluessel und kein Google-Konto.
+-->
+<style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0; padding: 16px 16px 40px; background: #0b1020; color: #f2f5ff;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        padding-top: calc(16px + env(safe-area-inset-top, 0px));
+    }
+    h1 { font-size: 21px; margin: 0 0 4px; letter-spacing: 0.3px; }
+    .raum { font-size: 13px; color: #8ea0c8; margin-bottom: 16px; }
+    .status {
+        background: #131a33; border: 1px solid #27325c; border-radius: 12px;
+        padding: 12px 14px; font-size: 15px; line-height: 1.45; margin-bottom: 16px;
+    }
+    .status b { color: #7ee3ff; font-weight: 700; }
+    .suche { display: flex; gap: 8px; margin-bottom: 8px; }
+    input[type=search] {
+        flex: 1; min-width: 0; padding: 13px 14px; font-size: 17px; border-radius: 12px;
+        border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
+    }
+    button {
+        font: inherit; font-weight: 700; border: 0; border-radius: 12px; padding: 13px 16px;
+        background: #2f6bff; color: #fff; cursor: pointer;
+    }
+    button.still { background: #1d2647; color: #cdd7f5; }
+    button.stopp { background: #b3243a; width: 100%; margin-top: 14px; }
+    button:disabled { opacity: 0.45; }
+    .hinweis { font-size: 13px; color: #8ea0c8; margin: 6px 2px 14px; }
+    .treffer { display: flex; flex-direction: column; gap: 10px; }
+    .video {
+        display: flex; gap: 12px; align-items: center; text-align: left; width: 100%;
+        background: #131a33; border: 1px solid #27325c; border-radius: 14px;
+        padding: 10px; color: inherit;
+    }
+    .video.gewaehlt { border-color: #2f6bff; background: #17224a; }
+    .video img { width: 104px; height: 58px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #000; }
+    .video .titel { font-size: 15px; font-weight: 700; line-height: 1.3; }
+    .video .meta { font-size: 13px; color: #8ea0c8; margin-top: 3px; }
+    .zeiten { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+    .zeiten button { flex: 1 1 28%; background: #1d2647; color: #cdd7f5; }
+    .zeiten button.aktiv { background: #2f6bff; color: #fff; }
+    .start { width: 100%; margin-top: 14px; padding: 16px; font-size: 18px; }
+    .fehler { color: #ff9b9b; }
+</style>
+</head>
+<body>
+
+<h1>🎬 YouTube-Fernbedienung</h1>
+<div class="raum" id="raum">City Cafe</div>
+
+<div class="status" id="status">Verbinde …</div>
+
+<form class="suche" id="suchform">
+    <input type="search" id="suchtext" placeholder="Suchen oder YouTube-Link einfügen" enterkeyhint="search">
+    <button type="submit" id="suchknopf">Suchen</button>
+</form>
+<div class="hinweis">Ein eingefügter YouTube-Link wird direkt übernommen, ohne Suche.</div>
+
+<div class="treffer" id="treffer"></div>
+
+<div id="auswahl" hidden>
+    <div class="zeiten" id="zeiten"></div>
+    <button class="start" id="startknopf">▶ Auf den Screen</button>
+</div>
+
+<button class="stopp" id="stoppknopf">■ Stopp, zurück zur normalen Rotation</button>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="dj-fernbedienung-config.js"></script>
+<script src="dj-fernbedienung-net.js"></script>
+<script src="yt-fernbedienung-net.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    var CFG = window.DJ_REMOTE_CONFIG || {};
+    var RAUM = (new URLSearchParams(location.search).get('raum') || '').trim() || CFG.raum || 'city-cafe';
+    var LAUFZEITEN = [
+        { sek: 300, text: '5 Min' },
+        { sek: 600, text: '10 Min' },
+        { sek: 900, text: '15 Min' },
+        { sek: 1800, text: '30 Min' },
+        { sek: 3600, text: '1 Std' },
+        { sek: -1, text: 'Bis Stopp' }
+    ];
+    var dauer = 600;
+    var gewaehlt = null;      // { videoId, titel }
+    var verb = null;
+    var suchId = '';
+    var el = function (id) { return document.getElementById(id); };
+
+    el('raum').textContent = 'Screen: ' + RAUM;
+
+    // --- Laufzeiten ---------------------------------------------------------
+    LAUFZEITEN.forEach(function (z) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = z.text;
+        b.className = z.sek === dauer ? 'aktiv' : '';
+        b.addEventListener('click', function () {
+            dauer = z.sek;
+            [].forEach.call(el('zeiten').children, function (k) { k.className = ''; });
+            b.className = 'aktiv';
+        });
+        el('zeiten').appendChild(b);
+    });
+
+    function statusText(s) {
+        if (!verb) return 'Keine Verbindung zum Screen.';
+        if (!s) return 'Verbunden. Der Screen hat noch nichts gemeldet.';
+        if (s.suchtGerade) return 'Suche läuft …';
+        if (s.laeuft) {
+            var rest = s.bisWann === -1 ? 'bis Stopp'
+                : 'noch ' + Math.max(0, Math.round((s.bisWann - Date.now()) / 60000)) + ' Min';
+            return 'Läuft am Screen: <b>' + (s.titel || s.videoId) + '</b> (' + rest + ')';
+        }
+        return 'Der Screen läuft in der normalen Rotation.';
+    }
+
+    function zeigeStatus(s) { el('status').innerHTML = statusText(s); }
+
+    // --- Trefferliste -------------------------------------------------------
+    function zeigeTreffer(liste) {
+        var box = el('treffer');
+        box.innerHTML = '';
+        (liste || []).forEach(function (v) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'video';
+            var bild = document.createElement('img');
+            bild.src = 'https://i.ytimg.com/vi/' + v.videoId + '/mqdefault.jpg';
+            bild.alt = '';
+            bild.loading = 'lazy';
+            var text = document.createElement('div');
+            var t = document.createElement('div');
+            t.className = 'titel';
+            t.textContent = v.titel || v.videoId;
+            var m = document.createElement('div');
+            m.className = 'meta';
+            m.textContent = [v.kanal, v.dauer].filter(Boolean).join(' · ');
+            text.appendChild(t); text.appendChild(m);
+            b.appendChild(bild); b.appendChild(text);
+            b.addEventListener('click', function () {
+                gewaehlt = { videoId: v.videoId, titel: v.titel || '' };
+                [].forEach.call(box.children, function (k) { k.classList.remove('gewaehlt'); });
+                b.classList.add('gewaehlt');
+                el('auswahl').hidden = false;
+                el('auswahl').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+            box.appendChild(b);
+        });
+    }
+
+    // --- Link erkennen ------------------------------------------------------
+    function videoIdAus(text) {
+        var m = String(text).match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([A-Za-z0-9_-]{11})/);
+        if (m) return m[1];
+        if (/^[A-Za-z0-9_-]{11}$/.test(String(text).trim())) return String(text).trim();
+        return null;
+    }
+
+    function senden(befehl) {
+        if (!verb) return Promise.resolve(null);
+        return YT_REMOTE_NET.befehlSenden(verb, RAUM, befehl).catch(function (e) {
+            el('status').innerHTML = '<span class="fehler">Senden fehlgeschlagen: ' + e.message + '</span>';
+            return null;
+        });
+    }
+
+    el('suchform').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var text = el('suchtext').value.trim();
+        if (!text) return;
+        var id = videoIdAus(text);
+        if (id) {                       // Link oder Video-Kennung eingefügt
+            gewaehlt = { videoId: id, titel: '' };
+            zeigeTreffer([{ videoId: id, titel: 'Eingefügter Link', kanal: '', dauer: '' }]);
+            el('treffer').firstChild.classList.add('gewaehlt');
+            el('auswahl').hidden = false;
+            return;
+        }
+        el('status').textContent = 'Suche läuft …';
+        el('treffer').innerHTML = '';
+        senden({ aktion: 'suche', text: text }).then(function (id) { suchId = id || ''; });
+    });
+
+    el('startknopf').addEventListener('click', function () {
+        if (!gewaehlt) return;
+        senden({ aktion: 'start', videoId: gewaehlt.videoId, titel: gewaehlt.titel, dauerSek: dauer });
+        el('status').textContent = 'Wird zum Screen geschickt …';
+    });
+
+    el('stoppknopf').addEventListener('click', function () {
+        senden({ aktion: 'stop' });
+        el('status').textContent = 'Stopp gesendet …';
+    });
+
+    // --- Verbinden ----------------------------------------------------------
+    if (!window.YT_REMOTE_NET || !YT_REMOTE_NET.istEingerichtet()) {
+        el('status').innerHTML = '<span class="fehler">Die Fernbedienung ist nicht eingerichtet '
+            + '(fehlende Firebase-Zugangsdaten).</span>';
+    } else {
+        YT_REMOTE_NET.bereit().then(function (v) {
+            if (!v) {
+                el('status').innerHTML = '<span class="fehler">Keine Verbindung zum Screen.</span>';
+                return;
+            }
+            verb = v;
+            YT_REMOTE_NET.aufStatusHoeren(v, RAUM, zeigeStatus);
+            YT_REMOTE_NET.aufTrefferHoeren(v, RAUM, function (t) {
+                if (!t || !t.liste) return;
+                // Nur die Antwort auf die eigene Suche zeigen, nicht die eines
+                // anderen Gastes von vorhin.
+                if (suchId && t.id !== suchId) return;
+                zeigeTreffer(t.liste);
+                if (!t.liste.length) el('status').textContent = 'Nichts gefunden.';
+            });
+            zeigeStatus(null);
+        });
+    }
+})();
+</script>
+</body>
+</html>
