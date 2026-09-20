@@ -7798,6 +7798,28 @@
             return Date.now() < djFern.bisWann;
         }
 
+        /*
+         * Der ferngesteuerte Stream ist wirklich aus - der Streamer hat beendet.
+         * Dann sofort weiter in der Rotation, genau wie beim Nightlife-Video
+         * (siehe nlVideoFertig): die am Handy gewaehlte Laufzeit ist eine
+         * Obergrenze, kein Mindestwert.
+         *
+         * Gemeldet wird das entweder vom mpv-Aufpasser (der Stream liefert
+         * nichts mehr) oder vom Twitch-Player selbst ueber OFFLINE.
+         * Rueckgabe: true, wenn weitergeschaltet wurde.
+         */
+        function djStreamFertig() {
+            if (mediaStateIndex !== DJ_SLOT_INDEX || !djFernAktiv()) return false;
+            djFern = null;
+            djFernQualitaetAnwenden(0);
+            djFernStatusMelden();
+            cancelSequenceTimers();
+            mediaStateIndex = 2;
+            runMasterSequence();
+            return true;
+        }
+        window.djStreamFertig = djStreamFertig;
+
         function djFernEintrag() {
             if (!djFernAktiv()) return null;
             return { platform: 'twitch', channel: djFern.kanal,
@@ -8379,14 +8401,13 @@
                         let kanal = entry.channel;
                         try { if (spieler.getChannel) kanal = spieler.getChannel() || kanal; } catch (e) {}
                         if (!djFern || String(djFern.kanal).toLowerCase() !== String(kanal).toLowerCase()) return;
+                        // Im DJ-Slot erledigt djStreamFertig() beides: Fernwahl
+                        // loeschen und sofort weiterschalten. Ausserhalb des
+                        // Slots bleibt nur das Loeschen.
+                        if (djStreamFertig()) return;
                         djFern = null;
                         djFernQualitaetAnwenden(0);
                         djFernStatusMelden();
-                        if (mediaStateIndex === DJ_SLOT_INDEX) {
-                            cancelSequenceTimers();
-                            mediaStateIndex = 2;
-                            runMasterSequence();
-                        }
                     });
                     // Blockiert der Browser das Autoplay doch, hier nachhelfen.
                     spieler.addEventListener(Twitch.Player.PLAYBACK_BLOCKED, () => {
