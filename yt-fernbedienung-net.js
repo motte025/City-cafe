@@ -78,6 +78,23 @@
         aufTrefferHoeren: function (verb, raum, rueckruf) {
             return hoeren(verb, raum, 'treffer', rueckruf);
         },
+
+        // --- Eigene Dauerliste (vom Handy gepflegt) --------------------------
+        // Liegt in Firebase statt im Repo: so kann das Handy Videos hinzufuegen,
+        // ohne dass jemand am Rechner etwas einchecken muss. nightlife.json
+        // bleibt die gepflegte Grundliste, beide zusammen ergeben den Pool.
+        aufListeHoeren: function (verb, raum, rueckruf) {
+            return hoeren(verb, raum, 'liste', rueckruf);
+        },
+        listeLesen: function (verb, raum) {
+            return verb.db.ref(pfad(raum) + '/liste').once('value').then(function (s) {
+                var w = s.val();
+                return (w && Array.isArray(w.eintraege)) ? w.eintraege : [];
+            }).catch(function () { return []; });
+        },
+        listeSchreiben: function (verb, raum, eintraege) {
+            return schreiben(verb, raum, 'liste', { eintraege: (eintraege || []).slice(0, 100) });
+        },
         aufStatusHoeren: function (verb, raum, rueckruf) {
             return hoeren(verb, raum, 'status', rueckruf);
         }

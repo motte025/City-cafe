@@ -6565,6 +6565,7 @@
                 markiert(rohDaten.tag, 'tag').concat(markiert(nacht, 'nacht')).forEach(v => {
                     if (v && v.videoId) nlAlleVideos[v.videoId] = v;
                 });
+                nlZusatzVideos.forEach(v => { nlAlleVideos[v.videoId] = v; });
             } catch (e) {
             } finally {
                 clearTimeout(abbruch);
@@ -6579,7 +6580,12 @@
             // damit laesst sich pruefen, ob die Abstuerze ueberhaupt am Video haengen.
             if (SPARSTUFE >= 3) return [];
             const alle = (nlDaten && nlDaten.videos) || [];
-            return alle.filter(v => nlSchluessel(v) && !nlDefekt[nlSchluessel(v)]);
+            // Vom Handy hinzugefuegte Videos laufen in der passenden Tageszeit mit:
+            // tagsueber alle, ab 18 Uhr nur die als "nacht" abgelegten.
+            const bekannt = new Set(alle.map(v => nlSchluessel(v)));
+            const zusatz = nlZusatzVideos.filter(v =>
+                !bekannt.has(v.videoId) && (nlIstTag() || v._art === 'nacht'));
+            return alle.concat(zusatz).filter(v => nlSchluessel(v) && !nlDefekt[nlSchluessel(v)]);
         }
 
         // Zufaellige Startsekunde fuer diesen Durchlauf - jeder Auftritt eines
@@ -7026,6 +7032,19 @@
                 return;
             }
 
+            if (befehl.aktion === 'spulen') {
+                const sek = Math.max(-600, Math.min(600, Number(befehl.sek) || 0));
+                if (!sek) return;
+                if (nlExtern()) {
+                    // mpv spielt: der Supervisor springt (window.nlSpulAuftrag).
+                    window.nlSpulAuftrag = { id: befehl.id, sek: sek };
+                } else {
+                    try { nlPlayer.seekTo(Math.max(0, (nlPlayer.getCurrentTime() || 0) + sek), true); } catch (e) {}
+                }
+                nlFernStatusMelden();
+                return;
+            }
+
             if (befehl.aktion === 'stop') {
                 nlFern = null;
                 window.nlWunschFormat = null;
@@ -7074,12 +7093,30 @@
             nlFernStatusMelden();
         }
 
+        // Vom Handy hinzugefuegte Videos. Sie liegen in Firebase (nicht im Repo),
+        // gelten also sofort und ueberleben Neustarts - nightlife.json bleibt die
+        // gepflegte Grundliste.
+        let nlZusatzVideos = [];
+        function nlZusatzUebernehmen(daten) {
+            const roh = (daten && Array.isArray(daten.eintraege)) ? daten.eintraege : [];
+            nlZusatzVideos = roh.filter(v => v && /^[A-Za-z0-9_-]{11}$/.test(v.videoId || ''))
+                .map(v => ({
+                    videoId: v.videoId,
+                    titel: String(v.titel || v.videoId).slice(0, 120),
+                    ort: v.ort ? String(v.ort).slice(0, 60) : undefined,
+                    land: v.land ? String(v.land).slice(0, 60) : undefined,
+                    _art: v.art === 'tag' ? 'tag' : 'nacht'
+                }));
+            nlZusatzVideos.forEach(v => { nlAlleVideos[v.videoId] = v; });
+        }
+
         function nlFernStarten() {
             if (!window.YT_REMOTE_NET || !YT_REMOTE_NET.istEingerichtet()) return;
             YT_REMOTE_NET.bereit().then(verb => {
                 if (!verb) return;
                 nlFernVerb = verb;
                 YT_REMOTE_NET.aufBefehlHoeren(verb, NL_FERN_RAUM, nlFernBefehlAusfuehren);
+                YT_REMOTE_NET.aufListeHoeren(verb, NL_FERN_RAUM, nlZusatzUebernehmen);
                 nlFernStatusMelden();
                 // Eigene Intervalle: sollen den Ansichtswechsel ueberleben.
                 setInterval(nlFernStatusMelden, 5000);

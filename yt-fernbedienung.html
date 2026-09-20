@@ -56,6 +56,8 @@
     summary { font-size: 16px; font-weight: 700; cursor: pointer; }
     details .treffer { margin-top: 12px; }
     .feldname { font-size: 13px; color: #8ea0c8; margin: 14px 2px 6px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .gewaehltName { font-size: 15px; font-weight: 700; margin: 14px 2px 0; }
+    button.breit { width: 100%; margin-top: 12px; }
     .zeiten { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
     .zeiten button { flex: 1 1 28%; background: #1d2647; color: #cdd7f5; }
     .zeiten button.aktiv { background: #2f6bff; color: #fff; }
@@ -84,14 +86,37 @@
 </details>
 
 <div id="auswahl" hidden>
+    <div class="gewaehltName" id="gewaehltName"></div>
+    <button class="start" id="startknopf">▶ Auf den Screen</button>
+    <details>
+        <summary>➕ Zur Dauerliste hinzufügen</summary>
+        <div class="feldname">Läuft in der Rotation</div>
+        <div class="zeiten" id="listenart"></div>
+        <button class="still breit" id="listeknopf">➕ Hinzufügen</button>
+        <div class="hinweis">Bleibt gespeichert, auch nach einem Neustart. Die Videos aus
+            nightlife.json bleiben unverändert.</div>
+    </details>
+</div>
+
+<details>
+    <summary>⏩ Vor- und zurückspulen</summary>
+    <div class="feldname">Zurück</div>
+    <div class="zeiten" id="zurueck"></div>
+    <div class="feldname">Vor</div>
+    <div class="zeiten" id="vor"></div>
+    <div class="hinweis">Wirkt sofort auf das laufende Video am Screen.</div>
+</details>
+
+<details>
+    <summary>⚙️ Laufzeit, Auflösung, Bildrate</summary>
     <div class="feldname">Laufzeit</div>
     <div class="zeiten" id="zeiten"></div>
     <div class="feldname">Auflösung</div>
     <div class="zeiten" id="hoehen"></div>
     <div class="feldname">Bildrate</div>
     <div class="zeiten" id="bildraten"></div>
-    <button class="start" id="startknopf">▶ Auf den Screen</button>
-</div>
+    <div class="hinweis">Voreingestellt 1080p mit 60 fps, das läuft am Screen am saubersten.</div>
+</details>
 
 <button class="stopp" id="stoppknopf">■ Stopp, zurück zur normalen Rotation</button>
 
@@ -129,7 +154,8 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
-    var dauer = 600, hoehe = 1080, fps = 60;
+    var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
+    var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
     var gewaehlt = null;      // { videoId, titel }
     var verb = null;
     var suchId = '';
@@ -157,6 +183,26 @@
     reihe('zeiten', LAUFZEITEN, dauer, function (w) { dauer = w; });
     reihe('hoehen', HOEHEN, hoehe, function (w) { hoehe = w; });
     reihe('bildraten', BILDRATEN, fps, function (w) { fps = w; });
+    reihe('listenart', [{ wert: 'nacht', text: 'Nachts' }, { wert: 'tag', text: 'Tagsüber' }],
+        'nacht', function (w) { listenArt = w; });
+
+    // --- Vor- und zurueckspulen --------------------------------------------
+    var SPRUENGE = [30, 60, 120, 300];
+    function spulReihe(boxId, vorzeichen) {
+        SPRUENGE.slice().sort(function (a, b) { return vorzeichen > 0 ? a - b : b - a; })
+            .forEach(function (s) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'still';
+                b.textContent = (vorzeichen > 0 ? '+' : '−') + (s < 60 ? s + ' s' : (s / 60) + ' Min');
+                b.addEventListener('click', function () {
+                    senden({ aktion: 'spulen', sek: vorzeichen * s });
+                });
+                document.getElementById(boxId).appendChild(b);
+            });
+    }
+    spulReihe('zurueck', -1);
+    spulReihe('vor', 1);
 
     function statusText(s) {
         if (!verb) return 'Keine Verbindung zum Screen.';
@@ -199,6 +245,7 @@
                     k.classList.remove('gewaehlt');
                 });
                 b.classList.add('gewaehlt');
+                el('gewaehltName').textContent = 'Gewählt: ' + (v.titel || v.videoId);
                 el('auswahl').hidden = false;
                 el('auswahl').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             });
@@ -248,6 +295,29 @@
         el('status').textContent = 'Wird zum Screen geschickt …';
     });
 
+    // --- Zur Dauerliste hinzufuegen ----------------------------------------
+    el('listeknopf').addEventListener('click', function () {
+        if (!gewaehlt || !verb) return;
+        el('listeknopf').disabled = true;
+        YT_REMOTE_NET.listeLesen(verb, RAUM).then(function (liste) {
+            if (liste.some(function (v) { return v.videoId === gewaehlt.videoId; })) {
+                el('status').textContent = 'Steht schon in der Liste.';
+                return null;
+            }
+            liste.push({
+                videoId: gewaehlt.videoId,
+                titel: gewaehlt.titel || gewaehlt.videoId,
+                art: listenArt
+            });
+            return YT_REMOTE_NET.listeSchreiben(verb, RAUM, liste).then(function () {
+                el('status').textContent = 'Zur Dauerliste hinzugefügt ('
+                    + (listenArt === 'tag' ? 'tagsüber' : 'nachts') + ').';
+            });
+        }).catch(function (e) {
+            el('status').innerHTML = '<span class="fehler">Hinzufügen fehlgeschlagen: ' + e.message + '</span>';
+        }).then(function () { el('listeknopf').disabled = false; });
+    });
+
     el('stoppknopf').addEventListener('click', function () {
         senden({ aktion: 'stop' });
         el('status').textContent = 'Stopp gesendet …';
@@ -256,6 +326,19 @@
     // --- Dauerliste (nightlife.json) ---------------------------------------
     // Liegt neben dieser Seite auf GitHub Pages, braucht also weder Firebase
     // noch den Screen. Zeigt Tag- und Nacht-Videos mit Ort.
+    var grundListe = [];
+    function listeZeigen() {
+        var alles = grundListe.concat(eigeneListe.map(function (v) {
+            return {
+                videoId: v.videoId, titel: v.titel || v.videoId,
+                kanal: 'selbst hinzugefügt', dauer: v.art === 'tag' ? 'Tag' : 'Nacht'
+            };
+        }));
+        zeigeTreffer(alles, 'liste');
+        el('listeBox').querySelector('summary').textContent =
+            '📺 Videos aus der Dauerliste (' + alles.length + ')';
+    }
+
     fetch('nightlife.json?v=' + Date.now(), { cache: 'no-store' })
         .then(function (r) { return r.json(); })
         .then(function (d) {
@@ -271,9 +354,8 @@
                     });
                 });
             });
-            zeigeTreffer(liste, 'liste');
-            el('listeBox').querySelector('summary').textContent =
-                '📺 Videos aus der Dauerliste (' + liste.length + ')';
+            grundListe = liste;
+            listeZeigen();
         })
         .catch(function () {
             el('listeBox').querySelector('summary').textContent = '📺 Dauerliste nicht ladbar';
@@ -291,6 +373,10 @@
             }
             verb = v;
             YT_REMOTE_NET.aufStatusHoeren(v, RAUM, zeigeStatus);
+            YT_REMOTE_NET.aufListeHoeren(v, RAUM, function (d) {
+                eigeneListe = (d && Array.isArray(d.eintraege)) ? d.eintraege : [];
+                listeZeigen();
+            });
             YT_REMOTE_NET.aufTrefferHoeren(v, RAUM, function (t) {
                 if (!t || !t.liste) return;
                 // Nur die Antwort auf die eigene Suche zeigen, nicht die eines
