@@ -65260,16 +65260,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Buffalo Springfield",
-    "title": "For What It's Worth",
+    "artist": "Isabel LaRosa",
+    "title": "favorite",
     "album": "",
-    "category": "Party & Rock",
+    "category": "Internationale Party-Hits",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke",
+      "Internationale Party-Hits"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Jürgen Milski",
+    "title": "Das hat die Welt noch nie gesehn",
+    "album": "",
+    "category": "Après-Ski & Ballermann",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Après-Ski & Ballermann"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
