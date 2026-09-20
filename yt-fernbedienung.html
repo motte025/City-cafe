@@ -17,31 +17,33 @@
 <style>
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
+    /* Bewusst grosse Schrift: die Seite wird am Handy im Lokal bedient, oft in
+       Eile und im Dunkeln. Lieber scrollen als kneifen. */
     body {
-        margin: 0; padding: 16px 16px 40px; background: #0b1020; color: #f2f5ff;
-        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-        padding-top: calc(16px + env(safe-area-inset-top, 0px));
+        margin: 0; padding: 18px 16px 48px; background: #0b1020; color: #f2f5ff;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 20px;
+        padding-top: calc(18px + env(safe-area-inset-top, 0px));
     }
-    h1 { font-size: 21px; margin: 0 0 4px; letter-spacing: 0.3px; }
-    .raum { font-size: 13px; color: #8ea0c8; margin-bottom: 16px; }
+    h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: 0.3px; }
+    .raum { font-size: 17px; color: #8ea0c8; margin-bottom: 18px; }
     .status {
         background: #131a33; border: 1px solid #27325c; border-radius: 12px;
-        padding: 12px 14px; font-size: 15px; line-height: 1.45; margin-bottom: 16px;
+        padding: 15px 16px; font-size: 20px; line-height: 1.45; margin-bottom: 18px;
     }
     .status b { color: #7ee3ff; font-weight: 700; }
     .suche { display: flex; gap: 8px; margin-bottom: 8px; }
     input[type=search] {
-        flex: 1; min-width: 0; padding: 13px 14px; font-size: 17px; border-radius: 12px;
+        flex: 1; min-width: 0; padding: 15px 16px; font-size: 21px; border-radius: 12px;
         border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
     }
     button {
-        font: inherit; font-weight: 700; border: 0; border-radius: 12px; padding: 13px 16px;
-        background: #2f6bff; color: #fff; cursor: pointer;
+        font: inherit; font-size: 20px; font-weight: 700; border: 0; border-radius: 12px;
+        padding: 15px 18px; background: #2f6bff; color: #fff; cursor: pointer;
     }
     button.still { background: #1d2647; color: #cdd7f5; }
     button.stopp { background: #b3243a; width: 100%; margin-top: 14px; }
     button:disabled { opacity: 0.45; }
-    .hinweis { font-size: 13px; color: #8ea0c8; margin: 6px 2px 14px; }
+    .hinweis { font-size: 16px; color: #8ea0c8; margin: 8px 2px 16px; line-height: 1.4; }
     .treffer { display: flex; flex-direction: column; gap: 10px; }
     .video {
         display: flex; gap: 12px; align-items: center; text-align: left; width: 100%;
@@ -49,14 +51,14 @@
         padding: 10px; color: inherit;
     }
     .video.gewaehlt { border-color: #2f6bff; background: #17224a; }
-    .video img { width: 104px; height: 58px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #000; }
-    .video .titel { font-size: 15px; font-weight: 700; line-height: 1.3; }
-    .video .meta { font-size: 13px; color: #8ea0c8; margin-top: 3px; }
+    .video img { width: 132px; height: 74px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #000; }
+    .video .titel { font-size: 19px; font-weight: 700; line-height: 1.3; }
+    .video .meta { font-size: 16px; color: #8ea0c8; margin-top: 5px; }
     details { margin-top: 14px; background: #131a33; border: 1px solid #27325c; border-radius: 14px; padding: 12px 14px; }
-    summary { font-size: 16px; font-weight: 700; cursor: pointer; }
-    details .treffer { margin-top: 12px; }
-    .feldname { font-size: 13px; color: #8ea0c8; margin: 14px 2px 6px; text-transform: uppercase; letter-spacing: 0.6px; }
-    .gewaehltName { font-size: 15px; font-weight: 700; margin: 14px 2px 0; }
+    summary { font-size: 21px; font-weight: 700; cursor: pointer; padding: 4px 0; }
+    details .treffer { margin-top: 14px; }
+    .feldname { font-size: 16px; color: #8ea0c8; margin: 16px 2px 8px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .gewaehltName { font-size: 19px; font-weight: 700; margin: 16px 2px 0; }
     button.breit { width: 100%; margin-top: 12px; }
     input[type=range] { width: 100%; margin: 4px 0 2px; accent-color: #2f6bff; height: 34px; }
     input[type=text] {
@@ -64,12 +66,12 @@
         border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
     }
     .eigenZeile { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #27325c; }
-    .eigenZeile span { flex: 1; font-size: 15px; }
+    .eigenZeile span { flex: 1; font-size: 18px; line-height: 1.35; }
     .eigenZeile button { background: #b3243a; padding: 8px 14px; }
     .zeiten { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
     .zeiten button { flex: 1 1 28%; background: #1d2647; color: #cdd7f5; }
     .zeiten button.aktiv { background: #2f6bff; color: #fff; }
-    .start { width: 100%; margin-top: 14px; padding: 16px; font-size: 18px; }
+    .start { width: 100%; margin-top: 16px; padding: 20px; font-size: 24px; }
     .fehler { color: #ff9b9b; }
 </style>
 </head>
@@ -261,6 +263,10 @@
     function zeigeStatus(s) {
         el('status').innerHTML = statusText(s);
         if (!s) return;
+        if (s.laengen && typeof s.laengen === 'object') {
+            laengen = s.laengen;
+            listeZeigen();
+        }
         // Regler und Schalter auf den Stand des Screens bringen - ausser waehrend
         // man den Regler gerade in der Hand hat.
         if (typeof s.lautstaerke === 'number' && document.activeElement !== el('laut')) {
@@ -389,15 +395,29 @@
     // --- Dauerliste (nightlife.json) ---------------------------------------
     // Liegt neben dieser Seite auf GitHub Pages, braucht also weder Firebase
     // noch den Screen. Zeigt Tag- und Nacht-Videos mit Ort.
-    var grundListe = [];
+    var grundListe = [], laengen = {};
+
+    // Laufzeit, sobald der Screen sie kennt (er merkt sie sich beim Abspielen).
+    function laufzeit(videoId) {
+        var s = Number(laengen[videoId]) || 0;
+        if (!s) return '';
+        var std = Math.floor(s / 3600), min = Math.floor((s % 3600) / 60), sek = s % 60;
+        return (std ? std + ':' + String(min).padStart(2, '0') : String(min))
+            + ':' + String(sek).padStart(2, '0');
+    }
+
     function listeZeigen() {
         var alles = grundListe.concat(eigeneListe.map(function (v) {
             return {
                 videoId: v.videoId, titel: v.titel || v.videoId,
                 kanal: [v.ort, v.land].filter(Boolean).join(', ') || 'selbst hinzugefügt',
-                dauer: v.art === 'tag' ? 'Tag' : 'Nacht'
+                tageszeit: v.art === 'tag' ? 'Tag' : 'Nacht'
             };
-        }));
+        })).map(function (v) {
+            var l = laufzeit(v.videoId);
+            return { videoId: v.videoId, titel: v.titel, kanal: v.kanal,
+                     dauer: [v.tageszeit, l].filter(Boolean).join(' · ') };
+        });
         zeigeTreffer(alles, 'liste');
         el('listeBox').querySelector('summary').textContent =
             '📺 Videos aus der Dauerliste (' + alles.length + ')';
@@ -453,10 +473,16 @@
                         videoId: v.videoId,
                         titel: v.titel || v.videoId,
                         kanal: [v.ort, v.land].filter(Boolean).join(', '),
-                        dauer: teil[0]
+                        tageszeit: teil[0]
                     });
                 });
             });
+            // Bei jedem Aufruf neu mischen - sonst stehen immer dieselben Videos
+            // oben und man tippt immer dieselben an.
+            for (var i = liste.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var h = liste[i]; liste[i] = liste[j]; liste[j] = h;
+            }
             grundListe = liste;
             listeZeigen();
         })

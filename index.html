@@ -7013,7 +7013,11 @@
                 suchtGerade: offen,
                 ueberMpv: nlExtern(),
                 lautstaerke: nlTon.vol,
-                lautheit: nlTon.lautheit
+                lautheit: nlTon.lautheit,
+                // Videolaengen, die das Dashboard schon kennt (aus nlDauern) -
+                // damit die Handy-Liste die Laufzeit anzeigen kann, ohne sie
+                // selbst bei YouTube abzufragen.
+                laengen: nlDauern
             }).catch(() => {});
         }
 
