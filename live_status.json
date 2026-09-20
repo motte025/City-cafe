@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T12:12:45Z",
+  "checked_at": "2026-09-20T12:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,16 +45,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "asot",
-      "name": "ASOT",
-      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed Sunday w/ @alexvaganza 🍒✨💞💋🌈 | !challenge",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Lazy relaxed Sunday w/ @alexvaganza 🍒✨💞💋🌈 | !challenge",
+      "channel": "asot",
+      "name": "ASOT",
+      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
       "game": "DJs"
     },
     {
