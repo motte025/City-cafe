@@ -127,7 +127,9 @@
         { wert: 60, text: '60 fps' },
         { wert: 30, text: '30 fps' }
     ];
-    var dauer = 600, hoehe = 0, fps = 0;
+    // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
+    // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
+    var dauer = 600, hoehe = 1080, fps = 60;
     var gewaehlt = null;      // { videoId, titel }
     var verb = null;
     var suchId = '';
