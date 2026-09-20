@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T23:17:46Z",
+  "checked_at": "2026-09-20T23:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "asot",
-      "name": "ASOT",
-      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
       "game": "DJs"
     }
   ]
