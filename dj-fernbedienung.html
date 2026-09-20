@@ -297,6 +297,7 @@
         quali:   CFG.qualitaetStandard || 0
     };
     var kanalListe = [];
+    var spielLaeuft = false;   // Hos'n Obe am Screen: dann startet kein Stream
 
     // ---------------------------------------------------------------- Anzeige
 
@@ -664,6 +665,10 @@
 
     function senden(aktion) {
         if (!verbindung) return;
+        if (aktion === 'start' && spielLaeuft) {
+            standSetzen('fehler', 'Hos’n Obe läuft — der Stream würde die Runde zerreißen');
+            return;
+        }
         NET.befehlSenden(verbindung, {
             aktion:   aktion,
             kanal:    wahl.kanal ? wahl.kanal.channel : '',
@@ -684,6 +689,15 @@
         if (!status) {
             standSetzen('', 'Screen meldet sich noch nicht');
             befundSetzen('');
+            return;
+        }
+        // Kartenspiel hat Vorrang: waehrend einer Runde nimmt der Screen keinen
+        // Stream an, also den Startknopf gleich sperren.
+        spielLaeuft = !!status.spielLaeuft;
+        el('starten').disabled = spielLaeuft || !wahl.kanal;
+        if (spielLaeuft) {
+            standSetzen('', 'Hos’n Obe läuft gerade — kein Stream möglich');
+            befundSetzen('Solange am Tisch gespielt wird, bleibt der Screen beim Kartenspiel.');
             return;
         }
         if (!status.laeuft) {

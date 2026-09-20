@@ -215,11 +215,12 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
-    var FASSUNG = '2026-09-21b';   // steht sichtbar unter dem Titel
+    var FASSUNG = '2026-09-21c';   // steht sichtbar unter dem Titel
     var ersteTrefferGesehen = false, letzteFremdId = null, keineAntwort = null;
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
     var gewaehlt = null;      // { videoId, titel }
+    var spielLaeuft = false;  // Hos'n Obe am Screen: dann startet kein Video
     var verb = null;
     var suchId = '';
     var el = function (id) { return document.getElementById(id); };
@@ -338,6 +339,9 @@
     function statusText(s) {
         if (!verb) return 'Keine Verbindung zum Screen.';
         if (!s) return 'Verbunden. Der Screen hat noch nichts gemeldet.';
+        // Kartenspiel hat Vorrang - ein Video wuerde die Runde zerreissen.
+        if (s.spielLaeuft) return '🃏 <b>Hos’n Obe läuft gerade</b> — solange nimmt '
+            + 'der Screen kein Video an. Sobald die Runde vorbei ist, geht es wieder.';
         if (s.suchtGerade) return 'Suche läuft …';
         if (s.laeuft) {
             var rest = s.bisWann === -1 ? 'bis Stopp'
@@ -349,6 +353,11 @@
 
     function zeigeStatus(s) {
         el('status').innerHTML = statusText(s);
+        // Waehrend einer Runde Hos'n Obe laesst sich nichts auf den Screen
+        // schicken: den Knopf gleich sperren, statt den Gast ins Leere tippen
+        // zu lassen.
+        spielLaeuft = !!(s && s.spielLaeuft);
+        el('startknopf').disabled = spielLaeuft;
         if (!s) return;
         if (s.laengen && typeof s.laengen === 'object') {
             laengen = s.laengen;
@@ -483,6 +492,11 @@
 
     el('startknopf').addEventListener('click', function () {
         if (!gewaehlt) return;
+        if (spielLaeuft) {
+            el('status').innerHTML = '🃏 <b>Hos’n Obe läuft gerade</b> — das Video '
+                + 'würde die Runde zerreißen und wird nicht gestartet.';
+            return;
+        }
         senden({
             aktion: 'start', videoId: gewaehlt.videoId, titel: gewaehlt.titel,
             dauerSek: dauer, hoehe: hoehe, fps: fps

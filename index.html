@@ -7010,6 +7010,9 @@
         let nlFernVerb = null;
         let nlFernLetzteId = '';
         let nlTrefferLetzteId = '';
+        // Letzter abgelehnter Wunsch: { id, grund }. Damit weiss das Handy,
+        // dass sein Tippen angekommen, aber nicht ausgefuehrt worden ist.
+        let nlFernAbgelehnt = null;
         const NL_FERN_RAUM = (new URLSearchParams(location.search).get('raum') || '').trim()
             || ((window.DJ_REMOTE_CONFIG || {}).raum || 'city-cafe');
 
@@ -7034,6 +7037,10 @@
                 // damit die Handy-Liste die Laufzeit anzeigen kann, ohne sie
                 // selbst bei YouTube abzufragen.
                 laengen: nlDauern,
+                // Hos'n Obe hat Vorrang: solange gespielt wird, nimmt der
+                // Screen kein Video an (siehe ktSpielLaeuft).
+                spielLaeuft: !!(window.ktSpielLaeuft && window.ktSpielLaeuft()),
+                abgelehnt: nlFernAbgelehnt,
                 // Laufende Hos'n-Obe-Runde: dieselbe Kennung wie im QR-Code am
                 // Screen. Damit kann die Sammel-Fernbedienung das Kartenspiel
                 // oeffnen, ohne dass jemand den Code abfotografiert.
@@ -7139,6 +7146,12 @@
             }
 
             if (befehl.aktion !== 'start' || !befehl.videoId) return;
+            // Waehrend einer Runde Hos'n Obe faellt kein Video dazwischen.
+            if (window.ktSpielLaeuft && window.ktSpielLaeuft()) {
+                nlFernAbgelehnt = { id: befehl.id, grund: 'spiel' };
+                nlFernStatusMelden();
+                return;
+            }
             const dauer = Number(befehl.dauerSek);
             nlFern = {
                 videoId: String(befehl.videoId).trim().slice(0, 20),
@@ -7788,6 +7801,7 @@
         let djFern = null;        // {kanal, name, quali, dauerSek, bisWann, id}
         let djFernVerb = null;    // Firebase-Verbindung, sobald angemeldet
         let djFernLetzteId = '';  // gegen erneut zugestellte, schon erledigte Befehle
+        let djFernAbgelehnt = null;   // { id, grund } - siehe nlFernAbgelehnt
 
         // Wahr, solange der ferngesteuerte Stream laufen soll. bisWann === -1
         // heisst "bis der Streamer offline geht" - das meldet der Player selbst
@@ -7929,6 +7943,10 @@
                 name:    djFern ? (djFern.name || djFern.kanal) : '',
                 quali:   djFern ? djFern.quali : 0,
                 bisWann: djFern ? djFern.bisWann : 0,
+                // Hos'n Obe hat Vorrang: solange gespielt wird, nimmt der
+                // Screen keinen Stream an (siehe ktSpielLaeuft).
+                spielLaeuft: !!(window.ktSpielLaeuft && window.ktSpielLaeuft()),
+                abgelehnt: djFernAbgelehnt,
                 // Der echte Zustand am Screen:
                 spielt:  lage.spielt,
                 stumm:   lage.stumm,
@@ -7971,6 +7989,12 @@
             }
 
             if (befehl.aktion !== 'start' || !befehl.kanal) return;
+            // Waehrend einer Runde Hos'n Obe faellt kein DJ-Stream dazwischen.
+            if (window.ktSpielLaeuft && window.ktSpielLaeuft()) {
+                djFernAbgelehnt = { id: befehl.id, grund: 'spiel' };
+                djFernStatusMelden();
+                return;
+            }
 
             const dauer = Number(befehl.dauerSek);
             djFern = {
@@ -10463,9 +10487,32 @@
         }
         window.addEventListener('resize', ktFitFullscreen);
 
+        /*
+         * Laeuft gerade eine Runde Hos'n Obe?
+         *
+         * Waehrend eines Spiels sitzen die Gaeste am Tisch und schauen auf den
+         * Screen - ein Video oder DJ-Stream vom Handy darf da nicht
+         * dazwischenfunken. Die Rotation selbst steht ohnehin still
+         * (pauseRotation in ktEnterGame); nur die Fernbedienung koennte sonst
+         * mitten in die Runde schalten, deshalb fragen nlFernBefehlAusfuehren
+         * und djFernBefehlAusfuehren hier nach.
+         */
+        function ktSpielLaeuft() { return !!ktActive; }
+        window.ktSpielLaeuft = ktSpielLaeuft;
+
+        // Beide Fernbedienungen sofort auf den neuen Stand bringen: die
+        // Video-Seite meldet ohnehin alle 5 s, die DJ-Seite nur bei
+        // Ereignissen - ohne diesen Anstoss stuende dort noch minutenlang,
+        // man koenne einen Stream starten.
+        function ktFernbedienungenMelden() {
+            try { nlFernStatusMelden(); } catch (e) {}
+            try { djFernStatusMelden(); } catch (e) {}
+        }
+
         function ktEnterGame() {
             if (ktActive) return;
             ktActive = true;
+            ktFernbedienungenMelden();
             // Die laufende Ansicht behaelt ihre .active-Klasse und friert ein -
             // das Hosen-Obe-Overlay legt sich per z-index darueber.
             pauseRotation();
@@ -10483,6 +10530,7 @@
             ktSetTimer(null);
             if (!ktActive) return;
             ktActive = false;
+            ktFernbedienungenMelden();
             const view = ktEl('media-view-hosnobe');
             view.classList.remove('kt-fullscreen');
             view.style.removeProperty('--kt-scale');

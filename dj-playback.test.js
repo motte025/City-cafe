@@ -29,7 +29,7 @@ async function run() {
         djTwitchSdkLaden: async () => true, djFreigabeNachruesten() {}, djEmbedHosts: () => ['localhost'],
         djSofortStarten: () => player.play(), djKnopfBeschriften() {}, djTonKnopf: value => { button = value; },
         djAnstupsen() {}, djSlotSichtbar: () => true, djMobilgeraet: () => false, djNeuaufbauErlaubt: () => false,
-        djTonNachziehen() {}, djKnopfStur: false, djFernAktiv: () => false, djFern: null,
+        djTonNachziehen() {}, djKnopfStur: false, djFern: null,
         djLiveBadgeSetzen: value => { offlineBadge = value; },
         djFernQualitaetAnwenden() {}, djFernStatusMelden() {},
         mediaStateIndex: 1, DJ_SLOT_INDEX: 1, cancelSequenceTimers() {},
@@ -37,7 +37,11 @@ async function run() {
         djExternEintrag: null, djExtern: () => false, djAktiverIndex: 0,
         djSpielerAufbauen: entry => { rueckfall = entry; }, videoRuheModus() {}
     });
-    vm.runInContext(fn('djBaueTwitch') + '\n' + fn('djWaechterTakt'), context);
+    // djFernAktiv und djStreamFertig bewusst im Original: das Ende eines
+    // ferngesteuerten Streams soll genau so getestet werden, wie es am Screen
+    // laeuft (sofort zurueck in die Rotation).
+    vm.runInContext(fn('djFernAktiv') + '\n' + fn('djStreamFertig') + '\n'
+        + fn('djBaueTwitch') + '\n' + fn('djWaechterTakt'), context);
     context.djBaueTwitch({ isConnected: true }, { channel: 'example' });
     await Promise.resolve();
     player.emit(Player.READY);
@@ -62,8 +66,10 @@ async function run() {
     assert.equal(sequenceRuns, 1, 'Offline remote channel returns to the normal sequence');
     player.channel = 'another-dj';
     context.djFern = { kanal: 'another-dj', bisWann: Date.now() + 15 * 60 * 1000 };
+    context.mediaStateIndex = 1;    // wieder im DJ-Slot, wie nach einem neuen Wunsch
     player.emit(Player.OFFLINE);
     assert.equal(context.djFern, null, 'Offline follows a channel switch within the existing player');
+    assert.equal(sequenceRuns, 2, 'Every ended remote stream hands back to the rotation at once');
     context.djTwitchSpieler = {};
     player.emit(Player.PLAYING);
     assert.equal(context.djQualiLage.bildGestartet, false, 'Old player events cannot mark a new player as running');
