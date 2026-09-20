@@ -207,7 +207,7 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
-    var FASSUNG = '2026-09-20d';   // steht sichtbar unter dem Titel
+    var FASSUNG = '2026-09-20e';   // steht sichtbar unter dem Titel
     var ersteTrefferGesehen = false, letzteFremdId = null;
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
@@ -534,9 +534,20 @@
         el('status').innerHTML = '<span class="fehler">Die Fernbedienung ist nicht eingerichtet '
             + '(fehlende Firebase-Zugangsdaten).</span>';
     } else {
+        el('status').textContent = 'Melde an …';
+        // Sagt nach 12 s Bescheid, statt still auf "Melde an …" stehen zu
+        // bleiben - genau dieser Fall ist am Handy aufgetreten.
+        var haengt = setTimeout(function () {
+            if (!verb) {
+                el('status').innerHTML = '<span class="fehler">Anmeldung hängt. Das Handy erreicht '
+                    + 'die Datenbank nicht (Netz, Browser-Einstellung oder privater Modus).</span>';
+            }
+        }, 12000);
         YT_REMOTE_NET.bereit().then(function (v) {
+            clearTimeout(haengt);
             if (!v) {
-                el('status').innerHTML = '<span class="fehler">Keine Verbindung zum Screen.</span>';
+                el('status').innerHTML = '<span class="fehler">Anmeldung fehlgeschlagen - keine '
+                    + 'Verbindung zum Screen. Anderen Browser oder anderes Netz versuchen.</span>';
                 return;
             }
             verb = v;
