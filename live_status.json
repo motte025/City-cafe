@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T07:22:47Z",
+  "checked_at": "2026-09-20T07:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
