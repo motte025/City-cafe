@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>City Cafe · Fernbedienung</title>
+<!--
+    SAMMEL-FERNBEDIENUNG
+
+    Eine Adresse fuer alles: YouTube-Videos, DJ-Livestream und das Trinkspiel.
+    Die drei bestehenden Seiten bleiben, wie sie sind, und laufen hier in einem
+    Rahmen - so gibt es keine doppelte Logik.
+
+    Der Screen wird EINMAL hier bestimmt (gleiche oeffentliche IP = gleiches
+    Netz = die Box vor Ort, siehe yt-fernbedienung-net.js) und dann als
+    ?raum=... an die Unterseiten weitergereicht.
+-->
+<style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+        margin: 0; background: #0b1020; color: #f2f5ff; display: flex; flex-direction: column;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 30px;
+        -webkit-text-size-adjust: 100%;
+    }
+    header {
+        padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 10px;
+        background: #0f1630; border-bottom: 1px solid #27325c; flex-shrink: 0;
+    }
+    .zeile { display: flex; gap: 10px; }
+    .zeile + .zeile { margin-top: 10px; }
+    button {
+        font: inherit; font-size: 27px; font-weight: 700; border: 0; border-radius: 14px;
+        padding: 16px 10px; background: #1d2647; color: #cdd7f5; cursor: pointer; flex: 1;
+    }
+    button.aktiv { background: #2f6bff; color: #fff; }
+    .screen { font-size: 21px; color: #8ea0c8; padding: 8px 2px 0; text-align: center; }
+    iframe { flex: 1; width: 100%; border: 0; background: #0b1020; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="zeile" id="tabs"></div>
+    <div class="zeile" id="boxen"></div>
+    <div class="screen" id="screen">Screen wird gesucht …</div>
+</header>
+<iframe id="rahmen" title="Fernbedienung"></iframe>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="dj-fernbedienung-config.js"></script>
+<script src="dj-fernbedienung-net.js"></script>
+<script src="yt-fernbedienung-net.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    var CFG = window.DJ_REMOTE_CONFIG || {};
+    var FASSUNG = '2026-09-21a';
+    var el = function (id) { return document.getElementById(id); };
+    var abfrage = new URLSearchParams(location.search);
+
+    var SEITEN = [
+        { schluessel: 'yt', text: '🎬 Videos', datei: 'yt-fernbedienung.html', raumParameter: true },
+        { schluessel: 'dj', text: '🎧 DJ', datei: 'dj-fernbedienung.html', raumParameter: true },
+        { schluessel: 'spiel', text: '🃏 Hos’n Obe', datei: 'hosn-obe.html', raumParameter: false }
+    ];
+
+    var raum = (abfrage.get('raum') || '').trim()
+        || (function () { try { return localStorage.getItem('fbRaum') || ''; } catch (e) { return ''; } })()
+        || CFG.raum || 'city-cafe';
+    var raumFest = !!(abfrage.get('raum') || '').trim();
+    var aktiv = (abfrage.get('teil') || '').trim() || 'yt';
+
+    function rahmenSetzen() {
+        var seite = SEITEN.filter(function (s) { return s.schluessel === aktiv; })[0] || SEITEN[0];
+        var ziel = seite.datei + '?v=' + Date.now() + (seite.raumParameter ? '&raum=' + encodeURIComponent(raum) : '');
+        if (el('rahmen').getAttribute('src') !== ziel) el('rahmen').setAttribute('src', ziel);
+        [].forEach.call(el('tabs').children, function (k) {
+            k.className = k.dataset.teil === aktiv ? 'aktiv' : '';
+        });
+        try { localStorage.setItem('fbTeil', aktiv); } catch (e) {}
+    }
+
+    SEITEN.forEach(function (s) {
+        var k = document.createElement('button');
+        k.type = 'button';
+        k.textContent = s.text;
+        k.dataset.teil = s.schluessel;
+        k.addEventListener('click', function () { aktiv = s.schluessel; rahmenSetzen(); });
+        el('tabs').appendChild(k);
+    });
+    rahmenSetzen();
+
+    // --- Screen bestimmen ---------------------------------------------------
+    function screenText(name, zusatz) {
+        el('screen').textContent = 'Screen: ' + name + (zusatz ? ' · ' + zusatz : '')
+            + ' · Fassung ' + FASSUNG;
+    }
+    screenText(raum, '');
+
+    function boxenKnoepfe(boxen) {
+        var box = el('boxen');
+        box.innerHTML = '';
+        if (boxen.length < 2) return;
+        boxen.forEach(function (b) {
+            var k = document.createElement('button');
+            k.type = 'button';
+            k.textContent = b.name;
+            k.className = b.raum === raum ? 'aktiv' : '';
+            k.addEventListener('click', function () {
+                raum = b.raum;
+                try { localStorage.setItem('fbRaum', raum); } catch (e) {}
+                screenText(b.name, 'von Hand gewählt');
+                boxenKnoepfe(boxen);
+                rahmenSetzen();
+            });
+            box.appendChild(k);
+        });
+    }
+
+    if (window.YT_REMOTE_NET && YT_REMOTE_NET.istEingerichtet()) {
+        YT_REMOTE_NET.bereit().then(function (verb) {
+            if (!verb) { screenText(raum, 'keine Verbindung'); return; }
+            Promise.all([
+                YT_REMOTE_NET.boxenLesen(verb),
+                fetch('https://api.ipify.org?format=json', { cache: 'no-store' })
+                    .then(function (r) { return r.json(); }).then(function (d) { return d.ip; })
+                    .catch(function () { return ''; })
+            ]).then(function (erg) {
+                var boxen = erg[0], meineIp = erg[1];
+                var passend = meineIp ? boxen.filter(function (b) { return b.ip && b.ip === meineIp; }) : [];
+                if (!raumFest && passend.length === 1 && passend[0].raum !== raum) {
+                    raum = passend[0].raum;
+                    try { localStorage.setItem('fbRaum', raum); } catch (e) {}
+                    screenText(passend[0].name, 'im selben Netz erkannt');
+                    rahmenSetzen();
+                } else {
+                    var eigene = boxen.filter(function (b) { return b.raum === raum; })[0];
+                    screenText(eigene ? eigene.name : raum, passend.length ? 'im selben Netz' : '');
+                }
+                boxenKnoepfe(boxen);
+            });
+        });
+    }
+})();
+</script>
+</body>
+</html>

@@ -216,7 +216,7 @@
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
     var FASSUNG = '2026-09-20e';   // steht sichtbar unter dem Titel
-    var ersteTrefferGesehen = false, letzteFremdId = null;
+    var ersteTrefferGesehen = false, letzteFremdId = null, keineAntwort = null;
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
     var gewaehlt = null;      // { videoId, titel }
@@ -442,8 +442,21 @@
         if (verb) YT_REMOTE_NET.diagnose(verb, RAUM, 'suche-gedrueckt', text);
         senden({ aktion: 'suche', text: text }).then(function (id) {
             suchId = id || '';
-            if (!id) el('status').innerHTML = '<span class="fehler">Suchauftrag konnte nicht '
-                + 'gesendet werden - keine Verbindung zum Screen.</span>';
+            if (!id) {
+                el('status').innerHTML = '<span class="fehler">Suchauftrag konnte nicht '
+                    + 'gesendet werden - keine Verbindung zum Screen.</span>';
+                return;
+            }
+            // Antwortet niemand, liegt es meist am falsch gewaehlten Screen:
+            // der Auftrag landet in einem Raum, in dem keine Box zuhoert.
+            clearTimeout(keineAntwort);
+            keineAntwort = setTimeout(function () {
+                if (!el('treffer').children.length) {
+                    el('status').innerHTML = '<span class="fehler">Keine Antwort vom Screen "'
+                        + boxName + '". Läuft er gerade? Oben gegebenenfalls den anderen '
+                        + 'Screen wählen.</span>';
+                }
+            }, 25000);
         });
     });
 
