@@ -6762,6 +6762,9 @@
                 nlQualitaetSetzen();
             }
             if (ev.data === 0 && nlAktiv && nlLaeuft && !nlLaeuft.datei) {
+                // Wunsch vom Handy zu Ende: weiter in der Rotation statt noch
+                // einmal von vorn.
+                if (nlVideoFertig()) return;
                 try { nlPlayer.seekTo(0, true); nlPlayer.playVideo(); } catch (e) {}
             }
         }
@@ -7037,6 +7040,34 @@
                 spiel: window.ktSessionAktuell || ''
             }).catch(() => {});
         }
+
+        /*
+         * Ein selbst gestartetes Video ist zu Ende (vom mpv-Aufpasser gemeldet
+         * oder vom Browser-Player). Dann geht es SOFORT in der normalen
+         * Rotation weiter - auch wenn am Handy nichts gedrueckt wird.
+         *
+         * Vorher lief die am Handy gewaehlte Zeit stur ab: war das Video
+         * kuerzer, spielte es entweder noch einmal von vorn oder man sah bis
+         * zum Ende der gewaehlten Zeit ein stehendes Bild.
+         *
+         * Nur fuer Wuensche vom Handy. In der normalen Rotation bleibt es wie
+         * bisher: dort dauert ein Auftritt seine feste Standzeit, und die
+         * Videos sind ohnehin laenger.
+         *
+         * Rueckgabe: true, wenn wirklich weitergeschaltet wurde - daran
+         * erkennt der mpv-Aufpasser, dass er das Bild nicht dem Browser
+         * zurueckgeben muss.
+         */
+        function nlVideoFertig() {
+            if (!nlAktiv || !nlFernAktiv()) return false;
+            nlFern = null;
+            window.nlWunschFormat = null;
+            nlFernStatusMelden();
+            if (globalMasterTimer) { cancelTimer(globalMasterTimer); globalMasterTimer = null; }
+            runMasterSequence();
+            return true;
+        }
+        window.nlVideoFertig = nlVideoFertig;
 
         // Beim Sprung ins Wunschvideo muessen die Zeitgeber des gerade gezeigten
         // Widgets weg. Hos'n Obe nutzt eigene (setInterval/setTimeout), die
