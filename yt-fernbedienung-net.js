@@ -83,6 +83,22 @@
         // Liegt in Firebase statt im Repo: so kann das Handy Videos hinzufuegen,
         // ohne dass jemand am Rechner etwas einchecken muss. nightlife.json
         // bleibt die gepflegte Grundliste, beide zusammen ergeben den Pool.
+        // --- Diagnose --------------------------------------------------------
+        // Kurze Spur der letzten Schritte eines Handys, damit sich Probleme aus
+        // der Ferne einkreisen lassen (kommt die Suche ueberhaupt an?). Nur
+        // Geraeteart und Ereignis, keine persoenlichen Daten.
+        diagnose: function (verb, raum, ereignis, zusatz) {
+            try {
+                return schreiben(verb, raum, 'diagnose', {
+                    ereignis: ereignis,
+                    zusatz: String(zusatz || '').slice(0, 120),
+                    geraet: (navigator.userAgent || '').slice(0, 90)
+                });
+            } catch (e) {
+                return Promise.resolve();
+            }
+        },
+
         aufListeHoeren: function (verb, raum, rueckruf) {
             return hoeren(verb, raum, 'liste', rueckruf);
         },

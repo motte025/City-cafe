@@ -207,7 +207,7 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
-    var FASSUNG = '2026-09-20c';   // steht sichtbar unter dem Titel
+    var FASSUNG = '2026-09-20d';   // steht sichtbar unter dem Titel
     var ersteTrefferGesehen = false, letzteFremdId = null;
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
@@ -354,9 +354,14 @@
     }
 
     function senden(befehl) {
-        if (!verb) return Promise.resolve(null);
+        if (!verb) {
+            el('status').innerHTML = '<span class="fehler">Keine Verbindung zum Screen - '
+                + 'der Befehl wurde nicht gesendet.</span>';
+            return Promise.resolve(null);
+        }
         return YT_REMOTE_NET.befehlSenden(verb, RAUM, befehl).catch(function (e) {
             el('status').innerHTML = '<span class="fehler">Senden fehlgeschlagen: ' + e.message + '</span>';
+            YT_REMOTE_NET.diagnose(verb, RAUM, 'sende-fehler', befehl.aktion + ': ' + e.message);
             return null;
         });
     }
@@ -375,6 +380,7 @@
         }
         el('status').textContent = 'Suche läuft …';
         el('treffer').innerHTML = '';
+        if (verb) YT_REMOTE_NET.diagnose(verb, RAUM, 'suche-gedrueckt', text);
         senden({ aktion: 'suche', text: text }).then(function (id) {
             suchId = id || '';
             if (!id) el('status').innerHTML = '<span class="fehler">Suchauftrag konnte nicht '
@@ -534,6 +540,7 @@
                 return;
             }
             verb = v;
+            YT_REMOTE_NET.diagnose(v, RAUM, 'seite-geladen', 'Fassung ' + FASSUNG);
             YT_REMOTE_NET.aufStatusHoeren(v, RAUM, zeigeStatus);
             YT_REMOTE_NET.aufListeHoeren(v, RAUM, function (d) {
                 eigeneListe = (d && Array.isArray(d.eintraege)) ? d.eintraege : [];
