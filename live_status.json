@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-20T22:47:45Z",
+  "checked_at": "2026-09-20T23:02:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "nyybeats",
       "name": "NyyBeats",
       "title": "🔥♡ SUNSET SUNDAY WITH A DOUBLE ORDER OF YAPPUCCINO🔥 !tip !NEWSONG🔥 !mods !mercy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
