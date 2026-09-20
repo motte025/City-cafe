@@ -2925,6 +2925,19 @@
          ab und die uebrige Rotation laeuft unveraendert weiter. -->
     <script src="hosn-obe-config.js"></script>
     <script src="dj-fernbedienung-config.js"></script>
+    <script>
+        /* Ein Screen = ein Raum, und zwar fuer ALLE Fernbedienungen. Der Name
+           kommt aus der Adresse (?raum=zuhause), so wie ihn der Kiosk-Starter
+           setzt. Ohne das liefe die DJ-Fernbedienung weiter im Standardraum
+           "city-cafe" - dann haetten beide Boxen denselben DJ-Kanal, und die
+           Box zu Hause meldete sich der Fernbedienung gar nicht. */
+        (function () {
+            var r = (new URLSearchParams(location.search).get('raum') || '').trim();
+            if (r && /^[A-Za-z0-9_-]{1,64}$/.test(r) && window.DJ_REMOTE_CONFIG) {
+                window.DJ_REMOTE_CONFIG.raum = r;
+            }
+        })();
+    </script>
     <script src="hosn-obe-engine.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
@@ -11179,7 +11192,10 @@
                 liste.push({
                     id: 'djremote', icon: '🎧', titel: 'DJ-Stream steuern',
                     text: 'Kanal, Auflösung und Laufzeit vom Handy aus',
-                    url: DJ_REMOTE_CONFIG.mobileUrl
+                    // Mit Raum, sonst landet der Befehl beim anderen Screen.
+                    url: DJ_REMOTE_CONFIG.mobileUrl +
+                         (DJ_REMOTE_CONFIG.mobileUrl.indexOf('?') >= 0 ? '&' : '?') +
+                         'raum=' + encodeURIComponent(DJ_REMOTE_CONFIG.raum || 'city-cafe')
                 });
             }
 
