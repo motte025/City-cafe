@@ -6998,6 +6998,7 @@
 
             if (befehl.aktion === 'stop') {
                 nlFern = null;
+                window.nlWunschFormat = null;
                 nlFernStatusMelden();
                 if (mediaStateIndex === NL_SLOT_INDEX || nlAktiv) {
                     cancelSequenceTimers();
@@ -7012,8 +7013,16 @@
             nlFern = {
                 videoId: String(befehl.videoId).trim().slice(0, 20),
                 titel: String(befehl.titel || '').slice(0, 120),
-                bisWann: dauer === -1 ? -1 : Date.now() + (dauer > 0 ? dauer : 600) * 1000
+                bisWann: dauer === -1 ? -1 : Date.now() + (dauer > 0 ? dauer : 600) * 1000,
+                // Wunsch-Auflaesung/-Bildrate vom Handy. 0 = egal, dann gilt der
+                // Standard (1080p, Bildrate wie das Video sie hat).
+                hoehe: [0, 480, 720, 1080].includes(Number(befehl.hoehe)) ? Number(befehl.hoehe) : 0,
+                fps: [0, 30, 60].includes(Number(befehl.fps)) ? Number(befehl.fps) : 0
             };
+            // Der Supervisor liest das mit und waehlt das passende Format.
+            window.nlWunschFormat = { hoehe: nlFern.hoehe, fps: nlFern.fps };
+            // Faellt mpv aus, soll wenigstens das Embed die Wunsch-Aufloesung nehmen.
+            if (nlFern.hoehe) NL_CONFIG.maxAufloesung = nlFern.hoehe >= 1080 ? 'hd1080' : 'hd720';
             nlFernStatusMelden();
             // Sofort hinschalten - wer am Handy tippt, will nicht die halbe
             // Rotation abwarten. Der Puffer wird verworfen, der Wunsch zaehlt.
@@ -7155,6 +7164,7 @@
             globalMasterTimer = later(() => {
                 if (fernWunsch && nlFern && nlFern.bisWann !== -1 && nlFern.bisWann <= Date.now()) {
                     nlFern = null;           // Wunsch abgelaufen, zurueck in die Rotation
+                    window.nlWunschFormat = null;
                     nlFernStatusMelden();
                 }
                 runMasterSequence();

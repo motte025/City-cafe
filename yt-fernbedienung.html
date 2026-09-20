@@ -52,7 +52,11 @@
     .video img { width: 104px; height: 58px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #000; }
     .video .titel { font-size: 15px; font-weight: 700; line-height: 1.3; }
     .video .meta { font-size: 13px; color: #8ea0c8; margin-top: 3px; }
-    .zeiten { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+    details { margin-top: 14px; background: #131a33; border: 1px solid #27325c; border-radius: 14px; padding: 12px 14px; }
+    summary { font-size: 16px; font-weight: 700; cursor: pointer; }
+    details .treffer { margin-top: 12px; }
+    .feldname { font-size: 13px; color: #8ea0c8; margin: 14px 2px 6px; text-transform: uppercase; letter-spacing: 0.6px; }
+    .zeiten { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
     .zeiten button { flex: 1 1 28%; background: #1d2647; color: #cdd7f5; }
     .zeiten button.aktiv { background: #2f6bff; color: #fff; }
     .start { width: 100%; margin-top: 14px; padding: 16px; font-size: 18px; }
@@ -74,8 +78,18 @@
 
 <div class="treffer" id="treffer"></div>
 
+<details id="listeBox">
+    <summary>📺 Videos aus der Dauerliste</summary>
+    <div class="treffer" id="liste"></div>
+</details>
+
 <div id="auswahl" hidden>
+    <div class="feldname">Laufzeit</div>
     <div class="zeiten" id="zeiten"></div>
+    <div class="feldname">Auflösung</div>
+    <div class="zeiten" id="hoehen"></div>
+    <div class="feldname">Bildrate</div>
+    <div class="zeiten" id="bildraten"></div>
     <button class="start" id="startknopf">▶ Auf den Screen</button>
 </div>
 
@@ -101,7 +115,19 @@
         { sek: 3600, text: '1 Std' },
         { sek: -1, text: 'Bis Stopp' }
     ];
-    var dauer = 600;
+    // Aufloesung: 0 = wie bisher (1080p). Bildrate: 0 = egal, sonst bevorzugt.
+    var HOEHEN = [
+        { wert: 0, text: 'Auto' },
+        { wert: 1080, text: '1080p' },
+        { wert: 720, text: '720p' },
+        { wert: 480, text: '480p' }
+    ];
+    var BILDRATEN = [
+        { wert: 0, text: 'Egal' },
+        { wert: 60, text: '60 fps' },
+        { wert: 30, text: '30 fps' }
+    ];
+    var dauer = 600, hoehe = 0, fps = 0;
     var gewaehlt = null;      // { videoId, titel }
     var verb = null;
     var suchId = '';
@@ -109,19 +135,26 @@
 
     el('raum').textContent = 'Screen: ' + RAUM;
 
-    // --- Laufzeiten ---------------------------------------------------------
-    LAUFZEITEN.forEach(function (z) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.textContent = z.text;
-        b.className = z.sek === dauer ? 'aktiv' : '';
-        b.addEventListener('click', function () {
-            dauer = z.sek;
-            [].forEach.call(el('zeiten').children, function (k) { k.className = ''; });
-            b.className = 'aktiv';
+    // --- Auswahlreihen (Laufzeit, Aufloesung, Bildrate) ---------------------
+    function reihe(boxId, eintraege, start, setzen) {
+        var box = el(boxId);
+        eintraege.forEach(function (e) {
+            var wert = (e.sek !== undefined) ? e.sek : e.wert;
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = e.text;
+            b.className = wert === start ? 'aktiv' : '';
+            b.addEventListener('click', function () {
+                setzen(wert);
+                [].forEach.call(box.children, function (k) { k.className = ''; });
+                b.className = 'aktiv';
+            });
+            box.appendChild(b);
         });
-        el('zeiten').appendChild(b);
-    });
+    }
+    reihe('zeiten', LAUFZEITEN, dauer, function (w) { dauer = w; });
+    reihe('hoehen', HOEHEN, hoehe, function (w) { hoehe = w; });
+    reihe('bildraten', BILDRATEN, fps, function (w) { fps = w; });
 
     function statusText(s) {
         if (!verb) return 'Keine Verbindung zum Screen.';
@@ -138,8 +171,8 @@
     function zeigeStatus(s) { el('status').innerHTML = statusText(s); }
 
     // --- Trefferliste -------------------------------------------------------
-    function zeigeTreffer(liste) {
-        var box = el('treffer');
+    function zeigeTreffer(liste, boxId) {
+        var box = el(boxId || 'treffer');
         box.innerHTML = '';
         (liste || []).forEach(function (v) {
             var b = document.createElement('button');
@@ -160,7 +193,9 @@
             b.appendChild(bild); b.appendChild(text);
             b.addEventListener('click', function () {
                 gewaehlt = { videoId: v.videoId, titel: v.titel || '' };
-                [].forEach.call(box.children, function (k) { k.classList.remove('gewaehlt'); });
+                [].forEach.call(document.querySelectorAll('.video'), function (k) {
+                    k.classList.remove('gewaehlt');
+                });
                 b.classList.add('gewaehlt');
                 el('auswahl').hidden = false;
                 el('auswahl').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -204,7 +239,10 @@
 
     el('startknopf').addEventListener('click', function () {
         if (!gewaehlt) return;
-        senden({ aktion: 'start', videoId: gewaehlt.videoId, titel: gewaehlt.titel, dauerSek: dauer });
+        senden({
+            aktion: 'start', videoId: gewaehlt.videoId, titel: gewaehlt.titel,
+            dauerSek: dauer, hoehe: hoehe, fps: fps
+        });
         el('status').textContent = 'Wird zum Screen geschickt …';
     });
 
@@ -212,6 +250,32 @@
         senden({ aktion: 'stop' });
         el('status').textContent = 'Stopp gesendet …';
     });
+
+    // --- Dauerliste (nightlife.json) ---------------------------------------
+    // Liegt neben dieser Seite auf GitHub Pages, braucht also weder Firebase
+    // noch den Screen. Zeigt Tag- und Nacht-Videos mit Ort.
+    fetch('nightlife.json?v=' + Date.now(), { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+            var liste = [];
+            [['Tag', (d.tag || {}).videos], ['Nacht', (d.nacht || {}).videos]].forEach(function (teil) {
+                (teil[1] || []).forEach(function (v) {
+                    if (!v.videoId) return;
+                    liste.push({
+                        videoId: v.videoId,
+                        titel: v.titel || v.videoId,
+                        kanal: [v.ort, v.land].filter(Boolean).join(', '),
+                        dauer: teil[0]
+                    });
+                });
+            });
+            zeigeTreffer(liste, 'liste');
+            el('listeBox').querySelector('summary').textContent =
+                '📺 Videos aus der Dauerliste (' + liste.length + ')';
+        })
+        .catch(function () {
+            el('listeBox').querySelector('summary').textContent = '📺 Dauerliste nicht ladbar';
+        });
 
     // --- Verbinden ----------------------------------------------------------
     if (!window.YT_REMOTE_NET || !YT_REMOTE_NET.istEingerichtet()) {
