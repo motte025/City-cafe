@@ -65,15 +65,21 @@
     button:disabled { opacity: 0.45; }
     .hinweis { font-size: 24px; color: #8ea0c8; margin: 10px 2px 18px; line-height: 1.4; }
     .treffer { display: flex; flex-direction: column; gap: 12px; }
+    /* Grosses Vorschaubild oben, Text darunter - am Handy viel besser zu
+       treffen und zu lesen als die fruehere schmale Zeile. */
     .video {
-        display: flex; gap: 14px; align-items: center; text-align: left; width: 100%;
-        background: #131a33; border: 1px solid #27325c; border-radius: 16px;
+        display: flex; flex-direction: column; gap: 12px; align-items: stretch;
+        text-align: left; width: 100%;
+        background: #131a33; border: 1px solid #27325c; border-radius: 18px;
         padding: 12px; color: inherit;
     }
     .video.gewaehlt { border-color: #2f6bff; background: #17224a; }
-    .video img { width: 168px; height: 94px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #000; }
-    .video .titel { font-size: 30px; font-weight: 700; line-height: 1.25; }
-    .video .meta { font-size: 25px; color: #8ea0c8; margin-top: 6px; }
+    .video img {
+        width: 100%; aspect-ratio: 16 / 9; height: auto; object-fit: cover;
+        border-radius: 12px; background: #000;
+    }
+    .video .titel { font-size: 36px; font-weight: 700; line-height: 1.25; }
+    .video .meta { font-size: 28px; color: #8ea0c8; margin-top: 8px; }
     details { margin-top: 18px; background: #131a33; border: 1px solid #27325c; border-radius: 16px; padding: 16px 16px; }
     summary { font-size: 33px; font-weight: 700; cursor: pointer; padding: 6px 0; }
     details .treffer { margin-top: 16px; }
@@ -311,7 +317,8 @@
             b.type = 'button';
             b.className = 'video';
             var bild = document.createElement('img');
-            bild.src = 'https://i.ytimg.com/vi/' + v.videoId + '/mqdefault.jpg';
+            // hqdefault statt mqdefault: das Bild ist jetzt so breit wie die Seite.
+            bild.src = 'https://i.ytimg.com/vi/' + v.videoId + '/hqdefault.jpg';
             bild.alt = '';
             bild.loading = 'lazy';
             var text = document.createElement('div');
