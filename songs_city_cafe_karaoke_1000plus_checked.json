@@ -65120,8 +65120,28 @@
     "auto_discovered": true
   },
   {
-    "artist": "Gaby Albrecht",
-    "title": "Dein Herz kannst du nicht betrügen",
+    "artist": "Sinéad O'Connor",
+    "title": "Nothing Compares 2 U",
+    "album": "",
+    "category": "90s",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "90s",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Kristina Bach",
+    "title": "Du machst eine Frau erst zur Frau",
     "album": "",
     "category": "Schlager & Karaoke",
     "chart": "",
