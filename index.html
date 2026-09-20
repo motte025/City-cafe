@@ -6992,6 +6992,19 @@
             }).catch(() => {});
         }
 
+        // Beim Sprung ins Wunschvideo muessen die Zeitgeber des gerade gezeigten
+        // Widgets weg. Hos'n Obe nutzt eigene (setInterval/setTimeout), die
+        // cancelSequenceTimers() nicht kennt - sonst schaltet sein Countdown
+        // mitten im Wunschvideo weiter (am Screen gesehen: Rotation lief in das
+        // Kartenspiel und das Video brach ab).
+        function nlFernWidgetAbraeumen() {
+            try { ktTestSlotDone = null; } catch (e) {}       // vor ktExitGame: kein Weiterschalten
+            try { ktClearTimers(); } catch (e) {}
+            try { ktSetTimer(null); } catch (e) {}
+            try { if (typeof ktActive !== 'undefined' && ktActive) ktExitGame(); } catch (e) {}
+            try { ktEl('media-view-hosnobe').classList.remove('active'); } catch (e) {}
+        }
+
         function nlFernBefehlAusfuehren(befehl) {
             if (!befehl || !befehl.id || befehl.id === nlFernLetzteId) return;
             nlFernLetzteId = befehl.id;
@@ -7013,6 +7026,7 @@
                 nlFernStatusMelden();
                 if (mediaStateIndex === NL_SLOT_INDEX || nlAktiv) {
                     cancelSequenceTimers();
+                    nlFernWidgetAbraeumen();
                     mediaStateIndex = KT.testFirstInCycle ? -1 : 0;
                     runMasterSequence();
                 }
@@ -7038,6 +7052,7 @@
             // Sofort hinschalten - wer am Handy tippt, will nicht die halbe
             // Rotation abwarten. Der Puffer wird verworfen, der Wunsch zaehlt.
             cancelSequenceTimers();
+            nlFernWidgetAbraeumen();
             nlGeladen = null;
             mediaStateIndex = NL_SLOT_INDEX;
             runMasterSequence();
