@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T03:32:45Z",
+  "checked_at": "2026-09-20T03:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "asot",
       "name": "ASOT",
       "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🖤🕷️💀 EMO NITEEEE 💀🕷️🖤 Pop Punk Rock Indie Alt Metal Music 🔥 Requests Open WITH LIVE DRUMS & BASS !request !tip !patreon !youtube  !birthday",
       "game": "DJs"
     }
   ]
