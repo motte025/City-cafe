@@ -207,6 +207,8 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
+    var FASSUNG = '2026-09-20c';   // steht sichtbar unter dem Titel
+    var ersteTrefferGesehen = false, letzteFremdId = null;
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
     var gewaehlt = null;      // { videoId, titel }
@@ -214,7 +216,7 @@
     var suchId = '';
     var el = function (id) { return document.getElementById(id); };
 
-    el('raum').textContent = 'Screen: ' + RAUM;
+    el('raum').textContent = 'Screen: ' + RAUM + ' · Fassung ' + FASSUNG;
 
     // --- Auswahlreihen (Laufzeit, Aufloesung, Bildrate) ---------------------
     function reihe(boxId, eintraege, start, setzen) {
@@ -373,7 +375,11 @@
         }
         el('status').textContent = 'Suche läuft …';
         el('treffer').innerHTML = '';
-        senden({ aktion: 'suche', text: text }).then(function (id) { suchId = id || ''; });
+        senden({ aktion: 'suche', text: text }).then(function (id) {
+            suchId = id || '';
+            if (!id) el('status').innerHTML = '<span class="fehler">Suchauftrag konnte nicht '
+                + 'gesendet werden - keine Verbindung zum Screen.</span>';
+        });
     });
 
     el('startknopf').addEventListener('click', function () {
@@ -535,12 +541,16 @@
             });
             YT_REMOTE_NET.aufTrefferHoeren(v, RAUM, function (t) {
                 if (!t || !t.liste) return;
-                // Nur die Antwort auf die eigene Suche zeigen. Ohne eigene Suche
-                // gar nichts: sonst standen nach jedem Neuladen die Treffer von
-                // vorhin wieder da. Bewusst ohne Zeitvergleich - der wuerde die
-                // Uhr des Handys gegen die des Servers stellen, und geht sie
-                // vor, verschwaende alles.
-                if (!suchId || t.id !== suchId) return;
+                // Der erste Wert beim Verbinden ist der Stand von vorhin - der
+                // soll nicht wieder auftauchen. Alles danach ist neu. Bewusst
+                // ohne Zeitvergleich (Handy-Uhr gegen Server-Uhr) und ohne
+                // Zwang zur eigenen Kennung: klappt das Senden einmal nicht,
+                // sollen die Treffer trotzdem ankommen.
+                if (!ersteTrefferGesehen) { ersteTrefferGesehen = true; return; }
+                if (suchId && t.id !== suchId && t.id !== letzteFremdId) {
+                    letzteFremdId = t.id;   // Suche eines anderen Gastes: einmal ignorieren
+                    return;
+                }
                 zeigeTreffer(t.liste);
                 if (!t.liste.length) el('status').textContent = 'Nichts gefunden.';
             });
