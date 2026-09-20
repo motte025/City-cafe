@@ -207,7 +207,6 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
-    var geladenSeit = Date.now();
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
     var gewaehlt = null;      // { videoId, titel }
@@ -536,10 +535,12 @@
             });
             YT_REMOTE_NET.aufTrefferHoeren(v, RAUM, function (t) {
                 if (!t || !t.liste) return;
-                // Nur die Antwort auf die eigene Suche zeigen, nicht die eines
-                // anderen Gastes und nicht die alte aus der Datenbank: sonst
-                // standen nach jedem Neuladen wieder dieselben Vorschlaege da.
-                if (suchId ? t.id !== suchId : (!t.ts || t.ts < geladenSeit)) return;
+                // Nur die Antwort auf die eigene Suche zeigen. Ohne eigene Suche
+                // gar nichts: sonst standen nach jedem Neuladen die Treffer von
+                // vorhin wieder da. Bewusst ohne Zeitvergleich - der wuerde die
+                // Uhr des Handys gegen die des Servers stellen, und geht sie
+                // vor, verschwaende alles.
+                if (!suchId || t.id !== suchId) return;
                 zeigeTreffer(t.liste);
                 if (!t.liste.length) el('status').textContent = 'Nichts gefunden.';
             });
