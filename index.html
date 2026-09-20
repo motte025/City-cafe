@@ -1608,8 +1608,14 @@
         }
         .kt-seat.is-loser .kt-fan-card { box-shadow: 0 0 0 5px #ff3344, 0 6px 12px rgba(0,0,0,0.5); }
         .kt-seat.is-loser .kt-seat-name, .kt-seat.is-loser .kt-seat-score { color: #ff3344; }
-        .kt-seat.is-fire .kt-fan-card { box-shadow: 0 0 0 5px #ff8a3d, 0 6px 12px rgba(0,0,0,0.5); }
-        .kt-seat.is-fire .kt-seat-name, .kt-seat.is-fire .kt-seat-score { color: #ff8a3d; }
+        /* Feuer (31 in einer Farbe) ist die beste Hand - also Gewinner-Gruen.
+           Vorher stand der Platz in Orangerot (#ff8a3d) und sah damit fast aus
+           wie der Verlierer-Rahmen (#ff3344). Steht nach der Verlierer-Regel,
+           damit Gruen gewinnt, falls beide Klassen je zusammentreffen. */
+        .kt-seat.is-fire .kt-fan-card {
+            box-shadow: 0 0 0 5px #2ee87a, 0 0 26px rgba(46,232,122,0.55), 0 6px 12px rgba(0,0,0,0.5);
+        }
+        .kt-seat.is-fire .kt-seat-name, .kt-seat.is-fire .kt-seat-score { color: #2ee87a; }
         .kt-seat.is-knocker .kt-seat-tag { border-color: #f4a300; color: #f4a300; }
 
         /* ---------- Status-Smileys ----------
