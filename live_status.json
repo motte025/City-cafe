@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T09:57:45Z",
+  "checked_at": "2026-09-20T10:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,20 @@
       "channel": "asot",
       "name": "ASOT",
       "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "!SUBATHON🎶CYBER RAVE: FUTURE BEATS🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
