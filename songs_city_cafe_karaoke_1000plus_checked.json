@@ -65180,16 +65180,35 @@
     "auto_discovered": true
   },
   {
-    "artist": "Gala",
-    "title": "Everyone Has Inside (Eiffel 65 Radio Pop Cut)",
+    "artist": "Sister Hazel",
+    "title": "All For You",
     "album": "",
-    "category": "Summer Party",
+    "category": "90s",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Latin",
-      "Sommer",
-      "Dance"
+      "90s",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Andy Borg",
+    "title": "Das Mädchen von Agadir",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Kult"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
