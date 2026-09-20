@@ -59,6 +59,13 @@
     .gewaehltName { font-size: 15px; font-weight: 700; margin: 14px 2px 0; }
     button.breit { width: 100%; margin-top: 12px; }
     input[type=range] { width: 100%; margin: 4px 0 2px; accent-color: #2f6bff; height: 34px; }
+    input[type=text] {
+        width: 100%; padding: 11px 13px; font-size: 16px; border-radius: 10px; margin-bottom: 8px;
+        border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
+    }
+    .eigenZeile { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #27325c; }
+    .eigenZeile span { flex: 1; font-size: 15px; }
+    .eigenZeile button { background: #b3243a; padding: 8px 14px; }
     .zeiten { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
     .zeiten button { flex: 1 1 28%; background: #1d2647; color: #cdd7f5; }
     .zeiten button.aktiv { background: #2f6bff; color: #fff; }
@@ -86,6 +93,11 @@
     <div class="treffer" id="liste"></div>
 </details>
 
+<details id="eigeneBox" hidden>
+    <summary>🗑️ Selbst hinzugefügte verwalten</summary>
+    <div id="eigene"></div>
+</details>
+
 <div id="auswahl" hidden>
     <div class="gewaehltName" id="gewaehltName"></div>
     <button class="start" id="startknopf">▶ Auf den Screen</button>
@@ -93,9 +105,12 @@
         <summary>➕ Zur Dauerliste hinzufügen</summary>
         <div class="feldname">Läuft in der Rotation</div>
         <div class="zeiten" id="listenart"></div>
+        <div class="feldname">Überschrift am Screen (optional)</div>
+        <input type="text" id="ort" placeholder="Ort, z. B. Ibiza">
+        <input type="text" id="land" placeholder="Land, z. B. Spanien">
         <button class="still breit" id="listeknopf">➕ Hinzufügen</button>
-        <div class="hinweis">Bleibt gespeichert, auch nach einem Neustart. Die Videos aus
-            nightlife.json bleiben unverändert.</div>
+        <div class="hinweis">Ohne Ort steht der Videotitel als Überschrift. Bleibt gespeichert,
+            auch nach einem Neustart. Die Videos aus nightlife.json bleiben unverändert.</div>
     </details>
 </div>
 
@@ -346,12 +361,18 @@
                 el('status').textContent = 'Steht schon in der Liste.';
                 return null;
             }
-            liste.push({
+            var eintrag = {
                 videoId: gewaehlt.videoId,
                 titel: gewaehlt.titel || gewaehlt.videoId,
                 art: listenArt
-            });
+            };
+            var ort = el('ort').value.trim(), land = el('land').value.trim();
+            if (ort) eintrag.ort = ort.slice(0, 60);
+            if (land) eintrag.land = land.slice(0, 60);
+            liste.push(eintrag);
             return YT_REMOTE_NET.listeSchreiben(verb, RAUM, liste).then(function () {
+                el('ort').value = '';
+                el('land').value = '';
                 el('status').textContent = 'Zur Dauerliste hinzugefügt ('
                     + (listenArt === 'tag' ? 'tagsüber' : 'nachts') + ').';
             });
@@ -373,12 +394,52 @@
         var alles = grundListe.concat(eigeneListe.map(function (v) {
             return {
                 videoId: v.videoId, titel: v.titel || v.videoId,
-                kanal: 'selbst hinzugefügt', dauer: v.art === 'tag' ? 'Tag' : 'Nacht'
+                kanal: [v.ort, v.land].filter(Boolean).join(', ') || 'selbst hinzugefügt',
+                dauer: v.art === 'tag' ? 'Tag' : 'Nacht'
             };
         }));
         zeigeTreffer(alles, 'liste');
         el('listeBox').querySelector('summary').textContent =
             '📺 Videos aus der Dauerliste (' + alles.length + ')';
+        eigeneZeigen();
+    }
+
+    // --- Selbst hinzugefuegte verwalten (entfernen) -------------------------
+    function eigeneZeigen() {
+        var box = el('eigene');
+        box.innerHTML = '';
+        el('eigeneBox').hidden = eigeneListe.length === 0;
+        el('eigeneBox').querySelector('summary').textContent =
+            '🗑️ Selbst hinzugefügte verwalten (' + eigeneListe.length + ')';
+        eigeneListe.forEach(function (v) {
+            var zeile = document.createElement('div');
+            zeile.className = 'eigenZeile';
+            var t = document.createElement('span');
+            t.textContent = (v.titel || v.videoId)
+                + (v.ort ? ' · ' + [v.ort, v.land].filter(Boolean).join(', ') : '')
+                + ' (' + (v.art === 'tag' ? 'Tag' : 'Nacht') + ')';
+            var weg = document.createElement('button');
+            weg.type = 'button';
+            weg.textContent = '✕';
+            weg.addEventListener('click', function () {
+                if (!verb) return;
+                weg.disabled = true;
+                YT_REMOTE_NET.listeLesen(verb, RAUM).then(function (liste) {
+                    return YT_REMOTE_NET.listeSchreiben(verb, RAUM, liste.filter(function (e) {
+                        return e.videoId !== v.videoId;
+                    }));
+                }).then(function () {
+                    el('status').textContent = 'Aus der Dauerliste entfernt.';
+                }).catch(function (e) {
+                    el('status').innerHTML = '<span class="fehler">Entfernen fehlgeschlagen: '
+                        + e.message + '</span>';
+                    weg.disabled = false;
+                });
+            });
+            zeile.appendChild(t);
+            zeile.appendChild(weg);
+            box.appendChild(zeile);
+        });
     }
 
     fetch('nightlife.json?v=' + Date.now(), { cache: 'no-store' })

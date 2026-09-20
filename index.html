@@ -7133,7 +7133,8 @@
                     titel: String(v.titel || v.videoId).slice(0, 120),
                     ort: v.ort ? String(v.ort).slice(0, 60) : undefined,
                     land: v.land ? String(v.land).slice(0, 60) : undefined,
-                    _art: v.art === 'tag' ? 'tag' : 'nacht'
+                    _art: v.art === 'tag' ? 'tag' : 'nacht',
+                    _eigen: true      // ohne Ort steht dann der Titel in der Ueberschrift
                 }));
             nlZusatzVideos.forEach(v => { nlAlleVideos[v.videoId] = v; });
         }
@@ -7195,7 +7196,11 @@
             // Statt der generischen Ueberschrift "Urlaubsziele" steht hier der
             // tatsaechliche Urlaubsort samt Land aus nightlife.json (Tag und
             // Nacht; fehlt "ort", bleibt es bei "Urlaubsziele"/"Nightlife").
-            const nlOrtLand = video.ort ? (video.land ? `${video.ort}, ${video.land}` : video.ort) : null;
+            // Selbst hinzugefuegte Videos (vom Handy) haben oft keinen Ort - dann
+            // steht ihr Titel oben, das sagt mehr als das allgemeine "Nightlife".
+            const nlOrtLand = video.ort
+                ? (video.land ? `${video.ort}, ${video.land}` : video.ort)
+                : (video._eigen && video.titel ? video.titel : null);
             document.getElementById('nl-stadt').textContent =
                 nlSymbol + ' ' + (nlOrtLand || nlStandard);
             document.getElementById('nl-untertitel').textContent =
