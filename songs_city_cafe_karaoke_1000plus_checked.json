@@ -65599,16 +65599,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Udo Lindenberg",
-    "title": "Reeperbahn",
+    "artist": "Demi Lovato",
+    "title": "Here All Night",
     "album": "",
-    "category": "Deutsch Karaoke",
+    "category": "Modern Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Deutsch Karaoke",
       "Party",
-      "Karaoke"
+      "Karaoke",
+      "Modern Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Ice MC",
+    "title": "Think About The Way",
+    "album": "",
+    "category": "Eurodance",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "90s",
+      "Eurodance",
+      "Club"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
