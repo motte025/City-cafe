@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-09-20T18:07:45Z",
+  "checked_at": "2026-09-20T18:22:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -20,13 +27,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "DANCE Classics Sunday - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
