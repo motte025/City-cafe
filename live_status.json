@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T13:27:45Z",
+  "checked_at": "2026-09-20T13:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,23 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "l4uchm3ld3r",
-      "name": "L4uchm3ld3r",
-      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "!SUBATHON🎶CYBER RAVE: FUTURE BEATS🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
