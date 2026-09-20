@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-20T18:22:45Z",
+  "checked_at": "2026-09-20T18:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "asot",
-      "name": "ASOT",
-      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "DANCE Classics Sunday - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "DANCE Classics Sunday - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "asot",
+      "name": "ASOT",
+      "title": "24/7 the best in trance and progressive, A State of Trance !discord",
       "game": "DJs"
     }
   ]
