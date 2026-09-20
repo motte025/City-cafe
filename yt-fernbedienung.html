@@ -455,7 +455,11 @@
         ersteTrefferGesehen = true;
         if (verb) YT_REMOTE_NET.diagnose(verb, RAUM,
             istVorschlag ? 'vorschlaege-geholt' : 'suche-gedrueckt', text);
-        return senden({ aktion: 'suche', text: text }).then(function (id) {
+        // Bei den Vorschlaegen sucht der Screen mehrere Begriffe gleichzeitig
+        // und mischt die Treffer (der mitgeschickte Begriff ist nur der
+        // Rueckfall fuer einen Screen, der das noch nicht kann).
+        return senden({ aktion: 'suche', text: text, vorschlaege: !!istVorschlag })
+            .then(function (id) {
             suchId = id || '';
             if (!id) {
                 el('status').innerHTML = '<span class="fehler">Suchauftrag konnte nicht '

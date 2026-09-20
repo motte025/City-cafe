@@ -7099,7 +7099,12 @@
             if (befehl.aktion === 'suche') {
                 const text = String(befehl.text || '').trim().slice(0, 100);
                 if (!text) return;
-                window.nlSucheAuftrag = { id: befehl.id, text: text };
+                // vorschlaege: der Screen mischt dann mehrere Suchbegriffe,
+                // statt 15 Treffer zu einem Thema zu liefern. Kennt ein
+                // aelterer Screen die Kennzeichnung nicht, sucht er einfach
+                // den mitgeschickten Begriff - dann bleibt es beim Alten.
+                window.nlSucheAuftrag = { id: befehl.id, text: text,
+                                          vorschlaege: !!befehl.vorschlaege };
                 nlFernStatusMelden();
                 return;
             }
