@@ -58,6 +58,7 @@
     .feldname { font-size: 13px; color: #8ea0c8; margin: 14px 2px 6px; text-transform: uppercase; letter-spacing: 0.6px; }
     .gewaehltName { font-size: 15px; font-weight: 700; margin: 14px 2px 0; }
     button.breit { width: 100%; margin-top: 12px; }
+    input[type=range] { width: 100%; margin: 4px 0 2px; accent-color: #2f6bff; height: 34px; }
     .zeiten { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
     .zeiten button { flex: 1 1 28%; background: #1d2647; color: #cdd7f5; }
     .zeiten button.aktiv { background: #2f6bff; color: #fff; }
@@ -105,6 +106,15 @@
     <div class="feldname">Vor</div>
     <div class="zeiten" id="vor"></div>
     <div class="hinweis">Wirkt sofort auf das laufende Video am Screen.</div>
+</details>
+
+<details>
+    <summary>🔊 Ton</summary>
+    <div class="feldname">Lautstärke <span id="lautwert">100 %</span></div>
+    <input type="range" id="laut" min="0" max="100" step="5" value="100">
+    <div class="zeiten" id="lautheit"></div>
+    <div class="hinweis">Gilt nur fürs Video. Der automatische Ausgleich hebt leise Stellen
+        an und dämpft laute, damit die Videos untereinander gleich laut wirken.</div>
 </details>
 
 <details>
@@ -204,6 +214,23 @@
     spulReihe('zurueck', -1);
     spulReihe('vor', 1);
 
+    // --- Ton ----------------------------------------------------------------
+    var lautheitAn = false;
+    reihe('lautheit', [{ wert: false, text: 'Ausgleich aus' }, { wert: true, text: 'Ausgleich an' }],
+        false, function (w) {
+            lautheitAn = w;
+            senden({ aktion: 'ton', lautheit: w });
+        });
+    el('laut').addEventListener('input', function () {
+        el('lautwert').textContent = el('laut').value + ' %';
+    });
+    // Erst beim Loslassen senden, sonst kaeme bei jedem Ziehen ein Befehl.
+    ['change', 'touchend', 'mouseup'].forEach(function (ev) {
+        el('laut').addEventListener(ev, function () {
+            senden({ aktion: 'ton', lautstaerke: Number(el('laut').value) });
+        });
+    });
+
     function statusText(s) {
         if (!verb) return 'Keine Verbindung zum Screen.';
         if (!s) return 'Verbunden. Der Screen hat noch nichts gemeldet.';
@@ -216,7 +243,22 @@
         return 'Der Screen läuft in der normalen Rotation.';
     }
 
-    function zeigeStatus(s) { el('status').innerHTML = statusText(s); }
+    function zeigeStatus(s) {
+        el('status').innerHTML = statusText(s);
+        if (!s) return;
+        // Regler und Schalter auf den Stand des Screens bringen - ausser waehrend
+        // man den Regler gerade in der Hand hat.
+        if (typeof s.lautstaerke === 'number' && document.activeElement !== el('laut')) {
+            el('laut').value = s.lautstaerke;
+            el('lautwert').textContent = s.lautstaerke + ' %';
+        }
+        if (typeof s.lautheit === 'boolean') {
+            lautheitAn = s.lautheit;
+            [].forEach.call(el('lautheit').children, function (k, i) {
+                k.className = (i === (s.lautheit ? 1 : 0)) ? 'aktiv' : '';
+            });
+        }
+    }
 
     // --- Trefferliste -------------------------------------------------------
     function zeigeTreffer(liste, boxId) {

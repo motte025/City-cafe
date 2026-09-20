@@ -6980,6 +6980,17 @@
         // einen API-Schluessel noch ein Google-Konto. Laeuft das Dashboard im
         // Browser ohne Supervisor, bleibt die Suche einfach ohne Ergebnis.
         let nlFern = null;            // { videoId, titel, bisWann } - Wunsch vom Handy
+        // Ton des Nightlife-Videos: Lautstaerke 0-100 und Lautheitsausgleich.
+        // Gilt fuer mpv wie fuers Embed und ueberlebt einen Neustart der Seite.
+        let nlTon = { vol: 100, lautheit: false };
+        try {
+            const gespeichert = JSON.parse(localStorage.getItem('cityCafeNlTon') || 'null');
+            if (gespeichert && typeof gespeichert === 'object') {
+                nlTon.vol = Math.max(0, Math.min(100, Number(gespeichert.vol) || 100));
+                nlTon.lautheit = !!gespeichert.lautheit;
+                window.nlTonWunsch = { id: 'gespeichert', vol: nlTon.vol, lautheit: nlTon.lautheit };
+            }
+        } catch (e) {}
         let nlFernVerb = null;
         let nlFernLetzteId = '';
         let nlTrefferLetzteId = '';
@@ -7000,7 +7011,9 @@
                 bisWann: nlFern ? nlFern.bisWann : 0,
                 imSlot: !!nlAktiv,
                 suchtGerade: offen,
-                ueberMpv: nlExtern()
+                ueberMpv: nlExtern(),
+                lautstaerke: nlTon.vol,
+                lautheit: nlTon.lautheit
             }).catch(() => {});
         }
 
@@ -7028,6 +7041,21 @@
                 const text = String(befehl.text || '').trim().slice(0, 100);
                 if (!text) return;
                 window.nlSucheAuftrag = { id: befehl.id, text: text };
+                nlFernStatusMelden();
+                return;
+            }
+
+            if (befehl.aktion === 'ton') {
+                // Lautstaerke des Videos (0-100) und Lautheitsausgleich an/aus.
+                // Die Systemlautstaerke (90 %) bleibt unberuehrt, hier geht es nur
+                // um das Video selbst - der DJ-Stream behaelt seine Lautstaerke.
+                if (befehl.lautstaerke !== undefined) {
+                    nlTon.vol = Math.max(0, Math.min(100, Number(befehl.lautstaerke) || 0));
+                }
+                if (befehl.lautheit !== undefined) nlTon.lautheit = !!befehl.lautheit;
+                window.nlTonWunsch = { id: befehl.id, vol: nlTon.vol, lautheit: nlTon.lautheit };
+                try { nlPlayer.setVolume(nlTon.vol); } catch (e) {}   // Rueckfall im Browser
+                try { localStorage.setItem('cityCafeNlTon', JSON.stringify(nlTon)); } catch (e) {}
                 nlFernStatusMelden();
                 return;
             }
