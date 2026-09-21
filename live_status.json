@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-21T16:57:46Z",
+  "checked_at": "2026-09-21T17:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 21✨Kuschel-Montag | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
