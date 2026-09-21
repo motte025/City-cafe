@@ -66876,36 +66876,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Slipknot",
-    "title": "Psychosocial",
+    "artist": "ABBA",
+    "title": "The Winner Takes It All",
     "album": "",
-    "category": "Rock Party",
+    "category": "Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Party",
       "Karaoke",
-      "Rock Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Silly",
-    "title": "Mont Klamott",
-    "album": "",
-    "category": "Schlager",
-    "chart": "",
-    "release_date": "",
-    "tags": [
       "Party",
-      "Karaoke",
-      "Schlager"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
