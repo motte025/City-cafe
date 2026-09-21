@@ -48,13 +48,17 @@ body.aufnahme #room-label {
             document.documentElement.classList.add('aufnahme-vor');
             var name = p.get('lokal') || 'CITY CAFE';
             var setzen = function () {
+                // Im <head> gibt es document.body noch nicht. Ohne diese
+                // Pruefung brach das Skript genau hier ab - und der
+                // Aufnahmemodus blieb wirkungslos.
+                if (!document.body) return;
                 document.body.classList.add('aufnahme');
                 var feld = document.getElementById('room-label');
                 if (feld && feld.textContent !== name) feld.textContent = name;
             };
-            setzen();
             document.addEventListener('DOMContentLoaded', setzen);
             setInterval(setzen, 1000);
+            setzen();
         } catch (e) {}
     })();
 </script>
