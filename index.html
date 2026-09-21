@@ -9681,6 +9681,27 @@
         function ktRoundElapsed() {
             return ktRoundStartMs ? (Date.now() - ktRoundStartMs) / 1000 : 0;
         }
+
+        /*
+         * Zeitbudget einer Runde - abhaengig von der Spieleranzahl.
+         *
+         * Bei vier bis sechs Spielern bleibt es bei der Vorgabe (rund 1:30 bis
+         * 2:00). So viele Tischrunden, wie die Regel zulaesst (acht), kommen
+         * dort ohnehin nie zusammen; dort ist die Uhr das Ende.
+         *
+         * Bei zwei oder drei Spielern ist eine Tischrunde kurz - da kann die
+         * achte wirklich erreicht werden. Damit nicht die Uhr vorher
+         * abschneidet, bekommt der kleine Tisch so viel Zeit, wie acht Runden
+         * brauchen (grob gerechnet mit sechs Sekunden je Zug).
+         */
+        const KT_SEKUNDEN_JE_ZUG = 6;
+        function ktRundenZiel() {
+            const ziel = KT.roundTargetSeconds || 95;
+            const count = Number(ktPub.playerCount) || 0;
+            if (count < 2 || count >= 4) return ziel;
+            const runden = KtEngine.MAX_ROUNDS || 8;
+            return Math.max(ziel, Math.round(KT_SEKUNDEN_JE_ZUG * runden * count));
+        }
         function ktClearRoundBudget() {
             if (ktRoundBudgetTimer) { clearTimeout(ktRoundBudgetTimer); ktRoundBudgetTimer = null; }
             ktRoundStartMs = 0;
@@ -9695,7 +9716,7 @@
                 KtNet.publicRef(ktDb, ktSessionId).update({
                     phase: 'reveal', swapWindowSeat: null
                 }).catch(() => {});
-            }, (KT.roundTargetSeconds || 95) * 1000);
+            }, ktRundenZiel() * 1000);
         }
 
         function ktEl(id) { return document.getElementById(id); }
@@ -11068,7 +11089,7 @@
                 // braucht dafuer keine Voraussetzung mehr, siehe canKnock oben.
                 canPass: !ktBotPassUsed[seat],
                 turnsPlayed: Number(ktPub.turnsPlayed) || 0, playerCount: count,
-                elapsedSeconds: ktRoundElapsed(), targetSeconds: KT.roundTargetSeconds
+                elapsedSeconds: ktRoundElapsed(), targetSeconds: ktRundenZiel()
             });
 
             const updates = {
@@ -11134,7 +11155,7 @@
                     updates.finalTurnsRemaining = left;
                     if (left <= 0) updates.phase = 'reveal';
                 } else if (KtEngine.roundShouldEnd(updates.turnsPlayed, count,
-                                                   ktRoundElapsed(), KT.roundTargetSeconds)) {
+                                                   ktRoundElapsed(), ktRundenZiel())) {
                     // Notbremse: geben alle nur noch weiter, endet die Runde nie
                     // von selbst. Auch das Zeitbudget der Runde greift hier.
                     updates.phase = 'reveal';
@@ -11175,7 +11196,7 @@
             // Zwei Minuten Bedenkzeit, aber nie laenger als das, was von der
             // Runde noch uebrig ist - sonst wuerde ein weggelegtes Handy die
             // Rundendauer sprengen.
-            const target = KT.roundTargetSeconds || 95;
+            const target = ktRundenZiel();
             const rest = Math.max(8, target - ktRoundElapsed());
             const wait = Math.min(KT.turnTimeoutSeconds || 20, rest);
             ktPhaseTimer = setTimeout(ktSkipTurn, wait * 1000);
@@ -11215,7 +11236,7 @@
                 updates.finalTurnsRemaining = rest;
                 if (rest <= 0) updates.phase = 'reveal';
             } else if (KtEngine.roundShouldEnd(Number(ktPub.turnsPlayed) || 0, count,
-                                               ktRoundElapsed(), KT.roundTargetSeconds)) {
+                                               ktRoundElapsed(), ktRundenZiel())) {
                 updates.phase = 'reveal';
             }
             KtNet.publicRef(ktDb, ktSessionId).update(updates).catch(() => {});
@@ -11239,7 +11260,7 @@
                 updates.finalTurnsRemaining = left;
                 if (left <= 0) updates.phase = 'reveal';
             } else if (KtEngine.roundShouldEnd(updates.turnsPlayed, count,
-                                               ktRoundElapsed(), KT.roundTargetSeconds)) {
+                                               ktRoundElapsed(), ktRundenZiel())) {
                 updates.phase = 'reveal';
             }
             KtNet.publicRef(ktDb, ktSessionId).update(updates).catch(() => {});

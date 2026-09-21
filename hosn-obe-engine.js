@@ -414,7 +414,11 @@
      * geben alle nur noch weiter, aendert sich die Mitte nie und niemand muss
      * aufgehen. Nach so vielen Zuegen wird deshalb aufgedeckt, egal was ist.
      */
-    var MAX_ROUNDS = 4;
+    // Erzwungener Schluss nach acht Tischrunden (Nutzer-Vorgabe). Bei vier bis
+    // sechs Spielern kommt das ohnehin nie zusammen - dort endet die Runde
+    // vorher ueber das Zeitbudget. Bei zwei oder drei Spielern ist eine
+    // Tischrunde kurz, da kann die achte wirklich erreicht werden.
+    var MAX_ROUNDS = 8;
     var ROUND_TARGET_SECONDS = 95;   // Vorgabe: eine Runde dauert rund 1:30 bis 2:00
 
     /*

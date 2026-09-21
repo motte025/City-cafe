@@ -496,9 +496,9 @@ check('Computer lässt einen schwächeren Satz liegen', leaveIt.type !== 'all', 
  * eine harte Obergrenze und eine mit der Zeit sinkende Klopfschwelle.
  */
 eq('Runde endet nicht vorzeitig', E.roundShouldEnd(5, 3), false);
-eq('Runde endet nach vier Durchgängen', E.roundShouldEnd(12, 3), true);
-eq('Obergrenze skaliert mit der Spieleranzahl', E.roundShouldEnd(23, 6), false);
-eq('Obergrenze bei sechs Spielern', E.roundShouldEnd(24, 6), true);
+eq('Runde endet nach acht Durchgaengen', E.roundShouldEnd(24, 3), true);
+eq('Obergrenze skaliert mit der Spieleranzahl', E.roundShouldEnd(47, 6), false);
+eq('Obergrenze bei sechs Spielern', E.roundShouldEnd(48, 6), true);
 
 /*
  * Zweite Bremse: die Zeit. Vorgabe ist eine Rundendauer von rund 1:30 bis
@@ -507,13 +507,13 @@ eq('Obergrenze bei sechs Spielern', E.roundShouldEnd(24, 6), true);
 eq('Zeitbudget noch nicht aufgebraucht', E.roundShouldEnd(2, 6, 40, 95), false);
 eq('Zeitbudget aufgebraucht beendet die Runde', E.roundShouldEnd(2, 6, 96, 95), true);
 check('Fortschritt zählt Züge und Zeit',
-    E.roundProgress(0, 6, 48, 96) === 0.5 && E.roundProgress(12, 6, 0, 96) === 0.5);
+    E.roundProgress(0, 6, 48, 96) === 0.5 && E.roundProgress(24, 6, 0, 96) === 0.5);
 check('Aufgeh-Schwelle sinkt auch mit der Zeit',
     E.botKnockThreshold(0, 6, 10, 95) > E.botKnockThreshold(0, 6, 90, 95));
 
 check('Aufgeh-Schwelle sinkt mit der Rundenzahl',
-    E.botKnockThreshold(0, 3) > E.botKnockThreshold(7, 3) &&
-    E.botKnockThreshold(7, 3) > E.botKnockThreshold(11, 3));
+    E.botKnockThreshold(0, 3) > E.botKnockThreshold(13, 3) &&
+    E.botKnockThreshold(13, 3) > E.botKnockThreshold(19, 3));
 
 // Vollständige Computer-Runden durchsimulieren: jede muss enden.
 var maxTurnsSeen = 0, endless = 0;
