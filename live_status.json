@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-21T20:37:45Z",
+  "checked_at": "2026-09-21T20:52:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "l4uchm3ld3r",
-      "name": "L4uchm3ld3r",
-      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Auf in die neue Woche... können wir es heute schaffen? <3 !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "l4uchm3ld3r",
+      "name": "L4uchm3ld3r",
+      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
       "game": "DJs"
     },
     {
