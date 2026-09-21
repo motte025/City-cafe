@@ -11306,6 +11306,15 @@
         }
 
         function ktOnPhaseChange(phase) {
+            /*
+             * Sobald die Runde das Aufdecken verlaesst, ist das Aufloesen
+             * erledigt. Ohne diese Zeile blieb ktResolving haengen, wenn die
+             * Phase von aussen umgesetzt wurde (Runde abgebrochen, waehrend das
+             * Ergebnis noch berechnet wurde): ktResolveReveal stieg danach
+             * sofort wieder aus, es wurde kein Verlierer mehr ermittelt und das
+             * Bild blieb im Spiel stehen - genau so am Screen gesehen.
+             */
+            if (phase !== 'reveal') ktResolving = false;
             ktClearTimers();
             // Zahl immer zuruecksetzen: wird die Lobby vorzeitig geschlossen (alle
             // Plaetze belegt), laeuft der Countdown nie ab und die letzte Zahl blieb
