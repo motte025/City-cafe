@@ -1559,6 +1559,37 @@
         }
 
         /* Spielerplatz: aufgefaecherte Kartenreihe statt gerader Stapel */
+        /* ---------- Spieltisch ----------
+           Gruener Filz mit Holzrand, darauf liegt alles andere. Bewusst ohne
+           Bilddatei und mit sparsamen Schatten: die Mali-GPU der Box malt
+           grosse weiche Schatten nur langsam, und waehrend der Fluganimationen
+           wird die Flaeche neu gezeichnet. */
+        .kt-table {
+            position: absolute; z-index: 1; pointer-events: none;
+            left: 34px; right: 34px; top: 14px; bottom: 14px;
+            border-radius: 50% / 46%;
+            background: radial-gradient(ellipse 72% 62% at 50% 44%,
+                        #1f7248 0%, #175c3a 46%, #10432b 78%, #0b3121 100%);
+            box-shadow:
+                inset 0 0 70px rgba(0,0,0,0.5),
+                0 0 0 14px #4a2c18,
+                0 0 0 19px #2a190d,
+                0 18px 40px rgba(0,0,0,0.55);
+        }
+        /* Talon: drei leicht versetzte Rueckseiten am linken Tischrand. */
+        .kt-deck {
+            position: absolute; z-index: 11; left: 296px; top: 348px;
+            width: 122px; height: 183px;
+        }
+        .kt-deck-card {
+            position: absolute; inset: 0; border-radius: 11px;
+            background: linear-gradient(150deg, #23406e 0%, #16294a 60%, #101d36 100%);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
+        }
+        .kt-deck-card:nth-child(1) { transform: translate(-5px, -4px) rotate(-3.5deg); }
+        .kt-deck-card:nth-child(2) { transform: translate(3px, 2px) rotate(2deg); }
+        .kt-deck-card:nth-child(3) { transform: none; }
+
         .kt-seat { position: absolute; transform: translateX(-50%); z-index: 10; }
         .kt-fan { position: relative; width: 232px; height: 202px; }
         .kt-fan-card {
@@ -2705,6 +2736,16 @@
                 <div class="media-inner-view" id="media-view-hosnobe">
                     <div class="kt-felt-tint"></div>
                     <div class="kt-stage">
+                        <!-- Gruener Filz mit Holzrand: darauf liegen Karten und
+                             Plaetze, darunter schaut das Holz der Bar hervor. -->
+                        <div class="kt-table"></div>
+                        <!-- Der Talon: aus diesem Stapel fliegen die Karten beim
+                             Austeilen zu den Plaetzen. -->
+                        <div class="kt-deck" id="kt-deck" hidden>
+                            <div class="kt-deck-card"></div>
+                            <div class="kt-deck-card"></div>
+                            <div class="kt-deck-card"></div>
+                        </div>
                         <div class="kt-banner">
                             <div class="kt-banner-title" id="kt-banner-title">🍻 City Cafe Hos’n Obe</div>
                             <div class="kt-banner-sub" id="kt-banner-sub">Schwimmen · 31 · Hosn Obe</div>
@@ -9541,23 +9582,37 @@
          * waere die untere Reihe wieder zu hoch. 30px bleiben als Reserve.
          */
         const KT_ROW_TOP = 54, KT_ROW_BOTTOM = 566;
+        /*
+         * Die aeusseren Plaetze sitzen etwas weiter zur Tischmitte hin als die
+         * mittleren: dadurch stehen die sechs Plaetze auf einem Bogen statt in
+         * zwei geraden Reihen - der Tisch wirkt rund, wie ein echter Spieltisch.
+         */
         const KT_SEAT_POSITIONS = {
-            LO: { x: 260,  y: KT_ROW_TOP },
+            LO: { x: 268,  y: KT_ROW_TOP + 30 },
             MO: { x: 765,  y: KT_ROW_TOP },
-            RO: { x: 1270, y: KT_ROW_TOP },
-            LU: { x: 260,  y: KT_ROW_BOTTOM },
+            RO: { x: 1262, y: KT_ROW_TOP + 30 },
+            LU: { x: 268,  y: KT_ROW_BOTTOM - 30 },
             MU: { x: 765,  y: KT_ROW_BOTTOM },
-            RU: { x: 1270, y: KT_ROW_BOTTOM }
+            RU: { x: 1262, y: KT_ROW_BOTTOM - 30 }
         };
         // Symmetrische Standardbelegung, Sitzreihenfolge = Zugreihenfolge im
         // Uhrzeigersinn. Reine Tabellenwerte - falls beim Testen eine andere
         // Anordnung besser aussieht, nur hier aendern.
+        /*
+         * Die Reihenfolge der Plaetze laeuft IM UHRZEIGERSINN um den Tisch:
+         * oben von links nach rechts, dann unten von rechts nach links.
+         *
+         * Gespielt wird mit Sitz+1 (KtEngine.nextSeat). Frueher war die untere
+         * Reihe ebenfalls von links nach rechts belegt - dann sprang der Zug
+         * von rechts oben nach links unten und lief unten verkehrt herum. Am
+         * Tisch erwartet jeder, dass es reihum weitergeht.
+         */
         const KT_LAYOUT = {
             2: ['MO', 'MU'],
-            3: ['MO', 'LU', 'RU'],
-            4: ['LO', 'RO', 'LU', 'RU'],
-            5: ['LO', 'MO', 'RO', 'LU', 'RU'],
-            6: ['LO', 'MO', 'RO', 'LU', 'MU', 'RU']
+            3: ['MO', 'RU', 'LU'],
+            4: ['LO', 'RO', 'RU', 'LU'],
+            5: ['LO', 'MO', 'RO', 'RU', 'LU'],
+            6: ['LO', 'MO', 'RO', 'RU', 'MU', 'LU']
         };
         // Aufgefaechert statt gerade gestapelt: leichte Drehung + Versatz je Karte.
         const KT_FAN = [
@@ -10350,6 +10405,68 @@
             return el;
         }
 
+        /*
+         * Austeilen zum Zusehen.
+         *
+         * Bisher lagen die Karten mit einem Schlag da. Jetzt fliegen sie aus
+         * dem Talon reihum IM UHRZEIGERSINN zu den Plaetzen - beim Geber
+         * beginnend, drei Runden lang, danach die drei Karten in die Mitte.
+         * Das ist der Moment, den man vom Wirtshaustisch kennt.
+         *
+         * Gezeigt wird das beim Uebergang in 'playing': da ist der Tisch frei
+         * zu sehen. Waehrend 'starter' liegt die Geber-Ermittlung darueber.
+         */
+        const KT_GEBEN_MS = 320;         // Flugzeit einer einzelnen Karte
+        const KT_GEBEN_ABSTAND = 62;     // Abstand zwischen zwei Karten
+
+        function ktGebenAnimieren() {
+            if (!ktActive) return;
+            const deck = ktEl('kt-deck');
+            if (!deck || deck.hidden) return;
+            const quelle = ktStageGeom(deck);
+            if (!quelle) return;
+            const count = Number(ktPub.playerCount) || 0;
+            const geber = Number(ktPub.starterSeat);
+            const ab = isFinite(geber) ? geber : 0;
+
+            // Eine Karte vom Talon an ihren Platz holen. Die Ruhelage (Faecher-
+            // Versatz bzw. Schraeglauf in der Mitte) steht im inline-transform
+            // und bleibt das Ziel - sonst laege die Karte danach schief.
+            const fliegen = (el, verzug) => {
+                const geo = ktStageGeom(el);
+                if (!geo) return;
+                const basis = (el.style.transform && el.style.transform !== 'none')
+                    ? ' ' + el.style.transform : '';
+                const dx = quelle.x - geo.x, dy = quelle.y - geo.y;
+                const start = `translate(${dx}px, ${dy}px)${basis} rotate(-7deg) scale(0.9)`;
+                try {
+                    el.animate([
+                        { transform: start, opacity: 0, offset: 0 },
+                        { transform: start, opacity: 1, offset: 0.08 },
+                        { transform: basis.trim() || 'none', opacity: 1, offset: 1 }
+                    ], {
+                        duration: KT_GEBEN_MS, delay: verzug, fill: 'backwards',
+                        easing: 'cubic-bezier(0.22, 0.7, 0.3, 1)'
+                    });
+                } catch (e) {}
+            };
+
+            let nr = 0;
+            for (let runde = 0; runde < 3; runde++) {
+                for (let i = 0; i < count; i++) {
+                    const seat = (ab + i) % count;
+                    const platz = ktSeatEls[seat];
+                    if (!platz || !platz.cards[runde]) continue;
+                    fliegen(platz.cards[runde], nr * KT_GEBEN_ABSTAND);
+                    nr++;
+                }
+            }
+            for (let i = 0; i < (ktMiddleEls || []).length; i++) {
+                const slot = ktMiddleEls[i];
+                if (slot && slot.el) fliegen(slot.el, nr++ * KT_GEBEN_ABSTAND);
+            }
+        }
+
         let ktLastAnimatedMove = null;
         function ktAnimateLastMove() {
             const move = ktPub.lastMove;
@@ -10472,6 +10589,12 @@
             // erste Frame nach einem Zug schon das Endergebnis, waehrend die
             // Fluganimation gerade erst startet.
             ktAnimateLastMove();
+            // Der Talon gehoert auf den Tisch, solange eine Runde laeuft.
+            const talon = ktEl('kt-deck');
+            if (talon) {
+                talon.hidden = ['starter', 'playing', 'knocked', 'reveal']
+                    .indexOf(ktPub.phase) < 0;
+            }
             ktRenderBanner();
             ktRenderSeats();
             ktRenderMiddle();
@@ -11100,6 +11223,10 @@
 
             } else if (phase === 'playing' || phase === 'knocked') {
                 ktEnterGame();
+                // Erster Zug einer Runde: vorher das Austeilen zeigen.
+                if (phase === 'playing' && (Number(ktPub.turnsPlayed) || 0) === 0) {
+                    later(ktGebenAnimieren, 80);
+                }
                 ktArmRoundBudget();
                 if (ktIsBotGame()) ktArmBotTurn();
                 else ktArmTurnTimeout();
