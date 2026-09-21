@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-21T12:57:46Z",
+  "checked_at": "2026-09-21T13:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🎶WORKOUT AFTER PARTY 🔥 | !subtember 🔥!youtube !huambo  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Kicks für den Wochenstart!  | HANDSUP & HARDERSTYLES !Socials !pchm !prep  #Werbung",
       "game": "DJs"
     }
   ]
