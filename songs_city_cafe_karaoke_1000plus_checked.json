@@ -66856,8 +66856,8 @@
     "auto_discovered": true
   },
   {
-    "artist": "Al Green",
-    "title": "Let's Stay Together",
+    "artist": "The Prodigy",
+    "title": "Smack My Bitch Up",
     "album": "",
     "category": "Party & Rock",
     "chart": "",
@@ -66866,6 +66866,26 @@
       "Party",
       "Rock",
       "Anthem"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "A La Carte",
+    "title": "River Blue",
+    "album": "",
+    "category": "Ballermann & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Ballermann & Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
