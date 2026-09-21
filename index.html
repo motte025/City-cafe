@@ -1569,6 +1569,18 @@
         /* Der Spieltisch ist das Hintergrundfoto (spieltisch1/2.webp): Filz,
            Bande, Licht und Deko stecken schon darin. Der frueher hier gemalte
            Filz ist damit ueberfluessig. */
+        /* Rundenzaehler: rechts oben auf dem Filz. Weiter aussen ginge nicht -
+           das Oval wird zu den Ecken hin schmal, der Kasten laege auf der
+           Bande. Hier sitzt er ueber dem rechten Platz und stoert kein Blatt. */
+        .kt-runde {
+            position: absolute; left: 1120px; top: 250px; z-index: 13;
+            padding: 6px 14px 7px; border-radius: 10px; white-space: nowrap;
+            background: rgba(6,14,28,0.72); border: 1px solid rgba(214,170,96,0.55);
+            font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900;
+            color: #e8c98a; letter-spacing: 0.6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+        }
+
         /* Vor dem Austeilen liegt nur der Talon am Tisch: waehrend "Wer
            beginnt?" darf noch kein Blatt und keine offene Karte zu sehen sein.
            !important, weil .kt-seat.is-empty .kt-fan-card sonst gewinnt. */
@@ -2771,6 +2783,10 @@
                         </div>
 
                         <div id="kt-seats"></div>
+
+                        <!-- Die wievielte Tischrunde laeuft gerade (rechts oben
+                             auf dem Filz, ueber dem rechten Platz). -->
+                        <div class="kt-runde" id="kt-runde" style="display: none;"></div>
 
                         <div class="kt-middle-hint" id="kt-middle-hint" style="display: none;"></div>
                         <div class="kt-middle" id="kt-middle"></div>
@@ -10023,6 +10039,7 @@
                 // Ende nicht mehr zu sehen, wer die Runde geschlossen hat.
                 const tagText = Number(ktPub.knockedBySeat) === seat ? 'aufgegangen'
                     : phase === 'reveal' ? ''
+                    : ktWeiterSeat === seat ? 'weiter'
                     : !occupied ? 'frei'
                     : inWindow ? 'aufgehen?'
                     : isTurn ? 'am Zug' : '';
@@ -10157,11 +10174,14 @@
                     ? 'Jetzt scannen — jeder bekommt eigene Karten'
                     : 'Scannen und mitspielen') :
                 phase === 'starter' ? 'Höchste Karte beginnt' :
-                phase === 'playing' ? (inWindow
-                    ? ktName(ktPub.swapWindowSeat) + ' — aufgehen oder weitergeben?'
-                    : ktName(displaySeat) + ' ist am Zug') :
-                phase === 'knocked' ? (ktName(ktPub.knockedBySeat)
-                    + ' ist aufgegangen — die letzten Züge laufen') :
+                phase === 'playing' ? (ktWeiterSeat !== null
+                    ? ktName(ktWeiterSeat) + ' sagt weiter'
+                    : inWindow
+                        ? ktName(ktPub.swapWindowSeat) + ' — aufgehen oder weitergeben?'
+                        : ktName(displaySeat) + ' ist am Zug') :
+                phase === 'knocked' ? (ktWeiterSeat !== null
+                    ? ktName(ktWeiterSeat) + ' sagt weiter'
+                    : ktName(ktPub.knockedBySeat) + ' ist aufgegangen — die letzten Züge laufen') :
                 phase === 'reveal' ? (ktPub.fireBySeat !== null && ktPub.fireBySeat !== undefined
                     ? '🔥 FEUER — alle decken auf!'
                     : (ktPub.knockedBySeat !== null && ktPub.knockedBySeat !== undefined
@@ -10520,6 +10540,9 @@
 
         let ktLastAnimatedMove = null;
         let ktFliegtBis = 0;        // bis wann noch eine Karte unterwegs ist
+        let ktWeiterSeat = null;    // wer gerade "weiter" gesagt hat
+        let ktWeiterTimer = null;
+        const KT_WEITER_MS = 2600;  // so lange bleibt "sagt weiter" stehen
         function ktAnimateLastMove() {
             const move = ktPub.lastMove;
             if (!move || !ktActive) return;
@@ -10539,7 +10562,25 @@
              * aus: die Karte flog irgendwohin, und in der Mitte lag nichts mehr.
              * Der genaue Wert folgt unten, sobald totalMs feststeht.
              */
-            ktFliegtBis = Date.now() + KT_FLY_MS * 2 + KT_FLY_GAP + 2 * 260 + 300;
+            if (move.type === 'single' || move.type === 'all') {
+                ktFliegtBis = Date.now() + KT_FLY_MS * 2 + KT_FLY_GAP + 2 * 260 + 300;
+            }
+
+            /*
+             * "Weiter" hat keine Bewegung - man sah also gar nicht, dass
+             * jemand nicht getauscht hat. Deshalb steht es kurz im Band und
+             * als Abzeichen am Platz.
+             */
+            if (move.type === 'pass') {
+                ktWeiterSeat = Number(move.seat);
+                if (ktWeiterTimer) clearTimeout(ktWeiterTimer);
+                ktWeiterTimer = setTimeout(() => {
+                    ktWeiterTimer = null;
+                    ktWeiterSeat = null;
+                    ktRenderBanner();
+                    ktRenderSeats();
+                }, KT_WEITER_MS);
+            }
 
             const seat = Number(move.seat);
             let totalMs = 0;
@@ -10702,6 +10743,26 @@
                 talon.hidden = ['starter', 'playing', 'knocked', 'reveal']
                     .indexOf(ktPub.phase) < 0;
                 if (!talon.hidden) ktTalonZumGeber(talon);
+            }
+
+            /*
+             * Die wievielte Tischrunde laeuft: eine Runde ist eine Runde um den
+             * Tisch, also ein Zug je Platz. Nach der vierten ist Schluss (siehe
+             * KtEngine.MAX_ROUNDS) - damit sehen die Gaeste, wie lange es noch
+             * geht.
+             */
+            const rundeEl = ktEl('kt-runde');
+            if (rundeEl) {
+                const count = Number(ktPub.playerCount) || 0;
+                const zeigen = count > 0 &&
+                    ['playing', 'knocked', 'reveal'].indexOf(ktPub.phase) >= 0;
+                ktSetShown(rundeEl, zeigen);
+                if (zeigen) {
+                    const max = KtEngine.MAX_ROUNDS || 4;
+                    const runde = Math.min(max,
+                        Math.floor((Number(ktPub.turnsPlayed) || 0) / count) + 1);
+                    ktSetText(rundeEl, 'Runde ' + runde + ' / ' + max);
+                }
                 if (!talon.hidden) {
                     // Dieselbe Rueckseite wie die Blaetter dieser Runde.
                     const ruecken = ktCurrentBack();
@@ -11302,6 +11363,8 @@
             ktLastSwapWindowSeat = null;
             if (ktTurnDisplayTimer) { clearTimeout(ktTurnDisplayTimer); ktTurnDisplayTimer = null; }
             ktTurnDisplaySeat = null;
+            if (ktWeiterTimer) { clearTimeout(ktWeiterTimer); ktWeiterTimer = null; }
+            ktWeiterSeat = null;
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
             ktMiddleHold = {};
