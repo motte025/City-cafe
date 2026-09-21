@@ -1817,7 +1817,7 @@
            deshalb faellt die Smiley-Reihe im Kasten weg. */
         .kt-result {
             position: absolute; left: 50%; top: 2px; transform: translateX(-50%); z-index: 30;
-            padding: 8px 34px 10px; border-radius: 16px; text-align: center;
+            padding: 6px 30px 8px; border-radius: 14px; text-align: center;
             background: rgba(4,10,20,0.9); border: 3px solid #ff3344;
             box-shadow: 0 0 46px rgba(255,51,68,0.55);
             font-family: 'Orbitron', sans-serif; font-weight: 900; color: #ffffff;
@@ -1825,8 +1825,8 @@
         /* !important: die ausfuehrliche Regel fuer die Smiley-Reihe steht
            weiter unten und wuerde sonst gewinnen. */
         .kt-result-smileys { display: none !important; }
-        .kt-result-main { font-size: 31px; letter-spacing: 1px; }
-        .kt-result-sub { margin-top: 3px; font-size: 18px; color: #ffb3ba; letter-spacing: 0.5px; }
+        .kt-result-main { font-size: 27px; letter-spacing: 1px; }
+        .kt-result-sub { margin-top: 2px; font-size: 16px; color: #ffb3ba; letter-spacing: 0.5px; }
         /* Der weinende Smiley ueber dem Namen. Die Reihe bleibt auch leer
            stehen (min-height), damit der Kasten beim Nachladen des SVGs nicht
            aufspringt. Zahlen ausnahmsweise mehrere, wird jeder kleiner. */
@@ -9593,8 +9593,9 @@
          * 300 px) liegt vollstaendig darin, kein Blatt ragt auf die Bande.
          */
         const KT_SEAT_POSITIONS = {
-            OL: { x: 560,  y: 67 },     // oben links
-            OR: { x: 974,  y: 67 },     // oben rechts
+            // 77 statt 67: darueber steht beim Aufdecken das Ergebnis.
+            OL: { x: 560,  y: 77 },     // oben links
+            OR: { x: 974,  y: 77 },     // oben rechts
             R:  { x: 1298, y: 343 },    // rechts
             UR: { x: 974,  y: 533 },    // unten rechts
             UL: { x: 560,  y: 533 },    // unten links
