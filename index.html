@@ -10950,7 +10950,6 @@
             view.classList.remove('kt-fullscreen');
             view.style.removeProperty('--kt-scale');
             document.body.classList.remove('kt-fullscreen-on');
-            ktEl('kt-launcher').style.display = '';
             resumeRotation();
 
             if (ktTestSlotDone) {
@@ -11687,8 +11686,11 @@
                 // Handy ohne QR-Code ins Spiel kommt.
                 window.ktSessionAktuell = ktSessionId;
 
+                // Der dauerhafte QR-Code am Bildrand ist auf Wunsch weg: er lag
+                // ueber den Widgets (zuletzt ueber dem Roulette-Rad). Ins Spiel
+                // kommt man ueber die Sammel-Fernbedienung und ueber den
+                // QR-Slot der Rotation.
                 ktEl('kt-launcher-img').src = ktQrUrl(300);
-                ktEl('kt-launcher').style.display = '';
 
                 return KtNet.publicRef(ktDb, ktSessionId).set({
                     phase: 'idle',
