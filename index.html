@@ -453,14 +453,24 @@
          */
         .roulette-rahmen { display: grid; place-items: center; }
         .roulette-rahmen iframe {
-            /* 16:9 wie die Roulette-Seite entworfen ist - in der 1280x815-Buehne
-               (1,57:1) haette das Rad sonst die Seitentexte ueberdeckt.
-               960x540 mal 1,333 ergibt die 1280x720 der Buehne. Sauber
-               gemessen (ohne Video im Hintergrund): 640x360 -> 43 Bilder/s,
-               800x450 -> 39,5, 960x540 -> 35, volle 1280x720 -> 26,6. 960x540
-               ist der beste Kompromiss aus Schaerfe und Laufruhe. */
-            width: 960px; height: 540px; border: 0; display: block;
-            transform: scale(1.3333); transform-origin: center center;
+            /*
+             * 16:9 wie die Roulette-Seite entworfen ist - in der 1280x815-Buehne
+             * (1,57:1) haette das Rad sonst die Seitentexte ueberdeckt.
+             * 800x450 mal 1,6 ergibt die 1280x720 der Buehne.
+             *
+             * Gemessen am Screen (ohne Video im Hintergrund, je 25 s):
+             *   640x360  -> rund 28 Bilder/s
+             *   800x450  -> rund 24
+             *   960x540  -> rund 21
+             *   1280x720 -> rund 15
+             * Vollbild bringt nichts: bei gleicher Rechengroesse dieselben
+             * Werte (960x540 im Vollbild 22/s), 1920x1080 nur 9/s.
+             *
+             * Wichtig fuers Messen: laeuft im Hintergrund mpv (Video oder
+             * Twitch), halbieren sich alle Werte - beides teilt sich die GPU.
+             */
+            width: 800px; height: 450px; border: 0; display: block;
+            transform: scale(1.6); transform-origin: center center;
         }
         .poster-image {
             position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
