@@ -10677,10 +10677,14 @@
             const seat = ktGeberSitz();
             const pos = KT_SEAT_POSITIONS[ktSeatPosKeys[seat]];
             if (seat < 0 || !pos) return;
-            // 100 = halbe Faecherbreite, 14 px Luft, 72 px Stapelbreite: so
-            // liegt er dicht daneben und deckt kein Blatt zu.
+            /*
+             * Abstand zur Mitte des Platzes: die aeussere Karte im Faecher ist
+             * um 14 Grad gedreht und reicht damit bis 66 px neben ihre Mitte
+             * (bei 50 px Versatz also 116 px). 130 px lassen dahinter noch gut
+             * einen Finger breit Luft - so deckt der Stapel kein Blatt zu.
+             */
             const richtung = KT_TALON_INNEN[ktSeatPosKeys[seat]] || 1;
-            const links = richtung > 0 ? (pos.x + 114) : (pos.x - 114 - 72);
+            const links = richtung > 0 ? (pos.x + 130) : (pos.x - 130 - 72);
             const oben = pos.y + 32;
             if (talon.style.left !== links + 'px') talon.style.left = links + 'px';
             if (talon.style.top !== oben + 'px') talon.style.top = oben + 'px';
