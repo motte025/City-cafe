@@ -11193,7 +11193,20 @@
         }
 
         function ktLobbyExpired() {
-            if (ktMode() !== 'botDecks') { ktDealIfPossible(); return; }
+            if (ktMode() !== 'botDecks') {
+                if (ktSeatsTaken() >= 2) { ktDealIfPossible(); return; }
+                /*
+                 * Zu wenige Gaeste haben gescannt. Frueher wurde die Runde
+                 * hier einfach abgeraeumt - der Screen fiel mitten aus dem
+                 * Spiel zurueck in die Rotation ("ich starte das Spiel und
+                 * lande im Dart-Widget"). Jetzt geht es zurueck zur Auswahl:
+                 * dort kann der Host es noch einmal versuchen oder "Computer
+                 * spielt allein" nehmen. Waehlt niemand, beendet der
+                 * 20-Sekunden-Countdown die Runde wie gehabt.
+                 */
+                ktBackToCountSelect();
+                return;
+            }
             const count = Number(ktPub.playerCount) || 0;
             if (count >= 2 && ktSeatsTaken() >= count) ktStartBotRound(count, true, true);
             else ktBackToCountSelect();
