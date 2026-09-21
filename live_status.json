@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-21T13:37:45Z",
+  "checked_at": "2026-09-21T13:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,20 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Kicks für den Wochenstart!  | HANDSUP & HARDERSTYLES !Socials !pchm !prep  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "🪩 VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !subtember | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "16-18 Uhr DJs after work - House Monday mit @dj_falk",
       "game": "DJs"
     }
   ]
