@@ -9607,9 +9607,11 @@
             LO: { x: 268,  y: KT_ROW_TOP + 30 },
             MO: { x: 765,  y: KT_ROW_TOP },
             RO: { x: 1262, y: KT_ROW_TOP + 30 },
-            LU: { x: 268,  y: KT_ROW_BOTTOM - 30 },
-            MU: { x: 765,  y: KT_ROW_BOTTOM },
-            RU: { x: 1262, y: KT_ROW_BOTTOM - 30 }
+            // Die untere Reihe sitzt 16 px hoeher als frueher: sonst lief das
+            // "AM ZUG"-Schild des mittleren unteren Platzes unten aus dem Bild.
+            LU: { x: 268,  y: KT_ROW_BOTTOM - 46 },
+            MU: { x: 765,  y: KT_ROW_BOTTOM - 16 },
+            RU: { x: 1262, y: KT_ROW_BOTTOM - 46 }
         };
         // Symmetrische Standardbelegung, Sitzreihenfolge = Zugreihenfolge im
         // Uhrzeigersinn. Reine Tabellenwerte - falls beim Testen eine andere
