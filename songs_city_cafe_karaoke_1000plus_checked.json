@@ -66157,5 +66157,24 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Bernd Clüver",
+    "title": "Der Junge mit der Mundharmonika ('94er Version)",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Party-Klassiker"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
