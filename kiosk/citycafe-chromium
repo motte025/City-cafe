@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+
+# A 4K desktop makes software-decoded browser video needlessly expensive.
+wlr-randr --output HDMI-A-1 --mode 1920x1080@60Hz || true
+
+# GitHub Pages liefert index.html mit Cache-Control: max-age=600. Chromiums
+# eigener Festplatten-Cache ueberlebt Prozess-Neustarts, also wuerde ein
+# Neustart innerhalb dieser 10 Minuten trotzdem den alten Stand zeigen. Der
+# Zeitstempel macht die URL bei jedem Start neu, damit immer frisch geladen wird.
+CACHEBUST="$(date +%s)"
+
+# --app statt --kiosk: unter sway darf Chromium nicht im Vollbild stehen (sonst
+# laege es ueber dem mpv-Fenster des Nightlife-Slots). --kiosk ohne Vollbild
+# blendet Tabs und Adressleiste ein, --app zeigt nur die Seite.
+exec chromium \
+  --ozone-platform=wayland \
+  --app="https://motte025.github.io/City-cafe/?kiosk=1&raum=zuhause&boxname=Zuhause&_t=${CACHEBUST}" \
+  --disable-features=Translate \
+  --no-first-run \
+  --no-default-browser-check \
+  --disable-session-crashed-bubble \
+  --autoplay-policy=no-user-gesture-required \
+  --load-extension=/opt/citycafe/twitch-autostart,/opt/citycafe/h264-force,/opt/citycafe/youtube-kiosk-ui \
+  --remote-debugging-address=127.0.0.1 \
+  --remote-debugging-port=9222 \
+  --user-data-dir=/home/citycafe/.config/chromium-kiosk
