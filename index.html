@@ -6530,6 +6530,42 @@
             try { return NL_FERN_RAUM === 'zuhause'; } catch (e) { return false; }
         }
 
+        /*
+         * Weckruf vom Handy.
+         *
+         * Die Roulette-Fernbedienung (von Codex) sperrt alle Knoepfe, solange
+         * der Fernseher keinen Status meldet - und der meldet nur, solange der
+         * Roulette-Slot laeuft. Wer also zwischendurch spielen will, sieht nur
+         * "Warte auf TV".
+         *
+         * Deshalb dieser eigene Pfad: die Sammel-Fernbedienung legt unter
+         * djremote/<raum>/roulette/wecken einen Zeitstempel ab, der Screen
+         * schaltet daraufhin in den Roulette-Slot. Ein Weckruf gilt nur eine
+         * Minute, damit ein alter Eintrag nicht bei jedem Seitenstart wieder
+         * Roulette aufruft.
+         */
+        const ROULETTE_WECKRUF_GUELTIG_MS = 60000;
+        let ktRouletteWeckerLetzter = 0;
+
+        function rouletteWeckerStarten() {
+            if (!rouletteAn() || !window.YT_REMOTE_NET || !nlFernVerb) return;
+            try {
+                nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/roulette/wecken')
+                    .on('value', schnappschuss => {
+                        const wert = schnappschuss.val() || {};
+                        const ts = Number(wert.ts) || 0;
+                        if (!ts || ts === ktRouletteWeckerLetzter) return;
+                        if (Date.now() - ts > ROULETTE_WECKRUF_GUELTIG_MS) return;
+                        ktRouletteWeckerLetzter = ts;
+                        // Laeuft gerade eine Runde Hos'n Obe, hat die Vorrang.
+                        if (window.ktSpielLaeuft && window.ktSpielLaeuft()) return;
+                        cancelSequenceTimers();
+                        mediaStateIndex = ROULETTE_SLOT_INDEX;
+                        runMasterSequence();
+                    });
+            } catch (e) { /* ohne Verbindung eben nicht */ }
+        }
+
         function rouletteStop() {
             const halter = document.getElementById('roulette-rahmen');
             if (halter && halter.firstChild) halter.innerHTML = '';
@@ -7410,6 +7446,8 @@
                 // Eigene Intervalle: sollen den Ansichtswechsel ueberleben.
                 setInterval(nlFernStatusMelden, 5000);
                 setInterval(nlTrefferWeiterreichen, 1000);
+                // Weckruf fuers Roulette (siehe rouletteWeckerStarten).
+                try { rouletteWeckerStarten(); } catch (e) {}
             }).catch(() => {});
         }
         nlFernStarten();

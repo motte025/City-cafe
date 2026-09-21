@@ -62,6 +62,12 @@
 <header>
     <div class="zeile" id="tabs"></div>
     <div class="zeile" id="boxen"></div>
+    <!-- Nur im Roulette-Reiter: der Screen zeigt Roulette nur waehrend seines
+         Slots, sonst steht in der Fernbedienung "Warte auf TV". Dieser Knopf
+         holt es an den Fernseher. -->
+    <div class="zeile" id="weckzeile" hidden>
+        <button type="button" id="wecken">🎰 Roulette am Screen starten</button>
+    </div>
     <div class="screen" id="screen">Screen wird gesucht …</div>
 </header>
 <div id="hinweis" class="hinweis" hidden>
@@ -117,6 +123,9 @@
         });
         try { localStorage.setItem('fbTeil', aktiv); } catch (e) {}
 
+        // Weckknopf nur beim Roulette zeigen.
+        el('weckzeile').hidden = seite.schluessel !== 'roulette';
+
         if (seite.brauchtSpiel && !spielSession) {
             el('hinweis').hidden = false;
             el('rahmen').hidden = true;
@@ -134,6 +143,35 @@
             + (seite.brauchtSpiel ? '&session=' + encodeURIComponent(spielSession) : '');
         el('rahmen').setAttribute('src', ziel);
     }
+
+    /*
+     * "Roulette am Screen starten": der Fernseher zeigt Roulette nur waehrend
+     * seines Slots in der Rotation. Vorher meldet er keinen Status, und die
+     * Roulette-Fernbedienung sperrt dann alle Knoepfe ("Warte auf TV").
+     *
+     * Der Knopf legt deshalb einen Zeitstempel unter
+     * djremote/<raum>/roulette/wecken ab; der Screen hoert darauf und schaltet
+     * in den Roulette-Slot (siehe rouletteWeckerStarten in index.html).
+     */
+    el('wecken').addEventListener('click', function () {
+        var knopf = el('wecken');
+        if (!verbindung) { knopf.textContent = 'Keine Verbindung zum Screen'; return; }
+        knopf.disabled = true;
+        knopf.textContent = 'Wird am Screen geöffnet …';
+        verbindung.db.ref('djremote/' + raum + '/roulette/wecken')
+            .set({ ts: Date.now() })
+            .then(function () {
+                knopf.textContent = '✓ Am Screen geöffnet';
+                setTimeout(function () {
+                    knopf.textContent = '🎰 Roulette am Screen starten';
+                    knopf.disabled = false;
+                }, 6000);
+            })
+            .catch(function () {
+                knopf.textContent = 'Nicht gesendet — Verbindung prüfen';
+                knopf.disabled = false;
+            });
+    });
 
     // Kommt eine neue Spielkennung herein, waehrend das Kartenspiel offen ist,
     // laedt es sich damit von selbst.
