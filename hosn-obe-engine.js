@@ -437,13 +437,22 @@
         return roundProgress(turnsPlayed, playerCount, elapsedSeconds, targetSeconds) >= 1;
     }
 
-    // Je laenger die Runde dauert, desto eher gibt sich der Computer zufrieden -
-    // sonst warten die Gaeste ewig auf ein Aufgehen, das nie kommt.
+    /*
+     * Je laenger die Runde dauert, desto eher gibt sich der Computer mit einer
+     * guten Hand zufrieden - aber er geht NIE aus Resignation auf.
+     *
+     * Vorher fiel die Schwelle gegen Rundenende auf 17 Punkte. Damit beendete
+     * der Computer die Runde, sobald er fuer sich keine Chance mehr sah - am
+     * Tisch sah das aus, als wuerde er hinschmeissen. Vorgabe: sieht er keine
+     * Chance mehr, spielt er die Partie trotzdem fertig. Kommt kein Aufgehen
+     * zustande, endet die Runde ueber Zuglimit und Zeitbudget, also nachdem
+     * jeder noch gespielt hat.
+     */
     function botKnockThreshold(turnsPlayed, playerCount, elapsedSeconds, targetSeconds) {
         var progress = roundProgress(turnsPlayed, playerCount, elapsedSeconds, targetSeconds);
         if (progress < 0.5) return BOT_KNOCK_SOLID;          // 24
-        if (progress < 0.75) return BOT_KNOCK_SOLID - 3;     // 21
-        return BOT_KNOCK_SOLID - 7;                          // 17
+        if (progress < 0.75) return BOT_KNOCK_SOLID - 1;     // 23
+        return BOT_KNOCK_SOLID - 2;                          // 22
     }
 
     /*

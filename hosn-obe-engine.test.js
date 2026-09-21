@@ -438,6 +438,26 @@ for (var kb = 0; kb < 2000; kb++) {
 }
 eq('Computer geht nie mit schwacher Hand auf', knockLow, 0);
 
+/*
+ * Auch am Rundenende darf der Computer nicht aus Resignation aufgehen: sieht
+ * er keine Chance mehr, spielt er die Partie trotzdem fertig. Frueher fiel die
+ * Schwelle gegen Schluss auf 17 Punkte.
+ */
+var spaetKnockLow = 0;
+for (var sk = 0; sk < 2000; sk++) {
+    var ds = E.deal(2);
+    var hs = ds.hands[0];
+    var ms = E.botDecide(hs, ds.middleCards, {
+        canKnock: true, canPass: false,
+        turnsPlayed: 40, playerCount: 2, elapsedSeconds: 200, targetSeconds: 95
+    });
+    var nachS = hs.slice();
+    if (ms.type === 'single') nachS[ms.handIndex] = ds.middleCards[ms.middleIndex];
+    else if (ms.type === 'all') nachS = ds.middleCards.slice();
+    if ((ms.type === 'knock' || ms.knock) && E.scoreHand(nachS).score < 22) spaetKnockLow++;
+}
+eq('Auch am Rundenende kein Aufgeben mit schwacher Hand', spaetKnockLow, 0);
+
 // ---------- Alle oder keine ----------
 /*
  * Liegt in der Mitte ein Drilling oder drei gleiche Farben, ist der
