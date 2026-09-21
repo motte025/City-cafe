@@ -1552,6 +1552,10 @@
             color: #ffffff; text-transform: uppercase; letter-spacing: 1.5px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 4px 16px rgba(0,0,0,0.85), 0 0 30px rgba(0,0,0,0.7);
         }
+        /* Tischfoto mit eigenem Messingschild (spieltisch2.webp): dann bleibt
+           unsere Ueberschrift weg - aber der Platz erhalten, damit das Band
+           darunter nicht nach oben rutscht. */
+        .kt-eigenes-schild .kt-banner-title { visibility: hidden; }
         .kt-banner-sub {
             margin-top: 3px; font-size: 15px; font-weight: 800; color: #f1f5f9;
             text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 3px 12px rgba(0,0,0,0.8);
@@ -9712,7 +9716,13 @@
         function ktSetFelt() {
             const view = ktEl('media-view-hosnobe');
             if (!view) return;
-            view.style.backgroundImage = "url('" + KT_TISCH_BILDER[ktFeltIndex] + "')";
+            const bild = KT_TISCH_BILDER[ktFeltIndex];
+            view.style.backgroundImage = "url('" + bild + "')";
+            // Das zweite Foto traegt oben am Tischrand ein Messingschild
+            // "CITY CAFE KLAGENFURT" - dahinter gehoert keine zweite
+            // Ueberschrift. Nur unsichtbar, nicht entfernt: so bleibt der Rest
+            // des Bands ("Spieler X ist am Zug", Countdown) an seinem Platz.
+            view.classList.toggle('kt-eigenes-schild', bild === 'spieltisch2.webp');
             ktFeltIndex = (ktFeltIndex + 1) % KT_TISCH_BILDER.length;
         }
 
