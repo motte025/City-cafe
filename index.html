@@ -1674,10 +1674,10 @@
            Die Karten liegen bewusst schief und leicht versetzt - wie echte Karten,
            die jemand auf den Tisch geworfen hat, nicht wie ein Raster. Rotation und
            Versatz kommen per Zufall aus ktRenderMiddle(). */
-        /* Die offenen Karten und der Talon daneben bilden eine Gruppe: damit
-           sie als Ganzes in der Tischmitte sitzt, ruecken die offenen Karten
-           um die halbe Talonbreite nach links. */
-        .kt-middle { position: absolute; left: 50%; top: 350px; transform: translateX(calc(-50% - 64px)); z-index: 12; display: flex; gap: 16px; }
+        /* Die drei offenen Karten sitzen genau in der Tischmitte. Der Talon
+           liegt nicht mehr daneben, sondern beim Geber (siehe
+           ktTalonZumGeber). */
+        .kt-middle { position: absolute; left: 50%; top: 350px; transform: translateX(-50%); z-index: 12; display: flex; gap: 16px; }
         .kt-middle-card {
             width: 104px; height: 156px; border-radius: 10px; overflow: hidden;
             background: #0a1426; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
@@ -9811,6 +9811,7 @@
          */
         let ktSeatEls = [];          // { wrap, cards[], imgs[], name, score, tag }
         let ktSeatLayoutKey = '';    // Spieleranzahl, fuer die die Struktur gebaut wurde
+        let ktSeatPosKeys = [];      // je Sitz der Platz am Tisch ('OL', 'R', …)
 
         /* ---------- Status-Smileys ----------
          *
@@ -9886,6 +9887,7 @@
             host.innerHTML = '';
             ktSeatEls = [];
             const layout = KT_LAYOUT[count] || KT_LAYOUT[6];
+            ktSeatPosKeys = layout.slice();
 
             for (let seat = 0; seat < count; seat++) {
                 const pos = KT_SEAT_POSITIONS[layout[seat]];
@@ -10015,8 +10017,10 @@
                 // Beim Aufdecken entfaellt das Abzeichen: dort steht unter dem
                 // Namen die Punktzahl, und beides zusammen liefe unten aus dem
                 // Bild. Wer aufgegangen ist, steht ohnehin im Banner.
-                const tagText = phase === 'reveal' ? ''
-                    : Number(ktPub.knockedBySeat) === seat ? 'aufgegangen'
+                // "aufgegangen" bleibt auch beim Aufdecken stehen: sonst war am
+                // Ende nicht mehr zu sehen, wer die Runde geschlossen hat.
+                const tagText = Number(ktPub.knockedBySeat) === seat ? 'aufgegangen'
+                    : phase === 'reveal' ? ''
                     : !occupied ? 'frei'
                     : inWindow ? 'aufgehen?'
                     : isTurn ? 'am Zug' : '';
@@ -10151,9 +10155,13 @@
                 phase === 'playing' ? (inWindow
                     ? ktName(ktPub.swapWindowSeat) + ' — aufgehen oder weitergeben?'
                     : ktName(displaySeat) + ' ist am Zug') :
-                phase === 'knocked' ? 'Aufgegangen — die letzten Züge laufen' :
+                phase === 'knocked' ? (ktName(ktPub.knockedBySeat)
+                    + ' ist aufgegangen — die letzten Züge laufen') :
                 phase === 'reveal' ? (ktPub.fireBySeat !== null && ktPub.fireBySeat !== undefined
-                    ? '🔥 FEUER — alle decken auf!' : 'Aufgedeckt') :
+                    ? '🔥 FEUER — alle decken auf!'
+                    : (ktPub.knockedBySeat !== null && ktPub.knockedBySeat !== undefined
+                        ? 'Aufgedeckt — ' + ktName(ktPub.knockedBySeat) + ' war aufgegangen'
+                        : 'Aufgedeckt')) :
                 'Schwimmen · 31 · Hos’n Obe';
         }
 
@@ -10642,6 +10650,35 @@
             }
         }
 
+        /*
+         * Der Talon liegt beim GEBER - also neben dem Blatt des Spielers, der
+         * ausgegeben hat. Geber ist klassisch der Platz VOR dem Beginner: wer
+         * die hoechste Karte gezogen hat, sitzt links vom Geber und faengt an.
+         *
+         * Der Stapel liegt immer auf der Tischinnenseite des Platzes. Aussen
+         * waere er teils auf der Bande gelandet, weil das Filzoval zu den
+         * Seiten hin schmaeler wird.
+         */
+        const KT_TALON_INNEN = { OL: 1, UL: 1, L: 1, OR: -1, UR: -1, R: -1 };
+
+        function ktGeberSitz() {
+            const count = Number(ktPub.playerCount) || 0;
+            const start = Number(ktPub.starterSeat);
+            if (!count || !isFinite(start)) return -1;
+            return (start - 1 + count) % count;
+        }
+
+        function ktTalonZumGeber(talon) {
+            const seat = ktGeberSitz();
+            const pos = KT_SEAT_POSITIONS[ktSeatPosKeys[seat]];
+            if (seat < 0 || !pos) return;
+            const richtung = KT_TALON_INNEN[ktSeatPosKeys[seat]] || 1;
+            const links = richtung > 0 ? (pos.x + 108) : (pos.x - 212);
+            const oben = pos.y + 10;
+            if (talon.style.left !== links + 'px') talon.style.left = links + 'px';
+            if (talon.style.top !== oben + 'px') talon.style.top = oben + 'px';
+        }
+
         function ktRender() {
             // Muss zuerst laufen: setzt ktTurnDisplaySeat/ktMiddleHold, bevor
             // die folgenden Funktionen sie zum Zeichnen lesen. Sonst zeigt der
@@ -10653,6 +10690,7 @@
             if (talon) {
                 talon.hidden = ['starter', 'playing', 'knocked', 'reveal']
                     .indexOf(ktPub.phase) < 0;
+                if (!talon.hidden) ktTalonZumGeber(talon);
                 if (!talon.hidden) {
                     // Dieselbe Rueckseite wie die Blaetter dieser Runde.
                     const ruecken = ktCurrentBack();
