@@ -1530,11 +1530,14 @@
            laege das Licht hinter dem Tisch und man saehe nichts davon. */
         .kt-felt-tint {
             position: absolute; inset: 0; z-index: 3; pointer-events: none;
-            background: radial-gradient(ellipse 640px 430px at 50% 52%,
-                        rgba(255,244,214,0.26) 0%,
-                        rgba(255,236,196,0.13) 42%,
-                        rgba(255,230,190,0.04) 66%,
-                        rgba(0,0,0,0) 78%);
+            /* Enger und waermer als vorher: ein Lichtkegel ueber der Tischmitte,
+               der zu den Plaetzen hin ausklingt. Zusammen mit dem dunklen
+               Filzrand ergibt das die Tiefe, die vorher fehlte. */
+            background: radial-gradient(ellipse 600px 370px at 50% 50%,
+                        rgba(255,246,222,0.34) 0%,
+                        rgba(255,238,200,0.19) 38%,
+                        rgba(255,230,190,0.07) 64%,
+                        rgba(0,0,0,0) 80%);
         }
 
 
@@ -1577,9 +1580,11 @@
         }
         .kt-felt {
             position: absolute; inset: 20px; border-radius: 50% / 46%;
-            background: radial-gradient(ellipse 72% 62% at 50% 44%,
-                        #1f7248 0%, #175c3a 46%, #10432b 78%, #0b3121 100%);
-            box-shadow: inset 0 0 70px rgba(0,0,0,0.5), inset 0 0 0 3px rgba(0,0,0,0.4);
+            /* Tiefer Filzton, zur Bande hin deutlich dunkler: dadurch sieht der
+               Tisch aus, als haenge die Lampe wirklich darueber. */
+            background: radial-gradient(ellipse 66% 58% at 50% 42%,
+                        #2a8a58 0%, #17673f 44%, #0d4128 76%, #07291a 100%);
+            box-shadow: inset 0 0 130px rgba(0,0,0,0.6), inset 0 0 0 4px rgba(0,0,0,0.5);
         }
         /* Talon: drei leicht versetzte Karten neben den Mittenkarten, mit
            derselben Rueckseite wie die Blaetter der Spieler. */
