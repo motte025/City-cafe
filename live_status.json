@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-21T16:27:45Z",
+  "checked_at": "2026-09-21T16:42:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Auf in die neue Woche... können wir es heute schaffen? <3 !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "bruebie",
@@ -13,13 +20,6 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "🪩 VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !subtember | !tip ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Auf in die neue Woche... können wir es heute schaffen? <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
