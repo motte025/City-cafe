@@ -6547,6 +6547,45 @@
         const ROULETTE_WECKRUF_GUELTIG_MS = 60000;
         let ktRouletteWeckerLetzter = 0;
 
+        /*
+         * Wie lange der Roulette-Slot bleibt.
+         *
+         * Vier Minuten sind die Untergrenze. Laeuft danach noch ein Zyklus,
+         * bleibt der Slot stehen, bis das Rad fertig ist - 100 Runden dauern
+         * rund 40 Minuten, und die soll man auch zu Ende sehen koennen.
+         * Frueher brach die Rotation stur nach vier Minuten ab, mitten im
+         * Zyklus.
+         *
+         * Die Notbremse nach zwei Stunden faengt den Fall ab, dass "unendlich"
+         * gewaehlt wurde und niemand mehr stoppt.
+         */
+        const ROULETTE_MAX_MS = 2 * 60 * 60 * 1000;
+        let rouletteStand = null;       // letzter Stand, den das Rad gemeldet hat
+        let rouletteStandZeit = 0;
+
+        function rouletteStandHoeren() {
+            if (!rouletteAn() || !nlFernVerb) return;
+            try {
+                nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/roulette/status')
+                    .on('value', schnappschuss => {
+                        const wert = schnappschuss.val() || {};
+                        rouletteStandZeit = Number(wert.ts) || 0;
+                        try {
+                            rouletteStand = typeof wert.payload === 'string'
+                                ? JSON.parse(wert.payload) : null;
+                        } catch (e) { rouletteStand = null; }
+                    });
+            } catch (e) { /* ohne Verbindung eben nicht */ }
+        }
+
+        function rouletteZyklusLaeuft() {
+            if (!rouletteStand) return false;
+            // Meldet sich das Rad nicht mehr, gilt der Zyklus als beendet.
+            if (Date.now() - rouletteStandZeit > 15000) return false;
+            if (!rouletteStand.running) return false;
+            return rouletteStand.remaining === null || Number(rouletteStand.remaining) > 0;
+        }
+
         function rouletteWeckerStarten() {
             if (!rouletteAn() || !window.YT_REMOTE_NET || !nlFernVerb) return;
             try {
@@ -6591,7 +6630,17 @@
             // Bild laeuft.
             videoRuheModus(true);
             mediaStateIndex = nextStateIndex;
-            globalMasterTimer = later(runMasterSequence, ROULETTE_SLOT_MS);
+            // Nach der Mindestzeit alle zehn Sekunden nachsehen: laeuft noch
+            // ein Zyklus, bleibt der Slot stehen.
+            const spaetestens = Date.now() + ROULETTE_MAX_MS;
+            const weiterschauen = () => {
+                if (rouletteZyklusLaeuft() && Date.now() < spaetestens) {
+                    globalMasterTimer = later(weiterschauen, 10000);
+                    return;
+                }
+                runMasterSequence();
+            };
+            globalMasterTimer = later(weiterschauen, ROULETTE_SLOT_MS);
         }
 
         function runMusicSlidesState(nextStateIndex) {
@@ -7448,6 +7497,7 @@
                 setInterval(nlTrefferWeiterreichen, 1000);
                 // Weckruf fuers Roulette (siehe rouletteWeckerStarten).
                 try { rouletteWeckerStarten(); } catch (e) {}
+                try { rouletteStandHoeren(); } catch (e) {}
             }).catch(() => {});
         }
         nlFernStarten();
