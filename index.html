@@ -435,6 +435,13 @@
         .drink-layer.is-visible { opacity: 1; z-index: 2; transition: opacity 0.2s linear; }
 
         .poster-container { width: 1280px; height: 815px; position: relative; border-radius: 22px; overflow: hidden; }
+        /* Roulette-Rahmen: gleiche Buehne wie die Plakate, der Inhalt kommt aus
+           roulette/index.html (eigene Seite im selben Repo). */
+        .roulette-rahmen {
+            width: 1280px; height: 815px; position: relative;
+            border-radius: 22px; overflow: hidden; background: #071713;
+        }
+        .roulette-rahmen iframe { width: 100%; height: 100%; border: 0; display: block; }
         .poster-image {
             position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
             object-fit: contain; display: block; opacity: 0;
@@ -2374,6 +2381,14 @@
                         <img class="poster-image" id="musicSlide2" src="" alt="Musik-Slide 2">
                         <div class="poster-ambient-glaze"></div>
                     </div>
+                </div>
+
+                <!-- Roulette am Fernseher (nur zuhause, siehe runRouletteState).
+                     Die Seite liegt im selben Repo unter roulette/ und wird nur
+                     fuer die Dauer des Slots geladen - ein WebGL-Rad im
+                     Hintergrund braucht die Box nicht mitzurechnen. -->
+                <div class="media-inner-view" id="media-view-roulette">
+                    <div class="roulette-rahmen" id="roulette-rahmen"></div>
                 </div>
 
                 <div class="media-inner-view" id="media-view-schlager">
@@ -6465,6 +6480,46 @@
                 else { slide1.src = url; slide1.classList.add('active'); slide2.classList.remove('active'); isMusicSlide1Active = true; }
             };
             if (preloader.complete) apply(); else { preloader.onload = apply; preloader.onerror = apply; }
+        }
+
+        /* ---------- Roulette am Fernseher ----------
+         *
+         * Nur am Fernseher zuhause (?raum=zuhause): im Lokal laeuft die
+         * Rotation unveraendert weiter. Die Seite (roulette/index.html, von
+         * Codex gebaut) wird nur fuer die Dauer des Slots in einen Rahmen
+         * geladen und danach wieder aus dem DOM genommen - ein WebGL-Rad im
+         * Hintergrund wuerde die Box unnoetig beschaeftigen.
+         */
+        const ROULETTE_SLOT_INDEX = 9.5;
+        const ROULETTE_SLOT_MS = 240000;                      // vier Minuten
+        const ROULETTE_AN = NL_FERN_RAUM === 'zuhause';
+
+        function rouletteStop() {
+            const halter = document.getElementById('roulette-rahmen');
+            if (halter && halter.firstChild) halter.innerHTML = '';
+        }
+
+        function runRouletteState(nextStateIndex) {
+            const halter = document.getElementById('roulette-rahmen');
+            const view = document.getElementById('media-view-roulette');
+            if (!ROULETTE_AN || !halter || !view) {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
+            view.classList.add('active');
+            halter.innerHTML = '';
+            const rahmen = document.createElement('iframe');
+            rahmen.setAttribute('allow', 'autoplay');
+            rahmen.setAttribute('title', 'Roulette');
+            rahmen.src = 'roulette/index.html?raum=' + encodeURIComponent(NL_FERN_RAUM)
+                       + '&v=' + Date.now();
+            halter.appendChild(rahmen);
+            // Wie bei den Video-Slots: Effekte ruhig halten, solange bewegtes
+            // Bild laeuft.
+            videoRuheModus(true);
+            mediaStateIndex = nextStateIndex;
+            globalMasterTimer = later(runMasterSequence, ROULETTE_SLOT_MS);
         }
 
         function runMusicSlidesState(nextStateIndex) {
@@ -11826,6 +11881,7 @@
             // Ein ausgeblendetes iframe streamt weiter - die Player muessen deshalb
             // bei jedem Ansichtswechsel wirklich aus dem DOM.
             djStopPlayer();
+            if (mediaStateIndex !== ROULETTE_SLOT_INDEX) rouletteStop();
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
             if (mediaStateIndex !== QR_SLOT_INDEX) qrCountdownStoppen();
 
@@ -11981,7 +12037,10 @@
                 }
 
             } else if (mediaStateIndex === 9) {
-                runMusicSlidesState(10); // -> Trinkspiel V1 (Foto)
+                runMusicSlidesState(ROULETTE_SLOT_INDEX); // -> Roulette (nur zuhause)
+
+            } else if (mediaStateIndex === ROULETTE_SLOT_INDEX) {
+                runRouletteState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
                 runPhotoTrinkspielV1(QR_SLOT_INDEX); // -> wieder an den Zyklusanfang (QR-Codes)
