@@ -10051,12 +10051,11 @@
             const hint = ktEl('kt-middle-hint');
             const cards = ktPub.middleCards || [];
             const phase = ktPub.phase;
-            // Beim Aufdecken steht an dieser Stelle das Ergebnis-Panel - die
-            // drei Karten bleiben aber liegen, solange der letzte Tausch noch
-            // fliegt. Sonst verschwindet die Mitte mitten in seiner Bewegung.
-            const fliegtNoch = Date.now() < ktFliegtBis;
+            // Die drei Karten bleiben bis zum Schluss liegen - auch beim
+            // Aufdecken. Vorher verschwanden sie in dem Moment, in dem die
+            // Runde endete, teils mitten im letzten Tausch.
             const show = cards.length === 3 &&
-                (phase === 'playing' || phase === 'knocked' || (phase === 'reveal' && fliegtNoch));
+                (phase === 'playing' || phase === 'knocked' || phase === 'reveal');
             ktSetShown(wrap, show);
             if (!show) { ktSetShown(hint, false); return; }
 
@@ -11028,7 +11027,15 @@
                 reveals[seat] = afterHand;
                 updates.phase = 'reveal';
                 updates.fireBySeat = seat;
-                updates.lastMove = { type: 'fire', seat: seat };
+                // Den Tausch NICHT ueberschreiben: frueher stand hier
+                // lastMove = {type:'fire'}, und genau die Karte, die das Feuer
+                // gebracht hat, flog nie - sie war einfach da. Der Tausch
+                // bleibt also stehen und wird nur als Feuer markiert.
+                if (updates.lastMove && updates.lastMove.type !== 'pass') {
+                    updates.lastMove.fire = true;
+                } else {
+                    updates.lastMove = { type: 'fire', seat: seat };
+                }
             }
 
             Object.keys(reveals).forEach(s => { updates['revealedHands/' + s] = reveals[s]; });
