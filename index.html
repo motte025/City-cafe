@@ -10503,6 +10503,20 @@
             if (stamp === ktLastAnimatedMove) return;
             ktLastAnimatedMove = stamp;
 
+            /*
+             * SOFORT merken, dass gleich etwas fliegt - noch vor dem ersten
+             * Zeichnen.
+             *
+             * Der letzte Zug einer Runde kommt oft in EINER Aktualisierung
+             * zusammen mit phase:'reveal'. Wurde die Flugzeit erst am Ende
+             * dieser Funktion gesetzt, hatte das ktRenderMiddle() weiter unten
+             * die Mitte schon ausgeblendet (Aufdecken!) - der Flieger hat dann
+             * gegen eine unsichtbare Mitte gemessen. Genau so sah es am Screen
+             * aus: die Karte flog irgendwohin, und in der Mitte lag nichts mehr.
+             * Der genaue Wert folgt unten, sobald totalMs feststeht.
+             */
+            ktFliegtBis = Date.now() + KT_FLY_MS * 2 + KT_FLY_GAP + 2 * 260 + 300;
+
             const seat = Number(move.seat);
             let totalMs = 0;
 
