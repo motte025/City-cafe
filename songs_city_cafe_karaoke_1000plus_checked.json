@@ -66976,16 +66976,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "The White Stripes",
-    "title": "Ball and Biscuit",
+    "artist": "G.G. Anderson",
+    "title": "Cheerio",
     "album": "",
-    "category": "Party & Rock",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke",
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "The Band Perry",
+    "title": "If I Die Young",
+    "album": "",
+    "category": "Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Karaoke",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
