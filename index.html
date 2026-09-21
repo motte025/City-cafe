@@ -451,9 +451,12 @@
          * Massstab 2.2 -> 28/s (Rad UND Dashboard). 582x370 mal 2.2 ergibt
          * wieder die 1280x815 der Buehne.
          */
+        .roulette-rahmen { display: grid; place-items: center; }
         .roulette-rahmen iframe {
-            width: 582px; height: 370px; border: 0; display: block;
-            transform: scale(2.2); transform-origin: top left;
+            /* 16:9 wie die Roulette-Seite entworfen ist - in der 1280x815-Buehne
+               (1,57:1) haette das Rad sonst die Seitentexte ueberdeckt. */
+            width: 640px; height: 360px; border: 0; display: block;
+            transform: scale(2); transform-origin: center center;
         }
         .poster-image {
             position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
