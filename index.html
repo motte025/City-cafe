@@ -1573,10 +1573,10 @@
            das Oval wird zu den Ecken hin schmal, der Kasten laege auf der
            Bande. Hier sitzt er ueber dem rechten Platz und stoert kein Blatt. */
         .kt-runde {
-            position: absolute; left: 1120px; top: 250px; z-index: 13;
-            padding: 6px 14px 7px; border-radius: 10px; white-space: nowrap;
+            position: absolute; left: 1120px; top: 246px; z-index: 13;
+            padding: 8px 20px 9px; border-radius: 12px; white-space: nowrap;
             background: rgba(6,14,28,0.72); border: 1px solid rgba(214,170,96,0.55);
-            font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900;
+            font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900;
             color: #e8c98a; letter-spacing: 0.6px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.9);
         }
@@ -10747,9 +10747,9 @@
 
             /*
              * Die wievielte Tischrunde laeuft: eine Runde ist eine Runde um den
-             * Tisch, also ein Zug je Platz. Nach der vierten ist Schluss (siehe
-             * KtEngine.MAX_ROUNDS) - damit sehen die Gaeste, wie lange es noch
-             * geht.
+             * Tisch, also ein Zug je Platz. Nutzer-Vorgabe: nur die aktuelle
+             * Runde anzeigen, kein "von X" - wann Schluss ist, geht die Gaeste
+             * nichts an.
              */
             const rundeEl = ktEl('kt-runde');
             if (rundeEl) {
@@ -10758,10 +10758,8 @@
                     ['playing', 'knocked', 'reveal'].indexOf(ktPub.phase) >= 0;
                 ktSetShown(rundeEl, zeigen);
                 if (zeigen) {
-                    const max = KtEngine.MAX_ROUNDS || 4;
-                    const runde = Math.min(max,
-                        Math.floor((Number(ktPub.turnsPlayed) || 0) / count) + 1);
-                    ktSetText(rundeEl, 'Runde ' + runde + ' / ' + max);
+                    const runde = Math.floor((Number(ktPub.turnsPlayed) || 0) / count) + 1;
+                    ktSetText(rundeEl, 'Runde ' + runde);
                 }
                 if (!talon.hidden) {
                     // Dieselbe Rueckseite wie die Blaetter dieser Runde.
