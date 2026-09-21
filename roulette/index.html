@@ -10,18 +10,28 @@
    (auf der Mali-G52 gemessen: 16 Bilder/s bei 1280x720).
 
    Weg kommt alles, was auf einer Aufzeichnung nichts verloren hat:
-   Knoepfe, Verbindungs- und Fernbedienungshinweise, Lauftexte.
-   Groesser werden die letzten zehn Zahlen, und rechts unten steht der
-   Name des Lokals statt des Raumnamens.
+   Verbindungs- und Fernbedienungshinweise, Lauftexte, der Rundenzaehler.
+   Der Zyklus laeuft ohne Ende, damit die Aufnahme nie abbricht.
+   Die Knoepfe bleiben erreichbar - sie blenden sich nur aus, sobald die
+   Maus zwei Sekunden stillsteht, sind also auf dem Video nicht zu sehen,
+   aber vor dem Start jederzeit da (Maus bewegen genuegt).
    ============================================================ */
 body.aufnahme .live-mark,
-body.aufnahme .show-header nav button:not(#audio-unlock),
-body.aufnahme.ton-frei .show-header nav,
 body.aufnahme .cycle-actions,
+body.aufnahme .cycle-divider,
+body.aufnahme .cycle-panel > .eyebrow:nth-of-type(2),
+body.aufnahme .remaining,
+body.aufnahme #round-progress,
 body.aufnahme #throw-info,
 body.aufnahme .connection,
 body.aufnahme .table-message,
 body.aufnahme #render-profile { display: none !important; }
+
+/* Knoepfe: da, aber unsichtbar sobald die Maus ruht. */
+body.aufnahme .show-header nav {
+    opacity: 0; pointer-events: none; transition: opacity .35s ease;
+}
+body.aufnahme.maus-da .show-header nav { opacity: 1; pointer-events: auto; }
 
 /* Letzte zehn Zahlen: deutlich groesser, damit man sie vom Tisch aus liest. */
 body.aufnahme .result-strip { height: 150px; gap: 34px; }
@@ -40,15 +50,16 @@ body.aufnahme #room-label {
 }
 </style>
 <script>
-    /* Klasse setzen, bevor gezeichnet wird, und den Raumnamen durch den
-       Namen des Lokals ersetzen. Der Rest der Seite bleibt unberuehrt -
-       Rad, Ablauf und Ergebnisse sind dieselben. */
+    /* Klasse setzen, bevor gezeichnet wird, den Raumnamen durch den Namen
+       des Lokals ersetzen und den Zyklus auf unendlich stellen. Rad,
+       Ablauf und Ergebnisse bleiben unberuehrt. */
     (function () {
         try {
             var p = new URLSearchParams(location.search);
             if (!p.has('aufnahme')) return;
             document.documentElement.classList.add('aufnahme-vor');
             var name = p.get('lokal') || 'CITY CAFE';
+            var ruhe = null;
             var setzen = function () {
                 // Im <head> gibt es document.body noch nicht. Ohne diese
                 // Pruefung brach das Skript genau hier ab - und der
@@ -58,9 +69,30 @@ body.aufnahme #room-label {
                 var feld = document.getElementById('room-label');
                 if (feld && feld.textContent !== name) feld.textContent = name;
             };
+            // Unendlich: der Knopf im Einstellungsfenster schickt genau den
+            // Befehl, den auch die Fernbedienung schickt. Einmal genuegt -
+            // erst wenn jemand den Zyklus wieder begrenzt, wird nachgefasst.
+            var unendlich = function () {
+                var zaehler = document.getElementById('remaining');
+                if (!zaehler || zaehler.textContent === '∞') return;
+                var knopf = document.querySelector('[data-rounds="infinite"]');
+                if (knopf) knopf.click();
+            };
             document.addEventListener('DOMContentLoaded', setzen);
             setInterval(setzen, 1000);
+            setInterval(unendlich, 4000);
             setzen();
+            // Maus bewegt: Knoepfe zeigen, nach zwei Sekunden Ruhe wieder weg.
+            document.addEventListener('mousemove', function () {
+                if (!document.body) return;
+                document.body.classList.add('maus-da');
+                clearTimeout(ruhe);
+                ruhe = setTimeout(function () {
+                    // Solange ein Fenster offen ist, bleiben die Knoepfe da.
+                    if (document.querySelector('dialog[open]')) return;
+                    document.body.classList.remove('maus-da');
+                }, 2000);
+            }, true);
         } catch (e) {}
     })();
 </script>
