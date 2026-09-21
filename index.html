@@ -6492,7 +6492,13 @@
          */
         const ROULETTE_SLOT_INDEX = 9.5;
         const ROULETTE_SLOT_MS = 240000;                      // vier Minuten
-        const ROULETTE_AN = NL_FERN_RAUM === 'zuhause';
+        // Bewusst eine Funktion: NL_FERN_RAUM wird weiter unten im Skript
+        // angelegt. Als const hier oben gelesen, liefe es in die
+        // "temporale Totzone" - das Skript bricht dann beim Laden ab und das
+        // ganze Dashboard bleibt schwarz (genau so passiert).
+        function rouletteAn() {
+            try { return NL_FERN_RAUM === 'zuhause'; } catch (e) { return false; }
+        }
 
         function rouletteStop() {
             const halter = document.getElementById('roulette-rahmen');
@@ -6502,7 +6508,7 @@
         function runRouletteState(nextStateIndex) {
             const halter = document.getElementById('roulette-rahmen');
             const view = document.getElementById('media-view-roulette');
-            if (!ROULETTE_AN || !halter || !view) {
+            if (!rouletteAn() || !halter || !view) {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
                 return;
