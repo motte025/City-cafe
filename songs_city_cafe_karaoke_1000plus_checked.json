@@ -66434,5 +66434,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Stardust",
+    "title": "Music Sounds Better With You (radio edit)",
+    "album": "",
+    "category": "Dance",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Dance",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
