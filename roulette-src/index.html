@@ -59,6 +59,7 @@ body.aufnahme #room-label {
             document.documentElement.classList.add('aufnahme-vor');
             var name = p.get('lokal') || 'CITY CAFE';
             var ruhe = null;
+            var letzteMaus = 0;
             var setzen = function () {
                 // Im <head> gibt es document.body noch nicht. Ohne diese
                 // Pruefung brach das Skript genau hier ab - und der
@@ -67,6 +68,13 @@ body.aufnahme #room-label {
                 document.body.classList.add('aufnahme');
                 var feld = document.getElementById('room-label');
                 if (feld && feld.textContent !== name) feld.textContent = name;
+                // Sicherung fuer die Aufnahme: ruht die Maus, darf kein
+                // Fenster offen stehen. Wer die Einstellungen benutzt,
+                // bewegt die Maus ohnehin.
+                if (Date.now() - letzteMaus > 8000) {
+                    var offen = document.querySelectorAll('dialog[open]');
+                    for (var i = 0; i < offen.length; i++) offen[i].close();
+                }
             };
             // Unendlich: der Knopf im Einstellungsfenster schickt genau den
             // Befehl, den auch die Fernbedienung schickt. Einmal genuegt -
@@ -75,7 +83,10 @@ body.aufnahme #room-label {
                 var zaehler = document.getElementById('remaining');
                 if (!zaehler || zaehler.textContent === '∞') return;
                 var knopf = document.querySelector('[data-rounds="infinite"]');
-                if (knopf) knopf.click();
+                if (!knopf) return;
+                knopf.click();
+                var fenster = document.getElementById('settings-dialog');
+                if (fenster && fenster.open) fenster.close();
             };
             document.addEventListener('DOMContentLoaded', setzen);
             setInterval(setzen, 1000);
@@ -84,6 +95,7 @@ body.aufnahme #room-label {
             // Maus bewegt: Knoepfe zeigen, nach zwei Sekunden Ruhe wieder weg.
             document.addEventListener('mousemove', function () {
                 if (!document.body) return;
+                letzteMaus = Date.now();
                 document.body.classList.add('maus-da');
                 clearTimeout(ruhe);
                 ruhe = setTimeout(function () {
