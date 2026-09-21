@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-09-21T17:12:45Z",
+  "checked_at": "2026-09-21T17:27:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Auf in die neue Woche... können wir es heute schaffen? <3 !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 21✨Kuschel-Montag | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -20,13 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 21✨Kuschel-Montag | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
