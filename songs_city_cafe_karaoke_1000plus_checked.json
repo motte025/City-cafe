@@ -66295,5 +66295,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Lindsey Buckingham",
+    "title": "Play in the Rain (Continued)",
+    "album": "",
+    "category": "Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Rock",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
