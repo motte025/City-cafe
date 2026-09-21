@@ -68193,16 +68193,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Babado Novo",
-    "title": "Bola De Sabão",
+    "artist": "Avicii",
+    "title": "Heaven",
     "album": "",
-    "category": "Après-Ski & Ballermann",
+    "category": "Internationale Party-Hits",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Après-Ski & Ballermann"
+      "Internationale Party-Hits"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Chicago",
+    "title": "You're the Inspiration",
+    "album": "",
+    "category": "International Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "International Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
