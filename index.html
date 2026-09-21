@@ -7094,6 +7094,10 @@
                 // damit die Handy-Liste die Laufzeit anzeigen kann, ohne sie
                 // selbst bei YouTube abzufragen.
                 laengen: nlDauern,
+                // Warum die letzte Runde Hos'n Obe geendet hat (Diagnose, siehe
+                // ktResetSession) - so laesst sich aus der Ferne nachsehen,
+                // warum der Screen wieder in die Rotation gegangen ist.
+                spielEnde: window.ktLetztesEnde || null,
                 // Hos'n Obe hat Vorrang: solange gespielt wird, nimmt der
                 // Screen kein Video an (siehe ktSpielLaeuft).
                 spielLaeuft: !!(window.ktSpielLaeuft && window.ktSpielLaeuft()),
@@ -10760,7 +10764,7 @@
             // Nutzer-Vorgabe: ab zwei verbundenen Spielern wird trotzdem gespielt,
             // leere Plaetze fallen einfach weg. Darunter lohnt die Runde nicht.
             const count = ktSeatsTaken();
-            if (count < 2) { ktResetSession(); return; }
+            if (count < 2) { ktResetSession('zu wenige Spieler zum Austeilen'); return; }
             ktDealing = true;
 
             // Neue Runde: eine Rueckseite fuer das ganze Blatt und neues Holz.
@@ -10797,7 +10801,7 @@
                 turnStartedAt: firebase.database.ServerValue.TIMESTAMP
             })).catch(err => {
                 console.warn('[Hos’n Obe] Austeilen fehlgeschlagen:', err);
-                ktResetSession();
+                ktResetSession('Austeilen fehlgeschlagen');
             }).then(() => { ktDealing = false; });
         }
 
@@ -10879,7 +10883,7 @@
             Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update(update))
             .catch(err => {
                 console.warn('[Hos’n Obe] Computer-Runde fehlgeschlagen:', err);
-                ktResetSession();
+                ktResetSession('Computer-Runde fehlgeschlagen');
             }).then(() => { ktDealing = false; });
         }
 
@@ -11147,7 +11151,7 @@
                     const hand = published[seat] || ktMirrorHands[seat];
                     if (hand && hand.length === 3) hands[seat] = hand;
                 }
-                if (!Object.keys(hands).length) { ktResolving = false; ktResetSession(); return; }
+                if (!Object.keys(hands).length) { ktResolving = false; ktResetSession('keine Haende beim Aufdecken'); return; }
 
                 const outcome = KtEngine.evaluateRound(hands, ktPub.tableFire);
                 KtNet.publicRef(ktDb, ktSessionId).update({
@@ -11166,7 +11170,7 @@
                       // Traenen-Animation auf keinen Fall abgeschnitten wird.
                       ktPhaseTimer = setTimeout(() => {
                           ktResolving = false;
-                          ktResetSession();
+                          ktResetSession('Runde regulaer zu Ende');
                       }, Math.max(10, KT.revealSeconds || 12) * 1000);
                   });
             // Der letzte Spieler tauscht ganz normal zu Ende: fliegt noch eine
@@ -11214,7 +11218,19 @@
             else ktDealIfPossible();
         }
 
-        function ktResetSession() {
+        /*
+         * Jeder Rundenabbruch hinterlaesst seinen Grund - sichtbar im Status
+         * der Fernbedienung (spielEnde). Ohne das laesst sich aus der Ferne
+         * nicht unterscheiden, ob eine Runde regulaer zu Ende ging, ob die
+         * Auswahl am Handy zu lange offen blieb oder ob jemand "Runde beenden"
+         * gedrueckt hat.
+         */
+        function ktResetSession(grund) {
+            window.ktLetztesEnde = {
+                grund: grund || 'unbekannt',
+                zeit: new Date().toLocaleTimeString('de-AT')
+            };
+            try { nlFernStatusMelden(); } catch (e) {}
             ktClearTimers();
             ktClearRoundBudget();
             ktSetTimer(null);
@@ -11287,7 +11303,8 @@
                 ktEnterGame();
                 // Waehlt niemand Modus bzw. Spieleranzahl, laeuft die Rotation
                 // exakt an der pausierten Stelle weiter - kein Neustart, kein Sprung.
-                ktStartCountdown(KT.hostSelectSeconds || 20, ktResetSession);
+                ktStartCountdown(KT.hostSelectSeconds || 20,
+                                 () => ktResetSession('Auswahl am Handy abgelaufen'));
 
             } else if (phase === 'lobby') {
                 ktEnterGame();
@@ -11374,7 +11391,7 @@
 
             // Notausstieg vom Handy des Hosts: Runde sofort abraeumen.
             if (ktPub.endRequestedBy) {
-                ktResetSession();
+                ktResetSession('Handy: Runde beenden');
                 ktRender();
                 return;
             }
@@ -11388,7 +11405,7 @@
             if (ktPub.newGameRequestedBy && !ktRestarting) {
                 const starter = ktPub.newGameRequestedBy;
                 ktRestarting = true;
-                ktResetSession().then(() => KtNet.publicRef(ktDb, ktSessionId).update({
+                ktResetSession('Handy: neues Spiel').then(() => KtNet.publicRef(ktDb, ktSessionId).update({
                     phase: 'hostSelect',
                     hostUid: starter,
                     hostRequestedAt: firebase.database.ServerValue.TIMESTAMP
@@ -11416,7 +11433,25 @@
                 if (!conn) return;
                 ktDb = conn.db;
                 ktUid = conn.uid;
-                ktSessionId = KtNet.newSessionId();
+                /*
+                 * Die Spielkennung bleibt ueber Neustarts hinweg dieselbe.
+                 *
+                 * Vorher wuerfelte jeder Seitenneustart eine neue: das Handy
+                 * (QR-Code oder Sammel-Fernbedienung) schrieb danach in eine
+                 * Runde, der niemand mehr zuhoert - am Fernseher passierte
+                 * nichts, und die Rotation lief weiter ins naechste Widget.
+                 * Genau so beschrieben: "ich starte das Spiel und lande im
+                 * Dart-Widget".
+                 */
+                ktSessionId = (function () {
+                    try {
+                        const alt = localStorage.getItem('cityCafeKtSession');
+                        if (alt && /^[A-Za-z0-9_-]{4,16}$/.test(alt)) return alt;
+                    } catch (e) {}
+                    const neu = KtNet.newSessionId();
+                    try { localStorage.setItem('cityCafeKtSession', neu); } catch (e) {}
+                    return neu;
+                })();
                 // Auch nach aussen sichtbar: der Status an die Fernbedienung
                 // meldet diese Kennung mit (siehe nlFernStatusMelden), damit das
                 // Handy ohne QR-Code ins Spiel kommt.
