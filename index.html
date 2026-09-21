@@ -10651,6 +10651,17 @@
             if (ktActive) return;
             ktActive = true;
             ktFernbedienungenMelden();
+            // Twitch schweigt waehrend der Runde. Das Bild deckt der Kartentisch
+            // ohnehin ab (und mpv haelt der Aufpasser an, sobald ktSpielLaeuft()
+            // true meldet) - der Ton lief aber weiter, mitten ins Spiel hinein.
+            try {
+                if (djTwitchSpieler) {
+                    djTwitchSpieler.setMuted(true);
+                    // tonAn zuruecksetzen: nach dem Spiel dreht der Waechter
+                    // (djTonNachziehen) von selbst wieder auf.
+                    if (djQualiLage) djQualiLage.tonAn = false;
+                }
+            } catch (e) {}
             // Die laufende Ansicht behaelt ihre .active-Klasse und friert ein -
             // das Hosen-Obe-Overlay legt sich per z-index darueber.
             pauseRotation();
