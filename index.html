@@ -1526,8 +1526,10 @@
         /* Kein Abdunkeln des Holzes: stattdessen ein warmer Lichtkegel ueber der
            Tischmitte, wie eine Lampe ueber dem Spieltisch. Liegt neben der
            Buehne, damit er im Vollbild die ganze Flaeche erreicht. */
+        /* z-index 3: ueber dem Filz (1), aber unter Karten und Plaetzen - sonst
+           laege das Licht hinter dem Tisch und man saehe nichts davon. */
         .kt-felt-tint {
-            position: absolute; inset: 0; z-index: 1; pointer-events: none;
+            position: absolute; inset: 0; z-index: 3; pointer-events: none;
             background: radial-gradient(ellipse 640px 430px at 50% 52%,
                         rgba(255,244,214,0.26) 0%,
                         rgba(255,236,196,0.13) 42%,
@@ -1566,26 +1568,31 @@
            wird die Flaeche neu gezeichnet. */
         .kt-table {
             position: absolute; z-index: 1; pointer-events: none;
-            left: 34px; right: 34px; top: 14px; bottom: 14px;
+            left: 26px; right: 26px; top: 10px; bottom: 10px;
             border-radius: 50% / 46%;
+            /* Die Bande: heller Lederrand oben, dunkler nach unten - dadurch
+               wirkt der Tisch gewoelbt. */
+            background: linear-gradient(180deg, #8a5630 0%, #6a3d20 45%, #3d2311 100%);
+            box-shadow: 0 16px 36px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,222,180,0.28);
+        }
+        .kt-felt {
+            position: absolute; inset: 20px; border-radius: 50% / 46%;
             background: radial-gradient(ellipse 72% 62% at 50% 44%,
                         #1f7248 0%, #175c3a 46%, #10432b 78%, #0b3121 100%);
-            box-shadow:
-                inset 0 0 70px rgba(0,0,0,0.5),
-                0 0 0 14px #4a2c18,
-                0 0 0 19px #2a190d,
-                0 18px 40px rgba(0,0,0,0.55);
+            box-shadow: inset 0 0 70px rgba(0,0,0,0.5), inset 0 0 0 3px rgba(0,0,0,0.4);
         }
-        /* Talon: drei leicht versetzte Rueckseiten am linken Tischrand. */
+        /* Talon: drei leicht versetzte Karten neben den Mittenkarten, mit
+           derselben Rueckseite wie die Blaetter der Spieler. */
         .kt-deck {
-            position: absolute; z-index: 11; left: 296px; top: 348px;
+            position: absolute; z-index: 11; left: 992px; top: 376px;
             width: 122px; height: 183px;
         }
         .kt-deck-card {
-            position: absolute; inset: 0; border-radius: 11px;
-            background: linear-gradient(150deg, #23406e 0%, #16294a 60%, #101d36 100%);
+            position: absolute; inset: 0; border-radius: 11px; overflow: hidden;
+            background: #0a1426;
             box-shadow: 0 6px 14px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
         }
+        .kt-deck-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .kt-deck-card:nth-child(1) { transform: translate(-5px, -4px) rotate(-3.5deg); }
         .kt-deck-card:nth-child(2) { transform: translate(3px, 2px) rotate(2deg); }
         .kt-deck-card:nth-child(3) { transform: none; }
@@ -2738,13 +2745,13 @@
                     <div class="kt-stage">
                         <!-- Gruener Filz mit Holzrand: darauf liegen Karten und
                              Plaetze, darunter schaut das Holz der Bar hervor. -->
-                        <div class="kt-table"></div>
+                        <div class="kt-table"><div class="kt-felt"></div></div>
                         <!-- Der Talon: aus diesem Stapel fliegen die Karten beim
                              Austeilen zu den Plaetzen. -->
                         <div class="kt-deck" id="kt-deck" hidden>
-                            <div class="kt-deck-card"></div>
-                            <div class="kt-deck-card"></div>
-                            <div class="kt-deck-card"></div>
+                            <div class="kt-deck-card"><img alt=""></div>
+                            <div class="kt-deck-card"><img alt=""></div>
+                            <div class="kt-deck-card"><img alt=""></div>
                         </div>
                         <div class="kt-banner">
                             <div class="kt-banner-title" id="kt-banner-title">🍻 City Cafe Hos’n Obe</div>
@@ -10594,6 +10601,13 @@
             if (talon) {
                 talon.hidden = ['starter', 'playing', 'knocked', 'reveal']
                     .indexOf(ktPub.phase) < 0;
+                if (!talon.hidden) {
+                    // Dieselbe Rueckseite wie die Blaetter dieser Runde.
+                    const ruecken = ktCurrentBack();
+                    talon.querySelectorAll('img').forEach(bild => {
+                        if (bild.getAttribute('src') !== ruecken) bild.setAttribute('src', ruecken);
+                    });
+                }
             }
             ktRenderBanner();
             ktRenderSeats();
