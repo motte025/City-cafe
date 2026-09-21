@@ -207,6 +207,17 @@
     }
     .lade { color: var(--text-leise); font-size: 20px; padding: 14px 2px; }
     [hidden] { display: none !important; }
+
+    /* Tablet und Rechner: die Seite ist fuers Handy gebaut und wirkt auf
+       grossen Schirmen riesig. Statt jede einzelne Groesse zu verdoppeln,
+       wird die ganze Seite verkleinert und in der Breite begrenzt - das
+       Verhaeltnis bleibt damit genau so, wie es am Handy passt. */
+    @media (min-width: 700px) {
+        body { zoom: 0.78; max-width: 1180px; margin: 0 auto; }
+    }
+    @media (min-width: 1200px) {
+        body { zoom: 0.68; }
+    }
 </style>
 </head>
 <body>

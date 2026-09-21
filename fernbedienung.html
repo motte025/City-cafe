@@ -43,6 +43,16 @@
         flex: 1; display: flex; flex-direction: column; justify-content: center;
         text-align: center; padding: 24px; color: #8ea0c8; line-height: 1.5;
     }
+    /* Tablet und Rechner: die Handy-Groessen sind dort viel zu gross. Die
+       Reiterleiste bekommt eine begrenzte Breite, damit die drei Knoepfe nicht
+       ueber den halben Schirm gehen. */
+    @media (min-width: 700px) {
+        body { font-size: 19px; }
+        header { padding: 10px 14px; }
+        .zeile { max-width: 760px; margin-left: auto; margin-right: auto; }
+        button { font-size: 18px; padding: 10px 12px; border-radius: 10px; }
+        .screen { font-size: 15px; }
+    }
 </style>
 </head>
 <body>
@@ -69,7 +79,7 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-09-21c';
+    var FASSUNG = '2026-09-21d';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 

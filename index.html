@@ -7103,8 +7103,11 @@
                 // statt 15 Treffer zu einem Thema zu liefern. Kennt ein
                 // aelterer Screen die Kennzeichnung nicht, sucht er einfach
                 // den mitgeschickten Begriff - dann bleibt es beim Alten.
+                // aehnlichZu: dann sucht der Screen Videos, die zum gerade
+                // gestarteten passen (wie die Vorschlaege bei YouTube).
                 window.nlSucheAuftrag = { id: befehl.id, text: text,
-                                          vorschlaege: !!befehl.vorschlaege };
+                                          vorschlaege: !!befehl.vorschlaege,
+                                          aehnlichZu: String(befehl.aehnlichZu || '').slice(0, 20) };
                 nlFernStatusMelden();
                 return;
             }

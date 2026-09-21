@@ -99,6 +99,37 @@
     .zeiten button.aktiv { background: #2f6bff; color: #fff; }
     .start { width: 100%; margin-top: 20px; padding: 26px; font-size: 38px; }
     .fehler { color: #ff9b9b; }
+
+    /* Tablet und Rechner: die Handy-Groessen sind dort viel zu gross. Ab 700px
+       Fensterbreite wird alles kleiner, der Inhalt bekommt eine begrenzte
+       Breite und die Videokacheln stehen nebeneinander statt untereinander -
+       auf einem 27-Zoll-Schirm waeren zwei Kacheln pro Bildschirmhoehe
+       verschenkter Platz. Am Handy aendert sich nichts. */
+    @media (min-width: 700px) {
+        body { font-size: 20px; padding: 26px 26px 60px; max-width: 1080px; margin: 0 auto; }
+        h1 { font-size: 31px; }
+        .raum { font-size: 16px; margin-bottom: 16px; }
+        .status { font-size: 20px; padding: 14px 16px; margin-bottom: 16px; }
+        input[type=search] { font-size: 20px; padding: 12px 14px; }
+        button { font-size: 19px; padding: 12px 18px; border-radius: 10px; }
+        .hinweis { font-size: 15px; }
+        .treffer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 14px;
+        }
+        .video { padding: 10px; border-radius: 14px; gap: 9px; }
+        .video .titel { font-size: 19px; }
+        .video .meta { font-size: 16px; margin-top: 5px; }
+        details { padding: 14px; border-radius: 12px; }
+        summary { font-size: 20px; }
+        .feldname { font-size: 15px; margin: 14px 2px 8px; }
+        .gewaehltName { font-size: 20px; }
+        input[type=text] { font-size: 18px; padding: 10px 12px; }
+        .eigenZeile span { font-size: 17px; }
+        .zeiten button { flex: 0 1 auto; min-width: 118px; }
+        .start { font-size: 23px; padding: 16px; margin-top: 14px; }
+        input[type=range] { height: 32px; }
+    }
 </style>
 </head>
 <body>
@@ -215,7 +246,7 @@
     ];
     // Voreinstellung 1080p/60: so ist es am Screen getestet und laeuft sauber.
     // Runterschalten geht im Einzelfall trotzdem, etwa wenn es ruckelt.
-    var FASSUNG = '2026-09-21c';   // steht sichtbar unter dem Titel
+    var FASSUNG = '2026-09-21d';   // steht sichtbar unter dem Titel
     var ersteTrefferGesehen = false, letzteFremdId = null, keineAntwort = null;
     var dauer = 600, hoehe = 1080, fps = 60, listenArt = 'nacht';
     var eigeneListe = [];     // vom Handy hinzugefuegte Videos (aus Firebase)
@@ -446,7 +477,7 @@
         'santorini 4k', 'dj live set rooftop'
     ];
 
-    function sucheStarten(text, istVorschlag) {
+    function sucheStarten(text, istVorschlag, aehnlichZu) {
         el('status').textContent = istVorschlag
             ? 'Vorschläge werden geholt …' : 'Suche läuft …';
         el('treffer').innerHTML = '';
@@ -458,7 +489,8 @@
         // Bei den Vorschlaegen sucht der Screen mehrere Begriffe gleichzeitig
         // und mischt die Treffer (der mitgeschickte Begriff ist nur der
         // Rueckfall fuer einen Screen, der das noch nicht kann).
-        return senden({ aktion: 'suche', text: text, vorschlaege: !!istVorschlag })
+        return senden({ aktion: 'suche', text: text, vorschlaege: !!istVorschlag,
+                        aehnlichZu: aehnlichZu || '' })
             .then(function (id) {
             suchId = id || '';
             if (!id) {
@@ -501,11 +533,19 @@
                 + 'würde die Runde zerreißen und wird nicht gestartet.';
             return;
         }
+        var gestartet = gewaehlt;
         senden({
-            aktion: 'start', videoId: gewaehlt.videoId, titel: gewaehlt.titel,
+            aktion: 'start', videoId: gestartet.videoId, titel: gestartet.titel,
             dauerSek: dauer, hoehe: hoehe, fps: fps
         });
         el('status').textContent = 'Wird zum Screen geschickt …';
+        // Gleich neue Vorschlaege holen, die zum gerade gestarteten Video
+        // passen - so wie YouTube nach einem Video weitermacht. Kurz warten,
+        // damit der Startbefehl nicht ueberschrieben wird (ein Pfad, ein
+        // Befehl je Raum).
+        setTimeout(function () {
+            sucheStarten(gestartet.titel || '', true, gestartet.videoId);
+        }, 2500);
     });
 
     // --- Zur Dauerliste hinzufuegen ----------------------------------------
