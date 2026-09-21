@@ -1530,14 +1530,12 @@
            laege das Licht hinter dem Tisch und man saehe nichts davon. */
         .kt-felt-tint {
             position: absolute; inset: 0; z-index: 3; pointer-events: none;
-            /* Enger und waermer als vorher: ein Lichtkegel ueber der Tischmitte,
-               der zu den Plaetzen hin ausklingt. Zusammen mit dem dunklen
-               Filzrand ergibt das die Tiefe, die vorher fehlte. */
+            /* Nur noch ein Hauch: das Tischfoto bringt sein eigenes Licht mit,
+               ein zweiter Lichtkegel wuerde den Filz auswaschen. */
             background: radial-gradient(ellipse 620px 390px at 50% 50%,
-                        rgba(255,226,160,0.30) 0%,
-                        rgba(255,216,150,0.18) 40%,
-                        rgba(255,208,145,0.07) 66%,
-                        rgba(0,0,0,0) 82%);
+                        rgba(255,230,175,0.12) 0%,
+                        rgba(255,222,165,0.06) 45%,
+                        rgba(0,0,0,0) 78%);
         }
 
 
@@ -1564,32 +1562,9 @@
         }
 
         /* Spielerplatz: aufgefaecherte Kartenreihe statt gerader Stapel */
-        /* ---------- Spieltisch ----------
-           Gruener Filz mit Holzrand, darauf liegt alles andere. Bewusst ohne
-           Bilddatei und mit sparsamen Schatten: die Mali-GPU der Box malt
-           grosse weiche Schatten nur langsam, und waehrend der Fluganimationen
-           wird die Flaeche neu gezeichnet. */
-        .kt-table {
-            position: absolute; z-index: 1; pointer-events: none;
-            left: 26px; right: 26px; top: 10px; bottom: 10px;
-            border-radius: 50% / 46%;
-            /* Die Bande: heller Lederrand oben, dunkler nach unten - dadurch
-               wirkt der Tisch gewoelbt. */
-            background: linear-gradient(180deg, #8a5630 0%, #6a3d20 45%, #3d2311 100%);
-            box-shadow: 0 16px 36px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,222,180,0.28);
-        }
-        .kt-felt {
-            position: absolute; inset: 20px; border-radius: 50% / 46%;
-            /* Tiefer Filzton, zur Bande hin deutlich dunkler: dadurch sieht der
-               Tisch aus, als haenge die Lampe wirklich darueber. */
-            background: radial-gradient(ellipse 66% 58% at 50% 42%,
-                        #2a8a58 0%, #17673f 44%, #0d4128 76%, #07291a 100%);
-            /* Duenne Messingkante zwischen Filz und Bande, wie an einem
-               Wirtshaus-Spieltisch. */
-            box-shadow: inset 0 0 130px rgba(0,0,0,0.6),
-                        inset 0 0 0 3px rgba(0,0,0,0.5),
-                        0 0 0 3px rgba(214,170,96,0.55);
-        }
+        /* Der Spieltisch ist das Hintergrundfoto (spieltisch1/2.webp): Filz,
+           Bande, Licht und Deko stecken schon darin. Der frueher hier gemalte
+           Filz ist damit ueberfluessig. */
         /* Talon: drei leicht versetzte Karten neben den Mittenkarten, mit
            derselben Rueckseite wie die Blaetter der Spieler. */
         .kt-deck {
@@ -2754,7 +2729,9 @@
                     <div class="kt-stage">
                         <!-- Gruener Filz mit Holzrand: darauf liegen Karten und
                              Plaetze, darunter schaut das Holz der Bar hervor. -->
-                        <div class="kt-table"><div class="kt-felt"></div></div>
+                        <!-- Der Tisch selbst ist das Hintergrundfoto
+                             (spieltisch1/2.webp, siehe ktSetFelt) - es braucht
+                             keinen gemalten Filz mehr. -->
                         <!-- Der Talon: aus diesem Stapel fliegen die Karten beim
                              Austeilen zu den Plaetzen. -->
                         <div class="kt-deck" id="kt-deck" hidden>
@@ -9582,36 +9559,23 @@
         const KT = window.HOSN_OBE_CONFIG || {};
         const KtEngine = window.HosnObeEngine;
 
-        /* ---------- Hoehen-Rechnung fuer die 1530x860-Buehne ----------
-         *
-         * Die alte Buehne (1280x815) war vertikal zu knapp gerechnet: das
-         * Hinweisband lag auf den Mittenkarten, und beim Aufdecken lief das
-         * Abzeichen der unteren Reihe unten aus dem Bild. Jetzt mit Reserve:
-         *
-         *   Banner          0 ..  50
-         *   obere Reihe    54 + Faecher 202 + Name 33 + Abzeichen 38 -> endet 327
-         *   Hinweisband   332 ..  368
-         *   offene Mitte  376 + Karte 183                            -> endet 559
-         *   untere Reihe  566 + Faecher 202 + Name 33 + Punkte 29    -> endet 830
-         *
-         * Beim Aufdecken entfaellt das Abzeichen (siehe ktRenderSeats), sonst
-         * waere die untere Reihe wieder zu hoch. 30px bleiben als Reserve.
-         */
-        const KT_ROW_TOP = 54, KT_ROW_BOTTOM = 566;
         /*
-         * Die aeusseren Plaetze sitzen etwas weiter zur Tischmitte hin als die
-         * mittleren: dadurch stehen die sechs Plaetze auf einem Bogen statt in
-         * zwei geraden Reihen - der Tisch wirkt rund, wie ein echter Spieltisch.
+         * Die Plaetze sitzen rund um das Oval des Tischfotos (spieltisch1/2.webp):
+         * zwei oben, einer rechts, zwei unten, einer links - so, wie man an
+         * einem echten Kartentisch sitzt.
+         *
+         * Die Zahlen sind am Foto ausgemessen: das Filzoval liegt in
+         * Buehnenkoordinaten um (767, 430) mit den Halbachsen 681 x 378. Jeder
+         * Platz (Faecher 232x202 plus Name/Punkte/Schild darunter, zusammen rund
+         * 300 px) liegt vollstaendig darin, kein Blatt ragt auf die Bande.
          */
         const KT_SEAT_POSITIONS = {
-            LO: { x: 268,  y: KT_ROW_TOP + 30 },
-            MO: { x: 765,  y: KT_ROW_TOP },
-            RO: { x: 1262, y: KT_ROW_TOP + 30 },
-            // Die untere Reihe sitzt 16 px hoeher als frueher: sonst lief das
-            // "AM ZUG"-Schild des mittleren unteren Platzes unten aus dem Bild.
-            LU: { x: 268,  y: KT_ROW_BOTTOM - 46 },
-            MU: { x: 765,  y: KT_ROW_BOTTOM - 16 },
-            RU: { x: 1262, y: KT_ROW_BOTTOM - 46 }
+            OL: { x: 560,  y: 74 },     // oben links
+            OR: { x: 974,  y: 74 },     // oben rechts
+            R:  { x: 1298, y: 330 },    // rechts
+            UR: { x: 974,  y: 486 },    // unten rechts
+            UL: { x: 560,  y: 486 },    // unten links
+            L:  { x: 236,  y: 330 }     // links
         };
         // Symmetrische Standardbelegung, Sitzreihenfolge = Zugreihenfolge im
         // Uhrzeigersinn. Reine Tabellenwerte - falls beim Testen eine andere
@@ -9626,11 +9590,11 @@
          * Tisch erwartet jeder, dass es reihum weitergeht.
          */
         const KT_LAYOUT = {
-            2: ['MO', 'MU'],
-            3: ['MO', 'RU', 'LU'],
-            4: ['LO', 'RO', 'RU', 'LU'],
-            5: ['LO', 'MO', 'RO', 'RU', 'LU'],
-            6: ['LO', 'MO', 'RO', 'RU', 'MU', 'LU']
+            2: ['L', 'R'],
+            3: ['OL', 'R', 'UL'],
+            4: ['OL', 'OR', 'UR', 'UL'],
+            5: ['OL', 'OR', 'R', 'UR', 'UL'],
+            6: ['OL', 'OR', 'R', 'UR', 'UL', 'L']
         };
         // Aufgefaechert statt gerade gestapelt: leichte Drehung + Versatz je Karte.
         const KT_FAN = [
@@ -9731,11 +9695,19 @@
         // Holz-Hintergruende von Trinkspiel V2 weiterverwenden, damit die drei
         // Trinkspiele optisch zusammengehoeren. Wechselt pro Runde.
         let ktFeltIndex = 0;
+        /*
+         * Die beiden Tischfotos (aus dem Repo, 1920x1080). Sie sind so
+         * zugeschnitten, dass das Filzoval auf beiden an derselben Stelle
+         * liegt - deshalb passen die Plaetze aus KT_SEAT_POSITIONS auf beide.
+         * Je Runde wird gewechselt.
+         */
+        const KT_TISCH_BILDER = ['spieltisch1.webp', 'spieltisch2.webp'];
+
         function ktSetFelt() {
             const view = ktEl('media-view-hosnobe');
-            if (!view || typeof HYPEREEL_BACKGROUNDS === 'undefined' || !HYPEREEL_BACKGROUNDS.length) return;
-            view.style.backgroundImage = "url('" + HYPEREEL_BACKGROUNDS[ktFeltIndex] + "')";
-            ktFeltIndex = (ktFeltIndex + 1) % HYPEREEL_BACKGROUNDS.length;
+            if (!view) return;
+            view.style.backgroundImage = "url('" + KT_TISCH_BILDER[ktFeltIndex] + "')";
+            ktFeltIndex = (ktFeltIndex + 1) % KT_TISCH_BILDER.length;
         }
 
         // Rueckseiten-Motiv: beim Austeilen EINMAL gewaehlt und dann fuer alle
@@ -10158,7 +10130,9 @@
         function ktRenderStarter() {
             const box = ktEl('kt-starter');
             const cards = ktPub.starterCards || null;
-            const show = ktPub.phase === 'starter' && !!cards;
+            // Solange ausgeteilt wird, bleibt "Wer beginnt?" weg - sonst lagen
+            // die Karten schon da und wurden danach noch einmal ausgeteilt.
+            const show = ktPub.phase === 'starter' && !!cards && !ktGibtAus;
             ktSetShown(box, show);
             if (!show) return;
 
@@ -10434,15 +10408,16 @@
          * Gezeigt wird das beim Uebergang in 'playing': da ist der Tisch frei
          * zu sehen. Waehrend 'starter' liegt die Geber-Ermittlung darueber.
          */
-        const KT_GEBEN_MS = 320;         // Flugzeit einer einzelnen Karte
-        const KT_GEBEN_ABSTAND = 62;     // Abstand zwischen zwei Karten
+        const KT_GEBEN_MS = 430;         // Flugzeit einer einzelnen Karte
+        const KT_GEBEN_ABSTAND = 100;    // Abstand zwischen zwei Karten
+        let ktGibtAus = false;           // laeuft gerade das Austeilen?
 
+        // Rueckgabe: wie lange das Austeilen dauert (ms) - danach darf die
+        // Geber-Ermittlung eingeblendet werden.
         function ktGebenAnimieren() {
-            if (!ktActive) return;
             const deck = ktEl('kt-deck');
-            if (!deck || deck.hidden) return;
-            const quelle = ktStageGeom(deck);
-            if (!quelle) return;
+            const quelle = (ktActive && deck && !deck.hidden) ? ktStageGeom(deck) : null;
+            if (!quelle) return 0;
             const count = Number(ktPub.playerCount) || 0;
             const geber = Number(ktPub.starterSeat);
             const ab = isFinite(geber) ? geber : 0;
@@ -10483,6 +10458,7 @@
                 const slot = ktMiddleEls[i];
                 if (slot && slot.el) fliegen(slot.el, nr++ * KT_GEBEN_ABSTAND);
             }
+            return nr ? (nr - 1) * KT_GEBEN_ABSTAND + KT_GEBEN_MS + 120 : 0;
         }
 
         let ktLastAnimatedMove = null;
@@ -11240,18 +11216,24 @@
                 ktStartBotRound(ktPub.playerCount, ktPub.botSeats);
 
             } else if (phase === 'starter') {
-                // Geber ermitteln: die gezogenen Karten stehen kurz gross am
-                // Bildschirm, danach beginnt der Spieler mit der hoechsten.
+                // Erst austeilen, dann "Wer beginnt?". Umgekehrt sah es falsch
+                // aus: die Karten lagen schon am Tisch und wurden danach noch
+                // einmal ausgeteilt.
                 ktEnterGame();
                 ktClearRoundBudget();
-                ktStartCountdown(KT.starterSeconds || 7, ktBeginPlaying);
+                ktGibtAus = true;
+                ktRender();                       // Karten anlegen, noch unsichtbar
+                later(() => {
+                    const dauer = ktGebenAnimieren();
+                    later(() => {
+                        ktGibtAus = false;
+                        ktRender();
+                        ktStartCountdown(KT.starterSeconds || 7, ktBeginPlaying);
+                    }, dauer);
+                }, 80);
 
             } else if (phase === 'playing' || phase === 'knocked') {
                 ktEnterGame();
-                // Erster Zug einer Runde: vorher das Austeilen zeigen.
-                if (phase === 'playing' && (Number(ktPub.turnsPlayed) || 0) === 0) {
-                    later(ktGebenAnimieren, 80);
-                }
                 ktArmRoundBudget();
                 if (ktIsBotGame()) ktArmBotTurn();
                 else ktArmTurnTimeout();
