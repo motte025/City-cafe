@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-21T16:12:45Z",
+  "checked_at": "2026-09-21T16:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Auf in die neue Woche... können wir es heute schaffen? <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Auf in die neue Woche... können wir es heute schaffen? <3 !release @just_jenny_official @two_crazy_girls",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
