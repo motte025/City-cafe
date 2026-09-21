@@ -10091,7 +10091,10 @@
             // Hinweis "Alle 3 nehmen" liegt ueber der Mitte, sobald sie einen
             // Drilling oder drei gleiche Farben zeigt - dann ist der Einzeltausch
             // gesperrt und es gilt alles oder nichts.
-            const allOnly = KtEngine.middleWorthTakingAll(cards);
+            // Beim Aufdecken ist der Hinweis erledigt - getauscht wird nicht
+            // mehr. Seit die Mitte bis zum Schluss liegen bleibt, stand er
+            // sonst noch ueber den Karten.
+            const allOnly = KtEngine.middleWorthTakingAll(cards) && phase !== 'reveal';
             ktSetShown(hint, allOnly);
             if (allOnly) {
                 const r = KtEngine.scoreHand(cards);
