@@ -1569,6 +1569,12 @@
         /* Der Spieltisch ist das Hintergrundfoto (spieltisch1/2.webp): Filz,
            Bande, Licht und Deko stecken schon darin. Der frueher hier gemalte
            Filz ist damit ueberfluessig. */
+        /* Vor dem Austeilen liegt nur der Talon am Tisch: waehrend "Wer
+           beginnt?" darf noch kein Blatt und keine offene Karte zu sehen sein.
+           !important, weil .kt-seat.is-empty .kt-fan-card sonst gewinnt. */
+        .kt-stage.kt-vor-geben .kt-fan-card,
+        .kt-stage.kt-vor-geben .kt-middle-card { opacity: 0 !important; }
+
         /* Talon: drei leicht versetzte Karten neben den Mittenkarten, mit
            derselben Rueckseite wie die Blaetter der Spieler. */
         .kt-deck {
@@ -10146,9 +10152,7 @@
         function ktRenderStarter() {
             const box = ktEl('kt-starter');
             const cards = ktPub.starterCards || null;
-            // Solange ausgeteilt wird, bleibt "Wer beginnt?" weg - sonst lagen
-            // die Karten schon da und wurden danach noch einmal ausgeteilt.
-            const show = ktPub.phase === 'starter' && !!cards && !ktGibtAus;
+            const show = ktPub.phase === 'starter' && !!cards;
             ktSetShown(box, show);
             if (!show) return;
 
@@ -10424,9 +10428,18 @@
          * Gezeigt wird das beim Uebergang in 'playing': da ist der Tisch frei
          * zu sehen. Waehrend 'starter' liegt die Geber-Ermittlung darueber.
          */
-        const KT_GEBEN_MS = 430;         // Flugzeit einer einzelnen Karte
-        const KT_GEBEN_ABSTAND = 100;    // Abstand zwischen zwei Karten
-        let ktGibtAus = false;           // laeuft gerade das Austeilen?
+        const KT_GEBEN_MS = 520;         // Flugzeit einer einzelnen Karte
+        const KT_GEBEN_ABSTAND = 135;    // Abstand zwischen zwei Karten
+
+        /*
+         * Vor dem Austeilen liegen weder Blaetter noch offene Mitte am Tisch -
+         * nur der Talon. Waehrend "Wer beginnt?" laeuft, darf naemlich noch
+         * nichts ausgeteilt sein, sonst haette man die Karten zweimal.
+         */
+        function ktVorGeben(an) {
+            const stage = document.querySelector('#media-view-hosnobe .kt-stage');
+            if (stage) stage.classList.toggle('kt-vor-geben', !!an);
+        }
 
         // Rueckgabe: wie lange das Austeilen dauert (ms) - danach darf die
         // Geber-Ermittlung eingeblendet werden.
@@ -10687,6 +10700,7 @@
             ktClearTimers();
             ktClearRoundBudget();
             ktSetTimer(null);
+            ktVorGeben(false);      // fuer die naechste Runde wieder normal
             if (!ktActive) return;
             ktActive = false;
             ktFernbedienungenMelden();
@@ -11243,27 +11257,31 @@
                 ktStartBotRound(ktPub.playerCount, ktPub.botSeats);
 
             } else if (phase === 'starter') {
-                // Erst austeilen, dann "Wer beginnt?". Umgekehrt sah es falsch
-                // aus: die Karten lagen schon am Tisch und wurden danach noch
-                // einmal ausgeteilt.
+                // Reihenfolge wie am Tisch: zuerst wird ausgespielt, wer
+                // beginnt - dabei liegt noch nichts aus -, danach teilt der
+                // Geber aus (siehe 'playing').
                 ktEnterGame();
                 ktClearRoundBudget();
-                ktGibtAus = true;
-                ktRender();                       // Karten anlegen, noch unsichtbar
-                later(() => {
-                    const dauer = ktGebenAnimieren();
-                    later(() => {
-                        ktGibtAus = false;
-                        ktRender();
-                        ktStartCountdown(KT.starterSeconds || 7, ktBeginPlaying);
-                    }, dauer);
-                }, 80);
+                ktVorGeben(true);
+                ktStartCountdown(KT.starterSeconds || 7, ktBeginPlaying);
 
             } else if (phase === 'playing' || phase === 'knocked') {
                 ktEnterGame();
-                ktArmRoundBudget();
-                if (ktIsBotGame()) ktArmBotTurn();
-                else ktArmTurnTimeout();
+                const losgehen = () => {
+                    ktArmRoundBudget();
+                    if (ktIsBotGame()) ktArmBotTurn();
+                    else ktArmTurnTimeout();
+                };
+                // Erster Zug der Runde: vorher wird ausgeteilt. Der erste
+                // Spieler ist erst dran, wenn alle Karten liegen.
+                if (phase === 'playing' && (Number(ktPub.turnsPlayed) || 0) === 0) {
+                    const dauer = ktGebenAnimieren();
+                    ktVorGeben(false);
+                    later(losgehen, dauer);
+                } else {
+                    ktVorGeben(false);
+                    losgehen();
+                }
 
             } else if (phase === 'reveal') {
                 ktEnterGame();
