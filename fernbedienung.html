@@ -31,6 +31,7 @@
         background: #0f1630; border-bottom: 1px solid #27325c; flex-shrink: 0;
     }
     .zeile { display: flex; gap: 10px; }
+    #tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .zeile + .zeile { margin-top: 10px; }
     button {
         font: inherit; font-size: 27px; font-weight: 700; border: 0; border-radius: 14px;
@@ -47,6 +48,7 @@
        Reiterleiste bekommt eine begrenzte Breite, damit die drei Knoepfe nicht
        ueber den halben Schirm gehen. */
     @media (min-width: 700px) {
+        #tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         body { font-size: 19px; }
         header { padding: 10px 14px; }
         .zeile { max-width: 760px; margin-left: auto; margin-right: auto; }
@@ -79,13 +81,14 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-09-21d';
+    var FASSUNG = '2026-09-21-roulette';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 
     var SEITEN = [
         { schluessel: 'yt', text: '🎬 Videos', datei: 'yt-fernbedienung.html', raumParameter: true },
         { schluessel: 'dj', text: '🎧 DJ', datei: 'dj-fernbedienung.html', raumParameter: true },
+        { schluessel: 'roulette', text: '🎰 Roulette', datei: 'roulette/remote.html', raumParameter: true },
         // Das Kartenspiel braucht die Kennung der laufenden Runde - dieselbe,
         // die sonst im QR-Code am Screen steht. Der Screen meldet sie im Status
         // mit, hier wird sie als ?session=... angehaengt.

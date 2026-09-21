@@ -1,0 +1,14 @@
+import type {Settings} from './settings';
+export function settingsForm(){return `<div class="settings-grid">
+ ${field('delay','Pause vor dem Abwurf','s',3,60,1)}${field('duration','Dauer der Kugelrunde','s',12,25,1)}
+ ${field('effects','Kugel & Aufpraller','%',0,1,.05)}${field('ambience','Casino-Atmosphäre','%',0,1,.05)}
+ <label class="switch"><input type="checkbox" data-setting="muted"> Gesamten Ton stummschalten</label></div>
+ <details class="picture-settings"><summary>TV-Bild & Perspektive</summary><div class="settings-grid">
+ ${field('brightness','Helligkeit','',.65,1.4,.05)}${field('zoom','Radgröße','',.75,1.15,.01)}
+ <label class="switch"><input type="checkbox" data-setting="topView"> Draufsicht</label><label class="switch"><input type="checkbox" data-setting="correction"> TV-Blickwinkel korrigieren</label>
+ ${field('diagonal','Bildschirm','Zoll',24,120,1,'number')}${field('bottomHeight','Unterkante','m',0,4,.05,'number')}${field('distance','Abstand','m',1,10,.1,'number')}${field('eyeHeight','Augenhöhe','m',.5,2.2,.05,'number')}
+ </div><p>Voreinstellung: 55 Zoll · Unterkante 2 m · Abstand 3,5 m · Augenhöhe 1,2 m. Korrektur im Vollbild vom Sitzplatz aus beurteilen.</p></details>`;}
+function field(key:string,label:string,unit:string,min:number,max:number,step:number,type='range'){return `<label class="setting-field"><span>${label}<output data-value="${key}"></output></span><input type="${type}" min="${min}" max="${max}" step="${step}" data-setting="${key}" data-unit="${unit}" aria-label="${label}"></label>`;}
+export function fillSettings(root:HTMLElement,settings:Settings){root.querySelectorAll<HTMLInputElement>('[data-setting]').forEach(input=>{const key=input.dataset.setting as keyof Settings,value=settings[key];if(document.activeElement!==input){if(input.type==='checkbox')input.checked=Boolean(value);else input.value=String(value);}const output=root.querySelector<HTMLOutputElement>(`[data-value="${key}"]`);if(output){const numeric=Number(value);output.textContent=input.dataset.unit==='%'?`${Math.round(numeric*100)} %`:`${numeric.toLocaleString('de-DE',{maximumFractionDigits:2})} ${input.dataset.unit}`;}});}
+export function settingsPatch(event:Event){const input=event.target as HTMLInputElement;if(!input.matches('[data-setting]'))return null;if(input.type!=='checkbox'&&(!input.validity.valid||input.value===''))return null;return {[input.dataset.setting!]:input.type==='checkbox'?input.checked:Number(input.value)} as Partial<Settings>;}
+export const roundButtons=()=>[12,10,30,50,100,200,null].map(n=>`<button data-rounds="${n??'infinite'}" class="round-preset">${n??'∞'}<span>${n===null?'unendlich':n===12?'Standard':'Runden'}</span></button>`).join('');
