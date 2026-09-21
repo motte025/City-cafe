@@ -10051,8 +10051,12 @@
             const hint = ktEl('kt-middle-hint');
             const cards = ktPub.middleCards || [];
             const phase = ktPub.phase;
-            // Beim Aufdecken steht an dieser Stelle das Ergebnis-Panel.
-            const show = cards.length === 3 && (phase === 'playing' || phase === 'knocked');
+            // Beim Aufdecken steht an dieser Stelle das Ergebnis-Panel - die
+            // drei Karten bleiben aber liegen, solange der letzte Tausch noch
+            // fliegt. Sonst verschwindet die Mitte mitten in seiner Bewegung.
+            const fliegtNoch = Date.now() < ktFliegtBis;
+            const show = cards.length === 3 &&
+                (phase === 'playing' || phase === 'knocked' || (phase === 'reveal' && fliegtNoch));
             ktSetShown(wrap, show);
             if (!show) { ktSetShown(hint, false); return; }
 
@@ -10491,6 +10495,7 @@
         }
 
         let ktLastAnimatedMove = null;
+        let ktFliegtBis = 0;        // bis wann noch eine Karte unterwegs ist
         function ktAnimateLastMove() {
             const move = ktPub.lastMove;
             if (!move || !ktActive) return;
@@ -10595,6 +10600,11 @@
              * Animation fertig ist, danach erst springt die Anzeige weiter.
              */
             if (totalMs > 0) {
+                // Bis dahin fliegt noch eine Karte. Die Mitte bleibt so lange
+                // liegen, und das Aufdecken wartet - sonst raeumt der letzte
+                // Zug den Tisch ab, waehrend seine eigene Karte noch unterwegs
+                // ist (genau so am Screen gesehen).
+                ktFliegtBis = Date.now() + totalMs;
                 ktTurnDisplaySeat = Number(move.seat);
                 if (ktTurnDisplayTimer) clearTimeout(ktTurnDisplayTimer);
                 ktTurnDisplayTimer = setTimeout(() => {
@@ -10602,6 +10612,7 @@
                     ktTurnDisplaySeat = null;
                     ktRenderBanner();
                     ktRenderSeats();
+                    ktRenderMiddle();     // jetzt darf die Mitte weg, falls aufgedeckt wird
                 }, totalMs);
             }
         }
@@ -11129,7 +11140,9 @@
                           ktResetSession();
                       }, Math.max(10, KT.revealSeconds || 12) * 1000);
                   });
-            }, 3500);
+            // Der letzte Spieler tauscht ganz normal zu Ende: fliegt noch eine
+            // Karte, wird erst danach aufgedeckt.
+            }, 3500 + Math.max(0, ktFliegtBis - Date.now()));
         }
 
         /* ---------- Lobby ----------
