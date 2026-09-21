@@ -453,24 +453,10 @@
          */
         .roulette-rahmen { display: grid; place-items: center; }
         .roulette-rahmen iframe {
-            /*
-             * 16:9 wie die Roulette-Seite entworfen ist - in der 1280x815-Buehne
-             * (1,57:1) haette das Rad sonst die Seitentexte ueberdeckt.
-             * 800x450 mal 1,6 ergibt die 1280x720 der Buehne.
-             *
-             * Gemessen am Screen (ohne Video im Hintergrund, je 25 s):
-             *   640x360  -> rund 28 Bilder/s
-             *   800x450  -> rund 24
-             *   960x540  -> rund 21
-             *   1280x720 -> rund 15
-             * Vollbild bringt nichts: bei gleicher Rechengroesse dieselben
-             * Werte (960x540 im Vollbild 22/s), 1920x1080 nur 9/s.
-             *
-             * Wichtig fuers Messen: laeuft im Hintergrund mpv (Video oder
-             * Twitch), halbieren sich alle Werte - beides teilt sich die GPU.
-             */
-            width: 800px; height: 450px; border: 0; display: block;
-            transform: scale(1.6); transform-origin: center center;
+            /* UI in echten 1280x720: keine hochskalierten Schriften mehr.
+               Der 3D-Puffer wird separat in der Roulette-Fernbedienung begrenzt.
+               Alte ODROID-Messwerte und Vergleichsanleitung: roulette-src/PERFORMANCE.md. */
+            width: 1280px; height: 720px; border: 0; display: block;
         }
         .poster-image {
             position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
@@ -6623,7 +6609,7 @@
             const rahmen = document.createElement('iframe');
             rahmen.setAttribute('allow', 'autoplay');
             rahmen.setAttribute('title', 'Roulette');
-            rahmen.src = 'roulette/index.html?raum=' + encodeURIComponent(NL_FERN_RAUM)
+            rahmen.src = 'roulette/index.html?kiosk=1&raum=' + encodeURIComponent(NL_FERN_RAUM)
                        + '&v=' + Date.now();
             halter.appendChild(rahmen);
             // Wie bei den Video-Slots: Effekte ruhig halten, solange bewegtes

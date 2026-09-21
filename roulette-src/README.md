@@ -43,3 +43,8 @@ Kontrollierte zeitbasierte Kugelbewegung mit wechselnden Richtungen, Abwurf bei 
 Rollgeräusche, Aufpraller und dezente Casino-Raumatmosphäre werden im Browser synthetisch erzeugt. Es sind keine echten Casino-Aufnahmen. Browser verlangen eine erste Tonfreigabe direkt am TV. Moderne WebGL-Unterstützung ist nötig; auf älteren TV-Browsern kann ein angeschlossener Computer erforderlich sein.
 
 Bei inaktivem Tab pausiert die Animationszeit; bei Rückkehr werden keine Würfe übersprungen. Nach Neuladen beginnt ein neuer Standardzyklus. Einstellungen bleiben auf diesem TV gespeichert; Ergebnisverlauf und Zyklus sind nicht dauerhaft gespeichert.
+
+## Sparsame Darstellung
+
+Für die ODROID-Box gibt es in der Fernbedienung einen Sparmodus und einen separaten Regler für die 3D-Auflösung. Das Dashboard startet beim ersten Aufruf mit Sparmodus; gespeicherte Einstellungen bleiben erhalten. Messwerte, Vergleichsadresse und Einschränkungen: [PERFORMANCE.md](PERFORMANCE.md).
+

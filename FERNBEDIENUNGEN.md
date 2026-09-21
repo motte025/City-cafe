@@ -64,3 +64,8 @@ braucht es keinen YouTube-Schlüssel und kein Google-Konto.
 * **GitHub Pages speichert 10 Minuten zwischen.** Die Seiten tragen deshalb eine
   sichtbare Fassungsnummer und holen sich einmal selbst frisch, wenn sie aus dem
   Zwischenspeicher kamen.
+
+## Roulette auf der TV-Box
+
+Im Roulette-Reiter gibt es **Sparsame Darstellung** und **3D-Auflösung im Sparmodus**. Diese Optionen ändern nur die Darstellung und sind auch während eines Wurfs umschaltbar. Der Dashboard-Rahmen bleibt 1280 × 720; Countdown und Schriften werden nicht mit heruntergerechnet. Technische Messwerte und Anleitung für den ODROID: [roulette-src/PERFORMANCE.md](roulette-src/PERFORMANCE.md).
+

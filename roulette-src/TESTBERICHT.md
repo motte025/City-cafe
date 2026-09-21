@@ -13,3 +13,8 @@ Stand: 21.09.2026
 - Tonfreigabe per Nutzerinteraktion funktioniert; keine Browserfehler auf der TV-Testseite.
 
 Nicht auf dem physischen 55-Zoll-TV oder dessen Lautsprechern geprüft. Die subjektive Klangwirkung und die Perspektive am tatsächlichen Sitzplatz müssen dort abgestimmt werden. Geräusche sind synthetisch erzeugt. Das browsergesteuerte Auspendeln ist kontrollierte Animation, keine freie Starrkörper-Simulation.
+
+## Leistungsüberarbeitung
+
+115 Tests bestehen inklusive Renderpuffer, Schatten-Takt, Geometriezusammenfassung und Leistungsoptionen. Handy-Schriften im Browser bei 390 px geprüft: Überschrift 54 px, Feldbeschriftungen 23 px, keine horizontale Überbreite. Runtime-Umschaltung über Firebase und 960×540-Puffer bei weiterhin 1280×720-Oberfläche geprüft. ODROID-Messung steht aus; siehe PERFORMANCE.md.
+

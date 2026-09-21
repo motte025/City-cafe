@@ -3,6 +3,8 @@ export function settingsForm(){return `<div class="settings-grid">
  ${field('delay','Pause vor dem Abwurf','s',3,60,1)}${field('duration','Dauer der Kugelrunde','s',12,25,1)}
  ${field('effects','Kugel & Aufpraller','%',0,1,.05)}${field('ambience','Casino-Atmosphäre','%',0,1,.05)}
  <label class="switch"><input type="checkbox" data-setting="muted"> Gesamten Ton stummschalten</label></div>
+ <label class="switch"><input type="checkbox" data-setting="economy"> Sparsame Darstellung</label><p class="helper">Für die TV-Box: weniger Renderaufwand, weichere Schatten. Schrift bleibt scharf.</p>
+ <div class="settings-grid">${field('renderScale','3D-Auflösung im Sparmodus','%',.5,1,.05)}</div>
  <details class="picture-settings"><summary>TV-Bild & Perspektive</summary><div class="settings-grid">
  ${field('brightness','Helligkeit','',.65,1.4,.05)}${field('zoom','Radgröße','',.75,1.15,.01)}
  <label class="switch"><input type="checkbox" data-setting="topView"> Draufsicht</label><label class="switch"><input type="checkbox" data-setting="correction"> TV-Blickwinkel korrigieren</label>
