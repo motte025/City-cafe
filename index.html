@@ -1568,7 +1568,7 @@
         /* Talon: drei leicht versetzte Karten neben den Mittenkarten, mit
            derselben Rueckseite wie die Blaetter der Spieler. */
         .kt-deck {
-            position: absolute; z-index: 11; left: 961px; top: 350px;
+            position: absolute; z-index: 11; left: 897px; top: 350px;
             width: 104px; height: 156px;
         }
         .kt-deck-card {
@@ -1664,7 +1664,10 @@
            Die Karten liegen bewusst schief und leicht versetzt - wie echte Karten,
            die jemand auf den Tisch geworfen hat, nicht wie ein Raster. Rotation und
            Versatz kommen per Zufall aus ktRenderMiddle(). */
-        .kt-middle { position: absolute; left: 50%; top: 350px; transform: translateX(-50%); z-index: 12; display: flex; gap: 16px; }
+        /* Die offenen Karten und der Talon daneben bilden eine Gruppe: damit
+           sie als Ganzes in der Tischmitte sitzt, ruecken die offenen Karten
+           um die halbe Talonbreite nach links. */
+        .kt-middle { position: absolute; left: 50%; top: 350px; transform: translateX(calc(-50% - 64px)); z-index: 12; display: flex; gap: 16px; }
         .kt-middle-card {
             width: 104px; height: 156px; border-radius: 10px; overflow: hidden;
             background: #0a1426; box-shadow: 0 8px 16px rgba(0,0,0,0.6), 0 0 0 2px rgba(255,255,255,0.14);
