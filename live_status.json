@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-09-22T13:07:47Z",
+  "checked_at": "2026-09-22T13:12:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "MUTE MARATHON TAG 89! | Österreich Quicky | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "deejayfamily",
@@ -20,6 +13,20 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈 | !challenge",
       "game": "DJs"
     }
   ]
