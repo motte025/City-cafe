@@ -5,3 +5,50 @@
 @media(max-width:1100px){.cycle-panel,.result-panel{width:175px;top:28%}.cycle-panel{left:2%}.result-panel{right:2%}.count-ring{width:134px;height:134px}.count-ring strong{font-size:70px}.count-ring span{font-size:7px}.latest{width:120px;height:125px;font-size:70px}.eyebrow{font-size:8px;letter-spacing:1.6px}.cycle-divider{margin:15px 0}.remaining strong{font-size:36px}.remaining span{font-size:8px}.cycle-actions{flex-wrap:wrap}.cycle-actions button{font-size:9px;padding:8px}.show-brand{font-size:17px}.show-brand small{font-size:6px}.show-header{height:85px}.live-mark{display:none}.show-header nav button{font-size:10px;padding:8px}.table-message{font-size:10px;bottom:101px}.result-strip{height:86px}#history{gap:7px}.history-number{width:38px;height:42px;font-size:20px}.result-strip>span{font-size:7px;min-width:65px}#throw-info{font-size:9px}.connection{font-size:8px}}
 @media(max-width:700px){.display-page .show-brand small{display:none}.display-page .brand-seal{width:27px;height:33px;font-size:23px}.display-page .show-brand{gap:8px;font-size:12px;letter-spacing:2px}.show-header{height:66px}.show-header nav{gap:4px}.show-header nav button{font-size:9px;padding:7px}#audio-unlock{max-width:70px}.cycle-panel,.result-panel{top:16%;width:115px}.count-ring{width:86px;height:86px;margin:15px auto}.count-ring strong{font-size:43px}.count-ring span{font-size:6px;letter-spacing:1px}.cycle-divider,.cycle-panel>.eyebrow:nth-of-type(2),.result-rule,.result-panel>.eyebrow:nth-of-type(2),#throw-info,.connection{display:none}.remaining strong{font-size:27px}.remaining span{font-size:6px}.remaining{gap:8px}.cycle-panel #round-progress{font-size:8px}.cycle-actions{display:none}.latest{width:80px;height:83px;font-size:47px;margin:15px auto}.result-panel{right:3%}.table-message{left:5%;right:5%;bottom:104px;font-size:10px}.result-strip{flex-wrap:wrap;justify-content:center;align-content:center;height:93px;gap:8px}.result-strip>span{font-size:6px;min-width:0}.result-strip #room-label{display:none}.history-number{width:25px;height:31px;font-size:14px}#history{gap:5px;flex:initial}.history-number.newest{outline-offset:2px;margin-right:2px}#history:empty:after{font-size:11px}.remote-shell{padding:20px 16px}.remote-heading h1{font-size:34px}.remote-page .setting-field>span{align-items:flex-start;font-size:10px}.remote-page .settings-grid{gap:22px 14px}.remote-link-state{font-size:9px}dialog{padding:22px}.dialog-title h2{font-size:23px}}
 @media(prefers-reduced-motion:reduce){.is-spinning strong{animation:none}button{transition:none}}
+
+/* TV typography is independent of the WebGL buffer and anchored to the wheel centre. */
+.display-page{--tv-text-scale:1}
+.display-page .show-header .live-mark{position:absolute;left:50%;transform:translateX(-50%);display:flex;justify-content:center;white-space:nowrap;font-size:calc(clamp(16px,1.3vw,26px)*var(--tv-text-scale));letter-spacing:2.5px;color:#e2cca0;font-weight:600}
+.display-page .live-mark i{width:8px;height:8px;background:#d7bb7b;box-shadow:0 0 16px #d7bb7b88}
+.display-page .show-brand small{font-size:calc(clamp(10px,.72vw,14px)*var(--tv-text-scale));color:#b1baaa;letter-spacing:2px}
+.display-page .show-header button{font-size:calc(clamp(12px,.82vw,16px)*var(--tv-text-scale))}
+.display-page .cycle-panel,.display-page .result-panel{width:clamp(225px,17vw,325px);top:25%}
+.display-page .eyebrow{font-size:calc(clamp(14px,1.1vw,22px)*var(--tv-text-scale));letter-spacing:1.7px;color:#d0c3a1;line-height:1.45}
+.display-page .count-ring span{font-size:calc(clamp(11px,.82vw,16px)*var(--tv-text-scale));letter-spacing:1.4px}
+.display-page .remaining span{font-size:calc(clamp(12px,.9vw,18px)*var(--tv-text-scale));letter-spacing:1px}
+.display-page #round-progress,.display-page .cycle-actions button{font-size:calc(clamp(13px,1vw,20px)*var(--tv-text-scale))}
+.display-page .cycle-actions{flex-wrap:wrap}
+.display-page #latest-color{font-size:calc(clamp(13px,1vw,20px)*var(--tv-text-scale));color:#d7c7a1}
+.display-page #throw-info{font-size:calc(clamp(13px,.98vw,19px)*var(--tv-text-scale));line-height:1.6}
+.display-page .connection{font-size:calc(clamp(11px,.82vw,16px)*var(--tv-text-scale));color:#9cac92}
+.display-page .table-message{font-size:calc(clamp(15px,1.15vw,23px)*var(--tv-text-scale));bottom:16%;left:26%;right:26%;line-height:1.4}
+.display-page:not(.aufnahme) .result-strip{height:14%;gap:20px}
+.display-page:not(.aufnahme) .result-strip>span{font-size:calc(clamp(12px,.92vw,18px)*var(--tv-text-scale));letter-spacing:1.3px;min-width:100px;max-width:16%;overflow-wrap:anywhere}
+.display-page:not(.aufnahme) #history{gap:clamp(6px,.65vw,13px);min-width:0}
+.display-page:not(.aufnahme) .history-number{width:clamp(43px,3.8vw,76px);height:clamp(48px,4vw,80px);font-size:calc(clamp(25px,2vw,40px)*var(--tv-text-scale))}
+.display-page #history:empty:after{content:'Hier erscheinen die letzten zehn Zahlen.';font-size:calc(clamp(14px,1vw,20px)*var(--tv-text-scale))}
+.picture-settings+[data-design-reset],.picture-settings [data-design-reset]{margin:18px 0 8px;width:100%}
+.picture-settings+.picture-settings{margin-top:22px}
+@media(max-width:1100px){
+ .display-page .show-header .live-mark{top:78px;font-size:calc(16px*var(--tv-text-scale))}
+ .display-page .cycle-panel,.display-page .result-panel{width:180px;top:25%}
+ .display-page .table-message{bottom:17%;left:20%;right:20%}
+}
+@media(max-width:700px){
+ .display-page .show-header .live-mark{top:78px;font-size:14px}
+ .display-page .cycle-panel,.display-page .result-panel{width:125px;top:21%}
+ .display-page .eyebrow{font-size:11px}
+ .display-page .show-brand small{display:none}
+ .display-page .table-message{font-size:12px;left:5%;right:5%}
+ .display-page:not(.aufnahme) .result-strip>span{max-width:none;min-width:0;font-size:10px}
+ .display-page:not(.aufnahme) .history-number{width:26px;height:32px;font-size:16px}
+ .display-page:not(.aufnahme) #history{gap:5px}
+}
+@media(max-width:900px){body.remote-page [data-design-reset]{font-size:24px;min-height:64px}}
+@media(min-width:701px) and (max-height:800px){
+ .display-page .count-ring{width:154px;height:154px;margin:16px auto}
+ .display-page .count-ring strong{font-size:78px}
+ .display-page .cycle-divider{margin:16px 0}
+ .display-page #round-progress{margin:8px 0 12px}
+ .display-page .remaining{margin-top:8px}
+}

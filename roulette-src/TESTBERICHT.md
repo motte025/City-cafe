@@ -1,6 +1,6 @@
 ﻿# Prüfbericht · Roulette-TV
 
-Stand: 21.09.2026
+Stand: 22.09.2026
 
 - 110 automatisierte Tests bestanden.
 - Alle 37 Endfächer, drei Bewegungsvarianten und beide Drehrichtungen geprüft.
@@ -15,6 +15,12 @@ Stand: 21.09.2026
 Nicht auf dem physischen 55-Zoll-TV oder dessen Lautsprechern geprüft. Die subjektive Klangwirkung und die Perspektive am tatsächlichen Sitzplatz müssen dort abgestimmt werden. Geräusche sind synthetisch erzeugt. Das browsergesteuerte Auspendeln ist kontrollierte Animation, keine freie Starrkörper-Simulation.
 
 ## Leistungsüberarbeitung
+
+### Kessel-Design
+
+120 Tests bestanden. Zusätzliche Prüfungen umfassen die geneigte Geometrie aller Zahlen, Ausrichtung und Flächennormalen aller acht Rauten sowie Kugelabstand zu den veränderten Oberflächen. Alle 37 Endfächer wurden mit beiden Richtungen, drei Varianten und vier extremen Formkombinationen bei 15 und 60 FPS geprüft. Einstellungen werden begrenzt; Design-Rücksetzung erhält Spielablauf und Tonwerte.
+
+TV-Optik bei 1920 × 1080 einschließlich zehn Historienzahlen und maximaler Schriftgröße visuell geprüft. „Live am Tisch“ liegt auf der horizontalen Kesselmitte. Die Fernbedienung zeigt während eines Wurfs vorgemerkte Formänderungen; Regler und Rücksetzung über Firebase geprüft. Handy-Ansicht bei 390 × 844 ohne horizontale Überbreite geprüft. Die großen Handy-Schriften und der bestehende Aufnahme-Modus bleiben erhalten.
 
 115 Tests bestehen inklusive Renderpuffer, Schatten-Takt, Geometriezusammenfassung und Leistungsoptionen. Handy-Schriften im Browser bei 390 px geprüft: Überschrift 54 px, Feldbeschriftungen 23 px, keine horizontale Überbreite. Runtime-Umschaltung über Firebase und 960×540-Puffer bei weiterhin 1280×720-Oberfläche geprüft. ODROID-Messung steht aus; siehe PERFORMANCE.md.
 

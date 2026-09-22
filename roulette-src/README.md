@@ -20,6 +20,10 @@ Die Fernbedienung verwendet die bereits vorhandene City-cafe-Firebase-Verbindung
 
 ## TV-Perspektive
 
+Unter „Kessel-Design & Lesbarkeit“ lassen sich Blickwinkel, 3D-Tiefe, Gefälle des Zahlenkranzes, Zahlengröße, Holzfarbe, Silber/Gold-Ton, Glanz, Lichtkontrast und TV-Schriftgröße einstellen. Blickwinkel 0° entspricht der senkrechten Draufsicht. Die acht Rauten sind abwechselnd radial und tangential angeordnet; der Zahlenkranz fällt zu den vertieften Taschen ab.
+
+Formänderungen während eines Wurfs werden bis zur Landung vorgemerkt, damit Kugel und Oberflächen zusammenpassen. Licht, Materialien, Blickwinkel und Texte reagieren sofort. „Design zurücksetzen“ stellt nur diese neun Designwerte zurück; Ton, Zyklus und TV-Kalibrierung bleiben erhalten.
+
 Voreinstellung: 55 Zoll, Unterkante 2 m, Abstand 3,5 m, Augenhöhe 1,2 m. Die geometrische Entzerrung ist für diesen Blickpunkt gedacht. Im Menü „TV-Bild & Perspektive“ an den tatsächlichen Sitz- oder Stehplatz anpassen. Das Layout ist für 1920 × 1080 im Querformat gestaltet.
 
 ## Lokal entwickeln

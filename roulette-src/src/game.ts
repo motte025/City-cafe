@@ -1,9 +1,10 @@
+import {DEFAULT_DESIGN,FLOOR,DIVIDER_HEIGHT,surfaceClearance,type WheelShape} from './wheel-shape';
 export const ORDER = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
 export const RED = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
 export const color = (n:number) => n===0?'green':RED.has(n)?'red':'black';
 export const TAU = Math.PI*2, STEP = TAU/37;
-export const BALL_RADIUS=.083, POCKET_RADIUS=1.79, POCKET_Y=.183;
-export const DIVIDER_TOP=.237;
+export const BALL_RADIUS=.083, POCKET_RADIUS=1.79, POCKET_Y=FLOOR*DEFAULT_DESIGN.bowlDepth+BALL_RADIUS;
+export const DIVIDER_TOP=DIVIDER_HEIGHT*DEFAULT_DESIGN.bowlDepth;
 export function restingOffset(variant:number){return [{angle:.025,radius:-.032},{angle:-.021,radius:.040},{angle:.012,radius:.009}][variant%3];}
 export function pocketForAngle(angle:number){return ((Math.round(angle/STEP)%37)+37)%37;}
 export class PlaybackClock {
@@ -28,7 +29,7 @@ export class Game {
  settle(token:number,index:number){if(token!==this.active||!Number.isInteger(index)||index<0||index>=37)return null;const number=ORDER[index];let payout=0;for(const [id,stake] of this.bets){const b=BETS.find(b=>b.id===id)!;if(b.numbers.includes(number))payout+=stake*b.multiplier;}this.balance+=payout;this.active=null;this.bets.clear();return {number,payout};}
 }
 const smooth=(x:number)=>x*x*x*(x*(x*6-15)+10);
-export interface Motion {index:number; duration:number; start:number; initialBall:number; variant:number;initialRadius?:number;initialY?:number;startSpeed?:number;launchDuration?:number;direction?:1|-1}
+export interface Motion {index:number; duration:number; start:number; initialBall:number; variant:number;initialRadius?:number;initialY?:number;startSpeed?:number;launchDuration?:number;direction?:1|-1;shape?:WheelShape}
 export function reversalPlan(angle:number,speed:number,direction:1|-1){return {angle,speed,duration:speed===0?0:1.6,endSpeed:direction*.76};}
 export function sampleReversal(p:ReturnType<typeof reversalPlan>,time:number){
  if(p.duration===0)return {angle:p.angle,speed:p.speed,u:1};
@@ -43,13 +44,7 @@ export function rotorState(m:Motion,t:number){
  return {angle:dir*(ROTOR_MIN_SPEED*t+(initial-ROTOR_MIN_SPEED)*(1-slow)/ROTOR_DRAG+boost*((1-slow)/ROTOR_DRAG-(1-fast)/2)),speed:dir*(ROTOR_MIN_SPEED+(initial-ROTOR_MIN_SPEED)*slow+boost*(slow-fast))};
 }
 export function rotorAt(m:Motion,t:number){return m.start+rotorState(m,t).angle;}
-export function supportHeight(r:number){
- const profile=[[1.53,.32],[1.58,.10],[1.98,.10],[2.04,.33],[2.43,.33],[2.49,.34],[2.7,.52],[2.9,.65],[3.05,.70]];
- let height=.70+BALL_RADIUS;
- for(let i=1;i<profile.length;i++){const a=profile[i-1],b=profile[i];if(r<=b[0]){height=a[1]+(b[1]-a[1])*Math.max(0,(r-a[0])/(b[0]-a[0]))+BALL_RADIUS;break;}}
- for(const [radius,y,tube] of [[2.013,.30,.018],[2.438,.332,.014],[2.47,.34,.022],[2.93,.66,.012],[3.02,.70,.018]]){const clearance=BALL_RADIUS+tube;if(Math.abs(r-radius)<clearance)height=Math.max(height,y+Math.sqrt(clearance**2-(r-radius)**2));}
- return height;
-}
+export function supportHeight(r:number,shape:WheelShape=DEFAULT_DESIGN){return surfaceClearance(r,BALL_RADIUS,shape);}
 export function sample(m:Motion,elapsed:number){
  const launchDuration=m.launchDuration??.8;
  const t=Math.max(0,Math.min(elapsed,m.duration)), u=Math.max(0,t-launchDuration)/(m.duration-launchDuration);
@@ -62,7 +57,8 @@ export function sample(m:Motion,elapsed:number){
  const lock=smooth(Math.max(0,Math.min(1,(u-.82)/.18)));
  const target=m.initialBall+travel;
  let angle=angular*(1-lock)+(target+rotor-rotorAt(m,m.duration))*lock;
- let radius=2.9,y=supportHeight(radius),impact=-1;
+ const shape=m.shape??DEFAULT_DESIGN;
+ let radius=2.9,y=supportHeight(radius,shape),impact=-1;
  // Unequal flight arcs: deflector hit, outward ricochet, pocket crossings, final rattles.
  const times=[.46,.54,.615,.68,.745,.805,.86,.91,.965,1];
  const radii=[2.9,2.57,2.20,2.36,1.88,2.025,1.73,1.91,1.76,POCKET_RADIUS+rest.radius];
@@ -73,11 +69,11 @@ export function sample(m:Motion,elapsed:number){
   radius=radii[j]+(radii[j+1]-radii[j])*(j===8?smooth(v):v);
   const kick=(j%2===0?1:-1)*(.13+m.variant*.022)*Math.pow(1-j/9,1.4);
   angle+=kick*(j===8?Math.sin(Math.PI*v)**2:Math.sin(Math.PI*v));
-  y=supportHeight(radius)+4*heights[j]*(1+m.variant*.12)*v*(1-v);
+  y=supportHeight(radius,shape)+4*heights[j]*(1+m.variant*.12)*v*(1-v);
  }
  if(u>.91){const q=(u-.91)/.09,fade=smooth(Math.min(1,q/.22));angle+=.028*Math.sin(q*Math.PI*5)*(1-q)**2*fade;y+=.028*Math.abs(Math.sin(q*Math.PI*4))*(1-q)**1.5;}
  // Keep the sphere above the raised metal dividers during each crossing.
- if(radius<2.075&&radius>1.50){const relative=((angle-rotor)%STEP+STEP)%STEP;const distance=Math.max(0,radius*Math.abs(Math.sin(relative-STEP/2))-.014);if(distance<BALL_RADIUS)y=Math.max(y,DIVIDER_TOP+Math.sqrt(BALL_RADIUS**2-distance**2));}
- if(t<launchDuration){const launch=smooth(t/launchDuration);radius=(m.initialRadius??2.9)+(2.9-(m.initialRadius??2.9))*launch;y=(m.initialY??supportHeight(2.9))+(supportHeight(2.9)-(m.initialY??supportHeight(2.9)))*launch+.64*Math.sin(Math.PI*t/launchDuration);}
+ if(radius<2.025&&radius>1.55){const relative=((angle-rotor)%STEP+STEP)%STEP;const distance=Math.max(0,radius*Math.abs(Math.sin(relative-STEP/2))-.018);if(distance<BALL_RADIUS)y=Math.max(y,DIVIDER_HEIGHT*shape.bowlDepth+Math.sqrt(BALL_RADIUS**2-distance**2));}
+ if(t<launchDuration){const launch=smooth(t/launchDuration);radius=(m.initialRadius??2.9)+(2.9-(m.initialRadius??2.9))*launch;y=(m.initialY??supportHeight(2.9,shape))+(supportHeight(2.9,shape)-(m.initialY??supportHeight(2.9,shape)))*launch+.64*Math.sin(Math.PI*t/launchDuration);}
  return {angle,rotor,radius,y,speed:rotorState(m,t).speed,impact,done:elapsed>=m.duration,index:m.index};
 }

@@ -2,6 +2,8 @@
 
 ## Befund
 
+Designstand 22.09.2026: Trotz plastischerer Taschen und Spindel bleibt die Geometrie nach Materialien zusammengefasst. Desktop-Profil während der Bewegung: 33 Draw Calls und 100.618 Dreiecke einschließlich Schattenpass. Das ist keine Messung auf dem ACEMAGIC W1 mit CachyOS; dessen tatsächliche Bildrate muss am Gerät geprüft werden. Sparmodus und getrennte Renderauflösung bleiben verfügbar.
+
 Die ursprüngliche Szene erzeugte bei 1280 × 720 **384 Draw Calls und 222.196 Dreiecke pro Bild einschließlich Schattenpass**. Gemessen mit `renderer.info`, dessen automatisches Zurücksetzen für die Messung abgeschaltet wurde. 37 separate Zahlentexturen und viele einzelne Stege, Schrauben und Ringe verursachten unnötig viele Einreichungen an den Treiber.
 
 Nach dem Zusammenfassen sind es im Qualitätsmodus **42 Draw Calls und 114.420 Dreiecke inklusive aktualisiertem Schattenpass**. Die Grundformen bleiben echte 3D-Geometrie. Die feinen Rundungen verwenden 128 statt 192 Umfangssegmente; kleine Ringquerschnitte 8 statt 12. Auf dem Testbild sind keine störenden Facetten erkennbar.
