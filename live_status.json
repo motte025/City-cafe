@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-22T14:22:46Z",
+  "checked_at": "2026-09-22T14:42:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -24,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @goblin_dj",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @goblin_dj",
       "game": "DJs"
     },
     {
@@ -48,6 +41,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Dienstag kurz & knackig / Quicky – Harderstyles auf Anschlag! !Socials !pchm !prep  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
     }
   ]
