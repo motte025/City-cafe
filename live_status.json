@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T16:37:45Z",
+  "checked_at": "2026-09-22T16:52:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Dienstag kurz & knackig / Quicky – Harderstyles auf Anschlag! !Socials !pchm !prep  #Werbung",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Dienstag kurz & knackig / Quicky – Harderstyles auf Anschlag! !Socials !pchm !prep  #Werbung",
       "game": "DJs"
     }
   ]
