@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T10:17:45Z",
+  "checked_at": "2026-09-22T10:22:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "MUTE MARATHON TAG 89! | Österreich Quicky | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
