@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T20:42:45Z",
+  "checked_at": "2026-09-22T20:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ TUNESDAY TUNES WITH A TRIPLE ORDER OF YAPPUCCINO🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     }
   ]
