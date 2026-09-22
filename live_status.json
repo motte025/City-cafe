@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T14:17:47Z",
+  "checked_at": "2026-09-22T14:22:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "16-18 Uhr DJs after work  mit @dj_falk",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Dienstag kurz & knackig / Quicky – Harderstyles auf Anschlag! !Socials !pchm !prep  #Werbung",
       "game": "DJs"
     }
   ]
