@@ -5,6 +5,7 @@ City
 
 | Datei | Inhalt |
 | --- | --- |
+| `STAND.md` | **Zuerst lesen:** wo das Projekt gerade steht - Geraete, Zustand der Bauteile, Verworfenes, feste Regeln |
 | `index.html` | Das Dashboard am Fernseher: Rotation aller Widgets, Nightlife, DJ-Slot, Hos'n Obe, Roulette-Slot |
 | `FERNBEDIENUNGEN.md` | Die Handy-Fernbedienungen (eine Adresse, vier Reiter) und wie sie den richtigen Screen finden |
 | `KIOSK-SUPERVISOR.md` | Der mpv-Aufpasser auf der Box: Video und Twitch ausserhalb des Browsers, Waechter, Neustart |
