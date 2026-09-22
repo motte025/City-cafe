@@ -68392,16 +68392,35 @@
     "auto_discovered": true
   },
   {
-    "artist": "Thomas Godoj",
-    "title": "Helden gesucht",
+    "artist": "The Cataracs",
+    "title": "Top Of The World",
     "album": "",
-    "category": "Schlager-Party",
+    "category": "Internationale Party-Hits",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
       "Party",
-      "Karaoke"
+      "Dance",
+      "Club"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Wind Rose",
+    "title": "Diggy Diggy Hole",
+    "album": "",
+    "category": "Party-Hit",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Folk-Pop",
+      "Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
