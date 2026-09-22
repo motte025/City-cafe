@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T22:47:46Z",
+  "checked_at": "2026-09-22T23:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "roice",
+      "name": "roice",
+      "title": "sand in your toesssssss !bewbs !morestreams !alt",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "sand in your toesssssss !bewbs !morestreams !alt",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
