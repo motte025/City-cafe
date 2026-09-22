@@ -68631,16 +68631,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Tony Holiday",
-    "title": "Tanze Samba mit mir",
+    "artist": "Junior Jack",
+    "title": "My Feeling",
+    "album": "",
+    "category": "Dance & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Dance",
+      "House",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Stephan Sulke",
+    "title": "Ich lieb Dich mehr",
     "album": "",
     "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
-      "Evergreen",
-      "Kult"
+      "Party",
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
