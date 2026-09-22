@@ -69329,16 +69329,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Cora",
-    "title": "Liebe pur",
+    "artist": "Snap!",
+    "title": "Rhythm Is a Dancer (7\" edit)",
     "album": "",
-    "category": "Party-Schlager",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "90s",
+      "Eurodance",
+      "Klassiker"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Sabrina Carpenter",
+    "title": "Sue Me",
+    "album": "",
+    "category": "Internationale Party-Hits",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Party-Schlager"
+      "Internationale Party-Hits"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
