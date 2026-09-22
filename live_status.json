@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-22T16:07:47Z",
+  "checked_at": "2026-09-22T16:22:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SUNSHINE LIVE Back 2 the 90s - Mit @Chris_Nitro - Eure Whatsapp ins Studio: 030- 20 19 16 16",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴 HARDSTYLE BABY  ☆ !holy !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -38,16 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "SUNSHINE LIVE Back 2 the 90s - Mit @Chris_Nitro - Eure Whatsapp ins Studio: 030- 20 19 16 16",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
