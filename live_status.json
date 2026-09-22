@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T15:52:46Z",
+  "checked_at": "2026-09-22T16:07:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "16-18 Uhr DJs after work  mit @dj_falk",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SUNSHINE LIVE Back 2 the 90s - Mit @Chris_Nitro - Eure Whatsapp ins Studio: 030- 20 19 16 16",
       "game": "DJs"
     }
   ]
