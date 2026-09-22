@@ -68751,16 +68751,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Akon",
-    "title": "Smack That (feat. Eminem)",
+    "artist": "Massive Töne",
+    "title": "Cruisen",
     "album": "",
-    "category": "Party & Rock",
+    "category": "Deutsch Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Hip-Hop",
+      "Deutsch",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Querbeat",
+    "title": "Stonn op un danz",
+    "album": "",
+    "category": "Ballermann & Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke",
+      "Ballermann & Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
