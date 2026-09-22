@@ -68829,5 +68829,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Ke$ha",
+    "title": "We R Who We R",
+    "album": "",
+    "category": "2010s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Pop",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
