@@ -68751,15 +68751,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Captain Hollywood Project",
-    "title": "Flying High - Radio Mix",
+    "artist": "Massive Töne",
+    "title": "Cruisen",
     "album": "",
-    "category": "90s Party",
+    "category": "Deutsch Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "90s",
-      "Eurodance"
+      "Hip-Hop",
+      "Deutsch",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Carole King",
+    "title": "It's Too Late",
+    "album": "",
+    "category": "Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Karaoke",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
