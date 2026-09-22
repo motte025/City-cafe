@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T21:37:45Z",
+  "checked_at": "2026-09-22T21:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
       "game": "DJs"
     }
   ]
