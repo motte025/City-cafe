@@ -69549,16 +69549,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Mariah Carey",
-    "title": "Honey",
+    "artist": "Yvonne Elliman",
+    "title": "If I Can't Have You",
     "album": "",
-    "category": "90s",
+    "category": "Disco / Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "90s",
+      "Disco",
+      "Mitmach-Hit",
+      "Kult"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Francine Jordi",
+    "title": "Frag den Abendwind",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
       "Party",
-      "Karaoke"
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
