@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T16:52:48Z",
+  "checked_at": "2026-09-22T17:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -26,14 +26,7 @@
       "platform": "twitch",
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @doglovernycmusic, @goblin_dj",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "title": "🍒✨💋🌈  Friendly takeover of @alexvaganza 🍒✨💞💋🌈 | !challenge | TY Raiders: @doglovernycmusic, @goblin",
       "game": "DJs"
     },
     {
@@ -41,6 +34,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Dienstag kurz & knackig / Quicky – Harderstyles auf Anschlag! !Socials !pchm !prep  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
