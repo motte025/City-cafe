@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-09-22T14:57:46Z",
+  "checked_at": "2026-09-22T15:12:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "colaway",
@@ -17,16 +10,23 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @goblin_dj",
+      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @doglovernycmusic, @goblin_dj",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
