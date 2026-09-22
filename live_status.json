@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-22T15:12:46Z",
+  "checked_at": "2026-09-22T15:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "16-18 Uhr DJs after work  mit @dj_falk",
@@ -41,6 +34,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Dienstag kurz & knackig / Quicky – Harderstyles auf Anschlag! !Socials !pchm !prep  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
