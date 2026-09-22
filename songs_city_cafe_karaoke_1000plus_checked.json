@@ -68831,14 +68831,34 @@
     "auto_discovered": true
   },
   {
-    "artist": "Charly Black",
-    "title": "Gyal You A Party Animal",
+    "artist": "Enrique Iglesias",
+    "title": "Escape",
     "album": "",
-    "category": "International Party",
+    "category": "90s Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "International Party",
+      "Party",
+      "Karaoke",
+      "90s Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "The Who",
+    "title": "Baba O'Riley",
+    "album": "",
+    "category": "Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Rock",
       "Party",
       "Karaoke"
     ],
