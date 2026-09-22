@@ -68372,36 +68372,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "BAP",
-    "title": "Alles Em Lot",
+    "artist": "Onyx",
+    "title": "Slam",
     "album": "",
-    "category": "Schlager",
+    "category": "Party & Rock",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
       "Party",
-      "Karaoke"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Roland Kaiser",
-    "title": "Flieg mit mir zu den Sternen",
-    "album": "",
-    "category": "Schlager",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Schlager",
-      "Party",
-      "Karaoke"
+      "Rock",
+      "Anthem"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
