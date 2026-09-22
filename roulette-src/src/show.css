@@ -45,6 +45,15 @@
  .display-page:not(.aufnahme) #history{gap:5px}
 }
 @media(max-width:900px){body.remote-page [data-design-reset]{font-size:24px;min-height:64px}}
+/* Public TV view: controls remain in the phone remote and the settings dialog. */
+.display-page .cycle-actions,.display-page .table-message{display:none!important}
+.display-page .show-header .live-mark{font-size:calc(clamp(20px,1.65vw,34px)*var(--tv-text-scale))}
+.display-page:not(.aufnahme) .result-strip{display:grid;grid-template-columns:minmax(130px,1fr) auto minmax(210px,1fr);gap:20px}
+.display-page:not(.aufnahme) .result-strip>span{max-width:none;font-size:calc(clamp(16px,1.15vw,24px)*var(--tv-text-scale))}
+.display-page:not(.aufnahme) #room-label{font:500 clamp(28px,2.5vw,52px)/1.1 'Playfair Display',Georgia,serif;letter-spacing:2px;white-space:nowrap}
+.service-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+@media(max-width:1100px){.display-page:not(.aufnahme) .result-strip{grid-template-columns:110px 1fr 150px;gap:10px}.display-page:not(.aufnahme) #room-label{font-size:25px}}
+@media(max-width:700px){.display-page:not(.aufnahme) .result-strip{display:flex}.display-page .show-header .live-mark{font-size:18px}.display-page:not(.aufnahme) .result-strip>span{font-size:12px}}
 @media(min-width:701px) and (max-height:800px){
  .display-page .count-ring{width:154px;height:154px;margin:16px auto}
  .display-page .count-ring strong{font-size:78px}

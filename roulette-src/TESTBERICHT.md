@@ -1,4 +1,4 @@
-﻿# Prüfbericht · Roulette-TV
+# Prüfbericht · Roulette-TV
 
 Stand: 22.09.2026
 
@@ -24,3 +24,7 @@ TV-Optik bei 1920 × 1080 einschließlich zehn Historienzahlen und maximaler Sch
 
 115 Tests bestehen inklusive Renderpuffer, Schatten-Takt, Geometriezusammenfassung und Leistungsoptionen. Handy-Schriften im Browser bei 390 px geprüft: Überschrift 54 px, Feldbeschriftungen 23 px, keine horizontale Überbreite. Runtime-Umschaltung über Firebase und 960×540-Puffer bei weiterhin 1280×720-Oberfläche geprüft. ODROID-Messung steht aus; siehe PERFORMANCE.md.
 
+
+## TV-Bereinigung, Laufzeit und Ton
+
+121 Tests bestanden. Variable Dauer 13/16/19 Sekunden für alle 37 Fächer und beide Richtungen geprüft. TV mit zehn Historienzahlen visuell geprüft; entfernte Bedienelemente fehlen in der Hauptansicht, Tonfreigabe ist im Einstellungsdialog erreichbar. Getrennte Innen-/Außenmaterialien über Firebase geprüft. Die permanenten Rauschgeneratoren sind entfernt, die bisher gespeicherte Atmosphäre wird beim Update einmalig auf null gesetzt. Tonfreigabe im Browser technisch geprüft; Klang auf den physischen TV-Lautsprechern nicht abgehört.

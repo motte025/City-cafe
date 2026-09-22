@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {randomSpinDuration} from './spin-duration';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {bufferSize,shadowDue} from './render-budget';
 import {RenderProfile} from './render-profile';
@@ -10,7 +11,7 @@ import {DEFAULT_TV,tvProjection,type TVSettings} from './tv-projection';
 export class Wheel {
  renderer:T.WebGLRenderer;scene=new T.Scene();rotor=new T.Group();ball:T.Mesh;
  camera=new T.PerspectiveCamera(37,1,.1,60);
- angle=0;speed=0;timeScale=1;durationSetting=16;zoom=1;motion:Motion|null=null;elapsed=0;
+ angle=0;speed=0;timeScale=1;durationSetting=16;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
  onLand:((index:number)=>void)|null=null;onPhase:((phase:number)=>void)|null=null;onImpact:((strength:number)=>void)|null=null;
  onLaunch:((previousNumber:number,direction:1|-1)=>void)|null=null;onPose:((angle:number,progress:number)=>void)|null=null;
  private profile?:RenderProfile;private economy=false;private renderScale=1;private lastShadow=-Infinity;private shadowDirty=true;
@@ -67,7 +68,7 @@ export class Wheel {
  }
  private beginSpin(index:number,variant:number,direction:1|-1){
   const initialBall=launchPosition(this.angle,this.lastIndex),y=supportHeight(2.9,this.shape);this.ball.position.set(Math.sin(initialBall)*2.9,y,-Math.cos(initialBall)*2.9);
-  this.motion={index,variant,direction,duration:this.durationSetting+variant*.35,start:this.angle,startSpeed:this.speed,initialBall,initialRadius:2.9,initialY:y,launchDuration:0,shape:{...this.shape}};
+  this.motion={index,variant,direction,duration:randomSpinDuration(this.durationSetting,this.durationSpread),start:this.angle,startSpeed:this.speed,initialBall,initialRadius:2.9,initialY:y,launchDuration:0,shape:{...this.shape}};
   this.elapsed=0;this.phase=-1;this.impact=-1;this.onLaunch?.(ORDER[this.lastIndex],direction);
  }
  private frame(time:number){

@@ -34,11 +34,13 @@ export class WheelModel {
  private ebony=new T.MeshPhysicalMaterial({color:0x080c0e,metalness:.3,roughness:.3,clearcoat:.65});
  private wood=new T.MeshPhysicalMaterial({roughness:.27,metalness:.06,clearcoat:.7,clearcoatRoughness:.18});
  private track=new T.MeshPhysicalMaterial({roughness:.3,metalness:.2,clearcoat:.6});
+ private inner=this.wood.clone();
  private colors={red:new T.MeshPhysicalMaterial({color:0x990b21,roughness:.31,metalness:.08,clearcoat:.65}),black:new T.MeshPhysicalMaterial({color:0x070b10,roughness:.31,metalness:.12,clearcoat:.65}),green:new T.MeshPhysicalMaterial({color:0x006b3f,roughness:.31,metalness:.08,clearcoat:.65})};
  private pockets={red:new T.MeshStandardMaterial({color:0x740c20,roughness:.42}),black:new T.MeshStandardMaterial({color:0x090f14,roughness:.44}),green:new T.MeshStandardMaterial({color:0x005736,roughness:.42})};
  private labels:T.MeshBasicMaterial;
  constructor(renderer:T.WebGLRenderer){
   this.wood.map=this.woodTexture();this.track.map=this.wood.map;
+  this.inner.map=this.wood.map;
   const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;const ctx=atlas.getContext('2d')!;
   ctx.font='700 230px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;
   ORDER.forEach((n,i)=>{const x=i%8*256,y=Math.floor(i/8)*320;ctx.strokeStyle='#1b100c';ctx.strokeText(String(n),x+128,y+168,236);ctx.fillStyle='#fff5db';ctx.fillText(String(n),x+128,y+168,236);});
@@ -54,6 +56,10 @@ export class WheelModel {
   for(const mat of [this.wood,this.track,this.ebony]){mat.roughness=.45-s.gloss*.25;mat.clearcoat=.3+s.gloss*.5;}
   for(const mat of Object.values(this.colors)){mat.roughness=.5-s.gloss*.12;mat.clearcoat=.2+s.gloss*.25;}
   this.metal.roughness=.36-s.gloss*.19;this.chrome.roughness=.3-s.gloss*.18;
+  this.inner.color.copy(this.wood.color).multiplyScalar(s.innerTone);
+  this.wood.color.multiplyScalar(s.outerTone);this.track.color.multiplyScalar(s.trackTone);
+  for(const [mat,gloss] of [[this.inner,s.innerGloss],[this.wood,s.outerGloss]] as const){mat.roughness=.65-gloss*.5;mat.clearcoat=gloss;}
+  for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
   for(const group of [this.fixed,this.turning]){for(const child of [...group.children]){if(child instanceof T.Mesh)child.geometry.dispose();group.remove(child);}}
@@ -71,7 +77,7 @@ export class WheelModel {
   }
   for(let i=0;i<8;i++)this.mesh(f,deflectorGeometry(i),this.chrome);
   this.lathe(r,[[0,.012],[2.44,.012],[2.44,numberHeight(2.425,shape)],[2.425,numberHeight(2.425,shape)-.006],[2.04,.229],[1.985,FLOOR-.006],[1.585,FLOOR-.006],[1.53,.34],[.53,.82],[0,.83]],b);
-  this.lathe(r,[[1.525,.345],[1.36,.447],[1.02,.653],[.62,.804],[.40,.839]],this.wood);
+  this.lathe(r,[[1.525,.345],[1.36,.447],[1.02,.653],[.62,.804],[.40,.839]],this.inner);
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius<2.45))this.ring(r,radius,y,t,m);
   this.ring(r,1.53,.348,.016,b);
   const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,DIVIDER_HEIGHT-FLOOR-.012);wall.lineTo(-.009,DIVIDER_HEIGHT-FLOOR-.012);wall.closePath();

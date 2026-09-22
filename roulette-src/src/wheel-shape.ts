@@ -1,6 +1,7 @@
 export const DEFAULT_DESIGN = {
  bowlDepth:1.15, numberSlope:22, numberSize:1, cameraTilt:16,
  woodWarmth:.65, gloss:.65, metalWarmth:.3, lightContrast:.65, textScale:1,
+ innerTone:1,outerTone:1,trackTone:1,innerGloss:.65,outerGloss:.65,pocketRichness:.5,
 };
 export type DesignSettings=typeof DEFAULT_DESIGN;
 export type WheelShape=Pick<DesignSettings,'bowlDepth'|'numberSlope'|'numberSize'>;

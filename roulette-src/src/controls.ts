@@ -1,7 +1,8 @@
 import type {Settings} from './settings';
 export function settingsForm(){return `<div class="settings-grid">
- ${field('delay','Pause vor dem Abwurf','s',3,60,1)}${field('duration','Dauer der Kugelrunde','s',12,25,1)}
- ${field('effects','Kugel & Aufpraller','%',0,1,.05)}${field('ambience','Casino-Atmosphäre','%',0,1,.05)}
+ ${field('delay','Pause vor dem Abwurf','s',3,60,1)}${field('duration','Mittlere Dauer der Kugelrunde','s',12,25,1)}
+ ${field('durationSpread','Zufällige Abweichung ±','s',0,5,.5)}
+ ${field('effects','Kugel & Aufpraller','%',0,1,.05)}${field('ambience','Dezente Tischgeräusche','%',0,1,.05)}
  <label class="switch"><input type="checkbox" data-setting="muted"> Gesamten Ton stummschalten</label></div>
  <label class="switch"><input type="checkbox" data-setting="economy"> Sparsame Darstellung</label><p class="helper">Für die TV-Box: weniger Renderaufwand, weichere Schatten. Schrift bleibt scharf.</p>
  <div class="settings-grid">${field('renderScale','3D-Auflösung im Sparmodus','%',.5,1,.05)}</div>
@@ -11,6 +12,9 @@ export function settingsForm(){return `<div class="settings-grid">
  ${field('woodWarmth','Holz · dunkel bis warm','%',0,1,.05)}${field('metalWarmth','Metall · Silber bis Gold','%',0,1,.05)}
  ${field('gloss','Glanz & Reflexionen','%',0,1,.05)}${field('lightContrast','Lichtkontrast','%',0,1,.05)}
  ${field('textScale','TV-Texte vergrößern','%',.85,1.3,.05)}
+ ${field('innerTone','Innenkessel · dunkel bis hell','%',.15,1.4,.05)}${field('outerTone','Außenrand · dunkel bis hell','%',.15,1.4,.05)}
+ ${field('trackTone','Kugellaufbahn · dunkel bis hell','%',.15,1.4,.05)}${field('pocketRichness','Taschen · Farbstärke','%',0,1,.05)}
+ ${field('innerGloss','Innenkessel · matt bis glänzend','%',0,1,.05)}${field('outerGloss','Außenrand · matt bis glänzend','%',0,1,.05)}
  </div><p data-design-note>Form und Zahlen ändern sich nach einem laufenden Wurf. Blickwinkel, Licht und Texte reagieren sofort.</p><button type="button" data-design-reset>Design zurücksetzen</button></details>
  <details class="picture-settings"><summary>TV-Bild & Perspektive</summary><div class="settings-grid">
  ${field('brightness','Helligkeit','',.65,1.4,.05)}${field('zoom','Radgröße','',.75,1.15,.01)}
