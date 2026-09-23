@@ -64,3 +64,8 @@ Pausieren, Neustart und Lauftext unter dem Kessel sind auf dem TV ausgeblendet. 
 Neu: Innenkessel, Außenrand und Kugellaufbahn separat heller/dunkler stellen, Innen- und Außenglanz getrennt regeln und Taschenfarben abstimmen.
 
 Die Rundendauer schwankt unabhängig vom Ergebnis um den eingestellten Mittelwert: standardmäßig 16 ± 3 Sekunden, also 13–19 Sekunden ab Abwurf. Der vorherige Richtungswechsel kommt hinzu. Abweichung 0–5 Sekunden in der Fernbedienung einstellbar. Eine konstante Animationsdauer hat die Gewinnwahrscheinlichkeiten ebenfalls nicht verändert: Das Endfach wird unabhängig mit Web Crypto gleichverteilt gezogen.
+# Kugelbewegung – 23.09.2026
+
+Die TV-Anzeige erzeugt pro Wurf ein unabhängiges 32-Bit-Bewegungsprofil: variabler Abstieg, 4–7 Kontakte vor dem Taschenbereich und 4–7 abklingende Taschenkontakte. Letzte Bewegung: seitlicher Rückprall und Ausrollen zur äußeren Taschenwand; kein Zentrieren. Die Endposition bleibt relativ zum Rotor erhalten. Das Ergebnis wird weiterhin unabhängig und unverzerrt über Web Crypto gewählt.
+
+Fernbedienung → **Kugel & Einlauf**: Durchmesser 18–21 mm, Gewichtsreferenz 5,3–10,5 g, Sprungstärke 50–140 %. Änderungen gelten ab dem nächsten Wurf. Referenzmaßstab: 900 mm äußerer Kesseldurchmesser; Standardkugel 21 mm, damit etwas kleiner als zuvor. Gewichtsreferenz steuert die angenäherte Rückprallenergie, keine freie Massensimulation. Größen/Gewichte nach [Apex Live Gaming](https://www.apex-livegaming.com/product/roulette-ball/); Standard 21 mm Ivorine mit 8,7 g.

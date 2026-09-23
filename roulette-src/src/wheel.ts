@@ -1,10 +1,11 @@
 import * as T from 'three';
+import {createBallProfile,ballRadiusFor} from './game';
 import {randomSpinDuration} from './spin-duration';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {bufferSize,shadowDue} from './render-budget';
 import {RenderProfile} from './render-profile';
 import {WheelModel} from './wheel-model';
-import {DEFAULT_DESIGN,sameShape,type DesignSettings,type WheelShape} from './wheel-shape';
+import {DEFAULT_DESIGN,sameShape,surfaceClearance,type DesignSettings,type WheelShape} from './wheel-shape';
 import {ORDER,STEP,sample,PlaybackClock,coast,BALL_RADIUS,reversalPlan,sampleReversal,supportHeight,launchPosition,pocketForAngle,type Motion} from './game';
 import {DEFAULT_TV,tvProjection,type TVSettings} from './tv-projection';
 
@@ -12,6 +13,7 @@ export class Wheel {
  renderer:T.WebGLRenderer;scene=new T.Scene();rotor=new T.Group();ball:T.Mesh;
  camera=new T.PerspectiveCamera(37,1,.1,60);
  angle=0;speed=0;timeScale=1;durationSetting=16;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
+ ballDiameter=21;ballMass=8.7;ballBounce=1;
  onLand:((index:number)=>void)|null=null;onPhase:((phase:number)=>void)|null=null;onImpact:((strength:number)=>void)|null=null;
  onLaunch:((previousNumber:number,direction:1|-1)=>void)|null=null;onPose:((angle:number,progress:number)=>void)|null=null;
  private profile?:RenderProfile;private economy=false;private renderScale=1;private lastShadow=-Infinity;private shadowDirty=true;
@@ -32,11 +34,12 @@ export class Wheel {
   this.fill=new T.DirectionalLight(0xa8ccff,1.05);this.fill.position.set(3,4,-5);this.scene.add(this.fill);
   const rim=new T.DirectionalLight(0xffd29a,1.2);rim.position.set(1,2,-4);this.scene.add(rim);
   this.model=new WheelModel(this.renderer);this.scene.add(this.model.fixed,this.rotor);this.rotor.add(this.model.turning);
-  this.ball=new T.Mesh(new T.SphereGeometry(BALL_RADIUS,40,28),new T.MeshPhysicalMaterial({color:0xfff5db,roughness:.19,metalness:.04,clearcoat:1}));this.ball.castShadow=true;this.ball.position.set(0,supportHeight(2.9,this.shape),-2.9);this.scene.add(this.ball);
+  this.ball=new T.Mesh(new T.SphereGeometry(BALL_RADIUS,40,28),new T.MeshPhysicalMaterial({color:0xfff5db,roughness:.19,metalness:.04,clearcoat:1}));this.ball.scale.setScalar(ballRadiusFor(this.ballDiameter)/BALL_RADIUS);this.ball.castShadow=true;this.ball.position.set(0,this.ballSupport(2.9),-2.9);this.scene.add(this.ball);
   const ground=new T.Mesh(new T.PlaneGeometry(12,12),new T.ShadowMaterial({opacity:.4}));ground.rotation.x=-Math.PI/2;ground.position.y=-.36;ground.receiveShadow=true;this.scene.add(ground);
   for(const event of ['visibilitychange','freeze','resume'])document.addEventListener(event,()=>{this.clock.reset();this.profile?.reset();this.shadowDirty=true;});
   new ResizeObserver(()=>this.resize()).observe(host);this.resize();this.renderer.setAnimationLoop(t=>this.frame(t));
  }
+ private ballSupport(radius:number){return surfaceClearance(radius,BALL_RADIUS*this.ball.scale.x,this.shape);}
  get designPending(){return this.pendingShape!==null;}
  setDesign(settings:DesignSettings){
   const next={...settings};this.design=next;this.model.appearance(next);
@@ -46,7 +49,7 @@ export class Wheel {
  }
  private applyShape(shape:WheelShape){
   this.shape={...shape};this.pendingShape=null;this.model.rebuild(this.shape);this.model.appearance(this.design);
-  this.ball.position.y=supportHeight(Math.hypot(this.ball.position.x,this.ball.position.z),this.shape);this.shadowDirty=true;
+  this.ball.position.y=this.ballSupport(Math.hypot(this.ball.position.x,this.ball.position.z));this.shadowDirty=true;
  }
  setPerformance(economy:boolean,scale:number){
   if(economy===this.economy&&scale===this.renderScale)return;this.economy=economy;this.renderScale=scale;
@@ -67,8 +70,10 @@ export class Wheel {
   if(plan.duration===0){this.preparation=null;this.beginSpin(index,variant,direction);}else this.onPhase?.(-1);
  }
  private beginSpin(index:number,variant:number,direction:1|-1){
-  const initialBall=launchPosition(this.angle,this.lastIndex),y=supportHeight(2.9,this.shape);this.ball.position.set(Math.sin(initialBall)*2.9,y,-Math.cos(initialBall)*2.9);
-  this.motion={index,variant,direction,duration:randomSpinDuration(this.durationSetting,this.durationSpread),start:this.angle,startSpeed:this.speed,initialBall,initialRadius:2.9,initialY:y,launchDuration:0,shape:{...this.shape}};
+  const profile=createBallProfile(crypto.getRandomValues(new Uint32Array(1))[0],this.ballDiameter,this.ballMass,this.ballBounce);
+  this.ball.scale.setScalar(profile.radius/BALL_RADIUS);
+  const initialBall=launchPosition(this.angle,this.lastIndex),y=surfaceClearance(2.9,profile.radius,this.shape);this.ball.position.set(Math.sin(initialBall)*2.9,y,-Math.cos(initialBall)*2.9);
+  this.motion={index,variant,direction,profile,duration:randomSpinDuration(this.durationSetting,this.durationSpread),start:this.angle,startSpeed:this.speed,initialBall,initialRadius:2.9,initialY:y,launchDuration:0,shape:{...this.shape}};
   this.elapsed=0;this.phase=-1;this.impact=-1;this.onLaunch?.(ORDER[this.lastIndex],direction);
  }
  private frame(time:number){
@@ -76,12 +81,12 @@ export class Wheel {
   if(this.preparation){
    const p=this.preparation;p.elapsed+=dt;const aligned=sampleReversal(p.plan,p.elapsed);this.angle=aligned.angle;this.speed=aligned.speed;this.rotor.rotation.y=-this.angle;
    const u=aligned.u,s=u*u*(3-2*u),a=this.angle+this.lastIndex*STEP+p.offset*(1-s),r=p.radius+(2.9-p.radius)*s;
-   const y=Math.max(supportHeight(r,this.shape),p.y+(supportHeight(2.9,this.shape)-p.y)*s)+.55*Math.sin(Math.PI*u);this.ball.position.set(Math.sin(a)*r,y,-Math.cos(a)*r);
+   const y=Math.max(this.ballSupport(r),p.y+(this.ballSupport(2.9)-p.y)*s)+.55*Math.sin(Math.PI*u);this.ball.position.set(Math.sin(a)*r,y,-Math.cos(a)*r);
    if(u===1){this.preparation=null;this.beginSpin(p.index,p.variant,p.direction);}
   }else if(this.motion){
    this.elapsed+=dt;const p=sample(this.motion,this.elapsed);this.angle=p.rotor;this.speed=p.speed;this.rotor.rotation.y=-this.angle;this.ball.position.set(Math.sin(p.angle)*p.radius,p.y,-Math.cos(p.angle)*p.radius);
-   this.onPose?.(p.angle,this.elapsed/this.motion.duration);const u=this.elapsed/this.motion.duration,phase=u<.46?0:u<.86?1:2;
-   if(phase!==this.phase){this.phase=phase;this.onPhase?.(phase);}if(p.impact!==this.impact){this.impact=p.impact;if(p.impact>=0)this.onImpact?.(1-p.impact/11);}
+   this.onPose?.(p.angle,this.elapsed/this.motion.duration);const u=this.elapsed/this.motion.duration,profile=this.motion.profile,phase=u<(profile?.drop??.46)?0:u<(profile?.capture??.86)?1:2;
+   if(phase!==this.phase){this.phase=phase;this.onPhase?.(phase);}if(p.impact!==this.impact){this.impact=p.impact;if(p.impact>=0)this.onImpact?.(Math.max(.12,1-p.impact/14));}
    if(p.done){this.shadowDirty=true;this.rotor.attach(this.ball);const actual=pocketForAngle(Math.atan2(this.ball.position.x,-this.ball.position.z));this.lastIndex=actual;this.motion=null;if(this.pendingShape)this.applyShape(this.pendingShape);this.onLand?.(actual);}
   }else{const next=coast(this.speed,dt);this.angle+=next.angle;this.speed=next.speed;this.rotor.rotation.y=-this.angle;}
   const updateShadow=shadowDue(time,this.lastShadow,this.economy,!!this.preparation||!!this.motion||Math.abs(this.speed)>.0001,this.shadowDirty);this.renderer.shadowMap.needsUpdate=updateShadow;if(updateShadow){this.lastShadow=time;this.shadowDirty=false;}

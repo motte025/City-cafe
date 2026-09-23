@@ -6,6 +6,9 @@ export function settingsForm(){return `<div class="settings-grid">
  <label class="switch"><input type="checkbox" data-setting="muted"> Gesamten Ton stummschalten</label></div>
  <label class="switch"><input type="checkbox" data-setting="economy"> Sparsame Darstellung</label><p class="helper">Für die TV-Box: weniger Renderaufwand, weichere Schatten. Schrift bleibt scharf.</p>
  <div class="settings-grid">${field('renderScale','3D-Auflösung im Sparmodus','%',.5,1,.05)}</div>
+ <details class="picture-settings" open><summary>Kugel &amp; Einlauf</summary><div class="settings-grid">
+ ${field('ballDiameter','Kugeldurchmesser','mm',18,21,1)}${field('ballMass','Trägheit · Gewichtsreferenz','g',5.3,10.5,.1)}${field('ballBounce','Sprungstärke','%',.5,1.4,.05)}
+ </div><p>Ab dem nächsten Wurf. Jeder Einlauf wird neu variiert. Referenz: 21 mm / 8,7 g Ivorine. Gewicht wirkt als angenäherte Trägheit und Dämpfung, nicht als vollständige Physiksimulation.</p></details>
  <details class="picture-settings" open><summary>Kessel-Design & Lesbarkeit</summary><div class="settings-grid">
  ${field('cameraTilt','Blickwinkel · 0° = genau von oben','°',0,32,1)}${field('bowlDepth','3D-Tiefe','%',.85,1.45,.05)}
  ${field('numberSlope','Gefälle des Zahlenkranzes','°',8,28,1)}${field('numberSize','Zahlen auf dem Kessel','%',.85,1.08,.01)}
