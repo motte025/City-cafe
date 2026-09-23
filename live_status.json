@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-23T16:47:45Z",
+  "checked_at": "2026-09-23T17:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ TRANCE meets TECHNO | !subtember | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "BAD TO THE BONEZ",
       "game": "DJs"
     }
   ]
