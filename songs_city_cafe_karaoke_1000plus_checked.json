@@ -70486,16 +70486,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Ray J",
-    "title": "One Wish",
+    "artist": "Rainhard Fendrich",
+    "title": "Strada Del Sole",
     "album": "",
-    "category": "2000s",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "2000s",
       "Party",
-      "Karaoke"
+      "Karaoke",
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Whitney Houston",
+    "title": "It's Not Right but It's Okay",
+    "album": "",
+    "category": "90s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "90s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
