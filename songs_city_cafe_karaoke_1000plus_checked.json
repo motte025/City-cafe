@@ -70825,16 +70825,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Benson Boone",
-    "title": "In the Stars",
+    "artist": "Miley Cyrus",
+    "title": "The Climb",
     "album": "",
-    "category": "Internationale Party-Hits",
+    "category": "90s",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "90s",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Creed",
+    "title": "One Last Breath",
+    "album": "",
+    "category": "Party & Rock",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Karaoke",
-      "Internationale Party-Hits"
+      "Rock",
+      "Anthem"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
