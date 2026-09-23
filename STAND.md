@@ -51,6 +51,13 @@ getan ist (Vorladen ohne Puffer, Puffergrenzen für mpv, yt-dlp als Zipapp,
 zram) und wie es eingerichtet wird, steht in `KIOSK-SUPERVISOR.md` unter
 „Arbeitsspeicher".
 
+**Selbst-Aktualisierung**: Das Dashboard prüft alle fünf Minuten, ob sich
+`index.html` auf GitHub Pages geändert hat, und lädt sich dann beim nächsten
+Slotwechsel neu (nicht während Hos'n Obe oder eines Handy-Wunsches). Ein
+Dashboard-Update braucht also keinen Neustart der Box mehr. Dateien auf der
+Box (Supervisor, Chromium-Starter) erreicht das nicht. Abschalten mit
+`?autoupdate=0`.
+
 **ACEMAGIC W1 (bestellt)**, soll mit CachyOS im Kiosk-Betrieb laufen und den
 ODROID ablösen oder ergänzen. Zu tun, sobald er da ist: das Kiosk-Gerüst aus
 `kiosk/` übertragen, Videobeschleunigung auf VA-API statt der Amlogic-Wege

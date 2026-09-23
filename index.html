@@ -12069,7 +12069,97 @@
             globalMasterTimer = later(runMasterSequence, QR_SLOT_SEKUNDEN * 1000);
         }
 
+        // ------------------------------------------------------------------
+        //  Selbst-Aktualisierung
+        // ------------------------------------------------------------------
+        // Die Box laedt das Dashboard nur beim Start von GitHub Pages. Damit ein
+        // neuer Stand ohne Neustart und ohne Anmeldung auf der Box ankommt,
+        // holt das Dashboard alle paar Minuten die eigene index.html und
+        // vergleicht sie mit dem Stand beim Start. Hat sie sich geaendert, laedt
+        // es sich beim naechsten Slotwechsel neu - nicht mitten in einer Runde
+        // Hos'n Obe und nicht, solange ein Wunsch vom Handy laeuft.
+        // Nur index.html zaehlt: die Auto-Commits (DJ-Status, Songs) aendern
+        // andere Dateien und loesen nichts aus. Abschalten mit ?autoupdate=0.
+        const UPDATE_PRUEF_MS = 5 * 60 * 1000;
+        let updateStand = null;       // Pruefsumme der index.html beim Start
+        let updateWartet = false;     // neuer Stand liegt bereit
+
+        function updatePruefsumme(text) {
+            let h = 0x811c9dc5;       // FNV-1a, reicht zum Erkennen einer Aenderung
+            for (let i = 0; i < text.length; i++) {
+                h ^= text.charCodeAt(i);
+                h = Math.imul(h, 0x01000193);
+            }
+            return (h >>> 0).toString(16) + ':' + text.length;
+        }
+
+        async function updatePruefen() {
+            if (updateWartet) return;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 20000);
+                const res = await fetch(location.pathname + '?update=' + Date.now(),
+                                        { cache: 'no-store', signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (!res.ok) return;
+                const text = await res.text();
+                // Nur eine vollstaendige Dashboard-Seite zaehlt - keine
+                // Fehlerseite, kein abgebrochener Download.
+                if (!text.includes('function runMasterSequence') || !/<\/html>\s*$/i.test(text)) return;
+                const summe = updatePruefsumme(text);
+                if (updateStand === null) { updateStand = summe; return; }
+                if (summe !== updateStand) {
+                    updateWartet = true;
+                    console.log('Neuer Dashboard-Stand liegt bereit - Neuladen beim naechsten Slotwechsel.');
+                }
+            } catch (e) {}
+        }
+
+        // Aus runMasterSequence(): true, wenn die Seite gerade neu laedt.
+        function updateJetztNeuladen() {
+            if (!updateWartet) return false;
+            if (window.ktSpielLaeuft && window.ktSpielLaeuft()) return false;
+            if (typeof nlFernAktiv === 'function' && nlFernAktiv()) return false;
+            if (typeof djFernAktiv === 'function' && djFernAktiv()) return false;
+            updateWartet = false;
+            // Unmittelbar vorher nachsehen, ob GitHub Pages antwortet. Ohne Netz
+            // wuerde das Neuladen auf der Fehlerseite des Browsers enden - dann
+            // lieber normal weiterrotieren und beim naechsten Pruefen neu versuchen.
+            (async () => {
+                let erreichbar = false;
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000);
+                    const res = await fetch(location.pathname + '?update=' + Date.now(),
+                                            { method: 'HEAD', cache: 'no-store', signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    erreichbar = res.ok;
+                } catch (e) {}
+                if (erreichbar) {
+                    try {
+                        const adresse = new URL(location.href);
+                        adresse.searchParams.set('_t', String(Date.now()));   // wie im Kiosk-Starter
+                        location.replace(adresse.toString());
+                        // Sicherheitsnetz: steht die Seite nach 20 s noch, weiter wie gehabt.
+                        setTimeout(runMasterSequence, 20000);
+                        return;
+                    } catch (e) {}
+                }
+                runMasterSequence();
+            })();
+            return true;
+        }
+
+        (function updateStarten() {
+            try {
+                if (new URLSearchParams(location.search).get('autoupdate') === '0') return;
+            } catch (e) {}
+            setTimeout(updatePruefen, 15000);     // Stand beim Start merken
+            setInterval(updatePruefen, UPDATE_PRUEF_MS);
+        })();
+
         function runMasterSequence() {
+            if (updateJetztNeuladen()) return;
             // Erst alle Timer der vorherigen Ansicht abraeumen, dann die neue starten.
             // Verhindert, dass eine abgeloeste Sequenz im Hintergrund weiterlaeuft.
             cancelSequenceTimers();
