@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-09-23T15:32:48Z",
+  "checked_at": "2026-09-23T15:37:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Musik an Welt aus  !!! <3 -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "popp_ccorn",
@@ -24,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "SUNSHINE LIVE DJs after work mit @dj_falk meets @felixkroecher",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SUNSHINE LIVE DJs after work mit @dj_falk meets @felixkroecher",
       "game": "DJs"
     },
     {
