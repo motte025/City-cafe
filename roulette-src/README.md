@@ -44,7 +44,9 @@ Nur im Entwicklungsserver: `/?dev&target=14` erzwingt Zielzahl 14. Alle 37 Zahle
 
 Kontrollierte zeitbasierte Kugelbewegung mit wechselnden Richtungen, Abwurf bei der letzten Gewinnzahl, Abprallphasen und seitlichem Auspendeln. Das Endfach wird aus der tatsächlichen lokalen Kugelposition abgeleitet. Die Kugel bleibt an ihrer Ruheposition, statt in die Fachmitte zu springen. Ergebnisse stammen gleichverteilt aus Web Crypto mit Rejection Sampling.
 
-Leise Rollkontakte, kurze Aufpraller und optionale Tischgeräusche werden im Browser synthetisch erzeugt. Es sind keine echten Casino-Aufnahmen. Dauernde Rauschschleifen sind entfernt. Tischgeräusche stehen standardmäßig auf null, auch einmalig beim Update bestehender Einstellungen. Tonfreigabe am TV unter ⚙ → Ton aktivieren. Moderne WebGL-Unterstützung ist nötig.
+Rollgeräusch und Aufpraller stammen aus einer echten Aufnahme des Casino Évian von f_ilippo (CC0). Die Sprachansage ist nicht Bestandteil der verwendeten Ausschnitte. Quelle und Schnittzeiten: [public/audio/SOURCES.md](public/audio/SOURCES.md). Keine synthetischen Oszillatoren oder Rauschgeneratoren mehr. Die kurzen Dateien werden von derselben Website geladen; bei Ladefehlern erscheint eine Wiederholungsmöglichkeit im Ton-Button. Tonfreigabe am TV unter ⚙ → Ton aktivieren. Optionale leise Kontakte außerhalb des Wurfs bleiben standardmäßig ausgeschaltet.
+
+Der Rollton beginnt erst beim tatsächlichen Abwurf und blendet vor den letzten Taschenkontakten aus. Einzelne Aufprallaufnahmen folgen den Kontaktphasen. Bei verborgenem Tab stoppen alle laufenden Geräusche; beim Zurückkehren wird die aktuelle Phase fortgesetzt. Die letzten fünf Bewegungsabschnitte lassen die Kugel radial und seitlich zurückprallen und erst danach zur außermittigen Ruheposition auspendeln.
 
 Bei inaktivem Tab pausiert die Animationszeit; bei Rückkehr werden keine Würfe übersprungen. Nach Neuladen beginnt ein neuer Standardzyklus. Einstellungen bleiben auf diesem TV gespeichert; Ergebnisverlauf und Zyklus sind nicht dauerhaft gespeichert.
 

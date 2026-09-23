@@ -21,8 +21,8 @@ test('Kräftige Sprünge, mehrere Rückpraller und durchgehende Position an jede
  const m:Motion={index:23,variant:2,duration:14.5,start:.5,initialBall:1};
  let maxLift=0;const impacts=new Set<number>();
  for(let t=.8;t<m.duration;t+=.002){const p=sample(m,t);maxLift=Math.max(maxLift,p.y-supportHeight(p.radius));if(p.impact>=0)impacts.add(p.impact);assert.ok(p.y>=supportHeight(p.radius)-1e-8);}
- assert.ok(maxLift>.4);assert.equal(impacts.size,9);
- for(const u of [.46,.54,.615,.68,.745,.805,.86,.91,.965,1]){const time=.8+u*(m.duration-.8);const a=sample(m,time-1e-7),b=sample(m,time+1e-7);assert.ok(Math.abs(a.y-b.y)<1e-5);assert.ok(Math.abs(a.radius-b.radius)<1e-5);assert.ok(Math.abs(a.angle-b.angle)<1e-5);}
+ assert.ok(maxLift>.4);assert.equal(impacts.size,11);
+ for(const u of [.46,.54,.615,.68,.745,.805,.86,.90,.93,.957,.981,1]){const time=.8+u*(m.duration-.8);const a=sample(m,time-1e-7),b=sample(m,time+1e-7);assert.ok(Math.abs(a.y-b.y)<1e-5);assert.ok(Math.abs(a.radius-b.radius)<1e-5);assert.ok(Math.abs(a.angle-b.angle)<1e-5);}
 });
 
 

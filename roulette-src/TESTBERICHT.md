@@ -1,6 +1,6 @@
 # Prüfbericht · Roulette-TV
 
-Stand: 22.09.2026
+Stand: 23.09.2026
 
 - 110 automatisierte Tests bestanden.
 - Alle 37 Endfächer, drei Bewegungsvarianten und beide Drehrichtungen geprüft.
@@ -26,5 +26,9 @@ TV-Optik bei 1920 × 1080 einschließlich zehn Historienzahlen und maximaler Sch
 
 
 ## TV-Bereinigung, Laufzeit und Ton
+
+## Aufnahmen und Taschenlandung (23.09.)
+
+123 Tests bestanden: elf Kontaktphasen mit stetigen Positionen, wiederholte radiale Richtungswechsel bis zur Ruhe, alle 37 Endfächer bei verschiedenen Bildraten und Formextremen. Vier lokale Ogg-Aufnahmen sind im Build enthalten; Laden und Dekodieren im Browser erfolgreich. Rollton blendet vor den letzten Kontakten aus. Kein synthetischer Ersatzton bei Ladefehlern. Quelle, CC0-Lizenz und Schnittzeiten stehen in public/audio/SOURCES.md. Die Auswahl erfolgte anhand Wellenform und automatischer Spracherkennung; kein subjektiver Hörtest und keine Prüfung an den TV-Lautsprechern.
 
 121 Tests bestanden. Variable Dauer 13/16/19 Sekunden für alle 37 Fächer und beide Richtungen geprüft. TV mit zehn Historienzahlen visuell geprüft; entfernte Bedienelemente fehlen in der Hauptansicht, Tonfreigabe ist im Einstellungsdialog erreichbar. Getrennte Innen-/Außenmaterialien über Firebase geprüft. Die permanenten Rauschgeneratoren sind entfernt, die bisher gespeicherte Atmosphäre wird beim Update einmalig auf null gesetzt. Tonfreigabe im Browser technisch geprüft; Klang auf den physischen TV-Lautsprechern nicht abgehört.

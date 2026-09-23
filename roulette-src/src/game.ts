@@ -71,7 +71,25 @@ export function sample(m:Motion,elapsed:number){
   angle+=kick*(j===8?Math.sin(Math.PI*v)**2:Math.sin(Math.PI*v));
   y=supportHeight(radius,shape)+4*heights[j]*(1+m.variant*.12)*v*(1-v);
  }
- if(u>.91){const q=(u-.91)/.09,fade=smooth(Math.min(1,q/.22));angle+=.028*Math.sin(q*Math.PI*5)*(1-q)**2*fade;y+=.028*Math.abs(Math.sin(q*Math.PI*4))*(1-q)**1.5;}
+ if(u>=.86){
+  // The last contacts reverse direction inside/over the pocket instead of homing
+  // into its centre. Preserve the incoming position at the first contact.
+  const entryTime=launchDuration+.86*(m.duration-launchDuration);
+  const entryAngular=m.initialBall+travel*(1-Math.pow(1-.86,3));
+  const entryTarget=target+rotorAt(m,entryTime)-rotorAt(m,m.duration);
+  const entryOffset=(entryAngular-entryTarget)*(1-smooth((.86-.82)/.18));
+  const contacts=[.86,.90,.93,.957,.981,1];
+  const offsets=[entryOffset,direction*.125,-direction*.066,direction*.034,-direction*.022,0];
+  const pocketRadii=[1.73,1.92,1.71,1.88,1.735,POCKET_RADIUS+rest.radius];
+  const lifts=[.15,.115,.075,.043,.018];
+  let j=0;while(j<contacts.length-2&&u>=contacts[j+1])j++;
+  const v=Math.max(0,Math.min(1,(u-contacts[j])/(contacts[j+1]-contacts[j])));
+  const travelFraction=j===4?1-(1-v)**3:v;
+  angle=target+rotor-rotorAt(m,m.duration)+offsets[j]+(offsets[j+1]-offsets[j])*travelFraction;
+  radius=pocketRadii[j]+(pocketRadii[j+1]-pocketRadii[j])*travelFraction;
+  y=supportHeight(radius,shape)+4*lifts[j]*(1+m.variant*.1)*v*(1-v);
+  impact=6+j;
+ }
  // Keep the sphere above the raised metal dividers during each crossing.
  if(radius<2.025&&radius>1.55){const relative=((angle-rotor)%STEP+STEP)%STEP;const distance=Math.max(0,radius*Math.abs(Math.sin(relative-STEP/2))-.018);if(distance<BALL_RADIUS)y=Math.max(y,DIVIDER_HEIGHT*shape.bowlDepth+Math.sqrt(BALL_RADIUS**2-distance**2));}
  if(t<launchDuration){const launch=smooth(t/launchDuration);radius=(m.initialRadius??2.9)+(2.9-(m.initialRadius??2.9))*launch;y=(m.initialY??supportHeight(2.9,shape))+(supportHeight(2.9,shape)-(m.initialY??supportHeight(2.9,shape)))*launch+.64*Math.sin(Math.PI*t/launchDuration);}
