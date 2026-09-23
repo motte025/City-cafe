@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-23T19:02:46Z",
+  "checked_at": "2026-09-23T19:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     }
   ]
