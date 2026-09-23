@@ -69,7 +69,15 @@ einen Prozess – meist Chromium, und der Bildschirm ist kurz schwarz. Deshalb:
 * **zram**: komprimierter Swap im RAM (`kiosk/citycafe-zram` plus
   `citycafe-zram.service`). Nie Swap auf der Speicherkarte.
 
-Einrichten auf der Box (einmalig; Dateien vorher mit `scp` nach `~` kopieren):
+Am einfachsten erledigt das alles `kiosk/ram-einrichten.sh` (holt die Dateien
+aus `main`, sichert die alten als `*.vor-ram`, prüft vor dem Einspielen):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/motte025/City-cafe/main/kiosk/ram-einrichten.sh -o ~/ram-einrichten.sh
+sh ~/ram-einrichten.sh --neustart
+```
+
+Von Hand, Schritt für Schritt (Dateien vorher mit `scp` nach `~` kopieren):
 
 ```sh
 # yt-dlp als Zipapp (braucht Python 3.10 oder neuer)
