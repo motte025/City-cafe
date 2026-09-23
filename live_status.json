@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-23T18:27:45Z",
+  "checked_at": "2026-09-23T18:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Happy Partnerversary @r4csco ! ✨ !charity",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | NEPTUNICA",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "STUDIO SESSION | NEPTUNICA",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Happy Partnerversary @r4csco ! ✨ !charity",
       "game": "DJs"
     }
   ]
