@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-23T11:32:45Z",
+  "checked_at": "2026-09-23T11:37:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Musik an Welt aus  !!! <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
