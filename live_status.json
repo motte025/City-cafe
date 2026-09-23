@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-23T15:52:46Z",
+  "checked_at": "2026-09-23T16:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "SUNSHINE LIVE DJs after work mit @dj_falk meets @felixkroecher",
       "game": "DJs"
     },
     {
