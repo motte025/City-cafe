@@ -13,6 +13,7 @@ export function startDisplay(){
  let settings={...DEFAULT_SETTINGS};if(params.has('kiosk'))settings.economy=true;try{settings=applySettings(settings,JSON.parse(localStorage.getItem('atelier-show-settings')||'null'));}catch{}
  // Retire the previous continuous noise bed once, including saved TV settings.
  try{if(!localStorage.getItem('atelier-audio-v2')){settings.ambience=0;localStorage.setItem('atelier-audio-v2','1');}}catch{settings.ambience=0;}
+ try{if(!localStorage.getItem('atelier-audio-v3')){settings.ambience=.35;localStorage.setItem('atelier-audio-v3','1');}}catch{settings.ambience=.35;}
  if(params.has('eco'))settings.economy=params.get('eco')!=='0';
  const cycle=new Cycle(),sound=new Sound(),relay=new Relay('tv'),session=crypto.randomUUID();let wheel:Wheel;let message='',throwInfo='Erster Abwurf bei 0 · Kessel ↻ · Kugel ↺',lastCommand='',lastHistory='',lastBroadcast=0,lastPaint=0;
  try{wheel=new Wheel($('wheel'));}catch{$('message').textContent='Dieser Browser benötigt WebGL 2. Bitte Hardwarebeschleunigung aktivieren.';return;}

@@ -3,21 +3,24 @@ export function rollLevel(progress:number){return progress<.46?.38:progress<.86?
 export class Sound {
  enabled=true;ready=false;error='';
  private context:AudioContext|null=null;private master:GainNode|null=null;private fx:GainNode|null=null;private bed:GainNode|null=null;
+ private background:HTMLAudioElement|null=null;
  private buffers:AudioBuffer[]=[];private loading:Promise<void>|null=null;
  private rolling:AudioBufferSourceNode|null=null;private rollGain:GainNode|null=null;private pan:StereoPannerNode|null=null;
  private shots=new Set<AudioBufferSourceNode>();private effects=.65;private atmosphere=0;private muted=false;private hitIndex=0;
  async unlock(){
   this.context??=new AudioContext();if(this.context.state==='suspended')await this.context.resume();
-  if(!this.master){const c=this.context;this.master=c.createGain();this.master.connect(c.destination);this.fx=c.createGain();this.bed=c.createGain();this.fx.connect(this.master);this.bed.connect(this.master);
-   window.setInterval(()=>{if(this.ready&&!this.muted&&this.atmosphere>0&&!document.hidden&&!this.rolling)this.contact(.055,true);},4100);
+  if(!this.master){const c=this.context;this.master=c.createGain();this.master.gain.value=0;this.master.connect(c.destination);this.fx=c.createGain();this.bed=c.createGain();this.bed.gain.value=0;this.fx.connect(this.master);this.bed.connect(this.master);
+   this.background=new Audio(new URL('audio/casino-background.ogg',document.baseURI).href);this.background.loop=true;this.background.preload='auto';
+   c.createMediaElementSource(this.background).connect(this.bed);
   }
+  if(this.background?.paused)await this.background.play();
   if(!this.buffers.length){
    this.loading??=Promise.all(RECORDINGS.map(async file=>{const response=await fetch(new URL(`audio/${file}`,document.baseURI),{signal:AbortSignal.timeout(12000)});if(!response.ok)throw new Error('Audio-Datei fehlt');return this.context!.decodeAudioData(await response.arrayBuffer());})).then(buffers=>{this.buffers=buffers;});
    try{await this.loading;this.error='';}catch{this.loading=null;this.ready=false;this.error='Roulette-Aufnahme konnte nicht geladen werden. Bitte erneut versuchen.';return;}
   }
   this.ready=this.context.state==='running';this.configure(this.effects,this.atmosphere,this.muted);
  }
- configure(effects:number,ambience:number,muted:boolean){this.effects=effects;this.atmosphere=ambience;this.muted=muted;if(this.master&&this.context){const t=this.context.currentTime;this.master.gain.setTargetAtTime(muted?0:.8,t,.08);this.fx!.gain.setTargetAtTime(effects,t,.08);this.bed!.gain.setTargetAtTime(ambience,t,.1);}}
+ configure(effects:number,ambience:number,muted:boolean){this.effects=effects;this.atmosphere=ambience;this.muted=muted;if(this.master&&this.context){const t=this.context.currentTime;this.master.gain.setTargetAtTime(muted?0:.8,t,.08);this.fx!.gain.setTargetAtTime(effects,t,.08);this.bed!.gain.setTargetAtTime(ambience,t,.25);}}
  roll(progress=0){
   if(!this.ready||!this.context||document.hidden)return;this.stop(true);if(progress>=.86)return;
   const c=this.context,source=c.createBufferSource(),gain=c.createGain(),pan=c.createStereoPanner();source.buffer=this.buffers[0];source.loop=true;source.loopStart=.06;source.loopEnd=this.buffers[0].duration-.06;

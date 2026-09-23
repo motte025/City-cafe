@@ -2,7 +2,7 @@ import type {Settings} from './settings';
 export function settingsForm(){return `<div class="settings-grid">
  ${field('delay','Pause vor dem Abwurf','s',3,60,1)}${field('duration','Mittlere Dauer der Kugelrunde','s',12,25,1)}
  ${field('durationSpread','Zufällige Abweichung ±','s',0,5,.5)}
- ${field('effects','Kugel & Aufpraller','%',0,1,.05)}${field('ambience','Dezente Tischgeräusche','%',0,1,.05)}
+ ${field('effects','Kugel & Aufpraller','%',0,1,.05)}${field('ambience','Hintergrundgeräusch','%',0,1,.05)}
  <label class="switch"><input type="checkbox" data-setting="muted"> Gesamten Ton stummschalten</label></div>
  <label class="switch"><input type="checkbox" data-setting="economy"> Sparsame Darstellung</label><p class="helper">Für die TV-Box: weniger Renderaufwand, weichere Schatten. Schrift bleibt scharf.</p>
  <div class="settings-grid">${field('renderScale','3D-Auflösung im Sparmodus','%',.5,1,.05)}</div>

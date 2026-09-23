@@ -46,6 +46,8 @@ Kontrollierte zeitbasierte Kugelbewegung mit wechselnden Richtungen, Abwurf bei 
 
 Rollgeräusch und Aufpraller stammen aus einer echten Aufnahme des Casino Évian von f_ilippo (CC0). Die Sprachansage ist nicht Bestandteil der verwendeten Ausschnitte. Quelle und Schnittzeiten: [public/audio/SOURCES.md](public/audio/SOURCES.md). Keine synthetischen Oszillatoren oder Rauschgeneratoren mehr. Die kurzen Dateien werden von derselben Website geladen; bei Ladefehlern erscheint eine Wiederholungsmöglichkeit im Ton-Button. Tonfreigabe am TV unter ⚙ → Ton aktivieren. Optionale leise Kontakte außerhalb des Wurfs bleiben standardmäßig ausgeschaltet.
 
+Das Hintergrundgeräusch stammt aus der vom Betreiber bereitgestellten WhatsApp-Tonspur. Der 6:32 Minuten lange Stereo-Loop wurde an den Enden beschnitten, über zwei Sekunden überblendet und auf −25 LUFS normalisiert. In der Handy-Fernbedienung regelt „Hintergrundgeräusch“ ausschließlich diesen Loop; „Kugel & Aufpraller“ bleibt davon getrennt. Neue und bestehende Installationen starten einmalig mit 35 Prozent Hintergrundlautstärke.
+
 Der Rollton beginnt erst beim tatsächlichen Abwurf und blendet vor den letzten Taschenkontakten aus. Einzelne Aufprallaufnahmen folgen den Kontaktphasen. Bei verborgenem Tab stoppen alle laufenden Geräusche; beim Zurückkehren wird die aktuelle Phase fortgesetzt. Die letzten fünf Bewegungsabschnitte lassen die Kugel radial und seitlich zurückprallen und erst danach zur außermittigen Ruheposition auspendeln.
 
 Bei inaktivem Tab pausiert die Animationszeit; bei Rückkehr werden keine Würfe übersprungen. Nach Neuladen beginnt ein neuer Standardzyklus. Einstellungen bleiben auf diesem TV gespeichert; Ergebnisverlauf und Zyklus sind nicht dauerhaft gespeichert.

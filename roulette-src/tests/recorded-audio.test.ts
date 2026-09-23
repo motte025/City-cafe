@@ -7,6 +7,9 @@ test('Recorded audio files are shipped, rolling fades before the final pocket co
  for(const file of RECORDINGS){const data=readFileSync(new URL(`../public/audio/${file}`,import.meta.url));assert.equal(data.toString('ascii',0,4),'OggS');assert.ok(data.length>4000);}
  assert.ok(rollLevel(.2)>rollLevel(.6));assert.ok(rollLevel(.6)>rollLevel(.8));assert.equal(rollLevel(.86),0);assert.equal(rollLevel(1),0);
 });
+test('User background recording is shipped as a substantial Ogg loop',()=>{
+ const data=readFileSync(new URL('../public/audio/casino-background.ogg',import.meta.url));assert.equal(data.toString('ascii',0,4),'OggS');assert.ok(data.length>2_000_000);
+});
 test('Ball reverses radial travel repeatedly before coming to rest',()=>{
  for(const direction of [-1,1] as const)for(let variant=0;variant<3;variant++){
  const motion={index:12,variant,direction,duration:16,start:1,initialBall:0,launchDuration:0};

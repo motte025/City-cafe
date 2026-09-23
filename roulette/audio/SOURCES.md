@@ -14,3 +14,12 @@ Derived Ogg files: roll 4.00–8.00 s; contacts 19.99–20.12 s,
 gain reduction applied; no generated tones mixed in. Original voice announcement
 is not included. Timestamp selection used waveform inspection and automatic
 speech recognition, not human listening; final subjective audio QA is pending.
+
+## Background loop
+
+`casino-background.ogg` is derived from the operator-provided file
+`WhatsApp Audio 2026-09-23 at 09.39.57.mpeg`. The quiet head and tail were
+trimmed, the final two seconds were crossfaded into the first two seconds,
+and loudness was normalized to -25 LUFS. The resulting 392-second stereo
+Ogg file loops continuously. Its level is controlled by the existing
+`Hintergrundgeräusch` slider in the phone remote.

@@ -31,4 +31,8 @@ TV-Optik bei 1920 × 1080 einschließlich zehn Historienzahlen und maximaler Sch
 
 123 Tests bestanden: elf Kontaktphasen mit stetigen Positionen, wiederholte radiale Richtungswechsel bis zur Ruhe, alle 37 Endfächer bei verschiedenen Bildraten und Formextremen. Vier lokale Ogg-Aufnahmen sind im Build enthalten; Laden und Dekodieren im Browser erfolgreich. Rollton blendet vor den letzten Kontakten aus. Kein synthetischer Ersatzton bei Ladefehlern. Quelle, CC0-Lizenz und Schnittzeiten stehen in public/audio/SOURCES.md. Die Auswahl erfolgte anhand Wellenform und automatischer Spracherkennung; kein subjektiver Hörtest und keine Prüfung an den TV-Lautsprechern.
 
+## Hintergrund-Loop
+
+124 Tests bestanden. Die bereitgestellte 394,8-Sekunden-MP3 wurde als 392-Sekunden-Ogg mit zyklischer Zwei-Sekunden-Überblendung und −25 LUFS integriert. Ogg-Container, Mindestgröße und Produktionsbuild geprüft. Im Browser geladen und gestartet; der Regler „Hintergrundgeräusch“ wurde über die Handy-Fernbedienung von 35 auf 55 Prozent geändert und am TV bestätigt. Subjektive Hörprüfung und Prüfung des Übergangs über die physischen TV-Lautsprecher stehen aus.
+
 121 Tests bestanden. Variable Dauer 13/16/19 Sekunden für alle 37 Fächer und beide Richtungen geprüft. TV mit zehn Historienzahlen visuell geprüft; entfernte Bedienelemente fehlen in der Hauptansicht, Tonfreigabe ist im Einstellungsdialog erreichbar. Getrennte Innen-/Außenmaterialien über Firebase geprüft. Die permanenten Rauschgeneratoren sind entfernt, die bisher gespeicherte Atmosphäre wird beim Update einmalig auf null gesetzt. Tonfreigabe im Browser technisch geprüft; Klang auf den physischen TV-Lautsprechern nicht abgehört.
