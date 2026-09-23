@@ -10,13 +10,28 @@ wlr-randr --output HDMI-A-1 --mode 1920x1080@60Hz || true
 # Zeitstempel macht die URL bei jedem Start neu, damit immer frisch geladen wird.
 CACHEBUST="$(date +%s)"
 
+# Sparsam mit dem Arbeitsspeicher (die Box hat nur 2 GB, dazu mpv daneben):
+# --disable-site-isolation-trials: sonst bekommt jedes fremde iframe (YouTube,
+#   Twitch) einen eigenen Renderer-Prozess mit je 50-100 MB. Im Kiosk laeuft
+#   nur das eigene Dashboard mit bekannten Einbettungen - der Schutz, den die
+#   Trennung bietet, bringt hier nichts.
+# --disable-background-networking / -sync / -default-apps und die Features
+#   unten: Hintergrunddienste eines normalen Desktop-Browsers (Uebersetzer,
+#   Casting, Vorschlags-Downloads, Sync), die am Fernseher niemand braucht,
+#   die aber Speicher und CPU belegen.
+#   BackForwardCache: der Kiosk navigiert nie zurueck; die alte Seite im
+#   Speicher zu halten, waere reine Verschwendung.
 # --app statt --kiosk: unter sway darf Chromium nicht im Vollbild stehen (sonst
 # laege es ueber dem mpv-Fenster des Nightlife-Slots). --kiosk ohne Vollbild
 # blendet Tabs und Adressleiste ein, --app zeigt nur die Seite.
 exec chromium \
   --ozone-platform=wayland \
   --app="https://motte025.github.io/City-cafe/?kiosk=1&raum=zuhause&boxname=Zuhause&_t=${CACHEBUST}" \
-  --disable-features=Translate \
+  --disable-features=Translate,MediaRouter,OptimizationHints,AutofillServerCommunication,BackForwardCache \
+  --disable-site-isolation-trials \
+  --disable-background-networking \
+  --disable-sync \
+  --disable-default-apps \
   --no-first-run \
   --no-default-browser-check \
   --disable-session-crashed-bubble \

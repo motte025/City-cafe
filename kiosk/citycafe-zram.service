@@ -1,0 +1,13 @@
+[Unit]
+Description=City Cafe: komprimierter Swap im RAM (zram)
+DefaultDependencies=no
+Before=swap.target
+After=systemd-modules-load.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/citycafe-zram
+
+[Install]
+WantedBy=swap.target

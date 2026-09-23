@@ -2636,10 +2636,14 @@
                 </div>
 
                 <!-- City-Flyers-Film: selbstgedrehte Vereins-Vorstellung mit Ton, laeuft in
-                     voller Laenge direkt nach der Mannschaftsfoto-Zwischenfolie. -->
+                     voller Laenge direkt nach der Mannschaftsfoto-Zwischenfolie.
+                     Ohne src und mit preload="none": die 10 MB lagen sonst ab dem
+                     Seitenstart dauerhaft im Speicher der Box (2 GB RAM), samt
+                     Decoder. dartFilmVorbereiten() setzt die Quelle erst zum
+                     Mannschaftsfoto, dartFilmFreigeben() gibt sie danach wieder ab. -->
                 <div class="media-inner-view" id="media-view-dart-film">
                     <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                        <video id="dart-film-video" src="city_flyers_film.mp4" style="width: 100%; height: 100%; object-fit: contain;" playsinline preload="auto"></video>
+                        <video id="dart-film-video" data-src="city_flyers_film.mp4" style="width: 100%; height: 100%; object-fit: contain;" playsinline preload="none"></video>
                     </div>
                 </div>
 
@@ -3460,13 +3464,13 @@
         const V2_ONLY_MODE = new URLSearchParams(location.search).has('v2only');
 
         const fallbackPartyBackgrounds = [
-            "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1600&auto=format&fit=crop&q=80"
+            "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1280&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1280&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1280&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1280&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1280&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1280&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1280&auto=format&fit=crop&q=80"
         ];
         function getRandomFallbackBackground() { return fallbackPartyBackgrounds[Math.floor(Math.random() * fallbackPartyBackgrounds.length)]; }
 
@@ -5781,6 +5785,27 @@
         // direkt nach der Mannschaftsfoto-Zwischenfolie.
         const DART_FILM_LAENGE_MS = 61700;
 
+        // Den Film erst kurz vor seinem Auftritt laden (waehrend der
+        // Mannschaftsfoto-Folie) und danach wieder ganz abgeben. Ein nur
+        // pausiertes <video> behaelt Puffer und Decoder - bei 2 GB RAM auf der
+        // Box zu teuer fuer einen Film, der einmal pro Durchlauf kommt.
+        function dartFilmVorbereiten() {
+            const el = document.getElementById('dart-film-video');
+            if (!el || el.getAttribute('src')) return el;
+            el.preload = 'auto';
+            el.setAttribute('src', el.dataset.src);
+            el.load();
+            return el;
+        }
+        function dartFilmFreigeben() {
+            const el = document.getElementById('dart-film-video');
+            if (!el || !el.getAttribute('src')) return;
+            try { el.pause(); } catch (e) {}
+            el.removeAttribute('src');
+            el.preload = 'none';
+            el.load();   // erst load() ohne src gibt Puffer und Decoder frei
+        }
+
         // Ein Bild, das nicht laedt, meldet sich ueber onerror - nur so laesst
         // sich vorher entscheiden, ob der Slot ueberhaupt etwas zu zeigen hat.
         // Ein <img> mit totem src im DOM stehen zu lassen reicht nicht: der
@@ -5826,6 +5851,8 @@
                 : 'Unser Dartverein · zu Hause im City Cafe, Fischlstraße 39';
 
             document.getElementById('media-view-dart-team').classList.add('active');
+            // Der Film kommt als Naechstes - jetzt vorpuffern, dann startet er ohne Pause.
+            if (nextStateIndex === DART_FILM_INDEX) dartFilmVorbereiten();
             mediaStateIndex = nextStateIndex;
             globalMasterTimer = later(runMasterSequence, DART_FOTO_SLOT_MS);
         }
@@ -5834,7 +5861,7 @@
         // <video>) in voller Laenge. Sicherheitsnetz wie bei runDrinksState:
         // ohne das blieb der Screen stehen, wenn "ended" mal nicht feuert.
         function runDartFilmState(nextStateIndex) {
-            const el = document.getElementById('dart-film-video');
+            const el = dartFilmVorbereiten();
             let weitergeschaltet = false;
 
             const advance = () => {
@@ -7186,6 +7213,13 @@
             return typeof window.nlExternBis === 'number' && window.nlExternBis > Date.now();
         }
 
+        // Laeuft der Supervisor ueberhaupt? Er schreibt window.nlExternBis in
+        // jedem Takt - auch als 0, wenn er das Video gerade nicht spielen kann.
+        // Solange er da ist, spielt mpv; das Embed ist nur der Notnagel.
+        function nlSupervisorDa() {
+            return typeof window.nlExternBis === 'number';
+        }
+
         // Welche Quelle ist gerade zu sehen: Datei oder YouTube.
         function nlAnsichtUmschalten(aufDatei) {
             const rahmen = document.getElementById('nl-player-frame');
@@ -7221,6 +7255,18 @@
 
             if (!nlPlayerBereit) return;
             nlGeladen = { schluessel: eintrag.schluessel, start: eintrag.start, datei: false, video: eintrag.video };
+            // Kiosk mit Supervisor: mpv spielt das Video, das Embed wird nur im
+            // Notfall gebraucht. Dann nur bereitlegen (cue) statt anspielen -
+            // sonst dekodiert Chromium das Video ein zweites Mal und haelt
+            // dessen Puffer im Speicher, der auf der Box (2 GB RAM) fehlt.
+            // Faellt mpv aus, startet playVideo() das Embed auch aus dem cue.
+            if (nlSupervisorDa()) {
+                try {
+                    nlPlayer.mute();
+                    nlPlayer.cueVideoById({ videoId: eintrag.video.videoId, startSeconds: eintrag.start });
+                } catch (e) {}
+                return;
+            }
             try {
                 nlPlayer.mute();
                 nlPlayer.loadVideoById({ videoId: eintrag.video.videoId, startSeconds: eintrag.start });
@@ -12038,10 +12084,10 @@
             // Native <video>-Elemente spielen im Hintergrund weiter, auch wenn ihre
             // Ansicht ausgeblendet ist - anders als beim iframe reicht hier kein
             // "aus dem DOM", ein explizites pause() genuegt aber.
-            if (mediaStateIndex !== DART_FILM_INDEX) {
-                const dfv = document.getElementById('dart-film-video');
-                if (dfv && !dfv.paused) dfv.pause();
-            }
+            // Der Dartfilm wird dabei nicht nur angehalten, sondern ganz
+            // freigegeben (siehe dartFilmFreigeben) - ausser er ist als
+            // Naechstes dran und puffert gerade vor.
+            if (mediaStateIndex !== DART_FILM_INDEX) dartFilmFreigeben();
 
             // Das QR-Widget eroeffnet den Zyklus: alles zum Mitmachen zuerst,
             // eine Minute lang mit Countdown.

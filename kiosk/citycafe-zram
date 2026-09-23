@@ -1,0 +1,33 @@
+#!/bin/sh
+# Komprimierter Auslagerungsspeicher im RAM (zram) fuer die Box mit 2 GB.
+#
+# Chromium, das YouTube-Embed, mpv und yt-dlp zusammen stossen bei 2 GB an
+# die Grenze - dann schiesst der Kernel einen Prozess ab, meist Chromium.
+# zram packt selten benutzte Speicherseiten komprimiert (lz4, rund 1:3) in
+# einen Teil des RAMs, statt sie wegzuwerfen. Auslagern auf die Speicherkarte
+# ist keine Option: langsam, und es nutzt die Karte ab.
+#
+# Wird von citycafe-zram.service beim Start aufgerufen. Laeuft schon ein
+# zram-Swap (z. B. von Armbian oder zram-tools), tut das Skript nichts.
+set -eu
+
+GROESSE="${ZRAM_GROESSE:-1G}"
+
+if grep -q '^/dev/zram' /proc/swaps 2>/dev/null; then
+    echo "zram-Swap laeuft bereits:"; cat /proc/swaps
+    exit 0
+fi
+
+modprobe zram 2>/dev/null || true
+ALGO=lz4
+grep -qw lz4 /sys/block/zram0/comp_algorithm 2>/dev/null || ALGO=lzo-rle
+
+GERAET="$(zramctl --find --size "$GROESSE" --algorithm "$ALGO")"
+mkswap "$GERAET" >/dev/null
+swapon --priority 100 "$GERAET"
+
+# zram ist billig (RAM statt Karte) - frueher auslagern als bei Plattenswap,
+# und immer nur einzelne Seiten statt Achterblocks zurueckholen.
+sysctl -q vm.swappiness=100 vm.page-cluster=0
+
+echo "zram-Swap aktiv: $GERAET ($GROESSE, $ALGO)"
