@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-23T12:27:46Z",
+  "checked_at": "2026-09-23T12:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ TRANCE meets TECHNO | !subtember | !tip ✨",
       "game": "DJs"
     }
   ]
