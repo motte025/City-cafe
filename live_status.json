@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-23T17:52:49Z",
+  "checked_at": "2026-09-23T18:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Vinyl Only - Heute wird auf Platte abgerissen! <3 !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Suptember 🔥 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -31,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ TRANCE meets TECHNO | !subtember | !tip ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
@@ -45,16 +45,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Suptember 🔥 !Shakes !Holy !Moumint !Shop !Socials",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Happy Partnerversary @r4csco ! ✨ !charity",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Happy Partnerversary @r4csco ! ✨ !charity",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | NEPTUNICA",
       "game": "DJs"
     }
   ]
