@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-23T14:57:50Z",
+  "checked_at": "2026-09-23T15:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ TRANCE meets TECHNO | !subtember | !tip ✨",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SUNSHINE LIVE DJs after work mit @dj_falk meets @felixkroecher",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "SUNSHINE LIVE DJs after work mit @dj_falk meets @felixkroecher",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ TRANCE meets TECHNO | !subtember | !tip ✨",
       "game": "DJs"
     },
     {
@@ -48,6 +48,13 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴 HARD TECHNO ☆ !holy !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Timeflow - A Hardstyle Journey w/ @Mindblast  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
