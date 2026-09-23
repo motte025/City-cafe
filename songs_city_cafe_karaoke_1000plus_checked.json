@@ -70546,16 +70546,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Mike Krüger",
-    "title": "Alle sprechen davon",
+    "artist": "Ina Deter Band",
+    "title": "Neue Männer braucht das Land",
     "album": "",
-    "category": "Ballermann & Party",
+    "category": "Party-Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Ballermann & Party"
+      "Party-Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Ina Deter Band",
+    "title": "Ob blond, ob braun, ob henna",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
