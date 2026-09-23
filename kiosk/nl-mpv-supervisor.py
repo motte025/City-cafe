@@ -27,6 +27,22 @@ import urllib.request
 
 CDP_HOST, CDP_PORT = "127.0.0.1", 9222
 YTDLP = "/opt/citycafe/bin/yt-dlp"
+# Dieselbe Version als Python-Zipapp (Release-Datei "yt-dlp" ohne Endung, hier
+# als yt-dlp.pyz abgelegt). Die Einzeldatei oben ist mit PyInstaller gebaut und
+# packt sich bei JEDEM Aufruf erst nach /tmp aus - und /tmp liegt im
+# Arbeitsspeicher: pro Aufruf rund 80 MB RAM und Sekunden an CPU fuers
+# Entpacken, genau dann, wenn Chromium den naechsten Slot aufbaut. Die Zipapp
+# laeuft mit dem System-Python direkt aus der Datei. Liegt sie nicht da oder
+# liefert sie nichts, wird die Einzeldatei genommen.
+YTDLP_ZIPAPP = "/opt/citycafe/bin/yt-dlp.pyz"
+
+
+def ytdlp_programme():
+    if os.access(YTDLP_ZIPAPP, os.X_OK):
+        return [YTDLP_ZIPAPP, YTDLP]
+    return [YTDLP]
+
+
 COOKIES_FROM = "chromium:/home/citycafe/.config/chromium-kiosk"
 # Bestes H.264 bis 1080p (der Hardware-Decoder kann kein VP9/AV1 in brauchbarer
 # Form), dazu die m4a-Tonspur. Nicht jedes Video hat 1080p60 (299) - manche
@@ -264,32 +280,40 @@ def mpv_window_rect():
 
 def resolve(video_id, fmt=FORMAT):
     """-> (video_url, audio_url|None) oder None"""
-    try:
-        out = subprocess.run(
-            [YTDLP, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
-             "-f", fmt, "-g", f"https://www.youtube.com/watch?v={video_id}"],
-            capture_output=True, text=True, timeout=30)
-    except subprocess.TimeoutExpired:
-        log(f"yt-dlp Zeitueberschreitung fuer {video_id}")
-        return None
-    urls = [l for l in out.stdout.splitlines() if l.startswith("http")]
-    if not urls:
-        log(f"yt-dlp ohne URL fuer {video_id}: {out.stderr.strip()[-200:]}")
-        return None
-    return urls[0], (urls[1] if len(urls) > 1 else None)
+    for programm in ytdlp_programme():
+        try:
+            out = subprocess.run(
+                [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                 "-f", fmt, "-g", f"https://www.youtube.com/watch?v={video_id}"],
+                capture_output=True, text=True, timeout=30)
+        except (subprocess.TimeoutExpired, OSError) as fehler:
+            log(f"{os.path.basename(programm)} fuer {video_id}: {type(fehler).__name__}")
+            continue
+        urls = [l for l in out.stdout.splitlines() if l.startswith("http")]
+        if urls:
+            return urls[0], (urls[1] if len(urls) > 1 else None)
+        log(f"{os.path.basename(programm)} ohne URL fuer {video_id}: {out.stderr.strip()[-200:]}")
+    return None
 
 
 def suchen(text, anzahl=None):
     """YouTube-Suche fuer die Handy-Fernbedienung. -> Liste von Treffern."""
     anzahl = anzahl or SUCH_TREFFER
-    try:
-        out = subprocess.run(
-            [YTDLP, "--js-runtimes", "node", "--flat-playlist", "--print",
-             "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s",
-             f"ytsearch{anzahl}:{text}"],
-            capture_output=True, text=True, timeout=60)
-    except subprocess.TimeoutExpired:
-        log(f"Suche Zeitueberschreitung: {text!r}")
+    out = None
+    for programm in ytdlp_programme():
+        try:
+            out = subprocess.run(
+                [programm, "--js-runtimes", "node", "--flat-playlist", "--print",
+                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s",
+                 f"ytsearch{anzahl}:{text}"],
+                capture_output=True, text=True, timeout=60)
+        except (subprocess.TimeoutExpired, OSError) as fehler:
+            log(f"Suche mit {os.path.basename(programm)}: {type(fehler).__name__} ({text!r})")
+            out = None
+            continue
+        if out.stdout.strip():
+            break
+    if out is None:
         return []
     treffer = []
     for zeile in out.stdout.splitlines():
@@ -753,7 +777,12 @@ def main():
             # der Mali-GPU zu teuer (gemessen 40-48 verworfene Bilder/s),
             # mit einfacher Skalierung 0,1-0,2/s.
             # --sid=no: nie Untertitel, auch keine im Videostrom eingebetteten.
+            # --demuxer-max-*: mpv puffert Netzstroeme sonst bis 150 MiB voraus
+            # und haelt 50 MiB Rueckblick - auf der Box mit 2 GB RAM, neben
+            # Chromium, zu viel. 48 MiB sind bei 1080p immer noch rund eine
+            # Minute Vorlauf; zurueckgespult wird im Slot nur per Fernbedienung.
             args = ["mpv", "--hwdec=no", "--vo=gpu", "--profile=fast", "--sid=no",
+                    "--demuxer-max-bytes=48MiB", "--demuxer-max-back-bytes=8MiB",
                     "--no-osc", "--osd-level=0", "--no-input-default-bindings",
                     "--really-quiet", "--input-ipc-server=/tmp/mpv-nl.sock",
                     "--log-file=/home/citycafe/mpv-nl.log", f"--volume={ton_vol}"]

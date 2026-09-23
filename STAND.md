@@ -46,7 +46,10 @@ laufen sway und Chromium im Kiosk (`--app`), dazu
 Debug-Schnittstelle von Chromium den Zustand des Dashboards und legt Videos und
 Streams mit mpv passgenau über das Browserfenster. Er löst YouTube-Adressen mit
 yt-dlp auf, sucht für die Fernbedienung, räumt `/tmp` auf und startet den
-Browser neu, wenn dieser hängt.
+Browser neu, wenn dieser hängt. Die Box hat nur **2 GB RAM**; was dagegen
+getan ist (Vorladen ohne Puffer, Puffergrenzen für mpv, yt-dlp als Zipapp,
+zram) und wie es eingerichtet wird, steht in `KIOSK-SUPERVISOR.md` unter
+„Arbeitsspeicher".
 
 **ACEMAGIC W1 (bestellt)**, soll mit CachyOS im Kiosk-Betrieb laufen und den
 ODROID ablösen oder ergänzen. Zu tun, sobald er da ist: das Kiosk-Gerüst aus
