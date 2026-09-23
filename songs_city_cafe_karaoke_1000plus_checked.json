@@ -70506,36 +70506,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Bob Dylan",
-    "title": "Knockin' on Heaven's Door",
+    "artist": "Strom & Wasser",
+    "title": "Der Riesenmann mit dem Riesenhut",
     "album": "",
-    "category": "Rock",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Rock",
       "Party",
-      "Karaoke"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Kenny Rogers",
-    "title": "She Believes in Me",
-    "album": "",
-    "category": "90s",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "90s",
-      "Party",
-      "Karaoke"
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
