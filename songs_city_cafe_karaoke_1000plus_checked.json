@@ -71084,16 +71084,56 @@
     "auto_discovered": true
   },
   {
-    "artist": "Energy 52",
-    "title": "Café Del Mar - Three 'n One Radio Edit",
+    "artist": "Andrea Berg",
+    "title": "Das Gefühl",
     "album": "",
-    "category": "2000s Party",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "2000s",
-      "Dance",
-      "Cover"
+      "Party",
+      "Karaoke",
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Selim61",
+    "title": "Top 10",
+    "album": "",
+    "category": "Deutsch Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Lolita",
+    "title": "Seemann, deine Heimat ist das Meer",
+    "album": "",
+    "category": "Schlager & Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager & Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
