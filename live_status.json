@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T14:17:47Z",
+  "checked_at": "2026-09-24T14:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Ascendance 9 by @markmcmanus1 - Breaks & Electronica ✨ !charity",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "16-18 Uhr: SUNSHINE LIVE DJs AFTER WORK - Melodic Beats mit @dj_falk",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "16-18 Uhr: SUNSHINE LIVE DJs AFTER WORK - Melodic Beats mit @dj_falk",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Ascendance 9 by @markmcmanus1 - Breaks & Electronica ✨ !charity",
       "game": "DJs"
     }
   ]
