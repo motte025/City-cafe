@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-09-24T12:22:46Z",
+  "checked_at": "2026-09-24T12:32:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Musik an Welt aus  !!! <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
