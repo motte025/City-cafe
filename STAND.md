@@ -92,10 +92,11 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   im Hauptthread). Findet die Suche nichts rechtzeitig, läuft die alte
   Keyframe-Animation als Rückfallebene — sie zeigt immer die richtige Zahl.
   Regler „Einlauf min./max. Taschen“ (Standard 5/15, Bereich 3–20).
-  Drei sichtbare Zierringe (r 2,93 / 2,47 / 2,025) stehen 1,7–2,7 mm über den
-  Flächen, über die die Kugel rollen muss; in der Kollisionsrechnung sind sie
-  bündig, das sichtbare Modell ist unverändert. Details, Messwerte und
-  offene Abweichungen: `roulette-src/TESTBERICHT.md`.
+  Drei Zierringe (r 2,93 / 2,47 / 2,025) standen 1,7–2,7 mm über den
+  Flächen, über die die Kugel rollen muss; auf Wunsch des Betreibers jetzt
+  auch im sichtbaren 3D-Modell bündig abgesenkt (zuvor nur in der
+  Kollisionsrechnung). Details, Messwerte und offene Abweichungen:
+  `roulette-src/TESTBERICHT.md`.
   Neu in der Fernbedienung: zwei Regler „Rauten radial/tangential ·
   Widerstand“ (0–100 %, Standard je 15 %). 0 % = kein Widerstand (Kugel
   prallt verlustfrei ab), 100 % = totaler Widerstand (kein Rückprall,

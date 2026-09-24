@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as T from 'three';
 import {BALL_PHYSICS,BALL_WINDOWS,G_EARTH,MM_PER_UNIT,deflectorMaterial} from '../src/ball-config';
-import {buildColliders,BallSim,surfaceDistance,FLUSH_BEADS} from '../src/ball-physics';
+import {buildColliders,BallSim,surfaceDistance} from '../src/ball-physics';
 import {collidersFor,planThrowSync,planInternals,type BallPlan,type PlanRequest} from '../src/ball-plan';
 import {deflectorGeometry} from '../src/wheel-model';
 import {DEFAULT_DESIGN,DIVIDER_HEIGHT,FLOOR,rimProfile,type WheelShape} from '../src/wheel-shape';
@@ -44,13 +44,12 @@ test('Stege: jede sichtbare Ecke liegt auf der Kollisionsfläche (Fase inklusive
  }
 });
 
-test('Wulstringe: alle sichtbaren außer den drei gemeldeten liegen in der Kollision',()=>{
+test('Wulstringe: alle sichtbaren Ringe liegen bündig in der Kollision (auch die drei zuvor überstehenden)',()=>{
  const col=collidersFor(DEFAULT_DESIGN);
  for(const [radius,y,t] of rimProfile(DEFAULT_DESIGN)){
   const top=y*DEFAULT_DESIGN.bowlDepth+t*DEFAULT_DESIGN.bowlDepth;
   const d=surfaceDistance({...col,deflectorTris:[]},radius,top,0,0);
-  if(FLUSH_BEADS.includes(radius))assert.ok(d>.5/MM_PER_UNIT,`Ring ${radius} ist absichtlich bündig`);
-  else assert.ok(d<.3/MM_PER_UNIT,`Ring ${radius} fehlt in der Kollision`);
+  assert.ok(d<.3/MM_PER_UNIT,`Ring ${radius} liegt ${(d*MM_PER_UNIT).toFixed(2)} mm über der Kollisionsfläche`);
  }
 });
 

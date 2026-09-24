@@ -11,8 +11,27 @@ export function bowlProfile(shape:WheelShape=DEFAULT_DESIGN):number[][]{
  return [[1.53,.34],[1.585,FLOOR],[1.985,FLOOR],[2.04,.235],[2.425,numberHeight(2.425,shape)],[2.49,.44],[2.7,.60],[2.9,.75],[3.05,.80]];
 }
 export function trackHeight(r:number){return r<2.7?.44+(r-2.49)*(.16/.21):r<2.9?.60+(r-2.7)*(.15/.2):.75+(r-2.9)*(.05/.15);}
+/**
+ * Höhe der Kollisionsfläche exakt an den drei bündig abgesenkten Ringen (r 2,93/2,47/2,025) –
+ * dieselben Bruchpunkte wie die Stator-/Rotor-Segmente in ball-physics.ts (buildColliders),
+ * unabhängig vom Zahlenkranz-Gefälle. Bei Änderung dort auch hier anpassen.
+ */
+function flushHeightAt(radius:number):number{
+ if(radius===2.93)return trackHeight(radius); // Segment (2.9,.75)–(3.05,.80)
+ if(radius===2.47)return .425+(radius-2.455)*(.44-.425)/(2.49-2.455); // Segment (2.455,.425)–(2.49,.44)
+ if(radius===2.025)return (FLOOR-.006)+(radius-1.985)*(.229-(FLOOR-.006))/(2.04-1.985); // Segment (1.985,FLOOR-.006)–(2.04,.229)
+ throw new Error(`flushHeightAt: unbekannter Ring r=${radius}`);
+}
+/**
+ * Drei der sechs Zierringe (r 2,93 / 2,47 / 2,025) standen 1,7–2,7 mm über die Fläche vor, über
+ * die die Kugel rollen muss, und bildeten Mulden, in denen eine langsame Kugel für immer liegen
+ * bliebe. Auf Wunsch des Betreibers im sichtbaren Modell bündig abgesenkt (Höhe = Fläche
+ * darunter, minus Ringdicke) statt wie zuvor nur in der Kollisionsrechnung.
+ */
+const FLUSH_RINGS=[2.93,2.47,2.025];
 export function rimProfile(shape:WheelShape=DEFAULT_DESIGN):number[][]{
- return [[1.555,.315,.018],[2.025,.232,.016],[2.442,numberHeight(2.425,shape)+.004,.015],[2.47,.425,.018],[2.93,.765,.012],[3.02,.795,.018]];
+ return [[1.555,.315,.018],[2.025,.232,.016],[2.442,numberHeight(2.425,shape)+.004,.015],[2.47,.425,.018],[2.93,.765,.012],[3.02,.795,.018]]
+  .map(([radius,y,tube])=>FLUSH_RINGS.includes(radius)?[radius,flushHeightAt(radius)-tube,tube]:[radius,y,tube]);
 }
 /** Sphere clearance over the radial cross-section, including sloped segments. */
 export function surfaceClearance(r:number,ballRadius:number,shape:WheelShape=DEFAULT_DESIGN){

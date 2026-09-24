@@ -74,22 +74,23 @@ vorgegebenen Geometrie nicht erreichbar.
 Stillstand: Die Kugel bleibt meist **radial in der Taschenmitte** liegen,
 nicht außen an der Wand. Das ergibt sich aus der Taschenform.
 
-## Geometrie-Probleme (außerhalb der Kugel - Entscheidung beim Betreiber)
+## Geometrie-Probleme (außerhalb der Kugel) — Zierringe: erledigt
 
-Drei sichtbare Zierringe stehen über den Flächen, über die die Kugel rollen
+Drei sichtbare Zierringe standen über den Flächen, über die die Kugel rollen
 muss:
 
-| Ring | Radius | Überstand | Wirkung |
+| Ring | Radius | Überstand (vorher) | Wirkung |
 |---|---|---|---|
 | Laufbahn-Innenkante | 2,93 | 2,7 mm | Kugel verließe die Bahn nie |
 | Konus-Unterkante | 2,47 | 1,8 mm | Kugel kreist auf der Kante |
 | Taschenkranz-Rand (Rotor) | 2,025 | rund 2 mm | Kugel kreist auf dem Zahlenkranz |
 
 Schon 0,8 mm Überstand genügen, um eine 21-mm-Kugel bei 21° Gefälle
-dauerhaft festzuhalten. In der Kollisionsrechnung sind die drei Ringe daher
-bündig (sichtbares Modell unverändert). Empfehlung: die Ringe im 3D-Modell
-bündig absenken; sonst schneidet die Kugel sie beim Überrollen um bis zu
-2,7 mm, meist unter der Kugel verdeckt.
+dauerhaft festzuhalten. Auf Wunsch des Betreibers sind die drei Ringe jetzt
+**auch im sichtbaren 3D-Modell** bündig abgesenkt (`rimProfile()` in
+`wheel-shape.ts`, Höhe = darunterliegende Fläche statt fester Wulst) — nicht
+mehr nur in der Kollisionsrechnung. Test „Wulstringe“ prüft seither alle
+sechs Ringe gleich (bündig statt drei mit Ausnahme).
 
 ## Extreme Kesselformen
 
@@ -107,8 +108,8 @@ bleibt davon unberührt.
   oder unauffällig?
 - Ist der meist rautenfreie Lauf akzeptabel, oder soll versucht werden,
   Rautentreffer wieder häufiger zu machen (verlangsamt die Suche deutlich)?
-- Sind die drei überstehenden Zierringe im Bild überhaupt wahrnehmbar (die
-  Kugel verdeckt sie meist), oder sollen sie im Modell abgesenkt werden?
+- Sind die jetzt abgesenkten Zierringe im Bild als Unterschied überhaupt
+  wahrnehmbar (die Kugel verdeckt sie meist)?
 - Rechenzeit/Rückfälle auf der tatsächlichen TV-Box (ODROID, später W1)
   gegenprüfen - die obigen Werte stammen vom Testrechner.
 

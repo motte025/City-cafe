@@ -20,15 +20,14 @@ export interface BallParams {diameter:number;mass:number;bounce:number}
 /** Rauten-Widerstand je Ausrichtung (0–100 %, per Fernbedienung); k gerade = radial, k ungerade = tangential. */
 export interface DeflectorResistance {radial:number;tangential:number}
 /**
- * VORLÄUFIG, zur Entscheidung beim Betreiber: Drei sichtbare Zierringe stehen
- * 1,7–2,7 mm über den Flächen, über die die Kugel rollen muss, und bilden Mulden,
- * in denen eine langsame Kugel physikalisch für immer liegen bleibt:
+ * Drei Zierringe standen 1,7–2,7 mm über den Flächen, über die die Kugel rollen muss, und
+ * bildeten Mulden, in denen eine langsame Kugel physikalisch für immer liegen bliebe:
  *  - r = 2,93 Innenkante der Laufbahn (die Kugel verließe die Bahn nie),
  *  - r = 2,47 Unterkante des Konus (Kugel kreist auf der Konuskante),
  *  - r = 2,025 Rand des Taschenkranzes am Rotor (Kugel kreist auf dem Zahlenkranz).
- * Schon 0,8 mm Überstand halten eine 21-mm-Kugel auf 21° Gefälle fest.
- * In der Kollisionsrechnung liegen sie deshalb bündig (entfallen); das sichtbare
- * Modell ist unverändert. Empfehlung: die drei Ringe im Modell bündig absenken.
+ * Schon 0,8 mm Überstand halten eine 21-mm-Kugel auf 21° Gefälle fest. Auf Wunsch des
+ * Betreibers deshalb bündig abgesenkt — in der Kollisionsrechnung hier (kein Wulst an
+ * diesen drei Radien) UND im sichtbaren Modell (rimProfile() in wheel-shape.ts).
  */
 export const FLUSH_BEADS=[2.93,2.47,2.025];
 export const ballRadiusOf=(diameter:number)=>diameter/MM_PER_UNIT/2;
