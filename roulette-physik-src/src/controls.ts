@@ -8,7 +8,8 @@ export function settingsForm(){return `<div class="settings-grid">
  <div class="settings-grid">${field('renderScale','3D-Auflösung im Sparmodus','%',.5,1,.05)}</div>
  <details class="picture-settings" open><summary>Kugel &amp; Einlauf</summary><div class="settings-grid">
  ${field('launchSpeed','Abwurfgeschwindigkeit','m/s',1.8,3.2,.1)}${field('ballDiameter','Kugeldurchmesser','mm',18,21,1)}${field('ballMass','Kugelmasse','g',5.3,10.5,.1)}${field('ballBounce','Rückprall · Material','%',.5,1.4,.05)}
- </div><p>Ab dem nächsten Wurf. Geschwindigkeit und Eigendrehung streuen bei jedem Abwurf. Referenz: 21 mm / 8,7 g Ivorine. Masse, Reibung und Rückprall wirken in der Kollisionssimulation.</p></details>
+ ${field('diamondRadialResistance','Rauten längs · Widerstand','%',0,1,.05)}${field('diamondTangentialResistance','Rauten quer · Widerstand','%',0,1,.05)}${field('pocketRun','Nachlauf maximal','Taschen',5,20,1)}
+ </div><p>Die beiden Rautenregler steuern den Energieverlust getrennt für längs und quer ausgerichtete Rauten. 0 % lässt die Kugel fast ungebremst abprallen, 100 % bremst stark. Der Nachlauf wird bei jedem Wurf neu zwischen 5 und dem eingestellten Maximum gewählt.</p></details>
  <details class="picture-settings" open><summary>Kessel-Design & Lesbarkeit</summary><div class="settings-grid">
  ${field('cameraTilt','Blickwinkel · 0° = genau von oben','°',0,32,1)}${field('bowlDepth','3D-Tiefe','%',.85,1.45,.05)}
  ${field('numberSlope','Gefälle des Zahlenkranzes','°',8,28,1)}${field('numberSize','Zahlen auf dem Kessel','%',.85,1.08,.01)}

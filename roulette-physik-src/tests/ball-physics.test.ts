@@ -1,24 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {BallPhysics,initBallPhysics,METRES_PER_UNIT,PHYSICS_DT,type Launch} from '../src/ball-physics';
+import {BallPhysics,deflectorMaterial,initBallPhysics,METRES_PER_UNIT,PHYSICS_DT,type Launch} from '../src/ball-physics';
 import {DEFAULT_DESIGN,FLOOR} from '../src/wheel-shape';
 import {pocketForAngle} from '../src/game';
 import {readFileSync} from 'node:fs';
 
 const launch=(i:number):Launch=>({angle:i*.713,rotorAngle:i*.377,rotorSpeed:i%2?-.76:.76,direction:i%2?-1:1,speed:(2.5+(i%4)*.15)/METRES_PER_UNIT,diameter:i%2?18:21,mass:i%2?5.3:8.7,restitution:.48,spinRatio:.78+(i%3)*.07});
-test('Physical ball: sixteen launches cross diamonds and bounce across 5–10 dividers',async()=>{
+test('Physical ball: sixteen launches cross diamonds and bounce across 5–20 dividers',async()=>{
  await initBallPhysics();const outcomes=new Set<number>();const times=new Set<number>();
  for(let i=0;i<16;i++){
-  const requested=5+i%5,sim=new BallPhysics({...launch(i),pocketContacts:requested},DEFAULT_DESIGN);let p=sim.step();let maxRelative=0;
+  const requested=5+i%15,sim=new BallPhysics({...launch(i),pocketContacts:requested,diamondRadialResistance:.1,diamondTangentialResistance:.1},DEFAULT_DESIGN);let p=sim.step();let maxRelative=0;
   assert.equal(p.index,null);assert.ok(Math.hypot(sim.rotor.localCom().x,sim.rotor.localCom().z)<1e-6,'rotor centre of mass must stay on its axle');
   for(let t=0;t<240*60&&p.index===null;t++){
    p=sim.step();assert.ok(Number.isFinite(p.x+p.y+p.z));
-   assert.ok(p.radius<3.4,'ball stays inside the bowl');assert.ok(p.y>FLOOR*DEFAULT_DESIGN.bowlDepth,'ball does not pass through the pocket floor');
+   assert.ok(p.radius<3.4,`launch ${i} stays inside the bowl at ${p.elapsed.toFixed(2)} s (r=${p.radius.toFixed(3)})`);assert.ok(p.y>FLOOR*DEFAULT_DESIGN.bowlDepth,'ball does not pass through the pocket floor');
    if(p.radius<2.02)maxRelative=Math.max(maxRelative,p.relativeSpeed);
   }
   assert.notEqual(p.index,null,`launch ${i} did not settle`);
   assert.ok(sim.deflectorHits>0,`launch ${i} missed all diamonds`);
-  assert.ok(sim.pocketBounces>=5&&sim.pocketBounces<=10,`launch ${i} had ${sim.pocketBounces} divider contacts`);
+  assert.ok(sim.pocketBounces>=5&&sim.pocketBounces<=20,`launch ${i} had ${sim.pocketBounces} divider contacts`);
   assert.equal(p.index,pocketForAngle(Math.atan2(p.x,-p.z)-p.rotor));
   assert.ok(maxRelative>.15,'arrival is followed by relative motion');
   const result=p.index;outcomes.add(result!);times.add(Math.round(p.elapsed*100));
@@ -27,6 +27,11 @@ test('Physical ball: sixteen launches cross diamonds and bounce across 5–10 di
   assert.ok(sim.ball.isDynamic());sim.dispose();
  }
  assert.ok(outcomes.size>=5);assert.ok(times.size>=8);
+});
+test('Separate diamond resistance maps 0–100% to increasing energy loss',()=>{
+ const free=deflectorMaterial(0),strong=deflectorMaterial(1);
+ assert.ok(free.friction<strong.friction);assert.ok(free.restitution>strong.restitution);
+ assert.deepEqual(deflectorMaterial(-5),free);assert.deepEqual(deflectorMaterial(9),strong);
 });
 test('Fixed steps give identical physics at 15/30/60/144 FPS',async()=>{
  await initBallPhysics();const samples=[];

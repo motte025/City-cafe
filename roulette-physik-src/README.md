@@ -75,3 +75,9 @@ Fernbedienung → **Kugel & Einlauf**: Durchmesser 18–21 mm, Gewichtsreferenz 
 Die getrennte Vorschau unter `roulette-physik/` berechnet Kugel, Rotor, Rauten und Taschenstege mit Rapier bei festen 1/240-Sekunden-Schritten. Ein Wurf hat keine vorab gewählte Zielzahl. Erst wenn die Kugel physisch zur Ruhe kommt, wird aus ihrer Position relativ zum weiterlaufenden Rotor das Fach gelesen.
 
 Die Kugel trifft mindestens eine der acht abwechselnd ausgerichteten Rauten und überquert danach pro Wurf zufällig fünf bis zehn Taschenstege. Dieser Kontaktbereich wird nur über Rückprall, Reibung und einen kleinen tangentialen Impuls gegen numerisches Festkleben stabilisiert; er lenkt die Kugel nicht zu einer Zahl. Nach dem letzten Kontakt bleibt die Kugel ein dynamischer Körper und wird weder an die Fachmitte gesetzt noch am Rotor angeheftet.
+
+## Rautenwiderstand und Taschen-Nachlauf
+
+In der Fernbedienung stehen unter „Kugel & Einlauf“ zwei getrennte Widerstandsregler für die längs und quer ausgerichteten Rauten zur Verfügung. 0 % verwendet sehr wenig Reibung und geringen Energieverlust, 100 % bremst stark. Standard sind 10 % für beide Typen.
+
+„Nachlauf maximal“ reicht von 5 bis 20 Taschen. Für jeden Wurf wird die Kontaktzahl mit Web Crypto ohne Modulo-Verzerrung neu zwischen 5 und dem eingestellten Maximum gewählt. Die Einstellung verändert nur die Abbremsphase und kennt keine Zielzahl.

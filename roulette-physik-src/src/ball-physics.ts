@@ -8,8 +8,9 @@ export const METRES_PER_UNIT=.9/6.8;
 export const PHYSICS_DT=1/240;
 let ready:Promise<void>|undefined;
 export const initBallPhysics=()=>ready??=RAPIER.init();
-export interface Launch {angle:number;rotorAngle:number;rotorSpeed:number;direction:1|-1;speed:number;diameter:number;mass:number;restitution:number;spinRatio:number;pocketContacts?:number}
+export interface Launch {angle:number;rotorAngle:number;rotorSpeed:number;direction:1|-1;speed:number;diameter:number;mass:number;restitution:number;spinRatio:number;pocketContacts?:number;diamondRadialResistance?:number;diamondTangentialResistance?:number}
 export interface PhysicalPose {x:number;y:number;z:number;rotation:{x:number;y:number;z:number;w:number};rotor:number;speed:number;radius:number;relativeSpeed:number;phase:number;index:number|null;impact:number;elapsed:number}
+export function deflectorMaterial(value=0.1){const resistance=Math.max(0,Math.min(1,value));return {friction:.01+.18*resistance,restitution:.7-.35*resistance};}
 
 /** Only forces and collision impulses move the ball. No target number or landing curve. */
 export class BallPhysics {
@@ -53,7 +54,8 @@ export class BallPhysics {
    const g=deflectorGeometry(i),points=new Float32Array(g.getAttribute('position').array);
    for(let j=1;j<points.length;j+=3)points[j]*=this.shape.bowlDepth;
    const hull=RAPIER.ColliderDesc.convexHull(points);if(!hull)throw new Error('Invalid deflector');
-   const collider=this.world.createCollider(hull.setDensity(0).setFriction(.12).setRestitution(.62));g.dispose();
+   const material=deflectorMaterial(i%2===0?this.launch.diamondRadialResistance:this.launch.diamondTangentialResistance);
+   const collider=this.world.createCollider(hull.setDensity(0).setFriction(material.friction).setRestitution(material.restitution));g.dispose();
    this.deflectors.add(collider.handle);
   }
   for(let i=0;i<37;i++){

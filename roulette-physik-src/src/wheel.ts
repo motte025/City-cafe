@@ -12,7 +12,7 @@ export class Wheel {
  renderer:T.WebGLRenderer;scene=new T.Scene();rotor=new T.Group();ball:T.Mesh;
  camera=new T.PerspectiveCamera(37,1,.1,60);
  angle=0;speed=0;timeScale=1;zoom=1;motion:{duration:number}|null=null;elapsed=0;
- ballDiameter=21;ballMass=8.7;ballBounce=1;launchSpeed=2.8;
+ ballDiameter=21;ballMass=8.7;ballBounce=1;launchSpeed=2.8;diamondRadialResistance=.1;diamondTangentialResistance=.1;pocketRun=20;
  private physics:BallPhysics|null=null;
  onLand:((index:number)=>void)|null=null;onPhase:((phase:number)=>void)|null=null;onImpact:((strength:number)=>void)|null=null;
  onFault:(()=>void)|null=null;
@@ -73,9 +73,12 @@ export class Wheel {
   if(plan.duration===0){this.preparation=null;this.beginSpin(direction);}else this.onPhase?.(-1);
  }
  private beginSpin(direction:1|-1){
-  const randomness=crypto.getRandomValues(new Uint32Array(4)),unit=(i:number)=>randomness[i]/4294967296;
+  const randomness=crypto.getRandomValues(new Uint32Array(3)),unit=(i:number)=>randomness[i]/4294967296;
   if(this.speed===0)this.speed=direction*(.68+unit(2)*.16);
-  this.physics=new BallPhysics({angle:launchPosition(this.angle,this.lastIndex),rotorAngle:this.angle,rotorSpeed:this.speed,direction,speed:this.launchSpeed/METRES_PER_UNIT*(.94+.12*unit(0)),diameter:this.ballDiameter,mass:this.ballMass,restitution:.48*this.ballBounce,spinRatio:.75+.22*unit(1),pocketContacts:5+randomness[3]%5},this.shape);
+  // The following divider can still be touched during settling, so the chosen
+  // braking point ends one contact before the configured visible maximum.
+  const span=Math.max(1,Math.round(this.pocketRun)-5),limit=Math.floor(2**32/span)*span;let draw:number;do{draw=crypto.getRandomValues(new Uint32Array(1))[0];}while(draw>=limit);
+  this.physics=new BallPhysics({angle:launchPosition(this.angle,this.lastIndex),rotorAngle:this.angle,rotorSpeed:this.speed,direction,speed:this.launchSpeed/METRES_PER_UNIT*(.94+.12*unit(0)),diameter:this.ballDiameter,mass:this.ballMass,restitution:.48*this.ballBounce,spinRatio:.75+.22*unit(1),pocketContacts:5+draw%span,diamondRadialResistance:this.diamondRadialResistance,diamondTangentialResistance:this.diamondTangentialResistance},this.shape);
   this.ball.scale.setScalar(this.physics.radius/BALL_RADIUS);
   const p=this.physics.advance(0);this.ball.position.set(p.x,p.y,p.z);this.ball.quaternion.copy(p.rotation);
   this.motion={duration:Infinity};

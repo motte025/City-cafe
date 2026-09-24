@@ -35,7 +35,8 @@ test('Seeds vary contact timing, radii, bounce count and entry; replay stays det
  assert.notDeepEqual(createBallProfile(42,21,5.3).lifts,createBallProfile(42,21,10.5).lifts);
 });
 test('Remote ball values are bounded and existing settings receive defaults',()=>{
- const s=applySettings(DEFAULT_SETTINGS,{ballDiameter:99,ballMass:-1,ballBounce:99});
+ const s=applySettings(DEFAULT_SETTINGS,{ballDiameter:99,ballMass:-1,ballBounce:99,diamondRadialResistance:-2,diamondTangentialResistance:4,pocketRun:99});
  assert.equal(s.ballDiameter,21);assert.equal(s.ballMass,5.3);assert.equal(s.ballBounce,1.4);
+ assert.equal(s.diamondRadialResistance,0);assert.equal(s.diamondTangentialResistance,1);assert.equal(s.pocketRun,20);
  assert.equal(applySettings(DEFAULT_SETTINGS,{duration:18}).ballDiameter,21);
 });

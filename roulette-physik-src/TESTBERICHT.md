@@ -47,3 +47,7 @@ Browser: Kessel und Kugel in Screenshots geprüft; neue Handy-Regler sichtbar. D
 130 Tests bestanden, TypeScript und Produktionsbuild erfolgreich. Eine Serie aus 16 kryptografisch variierten Physikwürfen prüft pro Wurf mindestens einen echten Rautenkontakt, fünf bis zehn tatsächliche Kontakte mit Taschenstegen, korrektes Auslesen des endgültigen Fachs und den weiterhin dynamischen Kugelkörper nach der Ergebnisanzeige. Derselbe Wurf liefert mit 15, 30, 60 und 144 Bildern pro Sekunde identische Physikresultate.
 
 Die Vorschau enthält weiterhin keine Zielzahl, keinen Ergebnisgenerator und keine vorberechnete Landekurve. Der gewünschte Bereich von fünf bis zehn Stegkontakten ist ein kontrollierter physikalischer Rahmen: Nach der zufällig bestimmten Kontaktzahl erhöhen sich Reibung und Dämpfung; bei numerischem Festkleben vor diesem Bereich erhält die Kugel einen kleinen tangentialen Impuls. Der Impuls kennt kein Zielfach und garantiert keine bestimmte Zahl.
+
+## Einstellbare Rauten und 5–20 Taschen – 25.09.2026
+
+131 Tests bestanden. Die beiden abwechselnden Rautenausrichtungen besitzen getrennte Widerstandswerte von 0 bis 100 %. Materialtests bestätigen monoton steigende Reibung und sinkenden Rückprall. Eine 16-Wurf-Serie deckt Nachläufe von 5 bis 20 Taschen ab, verlangt mindestens einen Rautenkontakt, hält die Kugel im Kessel und verifiziert das aus der Ruheposition gelesene Fach. Die Ergebnisse bleiben bei 15, 30, 60 und 144 Bildern pro Sekunde identisch.
