@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-24T17:37:46Z",
+  "checked_at": "2026-09-24T17:57:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "🔴 Komm rein, hier gibts Bass! | FREITAG gibts Giveaways von LOGITECHG | !holy !logitech #werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "nyybeats",
       "name": "NyyBeats",
-      "title": "🔥♡ EARLY YAPPUCCINO HOURS TO VIRTUALLY PARTY WITH PUBLICIS TOWN HALL🔥 !tip !NEWSONG🔥 !mods !mercy",
+      "title": "🔥♡ EARLY YAPPUCCINO HOURS 🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     },
     {
@@ -24,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴HARDSTYLE SESSION  ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴HARDSTYLE SESSION  ☆ !holy !naturtreu 🔴🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
