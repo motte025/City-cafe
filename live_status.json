@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T17:17:46Z",
+  "checked_at": "2026-09-24T17:37:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,13 +17,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴HARDSTYLE SESSION  ☆ !holy !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "✨DAY 24✨Ruhiger DOnnerstag? | !bier | !zug | !prep | !holy | #werbung",
@@ -34,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴HARDSTYLE SESSION  ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     }
   ]
