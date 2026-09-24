@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-09-24T21:32:47Z",
+  "checked_at": "2026-09-24T21:42:49Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 24✨Ruhiger Donnerstag? | !bier | !zug | !prep | !holy | #werbung",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "\"All You Need To Know\" Release Party - Mixed Music  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     },
     {
@@ -13,13 +13,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "\"All You Need To Know\" Release Party - Mixed Music  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
