@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T14:52:45Z",
+  "checked_at": "2026-09-24T15:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴HARDSTYLE SESSION  ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴HARDSTYLE SESSION  ☆ !holy !naturtreu 🔴🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -38,10 +38,10 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Ascendance 9 by @markmcmanus1 - Breaks & Electronica ✨ !charity",
-      "game": "DJs"
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "The Anjunadeep Edition #612 with josh & sam who are twins",
+      "game": "Music"
     }
   ]
 }
