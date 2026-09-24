@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-09-24T07:12:45Z",
+  "checked_at": "2026-09-24T07:22:52Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Twocolors Interview",
       "game": "DJs"
     }
   ]
