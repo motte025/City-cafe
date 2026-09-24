@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T16:52:45Z",
+  "checked_at": "2026-09-24T17:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 24✨Ruhiger DOnnerstag? | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
