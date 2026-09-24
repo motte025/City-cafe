@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T12:57:45Z",
+  "checked_at": "2026-09-24T13:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "🔴 Komm rein, hier gibts Bass! | FREITAG gibts Giveaways von LOGITECHG | !holy !logitech #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "🔴 Komm rein, hier gibts Bass! | FREITAG gibts Giveaways von LOGITECHG | !holy !logitech #werbung",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
