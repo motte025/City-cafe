@@ -111,3 +111,31 @@ bleibt davon unberührt.
   Kugel verdeckt sie meist), oder sollen sie im Modell abgesenkt werden?
 - Rechenzeit/Rückfälle auf der tatsächlichen TV-Box (ODROID, später W1)
   gegenprüfen - die obigen Werte stammen vom Testrechner.
+
+## Neu: Rauten-Widerstand per Fernbedienung (noch nicht am Dashboard aktiv)
+
+Zwei neue Regler in der Fernbedienung: „Rauten radial · Widerstand“ und
+„Rauten tangential · Widerstand“ (je 0-100 %, Standard 30 %). Die acht
+Rauten wechseln sich radial/tangential ab (Index 0, 2, 4, 6 = radial;
+1, 3, 5, 7 = tangential).
+
+- **0 %** = kein Widerstand: die Kugel prallt verlustfrei ab (Restitution 1,
+  keine Reibung).
+- **100 %** = totaler Widerstand: kein Rückprall, maximale Reibung
+  (Restitution 0) - die Kugel verliert an dieser Raute praktisch ihr
+  gesamtes Tempo in Stoßrichtung.
+- Dazwischen linear. Formel in `ball-config.ts` (`deflectorMaterial()`).
+
+Getestet: die Umrechnungsfunktion selbst (0 %/50 %/100 % ergeben die
+erwarteten Stoßwerte, Begrenzung auf 0-100 %) sowie ein vollständiger Wurf
+mit den Extremwerten (0 % radial, 100 % tangential) gegen alle Prüfungen
+aus `checkPlan` (Geometrie, Fenster, Stillstand, Durchdringung, Schwerkraft
+im Flug).
+
+**Wichtig:** Diese Änderung ist bislang nur in `roulette-src` (Quellcode).
+Der gebaute Stand in `roulette/` (das, was das TV-Dashboard tatsächlich
+lädt) ist unverändert, auf Wunsch des Betreibers - er wechselt gerade vom
+ODROID auf ein ACEMAGIC W1 mit EndeavourOS, das erst am Folgetag eintrifft.
+Vor dem Umzug auf die neue Box soll sich am laufenden Dashboard nichts
+ändern. Sobald der neue Rechner steht: `npm run build`, dist-Inhalt nach
+`roulette/` kopieren, dann deployen.

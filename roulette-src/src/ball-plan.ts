@@ -18,13 +18,15 @@
  *     danach meldet das Ergebnis "fallback" (Keyframe-Animation, landet sicher).
  */
 import {BALL_PHYSICS,BALL_SEARCH,BALL_WINDOWS} from './ball-config';
-import {BallSim,buildColliders,clearHeight,deflectorSilhouette,silhouetteDistance,K_DEFLECTOR,K_DIVIDER,K_POCKET,type BallParams,type Colliders} from './ball-physics';
+import {BallSim,buildColliders,clearHeight,deflectorSilhouette,silhouetteDistance,K_DEFLECTOR,K_DIVIDER,K_POCKET,type BallParams,type Colliders,type DeflectorResistance} from './ball-physics';
 import {STEP,TAU} from './game';
 import {FLOOR,type WheelShape} from './wheel-shape';
 
 export interface PlanRequest {
  /** optionales Rechenzeit-Budget (ms, Wanduhr); danach Abbruch → Rückfallebene. Tests lassen es weg. */
  timeBudgetMs?:number;
+ /** Rauten-Widerstand je Ausrichtung (0–100 %); ohne Angabe gelten die Werkswerte aus ball-config.ts. */
+ deflectorResistance?:DeflectorResistance;
  shape:WheelShape;ball:BallParams;
  /** Zielindex (Position in ORDER). */
  target:number;
@@ -233,7 +235,7 @@ export function* planThrow(req:PlanRequest):Generator<void,PlanResult>{
    const wantHand=req.duration-expDescent-expPocket+(rnd()*2-1)*(tol+.3);
    let steps=Math.round(wantHand/DT_REC);steps=Math.max(0,Math.min(fixedCount,steps));
    const i=fixedCount-steps,delta=req.launchAngle-ref.ang[i];
-   const sim=new BallSim({colliders:col,ball:req.ball,direction:req.direction,startSpeed:req.rotorSpeed,rotorStart:req.rotorStart,rotor:true,deflectors:true});
+   const sim=new BallSim({colliders:col,ball:req.ball,direction:req.direction,startSpeed:req.rotorSpeed,rotorStart:req.rotorStart,rotor:true,deflectors:true,deflectorResistance:req.deflectorResistance});
    const st=rotate(ref.hand,delta);st[9]=steps*DT_REC;st[10]=(req.seed^Math.imul(c+1+(relaxed?7919:0),0x9E3779B1))|0;
    sim.setState(st);
    rec.n=0;

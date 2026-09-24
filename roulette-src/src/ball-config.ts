@@ -10,7 +10,7 @@ export const MM_PER_UNIT = 900/6.5;
 /** Erdschwerkraft in Einheiten/s² (≈ 70,85). */
 export const G_EARTH = 9810/MM_PER_UNIT;
 
-export type MaterialName='track'|'rail'|'cone'|'deflector'|'ring'|'divider'|'wall'|'pocket';
+export type MaterialName='track'|'rail'|'cone'|'deflectorRadial'|'deflectorTangential'|'ring'|'divider'|'wall'|'pocket';
 export interface Material {
  /** Stoßzahl (Restitution) bei 100 % Sprungstärke. */
  e:number;
@@ -45,7 +45,10 @@ export const BALL_PHYSICS = {
   track:{e:.35,mu:.30,roll:.0065},
   rail:{e:.35,mu:.30,roll:.001},
   cone:{e:.38,mu:.25,roll:.004},
-  deflector:{e:.78,mu:.05,roll:.004},
+  // Startwerte für die zwei Rauten-Ausrichtungen; per Fernbedienung überschreibbar
+  // (0 % kein Widerstand, 100 % totaler Widerstand – siehe deflectorMaterial()).
+  deflectorRadial:{e:.78,mu:.05,roll:.004},
+  deflectorTangential:{e:.78,mu:.05,roll:.004},
   ring:{e:.42,mu:.25,roll:.006},
   divider:{e:.70,mu:.10,roll:.006},
   wall:{e:.55,mu:.25,roll:.01},
@@ -101,3 +104,16 @@ export const BALL_SEARCH = {
  /** Gelockerte zweite Suche (nur falls die strenge scheitert). */
  relaxedCandidates:300,relaxedDuration:1.2,relaxedSettle:1.2,
 };
+
+/**
+ * Rauten-Widerstand aus einem Fernbedienungs-Regler (0–100 %) in Stoßwerte
+ * umgerechnet: 0 % = kein Widerstand (Kugel prallt verlustfrei ab, keine
+ * Reibung), 100 % = totaler Widerstand (kein Rückprall, maximale Reibung –
+ * die Kugel bleibt praktisch an der Raute hängen). Dazwischen linear.
+ */
+export function deflectorMaterial(percent:number):Material{
+ const r=Math.max(0,Math.min(100,percent))/100;
+ return {e:1-r,mu:r,roll:.002+r*.01};
+}
+/** Vorbelegung der beiden Regler, bis der Betreiber sie einstellt. */
+export const DEFAULT_DEFLECTOR_RESISTANCE={radial:30,tangential:30};

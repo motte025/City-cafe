@@ -8,15 +8,17 @@
  * Rotorteile drehen mit rotorState(). Die Kugel ist eine Vollkugel mit Drall;
  * Stöße mit Restitution und Coulomb-Reibung, dazu Roll- und Luftwiderstand.
  */
-import {BALL_PHYSICS,G_EARTH,MM_PER_UNIT,type MaterialName} from './ball-config';
+import {BALL_PHYSICS,G_EARTH,MM_PER_UNIT,deflectorMaterial,type MaterialName} from './ball-config';
 import {FLOOR,numberHeight,trackHeight,type WheelShape} from './wheel-shape';
 import {STEP,TAU,rotorState,type Motion} from './game';
 
 export const K_TRACK=0,K_DEFLECTOR=1,K_RING=2,K_DIVIDER=3,K_POCKET=4;
-const MATERIALS:MaterialName[]=['track','rail','cone','deflector','ring','divider','wall','pocket'];
-const M_TRACK=0,M_RAIL=1,M_CONE=2,M_DEFLECTOR=3,M_RING=4,M_DIVIDER=5,M_WALL=6,M_POCKET=7;
+const MATERIALS:MaterialName[]=['track','rail','cone','deflectorRadial','deflectorTangential','ring','divider','wall','pocket'];
+const M_TRACK=0,M_RAIL=1,M_CONE=2,M_DEFLECTOR=3,M_DEFLECTOR_TAN=4,M_RING=5,M_DIVIDER=6,M_WALL=7,M_POCKET=8;
 
 export interface BallParams {diameter:number;mass:number;bounce:number}
+/** Rauten-Widerstand je Ausrichtung (0–100 %, per Fernbedienung); k gerade = radial, k ungerade = tangential. */
+export interface DeflectorResistance {radial:number;tangential:number}
 /**
  * VORLÄUFIG, zur Entscheidung beim Betreiber: Drei sichtbare Zierringe stehen
  * 1,7–2,7 mm über den Flächen, über die die Kugel rollen muss, und bilden Mulden,
@@ -129,7 +131,7 @@ function closestOnTriangle(px:number,py:number,pz:number,t:Float64Array,o:number
  const den=1/(va+vb+vc),v=vb*den,w=vc*den;out[0]=ax+abx*v+acx*w;out[1]=ay+aby*v+acy*w;out[2]=az+abz*v+acz*w;
 }
 
-export interface SimSetup {colliders:Colliders;ball:BallParams;direction:1|-1;startSpeed:number;rotorStart:number;rotor:boolean;deflectors:boolean;gravityFactor?:number}
+export interface SimSetup {colliders:Colliders;ball:BallParams;direction:1|-1;startSpeed:number;rotorStart:number;rotor:boolean;deflectors:boolean;gravityFactor?:number;deflectorResistance?:DeflectorResistance}
 export type ContactListener=(kind:number,index:number,impact:number,x:number,y:number,z:number)=>void;
 
 const MAX_CONTACTS=10;
@@ -160,6 +162,12 @@ export class BallSim {
   const lively=Math.sqrt(Math.max(.05,s.ball.bounce))*Math.pow(8.7/s.ball.mass,BALL_PHYSICS.massLiveliness);
   this.mat=new Float64Array(MATERIALS.length*3);
   MATERIALS.forEach((name,i)=>{const m=BALL_PHYSICS.materials[name];this.mat.set([Math.min(BALL_PHYSICS.maxRestitution,m.e*lively),m.mu,m.roll],i*3);});
+  // Rauten-Widerstand per Fernbedienung: ersetzt die Vorbelegung für Radial-/Tangential-Rauten.
+  if(s.deflectorResistance){
+   const dr=deflectorMaterial(s.deflectorResistance.radial),dt=deflectorMaterial(s.deflectorResistance.tangential);
+   this.mat.set([Math.min(BALL_PHYSICS.maxRestitution,dr.e*lively),dr.mu,dr.roll],M_DEFLECTOR*3);
+   this.mat.set([Math.min(BALL_PHYSICS.maxRestitution,dt.e*lively),dt.mu,dt.roll],M_DEFLECTOR_TAN*3);
+  }
   this.motion={direction:s.direction,startSpeed:s.startSpeed} as Motion;this.rotorStart=s.rotorStart;
   this.useRotor=s.rotor;this.useDeflectors=s.deflectors;
   this.updateRotor();
@@ -217,7 +225,7 @@ export class BallSim {
   const tris=this.col.deflectorTris[k],q=this.tmp;let best=Infinity,bx=0,by=0,bz=0;
   for(let i=0;i<tris.length;i+=9){closestOnTriangle(this.px,this.py,this.pz,tris,i,q);const ex=this.px-q[0],ey=this.py-q[1],ez=this.pz-q[2],d2=ex*ex+ey*ey+ez*ez;if(d2<best){best=d2;bx=q[0];by=q[1];bz=q[2];}}
   const d=Math.sqrt(best);if(d>=R||d<1e-12)return;
-  this.add((this.px-bx)/d,(this.py-by)/d,(this.pz-bz)/d,R-d,M_DEFLECTOR,K_DEFLECTOR,k,false);
+  this.add((this.px-bx)/d,(this.py-by)/d,(this.pz-bz)/d,R-d,k%2?M_DEFLECTOR_TAN:M_DEFLECTOR,K_DEFLECTOR,k,false);
  }
 
  private dividerContacts(){

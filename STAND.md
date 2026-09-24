@@ -96,6 +96,16 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   Flächen, über die die Kugel rollen muss; in der Kollisionsrechnung sind sie
   bündig, das sichtbare Modell ist unverändert. Details, Messwerte und
   offene Abweichungen: `roulette-src/TESTBERICHT.md`.
+  Neu in der Fernbedienung: zwei Regler „Rauten radial/tangential ·
+  Widerstand“ (0–100 %, Standard je 30 %). 0 % = kein Widerstand (Kugel
+  prallt verlustfrei ab), 100 % = totaler Widerstand (kein Rückprall,
+  maximale Reibung). Die acht Rauten wechseln sich radial/tangential ab.
+  **Nur in `roulette-src` (Quellcode), noch NICHT in `roulette/` gebaut und
+  deployed** — der Nutzer wechselt gerade vom ODROID auf ein ACEMAGIC W1
+  mit EndeavourOS, das Gerät kommt erst am Folgetag. Bis der Rechner
+  gewechselt ist, soll sich am laufenden Dashboard nichts ändern. Vor dem
+  nächsten Deploy: `npm run build` in `roulette-src`, dist nach `roulette/`
+  kopieren.
 - **Aufnahmemodus der Roulette-Seite** (`?aufnahme=1`): blendet Knöpfe aus, bis
   die Maus bewegt wird, zeigt keinen Rundenzähler, stellt den Zyklus auf
   unendlich und schreibt "CITY CAFE" statt des Raumnamens. Er steht in

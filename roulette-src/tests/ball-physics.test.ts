@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as T from 'three';
-import {BALL_PHYSICS,BALL_WINDOWS,G_EARTH,MM_PER_UNIT} from '../src/ball-config';
+import {BALL_PHYSICS,BALL_WINDOWS,G_EARTH,MM_PER_UNIT,deflectorMaterial} from '../src/ball-config';
 import {buildColliders,BallSim,surfaceDistance,FLUSH_BEADS} from '../src/ball-physics';
 import {collidersFor,planThrowSync,planInternals,type BallPlan,type PlanRequest} from '../src/ball-plan';
 import {deflectorGeometry} from '../src/wheel-model';
@@ -123,6 +123,18 @@ test('Schwerkraft-Faktor liegt im erlaubten Bereich, Einheiten stimmen',()=>{
  assert.ok(BALL_WINDOWS.settleMax<=.8);
 });
 
+test('Rauten-Widerstand: Regler 0–100 % ergibt die richtigen Stoßwerte und wirkt im Wurf',()=>{
+ // 0 % = kein Widerstand (voller Rückprall, keine Reibung), 100 % = totaler Widerstand (kein Rückprall, maximale Reibung).
+ const none=deflectorMaterial(0),total=deflectorMaterial(100),half=deflectorMaterial(50);
+ assert.equal(none.e,1);assert.equal(none.mu,0);
+ assert.equal(total.e,0);assert.equal(total.mu,1);
+ assert.ok(Math.abs(half.e-.5)<1e-9&&Math.abs(half.mu-.5)<1e-9);
+ assert.ok(deflectorMaterial(150).mu<=1&&deflectorMaterial(-20).mu>=0,'wird auf 0–100 % begrenzt');
+ // Wird tatsächlich an die Simulation durchgereicht (kein Absturz, Ergebnis bleibt gültig).
+ const req=request(3,{deflectorResistance:{radial:0,tangential:100}});
+ checkPlan(req,plan(req),false);
+});
+
 test('Kugel- und Einlaufwerte sind begrenzt, min ≤ max, alte Einstellungen bekommen Standardwerte',()=>{
  const s=applySettings(DEFAULT_SETTINGS,{ballDiameter:99,ballMass:-1,ballBounce:99});
  assert.equal(s.ballDiameter,21);assert.equal(s.ballMass,5.3);assert.equal(s.ballBounce,1.4);
@@ -131,6 +143,9 @@ test('Kugel- und Einlaufwerte sind begrenzt, min ≤ max, alte Einstellungen bek
  const old=applySettings(DEFAULT_SETTINGS,{ballDiameter:19});assert.equal(old.pocketRunMin,5);assert.equal(old.pocketRunMax,15);
  assert.equal(applySettings(DEFAULT_SETTINGS,{pocketRunMin:1}).pocketRunMin,3);
  assert.equal(applySettings(DEFAULT_SETTINGS,{pocketRunMax:40}).pocketRunMax,20);
+ assert.equal(DEFAULT_SETTINGS.deflectorResistanceRadial,30);assert.equal(DEFAULT_SETTINGS.deflectorResistanceTangential,30);
+ assert.equal(applySettings(DEFAULT_SETTINGS,{deflectorResistanceRadial:-5}).deflectorResistanceRadial,0);
+ assert.equal(applySettings(DEFAULT_SETTINGS,{deflectorResistanceTangential:150}).deflectorResistanceTangential,100);
  const up=applySettings(DEFAULT_SETTINGS,{pocketRunMin:18});assert.equal(up.pocketRunMin,18);assert.equal(up.pocketRunMax,18);
  const down=applySettings(DEFAULT_SETTINGS,{pocketRunMax:4});assert.equal(down.pocketRunMax,4);assert.equal(down.pocketRunMin,4);
  assert.equal(applySettings(DEFAULT_SETTINGS,{pocketRunMin:7.6}).pocketRunMin,8);

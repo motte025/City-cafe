@@ -15,7 +15,7 @@ export class Wheel {
  renderer:T.WebGLRenderer;scene=new T.Scene();rotor=new T.Group();ball:T.Mesh;
  camera=new T.PerspectiveCamera(37,1,.1,60);
  angle=0;speed=0;timeScale=1;durationSetting=16;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
- ballDiameter=21;ballMass=8.7;ballBounce=1;ballRunMin=5;ballRunMax=15;
+ ballDiameter=21;ballMass=8.7;ballBounce=1;ballRunMin=5;ballRunMax=15;deflectorResistanceRadial=30;deflectorResistanceTangential=30;
  readonly planner=new BallPlanner();
  /** Zähler für die Messung: wie oft die Keyframe-Rückfallebene statt der Physik lief. */
  stats={throws:0,fallbacks:0};
@@ -86,10 +86,11 @@ export class Wheel {
  private launchState(angle:number,speed:number,direction:1|-1){const rev=reversalPlan(angle,speed,direction),end=sampleReversal(rev,rev.duration);return {angle:end.angle,speed:rev.duration===0?speed:rev.endSpeed};}
  private planRequest(index:number,direction:1|-1,rotorStart:number,rotorSpeed:number):PlanRequest{
   return {shape:{...this.shape},ball:{diameter:this.ballDiameter,mass:this.ballMass,bounce:this.ballBounce},target:index,direction,rotorStart,rotorSpeed,
-   launchAngle:launchPosition(rotorStart,this.lastIndex),duration:randomSpinDuration(this.durationSetting,this.durationSpread),runMin:this.ballRunMin,runMax:this.ballRunMax,seed:crypto.getRandomValues(new Uint32Array(1))[0]};
+   launchAngle:launchPosition(rotorStart,this.lastIndex),duration:randomSpinDuration(this.durationSetting,this.durationSpread),runMin:this.ballRunMin,runMax:this.ballRunMax,
+   deflectorResistance:{radial:this.deflectorResistanceRadial,tangential:this.deflectorResistanceTangential},seed:crypto.getRandomValues(new Uint32Array(1))[0]};
  }
  /** Passt ein Planungsauftrag noch zu den aktuellen Einstellungen? */
- private current(request:PlanRequest){const b=request.ball;return sameShape(request.shape,this.shape)&&b.diameter===this.ballDiameter&&b.mass===this.ballMass&&b.bounce===this.ballBounce&&request.runMin===this.ballRunMin&&request.runMax===this.ballRunMax;}
+ private current(request:PlanRequest){const b=request.ball,dr=request.deflectorResistance;return sameShape(request.shape,this.shape)&&b.diameter===this.ballDiameter&&b.mass===this.ballMass&&b.bounce===this.ballBounce&&request.runMin===this.ballRunMin&&request.runMax===this.ballRunMax&&dr?.radial===this.deflectorResistanceRadial&&dr?.tangential===this.deflectorResistanceTangential;}
  /** overshoot: wie weit der Countdown im auslösenden Bild schon abgelaufen war (s); fehlt bei „Jetzt drehen“. */
  spin(index:number,variant:number,overshoot?:number){
   this.scene.attach(this.ball);const direction=this.nextDirection;this.nextDirection=direction===1?-1:1;
