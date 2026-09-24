@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-24T13:27:45Z",
+  "checked_at": "2026-09-24T13:42:49Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Musik an Welt aus  !!! <3 -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "🔴 Komm rein, hier gibts Bass! | FREITAG gibts Giveaways von LOGITECHG | !holy !logitech #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Musik an Welt aus  !!! <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     },
     {
