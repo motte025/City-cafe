@@ -70925,15 +70925,35 @@
     "auto_discovered": true
   },
   {
-    "artist": "Capo",
-    "title": "GHETTOGIRL",
+    "artist": "C.C. Catch",
+    "title": "Back Seat Of Your Cadillac",
     "album": "",
-    "category": "Deutsch",
+    "category": "Ballermann & Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
+      "Ballermann & Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Francine Jordi",
+    "title": "Love, L'amour und Liebe",
+    "album": "",
+    "category": "Schlager-Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Party",
       "Deutsch"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
