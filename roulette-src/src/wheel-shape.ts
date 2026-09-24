@@ -1,7 +1,9 @@
+import {MM_PER_UNIT} from './ball-config';
+
 export const DEFAULT_DESIGN = {
  bowlDepth:1.15, numberSlope:22, numberSize:1, cameraTilt:16,
  woodWarmth:.65, gloss:.65, metalWarmth:.3, lightContrast:.65, textScale:1,
- innerTone:1,outerTone:1,trackTone:1,innerGloss:.65,outerGloss:.65,pocketRichness:.5,
+ innerTone:1,outerTone:1,trackTone:1,innerGloss:.4,outerGloss:.4,pocketRichness:.5,
 };
 export type DesignSettings=typeof DEFAULT_DESIGN;
 export type WheelShape=Pick<DesignSettings,'bowlDepth'|'numberSlope'|'numberSize'>;
@@ -27,11 +29,16 @@ function flushHeightAt(radius:number):number{
  * die die Kugel rollen muss, und bildeten Mulden, in denen eine langsame Kugel für immer liegen
  * bliebe. Auf Wunsch des Betreibers im sichtbaren Modell bündig abgesenkt (Höhe = Fläche
  * darunter, minus Ringdicke) statt wie zuvor nur in der Kollisionsrechnung.
+ * VISUAL_LIFT: 0,15 mm rein optischer Sicherheitsabstand, damit Ring und Fläche nicht exakt in
+ * einer Ebene liegen (sonst flackerndes „Z-Fighting“ – zwei Flächen konkurrieren beim Rendern
+ * um denselben Bildpunkt). Bleibt weit unter der 0,8-mm-Schwelle, an der eine Kugel hängen
+ * bliebe, und unter der 0,3-mm-Toleranz des Bündig-Tests.
  */
 const FLUSH_RINGS=[2.93,2.47,2.025];
+const VISUAL_LIFT=.15/MM_PER_UNIT;
 export function rimProfile(shape:WheelShape=DEFAULT_DESIGN):number[][]{
  return [[1.555,.315,.018],[2.025,.232,.016],[2.442,numberHeight(2.425,shape)+.004,.015],[2.47,.425,.018],[2.93,.765,.012],[3.02,.795,.018]]
-  .map(([radius,y,tube])=>FLUSH_RINGS.includes(radius)?[radius,flushHeightAt(radius)-tube,tube]:[radius,y,tube]);
+  .map(([radius,y,tube])=>FLUSH_RINGS.includes(radius)?[radius,flushHeightAt(radius)-tube+VISUAL_LIFT,tube]:[radius,y,tube]);
 }
 /** Sphere clearance over the radial cross-section, including sloped segments. */
 export function surfaceClearance(r:number,ballRadius:number,shape:WheelShape=DEFAULT_DESIGN){
