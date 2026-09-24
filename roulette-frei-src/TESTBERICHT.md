@@ -115,7 +115,7 @@ bleibt davon unberührt.
 ## Neu: Rauten-Widerstand per Fernbedienung (noch nicht am Dashboard aktiv)
 
 Zwei neue Regler in der Fernbedienung: „Rauten radial · Widerstand“ und
-„Rauten tangential · Widerstand“ (je 0-100 %, Standard 15 %). Die acht
+„Rauten tangential · Widerstand“ (je 0-100 %, Standard 30 %). Die acht
 Rauten wechseln sich radial/tangential ab (Index 0, 2, 4, 6 = radial;
 1, 3, 5, 7 = tangential).
 

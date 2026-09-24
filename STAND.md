@@ -97,7 +97,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   bündig, das sichtbare Modell ist unverändert. Details, Messwerte und
   offene Abweichungen: `roulette-src/TESTBERICHT.md`.
   Neu in der Fernbedienung: zwei Regler „Rauten radial/tangential ·
-  Widerstand“ (0–100 %, Standard je 30 %). 0 % = kein Widerstand (Kugel
+  Widerstand“ (0–100 %, Standard je 15 %). 0 % = kein Widerstand (Kugel
   prallt verlustfrei ab), 100 % = totaler Widerstand (kein Rückprall,
   maximale Reibung). Die acht Rauten wechseln sich radial/tangential ab.
   **Nur in `roulette-src` (Quellcode), noch NICHT in `roulette/` gebaut und
@@ -106,6 +106,20 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   gewechselt ist, soll sich am laufenden Dashboard nichts ändern. Vor dem
   nächsten Deploy: `npm run build` in `roulette-src`, dist nach `roulette/`
   kopieren.
+  **Zwei Modell-Vorschauen zur Auswahl** (beide isoliert, Dashboard
+  unberührt): **Modell A** (`roulette-vorschau/`) — wie bisher: Zahl wird
+  vorab gezogen, die Suche bevorzugt jetzt aber Rautentreffer statt sie zu
+  meiden (deutlich mehr, aber nicht garantiert mehr Aktion; Rechenzeit
+  dadurch etwas höher, ~450–550 ms/Wurf). **Modell B** (`roulette-frei-src`
+  → `roulette-vorschau-frei/`) — echter freier Wurf: keine Zielzahl, keine
+  Suche, ein einziger Simulationslauf, Ergebnis ist, wo die Kugel
+  tatsächlich liegen bleibt; niemand (auch der Code nicht) kennt die Zahl
+  vorher. Dadurch natürlich deutlich mehr Rautentreffer (~75 % der Würfe)
+  und schneller (~30 ms/Wurf), aber Rundendauer (grob 11–20 s statt exakt
+  16±3 s) und „Einlauf min./max. Taschen“ sind dort keine exakten Vorgaben
+  mehr, sondern Ergebnis der Physik. Modell B ist nur oberflächlich
+  getestet (kein voller Testlauf wie bei `roulette-src`), da reine
+  Entscheidungsvorlage.
 - **Aufnahmemodus der Roulette-Seite** (`?aufnahme=1`): blendet Knöpfe aus, bis
   die Maus bewegt wird, zeigt keinen Rundenzähler, stellt den Zyklus auf
   unendlich und schreibt "CITY CAFE" statt des Raumnamens. Er steht in

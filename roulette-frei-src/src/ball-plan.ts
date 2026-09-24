@@ -322,8 +322,10 @@ export function planThrowSync(req:PlanRequest):PlanResult{const g=planThrow(req)
  * aus Reglern; siehe roulette-src/TESTBERICHT.md für die gemessene Streuung.
  */
 export interface FreeThrowRequest {
- shape:WheelShape;ball:BallParams;direction:1|-1;rotorStart:number;rotorSpeed:number;
+ shape:WheelShape;ball:BallParams;direction:1|-1;rotorStart:number;rotorSpeed:number;launchAngle:number;
  deflectorResistance?:DeflectorResistance;
+ /** optionales Rechenzeit-Budget (ms, Wanduhr); danach Abbruch → Rückfallebene. */
+ timeBudgetMs?:number;
  /** Seed nur für die Rauheits-Zufallszahlen innerhalb eines Stoßes (Tests: reproduzierbar). */
  seed:number;
 }
@@ -332,14 +334,17 @@ export function* planFreeThrow(req:FreeThrowRequest):Generator<void,PlanResult>{
  const ref=yield* referenceFor(col,req.ball,sigma),rnd=mulberry(req.seed>>>0);
  const rec=scratch(),fixedCount=ref.handoff;
  for(let attempt=0;attempt<8;attempt++){
-  // Zufälliger Abwurfzeitpunkt über den gesamten gültigen Bereich der Laufbahn – kein Zielwert, keine Suche.
-  const steps=Math.round(rnd()*fixedCount),i=fixedCount-steps;
-  const launchAngle=rnd()*TAU,delta=launchAngle-ref.ang[i];
+  // Zufälliger Abwurfzeitpunkt – kein Zielwert, keine Suche. Auf die obere Hälfte der Laufbahnzeit
+  // begrenzt, damit die Show nicht durch einen zu kurzen, hastigen Wurf wirkt (Vorgabe war ~16±3 s;
+  // hier nur noch ein grober Rahmen, das genaue Ergebnis bleibt Physik).
+  const steps=Math.round((.5+.5*rnd())*fixedCount),i=fixedCount-steps;
+  const delta=req.launchAngle-ref.ang[i];
   const sim=new BallSim({colliders:col,ball:req.ball,direction:req.direction,startSpeed:req.rotorSpeed,rotorStart:req.rotorStart,rotor:true,deflectors:true,deflectorResistance:req.deflectorResistance});
   const st=rotate(ref.hand,delta);st[9]=steps*DT_REC;st[10]=(req.seed^Math.imul(attempt+1,0x9E3779B1))|0;
   sim.setState(st);rec.n=0;
   const d=runDescent(sim,rec,steps*REC,st[9]+3);
   yield;
+  if(req.timeBudgetMs!==undefined&&now()-t0>req.timeBudgetMs)return {ok:false,candidates:attempt+1,variants:0,computeMs:now()-t0,reason:'Zeitbudget erschöpft'};
   if(!d.ok)continue;
   const descentRecN=rec.n,descentEv=d.ev;
   const entryGlobal=steps*REC+Math.round((d.entryTime-st[9])/DT);

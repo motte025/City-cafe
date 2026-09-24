@@ -143,7 +143,7 @@ test('Kugel- und Einlaufwerte sind begrenzt, min ≤ max, alte Einstellungen bek
  const old=applySettings(DEFAULT_SETTINGS,{ballDiameter:19});assert.equal(old.pocketRunMin,5);assert.equal(old.pocketRunMax,15);
  assert.equal(applySettings(DEFAULT_SETTINGS,{pocketRunMin:1}).pocketRunMin,3);
  assert.equal(applySettings(DEFAULT_SETTINGS,{pocketRunMax:40}).pocketRunMax,20);
- assert.equal(DEFAULT_SETTINGS.deflectorResistanceRadial,15);assert.equal(DEFAULT_SETTINGS.deflectorResistanceTangential,15);
+ assert.equal(DEFAULT_SETTINGS.deflectorResistanceRadial,30);assert.equal(DEFAULT_SETTINGS.deflectorResistanceTangential,30);
  assert.equal(applySettings(DEFAULT_SETTINGS,{deflectorResistanceRadial:-5}).deflectorResistanceRadial,0);
  assert.equal(applySettings(DEFAULT_SETTINGS,{deflectorResistanceTangential:150}).deflectorResistanceTangential,100);
  const up=applySettings(DEFAULT_SETTINGS,{pocketRunMin:18});assert.equal(up.pocketRunMin,18);assert.equal(up.pocketRunMax,18);
