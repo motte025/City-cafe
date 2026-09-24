@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T16:22:45Z",
+  "checked_at": "2026-09-24T16:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Musik an Welt aus  !!! <3 -  !dc  !peepo !linktree !shop",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ EARLY YAPPUCCINO HOURS TO VIRTUALLY PARTY WITH PUBLICIS TOWN HALL🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     },
     {
@@ -27,13 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ EARLY YAPPUCCINO HOURS TO VIRTUALLY PARTY WITH PUBLICIS TOWN HALL🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     }
   ]
