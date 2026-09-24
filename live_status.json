@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-24T12:52:46Z",
+  "checked_at": "2026-09-24T12:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "🔴 Komm rein, hier gibts Bass! | FREITAG gibts Giveaways von LOGITECHG | !holy !logitech #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Ascendance 9 by @markmcmanus1 - Breaks & Electronica ✨ !charity",
       "game": "DJs"
     }
   ]
