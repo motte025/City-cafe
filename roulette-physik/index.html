@@ -1,0 +1,112 @@
+<!doctype html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a1917"><title>Atelier · Roulette</title><style>
+/* ============================================================
+   AUFNAHMEMODUS  (Adresse mit ?aufnahme=1)
+
+   Gedacht fuer eine Bildschirmaufnahme in voller Qualitaet auf einem
+   schnellen Rechner: das fertige Video laeuft danach auf der Box ueber
+   mpv, das 1080p60 muehelos schafft - anders als das Rad in Echtzeit
+   (auf der Mali-G52 gemessen: 16 Bilder/s bei 1280x720).
+
+   Weg kommt alles, was auf einer Aufzeichnung nichts verloren hat:
+   Verbindungs- und Fernbedienungshinweise, Lauftexte, der Rundenzaehler.
+   Der Zyklus laeuft ohne Ende, damit die Aufnahme nie abbricht.
+   Die Knoepfe bleiben erreichbar - sie blenden sich nur aus, sobald die
+   Maus zwei Sekunden stillsteht, sind also auf dem Video nicht zu sehen,
+   aber vor dem Start jederzeit da (Maus bewegen genuegt).
+   ============================================================ */
+body.aufnahme .live-mark,
+body.aufnahme .cycle-actions,
+body.aufnahme .cycle-divider,
+body.aufnahme .cycle-panel .eyebrow ~ .eyebrow,
+body.aufnahme .result-panel .eyebrow ~ .eyebrow,
+body.aufnahme .remaining,
+body.aufnahme #round-progress,
+body.aufnahme #throw-info,
+body.aufnahme .connection,
+body.aufnahme .table-message,
+body.aufnahme #render-profile { display: none !important; }
+
+/* Knoepfe: da, aber unsichtbar sobald die Maus ruht. */
+body.aufnahme .show-header nav {
+    opacity: 0; pointer-events: none; transition: opacity .35s ease;
+}
+body.aufnahme.maus-da .show-header nav { opacity: 1; pointer-events: auto; }
+
+/* Letzte zehn Zahlen: deutlich groesser, damit man sie vom Tisch aus liest. */
+body.aufnahme .result-strip { height: 150px; gap: 34px; }
+body.aufnahme .result-strip > span { font-size: 15px; letter-spacing: 3px; min-width: 150px; }
+body.aufnahme #history { gap: 18px; }
+body.aufnahme .history-number {
+    width: 86px; height: 86px; font-size: 40px; border-radius: 12px;
+}
+body.aufnahme .history-number.newest { outline-width: 2px; outline-offset: 6px; margin-right: 10px; }
+
+/* Rechts unten der Name des Lokals. */
+body.aufnahme #room-label {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 40px; letter-spacing: 4px; color: #e6d4ad;
+    text-transform: none; min-width: 260px;
+}
+</style>
+<script>
+    /* Klasse setzen, bevor gezeichnet wird, den Raumnamen durch den Namen
+       des Lokals ersetzen und den Zyklus auf unendlich stellen. Rad,
+       Ablauf und Ergebnisse bleiben unberuehrt. */
+    (function () {
+        try {
+            var p = new URLSearchParams(location.search);
+            if (!p.has('aufnahme')) return;
+            document.documentElement.classList.add('aufnahme-vor');
+            var name = p.get('lokal') || 'CITY CAFE';
+            var ruhe = null;
+            var letzteMaus = 0;
+            var setzen = function () {
+                // Im <head> gibt es document.body noch nicht. Ohne diese
+                // Pruefung brach das Skript genau hier ab - und der
+                // Aufnahmemodus blieb wirkungslos.
+                if (!document.body) return;
+                document.body.classList.add('aufnahme');
+                var feld = document.getElementById('room-label');
+                if (feld && feld.textContent !== name) feld.textContent = name;
+                // Sicherung fuer die Aufnahme: ruht die Maus, darf kein
+                // Fenster offen stehen. Wer die Einstellungen benutzt,
+                // bewegt die Maus ohnehin.
+                if (Date.now() - letzteMaus > 8000) {
+                    var offen = document.querySelectorAll('dialog[open]');
+                    for (var i = 0; i < offen.length; i++) offen[i].close();
+                }
+            };
+            // Unendlich: der Knopf im Einstellungsfenster schickt genau den
+            // Befehl, den auch die Fernbedienung schickt. Einmal genuegt -
+            // erst wenn jemand den Zyklus wieder begrenzt, wird nachgefasst.
+            var unendlich = function () {
+                var zaehler = document.getElementById('remaining');
+                if (!zaehler || zaehler.textContent === '∞') return;
+                var knopf = document.querySelector('[data-rounds="infinite"]');
+                if (!knopf) return;
+                knopf.click();
+                var fenster = document.getElementById('settings-dialog');
+                if (fenster && fenster.open) fenster.close();
+            };
+            document.addEventListener('DOMContentLoaded', setzen);
+            setInterval(setzen, 1000);
+            setInterval(unendlich, 4000);
+            setzen();
+            // Maus bewegt: Knoepfe zeigen, nach zwei Sekunden Ruhe wieder weg.
+            document.addEventListener('mousemove', function () {
+                if (!document.body) return;
+                letzteMaus = Date.now();
+                document.body.classList.add('maus-da');
+                clearTimeout(ruhe);
+                ruhe = setTimeout(function () {
+                    // Solange ein Fenster offen ist, bleiben die Knoepfe da.
+                    if (document.querySelector('dialog[open]')) return;
+                    document.body.classList.remove('maus-da');
+                }, 2000);
+            }, true);
+        } catch (e) {}
+    })();
+</script>
+  <script type="module" crossorigin src="./assets/main-mTBsjVAV.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/main-B8YJA9lC.css">
+</head><body><div id="app"></div></body></html>

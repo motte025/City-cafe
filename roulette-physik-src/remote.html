@@ -1,0 +1,74 @@
+<!doctype html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a1917"><title>City Cafe · Roulette-Fernbedienung</title><style>
+/* ============================================================
+   Handy-Schriften fuer die Roulette-Fernbedienung.
+
+   Die gebaute Fassung ist fuer Tablet/Rechner gemacht: Beschriftungen
+   mit 8 bis 13 px sind am Handy im Lokal nicht lesbar - dieselbe Vorgabe
+   wie bei der Video- und der DJ-Fernbedienung ("lieber scrollen als
+   kneifen"). Deshalb hier eine Ueberschreibung, die nur bei schmalen
+   Fenstern greift; auf Tablet und Rechner bleibt alles wie entworfen.
+
+   Bewusst als eigener Block in der Seite und nicht im Bundle: der Bau
+   (roulette-src, Vite) braucht npm, das auf der Kiosk-Box nicht
+   installiert ist. Derselbe Block steht auch in roulette-src/remote.html,
+   damit ein spaeterer Neubau ihn behaelt.
+   ============================================================ */
+@media (max-width: 900px) {
+    body.remote-page .remote-shell{ padding: 22px 14px 48px; }
+    body.remote-page .remote-heading .eyebrow{ font-size: 21px; letter-spacing: 1.4px; }
+    body.remote-page .remote-heading h1{ font-size: 54px; margin-top: 10px; }
+    body.remote-page .remote-link-state{ font-size: 21px; padding: 12px 16px; border-radius: 26px; }
+    body.remote-page .remote-room{ font-size: 23px; margin: 14px 0 24px; }
+
+    body.remote-page .remote-live{ padding: 24px 12px 16px; border-radius: 16px; }
+    body.remote-page .remote-live span{ font-size: 22px; margin-bottom: 10px; }
+    body.remote-page .remote-live strong{ font-size: 52px; }
+    body.remote-page .remote-live p{ font-size: 24px; margin-top: 22px; }
+
+    body.remote-page .section-label{ font-size: 21px; letter-spacing: 1.4px; margin-bottom: 14px; }
+    /* Zwei statt vier Spalten: mit der grossen Schrift passen vier
+       Kacheln nicht mehr nebeneinander. */
+    body.remote-page .preset-grid{ grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    body.remote-page .round-preset{ min-height: 104px; font-size: 42px; padding: 14px 10px; }
+    body.remote-page .round-preset span{ font-size: 21px; margin-top: 6px; letter-spacing: 0.4px; }
+    body.remote-page .helper{ font-size: 21px; line-height: 1.45; margin: 16px 0 24px; }
+
+    body.remote-page .remote-actions{ gap: 12px; }
+    body.remote-page .remote-actions button{ font-size: 30px; min-height: 84px; border-radius: 14px; }
+    body.remote-page .remote-actions .stop-button{ min-height: 80px; }
+    body.remote-page #command-feedback{ height: auto; min-height: 30px; font-size: 22px; margin: 16px 0 24px; }
+
+    body.remote-page .remote-settings{ padding-top: 26px; }
+    body.remote-page .setting-field{ font-size: 23px; gap: 14px; }
+    body.remote-page .setting-field > span{ font-size: 23px; align-items: center; }
+    body.remote-page .setting-field output{ font-size: 23px; }
+    body.remote-page .settings-grid{ grid-template-columns: 1fr; gap: 26px; }
+    body.remote-page .setting-field input[type=range]{ min-height: 52px; }
+    body.remote-page .setting-field input[type=number]{ font-size: 24px; padding: 14px; }
+    body.remote-page .switch{ font-size: 24px; gap: 14px; }
+    body.remote-page .switch input{ width: 32px; height: 32px; }
+    body.remote-page .picture-settings summary{ font-size: 25px; }
+    body.remote-page .picture-settings p, body.remote-page .audio-hint{ font-size: 21px; line-height: 1.5; }
+
+    body.remote-page .remote-history{ gap: 10px; min-height: 60px; }
+    body.remote-page .remote-history .history-number{ width: 64px; height: 64px; font-size: 30px; border-radius: 10px; }
+
+    body.remote-page .remote-footer{ font-size: 20px; gap: 16px; padding-top: 22px; }
+
+    /* Der Einstellungs-Dialog gehoert genauso dazu. */
+    body.remote-page dialog{ padding: 22px 18px; }
+    body.remote-page .dialog-title h2{ font-size: 34px; }
+    body.remote-page .dialog-title button{ font-size: 26px; padding: 10px 16px; }
+    body.remote-page dialog p, body.remote-page dialog label, body.remote-page dialog .setting-field{ font-size: 22px; }
+}
+@media (max-width: 900px) {
+    body.remote-page .remote-heading { flex-wrap: wrap; gap: 12px; }
+    body.remote-page .remote-room { overflow-wrap: anywhere; }
+    body.remote-page .remote-live { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    body.remote-page .remote-live span { overflow-wrap: anywhere; }
+    body.remote-page .remote-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    body.remote-page .remote-actions button { min-width: 0; }
+    body.remote-page .remote-footer { flex-wrap: wrap; }
+}
+</style>
+</head><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>
