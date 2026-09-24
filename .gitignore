@@ -1,1 +1,5 @@
 node_modules/
+
+# lokale Sichtprüfungs-Hilfsskripte (nicht Teil des Auftrags)
+roulette-src/check.mjs
+roulette-src/probe*.mjs

@@ -26,6 +26,41 @@ Formänderungen während eines Wurfs werden bis zur Landung vorgemerkt, damit Ku
 
 Voreinstellung: 55 Zoll, Unterkante 2 m, Abstand 3,5 m, Augenhöhe 1,2 m. Die geometrische Entzerrung ist für diesen Blickpunkt gedacht. Im Menü „TV-Bild & Perspektive“ an den tatsächlichen Sitz- oder Stehplatz anpassen. Das Layout ist für 1920 × 1080 im Querformat gestaltet.
 
+## Kugelphysik
+
+Die Kugel läuft nicht mehr nach vorgefertigten Keyframes, sondern nach einer
+eigenen deterministischen 3D-Physik: Rollen mit Roll- und Luftwiderstand,
+Stöße mit Reibung an Laufbahn, Rauten, Zahlenkranz und Stegen, echte
+Schwerkraft im Flug.
+
+Ablauf eines Wurfs:
+
+1. Bei Countdown-Start wird die Gewinnzahl gezogen (`randomIndex()`, Web
+   Crypto) — unabhängig von der Bewegung.
+2. Im Hintergrund (Web Worker, ohne Worker gestückelt im Hauptthread) sucht
+   ein Generator einen geseedeten Wurf, der in dieser Zahl endet, im
+   eingestellten Einlauf-Fenster (`Einlauf min./max. Taschen`, Standard 5–15,
+   Bereich 3–20) und im Zeitfenster der Rundendauer liegt.
+3. Findet die Suche rechtzeitig nichts (siehe Rückfallquote unten), springt
+   die alte Keyframe-Animation ein. Sie zeigt garantiert die gezogene Zahl,
+   nur der Kugelweg ist dann nicht physikalisch.
+
+Bekannte Abweichungen von der ursprünglichen Vorgabe (Messwerte und Gründe in
+`TESTBERICHT.md`): die Taschenphase dauert meist 1,1–1,6 s statt der
+gewünschten 2–4 s; Rautentreffer sind meist 0 statt „meist 1“, weil ein
+Treffer so viel Tempo kostet, dass danach selten noch 5–15 Taschen offen
+bleiben; die Kugel bleibt oft radial in der Taschenmitte liegen statt außen.
+
+Drei sichtbare Zierringe (Laufbahn-Innenkante, Konus-Unterkante,
+Taschenkranz-Rand) stehen 1,7–2,7 mm über den Flächen, über die die Kugel
+rollen muss — in der Kollision sind sie deshalb bündig gerechnet, das
+sichtbare Modell ist unverändert. Empfehlung: die drei Ringe im 3D-Modell
+bündig absenken, siehe `TESTBERICHT.md`.
+
+Dev-Schalter (nur `npm run dev`, nicht am TV): `?dev&target=N` erzwingt eine
+Zahl, `?dev&slow=0.25` verlangsamt die Wiedergabe, das Debug-Overlay zeigt
+Phase, Laufweg, Rautentreffer und Rechenzeit der Suche.
+
 ## Lokal entwickeln
 
 Node.js installieren, dann im Quellordner:

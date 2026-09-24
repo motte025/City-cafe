@@ -1,3 +1,4 @@
+import type {BallPlan} from './ball-plan';
 import {DEFAULT_DESIGN,FLOOR,DIVIDER_HEIGHT,surfaceClearance,type WheelShape} from './wheel-shape';
 export const ORDER = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
 export const RED = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
@@ -29,37 +30,11 @@ export class Game {
  settle(token:number,index:number){if(token!==this.active||!Number.isInteger(index)||index<0||index>=37)return null;const number=ORDER[index];let payout=0;for(const [id,stake] of this.bets){const b=BETS.find(b=>b.id===id)!;if(b.numbers.includes(number))payout+=stake*b.multiplier;}this.balance+=payout;this.active=null;this.bets.clear();return {number,payout};}
 }
 const smooth=(x:number)=>x*x*x*(x*(x*6-15)+10);
-export interface Motion {index:number; duration:number; start:number; initialBall:number; variant:number;initialRadius?:number;initialY?:number;startSpeed?:number;launchDuration?:number;direction?:1|-1;shape?:WheelShape;profile?:ReturnType<typeof createBallProfile>}
+export interface Motion {index:number; duration:number; start:number; initialBall:number; variant:number;initialRadius?:number;initialY?:number;startSpeed?:number;launchDuration?:number;direction?:1|-1;shape?:WheelShape;
+ /** vorab simulierter Wurf (ball-plan.ts); ohne Plan gilt die Keyframe-Animation als sichere Rückfallebene */
+ plan?:BallPlan}
 /** Reference scale: the 6.5-unit outer rim represents a 900 mm wheel. */
 export function ballRadiusFor(diameter:number){return diameter*3.25/900;}
-export function createBallProfile(seed:number,diameter=21,mass=8.7,bounce=1){
- let state=seed>>>0;
- const rand=()=>{state=(state+0x6D2B79F5)|0;let x=Math.imul(state^(state>>>15),1|state);x^=x+Math.imul(x^(x>>>7),61|x);return ((x^(x>>>14))>>>0)/4294967296;};
- const radius=ballRadiusFor(diameter),drop=.40+rand()*.15,capture=.75+rand()*.07;
- const count=4+Math.floor(rand()*4),energy=bounce*Math.sqrt(8.7/mass);
- const restAngle=(rand()-.5)*.018,restRadius=1.985-radius-.006;
- const times=[drop],radii=[2.9],lifts:number[]=[],kicks:number[]=[];
- const weights=Array.from({length:count},()=>.65+rand());const sum=weights.reduce((a,b)=>a+b,0);
- for(let i=0;i<count;i++){
-  times.push(i===count-1?capture:times[i]+(capture-drop)*weights[i]/sum);
-  const q=(i+1)/count;
-  radii.push(i===count-1?1.74+rand()*.15:Math.max(1.72,2.9-1.12*q+(i%2?.08:-.09)*( .5+rand())));
-  lifts.push((.11+rand()*.20)*(1-q*.65)*energy);kicks.push((rand()-.5)*.34*energy*(1-q*.7));
- }
- const rattles=4+Math.floor(rand()*4),contacts=[capture],offsets=[0],pocketRadii=[radii.at(-1)!],pocketLifts:number[]=[];
- const durations=Array.from({length:rattles},(_,i)=>(.8+rand()*.5)*Math.pow(.86,i));const total=durations.reduce((a,b)=>a+b,0);
- const side=rand()<.5?-1:1;
- for(let i=0;i<rattles;i++){
-  const last=i===rattles-1,q=(i+1)/rattles;
-  contacts.push(last?1:contacts[i]+(1-capture)*durations[i]/total);
-  // Early hops can cross a divider; later rebounds fit inside the actual free width.
-  const freeAngle=Math.max(.006,STEP/2-Math.asin((radius+.022)/1.8));
-  offsets.push(last?0:side*(i%2?-1:1)*(i===0?.08+rand()*.08:freeAngle*(.8+rand()*.2)*Math.pow(1-q,.65)));
-  pocketRadii.push(last?restRadius:i%2?restRadius:1.70+rand()*.08+q*.03);
-  pocketLifts.push(last?0:(.07+rand()*.07)*Math.pow(1-q,1.4)*energy);
- }
- return {radius,drop,capture,turns:4+rand()*3,restAngle,restRadius,times,radii,lifts,kicks,contacts,offsets,pocketRadii,pocketLifts};
-}
 export function reversalPlan(angle:number,speed:number,direction:1|-1){return {angle,speed,duration:speed===0?0:1.6,endSpeed:direction*.76};}
 export function sampleReversal(p:ReturnType<typeof reversalPlan>,time:number){
  if(p.duration===0)return {angle:p.angle,speed:p.speed,u:1};
@@ -76,7 +51,7 @@ export function rotorState(m:Motion,t:number){
 export function rotorAt(m:Motion,t:number){return m.start+rotorState(m,t).angle;}
 export function supportHeight(r:number,shape:WheelShape=DEFAULT_DESIGN){return surfaceClearance(r,BALL_RADIUS,shape);}
 export function sample(m:Motion,elapsed:number){
- if(m.profile)return sampleNatural(m,elapsed);
+ if(m.plan)return samplePlan(m,elapsed);
  const launchDuration=m.launchDuration??.8;
  const t=Math.max(0,Math.min(elapsed,m.duration)), u=Math.max(0,t-launchDuration)/(m.duration-launchDuration);
  const rest=restingOffset(m.variant);
@@ -127,28 +102,14 @@ export function sample(m:Motion,elapsed:number){
  return {angle,rotor,radius,y,speed:rotorState(m,t).speed,impact,done:elapsed>=m.duration,index:m.index};
 }
 
-function sampleNatural(m:Motion,elapsed:number){
- const p=m.profile!,shape=m.shape??DEFAULT_DESIGN,t=Math.max(0,Math.min(elapsed,m.duration)),u=t/m.duration,dir=m.direction??1;
- const rotor=rotorAt(m,t),endRotor=rotorAt(m,m.duration),end=endRotor+m.index*STEP+p.restAngle;
- // Whole turns preserve the selected physical end pocket. The seed is independent of the result.
- const travel=-dir*(TAU*Math.floor(p.turns)+((dir*(m.initialBall-end))%TAU+TAU)%TAU),target=m.initialBall+travel;
- const angular=(v:number)=>m.initialBall+travel*(1-(1-v)**3);
- let angle=angular(u),radius=2.9,lift=0,impact=-1;
- const interval=(times:number[])=>{let j=0;while(j<times.length-2&&u>=times[j+1])j++;return {j,v:Math.max(0,Math.min(1,(u-times[j])/(times[j+1]-times[j])))};};
- if(u>=p.drop&&u<p.capture){const {j,v}=interval(p.times);radius=p.radii[j]+(p.radii[j+1]-p.radii[j])*v;lift=4*p.lifts[j]*v*(1-v);angle+=p.kicks[j]*Math.sin(Math.PI*v);impact=j;}
- if(u>=p.capture){
-  const {j,v}=interval(p.contacts),base=target+rotor-endRotor;
-  const incoming=angular(p.capture)-(target+rotorAt(m,p.capture*m.duration)-endRotor);
-  const from=j===0?incoming:p.offsets[j],to=p.offsets[j+1];
-  // Match incoming angular velocity at capture, then collide, rebound and roll out.
-  const segmentSeconds=(p.contacts[j+1]-p.contacts[j])*m.duration;
-  const incomingSpeed=travel*3*(1-p.capture)**2/m.duration-rotorState(m,p.capture*m.duration).speed;
-  const fraction=j===p.contacts.length-2?1-(1-v)**2:v;
-  const offset=j===0?(2*v**3-3*v*v+1)*from+(v**3-2*v*v+v)*incomingSpeed*segmentSeconds+(-2*v**3+3*v*v)*to+(v**3-v*v)*(to-from):from+(to-from)*fraction;
-  angle=base+offset;radius=p.pocketRadii[j]+(p.pocketRadii[j+1]-p.pocketRadii[j])*fraction;
-  lift=4*p.pocketLifts[j]*v*(1-v);impact=p.times.length-1+j;
- }
- let y=surfaceClearance(radius,p.radius,shape)+lift;
- if(radius<2.025&&radius>1.55){const relative=((angle-rotor)%STEP+STEP)%STEP,distance=Math.max(0,radius*Math.abs(Math.sin(relative-STEP/2))-.018);if(distance<p.radius)y=Math.max(y,DIVIDER_HEIGHT*shape.bowlDepth+Math.sqrt(p.radius**2-distance**2));}
- return {angle,rotor,radius,y,speed:rotorState(m,t).speed,impact,done:elapsed>=m.duration,index:m.index,phase:u<p.drop?0:u<p.capture?1:2};
+/**
+ * Wiedergabe eines vorab simulierten Wurfs: lineare Interpolation der 2-kHz-Zeitreihe,
+ * ab dem Stillstand exakt die Ruhelage im Rotor-System (keine Relativbewegung mehr).
+ */
+export function samplePlan(m:Motion,elapsed:number){
+ const plan=m.plan!,time=Math.max(0,Math.min(elapsed,m.duration)),rotor=rotorAt(m,time);
+ let x:number,y:number,z:number;
+ if(time>=plan.restTime){const c=Math.cos(rotor),s=Math.sin(rotor),[lx,ly,lz]=plan.rest;x=lx*c-lz*s;y=ly;z=lx*s+lz*c;}
+ else{const k=time/plan.dt,i=Math.min(plan.count-2,Math.floor(k)),f=k-i,o=i*3,q=plan.pos;x=q[o]+(q[o+3]-q[o])*f;y=q[o+1]+(q[o+4]-q[o+1])*f;z=q[o+2]+(q[o+5]-q[o+2])*f;}
+ return {angle:Math.atan2(x,-z),rotor,radius:Math.hypot(x,z),y,speed:rotorState(m,time).speed,impact:-1,done:elapsed>=m.duration,index:m.index,phase:time<plan.dropTime?0:time<plan.entryTime?1:2};
 }

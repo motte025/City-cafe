@@ -85,6 +85,17 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   Kessel gehört schräg dargestellt: `topView` aus, `correction` an, Helligkeit
   `0.8`, Radgröße `zoom` `0.96` (im localStorage unter
   `atelier-show-settings`).
+- **Roulette-Kugel**: eigene deterministische 3D-Physik (Rollen, Stöße,
+  Reibung, Schwerkraft) statt Keyframe-Animation. Die Zielzahl wird bei
+  Countdown-Start gezogen (`randomIndex()`, Web Crypto); die passende
+  Bewegung wird geseedet im Hintergrund gesucht (Web Worker, sonst gestückelt
+  im Hauptthread). Findet die Suche nichts rechtzeitig, läuft die alte
+  Keyframe-Animation als Rückfallebene — sie zeigt immer die richtige Zahl.
+  Regler „Einlauf min./max. Taschen“ (Standard 5/15, Bereich 3–20).
+  Drei sichtbare Zierringe (r 2,93 / 2,47 / 2,025) stehen 1,7–2,7 mm über den
+  Flächen, über die die Kugel rollen muss; in der Kollisionsrechnung sind sie
+  bündig, das sichtbare Modell ist unverändert. Details, Messwerte und
+  offene Abweichungen: `roulette-src/TESTBERICHT.md`.
 - **Aufnahmemodus der Roulette-Seite** (`?aufnahme=1`): blendet Knöpfe aus, bis
   die Maus bewegt wird, zeigt keinen Rundenzähler, stellt den Zyklus auf
   unendlich und schreibt "CITY CAFE" statt des Raumnamens. Er steht in

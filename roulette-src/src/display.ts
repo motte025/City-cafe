@@ -15,14 +15,19 @@ export function startDisplay(){
  try{if(!localStorage.getItem('atelier-audio-v2')){settings.ambience=0;localStorage.setItem('atelier-audio-v2','1');}}catch{settings.ambience=0;}
  try{if(!localStorage.getItem('atelier-audio-v3')){settings.ambience=.35;localStorage.setItem('atelier-audio-v3','1');}}catch{settings.ambience=.35;}
  if(params.has('eco'))settings.economy=params.get('eco')!=='0';
- const cycle=new Cycle(),sound=new Sound(),relay=new Relay('tv'),session=crypto.randomUUID();let wheel:Wheel;let message='',throwInfo='Erster Abwurf bei 0 · Kessel ↻ · Kugel ↺',lastCommand='',lastHistory='',lastBroadcast=0,lastPaint=0;
+ const cycle=new Cycle(),sound=new Sound(),relay=new Relay('tv'),session=crypto.randomUUID();let wheel:Wheel;
+ let nextIndex:number|null=null,planKey='',tickInfo:{dt:number;before:number}|null=null,lastCountdown=NaN,lastCounting=false;let message='',throwInfo='Erster Abwurf bei 0 · Kessel ↻ · Kugel ↺',lastCommand='',lastHistory='',lastBroadcast=0,lastPaint=0;
  try{wheel=new Wheel($('wheel'));}catch{$('message').textContent='Dieser Browser benötigt WebGL 2. Bitte Hardwarebeschleunigung aktivieren.';return;}
- function configure(patch:unknown){settings=applySettings(settings,patch);if(cycle.delay!==settings.delay)cycle.setDelay(settings.delay);wheel.setPerformance(settings.economy,settings.renderScale);wheel.setDesign(settings);wheel.ballDiameter=settings.ballDiameter;wheel.ballMass=settings.ballMass;wheel.ballBounce=settings.ballBounce;wheel.durationSetting=settings.duration;wheel.durationSpread=settings.durationSpread;wheel.zoom=settings.zoom;wheel.setTV(true,settings);wheel.renderer.toneMappingExposure=1.02*settings.brightness;document.body.style.setProperty('--tv-text-scale',String(settings.textScale));sound.configure(settings.effects,settings.ambience,settings.muted);fillSettings($('settings-dialog'),settings);try{localStorage.setItem('atelier-show-settings',JSON.stringify(settings));}catch{}}
+ function configure(patch:unknown){settings=applySettings(settings,patch);if(cycle.delay!==settings.delay)cycle.setDelay(settings.delay);wheel.setPerformance(settings.economy,settings.renderScale);wheel.setDesign(settings);wheel.ballDiameter=settings.ballDiameter;wheel.ballMass=settings.ballMass;wheel.ballBounce=settings.ballBounce;wheel.durationSetting=settings.duration;wheel.durationSpread=settings.durationSpread;wheel.ballRunMin=settings.pocketRunMin;wheel.ballRunMax=settings.pocketRunMax;replan();wheel.zoom=settings.zoom;wheel.setTV(true,settings);wheel.renderer.toneMappingExposure=1.02*settings.brightness;document.body.style.setProperty('--tv-text-scale',String(settings.textScale));sound.configure(settings.effects,settings.ambience,settings.muted);fillSettings($('settings-dialog'),settings);try{localStorage.setItem('atelier-show-settings',JSON.stringify(settings));}catch{}}
  configure(settings);
  function command(cmd:Command){if(!cmd||typeof cmd!=='object')return;switch(cmd.action){case 'start':cycle.start(cmd.rounds);break;case 'pause':cycle.pause();break;case 'resume':cycle.resume();break;case 'stop':cycle.stop();break;case 'now':cycle.spinNow();break;case 'settings':configure(cmd.patch);break;}render();}
  function snapshot():State{return {session,phase:cycle.phase,seconds:Math.ceil(cycle.countdown),remaining:cycle.remaining,total:cycle.total,completed:cycle.completed,history:[...cycle.history],message:statusText(),throwInfo,settings,audioReady:sound.ready,lastCommand,running:cycle.running,designPending:wheel.designPending};}
  function statusText(){return cycle.phase==='countdown'?`Nächster Abwurf in ${Math.ceil(cycle.countdown)} Sekunden`:cycle.phase==='complete'?'Zyklus beendet. Bereit für die nächste Runde.':cycle.phase==='paused'?'Der Croupier pausiert.':message;}
- cycle.onSpin=id=>{message='Rien ne va plus. Die Kugel rollt.';const forced=import.meta.env.DEV&&params.has('dev')&&params.has('target')?Number(params.get('target')):NaN;const index=Number.isInteger(forced)&&forced>=0&&forced<=36?ORDER.indexOf(forced):randomIndex();wheel.spin(index,crypto.getRandomValues(new Uint8Array(1))[0]%3);};
+ // Die Gewinnzahl wird zu Beginn des Countdowns gezogen (randomIndex, Web Crypto), damit die
+ // Kugelbewegung währenddessen im Hintergrund physikalisch gesucht werden kann.
+ function drawIndex(){const forced=import.meta.env.DEV&&params.has('dev')&&params.has('target')?Number(params.get('target')):NaN;return Number.isInteger(forced)&&forced>=0&&forced<=36?ORDER.indexOf(forced):randomIndex();}
+ function replan(){if(nextIndex===null||!wheel||cycle.phase!=='countdown'||!cycle.running)return;const key=[settings.ballDiameter,settings.ballMass,settings.ballBounce,settings.pocketRunMin,settings.pocketRunMax,settings.duration,settings.durationSpread,settings.bowlDepth,settings.numberSlope,settings.numberSize].join('/');if(key!==planKey){planKey=key;wheel.prepare(nextIndex,cycle.countdown);}}
+ cycle.onSpin=id=>{message='Rien ne va plus. Die Kugel rollt.';const index=nextIndex??drawIndex();nextIndex=null;const overshoot=tickInfo?Math.max(0,tickInfo.dt-tickInfo.before):undefined;wheel.spin(index,crypto.getRandomValues(new Uint8Array(1))[0]%3,overshoot);};
  wheel.onPhase=p=>{message=p<0?'Richtungswechsel. Die nächste Kugel wird eingesetzt.':p===0?'Rien ne va plus. Die Kugel rollt.':p===1?'Die Kugel springt in den Zahlenkranz.':'Die Kugel pendelt aus …';};
  wheel.onImpact=strength=>sound.impact(strength);wheel.onPose=(angle,progress)=>sound.update(angle,progress);wheel.onLaunch=(n,dir)=>{sound.roll();throwInfo=`Abwurf bei ${n} · Kessel ${dir===1?'↻':'↺'} · Kugel ${dir===1?'↺':'↻'}`;};
  wheel.onLand=index=>{const id=cycle.active;if(id===null)return;cycle.land(id,ORDER[index]);sound.stop();message=`${ORDER[index]} · ${color(ORDER[index])==='red'?'Rot':color(ORDER[index])==='black'?'Schwarz':'Grün'}`;render();void relay.send(snapshot());};
@@ -35,14 +40,25 @@ export function startDisplay(){
  document.querySelectorAll<HTMLButtonElement>('[data-rounds]').forEach(b=>b.onclick=()=>{command({action:'start',rounds:b.dataset.rounds==='infinite'?null:Number(b.dataset.rounds)});$<HTMLDialogElement>('settings-dialog').close();});
  $('settings-dialog').oninput=event=>{const patch=settingsPatch(event);if(patch)configure(patch);};
  document.querySelector<HTMLButtonElement>('[data-design-reset]')!.onclick=()=>configure(DEFAULT_DESIGN);
- $('audio-unlock').onclick=async()=>{if(!sound.ready){try{await sound.unlock();}catch{sound.error='Tonfreigabe fehlgeschlagen. Bitte erneut versuchen.';}configure(settings);if(wheel.motion)sound.roll(wheel.elapsed/wheel.motion.duration);}else configure({muted:!settings.muted});render();};
+ $('audio-unlock').onclick=async()=>{if(!sound.ready){try{await sound.unlock();}catch{sound.error='Tonfreigabe fehlgeschlagen. Bitte erneut versuchen.';}configure(settings);if(wheel.motion)sound.roll(wheel.rollProgress);}else configure({muted:!settings.muted});render();};
  $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{message='Vollbild bitte über den Browser aktivieren.';}};
  const remoteUrl=`https://motte025.github.io/City-cafe/fernbedienung.html?teil=roulette&raum=${encodeURIComponent(room)}`;$<HTMLAnchorElement>('remote-link').href=remoteUrl;$('room-label').textContent='CITY CAFE';$('pair-room').textContent=`Screen: ${room}`;
  $('pair').onclick=()=>{$<HTMLDialogElement>('pair-dialog').showModal();void QRCode.toCanvas($<HTMLCanvasElement>('qr'),remoteUrl,{width:240,margin:2,color:{dark:'#10221b',light:'#f1e8ce'}});};
  relay.onConnection=online=>{$('connection').textContent=online?'● Fernbedienung bereit':'○ Fernbedienung offline';if(online)void relay.send(snapshot());};
  relay.onMessage=(body,id)=>{if(!body||typeof body!=='object')return;const b=body as {session?:string;command?:Command};if(b.session!==session||!b.command)return;lastCommand=id;command(b.command);void relay.send(snapshot());};
  void relay.connect(room);
- const clock=new PlaybackClock();function frame(time:number){cycle.tick(clock.tick(time,!document.hidden));if(time-lastPaint>90){render();lastPaint=time;}if(time-lastBroadcast>1000){lastBroadcast=time;void relay.send(snapshot());}requestAnimationFrame(frame);}requestAnimationFrame(frame);
- document.addEventListener('visibilitychange',()=>{clock.reset();if(document.hidden)sound.stop(true);else if(wheel.motion)sound.roll(wheel.elapsed/wheel.motion.duration);});render();
+ // Countdown-Überschuss im auslösenden Bild wird an den Kessel weitergereicht (exakte Abwurflage).
+ const dev=import.meta.env.DEV&&params.has('dev'),debug=dev?document.createElement('pre'):null;
+ if(dev&&params.has('slow'))wheel.timeScale=Math.max(.05,Math.min(1,Number(params.get('slow'))||.25));
+ if(debug){debug.className='ball-debug';debug.style.cssText='position:fixed;left:12px;bottom:72px;z-index:50;margin:0;padding:8px 10px;background:rgba(0,0,0,.72);color:#f3e7c4;font:13px/1.35 ui-monospace,monospace;border-radius:6px;pointer-events:none;white-space:pre';document.body.append(debug);}
+ const clock=new PlaybackClock();function frame(time:number){
+  const dt=clock.tick(time,!document.hidden),before=cycle.countdown,changed=before!==lastCountdown||(cycle.phase==='countdown'&&cycle.running)!==lastCounting;
+  tickInfo={dt,before};cycle.tick(dt);tickInfo=null;
+  const counting=cycle.phase==='countdown'&&cycle.running;
+  if(counting&&(nextIndex===null||changed)){if(nextIndex===null)nextIndex=drawIndex();planKey='';replan();}
+  lastCountdown=cycle.countdown;lastCounting=counting;
+  if(debug)debug.textContent=wheel.debugInfo()+(nextIndex!==null&&counting?`\nnächste Zahl (nur Dev): ${ORDER[nextIndex]}`:'');
+  if(time-lastPaint>90){render();lastPaint=time;}if(time-lastBroadcast>1000){lastBroadcast=time;void relay.send(snapshot());}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+ document.addEventListener('visibilitychange',()=>{clock.reset();if(document.hidden)sound.stop(true);else if(wheel.motion)sound.roll(wheel.rollProgress);});render();
 }
 
