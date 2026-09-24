@@ -73,9 +73,9 @@ export class Wheel {
   if(plan.duration===0){this.preparation=null;this.beginSpin(direction);}else this.onPhase?.(-1);
  }
  private beginSpin(direction:1|-1){
-  const randomness=crypto.getRandomValues(new Uint32Array(3)),unit=(i:number)=>randomness[i]/4294967296;
+  const randomness=crypto.getRandomValues(new Uint32Array(4)),unit=(i:number)=>randomness[i]/4294967296;
   if(this.speed===0)this.speed=direction*(.68+unit(2)*.16);
-  this.physics=new BallPhysics({angle:launchPosition(this.angle,this.lastIndex),rotorAngle:this.angle,rotorSpeed:this.speed,direction,speed:this.launchSpeed/METRES_PER_UNIT*(.94+.12*unit(0)),diameter:this.ballDiameter,mass:this.ballMass,restitution:.48*this.ballBounce,spinRatio:.75+.22*unit(1)},this.shape);
+  this.physics=new BallPhysics({angle:launchPosition(this.angle,this.lastIndex),rotorAngle:this.angle,rotorSpeed:this.speed,direction,speed:this.launchSpeed/METRES_PER_UNIT*(.94+.12*unit(0)),diameter:this.ballDiameter,mass:this.ballMass,restitution:.48*this.ballBounce,spinRatio:.75+.22*unit(1),pocketContacts:5+randomness[3]%5},this.shape);
   this.ball.scale.setScalar(this.physics.radius/BALL_RADIUS);
   const p=this.physics.advance(0);this.ball.position.set(p.x,p.y,p.z);this.ball.quaternion.copy(p.rotation);
   this.motion={duration:Infinity};

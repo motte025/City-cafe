@@ -12,7 +12,7 @@ export function bowlProfile(shape:WheelShape=DEFAULT_DESIGN):number[][]{
 }
 export function trackHeight(r:number){return r<2.7?.44+(r-2.49)*(.16/.21):r<2.9?.60+(r-2.7)*(.15/.2):.75+(r-2.9)*(.05/.15);}
 export function rimProfile(shape:WheelShape=DEFAULT_DESIGN):number[][]{
- return [[1.555,.315,.018],[2.025,.185,.009],[2.442,numberHeight(2.425,shape)+.004,.015],[2.47,.425,.018],[3.02,.795,.018]];
+ return [[1.555,.315,.018],[2.025,.210,.012],[2.442,numberHeight(2.425,shape)+.004,.015],[2.47,.425,.018],[3.02,.795,.018]];
 }
 /** Sphere clearance over the radial cross-section, including sloped segments. */
 export function surfaceClearance(r:number,ballRadius:number,shape:WheelShape=DEFAULT_DESIGN){

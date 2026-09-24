@@ -5,13 +5,15 @@ import {DEFAULT_DESIGN,FLOOR,DIVIDER_HEIGHT,numberHeight,trackHeight,rimProfile,
 
 export function deflectorGeometry(index:number){
  const a=(index+.5)*TAU/8,rotation=index%2?Math.PI/2:0;
- const corners=[[0,-.13],[.078,0],[0,.13],[-.078,0]];
+ // Casino-sized raised diamonds: broad enough to catch a descending 18–21 mm ball,
+ // while alternating their long axis around the fixed bowl.
+ const corners=[[0,-.17],[.095,0],[0,.17],[-.095,0]];
  const points=corners.map(([x,z])=>{
   const tangent=x*Math.cos(rotation)-z*Math.sin(rotation),radial=x*Math.sin(rotation)+z*Math.cos(rotation);
   const r=2.74+radial,wx=Math.sin(a)*r+Math.cos(a)*tangent,wz=-Math.cos(a)*r+Math.sin(a)*tangent;
   return [wx,trackHeight(Math.hypot(wx,wz))+.006,wz];
  });
- points.push([Math.sin(a)*2.74,trackHeight(2.74)+.092,-Math.cos(a)*2.74]);
+ points.push([Math.sin(a)*2.74,trackHeight(2.74)+.22,-Math.cos(a)*2.74]);
  const vertices:number[]=[];for(let i=0;i<4;i++)for(const j of [i,(i+1)%4,4])vertices.push(...points[j]);
  const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geometry.computeVertexNormals();return geometry;
 }
