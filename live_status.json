@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T14:47:46Z",
+  "checked_at": "2026-09-25T15:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -55,6 +55,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 MUTE MARATHON TAG 90! 😈 | HARDER STYLES | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
