@@ -17,8 +17,10 @@
     var active = false;
 
     function tryPlay(audio) {
-        var result = audio.play();
-        if (result && result.catch) result.catch(function () { /* Autoplay-Sperre */ });
+        try {
+            var result = audio.play();
+            if (result && result.catch) result.catch(function () { /* Autoplay-Sperre */ });
+        } catch (e) { /* aeltere Kiosk-Browser ohne freigegebenes Audio */ }
     }
 
     function setEnabled(value) {
