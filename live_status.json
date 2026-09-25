@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T15:02:46Z",
+  "checked_at": "2026-09-25T15:22:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "🔴 GIVEAWAY FREITAG | LOGITECHG DEAL DAYS !logitech | !holy #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 MUTE MARATHON TAG 90! 😈 | HARDER STYLES | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -45,13 +52,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
@@ -59,9 +59,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 MUTE MARATHON TAG 90! 😈 | HARDER STYLES | !insta !holy !SF #Werbung",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
