@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T18:07:45Z",
+  "checked_at": "2026-09-25T18:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Endlich wieder Freitag! Das Wochenende kann beginnen! <3 !release @just_jenny_official @two_crazy_girls",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 25✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 25✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Endlich wieder Freitag! Das Wochenende kann beginnen! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -73,16 +73,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "\"All You Need To Know\" Release Party - Mixed Music  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Warm Up x Groovers w Flashbaxx  & Sam Gittis",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Warm Up x Groovers w Flashbaxx  & Sam Gittis",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "\"All You Need To Know\" Release Party - Mixed Music  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
