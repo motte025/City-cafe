@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T15:42:46Z",
+  "checked_at": "2026-09-25T16:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "🔴 GIVEAWAY FREITAG | LOGITECHG DEAL DAYS !logitech | !holy #werbung",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 MUTE MARATHON TAG 90! 😈 | HARDER STYLES | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 MUTE MARATHON TAG 90! 😈 | HARDER STYLES | !insta !holy !SF #Werbung",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "🔴 GIVEAWAY FREITAG | LOGITECHG DEAL DAYS !logitech | !holy #werbung",
       "game": "DJs"
     },
     {
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
