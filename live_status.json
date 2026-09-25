@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T17:42:45Z",
+  "checked_at": "2026-09-25T17:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Endlich wieder Freitag! Das Wochenende kann beginnen! <3 !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 25✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -55,13 +62,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 25✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
