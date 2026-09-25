@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T19:42:45Z",
+  "checked_at": "2026-09-25T19:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -66,9 +66,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Warm Up x Groovers w Flashbaxx  & Sam Gittis",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -80,9 +80,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Warm Up x Groovers w Flashbaxx  & Sam Gittis",
       "game": "DJs"
     },
     {
