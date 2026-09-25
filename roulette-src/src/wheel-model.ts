@@ -2,6 +2,7 @@ import * as T from 'three';
 import {ORDER,STEP,TAU,color} from './game';
 import {batchMeshes} from './render-budget';
 import {DEFAULT_DESIGN,FLOOR,DIVIDER_HEIGHT,numberHeight,trackHeight,rimProfile,type DesignSettings,type WheelShape} from './wheel-shape';
+import {MM_PER_UNIT} from './ball-config';
 
 export function deflectorGeometry(index:number){
  const a=(index+.5)*TAU/8,rotation=index%2?Math.PI/2:0;
@@ -44,9 +45,30 @@ export class WheelModel {
  private colors={red:new T.MeshPhysicalMaterial({color:0x990b21,roughness:.31,metalness:.08,clearcoat:.65}),black:new T.MeshPhysicalMaterial({color:0x070b10,roughness:.31,metalness:.12,clearcoat:.65}),green:new T.MeshPhysicalMaterial({color:0x006b3f,roughness:.31,metalness:.08,clearcoat:.65})};
  private pockets={red:new T.MeshStandardMaterial({color:0x740c20,roughness:.42}),black:new T.MeshStandardMaterial({color:0x090f14,roughness:.44}),green:new T.MeshStandardMaterial({color:0x005736,roughness:.42})};
  private labels:T.MeshBasicMaterial;
+ // Goldener Schriftring auf der inneren Kesselfläche ("CITY-CAFE KLAGENFURT", umlaufend,
+ // Ende geht nahtlos in den Anfang über). polygonOffset wie bei den Zierringen, sonst
+ // droht an der fast planparallelen Fläche wieder Z-Fighting (siehe wheel-shape.ts).
+ private gold=new T.MeshStandardMaterial({transparent:true,metalness:.75,roughness:.32,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
+ private logoTexture(){
+  const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=220;
+  const ctx=canvas.getContext('2d')!;
+  const repeats=3,unit=2048/repeats,phrase='CITY-CAFE KLAGENFURT   \u2726   ';
+  ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 128px Georgia, "Times New Roman", serif';
+  const natural=ctx.measureText(phrase).width;
+  for(let i=0;i<repeats;i++){
+   ctx.save();ctx.translate(i*unit,canvas.height/2);ctx.scale(unit/natural,1);
+   const grad=ctx.createLinearGradient(0,-70,0,70);
+   grad.addColorStop(0,'#fbecc0');grad.addColorStop(.45,'#d9ad52');grad.addColorStop(.55,'#a97c2e');grad.addColorStop(1,'#f6e0a4');
+   ctx.fillStyle=grad;ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=5;ctx.shadowOffsetY=3;
+   ctx.font='700 128px Georgia, "Times New Roman", serif';ctx.fillText(phrase,0,0);
+   ctx.restore();
+  }
+  const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=8;return texture;
+ }
  constructor(renderer:T.WebGLRenderer){
   this.wood.map=this.woodTexture();this.track.map=this.wood.map;
   this.inner.map=this.wood.map;
+  this.gold.map=this.logoTexture();
   const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;const ctx=atlas.getContext('2d')!;
   ctx.font='700 230px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;
   ORDER.forEach((n,i)=>{const x=i%8*256,y=Math.floor(i/8)*320;ctx.strokeStyle='#1b100c';ctx.strokeText(String(n),x+128,y+168,236);ctx.fillStyle='#fff5db';ctx.fillText(String(n),x+128,y+168,236);});
@@ -85,6 +107,13 @@ export class WheelModel {
   for(let i=0;i<8;i++)this.mesh(f,deflectorGeometry(i),this.deflectorMetal);
   this.lathe(r,[[0,.012],[2.44,.012],[2.44,numberHeight(2.425,shape)],[2.425,numberHeight(2.425,shape)-.006],[2.04,.229],[1.985,FLOOR-.006],[1.585,FLOOR-.006],[1.53,.34],[.53,.82],[0,.83]],b);
   this.lathe(r,[[1.525,.345],[1.36,.447],[1.02,.653],[.62,.804],[.40,.839]],this.inner);
+  // Schriftring exakt auf dem Kegelabschnitt zwischen r=0,62 und r=1,02 (selbe Neigung wie die
+  // Fläche darunter, nur als eigenes schmales Band mit der Gold-Textur statt Holzmaserung).
+  // +LOGO_LIFT und polygonOffset auf this.gold: zusammen wie bei den Zierringen gegen Z-Fighting
+  // (siehe wheel-shape.ts) – hier vorsorglich gleich mit eingebaut statt es erst zu entdecken.
+  const LOGO_LIFT=.2/MM_PER_UNIT;
+  const logo=this.lathe(r,[[.92,.653+(1.02-.92)/(1.02-.62)*(.804-.653)+LOGO_LIFT],[.68,.653+(1.02-.68)/(1.02-.62)*(.804-.653)+LOGO_LIFT]],this.gold);
+  logo.castShadow=false;
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius<2.45))this.ring(r,radius,y,t,m);
   this.ring(r,1.53,.348,.016,b);
   const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,DIVIDER_HEIGHT-FLOOR-.012);wall.lineTo(-.009,DIVIDER_HEIGHT-FLOOR-.012);wall.closePath();

@@ -127,6 +127,12 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   mehr, sondern Ergebnis der Physik. Modell B ist nur oberflächlich
   getestet (kein voller Testlauf wie bei `roulette-src`), da reine
   Entscheidungsvorlage.
+- **Schriftring "CITY-CAFE KLAGENFURT"**: goldener, umlaufender Schriftzug auf der
+  inneren Kesselfläche (r 0,68–0,92, folgt exakt der Kegelneigung dort), dreht
+  mit dem Rotor mit. Dreimal wiederholt mit Sternchen als Trenner, nahtloser
+  Umlauf (Ende geht in den Anfang über). Eigenes Gold-Material mit
+  polygonOffset + kleinem geometrischen Sicherheitsabstand (Lehre aus dem
+  Z-Fighting-Fehler an den Zierringen, direkt mit eingebaut).
 - **Aufnahmemodus der Roulette-Seite** (`?aufnahme=1`): blendet Knöpfe aus, bis
   die Maus bewegt wird, zeigt keinen Rundenzähler, stellt den Zyklus auf
   unendlich und schreibt "CITY CAFE" statt des Raumnamens. Er steht in
