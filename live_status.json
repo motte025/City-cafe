@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T13:17:47Z",
+  "checked_at": "2026-09-25T13:22:50Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "🔴 GIVEAWAY FREITAG | LOGITECHG DEAL DAYS !logitech | !holy #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     },
     {
@@ -24,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     }
   ]
