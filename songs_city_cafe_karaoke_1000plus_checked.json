@@ -72399,8 +72399,8 @@
     "auto_discovered": true
   },
   {
-    "artist": "Fernando Express",
-    "title": "Barfuss bis ans Ende der Welt",
+    "artist": "Michael Holm",
+    "title": "Wart' Auf Mich",
     "album": "",
     "category": "Schlager",
     "chart": "",
@@ -72409,6 +72409,46 @@
       "Party",
       "Karaoke",
       "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Leonard",
+    "title": "Auch Beim Zweiten Mal Tat's Noch Weh",
+    "album": "",
+    "category": "Schlager & Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager & Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Koos Alberts",
+    "title": "Zijn het je ogen",
+    "album": "",
+    "category": "Après-Ski & Ballermann",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Après-Ski & Ballermann"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
