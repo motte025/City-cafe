@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T23:22:47Z",
+  "checked_at": "2026-09-25T23:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,13 +17,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 25✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "roice",
       "name": "roice",
       "title": "rainforest cafe !bewbs !morestreams !alt",
@@ -31,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "The Block At Breakaway  North Carolina",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "The Block At Breakaway  North Carolina",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
