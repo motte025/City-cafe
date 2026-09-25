@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T18:52:45Z",
+  "checked_at": "2026-09-25T19:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,16 +45,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -83,6 +83,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "\"All You Need To Know\" Release Party - Mixed Music  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "FALL IS IN THE AIR",
       "game": "DJs"
     }
   ]
