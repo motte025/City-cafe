@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T18:22:45Z",
+  "checked_at": "2026-09-25T18:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
@@ -59,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
       "game": "DJs"
     },
     {
@@ -70,6 +63,13 @@
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #695 with Dusky",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
     },
     {
       "platform": "twitch",
