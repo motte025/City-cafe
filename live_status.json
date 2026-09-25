@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T20:02:45Z",
+  "checked_at": "2026-09-25T20:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 MUTE MARATHON TAG 90! 😈 | HARDER STYLES | !insta !holy !SF #Werbung",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "FALL IS IN THE AIR",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "FALL IS IN THE AIR",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 MUTE MARATHON TAG 90! 😈 | HARDER STYLES | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -69,13 +69,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Warm Up x Groovers w Flashbaxx  & Sam Gittis",
       "game": "DJs"
     },
     {
