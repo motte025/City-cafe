@@ -72856,8 +72856,8 @@
     "auto_discovered": true
   },
   {
-    "artist": "Deep Purple",
-    "title": "Space Truckin'",
+    "artist": "REO Speedwagon",
+    "title": "Take It on the Run",
     "album": "",
     "category": "Party & Rock",
     "chart": "",
@@ -72866,6 +72866,26 @@
       "Party",
       "Rock",
       "Anthem"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Gloria Estefan",
+    "title": "Don't Wanna Lose You",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
