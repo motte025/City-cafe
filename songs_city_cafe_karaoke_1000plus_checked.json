@@ -73094,16 +73094,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Beatrice Egli",
-    "title": "Aus Verseh'n Verliebt",
+    "artist": "The Von Bondies",
+    "title": "C'mon C'mon",
     "album": "",
-    "category": "Schlager",
+    "category": "Indie & Alternative",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Schlager"
+      "Indie & Alternative"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Charli xcx",
+    "title": "Good Ones",
+    "album": "",
+    "category": "Modern Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Modern Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
