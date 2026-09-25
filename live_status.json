@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T21:02:47Z",
+  "checked_at": "2026-09-25T21:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,20 +45,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "beatportofficial",
       "name": "BeatportOfficial",
       "title": "The Block At Breakaway  North Carolina",
@@ -66,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
