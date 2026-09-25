@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T20:37:47Z",
+  "checked_at": "2026-09-25T20:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,6 +38,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
@@ -48,6 +55,20 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴ROCK FINALLY FRIDAY ☆ !holy !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "The Block At Breakaway  North Carolina",
       "game": "DJs"
     },
     {
@@ -66,30 +87,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "\"All You Need To Know\" Release Party - Mixed Music  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "The Block At Breakaway  North Carolina",
       "game": "DJs"
     }
   ]
