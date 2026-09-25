@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T21:42:45Z",
+  "checked_at": "2026-09-25T21:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -62,6 +62,13 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "rainforest cafe !bewbs !morestreams !alt",
       "game": "DJs"
     }
   ]
