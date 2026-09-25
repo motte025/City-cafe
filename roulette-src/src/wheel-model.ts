@@ -28,7 +28,11 @@ export function numberGeometry(index:number,shape:WheelShape){
 
 export class WheelModel {
  fixed=new T.Group();turning=new T.Group();
- private metal=new T.MeshStandardMaterial({metalness:.93,roughness:.23});
+ // polygonOffset: schiebt die dünnen Zierringe im Tiefenpuffer minimal Richtung Kamera, damit sie
+ // an Stellen, wo Ring und Fläche fast auf gleicher Höhe liegen (bündig abgesenkte Ringe), nicht
+ // mit der Fläche um denselben Bildpunkt konkurrieren ("Z-Fighting", sichtbar als flackernde Linie
+ // mit Bildfehlern) – unabhängig von Kameraabstand oder GPU-Genauigkeit.
+ private metal=new T.MeshStandardMaterial({metalness:.93,roughness:.23,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
  private satin=new T.MeshStandardMaterial({metalness:.85,roughness:.35});
  private chrome=new T.MeshStandardMaterial({color:0xd5e0e8,metalness:.97,roughness:.17});
  /** Gedämpfteres, mattes Metall nur für die 8 Rauten – heller Chrom stach zu sehr gegen das dunkle Holz hervor. */

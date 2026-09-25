@@ -97,6 +97,12 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   auch im sichtbaren 3D-Modell bündig abgesenkt (zuvor nur in der
   Kollisionsrechnung). Details, Messwerte und offene Abweichungen:
   `roulette-src/TESTBERICHT.md`.
+  **Bug (behoben):** Das bündig Absenken hatte einen zu knappen
+  Sicherheitsabstand (0,15 mm) hinterlassen — am echten Gerät zeigte sich am
+  Ring r=2,93 (Außenkante der Laufbahn, genau dort wo die Kugel rollt) eine
+  flackernde Linie mit Bildfehlern ("Z-Fighting"). Behoben: Abstand auf
+  0,24 mm erhöht plus `polygonOffset` auf dem Ring-Material als zweite,
+  GPU-unabhängige Absicherung.
   Neu in der Fernbedienung: zwei Regler „Rauten radial/tangential ·
   Widerstand“ (0–100 %, Standard je 15 %). 0 % = kein Widerstand (Kugel
   prallt verlustfrei ab), 100 % = totaler Widerstand (kein Rückprall,

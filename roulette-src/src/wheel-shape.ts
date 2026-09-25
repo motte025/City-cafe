@@ -29,13 +29,17 @@ function flushHeightAt(radius:number):number{
  * die die Kugel rollen muss, und bildeten Mulden, in denen eine langsame Kugel für immer liegen
  * bliebe. Auf Wunsch des Betreibers im sichtbaren Modell bündig abgesenkt (Höhe = Fläche
  * darunter, minus Ringdicke) statt wie zuvor nur in der Kollisionsrechnung.
- * VISUAL_LIFT: 0,15 mm rein optischer Sicherheitsabstand, damit Ring und Fläche nicht exakt in
- * einer Ebene liegen (sonst flackerndes „Z-Fighting“ – zwei Flächen konkurrieren beim Rendern
- * um denselben Bildpunkt). Bleibt weit unter der 0,8-mm-Schwelle, an der eine Kugel hängen
- * bliebe, und unter der 0,3-mm-Toleranz des Bündig-Tests.
+ * VISUAL_LIFT: optischer Sicherheitsabstand, damit Ring und Fläche nicht exakt in einer Ebene
+ * liegen. 0,15 mm reichte in der Praxis nicht: am echten Gerät zeigte sich am Ring r=2,93 (der
+ * äußere Rand der Laufbahn, genau dort wo die Kugel rollt) eine flackernde Linie mit Aussetzern
+ * ("Z-Fighting" – zwei Flächen konkurrieren beim Rendern um denselben Bildpunkt). Jetzt 0,24 mm
+ * (wird mit der Kesseltiefe skaliert, bei Standardtiefe 1,15 also gemessene 0,276 mm) – knapp
+ * unter der 0,3-mm-Toleranz des Bündig-Tests, und zusätzlich polygonOffset auf dem Ring-Material
+ * (wheel-model.ts) als zweite, vom Kamera-/GPU-Abstand unabhängige Absicherung. Bleibt weit unter
+ * der 0,8-mm-Schwelle, an der eine Kugel hängen bliebe.
  */
 const FLUSH_RINGS=[2.93,2.47,2.025];
-const VISUAL_LIFT=.15/MM_PER_UNIT;
+const VISUAL_LIFT=.24/MM_PER_UNIT;
 export function rimProfile(shape:WheelShape=DEFAULT_DESIGN):number[][]{
  return [[1.555,.315,.018],[2.025,.232,.016],[2.442,numberHeight(2.425,shape)+.004,.015],[2.47,.425,.018],[2.93,.765,.012],[3.02,.795,.018]]
   .map(([radius,y,tube])=>FLUSH_RINGS.includes(radius)?[radius,flushHeightAt(radius)-tube+VISUAL_LIFT,tube]:[radius,y,tube]);
