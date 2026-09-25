@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T14:37:45Z",
+  "checked_at": "2026-09-25T14:47:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,13 +31,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
@@ -45,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
