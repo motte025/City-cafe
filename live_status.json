@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T20:22:46Z",
+  "checked_at": "2026-09-25T20:37:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -52,16 +52,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -83,6 +83,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "\"All You Need To Know\" Release Party - Mixed Music  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "The Block At Breakaway  North Carolina",
       "game": "DJs"
     }
   ]
