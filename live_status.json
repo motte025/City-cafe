@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-25T02:52:48Z",
+  "checked_at": "2026-09-25T03:12:50Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "nyybeats",
       "name": "NyyBeats",
       "title": "🔥♡ UNIVERSAL MUSIC LIVE IS BACK AND FROM THE NEW STUDIO RAIDING INTO THERE AFTER SOME SICK TUNES!!! AHHHHH 🔥 !tip !NEWSONG🔥 !mods !mercy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
