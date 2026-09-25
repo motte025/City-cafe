@@ -269,6 +269,12 @@ async function run() {
         page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
         // Firebase-CDN blockieren, Stub stattdessen einsetzen
         await page.route('**gstatic.com/**', r => r.abort());
+        // Andere Widgets laden Wetter, RSS und Schriftarten. Der Spieltest
+        // braucht sie nicht; Netzwartezeiten wuerden die Lobby-Timer verzerren.
+        await page.route('**/*', r => {
+            if (r.request().url().startsWith(`http://localhost:${PORT}/`)) r.continue();
+            else r.fulfill({ status: 204, body: '' });
+        });
         await page.exposeBinding('__ktOp', (_src, json) => dbOp(JSON.parse(json)));
         await page.addInitScript(`window.__ktUid = ${JSON.stringify(uid)};`);
         await page.addInitScript(STUB);
@@ -313,11 +319,8 @@ async function run() {
     check('TV nennt das Spiel "Hos’n Obe"',
         /Hos’n Obe/.test(names.banner) && /Hos’n Obe/.test(names.launcher), JSON.stringify(names));
 
-    const launcherVisible = await tv.evaluate(() => {
-        const el = document.getElementById('kt-launcher');
-        return el && getComputedStyle(el).display !== 'none';
-    });
-    check('Starter-QR ist sichtbar', launcherVisible);
+    check('Spielkennung ist fuer die Sammel-Fernbedienung verfuegbar',
+        await tv.evaluate(() => window.ktSessionAktuell) === sessionId);
 
     console.log('\n--- Handy 1 scannt (wird Host) ---');
     const phone1 = await open(`http://localhost:${PORT}/hosn-obe.html?session=${sessionId}`, 'phone-1');
@@ -509,6 +512,28 @@ async function run() {
         const seat = Number(pubNow().currentTurnSeat);
         const s1 = await seatOf(phone1);
         const p = s1 === seat ? phone1 : phone2;
+        if (seat === Number(pubNow().dealerSeat) && !pubNow().dealerChoiceDone) {
+            await waitFor('Teiler-Wahl bereit', () => p.evaluate(() =>
+                Array.from(document.querySelectorAll('.kt-btn')).some(b =>
+                    b.textContent === 'ERSTE DREI KARTEN BEHALTEN')));
+            check('Teiler bekommt die Wahl zwischen Behalten und drei neuen Karten',
+                (await buttonsOf(p)).some(t => /DREI NEUE ZIEHEN/.test(t)));
+            const privateDeck = tree.games[sessionId].private[seat];
+            const firstThree = privateDeck.hand.slice();
+            const replacement = privateDeck.dealerReplacement.slice();
+            const replace = !E.scoreHand(replacement).fire;
+            await clickButton(p, replace
+                ? 'IN DIE MITTE LEGEN · DREI NEUE ZIEHEN'
+                : 'ERSTE DREI KARTEN BEHALTEN');
+            await waitFor('Teiler-Wahl gespeichert', () => !!pubNow().dealerChoiceDone);
+            check('Teiler-Wahl verbraucht keinen regulaeren Zug', Number(pubNow().currentTurnSeat) === seat);
+            if (replace) {
+                check('Abgelehnte Karten liegen in der Mitte',
+                    JSON.stringify(pubNow().middleCards) === JSON.stringify(firstThree));
+                check('Teiler hat drei neue Karten erhalten',
+                    JSON.stringify(tree.games[sessionId].private[seat].hand) === JSON.stringify(replacement));
+            }
+        }
         // Warten, bis das Handy den Zug auch anzeigt.
         await waitFor('Zug-Ansicht bereit', () => p.evaluate(() =>
             document.querySelectorAll('#kt-hand-cards .kt-card.is-pickable').length > 0 ||
@@ -964,11 +989,29 @@ async function run() {
         Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
     check('Die drei Modi stehen wieder zur Wahl', restartModes.length === 3, JSON.stringify(restartModes));
 
+    console.log('\n--- Spielton der Fernbedienung ---');
+    const remote = await open(`http://localhost:${PORT}/fernbedienung.html?raum=city-cafe`, 'remote-uid');
+    await waitFor('Tonsteuerung verbunden', () => remote.evaluate(() =>
+        document.getElementById('ton-an').getAttribute('aria-pressed') === 'true'));
+    await remote.click('#ton-aus');
+    await waitFor('Ton aus gespeichert', () =>
+        tree.djremote && tree.djremote['city-cafe'] &&
+        tree.djremote['city-cafe'].ton && tree.djremote['city-cafe'].ton.enabled === false);
+    check('Ton aus ist sichtbar aktiv', await remote.evaluate(() =>
+        document.getElementById('ton-aus').getAttribute('aria-pressed') === 'true'));
+    await remote.click('#ton-an');
+    await waitFor('Ton an gespeichert', () =>
+        tree.djremote['city-cafe'].ton.enabled === true);
+    check('Ton an ist sichtbar aktiv', await remote.evaluate(() =>
+        document.getElementById('ton-an').getAttribute('aria-pressed') === 'true'));
+
     // ---------- Fehlerfreiheit ----------
     console.log('\n--- Konsolenfehler ---');
     for (const [name, p] of [['TV', tv], ['Handy 1', phone1], ['Handy 2', phone2],
                              ['TV (Computer)', tv2], ['Handy (Computer)', phone3], ['Gast (Computer)', phone4]]) {
-        const real = p.__errors.filter(e => !/gstatic|net::ERR|Failed to load resource|favicon/i.test(e));
+        // Wetter/RSS und Browser-Features anderer Widgets liegen ausserhalb
+        // dieses Spieltests; lokale Skriptfehler bleiben sichtbar.
+        const real = p.__errors.filter(e => !/gstatic|net::ERR|Failed to load resource|favicon|NetworkError|api\.codetabs\.com|Permissions policy violation/i.test(e));
         check(name + ' ohne JS-Fehler', real.length === 0, real.slice(0, 3).join(' | '));
     }
 

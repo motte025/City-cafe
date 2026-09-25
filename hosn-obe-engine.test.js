@@ -197,7 +197,11 @@ eq('Drilling-Wert bekommt ein Komma', E.formatScore(30.5), '30,5');
     var d = E.deal(n);
     eq('Deal ' + n + ' Spieler: ' + n + ' Hände', Object.keys(d.hands).length, n);
     eq('Deal ' + n + ' Spieler: 3 Mittenkarten', d.middleCards.length, 3);
+    eq('Deal ' + n + ' Spieler: drei Karten fuer den Teiler', d.dealerReplacement.length, 3);
+    eq('Deal ' + n + ' Spieler: Teiler sitzt vor dem Starter',
+       d.dealerSeat, (d.starterSeat - 1 + n) % n);
     var all = d.middleCards.slice();
+    all = all.concat(d.dealerReplacement);
     for (var s = 0; s < n; s++) {
         eq('Deal ' + n + ': Sitz ' + s + ' hat 3 Karten', d.hands[s].length, 3);
         all = all.concat(d.hands[s]);
@@ -281,8 +285,10 @@ function fireAtDeal(chances, rounds) {
 }
 var fireEven = fireAtDeal({ ace: 1, high: 1 }, 8000);
 var fireFew = fireAtDeal({ ace: 0.5, high: 0.5 }, 8000);
+// Mit drei zusaetzlich reservierten Teilerkarten wird der Stapel tiefer
+// genutzt; dadurch ist der Effekt kleiner als vor der Teiler-Regel.
 check('Seltenere hohe Karten heissen seltener Feuer',
-    fireFew < fireEven * 0.75,
+    fireFew < fireEven * 0.9,
     (fireFew * 100).toFixed(1) + '% statt ' + (fireEven * 100).toFixed(1) + '%');
 
 check('Deal lehnt 1 Spieler ab', (function () { try { E.deal(1); return false; } catch (e) { return true; } })());
@@ -347,6 +353,20 @@ eq('Rueckseite mit Basispfad', E.cardBackImage('cards/', function () { return 0;
 // ---------- Computer-Spieler ----------
 var botAll = E.botDecide(['C7', 'S8', 'D9'], ['H7', 'HK', 'HA'], { canKnock: false, canPass: true });
 eq('Computer nimmt einen lohnenden Rundumtausch', botAll.type, 'all');
+eq('Computer nimmt auch gleichwertige drei Farben',
+   E.botDecide(['H7', 'H8', 'H9'], ['S7', 'S8', 'S9'],
+       { canKnock: false, canPass: true }).type, 'all');
+eq('Computer nimmt gleichwertigen Satz auch bei Aufgeh-Erlaubnis',
+   E.botDecide(['H7', 'H8', 'H9'], ['S7', 'S8', 'S9'],
+       { canKnock: true, canPass: true }).type, 'all');
+check('Ass neben hohen Farbkarten ist spaet ein teures Geschenk',
+    E.giveawayCost('HA', ['H10', 'HK'], 1) > E.giveawayCost('HA', ['C7', 'D8'], 0));
+var safeColorMove = E.botDecide(['D7', 'C7', 'H8'], ['H9', 'HQ', 'CA'],
+    { canKnock: false, canPass: true, turnsPlayed: 12, playerCount: 3 });
+eq('Computer haelt die Mitte bei gleichem Handwert zweifarbig',
+   safeColorMove.type === 'single' ?
+       [safeColorMove.handIndex, safeColorMove.middleIndex] : safeColorMove.type,
+   [0, 2]);
 
 /*
  * Aufgehen ist ab der zweiten Runde jederzeit am eigenen Zug moeglich - mit

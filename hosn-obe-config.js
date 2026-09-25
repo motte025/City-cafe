@@ -43,7 +43,8 @@ window.HOSN_OBE_CONFIG = {
     // Chance für alle 32 Karten endete rund jede dritte Runde mit Feuer.
     // Punkte und Regeln bleiben unverändert — hohe Karten bleiben nur öfter
     // im ungenutzten Rest des Stapels liegen (im Spiel sind je nach
-    // Spieleranzahl nur 9 bis 21 der 32 Karten).
+    // Spieleranzahl nur 14 bis 30 der 32 Karten samt Geber-Ermittlung und
+    // reservierten Teilerkarten).
     // Gemessen über je 4000 simulierte Computer-Runden pro Spieleranzahl:
     //   Ass/hoch    2 Sp.  3 Sp.  4 Sp.  5 Sp.  6 Sp.  Schnitt  Ø Hand
     //   1.0 / 1.0    16%    27%    38%    45%    50%     35%      15.8

@@ -38,7 +38,11 @@
         padding: 16px 10px; background: #1d2647; color: #cdd7f5; cursor: pointer; flex: 1;
     }
     button.aktiv { background: #2f6bff; color: #fff; }
+    #tonzeile button { min-height: 62px; }
+    #tonzeile button.aktiv { background: #237c56; color: #fff; box-shadow: inset 0 0 0 2px #8ee7b5; }
+    #tonzeile button:disabled { opacity: 0.55; }
     .screen { font-size: 21px; color: #8ea0c8; padding: 8px 2px 0; text-align: center; }
+    .ton-label { font-size: 18px; color: #aebde0; margin: 10px 0 4px; text-align: center; }
     iframe { flex: 1; width: 100%; border: 0; background: #0b1020; }
     .hinweis {
         flex: 1; display: flex; flex-direction: column; justify-content: center;
@@ -62,6 +66,11 @@
 <header>
     <div class="zeile" id="tabs"></div>
     <div class="zeile" id="boxen"></div>
+    <div class="ton-label">Hos’n Obe · Spielton am Screen</div>
+    <div class="zeile" id="tonzeile" aria-label="Spielton">
+        <button type="button" id="ton-an">🔊 Ton an</button>
+        <button type="button" id="ton-aus">🔇 Ton aus</button>
+    </div>
     <!-- Nur im Roulette-Reiter: der Screen zeigt Roulette nur waehrend seines
          Slots, sonst steht in der Fernbedienung "Warte auf TV". Dieser Knopf
          holt es an den Fernseher. -->
@@ -87,7 +96,7 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-09-21-roulette';
+    var FASSUNG = '2026-09-25-spielton';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 
@@ -109,6 +118,7 @@
         || CFG.raum || 'city-cafe';
     var raumFest = !!(abfrage.get('raum') || '').trim();
     var verbindung = null;
+    var tonAus = null;
     var aktiv = (abfrage.get('teil') || '').trim() || 'yt';
 
     // Merkt sich je Reiter, was zuletzt geladen wurde. Ohne das wuerde jeder
@@ -214,6 +224,7 @@
                 screenText(b.name, 'von Hand gewählt');
                 boxenKnoepfe(boxen);
                 if (verbindung) statusAbo(verbindung);
+                if (verbindung) tonAbo(verbindung);
                 rahmenSetzen();
             });
             box.appendChild(k);
@@ -222,6 +233,33 @@
 
     // Status des gewaehlten Screens mithoeren - daraus kommt die Spielkennung.
     var statusAus = null;
+    function tonAnzeige(enabled) {
+        el('ton-an').classList.toggle('aktiv', enabled === true);
+        el('ton-aus').classList.toggle('aktiv', enabled === false);
+        el('ton-an').setAttribute('aria-pressed', enabled === true ? 'true' : 'false');
+        el('ton-aus').setAttribute('aria-pressed', enabled === false ? 'true' : 'false');
+    }
+    function tonAbo(verb) {
+        if (tonAus) { tonAus(); tonAus = null; }
+        tonAnzeige(null);
+        var ref = verb.db.ref('djremote/' + raum + '/ton');
+        var callback = function (snap) {
+            var value = snap.val();
+            tonAnzeige(!value || value.enabled !== false);
+        };
+        ref.on('value', callback);
+        tonAus = function () { ref.off('value', callback); };
+    }
+    function tonSetzen(enabled) {
+        if (!verbindung) { screenText(raum, 'keine Verbindung für Tonsteuerung'); return; }
+        el('ton-an').disabled = true;
+        el('ton-aus').disabled = true;
+        verbindung.db.ref('djremote/' + raum + '/ton').set({ enabled: enabled, ts: Date.now() })
+            .catch(function () { screenText(raum, 'Tonsteuerung nicht gesendet'); })
+            .then(function () { el('ton-an').disabled = false; el('ton-aus').disabled = false; });
+    }
+    el('ton-an').addEventListener('click', function () { tonSetzen(true); });
+    el('ton-aus').addEventListener('click', function () { tonSetzen(false); });
     function statusAbo(verb) {
         if (statusAus) { try { statusAus(); } catch (e) {} statusAus = null; }
         spielSessionSetzen('');
@@ -235,6 +273,7 @@
             if (!verb) { screenText(raum, 'keine Verbindung'); return; }
             verbindung = verb;
             statusAbo(verb);
+            tonAbo(verb);
             Promise.all([
                 YT_REMOTE_NET.boxenLesen(verb),
                 fetch('https://api.ipify.org?format=json', { cache: 'no-store' })
@@ -248,6 +287,7 @@
                     try { localStorage.setItem('fbRaum', raum); } catch (e) {}
                     screenText(passend[0].name, 'im selben Netz erkannt');
                     statusAbo(verb);
+                    tonAbo(verb);
                     rahmenSetzen();
                 } else {
                     var eigene = boxen.filter(function (b) { return b.raum === raum; })[0];

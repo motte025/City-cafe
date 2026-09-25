@@ -349,6 +349,7 @@
 
 <script src="hosn-obe-config.js"></script>
 <script src="hosn-obe-engine.js"></script>
+<script src="hosn-obe-sound.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
@@ -359,6 +360,22 @@
 
     var CFG = window.HOSN_OBE_CONFIG || {};
     var E = window.HosnObeEngine;
+    var Sound = window.HosnObeSound;
+    var soundMoveStamp = '';
+    var soundRoom = '';
+    var soundRef = null;
+    var soundCallback = null;
+    function watchSound(room) {
+        if (!db || !room || room === soundRoom) return;
+        if (soundRef && soundCallback) soundRef.off('value', soundCallback);
+        soundRoom = room;
+        soundRef = db.ref('djremote/' + room + '/ton');
+        soundCallback = function (snap) {
+            var value = snap.val();
+            Sound.setEnabled(!value || value.enabled !== false);
+        };
+        soundRef.on('value', soundCallback);
+    }
 
     var els = {
         seatBadge: document.getElementById('kt-seat-badge'),
@@ -384,6 +401,7 @@
     var mySeat = -1;
     var isHost = false;
     var myHand = [];
+    var dealerReplacement = [];
     var pub = {};
     var pickedHand = null;
     var pickedMiddle = null;
@@ -785,8 +803,33 @@
         return E.middleWorthTakingAll(pub.middleCards || []);
     }
 
+    function dealerChoicePending() {
+        return isMyTurn() && Number(pub.dealerSeat) === mySeat &&
+               !pub.dealerChoiceDone;
+    }
+
+    function chooseDealerCards(replace) {
+        if (busy || !dealerChoicePending()) return;
+        busy = true;
+        var oldHand = myHand.slice();
+        var nextHand = replace ? dealerReplacement.slice() : oldHand;
+        var updates = {
+            dealerChoiceDone: true,
+            lastMove: { type: replace ? 'dealerReplace' : 'dealerKeep',
+                        seat: mySeat, gave: replace ? oldHand : null }
+        };
+        if (replace) updates.middleCards = oldHand;
+        var save = replace ? writeHand(nextHand)
+            : KtNet.privateRef(db, sessionId, mySeat).update({ dealerReplacement: null });
+        save.then(function () { return KtNet.publicRef(db, sessionId).update(updates); })
+            .then(function () { dealerReplacement = []; resetSwapMode(); })
+            .catch(handleWriteError)
+            .then(function () { busy = false; });
+    }
+
     function swapNow(handIndex, middleIndex) {
         if (busy || !isMyTurn()) return;
+        if (dealerChoicePending()) return;
         // Im Aufgeh-Fenster ist der Tausch vorbei - jetzt gilt nur noch
         // aufgehen oder weitergeben.
         if (swapWindowActive()) return;
@@ -819,7 +862,7 @@
     }
 
     function doSwapAll() {
-        if (busy) return;
+        if (busy || !isMyTurn() || dealerChoicePending()) return;
         busy = true;
         var middle = (pub.middleCards || []).slice();
         var hand = myHand.slice();
@@ -843,7 +886,7 @@
      * OHNE Tausch frei (Nutzer-Vorgabe).
      */
     function doPass() {
-        if (busy || !isMyTurn() || passUsed || swapWindowActive()) return;
+        if (busy || !isMyTurn() || passUsed || swapWindowActive() || dealerChoicePending()) return;
         busy = true;
         passUsed = true;
         revealAfterMoveIfNeeded(myHand)
@@ -868,6 +911,7 @@
      */
     function doKnock(afterSwap) {
         if (busy || !canKnockNow()) return;
+        if (dealerChoicePending()) return;
         if (!afterSwap && !isMyTurn()) return;
         busy = true;
         stopSwapWindow();
@@ -984,6 +1028,20 @@
 
         if (!isMyTurn()) return;
 
+        if (dealerChoicePending()) {
+            var dealerHint = document.createElement('div');
+            dealerHint.className = 'kt-turn-hint';
+            dealerHint.textContent = 'Du bist Teiler: Sieh dir deine ersten drei Karten an. Du kannst sie behalten oder alle drei in die Mitte legen und drei neue ziehen.';
+            els.actions.appendChild(dealerHint);
+            if (dealerReplacement.length !== 3) {
+                els.actions.appendChild(button('Karten werden geladen …', 'kt-btn-big', function () {}, true));
+                return;
+            }
+            els.actions.appendChild(button('ERSTE DREI KARTEN BEHALTEN', 'kt-btn-confirm kt-btn-big', function () { chooseDealerCards(false); }));
+            els.actions.appendChild(button('IN DIE MITTE LEGEN · DREI NEUE ZIEHEN', 'kt-btn-big', function () { chooseDealerCards(true); }));
+            return;
+        }
+
         /*
          * Am eigenen Zug ist die Statusbox ausgeblendet - der Hinweis auf die
          * hoechste Karte muss deshalb hier stehen. Er gilt nur fuer den ersten
@@ -1085,7 +1143,7 @@
         show(els.middlePanel, (pub.middleCards || []).length === 3 && !lobbyish);
 
         var myTurn = isMyTurn();
-        var pickable = myTurn && !singleSwapBlocked() && !swapWindowActive();
+        var pickable = myTurn && !dealerChoicePending() && !singleSwapBlocked() && !swapWindowActive();
         renderCards(els.handCards, myHand, {
             pickable: pickable,
             selected: pickedHand,
@@ -1164,7 +1222,7 @@
             } else if (myTurn) {
                 // Am eigenen Zug braucht es keine Statusbox - die Knoepfe darunter
                 // sagen alles, und der Platz gehoert den Karten.
-                setStatus('Du bist dran!', '', 'is-myturn');
+                setStatus(dealerChoicePending() ? 'Du bist Teiler!' : 'Du bist dran!', '', 'is-myturn');
             } else {
                 setStatus(seatName(pub.currentTurnSeat) + ' ist dran',
                     'Warte, bis du dran bist.' + knockNote, 'is-turnof');
@@ -1201,7 +1259,7 @@
         // dieses schmale Band bleibt trotzdem stehen, damit man immer sieht, wer dran ist.
         var showTurnBanner = (phase === 'playing' || phase === 'knocked') && !pub.botGame;
         if (showTurnBanner) {
-            els.turnBanner.textContent = myTurn ? 'Du bist dran' : seatName(pub.currentTurnSeat) + ' ist dran';
+            els.turnBanner.textContent = myTurn ? (dealerChoicePending() ? 'Teiler: Karten wählen' : 'Du bist dran') : seatName(pub.currentTurnSeat) + ' ist dran';
             els.turnBanner.classList.toggle('is-myturn', myTurn);
         }
         show(els.turnBanner, showTurnBanner);
@@ -1364,6 +1422,7 @@
         handWatcher.on('value', function (snap) {
             var val = snap.val();
             myHand = (val && val.hand) || [];
+            dealerReplacement = (val && val.dealerReplacement) || [];
             // Auch eine bereits ausgeteilte Feuer-Hand beendet die Runde sofort -
             // schon waehrend der Geber-Ermittlung.
             if (pub.phase === 'starter' || pub.phase === 'playing' || pub.phase === 'knocked') {
@@ -1410,12 +1469,20 @@
     function onPublic(snap) {
         var prevPhase = pub.phase;
         pub = snap.val() || {};
+        watchSound(pub.remoteRoom || 'city-cafe');
+        var stamp = pub.lastMove ? JSON.stringify(pub.lastMove) + ':' + (pub.turnsPlayed || 0) : '';
+        if (stamp && stamp !== soundMoveStamp) {
+            soundMoveStamp = stamp;
+            Sound.cue(pub.lastMove, null);
+        }
+        if (pub.phase !== prevPhase) Sound.cue(null, pub.phase);
         if (pub.phase !== 'reveal') { publishedReveal = false; firePublished = false; }
 
         // Neue Runde: alter Sitzplatz gilt nicht mehr.
         if (prevPhase === 'reveal' && pub.phase === 'idle') {
             mySeat = -1;
             myHand = [];
+            soundMoveStamp = '';
             passUsed = false;
             stopSwapWindow();
             if (handWatcher) { handWatcher.off(); handWatcher = null; }

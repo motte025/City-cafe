@@ -114,8 +114,8 @@
      * Platz 1 an, und der hat einen echten Vorteil - er sieht die Mitte als
      * Erster und darf als Erster zugreifen.
      *
-     * Verbrauch bei sechs Spielern: 18 Handkarten + 3 Mitte + 6 Geberkarten =
-     * 27 von 32 - passt also in jeder Besetzung.
+     * Verbrauch bei sechs Spielern: 18 Handkarten + 3 Mitte + 6 Geberkarten
+     * + 3 Ersatzkarten fuer den Teiler = 30 von 32.
      */
     function deal(playerCount, rng, chances) {
         if (playerCount < 2 || playerCount > 6) throw new Error('Spieleranzahl muss 2-6 sein, war: ' + playerCount);
@@ -136,7 +136,9 @@
          * staerksten Karten. Gemessen waren das bei Chance 0,5 schon 15,3 zu
          * 15,8 Punkte im Schnitt - mit staerkerer Gewichtung noch mehr.
          */
-        var inPlay = weightedShuffle(buildDeck(), rng, draw).slice(0, 4 * playerCount + 3);
+        // Drei weitere Karten bleiben fuer die einmalige Wahl des Teilers
+        // reserviert. Auch bei sechs Plaetzen sind es nur 30 von 32 Karten.
+        var inPlay = weightedShuffle(buildDeck(), rng, draw).slice(0, 4 * playerCount + 6);
         var deck = shuffle(inPlay, rng);
         var hands = {};
         var at = 0;
@@ -154,12 +156,16 @@
                 starterSeat = seat;
             }
         }
+        var dealerSeat = (starterSeat - 1 + playerCount) % playerCount;
+        var dealerReplacement = [deck[at++], deck[at++], deck[at++]];
 
         return {
             hands: hands,
             middleCards: middleCards,
             starterCards: starterCards,
-            starterSeat: starterSeat
+            starterSeat: starterSeat,
+            dealerSeat: dealerSeat,
+            dealerReplacement: dealerReplacement
         };
     }
 
@@ -376,21 +382,48 @@
     var BOT_KNOCK_STRONG = 27;      // damit endet die Runde sofort
     var BOT_KNOCK_SOLID = 24;       // solide Hand und nichts mehr zu holen
     var BOT_MIN_GAIN = 1;           // darunter lohnt kein Tausch
-    var BOT_GIVEAWAY_WEIGHT = 0.18; // wie stark eine verschenkte hohe Karte zaehlt
+    var BOT_GIVEAWAY_WEIGHT = 0.4; // hohe Karten nicht leichtfertig verschenken
 
     // Was die abgegebene Karte dem naechsten Spieler wert sein koennte. Der
     // Computer weiss nicht, was der braucht - aber eine hohe Karte hilft
     // statistisch mehr als eine niedrige, und eine, die zur vorherrschenden
     // Farbe der Mitte passt, besonders.
-    function giveawayCost(code, middleCards) {
+    function giveawayCost(code, middleCards, progress) {
         var card = parseCard(code);
-        var cost = card.value;
+        var cost = card.value >= 10 ? 2 : 0;
         var sameSuit = 0;
+        var highSuit = 0;
         for (var i = 0; i < middleCards.length; i++) {
-            if (parseCard(middleCards[i]).suit === card.suit) sameSuit++;
+            var other = parseCard(middleCards[i]);
+            if (other.suit === card.suit) {
+                sameSuit++;
+                if (other.value >= 10) highSuit++;
+            }
         }
-        if (sameSuit >= 1) cost += 3;
-        return cost;
+        if (sameSuit >= 1) cost += 3 + 3 * sameSuit;
+        if (card.rank === 'A' && highSuit >= 2) cost += 12;
+        // Sobald die Runde laeuft, ist ein Geschenk an den Nachfolger teurer.
+        return cost * (1 + Math.min(1, Math.max(0, Number(progress) || 0)));
+    }
+
+    function middleRisk(cards) {
+        var suitCount = {}, ace = {}, high = {};
+        cards.forEach(function (code) {
+            var c = parseCard(code);
+            suitCount[c.suit] = (suitCount[c.suit] || 0) + 1;
+            if (c.rank === 'A') ace[c.suit] = true;
+            if (c.value >= 10 && c.rank !== 'A') high[c.suit] = (high[c.suit] || 0) + 1;
+        });
+        var risk = 0;
+        // Zwei Farben sind ein guter Kompromiss: kein fertiger Flush in der
+        // Mitte und weniger frei kombinierbare Einzelkarten.
+        if (Object.keys(suitCount).length === 3) risk += 3;
+        Object.keys(suitCount).forEach(function (suit) {
+            if (suitCount[suit] === 3) risk += 12;
+            else if (suitCount[suit] === 2) risk += 2;
+            if (ace[suit] && high[suit] >= 2) risk += 12;
+        });
+        return risk;
     }
 
     /*
@@ -454,8 +487,8 @@
      */
     function botKnockThreshold(turnsPlayed, playerCount, elapsedSeconds, targetSeconds) {
         var progress = roundProgress(turnsPlayed, playerCount, elapsedSeconds, targetSeconds);
-        if (progress < 0.5) return BOT_KNOCK_SOLID;          // 24
-        if (progress < 0.75) return BOT_KNOCK_SOLID - 1;     // 23
+        if (progress < 0.4) return BOT_KNOCK_SOLID;          // 24
+        if (progress < 0.6) return BOT_KNOCK_SOLID - 1;      // 23
         return BOT_KNOCK_SOLID - 2;                          // 22
     }
 
@@ -475,9 +508,6 @@
                                         opts.elapsedSeconds, opts.targetSeconds);
         var canKnock = !!opts.canKnock;
 
-        // Hand praktisch unschlagbar - direkt aufgehen, ganz ohne Tausch.
-        if (canKnock && current >= BOT_KNOCK_STRONG) return { type: 'knock' };
-
         /*
          * Liegt in der Mitte ein Drilling oder drei gleiche Farben, gilt
          * "alle oder keine": ein Einzeltausch wuerde den Satz zerreissen und
@@ -487,35 +517,47 @@
 
         if (allOrNothing) {
             var setValue = scoreHand(middleCards).score;
-            if (setValue >= current + BOT_MIN_GAIN) {
+            if (setValue >= current) {
                 return { type: 'all', knock: canKnock && setValue >= knockAt };
             }
+            if (canKnock && current >= BOT_KNOCK_STRONG) return { type: 'knock' };
             if (opts.canPass) return { type: 'pass' };
             // Weiter ist nicht (mehr) sinnvoll: es bleibt nur, den Satz zu nehmen.
             return { type: 'all', knock: canKnock && setValue >= knockAt };
         }
 
         var best = null;        // bester Tausch nach Nutzen (inkl. verschenkter Karte)
-        var strongest = null;   // hoechster Wert - zaehlt, wenn getauscht werden MUSS
+        var bestImproving = null;
+        var progress = roundProgress(opts.turnsPlayed, opts.playerCount,
+                                     opts.elapsedSeconds, opts.targetSeconds);
         for (var h = 0; h < 3; h++) {
             for (var m = 0; m < 3; m++) {
                 var trial = hand.slice();
                 trial[h] = middleCards[m];
                 var value = scoreHand(trial).score;
-                var utility = value - BOT_GIVEAWAY_WEIGHT * giveawayCost(hand[h], middleCards);
+                var nextMiddle = middleCards.slice();
+                nextMiddle[m] = hand[h];
+                var utility = value - BOT_GIVEAWAY_WEIGHT * giveawayCost(hand[h],
+                    middleCards.filter(function (_, index) { return index !== m; }), progress)
+                    - middleRisk(nextMiddle) * (0.2 + progress * 0.3);
+                // Das Ass aus einer Feuer-Mitte nehmen, selbst wenn die
+                // eigene Punktzahl dadurch nur gleich bleibt.
+                if (parseCard(middleCards[m]).rank === 'A' && middleRisk(middleCards) >= 12)
+                    utility += 3;
                 if (!best || utility > best.utility) {
                     best = { handIndex: h, middleIndex: m, value: value, utility: utility };
                 }
-                if (!strongest || value > strongest.value) {
-                    strongest = { handIndex: h, middleIndex: m, value: value };
+                if (value >= current + BOT_MIN_GAIN &&
+                    (!bestImproving || utility > bestImproving.utility)) {
+                    bestImproving = { handIndex: h, middleIndex: m, value: value, utility: utility };
                 }
             }
         }
 
-        if (best && best.value >= current + BOT_MIN_GAIN) {
+        if (bestImproving && (progress < 0.5 || bestImproving.utility >= current - 1)) {
             return {
-                type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex,
-                knock: canKnock && best.value >= knockAt
+                type: 'single', handIndex: bestImproving.handIndex, middleIndex: bestImproving.middleIndex,
+                knock: canKnock && bestImproving.value >= knockAt
             };
         }
 
@@ -529,6 +571,8 @@
          */
 
         // Lieber weitergeben, als die eigene Hand zu verschlechtern.
+        if (canKnock && current >= knockAt &&
+            (progress >= 0.4 || current >= BOT_KNOCK_STRONG)) return { type: 'knock' };
         if (opts.canPass) return { type: 'pass' };
 
         /*
@@ -537,10 +581,10 @@
          * weitergegeben: eine Runde absichtlich schlechter zu spielen, nur um
          * irgendetwas zu tun, waere der schlechteste aller Zuege.
          */
-        if (strongest && strongest.value >= current) {
+        if (best && best.value >= current && best.utility >= current - 1) {
             return {
-                type: 'single', handIndex: strongest.handIndex, middleIndex: strongest.middleIndex,
-                knock: canKnock && strongest.value >= knockAt
+                type: 'single', handIndex: best.handIndex, middleIndex: best.middleIndex,
+                knock: canKnock && best.value >= knockAt
             };
         }
         return { type: 'pass' };

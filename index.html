@@ -3057,6 +3057,7 @@
         })();
     </script>
     <script src="hosn-obe-engine.js"></script>
+    <script src="hosn-obe-sound.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
@@ -9853,6 +9854,21 @@
         // ==================================================================
         const KT = window.HOSN_OBE_CONFIG || {};
         const KtEngine = window.HosnObeEngine;
+        const KtSound = window.HosnObeSound;
+        let ktSoundMoveStamp = '';
+        let ktSoundRoom = '';
+        function ktSoundWatch(verb) {
+            const room = (window.DJ_REMOTE_CONFIG || {}).raum || 'city-cafe';
+            if (ktSoundRoom === room) return;
+            ktSoundRoom = room;
+            verb.db.ref('djremote/' + room + '/ton').on('value', snap => {
+                const value = snap.val();
+                KtSound.setEnabled(!value || value.enabled !== false);
+            });
+        }
+        if (window.DJ_REMOTE_NET) DJ_REMOTE_NET.bereit().then(verb => {
+            if (verb) ktSoundWatch(verb);
+        });
 
         /*
          * Die Plaetze sitzen rund um das Oval des Tischfotos (spieltisch1/2.webp):
@@ -10445,7 +10461,11 @@
                     ? 'Jetzt scannen — jeder bekommt eigene Karten'
                     : 'Scannen und mitspielen') :
                 phase === 'starter' ? 'Höchste Karte beginnt' :
-                phase === 'playing' ? (ktWeiterSeat !== null
+                phase === 'playing' ? (ktDealerNotice
+                    ? ktDealerNotice
+                    : Number(ktPub.currentTurnSeat) === Number(ktPub.dealerSeat) && !ktPub.dealerChoiceDone
+                        ? ktName(ktPub.dealerSeat) + ' ist Teiler — erste drei Karten behalten oder neu ziehen?'
+                    : ktWeiterSeat !== null
                     ? ktName(ktWeiterSeat) + ' sagt weiter'
                     : inWindow
                         ? ktName(ktPub.swapWindowSeat) + ' — aufgehen oder weitergeben?'
@@ -10695,7 +10715,7 @@
             el.style.left = (to.x - to.w / 2) + 'px';
             el.style.top = (to.y - to.h / 2) + 'px';
             const img = document.createElement('img');
-            img.src = KtEngine.cardImage(code, 'cards/');
+            img.src = code === 'BACK' ? ktCurrentBack() : KtEngine.cardImage(code, 'cards/');
             el.appendChild(img);
             stage.appendChild(el);
 
@@ -10813,6 +10833,8 @@
         let ktFliegtBis = 0;        // bis wann noch eine Karte unterwegs ist
         let ktWeiterSeat = null;    // wer gerade "weiter" gesagt hat
         let ktWeiterTimer = null;
+        let ktDealerNotice = '';
+        let ktDealerNoticeTimer = null;
         const KT_WEITER_MS = 2600;  // so lange bleibt "sagt weiter" stehen
         function ktAnimateLastMove() {
             const move = ktPub.lastMove;
@@ -10833,7 +10855,7 @@
              * aus: die Karte flog irgendwohin, und in der Mitte lag nichts mehr.
              * Der genaue Wert folgt unten, sobald totalMs feststeht.
              */
-            if (move.type === 'single' || move.type === 'all') {
+            if (move.type === 'single' || move.type === 'all' || move.type === 'dealerReplace') {
                 ktFliegtBis = Date.now() + KT_FLY_MS * 2 + KT_FLY_GAP + 2 * 260 + 300;
             }
 
@@ -10851,6 +10873,17 @@
                     ktRenderBanner();
                     ktRenderSeats();
                 }, KT_WEITER_MS);
+            }
+            if (move.type === 'dealerKeep' || move.type === 'dealerReplace') {
+                ktDealerNotice = ktName(move.seat) + (move.type === 'dealerKeep'
+                    ? ' behält die ersten drei Karten'
+                    : ' legt die Karten in die Mitte und zieht drei neue');
+                if (ktDealerNoticeTimer) clearTimeout(ktDealerNoticeTimer);
+                ktDealerNoticeTimer = setTimeout(() => {
+                    ktDealerNotice = '';
+                    ktDealerNoticeTimer = null;
+                    ktRenderBanner();
+                }, KT_WEITER_MS + (move.type === 'dealerReplace' ? KT_FLY_MS : 0));
             }
 
             const seat = Number(move.seat);
@@ -10926,6 +10959,20 @@
                 runSwap(idx, move.gave, move.took, hIdx, 0);
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP;
 
+            } else if (move.type === 'dealerReplace') {
+                const deck = ktStageGeom(ktEl('kt-deck'));
+                const gave = move.gave || [];
+                const step = 260;
+                totalMs = KT_FLY_MS * 2 + KT_FLY_GAP + 2 * step;
+                for (let i = 0; i < 3; i++) ktSeatHide[seat + ':' + i] = true;
+                ktRenderSeats();
+                for (let i = 0; i < 3; i++) {
+                    const hand = ktSeatCardGeom(seat, i);
+                    const center = ktMiddlePose(cards[i], i);
+                    ktFly(gave[i], hand, center, i * step, null);
+                    later(() => ktFly('BACK', deck, hand, 0, () => showSeatCard(i)),
+                          i * step + KT_FLY_MS + KT_FLY_GAP);
+                }
             } else if (move.type === 'all') {
                 /*
                  * Rundumtausch: dreimal derselbe Ablauf, nur versetzt. Der
@@ -11088,6 +11135,7 @@
         function ktEnterGame() {
             if (ktActive) return;
             ktActive = true;
+            KtSound.setActive(true);
             ktFernbedienungenMelden();
             // Twitch schweigt waehrend der Runde. Das Bild deckt der Kartentisch
             // ohnehin ab (und mpv haelt der Aufpasser an, sobald ktSpielLaeuft()
@@ -11118,6 +11166,7 @@
             ktVorGeben(false);      // fuer die naechste Runde wieder normal
             if (!ktActive) return;
             ktActive = false;
+            KtSound.setActive(false);
             ktFernbedienungenMelden();
             const view = ktEl('media-view-hosnobe');
             view.classList.remove('kt-fullscreen');
@@ -11154,7 +11203,10 @@
 
             const writes = [];
             for (let seat = 0; seat < count; seat++) {
-                writes.push(KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: dealt.hands[seat] }));
+                writes.push(KtNet.privateRef(ktDb, ktSessionId, seat).set({
+                    hand: dealt.hands[seat],
+                    dealerReplacement: seat === dealt.dealerSeat ? dealt.dealerReplacement : null
+                }));
             }
 
             Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update({
@@ -11165,6 +11217,9 @@
                 phase: 'starter',
                 starterCards: dealt.starterCards,
                 starterSeat: dealt.starterSeat,
+                dealerSeat: dealt.dealerSeat,
+                dealerChoiceDone: false,
+                remoteRoom: (window.DJ_REMOTE_CONFIG || {}).raum || 'city-cafe',
                 currentTurnSeat: dealt.starterSeat,
                 turnsPlayed: 0,
                 knockedBySeat: null,
@@ -11191,6 +11246,7 @@
          * unangetastet.
          */
         let ktBotTimer = null;
+        let ktDealerReplacement = null;
 
         function ktIsBotGame() { return !!ktPub.botGame; }
 
@@ -11216,11 +11272,15 @@
 
             const dealt = KtEngine.deal(players, null, ktDrawChances());
             ktMirrorHands = dealt.hands;
+            ktDealerReplacement = dealt.dealerReplacement;
             ktBotPassUsed = {};
 
             const writes = [];
             for (let seat = 0; seat < players; seat++) {
-                writes.push(KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: dealt.hands[seat] }));
+                writes.push(KtNet.privateRef(ktDb, ktSessionId, seat).set({
+                    hand: dealt.hands[seat],
+                    dealerReplacement: seat === dealt.dealerSeat ? dealt.dealerReplacement : null
+                }));
             }
 
             // Schon beim Austeilen kann ein Feuer dabei sein - es wird aber erst
@@ -11240,6 +11300,9 @@
                 phase: 'starter',
                 starterCards: dealt.starterCards,
                 starterSeat: dealt.starterSeat,
+                dealerSeat: dealt.dealerSeat,
+                dealerChoiceDone: false,
+                remoteRoom: (window.DJ_REMOTE_CONFIG || {}).raum || 'city-cafe',
                 currentTurnSeat: dealt.starterSeat,
                 turnsPlayed: 0,
                 knockedBySeat: null,
@@ -11328,6 +11391,34 @@
             const hand = ktMirrorHands[seat];
             const middle = (ktPub.middleCards || []).slice();
             if (!hand || hand.length !== 3 || middle.length !== 3) return;
+
+            // Der Teiler entscheidet vor seinem ersten regulaeren Tauschzug.
+            // Die drei Ersatzkarten sind nur in seinem privaten Fach bekannt.
+            if (seat === Number(ktPub.dealerSeat) && !ktPub.dealerChoiceDone &&
+                ktDealerReplacement && ktDealerReplacement.length === 3) {
+                // Der Computer kennt die Ersatzkarten bei der Entscheidung
+                // nicht: wie ein Gast beurteilt er nur seine ersten drei.
+                const replace = KtEngine.scoreHand(hand).score < 20;
+                if (replace) ktMirrorHands[seat] = ktDealerReplacement.slice();
+                const dealerUpdate = {
+                    dealerChoiceDone: true,
+                    lastMove: { type: replace ? 'dealerReplace' : 'dealerKeep', seat: seat,
+                                gave: replace ? hand.slice() : null }
+                };
+                if (replace) dealerUpdate.middleCards = hand.slice();
+                if (replace && KtEngine.scoreHand(ktMirrorHands[seat]).fire) {
+                    dealerUpdate.phase = 'reveal';
+                    dealerUpdate.fireBySeat = seat;
+                    dealerUpdate['revealedHands/' + seat] = ktMirrorHands[seat];
+                    dealerUpdate.lastMove.fire = true;
+                }
+                ktDealerReplacement = null;
+                KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: ktMirrorHands[seat] })
+                    .then(() => KtNet.publicRef(ktDb, ktSessionId).update(dealerUpdate))
+                    .then(() => { if (dealerUpdate.phase !== 'reveal') ktArmBotTurn(); })
+                    .catch(err => console.warn('[Hos’n Obe] Teiler-Wahl fehlgeschlagen:', err));
+                return;
+            }
 
             const canKnock = !ktHasKnocked() && (Number(ktPub.turnsPlayed) || 0) >= count;
             // Der Computer bekommt NUR seine eigene Hand und die offene Mitte -
@@ -11504,6 +11595,10 @@
                 swapWindowSeat: null,
                 lastMove: { type: 'skip', seat: seat }
             };
+            if (seat === Number(ktPub.dealerSeat) && !ktPub.dealerChoiceDone) {
+                updates.dealerChoiceDone = true;
+                KtNet.privateRef(ktDb, ktSessionId, seat).update({ dealerReplacement: null }).catch(() => {});
+            }
             if (ktHasKnocked()) {
                 const left = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
                 updates.finalTurnsRemaining = left;
@@ -11626,6 +11721,8 @@
             ktClearRoundBudget();
             ktSetTimer(null);
             ktMirrorHands = {};
+            ktDealerReplacement = null;
+            ktSoundMoveStamp = '';
             ktLastTurnSeat = null;
             ktLastAnimatedMove = null;
             ktLastSwapWindowSeat = null;
@@ -11633,6 +11730,8 @@
             ktTurnDisplaySeat = null;
             if (ktWeiterTimer) { clearTimeout(ktWeiterTimer); ktWeiterTimer = null; }
             ktWeiterSeat = null;
+            if (ktDealerNoticeTimer) { clearTimeout(ktDealerNoticeTimer); ktDealerNoticeTimer = null; }
+            ktDealerNotice = '';
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
             ktMiddleHold = {};
@@ -11669,6 +11768,8 @@
                     swapWindowSeat: null,
                     starterCards: null,
                     starterSeat: null,
+                    dealerSeat: null,
+                    dealerChoiceDone: null,
                     revealedHands: null,
                     scores: null,
                     loserSeat: null,
@@ -11757,6 +11858,12 @@
             const prevPhase = ktPub.phase;
             ktPub = snapshot.val() || {};
             const phase = ktPub.phase || 'idle';
+            const soundStamp = ktPub.lastMove ? JSON.stringify(ktPub.lastMove) + ':' + (ktPub.turnsPlayed || 0) : '';
+            if (soundStamp && soundStamp !== ktSoundMoveStamp) {
+                ktSoundMoveStamp = soundStamp;
+                KtSound.cue(ktPub.lastMove, null);
+            }
+            if (phase !== prevPhase) KtSound.cue(null, phase);
 
             if (phase !== prevPhase) {
                 ktLastTurnSeat = null;
