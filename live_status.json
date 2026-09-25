@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T13:52:45Z",
+  "checked_at": "2026-09-25T14:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,27 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴ROCK FINALLY FRIDAY ☆ !holy !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Friday - das Musikrad ist wieder da !!! <3 -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
       "game": "DJs"
     }
   ]
