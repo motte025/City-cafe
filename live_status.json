@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T19:02:45Z",
+  "checked_at": "2026-09-25T19:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 MUTE MARATHON TAG 90! 😈 | HARDER STYLES | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "FALL IS IN THE AIR",
       "game": "DJs"
     },
     {
@@ -66,16 +73,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Warm Up x Groovers w Flashbaxx  & Sam Gittis",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Warm Up x Groovers w Flashbaxx  & Sam Gittis",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
@@ -87,9 +94,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "FALL IS IN THE AIR",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     }
   ]
