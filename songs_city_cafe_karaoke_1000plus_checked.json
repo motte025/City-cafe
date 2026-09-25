@@ -72179,36 +72179,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Morandi",
-    "title": "Colors",
+    "artist": "Elija",
+    "title": "Somehow, Somewhere",
     "album": "",
-    "category": "Party",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Party",
-      "Karaoke"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Frau Potz",
-    "title": "Ach, Heiner",
-    "album": "",
-    "category": "Deutsch Party",
+    "category": "Schlager & Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Deutsch Party"
+      "Schlager & Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
