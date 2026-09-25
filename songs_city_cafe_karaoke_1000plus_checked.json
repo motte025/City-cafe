@@ -71761,36 +71761,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Calvin Harris",
-    "title": "Thinking About You",
+    "artist": "Demi Lovato",
+    "title": "29",
     "album": "",
-    "category": "Dance & EDM",
+    "category": "Modern",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Modern",
       "Party",
-      "Karaoke",
-      "Dance & EDM"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Buddy Holly",
-    "title": "Peggy Sue",
-    "album": "",
-    "category": "Party & Rock",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
