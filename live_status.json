@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T19:57:45Z",
+  "checked_at": "2026-09-25T20:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴ROCK FINALLY FRIDAY ☆ !holy !naturtreu 🔴🔴",
@@ -52,9 +45,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     },
     {
@@ -66,17 +59,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "Above & Beyond Group Therapy #695 with Dusky",
-      "game": "Music"
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
+      "game": "DJs"
     },
     {
       "platform": "twitch",
