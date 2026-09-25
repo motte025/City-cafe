@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T19:17:45Z",
+  "checked_at": "2026-09-25T19:22:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -55,13 +55,6 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ 90s MUSIC HITS | !goals | !subtember | !tip ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
