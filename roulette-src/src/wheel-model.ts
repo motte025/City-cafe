@@ -31,6 +31,8 @@ export class WheelModel {
  private metal=new T.MeshStandardMaterial({metalness:.93,roughness:.23});
  private satin=new T.MeshStandardMaterial({metalness:.85,roughness:.35});
  private chrome=new T.MeshStandardMaterial({color:0xd5e0e8,metalness:.97,roughness:.17});
+ /** Gedämpfteres, mattes Metall nur für die 8 Rauten – heller Chrom stach zu sehr gegen das dunkle Holz hervor. */
+ private deflectorMetal=new T.MeshStandardMaterial({color:0x8b939c,metalness:.6,roughness:.5});
  private ebony=new T.MeshPhysicalMaterial({color:0x080c0e,metalness:.3,roughness:.3,clearcoat:.65});
  private wood=new T.MeshPhysicalMaterial({roughness:.27,metalness:.06,clearcoat:.7,clearcoatRoughness:.18});
  private track=new T.MeshPhysicalMaterial({roughness:.3,metalness:.2,clearcoat:.6});
@@ -53,9 +55,10 @@ export class WheelModel {
   this.track.color.copy(new T.Color(0x211b1a).lerp(new T.Color(0xb99973),s.woodWarmth));
   this.metal.color.copy(new T.Color(0xd2dce0).lerp(new T.Color(0xd4a553),s.metalWarmth));
   this.satin.color.copy(new T.Color(0x808b90).lerp(new T.Color(0x9b783f),s.metalWarmth));
+ this.deflectorMetal.color.copy(new T.Color(0x878f97).lerp(new T.Color(0x8a6f45),s.metalWarmth));
   for(const mat of [this.wood,this.track,this.ebony]){mat.roughness=.45-s.gloss*.25;mat.clearcoat=.3+s.gloss*.5;}
   for(const mat of Object.values(this.colors)){mat.roughness=.5-s.gloss*.12;mat.clearcoat=.2+s.gloss*.25;}
-  this.metal.roughness=.36-s.gloss*.19;this.chrome.roughness=.3-s.gloss*.18;
+  this.metal.roughness=.36-s.gloss*.19;this.chrome.roughness=.3-s.gloss*.18;this.deflectorMetal.roughness=.62-s.gloss*.18;
   this.inner.color.copy(this.wood.color).multiplyScalar(s.innerTone);
   this.wood.color.multiplyScalar(s.outerTone);this.track.color.multiplyScalar(s.trackTone);
   for(const [mat,gloss] of [[this.inner,s.innerGloss],[this.wood,s.outerGloss]] as const){mat.roughness=.65-gloss*.5;mat.clearcoat=gloss;}
@@ -75,7 +78,7 @@ export class WheelModel {
    const screw=this.mesh(f,new T.CylinderGeometry(.025,.025,.009,12),this.satin);screw.position.copy(position);
    const slit=this.mesh(f,new T.BoxGeometry(.031,.002,.004),b);slit.position.copy(position);slit.position.y+=.006;slit.rotation.y=-a;
   }
-  for(let i=0;i<8;i++)this.mesh(f,deflectorGeometry(i),this.chrome);
+  for(let i=0;i<8;i++)this.mesh(f,deflectorGeometry(i),this.deflectorMetal);
   this.lathe(r,[[0,.012],[2.44,.012],[2.44,numberHeight(2.425,shape)],[2.425,numberHeight(2.425,shape)-.006],[2.04,.229],[1.985,FLOOR-.006],[1.585,FLOOR-.006],[1.53,.34],[.53,.82],[0,.83]],b);
   this.lathe(r,[[1.525,.345],[1.36,.447],[1.02,.653],[.62,.804],[.40,.839]],this.inner);
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius<2.45))this.ring(r,radius,y,t,m);

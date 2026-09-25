@@ -35,7 +35,7 @@ export class Wheel {
   this.renderer.toneMapping=T.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.02;this.renderer.info.autoReset=false;
   if(new URLSearchParams(location.search).has('profile'))this.profile=new RenderProfile(this.renderer);
   host.append(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label','3D-Roulettekessel mit geneigtem Zahlenkranz, vertieften Taschen und acht Metallrauten');
-  const pmrem=new T.PMREMGenerator(this.renderer),env=new RoomEnvironment();this.scene.environment=pmrem.fromScene(env,.025).texture;this.scene.environmentIntensity=.4;env.dispose();pmrem.dispose();
+  const pmrem=new T.PMREMGenerator(this.renderer),env=new RoomEnvironment();this.scene.environment=pmrem.fromScene(env,.025).texture;this.scene.environmentIntensity=.28;env.dispose();pmrem.dispose();
   this.ambient=new T.HemisphereLight(0xd9e7ff,0x28120b,.7);this.scene.add(this.ambient);
   this.key=new T.DirectionalLight(0xffe9cc,3.2);this.key.position.set(-4,7,2);this.key.castShadow=true;this.key.shadow.mapSize.set(2048,2048);
   Object.assign(this.key.shadow.camera,{left:-4,right:4,top:4,bottom:-4});this.key.shadow.bias=-.00015;this.key.shadow.normalBias=.007;this.key.shadow.radius=2;this.scene.add(this.key);
