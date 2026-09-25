@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-25T17:22:45Z",
+  "checked_at": "2026-09-25T17:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴ROCK FINALLY FRIDAY ☆ !holy !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
@@ -66,6 +59,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴ROCK FINALLY FRIDAY ☆ !holy !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Freitagsstreamiiii <3– HandsUp, Harderstyles & Abriss!  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
@@ -76,6 +76,13 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "MIX MISSION TV | JANA FALCON",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 25✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
