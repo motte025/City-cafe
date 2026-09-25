@@ -72179,16 +72179,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Elija",
-    "title": "Somehow, Somewhere",
+    "artist": "Morandi",
+    "title": "Colors",
     "album": "",
-    "category": "Schlager & Karaoke",
+    "category": "Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "The Kinks",
+    "title": "Sunny Afternoon",
+    "album": "",
+    "category": "Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
       "Karaoke",
-      "Schlager & Karaoke"
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
