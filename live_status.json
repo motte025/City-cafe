@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T18:57:45Z",
+  "checked_at": "2026-09-26T19:02:53Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "OKTOBERFEST",
       "game": "DJs"
     },
     {
