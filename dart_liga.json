@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T16:48:33Z",
+  "aktualisiert": "2026-09-26T16:58:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -9,11 +9,11 @@
         {
           "rang": 1,
           "team": "Askö DC Sonne 2",
-          "spiele": 2,
-          "siege": 2,
+          "spiele": 3,
+          "siege": 3,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 4
+          "punkte": 6
         },
         {
           "rang": 2,
@@ -44,15 +44,6 @@
         },
         {
           "rang": 5,
-          "team": "Dart Fuchs 4",
-          "spiele": 2,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 1,
-          "punkte": 2
-        },
-        {
-          "rang": 6,
           "team": "DC Schwarzer Kater",
           "spiele": 2,
           "siege": 1,
@@ -61,12 +52,21 @@
           "punkte": 2
         },
         {
-          "rang": 7,
+          "rang": 6,
           "team": "City-Flyers \"Chaoten\"",
           "spiele": 2,
           "siege": 1,
           "unentschieden": 0,
           "niederlagen": 1,
+          "punkte": 2
+        },
+        {
+          "rang": 7,
+          "team": "Dart Fuchs 4",
+          "spiele": 3,
+          "siege": 1,
+          "unentschieden": 0,
+          "niederlagen": 2,
           "punkte": 2
         },
         {
@@ -175,12 +175,12 @@
         {
           "rang": 4,
           "spieler": "ELEZOSKI Serif",
-          "spiele": 3,
-          "siege": 2,
+          "spiele": 4,
+          "siege": 3,
           "niederlagen": 1,
-          "legs_plus": 8,
+          "legs_plus": 11,
           "legs_minus": 3,
-          "punkte": 8
+          "punkte": 11
         },
         {
           "rang": 5,
@@ -394,22 +394,22 @@
         },
         {
           "rang": 26,
-          "spieler": "AMBROS Thomas",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 2,
-          "legs_minus": 5,
-          "punkte": 2
-        },
-        {
-          "rang": 27,
           "spieler": "JAMMER Fabian",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
           "legs_plus": 2,
           "legs_minus": 6,
+          "punkte": 2
+        },
+        {
+          "rang": 27,
+          "spieler": "AMBROS Thomas",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 2,
+          "legs_minus": 8,
           "punkte": 2
         },
         {
@@ -587,7 +587,7 @@
             "datum": "2026-09-26",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 9,
+            "erg_heim": 10,
             "erg_auswaerts": 0,
             "id": 109477,
             "paarungen": [
@@ -658,7 +658,7 @@
                 "art": "OE",
                 "spieler1": "ELEZOSKI Serif",
                 "spieler2": "AMBROS Thomas",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
@@ -671,7 +671,36 @@
             "erg_heim": 0,
             "erg_auswaerts": 0,
             "id": 109488,
-            "paarungen": []
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "REINISCH Jessica",
+                "spieler2": "JAHN Corinna",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "LUBE Mario",
+                "spieler2": "SCHNEIDER Hermann",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "SIMONITSCH Erhard",
+                "spieler2": "JAMMER Fabian",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "BRUNNER Jürgen",
+                "spieler2": "BERGLER Benjamin",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
           },
           {
             "runde": 2,
@@ -681,7 +710,36 @@
             "erg_heim": 0,
             "erg_auswaerts": 0,
             "id": 109510,
-            "paarungen": []
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "GORICNIK Cornelia",
+                "spieler2": "HOCHEGGER Andrea",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "GORICNIK Michael",
+                "spieler2": "URANK Romeo",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "JAHN Christian",
+                "spieler2": "HOCHEGGER Martin",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "JAHN Andreas",
+                "spieler2": "REGENFELDNER Rene",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
           }
         ]
       },
