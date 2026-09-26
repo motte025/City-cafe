@@ -353,3 +353,10 @@ Skripteigenschaft `DART_TERMINE` und richtet sein Live-Fenster danach.
 
 Das grosse Badge rechts oben ist **gruen**, solange die City-Cafe-Mannschaft
 vorne liegt, sonst rot.
+
+## Anheizer (17:00 bis 18:30)
+
+An Heimspieltagen zeigt das Dashboard ab 17:00 einen Vollbild-Anheizer:
+Paarung, Liga/Runde, Tabellenplaetze, Countdown bis zum Anwurf (19:00) und
+den Hinweis auf Dartcam ab 18:30. Keine Videos darunter; um 18:30 (geprueft
+alle 30 s) uebernimmt der Dart-Abend-Modus. Vorschau: `?anheizer=1`.

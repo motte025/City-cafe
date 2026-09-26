@@ -1152,6 +1152,43 @@
             text-transform: none !important; letter-spacing: 0.5px !important; margin-top: 6px !important;
         }
 
+
+        /* ---------- Anheizer: Vollbild vor dem Heim-Dartabend (17:00-18:30) ---------- */
+        #dart-anheizer {
+            position: fixed; inset: 0; z-index: 99990; display: none; overflow: hidden;
+            background: radial-gradient(ellipse at 50% 40%, #6a1438 0%, #2a0a1c 55%, #12040c 100%);
+            color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; text-align: center;
+        }
+        #dart-anheizer.aktiv { display: block; }
+        .ah-scheibe {
+            position: absolute; width: 1500px; height: 1500px; left: 50%; top: 50%;
+            margin: -750px 0 0 -750px; border-radius: 50%; opacity: 0.13;
+            background: repeating-conic-gradient(#ff3355 0 9deg, #0b0b0b 9deg 18deg);
+            -webkit-mask: radial-gradient(circle, transparent 0 7%, #000 7.5% 44%, transparent 44.5% 47%, #000 47.5% 70%, transparent 70.5%);
+                    mask: radial-gradient(circle, transparent 0 7%, #000 7.5% 44%, transparent 44.5% 47%, #000 47.5% 70%, transparent 70.5%);
+            animation: ahDreh 90s linear infinite;
+        }
+        @keyframes ahDreh { to { transform: rotate(360deg); } }
+        @keyframes ahPuls { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+        .ah-inhalt { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 22px; padding: 40px; box-sizing: border-box; }
+        .ah-logo { height: 150px; border-radius: 22px; background: #fff; padding: 10px; box-shadow: 0 0 60px rgba(255,51,85,0.5); }
+        .ah-logo-emoji { font-size: 120px; line-height: 1; }
+        .ah-kicker { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 34px; letter-spacing: 8px;
+            color: #ff3355; text-transform: uppercase; text-shadow: 0 0 24px rgba(255,51,85,0.7); }
+        .ah-titel { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 96px; line-height: 1.02;
+            text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 6px 30px rgba(0,0,0,0.6);
+            animation: ahPuls 3s ease-in-out infinite; }
+        .ah-paarung { display: flex; align-items: center; gap: 40px; margin-top: 10px; }
+        .ah-team { font-size: 54px; font-weight: 900; max-width: 720px; line-height: 1.1; }
+        .ah-team.is-wir { color: #34d399; text-shadow: 0 0 28px rgba(52,211,153,0.45); }
+        .ah-vs { font-family: 'Orbitron', sans-serif; font-size: 44px; font-weight: 900; color: #ff3355; }
+        .ah-liga { font-size: 26px; font-weight: 800; color: rgba(255,255,255,0.65); letter-spacing: 3px; text-transform: uppercase; }
+        .ah-countdown-label { font-size: 26px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: 18px; }
+        .ah-countdown { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 150px; line-height: 1;
+            font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 0 40px rgba(255,51,85,0.6); }
+        .ah-fuss { font-size: 30px; font-weight: 800; color: #ffd166; margin-top: 12px; }
+        .ah-tabelle { font-size: 24px; font-weight: 700; color: rgba(255,255,255,0.6); }
         /* ---------- Dartcam (Dart-Abend-Modus) ----------
            Das Bild selbst legt der mpv-Aufpasser als eigenes Fenster genau
            ueber #dart-cam-frame; darunter steht nur der Hinweistext. */
@@ -12683,6 +12720,78 @@
             globalMasterTimer = later(runMasterSequence, DART_ABEND_GRUPPE_MS);
         }
 
+
+        // ==================================================================
+        //  Anheizer: Vollbild vor dem Heim-Dartabend, 17:00 bis 18:30
+        // ==================================================================
+        // Grosse Paarung, Countdown bis zum Anwurf (19:00), Tabellenplatz.
+        // Laeuft als eigener Zustand - also keine Videos (mpv) darunter. Um
+        // 18:30 uebernimmt beim naechsten Takt der Dart-Abend-Modus (Kamera).
+        // Ansehen jederzeit mit ?anheizer=1.
+        const DART_ANHEIZER_START = { stunde: 17, minute: 0 };
+        const DART_ANHEIZER_INDEX = -11;
+        const DART_ANHEIZER_ERZWUNGEN = /(?:^|[?&])anheizer=1(?:&|$)/.test(location.search);
+
+        function dartAnheizerAktiv(jetzt) {
+            if (DART_ANHEIZER_ERZWUNGEN) return true;
+            if (DART_ABEND_ERZWUNGEN !== null) return false;
+            const n = jetzt || new Date();
+            if (n.getHours() < DART_ABEND_SCHLUSS_STUNDE || !dartAbendHeimtag(n)) return false;
+            const min = n.getHours() * 60 + n.getMinutes();
+            return min >= DART_ANHEIZER_START.stunde * 60 + DART_ANHEIZER_START.minute
+                && min < DART_ABEND_START.stunde * 60 + DART_ABEND_START.minute;
+        }
+
+        function dartAnheizerRang(teamKey, name) {
+            const z = dartTabelleZeilen(teamKey).find(r => dartNameKey(r.team) === dartNameKey(name));
+            return z ? z.rang : null;
+        }
+
+        function dartAnheizerZeichnen() {
+            const el = document.getElementById('dart-anheizer-inhalt');
+            if (!el) return;
+            let teams = dartAbendHeimTeams();
+            if (!teams.length) teams = ['chaoten'];
+            const logo = document.querySelector('.dart-logo img')
+                ? `<img class="ah-logo" src="${DART_LOGO_URL}" alt="">` : '<div class="ah-logo-emoji">🎯</div>';
+            const paarungen = teams.map(k => {
+                const sp = dartAbendHeute(k) || dartNaechstesSpiel(k);
+                if (!sp) return '';
+                const rw = dartAnheizerRang(k, DART_CLUB[k].name), rg = dartAnheizerRang(k, sp.gegner);
+                return `<div class="ah-paarung">
+                        <div class="ah-team is-wir">City Flyers<br>"${DART_CLUB[k].kurz}"</div>
+                        <div class="ah-vs">VS</div>
+                        <div class="ah-team">${sp.gegner}</div>
+                    </div>
+                    <div class="ah-liga">${sp.liga} · Runde ${sp.runde}</div>
+                    ${rw && rg ? `<div class="ah-tabelle">Tabelle: wir Platz ${rw} · Gegner Platz ${rg}</div>` : ''}`;
+            }).join('');
+            const n = new Date();
+            const [h, m] = DART_SPIELBEGINN.split(':').map(Number);
+            let rest = Math.max(0, Math.floor((new Date(n.getFullYear(), n.getMonth(), n.getDate(), h, m) - n) / 1000));
+            const hh = Math.floor(rest / 3600), mm = Math.floor(rest % 3600 / 60), ss = rest % 60;
+            const zeit = `${hh}:${dartZwei(mm)}:${dartZwei(ss)}`;
+            el.innerHTML = `${logo}
+                <div class="ah-kicker">Heute im City Cafe</div>
+                <div class="ah-titel">Dartabend!</div>
+                ${paarungen}
+                <div class="ah-countdown-label">Anwurf ${DART_SPIELBEGINN} Uhr · noch</div>
+                <div class="ah-countdown">${zeit}</div>
+                <div class="ah-fuss">🎯 Ab 18:30 Dartcam &amp; Live-Ergebnisse hier am Schirm – feuert unsere Mannschaft an!</div>`;
+        }
+
+        function runDartAnheizerState() {
+            document.getElementById('dart-anheizer').classList.add('aktiv');
+            dartAnheizerZeichnen();
+            repeat(dartAnheizerZeichnen, 1000);
+            // Jede halbe Minute pruefen, ob es Zeit fuer die Kamera ist.
+            function pruefen() {
+                if (!dartAnheizerAktiv()) { runMasterSequence(); return; }
+                globalMasterTimer = later(pruefen, 30000);
+            }
+            globalMasterTimer = later(pruefen, 30000);
+        }
+
         (function updateStarten() {
             try {
                 if (new URLSearchParams(location.search).get('autoupdate') === '0') return;
@@ -12711,6 +12820,16 @@
             // freigegeben (siehe dartFilmFreigeben) - ausser er ist als
             // Naechstes dran und puffert gerade vor.
             if (mediaStateIndex !== DART_FILM_INDEX) dartFilmFreigeben();
+
+            // Anheizer (17:00-18:30 an Heimspieltagen): Vollbild, sonst nichts.
+            const anheizer = document.getElementById('dart-anheizer');
+            if (dartAnheizerAktiv()) {
+                mediaStateIndex = DART_ANHEIZER_INDEX;
+                runDartAnheizerState();
+                return;
+            }
+            if (anheizer) anheizer.classList.remove('aktiv');
+            if (mediaStateIndex === DART_ANHEIZER_INDEX) mediaStateIndex = QR_SLOT_INDEX;
 
             // Dart-Abend-Modus: solange er laeuft, gibt es nur Kamera und
             // Ergebnisse. Danach geht es am gewohnten Zyklusanfang weiter.
@@ -12909,7 +13028,7 @@
             const djSofort = DJ_SLOT_AN && /(?:^|[?&])djnow=1(?:&|$)/.test(location.search);
             mediaStateIndex = djSofort ? DJ_SLOT_INDEX : QR_SLOT_INDEX;
             globalMasterTimer = later(runMasterSequence,
-                djSofort ? 1500 : (dartAbendAktiv() ? 3000 : (KT.testFirstInCycle ? 6000 : 35000)));
+                djSofort ? 1500 : ((dartAbendAktiv() || dartAnheizerAktiv()) ? 3000 : (KT.testFirstInCycle ? 6000 : 35000)));
         }
 
         function weatherCodeToIcon(code) {
@@ -13414,5 +13533,6 @@
         }
         loopBorderShimmer();
     </script>
+<div id="dart-anheizer" aria-hidden="true"><div class="ah-scheibe"></div><div class="ah-inhalt" id="dart-anheizer-inhalt"></div></div>
 </body>
 </html>
