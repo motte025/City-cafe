@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T20:17:32Z",
+  "aktualisiert": "2026-09-26T20:21:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1166,7 +1166,7 @@
         },
         {
           "rang": 5,
-          "spieler": "GÖSCHL Mario",
+          "spieler": "BRUNNER Peter",
           "spiele": 5,
           "siege": 4,
           "niederlagen": 1,
@@ -1176,12 +1176,12 @@
         },
         {
           "rang": 6,
-          "spieler": "BRUNNER Peter",
-          "spiele": 5,
+          "spieler": "GÖSCHL Mario",
+          "spiele": 6,
           "siege": 4,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 11,
-          "legs_minus": 5,
+          "legs_minus": 8,
           "punkte": 11
         },
         {
@@ -1226,6 +1226,16 @@
         },
         {
           "rang": 11,
+          "spieler": "WIESER (J) David",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 3,
+          "punkte": 7
+        },
+        {
+          "rang": 12,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 4,
           "siege": 2,
@@ -1235,7 +1245,7 @@
           "punkte": 6
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1245,7 +1255,7 @@
           "punkte": 6
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 3,
           "siege": 1,
@@ -1255,7 +1265,7 @@
           "punkte": 6
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "STINGLER Engelbert",
           "spiele": 5,
           "siege": 2,
@@ -1265,7 +1275,7 @@
           "punkte": 6
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "ETTL Theresa",
           "spiele": 5,
           "siege": 2,
@@ -1275,7 +1285,7 @@
           "punkte": 6
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "GRAF Franz",
           "spiele": 2,
           "siege": 2,
@@ -1285,7 +1295,7 @@
           "punkte": 5
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 2,
           "siege": 2,
@@ -1295,7 +1305,7 @@
           "punkte": 5
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "OBERZAN Lukas",
           "spiele": 2,
           "siege": 2,
@@ -1305,7 +1315,7 @@
           "punkte": 5
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 3,
           "siege": 1,
@@ -1315,7 +1325,7 @@
           "punkte": 5
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "ANWALD Guenther",
           "spiele": 4,
           "siege": 1,
@@ -1323,16 +1333,6 @@
           "legs_plus": 5,
           "legs_minus": 9,
           "punkte": 5
-        },
-        {
-          "rang": 21,
-          "spieler": "WIESER (J) David",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 3,
-          "punkte": 4
         },
         {
           "rang": 22,
@@ -1630,7 +1630,7 @@
             "heim": "ESV DC Inferno",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 4,
-            "erg_auswaerts": 4,
+            "erg_auswaerts": 5,
             "id": 108872,
             "paarungen": [
               {
@@ -1694,7 +1694,7 @@
                 "spieler1": "GÖSCHL Mario",
                 "spieler2": "WIESER (J) David",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "OE",
