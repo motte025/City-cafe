@@ -225,7 +225,10 @@ FLAECHE = {"yt": ("media-view-nightlife", "nl-player-frame"),
            "cam": ("media-view-dart-cam", "dart-cam-frame")}
 # Die Dartcam ist ein Live-Strom im Lokal-Netz: faellt sie aus, nach kurzer
 # Pause neu verbinden statt zehn Minuten zu sperren wie ein kaputtes Video.
-CAM_RETRY_AFTER = 20
+CAM_RETRY_AFTER = 5
+# Mit Puffer darf die Kamera kurz haengen, ohne gleich neu verbunden zu werden -
+# ein Neuverbinden selbst kostet mehrere Sekunden Schwarzbild.
+CAM_STALL_TIMEOUT = 20
 
 STREAMLINK = "/usr/bin/streamlink"
 # Twitch: streamlink filtert Werbesegmente selbst heraus (seit 6.x immer, siehe
@@ -768,8 +771,8 @@ def main():
                 erste_frist = TWITCH_FIRST_FRAME_TIMEOUT if art == "twitch" else FIRST_FRAME_TIMEOUT
                 if last_pos is None and now - started > erste_frist:
                     problem = f"mpv ohne erstes Bild nach {erste_frist}s"
-                elif last_pos is not None and now - last_progress > STALL_TIMEOUT:
-                    problem = f"mpv steht seit {STALL_TIMEOUT}s bei {last_pos:.1f}s"
+                elif last_pos is not None and now - last_progress > (CAM_STALL_TIMEOUT if art == "cam" else STALL_TIMEOUT):
+                    problem = f"mpv steht bei {last_pos:.1f}s"
             if problem:
                 log(f"{problem} ({shown}) - zurueck zum Browser-Player")
                 if mpv.poll() is None:
@@ -835,10 +838,15 @@ def main():
                 feeder.stdout.close()   # gehoert jetzt mpv allein
                 log(f"Auftritt: Twitch {dj_kanal}")
             elif want.startswith("cam:"):
-                # RTSP ueber TCP (UDP geht im WLAN gern verloren), wenig Puffer
-                # fuer kurze Verzoegerung, ohne Ton (Kneipenlaerm).
-                mpv = subprocess.Popen(args + ["--profile=low-latency", "--rtsp-transport=tcp",
-                                               "--no-audio", "--cache=no", want[4:]],
+                # RTSP ueber TCP (UDP geht im WLAN gern verloren), ohne Ton
+                # (Kneipenlaerm). 3 s Puffer: ganz ohne (low-latency, cache=no)
+                # ruckelte das Bild am 26.09. bei jeder Netzschwankung - ein
+                # paar Sekunden Verzoegerung stoeren beim Dart nicht.
+                # framedrop=vo: lieber ein Bild auslassen als hinterherhinken.
+                mpv = subprocess.Popen(args + ["--rtsp-transport=tcp", "--no-audio",
+                                               "--cache=yes", "--cache-secs=3",
+                                               "--demuxer-readahead-secs=3",
+                                               "--framedrop=vo", want[4:]],
                                        env=env, preexec_fn=mpv_dies_with_us)
                 log("Auftritt: Dartcam")
             if mpv is not None:
