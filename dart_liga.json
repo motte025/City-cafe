@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T18:05:38Z",
+  "aktualisiert": "2026-09-26T18:12:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1048,6 +1048,16 @@
         },
         {
           "rang": 6,
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 9,
+          "legs_minus": 7,
+          "punkte": 9
+        },
+        {
+          "rang": 7,
           "spieler": "NIKOLIC Dennis",
           "spiele": 3,
           "siege": 3,
@@ -1057,7 +1067,7 @@
           "punkte": 8
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "BRUNNER Peter",
           "spiele": 3,
           "siege": 2,
@@ -1067,23 +1077,13 @@
           "punkte": 6
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "WIMMER Leon",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
           "legs_plus": 6,
           "legs_minus": 3,
-          "punkte": 6
-        },
-        {
-          "rang": 9,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 5,
           "punkte": 6
         },
         {
@@ -1218,7 +1218,7 @@
         },
         {
           "rang": 23,
-          "spieler": "GREINIG Hubert",
+          "spieler": "GREINIG Petra",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -1228,7 +1228,7 @@
         },
         {
           "rang": 24,
-          "spieler": "GREINIG Petra",
+          "spieler": "GREINIG Hubert",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -1248,6 +1248,16 @@
         },
         {
           "rang": 26,
+          "spieler": "WIESER (J) David",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 2,
+          "legs_minus": 3,
+          "punkte": 2
+        },
+        {
+          "rang": 27,
           "spieler": "POSCHINGER Franz",
           "spiele": 2,
           "siege": 0,
@@ -1257,7 +1267,7 @@
           "punkte": 2
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 3,
           "siege": 0,
@@ -1267,7 +1277,7 @@
           "punkte": 2
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 1,
           "siege": 0,
@@ -1277,7 +1287,7 @@
           "punkte": 1
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 1,
           "siege": 0,
@@ -1287,7 +1297,7 @@
           "punkte": 1
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "LANG Melanie",
           "spiele": 3,
           "siege": 0,
@@ -1297,7 +1307,7 @@
           "punkte": 1
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "BRUNNER Katharina",
           "spiele": 1,
           "siege": 0,
@@ -1307,7 +1317,7 @@
           "punkte": 0
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1317,7 +1327,7 @@
           "punkte": 0
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
@@ -1421,7 +1431,7 @@
             "datum": "2026-09-26",
             "heim": "ESV DC Inferno",
             "auswaerts": "DSZKärnten \"2er\"",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 1,
             "id": 108872,
             "paarungen": [
@@ -1443,8 +1453,8 @@
                 "art": "OE",
                 "spieler1": "SCHMALNAUER Daniel",
                 "spieler2": "WIESER (J) David",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               },
               {
                 "art": "OE",
