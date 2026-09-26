@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T20:54:34Z",
+  "aktualisiert": "2026-09-26T21:22:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -18,11 +18,11 @@
         {
           "rang": 2,
           "team": "PBC DC Skorpions Reichenfels",
-          "spiele": 2,
-          "siege": 2,
+          "spiele": 3,
+          "siege": 3,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 4
+          "punkte": 6
         },
         {
           "rang": 3,
@@ -53,16 +53,16 @@
         },
         {
           "rang": 6,
-          "team": "City-Flyers \"Chaoten\"",
-          "spiele": 2,
+          "team": "Dart Fuchs 4",
+          "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "punkte": 2
         },
         {
           "rang": 7,
-          "team": "Dart Fuchs 4",
+          "team": "City-Flyers \"Chaoten\"",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -87,7 +87,7 @@
         },
         "2": {
           "heim": 2,
-          "auswaerts": 7,
+          "auswaerts": 8,
           "id": 109510
         },
         "4": {
@@ -174,6 +174,16 @@
         },
         {
           "rang": 4,
+          "spieler": "URANK Romeo",
+          "spiele": 6,
+          "siege": 6,
+          "niederlagen": 0,
+          "legs_plus": 16,
+          "legs_minus": 6,
+          "punkte": 16
+        },
+        {
+          "rang": 5,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -181,16 +191,6 @@
           "legs_plus": 14,
           "legs_minus": 6,
           "punkte": 14
-        },
-        {
-          "rang": 5,
-          "spieler": "URANK Romeo",
-          "spiele": 5,
-          "siege": 5,
-          "niederlagen": 0,
-          "legs_plus": 13,
-          "legs_minus": 4,
-          "punkte": 13
         },
         {
           "rang": 6,
@@ -204,6 +204,16 @@
         },
         {
           "rang": 7,
+          "spieler": "JAHN Andreas",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 10,
+          "legs_minus": 12,
+          "punkte": 10
+        },
+        {
+          "rang": 8,
           "spieler": "BERGLER Benjamin",
           "spiele": 4,
           "siege": 3,
@@ -211,16 +221,6 @@
           "legs_plus": 9,
           "legs_minus": 6,
           "punkte": 9
-        },
-        {
-          "rang": 8,
-          "spieler": "JAHN Andreas",
-          "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
-          "legs_plus": 8,
-          "legs_minus": 9,
-          "punkte": 8
         },
         {
           "rang": 9,
@@ -574,7 +574,7 @@
       "letztes_spiel": {
         "runde": 2,
         "heim": 2,
-        "auswaerts": 7,
+        "auswaerts": 8,
         "paarungen": [
           {
             "art": "DE",
@@ -643,8 +643,8 @@
             "art": "OE",
             "spieler1": "JAHN Andreas",
             "spieler2": "URANK Romeo",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 2,
+            "legs2": 3
           }
         ]
       },
@@ -792,7 +792,7 @@
             "heim": "City-Flyers \"Chaoten\"",
             "auswaerts": "PBC DC Skorpions Reichenfels",
             "erg_heim": 2,
-            "erg_auswaerts": 7,
+            "erg_auswaerts": 8,
             "id": 109510,
             "paarungen": [
               {
@@ -862,8 +862,8 @@
                 "art": "OE",
                 "spieler1": "JAHN Andreas",
                 "spieler2": "URANK Romeo",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               }
             ]
           }
