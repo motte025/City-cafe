@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T19:15:32Z",
+  "aktualisiert": "2026-09-26T19:16:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -194,7 +194,7 @@
         },
         {
           "rang": 6,
-          "spieler": "REGENFELDNER Rene",
+          "spieler": "BERGLER Benjamin",
           "spiele": 4,
           "siege": 3,
           "niederlagen": 1,
@@ -204,13 +204,13 @@
         },
         {
           "rang": 7,
-          "spieler": "BERGLER Benjamin",
-          "spiele": 3,
+          "spieler": "REGENFELDNER Rene",
+          "spiele": 4,
           "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 3,
-          "punkte": 8
+          "niederlagen": 1,
+          "legs_plus": 9,
+          "legs_minus": 6,
+          "punkte": 9
         },
         {
           "rang": 8,
@@ -274,6 +274,16 @@
         },
         {
           "rang": 14,
+          "spieler": "JAMMER Fabian",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 5,
+          "legs_minus": 7,
+          "punkte": 5
+        },
+        {
+          "rang": 15,
           "spieler": "KOLLER Elias",
           "spiele": 6,
           "siege": 1,
@@ -283,7 +293,7 @@
           "punkte": 5
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "SCHECK Guenther",
           "spiele": 2,
           "siege": 2,
@@ -293,27 +303,7 @@
           "punkte": 4
         },
         {
-          "rang": 16,
-          "spieler": "KREUZER Silvia",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 4,
-          "punkte": 4
-        },
-        {
           "rang": 17,
-          "spieler": "FRIEßNEGGER Sarah",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 4,
-          "punkte": 4
-        },
-        {
-          "rang": 18,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 2,
           "siege": 1,
@@ -323,7 +313,27 @@
           "punkte": 4
         },
         {
+          "rang": 18,
+          "spieler": "KREUZER Silvia",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 4,
+          "punkte": 4
+        },
+        {
           "rang": 19,
+          "spieler": "FRIEßNEGGER Sarah",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 4,
+          "punkte": 4
+        },
+        {
+          "rang": 20,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 3,
           "siege": 1,
@@ -331,16 +341,6 @@
           "legs_plus": 4,
           "legs_minus": 5,
           "punkte": 4
-        },
-        {
-          "rang": 20,
-          "spieler": "HOCHEGGER Andrea",
-          "spiele": 1,
-          "siege": 1,
-          "niederlagen": 0,
-          "legs_plus": 3,
-          "legs_minus": 1,
-          "punkte": 3
         },
         {
           "rang": 21,
@@ -354,7 +354,7 @@
         },
         {
           "rang": 22,
-          "spieler": "SCHNEIDER Hermann",
+          "spieler": "BRUNNER Jürgen",
           "spiele": 1,
           "siege": 1,
           "niederlagen": 0,
@@ -364,6 +364,26 @@
         },
         {
           "rang": 23,
+          "spieler": "HOCHEGGER Andrea",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 3,
+          "legs_minus": 1,
+          "punkte": 3
+        },
+        {
+          "rang": 24,
+          "spieler": "SCHNEIDER Hermann",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 3,
+          "legs_minus": 1,
+          "punkte": 3
+        },
+        {
+          "rang": 25,
           "spieler": "BÄCKER Josephine",
           "spiele": 2,
           "siege": 0,
@@ -373,7 +393,7 @@
           "punkte": 3
         },
         {
-          "rang": 24,
+          "rang": 26,
           "spieler": "GORICNIK Cornelia",
           "spiele": 3,
           "siege": 0,
@@ -383,7 +403,7 @@
           "punkte": 3
         },
         {
-          "rang": 25,
+          "rang": 27,
           "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
@@ -393,7 +413,7 @@
           "punkte": 3
         },
         {
-          "rang": 26,
+          "rang": 28,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 3,
           "siege": 0,
@@ -403,7 +423,7 @@
           "punkte": 3
         },
         {
-          "rang": 27,
+          "rang": 29,
           "spieler": "JESENKO Julia",
           "spiele": 1,
           "siege": 1,
@@ -413,7 +433,7 @@
           "punkte": 2
         },
         {
-          "rang": 28,
+          "rang": 30,
           "spieler": "KOGLER Sabine",
           "spiele": 1,
           "siege": 0,
@@ -423,17 +443,7 @@
           "punkte": 2
         },
         {
-          "rang": 29,
-          "spieler": "JAMMER Fabian",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 2,
-          "legs_minus": 6,
-          "punkte": 2
-        },
-        {
-          "rang": 30,
+          "rang": 31,
           "spieler": "AMBROS Thomas",
           "spiele": 3,
           "siege": 0,
@@ -443,7 +453,17 @@
           "punkte": 2
         },
         {
-          "rang": 31,
+          "rang": 32,
+          "spieler": "SIMONITSCH Erhard",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 1,
+          "legs_minus": 3,
+          "punkte": 1
+        },
+        {
+          "rang": 33,
           "spieler": "LUBE Mario",
           "spiele": 1,
           "siege": 0,
@@ -453,7 +473,7 @@
           "punkte": 1
         },
         {
-          "rang": 32,
+          "rang": 34,
           "spieler": "JAHN Christian",
           "spiele": 2,
           "siege": 0,
@@ -463,7 +483,7 @@
           "punkte": 1
         },
         {
-          "rang": 33,
+          "rang": 35,
           "spieler": "KERNSTOCK Michael",
           "spiele": 2,
           "siege": 0,
@@ -473,7 +493,7 @@
           "punkte": 1
         },
         {
-          "rang": 34,
+          "rang": 36,
           "spieler": "GORICNIK Michael",
           "spiele": 3,
           "siege": 0,
@@ -483,7 +503,7 @@
           "punkte": 1
         },
         {
-          "rang": 35,
+          "rang": 37,
           "spieler": "PROVNIK Gabriele",
           "spiele": 1,
           "siege": 0,
@@ -493,7 +513,7 @@
           "punkte": 0
         },
         {
-          "rang": 36,
+          "rang": 38,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -503,7 +523,7 @@
           "punkte": 0
         },
         {
-          "rang": 37,
+          "rang": 39,
           "spieler": "REINISCH Jessica",
           "spiele": 1,
           "siege": 0,
@@ -513,7 +533,7 @@
           "punkte": 0
         },
         {
-          "rang": 38,
+          "rang": 40,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
@@ -523,7 +543,7 @@
           "punkte": 0
         },
         {
-          "rang": 39,
+          "rang": 41,
           "spieler": "JAHN Herbert",
           "spiele": 3,
           "siege": 0,
@@ -533,7 +553,7 @@
           "punkte": 0
         },
         {
-          "rang": 40,
+          "rang": 42,
           "spieler": "APOVNIK Gabriele",
           "spiele": 3,
           "siege": 0,
@@ -690,8 +710,8 @@
             "datum": "2026-09-26",
             "heim": "DC Cafe Seven",
             "auswaerts": "DC Fighting Penguins „Waddling Arrows“",
-            "erg_heim": 0,
-            "erg_auswaerts": 2,
+            "erg_heim": 1,
+            "erg_auswaerts": 3,
             "id": 109488,
             "paarungen": [
               {
@@ -712,15 +732,15 @@
                 "art": "OE",
                 "spieler1": "SIMONITSCH Erhard",
                 "spieler2": "JAMMER Fabian",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
                 "spieler1": "BRUNNER Jürgen",
                 "spieler2": "BERGLER Benjamin",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               }
             ]
           },
