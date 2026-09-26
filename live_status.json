@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T20:32:45Z",
+  "checked_at": "2026-09-26T20:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,13 +31,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Music to clear the head from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @solerlive, @alexvaganza",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
@@ -59,6 +52,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "The Block At Breakaway  Carolina",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Back to the 90s  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
@@ -69,13 +69,6 @@
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "The Block At Breakaway  Carolina",
       "game": "DJs"
     }
   ]
