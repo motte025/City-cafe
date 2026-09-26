@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T18:50:33Z",
+  "aktualisiert": "2026-09-26T18:52:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1136,16 +1136,6 @@
         },
         {
           "rang": 11,
-          "spieler": "STINGLER Engelbert",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 5,
-          "punkte": 6
-        },
-        {
-          "rang": 12,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1155,7 +1145,7 @@
           "punkte": 6
         },
         {
-          "rang": 13,
+          "rang": 12,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 4,
           "siege": 2,
@@ -1165,13 +1155,23 @@
           "punkte": 6
         },
         {
-          "rang": 14,
+          "rang": 13,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 3,
           "siege": 1,
           "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 14,
+          "spieler": "STINGLER Engelbert",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 8,
           "punkte": 6
         },
         {
@@ -1216,7 +1216,7 @@
         },
         {
           "rang": 19,
-          "spieler": "STEINER Sandro Emmanuel",
+          "spieler": "GRAF Franz",
           "spiele": 1,
           "siege": 1,
           "niederlagen": 0,
@@ -1226,6 +1226,16 @@
         },
         {
           "rang": 20,
+          "spieler": "STEINER Sandro Emmanuel",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 3,
+          "legs_minus": 0,
+          "punkte": 3
+        },
+        {
+          "rang": 21,
           "spieler": "OBERZAN Lukas",
           "spiele": 1,
           "siege": 1,
@@ -1235,7 +1245,7 @@
           "punkte": 3
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "STEINER Lydia",
           "spiele": 1,
           "siege": 1,
@@ -1245,7 +1255,7 @@
           "punkte": 3
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "PINTER Michele",
           "spiele": 2,
           "siege": 0,
@@ -1255,7 +1265,7 @@
           "punkte": 3
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "GREINIG Petra",
           "spiele": 3,
           "siege": 0,
@@ -1265,7 +1275,7 @@
           "punkte": 3
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "GREINIG Hubert",
           "spiele": 3,
           "siege": 0,
@@ -1275,7 +1285,7 @@
           "punkte": 3
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "ETTL Theresa",
           "spiele": 4,
           "siege": 1,
@@ -1285,7 +1295,7 @@
           "punkte": 3
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "RUS Kerstin",
           "spiele": 1,
           "siege": 0,
@@ -1295,7 +1305,7 @@
           "punkte": 2
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "WIESER (J) David",
           "spiele": 1,
           "siege": 0,
@@ -1305,7 +1315,7 @@
           "punkte": 2
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "POSCHINGER Franz",
           "spiele": 2,
           "siege": 0,
@@ -1315,7 +1325,7 @@
           "punkte": 2
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 3,
           "siege": 0,
@@ -1325,7 +1335,7 @@
           "punkte": 2
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 1,
           "siege": 0,
@@ -1335,7 +1345,7 @@
           "punkte": 1
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "KRUSCHITZ Harald",
           "spiele": 1,
           "siege": 0,
@@ -1345,7 +1355,7 @@
           "punkte": 1
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 1,
           "siege": 0,
@@ -1355,7 +1365,7 @@
           "punkte": 1
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 1,
           "siege": 0,
@@ -1365,7 +1375,7 @@
           "punkte": 1
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 2,
           "siege": 0,
@@ -1375,7 +1385,7 @@
           "punkte": 1
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "LANG Melanie",
           "spiele": 3,
           "siege": 0,
@@ -1385,7 +1395,7 @@
           "punkte": 1
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "BRUNNER Katharina",
           "spiele": 1,
           "siege": 0,
@@ -1395,7 +1405,7 @@
           "punkte": 0
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1405,7 +1415,7 @@
           "punkte": 0
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
@@ -1615,7 +1625,7 @@
             "datum": "2026-09-26",
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "DC O3tz 1.0",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 0,
             "id": 108894,
             "paarungen": [
@@ -1644,7 +1654,7 @@
                 "art": "OE",
                 "spieler1": "GRAF Franz",
                 "spieler2": "STINGLER Engelbert",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
