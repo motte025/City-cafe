@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T20:52:42Z",
+  "aktualisiert": "2026-09-26T20:54:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1226,6 +1226,16 @@
         },
         {
           "rang": 11,
+          "spieler": "OBERZAN Lukas",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 2,
+          "punkte": 8
+        },
+        {
+          "rang": 12,
           "spieler": "WIESER (J) David",
           "spiele": 3,
           "siege": 2,
@@ -1233,16 +1243,6 @@
           "legs_plus": 7,
           "legs_minus": 3,
           "punkte": 7
-        },
-        {
-          "rang": 12,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
-          "legs_plus": 6,
-          "legs_minus": 6,
-          "punkte": 6
         },
         {
           "rang": 13,
@@ -1266,6 +1266,16 @@
         },
         {
           "rang": 15,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 16,
           "spieler": "STINGLER Engelbert",
           "spiele": 5,
           "siege": 2,
@@ -1275,7 +1285,7 @@
           "punkte": 6
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "ETTL Theresa",
           "spiele": 5,
           "siege": 2,
@@ -1285,7 +1295,7 @@
           "punkte": 6
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 2,
           "siege": 2,
@@ -1295,23 +1305,13 @@
           "punkte": 5
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "GRAF Franz",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
           "legs_plus": 5,
           "legs_minus": 0,
-          "punkte": 5
-        },
-        {
-          "rang": 19,
-          "spieler": "OBERZAN Lukas",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 5,
-          "legs_minus": 1,
           "punkte": 5
         },
         {
@@ -1336,16 +1336,6 @@
         },
         {
           "rang": 22,
-          "spieler": "KRENN Klaus",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 3,
-          "punkte": 4
-        },
-        {
-          "rang": 23,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1355,8 +1345,18 @@
           "punkte": 4
         },
         {
-          "rang": 24,
+          "rang": 23,
           "spieler": "REIF Daniel-Stefan",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 3,
+          "punkte": 4
+        },
+        {
+          "rang": 24,
+          "spieler": "KRENN Klaus",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1376,6 +1376,16 @@
         },
         {
           "rang": 26,
+          "spieler": "GREINIG Hubert",
+          "spiele": 5,
+          "siege": 0,
+          "niederlagen": 5,
+          "legs_plus": 4,
+          "legs_minus": 13,
+          "punkte": 4
+        },
+        {
+          "rang": 27,
           "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
@@ -1385,7 +1395,7 @@
           "punkte": 3
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "STEINER Lydia",
           "spiele": 1,
           "siege": 1,
@@ -1395,7 +1405,7 @@
           "punkte": 3
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "PINTER Michele",
           "spiele": 2,
           "siege": 0,
@@ -1405,7 +1415,7 @@
           "punkte": 3
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "GREINIG Petra",
           "spiele": 3,
           "siege": 0,
@@ -1415,23 +1425,13 @@
           "punkte": 3
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "LANG Melanie",
           "spiele": 4,
           "siege": 1,
           "niederlagen": 3,
           "legs_plus": 3,
           "legs_minus": 9,
-          "punkte": 3
-        },
-        {
-          "rang": 31,
-          "spieler": "GREINIG Hubert",
-          "spiele": 4,
-          "siege": 0,
-          "niederlagen": 4,
-          "legs_plus": 3,
-          "legs_minus": 10,
           "punkte": 3
         },
         {
@@ -1801,7 +1801,7 @@
             "datum": "2026-09-26",
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "DC O3tz 1.0",
-            "erg_heim": 6,
+            "erg_heim": 7,
             "erg_auswaerts": 0,
             "id": 108894,
             "paarungen": [
@@ -1851,8 +1851,8 @@
                 "art": "HE",
                 "spieler1": "OBERZAN Lukas",
                 "spieler2": "GREINIG Hubert",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "DE",
