@@ -74072,16 +74072,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Gaby Albrecht",
-    "title": "Mein Herz bleibt Dir treu",
+    "artist": "Fernando Express",
+    "title": "Der Rote Mond Von Agadir",
     "album": "",
-    "category": "Après-Ski & Ballermann",
+    "category": "Schlager-Party",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
       "Party",
-      "Karaoke",
-      "Après-Ski & Ballermann"
+      "Deutsch"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Miley Cyrus",
+    "title": "Reborn",
+    "album": "",
+    "category": "Internationale Party-Hits",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Disco",
+      "Pop",
+      "Dance"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
