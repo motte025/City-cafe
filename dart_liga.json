@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T16:36:35Z",
+  "aktualisiert": "2026-09-26T16:39:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -154,6 +154,16 @@
         },
         {
           "rang": 2,
+          "spieler": "RAINER Gerald",
+          "spiele": 6,
+          "siege": 6,
+          "niederlagen": 0,
+          "legs_plus": 16,
+          "legs_minus": 3,
+          "punkte": 16
+        },
+        {
+          "rang": 3,
           "spieler": "KLEINHAPPEL Ernestine",
           "spiele": 6,
           "siege": 6,
@@ -163,21 +173,11 @@
           "punkte": 16
         },
         {
-          "rang": 3,
-          "spieler": "RAINER Gerald",
-          "spiele": 5,
-          "siege": 5,
-          "niederlagen": 0,
-          "legs_plus": 13,
-          "legs_minus": 2,
-          "punkte": 13
-        },
-        {
           "rang": 4,
-          "spieler": "REGENFELDNER Rene",
+          "spieler": "ELEZOSKI Serif",
           "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
+          "siege": 2,
+          "niederlagen": 1,
           "legs_plus": 8,
           "legs_minus": 3,
           "punkte": 8
@@ -194,17 +194,17 @@
         },
         {
           "rang": 6,
-          "spieler": "ELEZOSKI Serif",
+          "spieler": "BERGLER Benjamin",
           "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
+          "siege": 3,
+          "niederlagen": 0,
           "legs_plus": 8,
           "legs_minus": 3,
           "punkte": 8
         },
         {
           "rang": 7,
-          "spieler": "BERGLER Benjamin",
+          "spieler": "REGENFELDNER Rene",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -225,12 +225,12 @@
         {
           "rang": 9,
           "spieler": "FELLNER Johann",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 4,
-          "punkte": 6
+          "niederlagen": 2,
+          "legs_plus": 7,
+          "legs_minus": 7,
+          "punkte": 7
         },
         {
           "rang": 10,
@@ -274,16 +274,6 @@
         },
         {
           "rang": 14,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 4,
-          "punkte": 4
-        },
-        {
-          "rang": 15,
           "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
@@ -293,8 +283,18 @@
           "punkte": 4
         },
         {
-          "rang": 16,
+          "rang": 15,
           "spieler": "FRIEßNEGGER Sarah",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 4,
+          "punkte": 4
+        },
+        {
+          "rang": 16,
+          "spieler": "HOPFGARTNER Joachim",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -344,7 +344,7 @@
         },
         {
           "rang": 21,
-          "spieler": "FRIEßNEGGER Gerhard",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -354,7 +354,7 @@
         },
         {
           "rang": 22,
-          "spieler": "ROSSMANN Christoph",
+          "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -384,7 +384,7 @@
         },
         {
           "rang": 25,
-          "spieler": "AMBROS Thomas",
+          "spieler": "GORICNIK Cornelia",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
@@ -394,7 +394,7 @@
         },
         {
           "rang": 26,
-          "spieler": "GORICNIK Cornelia",
+          "spieler": "AMBROS Thomas",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
@@ -587,7 +587,7 @@
             "datum": "2026-09-26",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 8,
+            "erg_heim": 9,
             "erg_auswaerts": 0,
             "id": 109477,
             "paarungen": [
@@ -651,8 +651,8 @@
                 "art": "OE",
                 "spieler1": "RAINER Gerald",
                 "spieler2": "FELLNER Johann",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "OE",
