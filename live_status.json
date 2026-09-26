@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T20:37:45Z",
+  "checked_at": "2026-09-26T20:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,6 +38,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "The Block is coming to you from Breakaway [ https://www.breakawayfestival.com/festival/carolina-2026 ]",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
@@ -48,13 +55,6 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Ascendance 9 by @markmcmanus1 - Breaks & Electronica ✨ !charity",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "The Block At Breakaway  Carolina",
       "game": "DJs"
     },
     {
