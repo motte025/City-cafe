@@ -73430,5 +73430,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Michael Gray",
+    "title": "The Weekend (Radio Edit)",
+    "album": "",
+    "category": "Electro House",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Electro",
+      "House",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
