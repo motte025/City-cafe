@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T16:57:45Z",
+  "checked_at": "2026-09-26T17:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Hoch die Hände, Wochenende! Wir reißen ab! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
