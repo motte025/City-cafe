@@ -73852,35 +73852,15 @@
     "auto_discovered": true
   },
   {
-    "artist": "Bruce Low",
-    "title": "Das Haus in New Orleans",
+    "artist": "Jürgen",
+    "title": "Großer Bruder",
     "album": "",
-    "category": "Schlager",
+    "category": "Party-Hit",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Karaoke",
-      "Schlager"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Angelika Milster",
-    "title": "Ich liebe Dich",
-    "album": "",
-    "category": "Schlager",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Schlager",
-      "Party",
+      "Mitsingen",
       "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
