@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T16:30:35Z",
+  "aktualisiert": "2026-09-26T16:36:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -154,22 +154,22 @@
         },
         {
           "rang": 2,
+          "spieler": "KLEINHAPPEL Ernestine",
+          "spiele": 6,
+          "siege": 6,
+          "niederlagen": 0,
+          "legs_plus": 16,
+          "legs_minus": 4,
+          "punkte": 16
+        },
+        {
+          "rang": 3,
           "spieler": "RAINER Gerald",
           "spiele": 5,
           "siege": 5,
           "niederlagen": 0,
           "legs_plus": 13,
           "legs_minus": 2,
-          "punkte": 13
-        },
-        {
-          "rang": 3,
-          "spieler": "KLEINHAPPEL Ernestine",
-          "spiele": 5,
-          "siege": 5,
-          "niederlagen": 0,
-          "legs_plus": 13,
-          "legs_minus": 4,
           "punkte": 13
         },
         {
@@ -464,16 +464,6 @@
         },
         {
           "rang": 33,
-          "spieler": "APOVNIK Gabriele",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 0,
-          "legs_minus": 5,
-          "punkte": 0
-        },
-        {
-          "rang": 34,
           "spieler": "GORICNIK Michael",
           "spiele": 2,
           "siege": 0,
@@ -483,8 +473,18 @@
           "punkte": 0
         },
         {
-          "rang": 35,
+          "rang": 34,
           "spieler": "JAHN Herbert",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 0,
+          "legs_minus": 8,
+          "punkte": 0
+        },
+        {
+          "rang": 35,
+          "spieler": "APOVNIK Gabriele",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -587,7 +587,7 @@
             "datum": "2026-09-26",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 7,
+            "erg_heim": 8,
             "erg_auswaerts": 0,
             "id": 109477,
             "paarungen": [
@@ -644,7 +644,7 @@
                 "art": "DE",
                 "spieler1": "KLEINHAPPEL Ernestine",
                 "spieler2": "APOVNIK Gabriele",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
