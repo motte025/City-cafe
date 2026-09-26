@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T20:21:32Z",
+  "aktualisiert": "2026-09-26T20:23:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1166,17 +1166,17 @@
         },
         {
           "rang": 5,
-          "spieler": "BRUNNER Peter",
-          "spiele": 5,
+          "spieler": "GÖSCHL Mario",
+          "spiele": 6,
           "siege": 4,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 11,
-          "legs_minus": 5,
+          "legs_minus": 8,
           "punkte": 11
         },
         {
           "rang": 6,
-          "spieler": "GÖSCHL Mario",
+          "spieler": "BRUNNER Peter",
           "spiele": 6,
           "siege": 4,
           "niederlagen": 2,
@@ -1236,20 +1236,20 @@
         },
         {
           "rang": 12,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 4,
+          "spieler": "SPANRING Andreas",
+          "spiele": 3,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 1,
           "legs_plus": 6,
           "legs_minus": 6,
           "punkte": 6
         },
         {
           "rang": 13,
-          "spieler": "SPANRING Andreas",
-          "spiele": 3,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 6,
           "punkte": 6
@@ -1336,16 +1336,6 @@
         },
         {
           "rang": 22,
-          "spieler": "OSTRY Samantha-Lee",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 3,
-          "punkte": 4
-        },
-        {
-          "rang": 23,
           "spieler": "KRENN Klaus",
           "spiele": 2,
           "siege": 1,
@@ -1355,7 +1345,27 @@
           "punkte": 4
         },
         {
+          "rang": 23,
+          "spieler": "REIF Daniel-Stefan",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 3,
+          "punkte": 4
+        },
+        {
           "rang": 24,
+          "spieler": "OSTRY Samantha-Lee",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 3,
+          "punkte": 4
+        },
+        {
+          "rang": 25,
           "spieler": "SONNBERGER Harald",
           "spiele": 3,
           "siege": 1,
@@ -1365,7 +1375,7 @@
           "punkte": 4
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "STEINER Lydia",
           "spiele": 1,
           "siege": 1,
@@ -1375,7 +1385,7 @@
           "punkte": 3
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "PINTER Michele",
           "spiele": 2,
           "siege": 0,
@@ -1385,7 +1395,7 @@
           "punkte": 3
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "GREINIG Petra",
           "spiele": 3,
           "siege": 0,
@@ -1395,7 +1405,7 @@
           "punkte": 3
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "LANG Melanie",
           "spiele": 4,
           "siege": 1,
@@ -1405,7 +1415,7 @@
           "punkte": 3
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "GREINIG Hubert",
           "spiele": 4,
           "siege": 0,
@@ -1415,7 +1425,7 @@
           "punkte": 3
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 1,
           "siege": 1,
@@ -1425,7 +1435,7 @@
           "punkte": 2
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "SCHMID Thomas",
           "spiele": 1,
           "siege": 1,
@@ -1435,7 +1445,7 @@
           "punkte": 2
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 2,
           "siege": 0,
@@ -1445,7 +1455,7 @@
           "punkte": 2
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "POSCHINGER Franz",
           "spiele": 2,
           "siege": 0,
@@ -1455,7 +1465,7 @@
           "punkte": 2
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "RUS Kerstin",
           "spiele": 2,
           "siege": 0,
@@ -1465,7 +1475,7 @@
           "punkte": 2
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 3,
           "siege": 0,
@@ -1475,7 +1485,7 @@
           "punkte": 2
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 3,
           "siege": 0,
@@ -1483,16 +1493,6 @@
           "legs_plus": 2,
           "legs_minus": 8,
           "punkte": 2
-        },
-        {
-          "rang": 37,
-          "spieler": "REIF Daniel-Stefan",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 1,
-          "legs_minus": 3,
-          "punkte": 1
         },
         {
           "rang": 38,
@@ -1710,7 +1710,7 @@
             "datum": "2026-09-26",
             "heim": "DC Garzern",
             "auswaerts": "DC Drautal Dart Vipers",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 4,
             "id": 108883,
             "paarungen": [
@@ -1774,7 +1774,7 @@
                 "art": "OE",
                 "spieler1": "REIF Daniel-Stefan",
                 "spieler2": "BRUNNER Peter",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
