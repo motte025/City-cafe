@@ -73890,5 +73890,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Wham!",
+    "title": "Wake Me up Before You Go Go",
+    "album": "",
+    "category": "80s Pop / Dance",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Pop",
+      "Dance",
+      "Klassiker"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
