@@ -73692,16 +73692,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Drake",
-    "title": "Shut It Down",
+    "artist": "Andrea Jürgens",
+    "title": "Wenn ich einsam bin",
     "album": "",
-    "category": "Internationale Party-Hits",
+    "category": "Schlager & Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Internationale Party-Hits"
+      "Schlager & Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "André Heller",
+    "title": "Du, Du, Du",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
