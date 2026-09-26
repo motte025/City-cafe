@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T22:32:45Z",
+  "checked_at": "2026-09-26T22:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "✨DAY 26✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Hoch die Hände, Wochenende! Wir reißen ab! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -38,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Back to the 90s  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     },
     {
@@ -52,16 +45,23 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "SCHRANZ IS BACK FELIX KRÖCHER",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Back to the 90s  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ A VERY NORMAL NOT EVIL AT ALL SATURDAY SET🔥 !tip !NEWSONG🔥 !mods !mercy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SCHRANZ IS BACK FELIX KRÖCHER",
       "game": "DJs"
     }
   ]
