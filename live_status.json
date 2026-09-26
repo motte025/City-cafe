@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T10:27:45Z",
+  "checked_at": "2026-09-26T10:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Saturday - das Musikrad ist wieder da !!! <3 -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
@@ -27,13 +34,6 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Saturday - das Musikrad ist wieder da !!! <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
