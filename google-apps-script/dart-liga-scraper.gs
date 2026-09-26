@@ -72,7 +72,8 @@ const DART_LIVE_START_MINUTE = 30;   // im Dashboard beginnt dann die Kamera)
 const DART_LIVE_ENDE_STUNDE = 1;     // bis 01:00 des Folgetags
 const DART_ZEITZONE = 'Europe/Vienna';
 
-const DART_RUHE_MINUTEN = 360;       // ausserhalb der Spieltage: alle 6 Stunden
+const DART_RUHE_MINUTEN = 720;       // ausserhalb der Spieltage: 2x taeglich (auch Spielplan-Abgleich)
+const DART_AUSWAERTS_MINUTEN = 5;    // Spielabend ohne Heimspiel im City Cafe: alle 5 Minuten
 const DART_TRIGGER_STUNDEN = 6;      // nur noch fuer dartTriggerEinrichtenEinfach()
 
 // Die Zeitzone des Apps-Script-Projekts muss nicht Europe/Vienna sein - deshalb
@@ -90,22 +91,46 @@ function dartWienerMinute(datum) {
 }
 
 /**
+ * Spieltermine laut Website: { 'yyyy-MM-dd': 'heim' | 'aus' }. 'heim' heisst:
+ * mindestens eine City-Cafe-Mannschaft spielt an dem Tag daheim. Wird bei jedem
+ * vollen Lauf aus vorrunde.php neu geschrieben - verschobene Spiele landen so
+ * spaetestens nach 12 Stunden im Live-Fenster. Ohne gespeicherten Stand gelten
+ * die festen DART_SPIELTAGE (als Heimtag, also Minutentakt).
+ */
+function dartTermine() {
+  try {
+    const t = JSON.parse(PropertiesService.getScriptProperties().getProperty('DART_TERMINE') || 'null');
+    if (t && Object.keys(t).length) return t;
+  } catch (e) {}
+  const t = {};
+  DART_SPIELTAGE.forEach(function (d) { t[d] = 'heim'; });
+  return t;
+}
+
+// Der Spieltag, zu dem "jetzt" gehoert (vor 01:00 noch der Vortag), oder null.
+function dartLiveTag(jetzt) {
+  const n = jetzt || new Date();
+  const stunde = dartWienerStunde(n);
+  const minuten = stunde * 60 + dartWienerMinute(n);
+  const termine = dartTermine();
+  if (minuten >= DART_LIVE_START_STUNDE * 60 + DART_LIVE_START_MINUTE) {
+    const tag = dartWienerTag(n);
+    return termine[tag] ? tag : null;
+  }
+  if (stunde < DART_LIVE_ENDE_STUNDE) {
+    const tag = dartWienerTag(new Date(n.getTime() - 24 * 60 * 60 * 1000));
+    return termine[tag] ? tag : null;
+  }
+  return null;
+}
+
+/**
  * Wahr zwischen 18:30 eines Spieltags und 01:00 des Folgetags.
  * Der Abschnitt nach Mitternacht gehoert noch zum Abend davor - dort wird
  * deshalb auf den VORTAG geprueft, nicht auf den laufenden Tag.
  */
 function dartImLiveFenster(jetzt) {
-  const n = jetzt || new Date();
-  const stunde = dartWienerStunde(n);
-  const minuten = stunde * 60 + dartWienerMinute(n);
-  if (minuten >= DART_LIVE_START_STUNDE * 60 + DART_LIVE_START_MINUTE) {
-    return DART_SPIELTAGE.indexOf(dartWienerTag(n)) !== -1;
-  }
-  if (stunde < DART_LIVE_ENDE_STUNDE) {
-    const gestern = new Date(n.getTime() - 24 * 60 * 60 * 1000);
-    return DART_SPIELTAGE.indexOf(dartWienerTag(gestern)) !== -1;
-  }
-  return false;
+  return dartLiveTag(jetzt) !== null;
 }
 
 /**
@@ -116,11 +141,13 @@ function dartImLiveFenster(jetzt) {
  */
 function dartLiveTakt() {
   const props = PropertiesService.getScriptProperties();
-  const live = dartImLiveFenster();
-
-  if (!live) {
+  const tag = dartLiveTag();
+  // Heimspiel im City Cafe: jede Minute. Nur auswaerts: alle 5 Minuten.
+  // Sonst 2x taeglich (dabei wird auch der Spielplan neu abgeglichen).
+  const abstand = tag ? (dartTermine()[tag] === 'heim' ? 0 : DART_AUSWAERTS_MINUTEN) : DART_RUHE_MINUTEN;
+  if (abstand) {
     const zuletzt = parseInt(props.getProperty('DART_LETZTER_LAUF') || '0', 10);
-    if (zuletzt && (Date.now() - zuletzt) < DART_RUHE_MINUTEN * 60 * 1000) return;
+    if (zuletzt && (Date.now() - zuletzt) < abstand * 60 * 1000) return;
   }
 
   props.setProperty('DART_LETZTER_LAUF', String(Date.now()));
@@ -137,6 +164,7 @@ function dartLigaAktualisieren() {
   if (!token) throw new Error('Script Property GITHUB_TOKEN fehlt.');
 
   const teams = {};
+  const termine = {};
   DART_TEAMS.forEach(function (t) {
     const tabelle = dartHoleTabelle(t.turnierid);
     const ergebnisse = dartHoleErgebnisse(t.turnierid, t.name);
@@ -177,8 +205,13 @@ function dartLigaAktualisieren() {
       einzelwertung: einzel,
       kader: kader,
       letztes_spiel: letztes,
-      spieltag: dartImLiveFenster() ? dartHoleSpieltag(t.turnierid) : null
+      spieltag: dartImLiveFenster() ? dartHoleSpieltag(t.turnierid) : null,
+      spielplan: dartEigenerSpielplan(t)
     };
+    teams[t.key].spielplan.forEach(function (s) {
+      if (!s.datum || s.freilos) return;
+      termine[s.datum] = (termine[s.datum] === 'heim' || s.heimspiel) ? 'heim' : 'aus';
+    });
     Logger.log(t.name + ': ' + tabelle.length + ' Tabellenplaetze, ' +
                Object.keys(ergebnisse).length + ' Runden mit Gegner, ' +
                dartGespielte(ergebnisse) + ' davon gespielt, ' +
@@ -192,6 +225,7 @@ function dartLigaAktualisieren() {
     Logger.log('Nichts abrufbar - kein Commit.');
     return;
   }
+  if (Object.keys(termine).length) props.setProperty('DART_TERMINE', JSON.stringify(termine));
 
   dartSchreibeWennNoetig(teams, token);
 }
@@ -338,6 +372,19 @@ function dartParseTabelle(html) {
 // Spaltennummern verschieben sich. Deshalb wird nicht nach fester Position
 // gesucht, sondern nach der Zelle, die mit einem Spielstand beginnt: davor
 // steht der Heimverein, im Rest derselben Zelle der Gast.
+
+// Spielplan der eigenen Mannschaft laut Website (Datum kann sich durch
+// Verschiebungen aendern - das Dashboard uebernimmt diese Daten).
+function dartEigenerSpielplan(t) {
+  const eigen = dartSchluessel(t.name);
+  return dartParseGruppe(dartSeiteHolen('vorrunde.php', t.turnierid)).filter(function (s) {
+    return dartSchluessel(s.heim) === eigen || dartSchluessel(s.auswaerts) === eigen;
+  }).map(function (s) {
+    return { runde: s.runde, datum: s.datum, heim: s.heim, auswaerts: s.auswaerts,
+             heimspiel: dartSchluessel(s.heim) === eigen,
+             freilos: dartIstFreilos(s.heim) || dartIstFreilos(s.auswaerts) };
+  });
+}
 
 // Alle Paarungen der Gruppe (nicht nur die eigenen), mit Datum und Runde.
 function dartParseGruppe(html) {
@@ -656,7 +703,8 @@ function dartTriggerEinrichten() {
   Logger.log('Trigger angelegt: dartLiveTakt jede Minute.');
   Logger.log('Live-Fenster: ' + DART_SPIELTAGE.length + ' Spieltage, jeweils ' +
              DART_LIVE_START_STUNDE + ':' + DART_LIVE_START_MINUTE + ' bis ' + DART_LIVE_ENDE_STUNDE + ':00 (' + DART_ZEITZONE + ').');
-  Logger.log('Ausserhalb davon laeuft der Abruf alle ' + (DART_RUHE_MINUTEN / 60) + ' Stunden.');
+  Logger.log('Heimspielabend: jede Minute, nur auswaerts: alle ' + DART_AUSWAERTS_MINUTEN + ' Minuten.');
+  Logger.log('Ausserhalb davon laeuft der Abruf alle ' + (DART_RUHE_MINUTEN / 60) + ' Stunden (inkl. Spielplan-Abgleich).');
 }
 
 function dartTriggerEntfernen() {
@@ -678,7 +726,7 @@ function dartTriggerEntfernen() {
  * Die Fassungskennung in der ersten Zeile zeigt auf einen Blick, ob im
  * Apps Script wirklich die aktuelle Datei steht.
  */
-const DART_FASSUNG = '2026-09-26 (Dart-Abend: Spieltag der ganzen Gruppe, ab 18:30)';
+const DART_FASSUNG = '2026-09-26b (Heimspiel-Modus, Spielplan-Abgleich 2x taeglich)';
 
 function dartTestLauf() {
   Logger.log('Skriptfassung: ' + DART_FASSUNG);
@@ -740,6 +788,12 @@ function dartTestLauf() {
     }
 
     // --- Spieltag der ganzen Gruppe (Dart-Abend-Modus) -----------------
+    const plan = dartEigenerSpielplan(t);
+    Logger.log('Spielplan laut Website: ' + plan.length + ' Runden');
+    plan.forEach(function (s) {
+      Logger.log('  Runde ' + s.runde + ' ' + s.datum + (s.freilos ? ' spielfrei' : (s.heimspiel ? ' HEIM ' : ' auswaerts ')) +
+                 (s.freilos ? '' : (s.heimspiel ? s.auswaerts : s.heim)));
+    });
     const tag = dartHoleSpieltag(t.turnierid);
     if (!tag) {
       Logger.log('Spieltag: heute kein Spiel in dieser Klasse.');

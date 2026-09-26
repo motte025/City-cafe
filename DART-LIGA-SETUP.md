@@ -300,13 +300,15 @@ veraltete Turnier-ID.
 
 # Dart-Abend-Modus (Heimspieltag, Dartcam)
 
-An jedem Spieltag der **Chaoten** (Freilos-Runden zaehlen nicht) zeigt das
-Dashboard ab **18:30** nur noch die Dart-Strecke des Abends, im Kreis:
+An jedem Tag, an dem **Chaoten oder Fraggles daheim im City Cafe** spielen,
+zeigt das Dashboard ab **18:30** nur noch die Dart-Strecke des Abends, im Kreis.
+Bei **Auswaertsspielen** laeuft der normale Zyklus; die Daten kommen dann alle
+5 Minuten (Heimspiel: jede Minute).
 
 | # | Slot | Dauer |
 | --- | --- | --- |
 | 1 | Dartcam (RTSP) | 3 min - **zu Beginn so lange, bis die ersten Einzelergebnisse der Chaoten da sind** (danach alle 15 s geprueft) |
-| 2 | Chaoten live: die zehn Paarungen, offene grau mit "–:–", Zwischenstand im Kopf | 30 s |
+| 2 | je Heim-Mannschaft live: die zehn Paarungen, offene grau mit "–:–", Zwischenstand im Kopf | 30 s |
 | 3 | EIN anderes Spiel derselben Klasse, bei jedem Durchlauf das naechste | 26 s |
 
 Danach wieder die Kamera. **30 Minuten nach dem Endergebnis** der Chaoten
@@ -339,3 +341,15 @@ Abruf jede Minute, im Dashboard ebenfalls. **Die neue `dart-liga-scraper.gs`
 muss dafuer ins Apps Script eingespielt werden.** Mit der alten Fassung laeuft
 der Modus trotzdem, zeigt aber nur das Chaoten-Spiel (ueber `letztes_spiel`,
 sobald der Mannschaftsstand nicht mehr 0:0 ist) und keine anderen Spiele.
+
+## Verschobene Spiele
+
+Der Scraper liest 2x taeglich (und an jedem Spielabend) den Spielplan von
+`vorrunde.php` und schreibt ihn je Mannschaft als `spielplan` in
+`dart_liga.json`. Das Dashboard uebernimmt diese Termine vor den fest
+eingetragenen in `DART_CLUB` - ein verschobenes Spiel landet so von selbst am
+richtigen Tag, samt Heim/Auswaerts. Der Scraper merkt sich die Termine in der
+Skripteigenschaft `DART_TERMINE` und richtet sein Live-Fenster danach.
+
+Das grosse Badge rechts oben ist **gruen**, solange die City-Cafe-Mannschaft
+vorne liegt, sonst rot.
