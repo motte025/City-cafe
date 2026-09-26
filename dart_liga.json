@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T20:24:33Z",
+  "aktualisiert": "2026-09-26T20:33:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -991,24 +991,24 @@
         {
           "rang": 1,
           "team": "DSZKärnten \"2er\"",
-          "spiele": 2,
+          "spiele": 3,
           "siege": 2,
-          "unentschieden": 0,
+          "unentschieden": 1,
           "niederlagen": 0,
-          "punkte": 4
+          "punkte": 5
         },
         {
           "rang": 2,
-          "team": "DC Garzern",
-          "spiele": 2,
+          "team": "ESV DC Inferno",
+          "spiele": 3,
           "siege": 2,
-          "unentschieden": 0,
+          "unentschieden": 1,
           "niederlagen": 0,
-          "punkte": 4
+          "punkte": 5
         },
         {
           "rang": 3,
-          "team": "ESV DC Inferno",
+          "team": "DC Garzern",
           "spiele": 2,
           "siege": 2,
           "unentschieden": 0,
@@ -1166,7 +1166,7 @@
         },
         {
           "rang": 5,
-          "spieler": "GÖSCHL Mario",
+          "spieler": "BRUNNER Peter",
           "spiele": 6,
           "siege": 4,
           "niederlagen": 2,
@@ -1176,7 +1176,7 @@
         },
         {
           "rang": 6,
-          "spieler": "BRUNNER Peter",
+          "spieler": "GÖSCHL Mario",
           "spiele": 6,
           "siege": 4,
           "niederlagen": 2,
@@ -1187,11 +1187,11 @@
         {
           "rang": 7,
           "spieler": "WILTSCHNIG Gernot",
-          "spiele": 4,
+          "spiele": 5,
           "siege": 3,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 10,
-          "legs_minus": 7,
+          "legs_minus": 10,
           "punkte": 10
         },
         {
@@ -1286,7 +1286,7 @@
         },
         {
           "rang": 17,
-          "spieler": "GRAF Franz",
+          "spieler": "STEINER Sandro Emmanuel",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
@@ -1296,7 +1296,7 @@
         },
         {
           "rang": 18,
-          "spieler": "STEINER Sandro Emmanuel",
+          "spieler": "GRAF Franz",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
@@ -1336,7 +1336,7 @@
         },
         {
           "rang": 22,
-          "spieler": "KRENN Klaus",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1346,7 +1346,7 @@
         },
         {
           "rang": 23,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "KRENN Klaus",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1356,7 +1356,7 @@
         },
         {
           "rang": 24,
-          "spieler": "OSTRY Samantha-Lee",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1376,6 +1376,16 @@
         },
         {
           "rang": 26,
+          "spieler": "HUDMAST Manuel",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 3,
+          "legs_minus": 0,
+          "punkte": 3
+        },
+        {
+          "rang": 27,
           "spieler": "STEINER Lydia",
           "spiele": 1,
           "siege": 1,
@@ -1385,7 +1395,7 @@
           "punkte": 3
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "PINTER Michele",
           "spiele": 2,
           "siege": 0,
@@ -1395,7 +1405,7 @@
           "punkte": 3
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "GREINIG Petra",
           "spiele": 3,
           "siege": 0,
@@ -1405,7 +1415,7 @@
           "punkte": 3
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "LANG Melanie",
           "spiele": 4,
           "siege": 1,
@@ -1415,7 +1425,7 @@
           "punkte": 3
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "GREINIG Hubert",
           "spiele": 4,
           "siege": 0,
@@ -1425,7 +1435,7 @@
           "punkte": 3
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 1,
           "siege": 1,
@@ -1435,7 +1445,7 @@
           "punkte": 2
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "SCHMID Thomas",
           "spiele": 1,
           "siege": 1,
@@ -1445,7 +1455,7 @@
           "punkte": 2
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 2,
           "siege": 0,
@@ -1455,7 +1465,7 @@
           "punkte": 2
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "POSCHINGER Franz",
           "spiele": 2,
           "siege": 0,
@@ -1465,7 +1475,7 @@
           "punkte": 2
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "RUS Kerstin",
           "spiele": 2,
           "siege": 0,
@@ -1475,7 +1485,7 @@
           "punkte": 2
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 3,
           "siege": 0,
@@ -1485,7 +1495,7 @@
           "punkte": 2
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 3,
           "siege": 0,
@@ -1495,7 +1505,7 @@
           "punkte": 2
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "KRUSCHITZ Harald",
           "spiele": 2,
           "siege": 0,
@@ -1505,7 +1515,7 @@
           "punkte": 1
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "BRUNNER Katharina",
           "spiele": 1,
           "siege": 0,
@@ -1515,7 +1525,7 @@
           "punkte": 0
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1525,7 +1535,7 @@
           "punkte": 0
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
@@ -1629,7 +1639,7 @@
             "datum": "2026-09-26",
             "heim": "ESV DC Inferno",
             "auswaerts": "DSZKärnten \"2er\"",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 5,
             "id": 108872,
             "paarungen": [
@@ -1700,7 +1710,7 @@
                 "art": "OE",
                 "spieler1": "HUDMAST Manuel",
                 "spieler2": "WILTSCHNIG Gernot",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
