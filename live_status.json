@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T18:17:45Z",
+  "checked_at": "2026-09-26T18:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 26✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴 HARD STYLE ☆ !holy !naturtreu 🔴🔴",
@@ -26,14 +33,7 @@
       "platform": "twitch",
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Music to clear the head from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @alexvaganza",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 26✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
+      "title": "🍒✨💋🌈  Music to clear the head from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @solerlive, @alexvaganza",
       "game": "DJs"
     },
     {
