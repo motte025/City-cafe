@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T18:12:34Z",
+  "aktualisiert": "2026-09-26T18:20:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -998,7 +998,7 @@
       "einzelwertung": [
         {
           "rang": 1,
-          "spieler": "DANIEL Utta",
+          "spieler": "JANESCH Christine",
           "spiele": 4,
           "siege": 4,
           "niederlagen": 0,
@@ -1008,7 +1008,7 @@
         },
         {
           "rang": 2,
-          "spieler": "JANESCH Christine",
+          "spieler": "DANIEL Utta",
           "spiele": 4,
           "siege": 4,
           "niederlagen": 0,
@@ -1048,6 +1048,16 @@
         },
         {
           "rang": 6,
+          "spieler": "BRUNNER Peter",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 9,
+          "legs_minus": 4,
+          "punkte": 9
+        },
+        {
+          "rang": 7,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 4,
           "siege": 3,
@@ -1057,7 +1067,7 @@
           "punkte": 9
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "NIKOLIC Dennis",
           "spiele": 3,
           "siege": 3,
@@ -1065,16 +1075,6 @@
           "legs_plus": 8,
           "legs_minus": 1,
           "punkte": 8
-        },
-        {
-          "rang": 8,
-          "spieler": "BRUNNER Peter",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 3,
-          "punkte": 6
         },
         {
           "rang": 9,
@@ -1098,6 +1098,16 @@
         },
         {
           "rang": 11,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 12,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1107,20 +1117,10 @@
           "punkte": 6
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 3,
           "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 6,
-          "legs_minus": 6,
-          "punkte": 6
-        },
-        {
-          "rang": 13,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 4,
-          "siege": 2,
           "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 6,
@@ -1288,7 +1288,7 @@
         },
         {
           "rang": 30,
-          "spieler": "KÜHWEIDER Thomas",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1298,6 +1298,16 @@
         },
         {
           "rang": 31,
+          "spieler": "KÜHWEIDER Thomas",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 1,
+          "legs_minus": 3,
+          "punkte": 1
+        },
+        {
+          "rang": 32,
           "spieler": "LANG Melanie",
           "spiele": 3,
           "siege": 0,
@@ -1307,7 +1317,7 @@
           "punkte": 1
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "BRUNNER Katharina",
           "spiele": 1,
           "siege": 0,
@@ -1317,7 +1327,7 @@
           "punkte": 0
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1327,7 +1337,7 @@
           "punkte": 0
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
@@ -1471,7 +1481,7 @@
             "heim": "DC Garzern",
             "auswaerts": "DC Drautal Dart Vipers",
             "erg_heim": 2,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 108883,
             "paarungen": [
               {
@@ -1499,8 +1509,8 @@
                 "art": "OE",
                 "spieler1": "REIF Daniel-Stefan",
                 "spieler2": "BRUNNER Peter",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               }
             ]
           },
