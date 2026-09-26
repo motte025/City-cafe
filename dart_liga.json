@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T18:59:33Z",
+  "aktualisiert": "2026-09-26T19:15:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1056,16 +1056,6 @@
         },
         {
           "rang": 3,
-          "spieler": "JANESCH Christine",
-          "spiele": 4,
-          "siege": 4,
-          "niederlagen": 0,
-          "legs_plus": 11,
-          "legs_minus": 3,
-          "punkte": 11
-        },
-        {
-          "rang": 4,
           "spieler": "GÖSCHL Mario",
           "spiele": 4,
           "siege": 4,
@@ -1075,7 +1065,37 @@
           "punkte": 11
         },
         {
+          "rang": 4,
+          "spieler": "JANESCH Christine",
+          "spiele": 4,
+          "siege": 4,
+          "niederlagen": 0,
+          "legs_plus": 11,
+          "legs_minus": 3,
+          "punkte": 11
+        },
+        {
           "rang": 5,
+          "spieler": "BRUNNER Peter",
+          "spiele": 5,
+          "siege": 4,
+          "niederlagen": 1,
+          "legs_plus": 11,
+          "legs_minus": 5,
+          "punkte": 11
+        },
+        {
+          "rang": 6,
+          "spieler": "MARKTL Werner",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 10,
+          "legs_minus": 5,
+          "punkte": 10
+        },
+        {
+          "rang": 7,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 4,
           "siege": 3,
@@ -1083,26 +1103,6 @@
           "legs_plus": 10,
           "legs_minus": 7,
           "punkte": 10
-        },
-        {
-          "rang": 6,
-          "spieler": "MARKTL Werner",
-          "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 9,
-          "legs_minus": 3,
-          "punkte": 9
-        },
-        {
-          "rang": 7,
-          "spieler": "BRUNNER Peter",
-          "spiele": 4,
-          "siege": 3,
-          "niederlagen": 1,
-          "legs_plus": 9,
-          "legs_minus": 4,
-          "punkte": 9
         },
         {
           "rang": 8,
@@ -1116,6 +1116,16 @@
         },
         {
           "rang": 9,
+          "spieler": "WIMMER Leon",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 8,
+          "legs_minus": 4,
+          "punkte": 8
+        },
+        {
+          "rang": 10,
           "spieler": "FRADL Ingemar",
           "spiele": 5,
           "siege": 3,
@@ -1123,16 +1133,6 @@
           "legs_plus": 8,
           "legs_minus": 8,
           "punkte": 8
-        },
-        {
-          "rang": 10,
-          "spieler": "WIMMER Leon",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 3,
-          "punkte": 6
         },
         {
           "rang": 11,
@@ -1146,9 +1146,9 @@
         },
         {
           "rang": 12,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 4,
-          "siege": 2,
+          "spieler": "GRAFSCHAFTER Bastian",
+          "spiele": 3,
+          "siege": 1,
           "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 6,
@@ -1156,9 +1156,9 @@
         },
         {
           "rang": 13,
-          "spieler": "GRAFSCHAFTER Bastian",
-          "spiele": 3,
-          "siege": 1,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 4,
+          "siege": 2,
           "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 6,
@@ -1316,6 +1316,16 @@
         },
         {
           "rang": 29,
+          "spieler": "MARKTL (J) Maximilian",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 2,
+          "legs_minus": 4,
+          "punkte": 2
+        },
+        {
+          "rang": 30,
           "spieler": "POSCHINGER Franz",
           "spiele": 2,
           "siege": 0,
@@ -1325,7 +1335,7 @@
           "punkte": 2
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 3,
           "siege": 0,
@@ -1335,27 +1345,7 @@
           "punkte": 2
         },
         {
-          "rang": 31,
-          "spieler": "MARKTL (J) Maximilian",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 1,
-          "legs_minus": 2,
-          "punkte": 1
-        },
-        {
           "rang": 32,
-          "spieler": "KRUSCHITZ Harald",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 1,
-          "legs_minus": 3,
-          "punkte": 1
-        },
-        {
-          "rang": 33,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 1,
           "siege": 0,
@@ -1365,8 +1355,18 @@
           "punkte": 1
         },
         {
-          "rang": 34,
+          "rang": 33,
           "spieler": "REIF Daniel-Stefan",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 1,
+          "legs_minus": 3,
+          "punkte": 1
+        },
+        {
+          "rang": 34,
+          "spieler": "KRUSCHITZ Harald",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1573,7 +1573,7 @@
             "heim": "DC Garzern",
             "auswaerts": "DC Drautal Dart Vipers",
             "erg_heim": 3,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 108883,
             "paarungen": [
               {
@@ -1615,8 +1615,8 @@
                 "art": "OD",
                 "spieler1": "MARKTL (J) Maximilian / MARKTL Werner",
                 "spieler2": "BRUNNER Peter / WIMMER Leon",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 2
               }
             ]
           },
