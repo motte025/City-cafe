@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T18:44:36Z",
+  "aktualisiert": "2026-09-26T18:48:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -583,6 +583,20 @@
             "spieler2": "REGENFELDNER Rene",
             "legs1": 3,
             "legs2": 1
+          },
+          {
+            "art": "MD",
+            "spieler1": "KOGLER Sabine / JAHN Andreas",
+            "spieler2": "HOCHEGGER Andrea / HOCHEGGER Martin",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OD",
+            "spieler1": "GORICNIK Michael / JAHN Herbert",
+            "spieler2": "URANK Romeo / REGENFELDNER Rene",
+            "legs1": 0,
+            "legs2": 0
           }
         ]
       },
@@ -746,6 +760,20 @@
                 "spieler2": "REGENFELDNER Rene",
                 "legs1": 3,
                 "legs2": 1
+              },
+              {
+                "art": "MD",
+                "spieler1": "KOGLER Sabine / JAHN Andreas",
+                "spieler2": "HOCHEGGER Andrea / HOCHEGGER Martin",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "GORICNIK Michael / JAHN Herbert",
+                "spieler2": "URANK Romeo / REGENFELDNER Rene",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           }
