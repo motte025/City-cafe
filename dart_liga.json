@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T17:09:32Z",
+  "aktualisiert": "2026-09-26T17:15:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1000,13 +1000,13 @@
       "einzelwertung": [
         {
           "rang": 1,
-          "spieler": "GÖSCHL Mario",
-          "spiele": 3,
-          "siege": 3,
+          "spieler": "DANIEL Utta",
+          "spiele": 4,
+          "siege": 4,
           "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 1,
-          "punkte": 8
+          "legs_plus": 11,
+          "legs_minus": 3,
+          "punkte": 11
         },
         {
           "rang": 2,
@@ -1020,17 +1020,17 @@
         },
         {
           "rang": 3,
-          "spieler": "JANESCH Christine",
+          "spieler": "GÖSCHL Mario",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
           "legs_plus": 8,
-          "legs_minus": 3,
+          "legs_minus": 1,
           "punkte": 8
         },
         {
           "rang": 4,
-          "spieler": "DANIEL Utta",
+          "spieler": "JANESCH Christine",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -1080,16 +1080,6 @@
         },
         {
           "rang": 9,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 5,
-          "punkte": 6
-        },
-        {
-          "rang": 10,
           "spieler": "FRADL Ingemar",
           "spiele": 3,
           "siege": 2,
@@ -1099,8 +1089,18 @@
           "punkte": 6
         },
         {
-          "rang": 11,
+          "rang": 10,
           "spieler": "STINGLER Engelbert",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 5,
+          "punkte": 6
+        },
+        {
+          "rang": 11,
+          "spieler": "SCHMALNAUER Daniel",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -1180,16 +1180,6 @@
         },
         {
           "rang": 19,
-          "spieler": "ETTL Theresa",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 3,
-          "legs_minus": 4,
-          "punkte": 3
-        },
-        {
-          "rang": 20,
           "spieler": "GREINIG Hubert",
           "spiele": 2,
           "siege": 0,
@@ -1199,13 +1189,23 @@
           "punkte": 3
         },
         {
-          "rang": 21,
+          "rang": 20,
           "spieler": "PINTER Michele",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
           "legs_plus": 3,
           "legs_minus": 6,
+          "punkte": 3
+        },
+        {
+          "rang": 21,
+          "spieler": "ETTL Theresa",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 3,
+          "legs_minus": 7,
           "punkte": 3
         },
         {
@@ -1422,7 +1422,7 @@
             "datum": "2026-09-26",
             "heim": "DC Garzern",
             "auswaerts": "DC Drautal Dart Vipers",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 0,
             "id": 108883,
             "paarungen": [
@@ -1430,7 +1430,7 @@
                 "art": "DE",
                 "spieler1": "DANIEL Utta",
                 "spieler2": "ETTL Theresa",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
