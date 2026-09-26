@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T23:27:49Z",
+  "checked_at": "2026-09-26T23:37:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,13 +27,6 @@
       "channel": "beatportofficial",
       "name": "BeatportOfficial",
       "title": "The Block At Breakaway  Carolina",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     },
     {
