@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T01:32:45Z",
+  "checked_at": "2026-09-26T01:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,13 +7,6 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Live: Noah Kahan",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "rainforest cafe !bewbs !morestreams !alt",
-      "game": "DJs"
     },
     {
       "platform": "twitch",
