@@ -305,7 +305,7 @@ Dashboard ab **18:30** nur noch die Dart-Strecke des Abends, im Kreis:
 
 | # | Slot | Dauer |
 | --- | --- | --- |
-| 1 | Dartcam (RTSP) | 5 min - **zu Beginn so lange, bis die ersten Einzelergebnisse der Chaoten da sind** (danach alle 15 s geprueft) |
+| 1 | Dartcam (RTSP) | 3 min - **zu Beginn so lange, bis die ersten Einzelergebnisse der Chaoten da sind** (danach alle 15 s geprueft) |
 | 2 | Chaoten live: die zehn Paarungen, offene grau mit "–:–", Zwischenstand im Kopf | 30 s |
 | 3 | EIN anderes Spiel derselben Klasse, bei jedem Durchlauf das naechste | 26 s |
 
