@@ -1127,6 +1127,18 @@
             color: rgba(255,255,255,0.85);
         }
         .sd-legs.is-sieg { color: #34d399; }
+        .sd-row.is-offen { opacity: 0.45; }
+
+        /* ---------- Dartcam (Dart-Abend-Modus) ----------
+           Das Bild selbst legt der mpv-Aufpasser als eigenes Fenster genau
+           ueber #dart-cam-frame; darunter steht nur der Hinweistext. */
+        .dc-frame {
+            position: relative; width: 1200px; height: 675px; margin: 0 auto;
+            background: #000; border-radius: 14px; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 0 2px rgba(255, 51, 85, 0.45);
+        }
+        .dc-hinweis { font-size: 26px; font-weight: 800; color: rgba(255,255,255,0.55); letter-spacing: 1px; }
         .sd-legs.is-nied { color: #ff6b6b; }
         .sd-kopfzeile {
             display: grid; grid-template-columns: 74px 1fr 104px 1fr;
@@ -1925,7 +1937,8 @@
         #media-view-dart-team.active ~ .kt-launcher,
         #media-view-dart-einzel.active ~ .kt-launcher,
         #media-view-dart-spiel.active ~ .kt-launcher,
-        #media-view-dart-table.active ~ .kt-launcher { display: none !important; }
+        #media-view-dart-table.active ~ .kt-launcher,
+        #media-view-dart-cam.active ~ .kt-launcher { display: none !important; }
 
         /* ---------- DJ-Live-Widget (Twitch / YouTube Live) ---------- */
         /* Gleiche Buehnen-Handschrift wie die Bundesliga-Slots, nur in Club-Farben
@@ -2687,6 +2700,24 @@
                             <span class="is-rechts" id="dart-spiel-kopf-rechts">Gegner</span>
                         </div>
                         <div class="sd-liste" id="dart-spiel-liste"></div>
+                    </div>
+                </div>
+
+                <!-- Dart-Abend-Modus: Dartcam. RTSP spielt nur der mpv-Aufpasser,
+                     er legt sein Fenster passgenau ueber #dart-cam-frame. -->
+                <div class="media-inner-view" id="media-view-dart-cam">
+                    <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden; padding: 24px 40px; box-sizing: border-box;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px;">
+                            <div class="dart-kopf">
+                                <span class="dart-logo">🎯</span>
+                                <div>
+                                    <h2 style="font-family: 'Orbitron', sans-serif; font-size: 30px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">Dartcam · City Cafe</h2>
+                                    <p id="dart-cam-untertitel" style="font-size: 15px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 4px 0 0;">Live aus dem City Cafe</p>
+                                </div>
+                            </div>
+                            <div id="dart-cam-badge" class="dart-badge">LIVE</div>
+                        </div>
+                        <div class="dc-frame" id="dart-cam-frame"><div class="dc-hinweis" id="dart-cam-hinweis">Kamera wird verbunden …</div></div>
                     </div>
                 </div>
 
@@ -6257,7 +6288,8 @@
         // Gespielt wird immer samstags ab 19:00; ein Mannschaftsabend zieht sich
         // bis in die Nacht. Das Live-Fenster laeuft deshalb ueber Mitternacht
         // hinaus bis 01:00 des Folgetags.
-        const DART_LIVE_START_STUNDE = 19;
+        const DART_LIVE_START_STUNDE = 18;
+        const DART_LIVE_START_MINUTE = 30;   // Dart-Abend-Modus beginnt um 18:30
         const DART_LIVE_ENDE_STUNDE = 1;
 
         let DART_LIGA = { teams: {}, aktualisiert: null };
@@ -6433,7 +6465,7 @@
         function dartLiveFenster(jetzt) {
             const n = jetzt || new Date();
             const stunde = n.getHours();
-            if (stunde >= DART_LIVE_START_STUNDE) {
+            if (stunde * 60 + n.getMinutes() >= DART_LIVE_START_STUNDE * 60 + DART_LIVE_START_MINUTE) {
                 return DART_SPIELTAGE.has(dartTagesSchluessel(n));
             }
             if (stunde < DART_LIVE_ENDE_STUNDE) {
@@ -6457,6 +6489,7 @@
             if (Date.now() - dartLetzterAbruf < abstand) return;
             dartLetzterAbruf = Date.now();
             await dartLigaLaden();
+            dartAbendEndePruefen();
             // Steht gerade eine Dart-Ansicht auf dem Schirm, soll sie den neuen
             // Stand sofort zeigen und nicht erst beim naechsten Durchlauf.
             dartAnsichtAuffrischen();
@@ -6472,10 +6505,11 @@
             };
             if (sichtbar('media-view-dart-next')) dartRenderNext();
             if (sichtbar('media-view-dart-table') && dartTableSlotVerfuegbar()) dartRenderTabelle();
+            if (sichtbar('media-view-dart-spiel') && typeof window.dartAbendNeuZeichnen === 'function') window.dartAbendNeuZeichnen();
         }
 
         dartLetzterAbruf = Date.now();
-        dartLigaLaden().then(dartAnsichtAuffrischen);
+        dartLigaLaden().then(() => { dartAbendEndePruefen(); dartAnsichtAuffrischen(); });
         setInterval(dartAbrufTakt, 20000);
 
         function runDrinksState(nextStateIndex) {
@@ -12257,6 +12291,272 @@
             return true;
         }
 
+        // ==================================================================
+        //  Dart-Abend-Modus (Heimspieltag der Chaoten im City Cafe)
+        // ==================================================================
+        // An einem Spieltag der Chaoten laeuft ab 18:30 NUR noch die
+        // Dart-Strecke des Abends, im Kreis:
+        //   1. Dartcam, 5 Minuten (RTSP - spielt der mpv-Aufpasser auf der Box,
+        //      ein Browser kann RTSP nicht; siehe kiosk/nl-mpv-supervisor.py)
+        //   2. die Einzelpaarungen der Chaoten (live aus dart_liga.json)
+        //   3. EIN anderes Spiel derselben Klasse - bei jedem Durchlauf das
+        //      naechste, also abwechselnd
+        //   -> wieder 1.
+        // Zu Beginn bleibt die Kamera stehen, bis die ersten Ergebnisse der
+        // Chaoten-Spieler da sind. 30 Minuten nach dem Endergebnis der Chaoten
+        // geht der gewohnte Zyklus weiter.
+        //
+        // Zum Ansehen ausserhalb des Spieltags: ?dartabend=1 erzwingt den
+        // Modus, ?dartabend=0 schaltet ihn ab.
+        const DART_CAM_URL = 'rtsp://dartcam:sabrina025@192.168.0.177:554/stream1';
+        const DART_ABEND_TEAM = 'chaoten';
+        const DART_ABEND_START = { stunde: 18, minute: 30 };
+        const DART_ABEND_CAM_MS = 5 * 60000;
+        const DART_ABEND_CAM_WARTE_MS = 15000;   // danach so oft auf erste Ergebnisse pruefen
+        const DART_ABEND_NACHLAUF_MS = 30 * 60000;
+        const DART_ABEND_SPIEL_MS = 30000;
+        const DART_ABEND_GRUPPE_MS = 26000;
+        // Notbremse: spaetestens um 04:00 ist der Abend vorbei, auch wenn nie
+        // ein Endergebnis ankommt (Scraper aus, Spiel abgebrochen).
+        const DART_ABEND_SCHLUSS_STUNDE = 4;
+
+        const DART_ABEND_CAM_INDEX = -10;
+        const DART_ABEND_SPIEL_INDEX = -9.9;
+        const DART_ABEND_GRUPPE_INDEX = -9.8;
+        function dartAbendIndex(i) {
+            return i === DART_ABEND_CAM_INDEX || i === DART_ABEND_SPIEL_INDEX || i === DART_ABEND_GRUPPE_INDEX;
+        }
+
+        const DART_ABEND_ERZWUNGEN = (() => {
+            try {
+                const w = new URLSearchParams(location.search).get('dartabend');
+                return w === '1' ? true : (w === '0' ? false : null);
+            } catch (e) { return null; }
+        })();
+
+        // Der Spieltag, zu dem "jetzt" gehoert: nach Mitternacht noch der Vortag.
+        function dartAbendTag(jetzt) {
+            const n = jetzt || new Date();
+            return n.getHours() < DART_ABEND_SCHLUSS_STUNDE
+                ? new Date(n.getFullYear(), n.getMonth(), n.getDate() - 1)
+                : new Date(n.getFullYear(), n.getMonth(), n.getDate());
+        }
+
+        // Spielplan-Eintrag der Chaoten fuer heute (Freilos zaehlt nicht).
+        function dartAbendHeute(jetzt) {
+            const tag = dartTagesSchluessel(dartAbendTag(jetzt));
+            return DART_SPIELE[DART_ABEND_TEAM].find(s => s.datumIso === tag && !s.freilos) || null;
+        }
+
+        function dartAbendEndeSchluessel(jetzt) {
+            return 'dartAbendEnde-' + dartTagesSchluessel(dartAbendTag(jetzt));
+        }
+        function dartAbendEndeLesen(jetzt) {
+            try { return Number(localStorage.getItem(dartAbendEndeSchluessel(jetzt))) || 0; } catch (e) { return 0; }
+        }
+        let dartAbendEndeMerker = 0;   // falls localStorage nicht geht
+
+        // Das Spiel der Chaoten heute, normalisiert:
+        // { heim, auswaerts, ergHeim, ergAus, paarungen, wirHeim }.
+        // Bevorzugt aus "spieltag" (neue Scraper-Fassung, ab 18:30); aeltere
+        // Fassungen liefern nur "letztes_spiel" - das reicht auch, sobald es
+        // die heutige Runde ist.
+        function dartAbendEigenesSpiel() {
+            const heute = dartAbendHeute();
+            const team = dartLigaTeam(DART_ABEND_TEAM);
+            if (!heute || !team) return null;
+            const eigen = dartNameKey(DART_CLUB[DART_ABEND_TEAM].name);
+            const tag = team.spieltag;
+            if (tag && Array.isArray(tag.spiele)) {
+                const s = tag.spiele.find(x => dartNameKey(x.heim) === eigen || dartNameKey(x.auswaerts) === eigen);
+                if (s) return {
+                    heim: s.heim, auswaerts: s.auswaerts,
+                    ergHeim: Number(s.erg_heim) || 0, ergAus: Number(s.erg_auswaerts) || 0,
+                    paarungen: Array.isArray(s.paarungen) ? s.paarungen : [],
+                    wirHeim: dartNameKey(s.heim) === eigen
+                };
+            }
+            const l = team.letztes_spiel;
+            if (l && l.runde === heute.runde && Array.isArray(l.paarungen)) {
+                return {
+                    heim: heute.istHeim ? heute.teamName : heute.gegner,
+                    auswaerts: heute.istHeim ? heute.gegner : heute.teamName,
+                    ergHeim: Number(l.heim) || 0, ergAus: Number(l.auswaerts) || 0,
+                    paarungen: l.paarungen, wirHeim: heute.istHeim
+                };
+            }
+            return null;
+        }
+
+        // Die anderen Spiele derselben Klasse am heutigen Abend.
+        function dartAbendAndereSpiele() {
+            const team = dartLigaTeam(DART_ABEND_TEAM);
+            const tag = team && team.spieltag;
+            if (!tag || !Array.isArray(tag.spiele)) return [];
+            const eigen = dartNameKey(DART_CLUB[DART_ABEND_TEAM].name);
+            return tag.spiele.filter(x => dartNameKey(x.heim) !== eigen && dartNameKey(x.auswaerts) !== eigen);
+        }
+
+        function dartPaarungGespielt(p) { return (Number(p.legs1) || 0) + (Number(p.legs2) || 0) > 0; }
+
+        function dartAbendHatErgebnisse() {
+            const s = dartAbendEigenesSpiel();
+            return !!s && (s.ergHeim + s.ergAus > 0 || s.paarungen.some(dartPaarungGespielt));
+        }
+
+        // Zehn Saetze je Mannschaftsabend - erst dann steht das Endergebnis.
+        function dartAbendEndstand(s) {
+            if (!s) return false;
+            if (s.ergHeim + s.ergAus >= 10) return true;
+            return s.paarungen.length >= 10 && s.paarungen.every(dartPaarungGespielt);
+        }
+
+        // Beim ersten Endstand den Zeitpunkt merken - ab da laufen die 30 Minuten.
+        function dartAbendEndePruefen() {
+            if (dartAbendEndeLesen() || dartAbendEndeMerker) return;
+            if (!dartAbendEndstand(dartAbendEigenesSpiel())) return;
+            dartAbendEndeMerker = Date.now();
+            try { localStorage.setItem(dartAbendEndeSchluessel(), String(dartAbendEndeMerker)); } catch (e) {}
+        }
+
+        function dartAbendAktiv(jetzt) {
+            if (DART_ABEND_ERZWUNGEN !== null) return DART_ABEND_ERZWUNGEN;
+            const n = jetzt || new Date();
+            const heute = dartAbendHeute(n);
+            if (!heute) return false;
+            const beginn = new Date(heute.datum.getFullYear(), heute.datum.getMonth(), heute.datum.getDate(),
+                                    DART_ABEND_START.stunde, DART_ABEND_START.minute);
+            if (n < beginn) return false;
+            const ende = dartAbendEndeLesen(n) || dartAbendEndeMerker;
+            return !(ende && n.getTime() >= ende + DART_ABEND_NACHLAUF_MS);
+        }
+
+        // ---------- Slot 1: Dartcam ----------
+        // Der Aufpasser liest dartCamAktiv/DART_CAM_URL und legt mpv passgenau
+        // ueber #dart-cam-frame. Er meldet ueber window.dartCamLaeuft zurueck;
+        // bleibt das aus, steht hier ein Hinweis statt einer schwarzen Flaeche.
+        window.dartCamAktiv = false;
+        window.dartCamLaeuft = false;
+        window.dartCamUrl = DART_CAM_URL;
+
+        function dartCamHinweis() {
+            const el = document.getElementById('dart-cam-hinweis');
+            if (!el) return;
+            const seit = Date.now() - (window.dartCamSeit || Date.now());
+            el.textContent = window.dartCamLaeuft ? '' :
+                (seit > 25000 ? 'Kamera gerade nicht erreichbar – versuche es weiter …' : 'Kamera wird verbunden …');
+        }
+
+        function runDartAbendCamState() {
+            window.dartCamAktiv = true;
+            window.dartCamSeit = Date.now();
+            const s = dartAbendEigenesSpiel();
+            dartBadgeSetzen('dart-cam-badge', s && (s.ergHeim + s.ergAus > 0)
+                ? `LIVE · ${s.wirHeim ? s.ergHeim : s.ergAus}:${s.wirHeim ? s.ergAus : s.ergHeim}` : 'LIVE', true);
+            const heute = dartAbendHeute() || dartNaechstesSpiel(DART_ABEND_TEAM);
+            document.getElementById('dart-cam-untertitel').textContent = heute
+                ? `Chaoten gegen ${heute.gegner} · ${heute.liga} · Runde ${heute.runde}`
+                : 'Live aus dem City Cafe';
+            document.getElementById('media-view-dart-cam').classList.add('active');
+            dartCamHinweis();
+            repeat(dartCamHinweis, 2000);
+
+            function weiter() {
+                // Erst wechseln, wenn es von den Chaoten etwas zu zeigen gibt.
+                if (!dartAbendAktiv() || dartAbendHatErgebnisse()) {
+                    mediaStateIndex = DART_ABEND_SPIEL_INDEX;
+                    runMasterSequence();
+                } else {
+                    globalMasterTimer = later(weiter, DART_ABEND_CAM_WARTE_MS);
+                }
+            }
+            globalMasterTimer = later(weiter, DART_ABEND_CAM_MS);
+        }
+
+        // ---------- Slot 2 und 3: Paarungen eines Spiels ----------
+        // Nutzt die Ansicht "Letztes Spiel" (media-view-dart-spiel) mit.
+        // wirSeite: 'heim' / 'aus' / null (fremdes Spiel, niemand hervorgehoben)
+        function dartAbendRenderSpiel(titel, untertitel, s, wirSeite) {
+            document.getElementById('dart-spiel-titel').textContent = titel;
+            document.getElementById('dart-spiel-untertitel').textContent = untertitel;
+            const fertig = dartAbendEndstand(s);
+            const badge = document.getElementById('dart-spiel-endstand');
+            badge.classList.remove('is-live', 'is-sieg', 'is-nied');
+            if (!fertig) {
+                badge.classList.add('is-live');
+                badge.innerHTML = `<span class="dart-live-punkt"></span><span class="sd-endstand">${s.ergHeim}:${s.ergAus}</span> LIVE`;
+            } else if (wirSeite) {
+                const unser = wirSeite === 'heim' ? s.ergHeim : s.ergAus;
+                const gegen = wirSeite === 'heim' ? s.ergAus : s.ergHeim;
+                badge.classList.add(unser > gegen ? 'is-sieg' : (unser < gegen ? 'is-nied' : 'is-live'));
+                badge.innerHTML = `<span class="sd-endstand">${unser}:${gegen}</span> ` +
+                    (unser > gegen ? 'gewonnen' : (unser < gegen ? 'verloren' : 'unentschieden'));
+            } else {
+                badge.innerHTML = `<span class="sd-endstand">${s.ergHeim}:${s.ergAus}</span> Endstand`;
+            }
+
+            document.getElementById('dart-spiel-kopf-links').textContent = s.heim;
+            document.getElementById('dart-spiel-kopf-rechts').textContent = s.auswaerts;
+
+            const liste = document.getElementById('dart-spiel-liste');
+            if (!s.paarungen.length) {
+                liste.innerHTML = `<div class="dn-leer"><div class="dn-leer-icon">🎯</div>
+                    <div class="dn-leer-text">Noch keine Ergebnisse eingetragen</div></div>`;
+                return;
+            }
+            liste.innerHTML = s.paarungen.map(p => {
+                const gespielt = dartPaarungGespielt(p);
+                const l1 = Number(p.legs1) || 0, l2 = Number(p.legs2) || 0;
+                let klasse = '';
+                if (gespielt && wirSeite) {
+                    const uns = wirSeite === 'heim' ? l1 : l2, geg = wirSeite === 'heim' ? l2 : l1;
+                    klasse = uns > geg ? 'is-sieg' : (uns < geg ? 'is-nied' : '');
+                }
+                const doppel = p.art === 'MD' || p.art === 'OD';
+                return `<div class="sd-row ${gespielt ? '' : 'is-offen'}">
+                    <div class="sd-art ${doppel ? 'is-doppel' : ''}">${p.art || '–'}</div>
+                    <div class="sd-spieler ${wirSeite === 'heim' ? 'is-wir' : ''}">${dartKurzName(p.spieler1)}</div>
+                    <div class="sd-legs ${klasse}">${gespielt ? `${l1}:${l2}` : '–:–'}</div>
+                    <div class="sd-spieler is-rechts ${wirSeite === 'aus' ? 'is-wir' : ''}">${dartKurzName(p.spieler2)}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function runDartAbendSpielState() {
+            const s = dartAbendEigenesSpiel();
+            const heute = dartAbendHeute() || dartNaechstesSpiel(DART_ABEND_TEAM);
+            if (!s) { mediaStateIndex = DART_ABEND_GRUPPE_INDEX; runMasterSequence(); return; }
+            const liga = heute ? `${heute.liga} · Runde ${heute.runde} · heute` : 'heute';
+            const zeichnen = () => dartAbendRenderSpiel('City Flyers "Chaoten" · Live', liga,
+                dartAbendEigenesSpiel() || s, s.wirHeim ? 'heim' : 'aus');
+            zeichnen();
+            window.dartAbendNeuZeichnen = zeichnen;
+            document.getElementById('media-view-dart-spiel').classList.add('active');
+            mediaStateIndex = DART_ABEND_GRUPPE_INDEX;
+            globalMasterTimer = later(runMasterSequence, DART_ABEND_SPIEL_MS);
+        }
+
+        let dartAbendGruppeZeiger = 0;
+        function runDartAbendGruppeState() {
+            const andere = dartAbendAndereSpiele();
+            if (!andere.length) { mediaStateIndex = DART_ABEND_CAM_INDEX; runMasterSequence(); return; }
+            const nr = dartAbendGruppeZeiger % andere.length;
+            dartAbendGruppeZeiger++;
+            const zeichnen = () => {
+                const x = dartAbendAndereSpiele()[nr] || andere[nr];
+                dartAbendRenderSpiel(`${DART_CLUB[DART_ABEND_TEAM].liga} · Spiel ${nr + 1}/${andere.length}`,
+                    `Runde ${x.runde} · die anderen Spiele unserer Gruppe`,
+                    { heim: x.heim, auswaerts: x.auswaerts, ergHeim: Number(x.erg_heim) || 0,
+                      ergAus: Number(x.erg_auswaerts) || 0, paarungen: Array.isArray(x.paarungen) ? x.paarungen : [] },
+                    null);
+            };
+            zeichnen();
+            window.dartAbendNeuZeichnen = zeichnen;
+            document.getElementById('media-view-dart-spiel').classList.add('active');
+            mediaStateIndex = DART_ABEND_CAM_INDEX;
+            globalMasterTimer = later(runMasterSequence, DART_ABEND_GRUPPE_MS);
+        }
+
         (function updateStarten() {
             try {
                 if (new URLSearchParams(location.search).get('autoupdate') === '0') return;
@@ -12285,6 +12585,20 @@
             // freigegeben (siehe dartFilmFreigeben) - ausser er ist als
             // Naechstes dran und puffert gerade vor.
             if (mediaStateIndex !== DART_FILM_INDEX) dartFilmFreigeben();
+
+            // Dart-Abend-Modus: solange er laeuft, gibt es nur Kamera und
+            // Ergebnisse. Danach geht es am gewohnten Zyklusanfang weiter.
+            window.dartCamAktiv = false;
+            window.dartCamLaeuft = false;
+            window.dartAbendNeuZeichnen = null;
+            if (dartAbendAktiv()) {
+                if (!dartAbendIndex(mediaStateIndex)) mediaStateIndex = DART_ABEND_CAM_INDEX;
+            } else if (dartAbendIndex(mediaStateIndex)) {
+                mediaStateIndex = QR_SLOT_INDEX;
+            }
+            if (mediaStateIndex === DART_ABEND_CAM_INDEX) { runDartAbendCamState(); return; }
+            if (mediaStateIndex === DART_ABEND_SPIEL_INDEX) { runDartAbendSpielState(); return; }
+            if (mediaStateIndex === DART_ABEND_GRUPPE_INDEX) { runDartAbendGruppeState(); return; }
 
             // Das QR-Widget eroeffnet den Zyklus: alles zum Mitmachen zuerst,
             // eine Minute lang mit Countdown.
@@ -12469,7 +12783,7 @@
             const djSofort = DJ_SLOT_AN && /(?:^|[?&])djnow=1(?:&|$)/.test(location.search);
             mediaStateIndex = djSofort ? DJ_SLOT_INDEX : QR_SLOT_INDEX;
             globalMasterTimer = later(runMasterSequence,
-                djSofort ? 1500 : (KT.testFirstInCycle ? 6000 : 35000));
+                djSofort ? 1500 : (dartAbendAktiv() ? 3000 : (KT.testFirstInCycle ? 6000 : 35000)));
         }
 
         function weatherCodeToIcon(code) {

@@ -67,7 +67,8 @@ const DART_SPIELTAGE = [
   '2026-11-21', '2026-12-05', '2027-01-09', '2027-01-23', '2027-02-13',
   '2027-03-20', '2027-04-10', '2027-04-24', '2027-05-08'
 ];
-const DART_LIVE_START_STUNDE = 19;   // ab 19:00 des Spieltags
+const DART_LIVE_START_STUNDE = 18;   // ab 18:30 des Spieltags (Dart-Abend-Modus
+const DART_LIVE_START_MINUTE = 30;   // im Dashboard beginnt dann die Kamera)
 const DART_LIVE_ENDE_STUNDE = 1;     // bis 01:00 des Folgetags
 const DART_ZEITZONE = 'Europe/Vienna';
 
@@ -84,15 +85,20 @@ function dartWienerTag(datum) {
   return Utilities.formatDate(datum || new Date(), DART_ZEITZONE, 'yyyy-MM-dd');
 }
 
+function dartWienerMinute(datum) {
+  return parseInt(Utilities.formatDate(datum || new Date(), DART_ZEITZONE, 'm'), 10);
+}
+
 /**
- * Wahr zwischen 19:00 eines Spieltags und 01:00 des Folgetags.
+ * Wahr zwischen 18:30 eines Spieltags und 01:00 des Folgetags.
  * Der Abschnitt nach Mitternacht gehoert noch zum Abend davor - dort wird
  * deshalb auf den VORTAG geprueft, nicht auf den laufenden Tag.
  */
 function dartImLiveFenster(jetzt) {
   const n = jetzt || new Date();
   const stunde = dartWienerStunde(n);
-  if (stunde >= DART_LIVE_START_STUNDE) {
+  const minuten = stunde * 60 + dartWienerMinute(n);
+  if (minuten >= DART_LIVE_START_STUNDE * 60 + DART_LIVE_START_MINUTE) {
     return DART_SPIELTAGE.indexOf(dartWienerTag(n)) !== -1;
   }
   if (stunde < DART_LIVE_ENDE_STUNDE) {
@@ -170,7 +176,8 @@ function dartLigaAktualisieren() {
       ergebnisse: ergebnisse,
       einzelwertung: einzel,
       kader: kader,
-      letztes_spiel: letztes
+      letztes_spiel: letztes,
+      spieltag: dartImLiveFenster() ? dartHoleSpieltag(t.turnierid) : null
     };
     Logger.log(t.name + ': ' + tabelle.length + ' Tabellenplaetze, ' +
                Object.keys(ergebnisse).length + ' Runden mit Gegner, ' +
@@ -225,6 +232,25 @@ function dartHoleTabelle(turnierid) {
 
 function dartHoleErgebnisse(turnierid, eigenerName) {
   return dartParseVorrunde(dartSeiteHolen('vorrunde.php', turnierid), eigenerName);
+}
+
+/**
+ * Dart-Abend-Modus: alle Spiele der Gruppe am heutigen Spieltag, jeweils mit
+ * den Einzelpaarungen. Nur im Live-Fenster - dort zeigt das Dashboard erst
+ * die Paarungen der eigenen Mannschaft und dann abwechselnd die der anderen
+ * Spiele derselben Klasse. Eine Session reicht fuer alle Detailseiten.
+ */
+function dartHoleSpieltag(turnierid) {
+  const heute = dartWienerTag(new Date(Date.now() - DART_LIVE_ENDE_STUNDE * 3600 * 1000));
+  const spiele = dartParseGruppe(dartSeiteHolen('vorrunde.php', turnierid)).filter(function (s) {
+    return s.datum === heute && !dartIstFreilos(s.heim) && !dartIstFreilos(s.auswaerts);
+  });
+  if (!spiele.length) return null;
+  const cookie = dartSessionCookie(turnierid);
+  spiele.forEach(function (s) {
+    s.paarungen = (cookie && s.id) ? dartHoleSpielDetail(turnierid, s.id, cookie) : [];
+  });
+  return { datum: heute, runde: spiele[0].runde, spiele: spiele };
 }
 
 // ---------------------------------------------------------------------------
@@ -312,6 +338,31 @@ function dartParseTabelle(html) {
 // Spaltennummern verschieben sich. Deshalb wird nicht nach fester Position
 // gesucht, sondern nach der Zelle, die mit einem Spielstand beginnt: davor
 // steht der Heimverein, im Rest derselben Zelle der Gast.
+
+// Alle Paarungen der Gruppe (nicht nur die eigenen), mit Datum und Runde.
+function dartParseGruppe(html) {
+  const out = [];
+  let runde = null, datum = null;
+  dartTabellenZeilen(html).forEach(function (z) {
+    const c = dartZellen(z);
+    if (!c.length) return;
+    const kopf = c[0] && c[0].match(/(\d{4}-\d{2}-\d{2})\s*-\s*Runde\s*(\d+)/);
+    if (kopf) { datum = kopf[1]; runde = parseInt(kopf[2], 10); return; }
+    if (runde === null) return;
+    let i = -1, m = null;
+    for (let k = 1; k < c.length; k++) {
+      const t = c[k].match(/^(\d+)\s*:\s*(\d+)\s*(.*)$/);
+      if (t && t[3]) { i = k; m = t; break; }
+    }
+    if (i < 1) return;
+    const eintrag = { runde: runde, datum: datum, heim: c[i - 1], auswaerts: m[3],
+                      erg_heim: parseInt(m[1], 10), erg_auswaerts: parseInt(m[2], 10) };
+    const id = z.match(/teamSpielId=(\d+)/);
+    if (id) eintrag.id = parseInt(id[1], 10);
+    out.push(eintrag);
+  });
+  return out;
+}
 
 function dartParseVorrunde(html, eigenerName) {
   const ergebnisse = {};
@@ -442,8 +493,8 @@ function dartSessionCookie(turnierid) {
  * Ohne Cookie oder bei leerer Seite kommt ein leeres Array zurueck - der
  * Slot faellt dann aus, statt eine leere Tabelle zu zeigen.
  */
-function dartHoleSpielDetail(turnierid, spielId) {
-  const cookie = dartSessionCookie(turnierid);
+function dartHoleSpielDetail(turnierid, spielId, vorhandenesCookie) {
+  const cookie = vorhandenesCookie || dartSessionCookie(turnierid);
   if (!cookie) {
     Logger.log('WARNUNG: keine Session fuer Turnier ' + turnierid + ' - Spiel-Detail uebersprungen.');
     return [];
@@ -604,7 +655,7 @@ function dartTriggerEinrichten() {
   ScriptApp.newTrigger('dartLiveTakt').timeBased().everyMinutes(1).create();
   Logger.log('Trigger angelegt: dartLiveTakt jede Minute.');
   Logger.log('Live-Fenster: ' + DART_SPIELTAGE.length + ' Spieltage, jeweils ' +
-             DART_LIVE_START_STUNDE + ':00 bis ' + DART_LIVE_ENDE_STUNDE + ':00 (' + DART_ZEITZONE + ').');
+             DART_LIVE_START_STUNDE + ':' + DART_LIVE_START_MINUTE + ' bis ' + DART_LIVE_ENDE_STUNDE + ':00 (' + DART_ZEITZONE + ').');
   Logger.log('Ausserhalb davon laeuft der Abruf alle ' + (DART_RUHE_MINUTEN / 60) + ' Stunden.');
 }
 
@@ -627,7 +678,7 @@ function dartTriggerEntfernen() {
  * Die Fassungskennung in der ersten Zeile zeigt auf einen Blick, ob im
  * Apps Script wirklich die aktuelle Datei steht.
  */
-const DART_FASSUNG = '2026-09-06 (Einzelwertung, Kader, Spiel-Detail)';
+const DART_FASSUNG = '2026-09-26 (Dart-Abend: Spieltag der ganzen Gruppe, ab 18:30)';
 
 function dartTestLauf() {
   Logger.log('Skriptfassung: ' + DART_FASSUNG);
@@ -686,6 +737,18 @@ function dartTestLauf() {
         Logger.log('  ' + p.art + '  ' + p.spieler1 + '  ' + p.legs1 + ':' + p.legs2 + '  ' + p.spieler2);
       });
       if (!paarungen.length) Logger.log('ACHTUNG: Detailseite leer - Session oder teamSpielId pruefen.');
+    }
+
+    // --- Spieltag der ganzen Gruppe (Dart-Abend-Modus) -----------------
+    const tag = dartHoleSpieltag(t.turnierid);
+    if (!tag) {
+      Logger.log('Spieltag: heute kein Spiel in dieser Klasse.');
+    } else {
+      Logger.log('Spieltag ' + tag.datum + ', Runde ' + tag.runde + ': ' + tag.spiele.length + ' Spiele');
+      tag.spiele.forEach(function (s) {
+        Logger.log('  ' + s.heim + ' ' + s.erg_heim + ':' + s.erg_auswaerts + ' ' + s.auswaerts +
+                   ' (' + s.paarungen.length + ' Paarungen)');
+      });
     }
   });
 }

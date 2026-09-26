@@ -295,3 +295,47 @@ Fuer die Erg-Spalte reicht das; der Tabellen-Slot braucht zusaetzlich einen
 `dartTestLauf()` meldet ausdruecklich, wenn die eigene Mannschaft **nicht** in
 der abgerufenen Tabelle steht - das ist der zuverlaessigste Hinweis auf eine
 veraltete Turnier-ID.
+
+---
+
+# Dart-Abend-Modus (Heimspieltag, Dartcam)
+
+An jedem Spieltag der **Chaoten** (Freilos-Runden zaehlen nicht) zeigt das
+Dashboard ab **18:30** nur noch die Dart-Strecke des Abends, im Kreis:
+
+| # | Slot | Dauer |
+| --- | --- | --- |
+| 1 | Dartcam (RTSP) | 5 min - **zu Beginn so lange, bis die ersten Einzelergebnisse der Chaoten da sind** (danach alle 15 s geprueft) |
+| 2 | Chaoten live: die zehn Paarungen, offene grau mit "–:–", Zwischenstand im Kopf | 30 s |
+| 3 | EIN anderes Spiel derselben Klasse, bei jedem Durchlauf das naechste | 26 s |
+
+Danach wieder die Kamera. **30 Minuten nach dem Endergebnis** der Chaoten
+(zehn Saetze, also Mannschaftsstand ergibt 10) geht der gewohnte Zyklus
+weiter; der Zeitpunkt steht im localStorage (`dartAbendEnde-<datum>`), ein
+Neuladen der Seite verlaengert den Abend also nicht. Notbremse: um 04:00 ist
+Schluss, auch wenn nie ein Endergebnis kommt. Der Wechsel in den Modus
+passiert beim naechsten Slotwechsel nach 18:30.
+
+Zum Ansehen an einem anderen Tag: `?dartabend=1` erzwingt den Modus,
+`?dartabend=0` schaltet ihn ab.
+
+## Kamera
+
+`DART_CAM_URL` in `index.html`. Ein Browser kann RTSP nicht abspielen - das
+Bild legt der **mpv-Aufpasser** (`kiosk/nl-mpv-supervisor.py`) passgenau ueber
+`#dart-cam-frame`, genau wie bei YouTube und Twitch (TCP, geringe Latenz, ohne
+Ton). Reisst der Strom ab, verbindet er nach 20 s neu; bis dahin steht im
+Rahmen "Kamera wird verbunden …". **Der Aufpasser muss dafuer auf der Box
+aktualisiert werden** (nach `/opt/citycafe/nl-mpv-supervisor.py` kopieren und
+neu starten) - das Dashboard allein zieht sich per Selbst-Aktualisierung nach,
+der Aufpasser nicht.
+
+## Daten
+
+Der Scraper (Fassung `2026-09-26`) schreibt im Live-Fenster (jetzt ab 18:30)
+je Mannschaft zusaetzlich `spieltag`: alle Spiele der Klasse am heutigen Tag
+mit Zwischenstand (`erg_heim`, `erg_auswaerts`) und den Einzelpaarungen.
+Abruf jede Minute, im Dashboard ebenfalls. **Die neue `dart-liga-scraper.gs`
+muss dafuer ins Apps Script eingespielt werden.** Mit der alten Fassung laeuft
+der Modus trotzdem, zeigt aber nur das Chaoten-Spiel (ueber `letztes_spiel`,
+sobald der Mannschaftsstand nicht mehr 0:0 ist) und keine anderen Spiele.

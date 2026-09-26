@@ -183,7 +183,11 @@ STATE_EXPR = """JSON.stringify({
   ton: (typeof window.nlTonWunsch !== 'undefined' && window.nlTonWunsch) ? window.nlTonWunsch : null,
   // Laeuft gerade eine Runde Hos'n Obe? Dann muss mpv aus bleiben - sein
   // Fenster liegt sonst ueber dem Kartentisch.
-  spiel: (typeof window.ktSpielLaeuft === 'function') ? !!window.ktSpielLaeuft() : false
+  spiel: (typeof window.ktSpielLaeuft === 'function') ? !!window.ktSpielLaeuft() : false,
+  // Dart-Abend-Modus: RTSP-Dartcam. Die Adresse kommt vom Dashboard
+  // (DART_CAM_URL in index.html), damit ein Kamerawechsel keinen Eingriff
+  // auf der Box braucht.
+  cam: (window.dartCamAktiv && window.dartCamUrl) ? String(window.dartCamUrl) : null
 })"""
 
 # Lautheitsausgleich: dynaudnorm gleicht leise und laute Stellen an und ist
@@ -217,7 +221,11 @@ RECT_EXPR = """JSON.stringify((() => {
   return {x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.width), h: Math.round(b.height)};
 })())"""
 FLAECHE = {"yt": ("media-view-nightlife", "nl-player-frame"),
-           "twitch": ("media-view-djlive", "dj-live-player")}
+           "twitch": ("media-view-djlive", "dj-live-player"),
+           "cam": ("media-view-dart-cam", "dart-cam-frame")}
+# Die Dartcam ist ein Live-Strom im Lokal-Netz: faellt sie aus, nach kurzer
+# Pause neu verbinden statt zehn Minuten zu sperren wie ein kaputtes Video.
+CAM_RETRY_AFTER = 20
 
 STREAMLINK = "/usr/bin/streamlink"
 # Twitch: streamlink filtert Werbesegmente selbst heraus (seit 6.x immer, siehe
@@ -544,7 +552,8 @@ def main():
     naechste_tmp_pruefung = 0.0
 
     def blocked(key):
-        return time.time() - mpv_bad.get(key, 0) < RETRY_FAILED_AFTER
+        frist = CAM_RETRY_AFTER if key.startswith("cam:") else RETRY_FAILED_AFTER
+        return time.time() - mpv_bad.get(key, 0) < frist
 
     def give_back(page_id, key):
         # Bild nie einfrieren lassen: ohne mpv spielt wieder der Browser.
@@ -552,7 +561,9 @@ def main():
         # Twitch: djExternBis = 0 - der DJ-Waechter baut den Twitch-Player.
         if not page_id:
             return
-        if key.startswith("yt:"):
+        if key.startswith("cam:"):
+            cdp_eval(page_id, "window.dartCamLaeuft = false; 1")
+        elif key.startswith("yt:"):
             cdp_eval(page_id, "window.nlExternBis = 0; try { nlPlayer.playVideo(); } catch (e) {} 1")
         else:
             cdp_eval(page_id, "window.djExternBis = 0; window.djExternLaeuft = false; 1")
@@ -598,6 +609,8 @@ def main():
             want = None
         elif youtube and state.get("aktiv"):
             want = "yt:" + schluessel
+        elif state.get("cam"):
+            want = "cam:" + state["cam"]
         elif dj_kanal:
             want = "twitch:" + dj_kanal
         else:
@@ -694,6 +707,14 @@ def main():
         if mpv is not None:
             now = time.time()
             art = shown.split(":", 1)[0]
+            if art == "cam" and mpv.poll() is not None:
+                # Kamera-Strom abgerissen: gleich neu verbinden (CAM_RETRY_AFTER).
+                log(f"Dartcam beendet (Code {mpv.returncode}) - verbinde neu")
+                stop_all()
+                give_back(page_id, shown)
+                mpv_bad[shown] = now
+                shown, embed_paused = None, False
+                continue
             if mpv.poll() is not None and mpv.returncode == 0 and last_pos is not None:
                 # Sauberes Ende, nachdem wirklich etwas gelaufen ist: das Video
                 # ist aus bzw. der Streamer hat beendet. Bei einer Wahl vom
@@ -735,6 +756,10 @@ def main():
                         cdp_eval(page_id, "try { nlPlayer.pauseVideo(); } catch (e) {} 1")
                         embed_paused = True
                         log(f"mpv laeuft nach {now - started:.1f}s, Embed angehalten")
+                    elif last_pos is not None and window_seen and art == "cam" and not embed_paused:
+                        embed_paused = True
+                        cdp_eval(page_id, "window.dartCamLaeuft = true; 1")
+                        log(f"Dartcam laeuft nach {now - started:.1f}s")
                     elif last_pos is not None and window_seen and art == "twitch" and not embed_paused:
                         embed_paused = True   # hier nur: "laeuft" schon gemeldet
                         log(f"mpv laeuft nach {now - started:.1f}s")
@@ -809,6 +834,13 @@ def main():
                                        preexec_fn=mpv_dies_with_us)
                 feeder.stdout.close()   # gehoert jetzt mpv allein
                 log(f"Auftritt: Twitch {dj_kanal}")
+            elif want.startswith("cam:"):
+                # RTSP ueber TCP (UDP geht im WLAN gern verloren), wenig Puffer
+                # fuer kurze Verzoegerung, ohne Ton (Kneipenlaerm).
+                mpv = subprocess.Popen(args + ["--profile=low-latency", "--rtsp-transport=tcp",
+                                               "--no-audio", "--cache=no", want[4:]],
+                                       env=env, preexec_fn=mpv_dies_with_us)
+                log("Auftritt: Dartcam")
             if mpv is not None:
                 shown = want
                 started, last_pos, last_progress, embed_paused = time.time(), None, None, False
