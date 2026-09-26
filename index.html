@@ -1181,9 +1181,15 @@
             animation: ahPuls 3s ease-in-out infinite; }
         /* Drei gleich breite Spalten: VS steht genau in der Bildmitte, jede
            Mannschaft mittig in ihrer Haelfte. */
-        .ah-paarung { display: grid; grid-template-columns: 1fr 140px 1fr; align-items: center;
-            width: 1600px; max-width: 100%; margin-top: 10px; }
-        .ah-team { font-size: 54px; font-weight: 900; line-height: 1.1; text-align: center; }
+        .ah-paarung { display: grid; grid-template-columns: 1fr 120px 1fr; align-items: stretch;
+            width: 1500px; max-width: 100%; margin-top: 10px; }
+        /* Jede Mannschaft als eigene Karte, unsere gruen umrandet. */
+        .ah-team { font-size: 46px; font-weight: 900; line-height: 1.1; text-align: center;
+            background: rgba(0,0,0,0.35); border: 3px solid rgba(255,255,255,0.25); border-radius: 24px;
+            padding: 26px 20px; min-height: 170px; box-sizing: border-box;
+            display: flex; align-items: center; justify-content: center; }
+        .ah-team.is-wir { border-color: #34d399; }
+        .ah-paarung .ah-vs { align-self: center; }
         .ah-team.is-wir { color: #34d399; text-shadow: 0 0 28px rgba(52,211,153,0.45); }
         .ah-vs { font-family: 'Orbitron', sans-serif; font-size: 44px; font-weight: 900; color: #ff3355; text-align: center; }
         .ah-liga { font-size: 26px; font-weight: 800; color: rgba(255,255,255,0.65); letter-spacing: 3px; text-transform: uppercase; }
