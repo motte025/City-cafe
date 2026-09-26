@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-19T17:31:07Z",
+  "aktualisiert": "2026-09-26T16:30:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -145,45 +145,35 @@
         {
           "rang": 1,
           "spieler": "DOUJAK Siegfried",
-          "spiele": 3,
-          "siege": 3,
+          "spiele": 6,
+          "siege": 6,
           "niederlagen": 0,
-          "legs_plus": 8,
+          "legs_plus": 16,
           "legs_minus": 0,
-          "punkte": 8
+          "punkte": 16
         },
         {
           "rang": 2,
           "spieler": "RAINER Gerald",
-          "spiele": 3,
-          "siege": 3,
+          "spiele": 5,
+          "siege": 5,
           "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 0,
-          "punkte": 8
+          "legs_plus": 13,
+          "legs_minus": 2,
+          "punkte": 13
         },
         {
           "rang": 3,
-          "spieler": "BERGLER Benjamin",
-          "spiele": 3,
-          "siege": 3,
+          "spieler": "KLEINHAPPEL Ernestine",
+          "spiele": 5,
+          "siege": 5,
           "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 3,
-          "punkte": 8
+          "legs_plus": 13,
+          "legs_minus": 4,
+          "punkte": 13
         },
         {
           "rang": 4,
-          "spieler": "URANK Romeo",
-          "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 3,
-          "punkte": 8
-        },
-        {
-          "rang": 5,
           "spieler": "REGENFELDNER Rene",
           "spiele": 3,
           "siege": 3,
@@ -193,17 +183,37 @@
           "punkte": 8
         },
         {
-          "rang": 6,
-          "spieler": "KLEINHAPPEL Ernestine",
+          "rang": 5,
+          "spieler": "URANK Romeo",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
           "legs_plus": 8,
-          "legs_minus": 4,
+          "legs_minus": 3,
+          "punkte": 8
+        },
+        {
+          "rang": 6,
+          "spieler": "ELEZOSKI Serif",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 8,
+          "legs_minus": 3,
           "punkte": 8
         },
         {
           "rang": 7,
+          "spieler": "BERGLER Benjamin",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 3,
+          "punkte": 8
+        },
+        {
+          "rang": 8,
           "spieler": "ASPRIAN Johann",
           "spiele": 3,
           "siege": 2,
@@ -213,7 +223,7 @@
           "punkte": 7
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "FELLNER Johann",
           "spiele": 3,
           "siege": 2,
@@ -223,7 +233,7 @@
           "punkte": 6
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 3,
           "siege": 2,
@@ -231,16 +241,6 @@
           "legs_plus": 6,
           "legs_minus": 4,
           "punkte": 6
-        },
-        {
-          "rang": 10,
-          "spieler": "ELEZOSKI Serif",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 5,
-          "legs_minus": 3,
-          "punkte": 5
         },
         {
           "rang": 11,
@@ -255,15 +255,25 @@
         {
           "rang": 12,
           "spieler": "KOLLER Elias",
-          "spiele": 3,
+          "spiele": 6,
           "siege": 1,
-          "niederlagen": 2,
+          "niederlagen": 5,
           "legs_plus": 5,
-          "legs_minus": 6,
+          "legs_minus": 14,
           "punkte": 5
         },
         {
           "rang": 13,
+          "spieler": "SCHECK Guenther",
+          "spiele": 2,
+          "siege": 2,
+          "niederlagen": 0,
+          "legs_plus": 4,
+          "legs_minus": 0,
+          "punkte": 4
+        },
+        {
+          "rang": 14,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 2,
           "siege": 1,
@@ -273,7 +283,7 @@
           "punkte": 4
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
@@ -283,7 +293,7 @@
           "punkte": 4
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 2,
           "siege": 1,
@@ -293,7 +303,7 @@
           "punkte": 4
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 3,
           "siege": 1,
@@ -303,7 +313,7 @@
           "punkte": 4
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "JAHN Corinna",
           "spiele": 1,
           "siege": 1,
@@ -313,7 +323,7 @@
           "punkte": 3
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "BÄCKER Josephine",
           "spiele": 2,
           "siege": 0,
@@ -323,7 +333,7 @@
           "punkte": 3
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "JAHN Andreas",
           "spiele": 3,
           "siege": 1,
@@ -333,7 +343,7 @@
           "punkte": 3
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 3,
           "siege": 0,
@@ -343,7 +353,7 @@
           "punkte": 3
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
@@ -353,18 +363,8 @@
           "punkte": 3
         },
         {
-          "rang": 22,
-          "spieler": "JESENKO Julia",
-          "spiele": 1,
-          "siege": 1,
-          "niederlagen": 0,
-          "legs_plus": 2,
-          "legs_minus": 0,
-          "punkte": 2
-        },
-        {
           "rang": 23,
-          "spieler": "SCHECK Guenther",
+          "spieler": "JESENKO Julia",
           "spiele": 1,
           "siege": 1,
           "niederlagen": 0,
@@ -384,7 +384,7 @@
         },
         {
           "rang": 25,
-          "spieler": "GORICNIK Cornelia",
+          "spieler": "AMBROS Thomas",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
@@ -394,6 +394,16 @@
         },
         {
           "rang": 26,
+          "spieler": "GORICNIK Cornelia",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 2,
+          "legs_minus": 5,
+          "punkte": 2
+        },
+        {
+          "rang": 27,
           "spieler": "JAMMER Fabian",
           "spiele": 2,
           "siege": 0,
@@ -403,7 +413,7 @@
           "punkte": 2
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "KERNSTOCK Michael",
           "spiele": 2,
           "siege": 0,
@@ -413,7 +423,7 @@
           "punkte": 1
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "JAHN Christian",
           "spiele": 1,
           "siege": 0,
@@ -423,7 +433,7 @@
           "punkte": 0
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "PROVNIK Gabriele",
           "spiele": 1,
           "siege": 0,
@@ -433,7 +443,7 @@
           "punkte": 0
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -443,7 +453,27 @@
           "punkte": 0
         },
         {
-          "rang": 31,
+          "rang": 32,
+          "spieler": "BRANDSTÄTTER Manuel",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 0,
+          "legs_minus": 5,
+          "punkte": 0
+        },
+        {
+          "rang": 33,
+          "spieler": "APOVNIK Gabriele",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 0,
+          "legs_minus": 5,
+          "punkte": 0
+        },
+        {
+          "rang": 34,
           "spieler": "GORICNIK Michael",
           "spiele": 2,
           "siege": 0,
@@ -453,7 +483,7 @@
           "punkte": 0
         },
         {
-          "rang": 32,
+          "rang": 35,
           "spieler": "JAHN Herbert",
           "spiele": 3,
           "siege": 0,
@@ -547,7 +577,228 @@
             "legs2": 3
           }
         ]
-      }
+      },
+      "spieltag": {
+        "datum": "2026-09-26",
+        "runde": 2,
+        "spiele": [
+          {
+            "runde": 2,
+            "datum": "2026-09-26",
+            "heim": "Askö DC Sonne 2",
+            "auswaerts": "Dart Fuchs 4",
+            "erg_heim": 7,
+            "erg_auswaerts": 0,
+            "id": 109477,
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "KLEINHAPPEL Ernestine",
+                "spieler2": "APOVNIK Gabriele",
+                "legs1": 3,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "DOUJAK Siegfried",
+                "spieler2": "BRANDSTÄTTER Manuel",
+                "legs1": 3,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "RAINER Gerald",
+                "spieler2": "AMBROS Thomas",
+                "legs1": 3,
+                "legs2": 2
+              },
+              {
+                "art": "OE",
+                "spieler1": "ELEZOSKI Serif",
+                "spieler2": "KOLLER Elias",
+                "legs1": 3,
+                "legs2": 0
+              },
+              {
+                "art": "MD",
+                "spieler1": "KLEINHAPPEL Ernestine / RAINER Gerald",
+                "spieler2": "APOVNIK Gabriele / BRANDSTÄTTER Manuel",
+                "legs1": 2,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "SCHECK Guenther / DOUJAK Siegfried",
+                "spieler2": "AMBROS Thomas / KOLLER Elias",
+                "legs1": 2,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "DOUJAK Siegfried",
+                "spieler2": "KOLLER Elias",
+                "legs1": 3,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "KLEINHAPPEL Ernestine",
+                "spieler2": "APOVNIK Gabriele",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "RAINER Gerald",
+                "spieler2": "FELLNER Johann",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "ELEZOSKI Serif",
+                "spieler2": "AMBROS Thomas",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
+          },
+          {
+            "runde": 2,
+            "datum": "2026-09-26",
+            "heim": "DC Cafe Seven",
+            "auswaerts": "DC Fighting Penguins „Waddling Arrows“",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109488,
+            "paarungen": []
+          },
+          {
+            "runde": 2,
+            "datum": "2026-09-26",
+            "heim": "City-Flyers \"Chaoten\"",
+            "auswaerts": "PBC DC Skorpions Reichenfels",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109510,
+            "paarungen": []
+          }
+        ]
+      },
+      "spielplan": [
+        {
+          "runde": 1,
+          "datum": "2026-09-05",
+          "heim": "City-Flyers \"Chaoten\"",
+          "auswaerts": "Askö DC Sonne 2",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 2,
+          "datum": "2026-09-26",
+          "heim": "City-Flyers \"Chaoten\"",
+          "auswaerts": "PBC DC Skorpions Reichenfels",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 3,
+          "datum": "2026-10-10",
+          "heim": "Freilos 3",
+          "auswaerts": "City-Flyers \"Chaoten\"",
+          "heimspiel": false,
+          "freilos": true
+        },
+        {
+          "runde": 4,
+          "datum": "2026-10-31",
+          "heim": "City-Flyers \"Chaoten\"",
+          "auswaerts": "DC Fighting Penguins „Waddling Arrows“",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 5,
+          "datum": "2026-11-07",
+          "heim": "Dart Fuchs 4",
+          "auswaerts": "City-Flyers \"Chaoten\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 6,
+          "datum": "2026-11-21",
+          "heim": "City-Flyers \"Chaoten\"",
+          "auswaerts": "DC Cafe Seven",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 7,
+          "datum": "2026-12-05",
+          "heim": "DC Schwarzer Kater",
+          "auswaerts": "City-Flyers \"Chaoten\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 8,
+          "datum": "2027-01-09",
+          "heim": "Askö DC Sonne 2",
+          "auswaerts": "City-Flyers \"Chaoten\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 9,
+          "datum": "2027-01-23",
+          "heim": "PBC DC Skorpions Reichenfels",
+          "auswaerts": "City-Flyers \"Chaoten\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 10,
+          "datum": "2027-02-13",
+          "heim": "City-Flyers \"Chaoten\"",
+          "auswaerts": "Freilos 3",
+          "heimspiel": true,
+          "freilos": true
+        },
+        {
+          "runde": 11,
+          "datum": "2027-03-20",
+          "heim": "DC Fighting Penguins „Waddling Arrows“",
+          "auswaerts": "City-Flyers \"Chaoten\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 12,
+          "datum": "2027-04-10",
+          "heim": "City-Flyers \"Chaoten\"",
+          "auswaerts": "Dart Fuchs 4",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 13,
+          "datum": "2027-04-24",
+          "heim": "DC Cafe Seven",
+          "auswaerts": "City-Flyers \"Chaoten\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 14,
+          "datum": "2027-05-08",
+          "heim": "City-Flyers \"Chaoten\"",
+          "auswaerts": "DC Schwarzer Kater",
+          "heimspiel": true,
+          "freilos": false
+        }
+      ]
     },
     "fraggles": {
       "turnierid": 316,
@@ -1064,7 +1315,157 @@
             "legs2": 2
           }
         ]
-      }
+      },
+      "spieltag": {
+        "datum": "2026-09-26",
+        "runde": 2,
+        "spiele": [
+          {
+            "runde": 2,
+            "datum": "2026-09-26",
+            "heim": "ESV DC Inferno",
+            "auswaerts": "DSZKärnten \"2er\"",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108872,
+            "paarungen": []
+          },
+          {
+            "runde": 2,
+            "datum": "2026-09-26",
+            "heim": "DC Garzern",
+            "auswaerts": "DC Drautal Dart Vipers",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108883,
+            "paarungen": []
+          },
+          {
+            "runde": 2,
+            "datum": "2026-09-26",
+            "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+            "auswaerts": "DC O3tz 1.0",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108894,
+            "paarungen": []
+          }
+        ]
+      },
+      "spielplan": [
+        {
+          "runde": 1,
+          "datum": "2026-09-05",
+          "heim": "DSZKärnten \"2er\"",
+          "auswaerts": "City-Flyers \"Fraggles\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 2,
+          "datum": "2026-09-26",
+          "heim": "Freilos 2",
+          "auswaerts": "City-Flyers \"Fraggles\"",
+          "heimspiel": false,
+          "freilos": true
+        },
+        {
+          "runde": 3,
+          "datum": "2026-10-10",
+          "heim": "City-Flyers \"Fraggles\"",
+          "auswaerts": "ESV DC Inferno",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 4,
+          "datum": "2026-10-31",
+          "heim": "DC Garzern",
+          "auswaerts": "City-Flyers \"Fraggles\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 5,
+          "datum": "2026-11-07",
+          "heim": "City-Flyers \"Fraggles\"",
+          "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 6,
+          "datum": "2026-11-21",
+          "heim": "DC O3tz 1.0",
+          "auswaerts": "City-Flyers \"Fraggles\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 7,
+          "datum": "2026-12-05",
+          "heim": "City-Flyers \"Fraggles\"",
+          "auswaerts": "DC Drautal Dart Vipers",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 8,
+          "datum": "2027-01-09",
+          "heim": "City-Flyers \"Fraggles\"",
+          "auswaerts": "DSZKärnten \"2er\"",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 9,
+          "datum": "2027-01-23",
+          "heim": "City-Flyers \"Fraggles\"",
+          "auswaerts": "Freilos 2",
+          "heimspiel": true,
+          "freilos": true
+        },
+        {
+          "runde": 10,
+          "datum": "2027-02-13",
+          "heim": "ESV DC Inferno",
+          "auswaerts": "City-Flyers \"Fraggles\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 11,
+          "datum": "2027-03-20",
+          "heim": "City-Flyers \"Fraggles\"",
+          "auswaerts": "DC Garzern",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 12,
+          "datum": "2027-04-10",
+          "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+          "auswaerts": "City-Flyers \"Fraggles\"",
+          "heimspiel": false,
+          "freilos": false
+        },
+        {
+          "runde": 13,
+          "datum": "2027-04-24",
+          "heim": "City-Flyers \"Fraggles\"",
+          "auswaerts": "DC O3tz 1.0",
+          "heimspiel": true,
+          "freilos": false
+        },
+        {
+          "runde": 14,
+          "datum": "2027-05-08",
+          "heim": "DC Drautal Dart Vipers",
+          "auswaerts": "City-Flyers \"Fraggles\"",
+          "heimspiel": false,
+          "freilos": false
+        }
+      ]
     }
   }
 }
