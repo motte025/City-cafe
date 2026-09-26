@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T20:38:32Z",
+  "aktualisiert": "2026-09-26T20:41:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -999,7 +999,7 @@
         },
         {
           "rang": 2,
-          "team": "ESV DC Inferno",
+          "team": "DC Garzern",
           "spiele": 3,
           "siege": 2,
           "unentschieden": 1,
@@ -1008,29 +1008,29 @@
         },
         {
           "rang": 3,
-          "team": "DC Garzern",
-          "spiele": 2,
+          "team": "ESV DC Inferno",
+          "spiele": 3,
           "siege": 2,
-          "unentschieden": 0,
+          "unentschieden": 1,
           "niederlagen": 0,
-          "punkte": 4
+          "punkte": 5
         },
         {
           "rang": 4,
+          "team": "DC Drautal Dart Vipers",
+          "spiele": 3,
+          "siege": 1,
+          "unentschieden": 1,
+          "niederlagen": 1,
+          "punkte": 3
+        },
+        {
+          "rang": 5,
           "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
           "spiele": 1,
           "siege": 1,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 2
-        },
-        {
-          "rang": 5,
-          "team": "DC Drautal Dart Vipers",
-          "spiele": 2,
-          "siege": 1,
-          "unentschieden": 0,
-          "niederlagen": 1,
           "punkte": 2
         },
         {
@@ -1166,6 +1166,16 @@
         },
         {
           "rang": 5,
+          "spieler": "WIMMER Leon",
+          "spiele": 5,
+          "siege": 4,
+          "niederlagen": 1,
+          "legs_plus": 11,
+          "legs_minus": 5,
+          "punkte": 11
+        },
+        {
+          "rang": 6,
           "spieler": "BRUNNER Peter",
           "spiele": 6,
           "siege": 4,
@@ -1175,7 +1185,7 @@
           "punkte": 11
         },
         {
-          "rang": 6,
+          "rang": 7,
           "spieler": "GÖSCHL Mario",
           "spiele": 6,
           "siege": 4,
@@ -1185,7 +1195,7 @@
           "punkte": 11
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1195,7 +1205,17 @@
           "punkte": 10
         },
         {
-          "rang": 8,
+          "rang": 9,
+          "spieler": "FRADL Ingemar",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 9,
+          "legs_minus": 11,
+          "punkte": 9
+        },
+        {
+          "rang": 10,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 6,
           "siege": 3,
@@ -1203,26 +1223,6 @@
           "legs_plus": 9,
           "legs_minus": 12,
           "punkte": 9
-        },
-        {
-          "rang": 9,
-          "spieler": "WIMMER Leon",
-          "spiele": 4,
-          "siege": 3,
-          "niederlagen": 1,
-          "legs_plus": 8,
-          "legs_minus": 4,
-          "punkte": 8
-        },
-        {
-          "rang": 10,
-          "spieler": "FRADL Ingemar",
-          "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
-          "legs_plus": 8,
-          "legs_minus": 8,
-          "punkte": 8
         },
         {
           "rang": 11,
@@ -1236,20 +1236,20 @@
         },
         {
           "rang": 12,
-          "spieler": "SPANRING Andreas",
-          "spiele": 3,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 6,
           "punkte": 6
         },
         {
           "rang": 13,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 4,
+          "spieler": "SPANRING Andreas",
+          "spiele": 3,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 1,
           "legs_plus": 6,
           "legs_minus": 6,
           "punkte": 6
@@ -1336,7 +1336,7 @@
         },
         {
           "rang": 22,
-          "spieler": "OSTRY Samantha-Lee",
+          "spieler": "KRENN Klaus",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1346,7 +1346,7 @@
         },
         {
           "rang": 23,
-          "spieler": "KRENN Klaus",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1721,7 +1721,7 @@
             "heim": "DC Garzern",
             "auswaerts": "DC Drautal Dart Vipers",
             "erg_heim": 5,
-            "erg_auswaerts": 4,
+            "erg_auswaerts": 5,
             "id": 108883,
             "paarungen": [
               {
@@ -1791,8 +1791,8 @@
                 "art": "OE",
                 "spieler1": "FRADL Ingemar",
                 "spieler2": "WIMMER Leon",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               }
             ]
           },
