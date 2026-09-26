@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-26T23:17:45Z",
+  "checked_at": "2026-09-26T23:27:49Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "The 2026 Canadian Song Writers Hall of Fame",
+      "game": "Music"
+    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
@@ -13,13 +20,6 @@
       "channel": "nyybeats",
       "name": "NyyBeats",
       "title": "🔥♡ A VERY NORMAL NOT EVIL AT ALL SATURDAY SET🔥 !tip !NEWSONG🔥 !mods !mercy",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 26✨OKTOBERFEST🍺 | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -56,13 +56,6 @@
       "name": "DJMikeMorino",
       "title": "Back to the 90s  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "The 2026 Canadian Song Writers Hall of Fame",
-      "game": "Music"
     }
   ]
 }
