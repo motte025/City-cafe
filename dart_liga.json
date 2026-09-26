@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T16:39:34Z",
+  "aktualisiert": "2026-09-26T16:48:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -942,16 +942,6 @@
       "einzelwertung": [
         {
           "rang": 1,
-          "spieler": "NIKOLIC Dennis",
-          "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 1,
-          "punkte": 8
-        },
-        {
-          "rang": 2,
           "spieler": "GÖSCHL Mario",
           "spiele": 3,
           "siege": 3,
@@ -961,8 +951,18 @@
           "punkte": 8
         },
         {
+          "rang": 2,
+          "spieler": "NIKOLIC Dennis",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 1,
+          "punkte": 8
+        },
+        {
           "rang": 3,
-          "spieler": "JANESCH Christine",
+          "spieler": "DANIEL Utta",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -972,7 +972,7 @@
         },
         {
           "rang": 4,
-          "spieler": "DANIEL Utta",
+          "spieler": "JANESCH Christine",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -1002,16 +1002,6 @@
         },
         {
           "rang": 7,
-          "spieler": "BRUNNER Peter",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 3,
-          "punkte": 6
-        },
-        {
-          "rang": 8,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 3,
           "siege": 2,
@@ -1021,8 +1011,18 @@
           "punkte": 6
         },
         {
+          "rang": 8,
+          "spieler": "BRUNNER Peter",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 3,
+          "punkte": 6
+        },
+        {
           "rang": 9,
-          "spieler": "FRADL Ingemar",
+          "spieler": "SCHMALNAUER Daniel",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -1032,7 +1032,7 @@
         },
         {
           "rang": 10,
-          "spieler": "STINGLER Engelbert",
+          "spieler": "FRADL Ingemar",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -1042,7 +1042,7 @@
         },
         {
           "rang": 11,
-          "spieler": "SCHMALNAUER Daniel",
+          "spieler": "STINGLER Engelbert",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
