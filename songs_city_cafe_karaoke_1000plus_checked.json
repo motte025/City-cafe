@@ -74272,16 +74272,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Lily Allen",
-    "title": "Smile",
+    "artist": "Calvin Harris",
+    "title": "Let's Go",
     "album": "",
-    "category": "2000s Party",
+    "category": "Dance & Club",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "2000s Party"
+      "Dance & Club"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Kollegah",
+    "title": "Big Boss",
+    "album": "",
+    "category": "Deutsch Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
