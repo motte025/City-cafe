@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T19:43:36Z",
+  "aktualisiert": "2026-09-26T19:47:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -87,7 +87,7 @@
         },
         "2": {
           "heim": 2,
-          "auswaerts": 3,
+          "auswaerts": 4,
           "id": 109510
         },
         "4": {
@@ -174,6 +174,16 @@
         },
         {
           "rang": 4,
+          "spieler": "URANK Romeo",
+          "spiele": 5,
+          "siege": 5,
+          "niederlagen": 0,
+          "legs_plus": 13,
+          "legs_minus": 4,
+          "punkte": 13
+        },
+        {
+          "rang": 5,
           "spieler": "ELEZOSKI Serif",
           "spiele": 4,
           "siege": 3,
@@ -183,24 +193,14 @@
           "punkte": 11
         },
         {
-          "rang": 5,
-          "spieler": "URANK Romeo",
-          "spiele": 4,
-          "siege": 4,
-          "niederlagen": 0,
-          "legs_plus": 11,
-          "legs_minus": 4,
-          "punkte": 11
-        },
-        {
           "rang": 6,
           "spieler": "REGENFELDNER Rene",
-          "spiele": 4,
-          "siege": 3,
+          "spiele": 5,
+          "siege": 4,
           "niederlagen": 1,
-          "legs_plus": 9,
+          "legs_plus": 11,
           "legs_minus": 6,
-          "punkte": 9
+          "punkte": 11
         },
         {
           "rang": 7,
@@ -505,11 +505,11 @@
         {
           "rang": 37,
           "spieler": "GORICNIK Michael",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 1,
-          "legs_minus": 9,
+          "legs_minus": 11,
           "punkte": 1
         },
         {
@@ -544,7 +544,7 @@
         },
         {
           "rang": 41,
-          "spieler": "JAHN Herbert",
+          "spieler": "APOVNIK Gabriele",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -554,12 +554,12 @@
         },
         {
           "rang": 42,
-          "spieler": "APOVNIK Gabriele",
-          "spiele": 3,
+          "spieler": "JAHN Herbert",
+          "spiele": 4,
           "siege": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 0,
-          "legs_minus": 8,
+          "legs_minus": 10,
           "punkte": 0
         }
       ],
@@ -574,7 +574,7 @@
       "letztes_spiel": {
         "runde": 2,
         "heim": 2,
-        "auswaerts": 3,
+        "auswaerts": 4,
         "paarungen": [
           {
             "art": "DE",
@@ -616,7 +616,7 @@
             "spieler1": "GORICNIK Michael / JAHN Herbert",
             "spieler2": "URANK Romeo / REGENFELDNER Rene",
             "legs1": 0,
-            "legs2": 0
+            "legs2": 2
           }
         ]
       },
@@ -764,7 +764,7 @@
             "heim": "City-Flyers \"Chaoten\"",
             "auswaerts": "PBC DC Skorpions Reichenfels",
             "erg_heim": 2,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 109510,
             "paarungen": [
               {
@@ -807,7 +807,7 @@
                 "spieler1": "GORICNIK Michael / JAHN Herbert",
                 "spieler2": "URANK Romeo / REGENFELDNER Rene",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               }
             ]
           }
