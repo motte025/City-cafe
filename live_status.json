@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T15:22:45Z",
+  "checked_at": "2026-09-26T15:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴 HARD STYLE ☆ !holy !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Music to clear the head from the Cherry Corner 🍒✨💞💋🌈 | !challenge | TY Raiders: @alexvaganza",
       "game": "DJs"
     },
     {
@@ -34,13 +41,6 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Music to clear the head from the Cherry Corner 🍒✨💞💋🌈 | !challenge",
       "game": "DJs"
     }
   ]
