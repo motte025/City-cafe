@@ -73972,16 +73972,35 @@
     "auto_discovered": true
   },
   {
-    "artist": "Riton",
-    "title": "Fake ID (Coke & Rum Remix)",
+    "artist": "Tony Marshall",
+    "title": "Ich träume jede Nacht von Dir",
     "album": "",
-    "category": "Party-Schlager",
+    "category": "Schlager & Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Party-Schlager"
+      "Schlager & Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Kastelruther Spatzen",
+    "title": "Gold, Platin & Everest",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Kult"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
