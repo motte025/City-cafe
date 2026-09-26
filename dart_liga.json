@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T17:05:44Z",
+  "aktualisiert": "2026-09-26T17:07:42Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1000,7 +1000,7 @@
       "einzelwertung": [
         {
           "rang": 1,
-          "spieler": "GÖSCHL Mario",
+          "spieler": "NIKOLIC Dennis",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -1010,7 +1010,7 @@
         },
         {
           "rang": 2,
-          "spieler": "NIKOLIC Dennis",
+          "spieler": "GÖSCHL Mario",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -1060,7 +1060,7 @@
         },
         {
           "rang": 7,
-          "spieler": "STÜCKLER Heidemarie",
+          "spieler": "BRUNNER Peter",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -1070,7 +1070,7 @@
         },
         {
           "rang": 8,
-          "spieler": "BRUNNER Peter",
+          "spieler": "STÜCKLER Heidemarie",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -1270,7 +1270,7 @@
         },
         {
           "rang": 28,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1280,7 +1280,7 @@
         },
         {
           "rang": 29,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
