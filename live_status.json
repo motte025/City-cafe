@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T21:32:45Z",
+  "checked_at": "2026-09-26T21:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "The Block At Breakaway  Carolina",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "The Block At Breakaway  Carolina",
       "game": "DJs"
     },
     {
