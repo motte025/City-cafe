@@ -50,17 +50,17 @@ export class WheelModel {
  // droht an der fast planparallelen Fläche wieder Z-Fighting (siehe wheel-shape.ts).
  private gold=new T.MeshStandardMaterial({transparent:true,metalness:.75,roughness:.32,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
  private logoTexture(){
-  const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=220;
+  const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=440;
   const ctx=canvas.getContext('2d')!;
-  const repeats=3,unit=2048/repeats,phrase='CITY-CAFE KLAGENFURT   \u2726   ';
-  ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 128px Georgia, "Times New Roman", serif';
+  const repeats=3,unit=2048/repeats,phrase='CITY-CAFE KLAGENFURT   \u2726   ',font='700 256px Georgia, "Times New Roman", serif';
+  ctx.textBaseline='middle';ctx.textAlign='left';ctx.font=font;
   const natural=ctx.measureText(phrase).width;
   for(let i=0;i<repeats;i++){
    ctx.save();ctx.translate(i*unit,canvas.height/2);ctx.scale(unit/natural,1);
-   const grad=ctx.createLinearGradient(0,-70,0,70);
+   const grad=ctx.createLinearGradient(0,-140,0,140);
    grad.addColorStop(0,'#fbecc0');grad.addColorStop(.45,'#d9ad52');grad.addColorStop(.55,'#a97c2e');grad.addColorStop(1,'#f6e0a4');
-   ctx.fillStyle=grad;ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=5;ctx.shadowOffsetY=3;
-   ctx.font='700 128px Georgia, "Times New Roman", serif';ctx.fillText(phrase,0,0);
+   ctx.fillStyle=grad;ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.shadowOffsetY=5;
+   ctx.font=font;ctx.fillText(phrase,0,0);
    ctx.restore();
   }
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=8;return texture;
@@ -107,12 +107,13 @@ export class WheelModel {
   for(let i=0;i<8;i++)this.mesh(f,deflectorGeometry(i),this.deflectorMetal);
   this.lathe(r,[[0,.012],[2.44,.012],[2.44,numberHeight(2.425,shape)],[2.425,numberHeight(2.425,shape)-.006],[2.04,.229],[1.985,FLOOR-.006],[1.585,FLOOR-.006],[1.53,.34],[.53,.82],[0,.83]],b);
   this.lathe(r,[[1.525,.345],[1.36,.447],[1.02,.653],[.62,.804],[.40,.839]],this.inner);
-  // Schriftring exakt auf dem Kegelabschnitt zwischen r=0,62 und r=1,02 (selbe Neigung wie die
-  // Fläche darunter, nur als eigenes schmales Band mit der Gold-Textur statt Holzmaserung).
+  // Schriftring ganz außen auf der Innenfläche, bis an die Kante des Zahlenkranzes (r 1,02–1,525
+  // – dieselben Eckpunkte wie die Fläche darunter, also exakt deren Neigung über den Knick bei
+  // r=1,36 hinweg). Das Zentrum (r < 1,02, Richtung Nabe) bleibt frei für künftige Veranstaltungen.
   // +LOGO_LIFT und polygonOffset auf this.gold: zusammen wie bei den Zierringen gegen Z-Fighting
   // (siehe wheel-shape.ts) – hier vorsorglich gleich mit eingebaut statt es erst zu entdecken.
   const LOGO_LIFT=.2/MM_PER_UNIT;
-  const logo=this.lathe(r,[[.92,.653+(1.02-.92)/(1.02-.62)*(.804-.653)+LOGO_LIFT],[.68,.653+(1.02-.68)/(1.02-.62)*(.804-.653)+LOGO_LIFT]],this.gold);
+  const logo=this.lathe(r,[[1.525,.345+LOGO_LIFT],[1.36,.447+LOGO_LIFT],[1.02,.653+LOGO_LIFT]],this.gold);
   logo.castShadow=false;
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius<2.45))this.ring(r,radius,y,t,m);
   this.ring(r,1.53,.348,.016,b);
