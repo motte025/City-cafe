@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T18:31:35Z",
+  "aktualisiert": "2026-09-26T18:32:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1008,6 +1008,16 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "NIKOLIC Dennis",
+          "spiele": 4,
+          "siege": 4,
+          "niederlagen": 0,
+          "legs_plus": 11,
+          "legs_minus": 2,
+          "punkte": 11
+        },
+        {
+          "rang": 2,
           "spieler": "DANIEL Utta",
           "spiele": 4,
           "siege": 4,
@@ -1017,7 +1027,7 @@
           "punkte": 11
         },
         {
-          "rang": 2,
+          "rang": 3,
           "spieler": "JANESCH Christine",
           "spiele": 4,
           "siege": 4,
@@ -1027,7 +1037,7 @@
           "punkte": 11
         },
         {
-          "rang": 3,
+          "rang": 4,
           "spieler": "GÖSCHL Mario",
           "spiele": 4,
           "siege": 4,
@@ -1037,7 +1047,7 @@
           "punkte": 11
         },
         {
-          "rang": 4,
+          "rang": 5,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 4,
           "siege": 3,
@@ -1047,7 +1057,7 @@
           "punkte": 10
         },
         {
-          "rang": 5,
+          "rang": 6,
           "spieler": "MARKTL Werner",
           "spiele": 3,
           "siege": 3,
@@ -1057,7 +1067,7 @@
           "punkte": 9
         },
         {
-          "rang": 6,
+          "rang": 7,
           "spieler": "BRUNNER Peter",
           "spiele": 4,
           "siege": 3,
@@ -1067,7 +1077,7 @@
           "punkte": 9
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 4,
           "siege": 3,
@@ -1075,16 +1085,6 @@
           "legs_plus": 9,
           "legs_minus": 7,
           "punkte": 9
-        },
-        {
-          "rang": 8,
-          "spieler": "NIKOLIC Dennis",
-          "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 1,
-          "punkte": 8
         },
         {
           "rang": 9,
@@ -1108,6 +1108,16 @@
         },
         {
           "rang": 11,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 12,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1117,20 +1127,10 @@
           "punkte": 6
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 3,
           "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 6,
-          "legs_minus": 6,
-          "punkte": 6
-        },
-        {
-          "rang": 13,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 4,
-          "siege": 2,
           "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 6,
@@ -1318,7 +1318,7 @@
         },
         {
           "rang": 32,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1328,7 +1328,7 @@
         },
         {
           "rang": 33,
-          "spieler": "KÜHWEIDER Thomas",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1338,6 +1338,16 @@
         },
         {
           "rang": 34,
+          "spieler": "KÜHWEIDER Thomas",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 1,
+          "legs_minus": 3,
+          "punkte": 1
+        },
+        {
+          "rang": 35,
           "spieler": "LANG Melanie",
           "spiele": 3,
           "siege": 0,
@@ -1347,7 +1357,7 @@
           "punkte": 1
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "BRUNNER Katharina",
           "spiele": 1,
           "siege": 0,
@@ -1357,7 +1367,7 @@
           "punkte": 0
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1367,7 +1377,7 @@
           "punkte": 0
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
@@ -1472,7 +1482,7 @@
             "heim": "ESV DC Inferno",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 2,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 108872,
             "paarungen": [
               {
@@ -1500,8 +1510,8 @@
                 "art": "OE",
                 "spieler1": "OSTRY Samantha-Lee",
                 "spieler2": "NIKOLIC Dennis",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               }
             ]
           },
