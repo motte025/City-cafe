@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-26T17:46:32Z",
+  "aktualisiert": "2026-09-26T17:52:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -87,7 +87,7 @@
         },
         "2": {
           "heim": 0,
-          "auswaerts": 1,
+          "auswaerts": 2,
           "id": 109510
         },
         "4": {
@@ -184,17 +184,17 @@
         },
         {
           "rang": 5,
-          "spieler": "BERGLER Benjamin",
-          "spiele": 3,
-          "siege": 3,
+          "spieler": "URANK Romeo",
+          "spiele": 4,
+          "siege": 4,
           "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 3,
-          "punkte": 8
+          "legs_plus": 11,
+          "legs_minus": 4,
+          "punkte": 11
         },
         {
           "rang": 6,
-          "spieler": "URANK Romeo",
+          "spieler": "BERGLER Benjamin",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
@@ -434,6 +434,16 @@
         },
         {
           "rang": 30,
+          "spieler": "GORICNIK Michael",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 1,
+          "legs_minus": 9,
+          "punkte": 1
+        },
+        {
+          "rang": 31,
           "spieler": "PROVNIK Gabriele",
           "spiele": 1,
           "siege": 0,
@@ -443,7 +453,7 @@
           "punkte": 0
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "JAHN Christian",
           "spiele": 1,
           "siege": 0,
@@ -453,7 +463,7 @@
           "punkte": 0
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -463,23 +473,13 @@
           "punkte": 0
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
           "legs_plus": 0,
           "legs_minus": 5,
-          "punkte": 0
-        },
-        {
-          "rang": 34,
-          "spieler": "GORICNIK Michael",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 0,
-          "legs_minus": 6,
           "punkte": 0
         },
         {
@@ -514,7 +514,7 @@
       "letztes_spiel": {
         "runde": 2,
         "heim": 0,
-        "auswaerts": 1,
+        "auswaerts": 2,
         "paarungen": [
           {
             "art": "DE",
@@ -527,8 +527,8 @@
             "art": "HE",
             "spieler1": "GORICNIK Michael",
             "spieler2": "URANK Romeo",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 3
           },
           {
             "art": "OE",
@@ -676,7 +676,7 @@
             "heim": "City-Flyers \"Chaoten\"",
             "auswaerts": "PBC DC Skorpions Reichenfels",
             "erg_heim": 0,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109510,
             "paarungen": [
               {
@@ -690,8 +690,8 @@
                 "art": "HE",
                 "spieler1": "GORICNIK Michael",
                 "spieler2": "URANK Romeo",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
