@@ -1179,10 +1179,13 @@
         .ah-titel { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 96px; line-height: 1.02;
             text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 6px 30px rgba(0,0,0,0.6);
             animation: ahPuls 3s ease-in-out infinite; }
-        .ah-paarung { display: flex; align-items: center; gap: 40px; margin-top: 10px; }
-        .ah-team { font-size: 54px; font-weight: 900; max-width: 720px; line-height: 1.1; }
+        /* Drei gleich breite Spalten: VS steht genau in der Bildmitte, jede
+           Mannschaft mittig in ihrer Haelfte. */
+        .ah-paarung { display: grid; grid-template-columns: 1fr 140px 1fr; align-items: center;
+            width: 1600px; max-width: 100%; margin-top: 10px; }
+        .ah-team { font-size: 54px; font-weight: 900; line-height: 1.1; text-align: center; }
         .ah-team.is-wir { color: #34d399; text-shadow: 0 0 28px rgba(52,211,153,0.45); }
-        .ah-vs { font-family: 'Orbitron', sans-serif; font-size: 44px; font-weight: 900; color: #ff3355; }
+        .ah-vs { font-family: 'Orbitron', sans-serif; font-size: 44px; font-weight: 900; color: #ff3355; text-align: center; }
         .ah-liga { font-size: 26px; font-weight: 800; color: rgba(255,255,255,0.65); letter-spacing: 3px; text-transform: uppercase; }
         .ah-countdown-label { font-size: 26px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: 18px; }
         .ah-countdown { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 150px; line-height: 1;
