@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-09-27T11:07:45Z",
+  "checked_at": "2026-09-27T11:17:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SUNDAY FUNDAY - SUBTEMBER FINALE ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "l4uchm3ld3r",
@@ -31,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🎶OKTOBERFEST CHALLENGE🔥!SUBATHON | !subtember 🔥 !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🎶OKTOBERFEST CHALLENGE🔥!SUBATHON | !subtember 🔥 !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
