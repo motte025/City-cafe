@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-27T01:07:45Z",
+  "checked_at": "2026-09-27T01:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Back to the 90s  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
