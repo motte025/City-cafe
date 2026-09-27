@@ -75390,36 +75390,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Tom Jones",
-    "title": "Help Yourself",
+    "artist": "Girlicious",
+    "title": "Maniac",
     "album": "",
-    "category": "Party-Hit",
+    "category": "Deutsch-Pop",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
-      "Kult",
-      "Retro"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Charli XCX feat. Rita Ora",
-    "title": "Doing It",
-    "album": "",
-    "category": "Dance & Party",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Dance",
-      "Pop",
-      "Party"
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
