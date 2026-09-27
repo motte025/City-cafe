@@ -137,9 +137,11 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   Steht in `roulette-src` und ist **nur** nach `roulette-vorschau-spiel/`
   gebaut — `roulette/` (das Dashboard) ist bewusst unberührt, weil ein Neubau
   dorthin auch Schriftring, Rauten-Widerstand und Modell A mitbringen würde.
-  Vorschau: TV `roulette-vorschau-spiel/?raum=zuhause`, Handy
-  `roulette-vorschau-spiel/remote.html?raum=zuhause` (der Roulette-Reiter der
-  Sammel-Fernbedienung zeigt noch die alte Seite ohne Spielmodus).
+  Vorschau (liegt auf main, damit GitHub Pages sie ausliefert; die Boxen
+  laden sie nicht): TV `roulette-vorschau-spiel/?raum=spieltest`, Handy
+  `roulette-vorschau-spiel/remote.html?raum=spieltest`. Eigener Raum, damit
+  sich Vorschau und Boxen auch über Firebase nicht begegnen. Der
+  Roulette-Reiter der Sammel-Fernbedienung zeigt noch die alte Seite.
 - **Schriftring "CITY-CAFE KLAGENFURT"**: goldener, umlaufender Schriftzug auf der
   inneren Kesselfläche, ganz außen direkt an der Kante zum Zahlenkranz
   (r 1,02–1,525, dieselben Eckpunkte wie die Fläche darunter, folgt also exakt
