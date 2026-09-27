@@ -23,7 +23,8 @@ export function settingsForm(){return `<div class="settings-grid">
  ${field('grainTrack','Kugellaufbahn · Holzmaserung','%',0,1,.05)}${field('grainInner','Innenkessel · Holzmaserung','%',0,1,.05)}
  </div><p data-design-note>Form und Zahlen ändern sich nach einem laufenden Wurf. Blickwinkel, Licht und Texte reagieren sofort.</p><button type="button" data-design-reset>Design zurücksetzen</button></details>
  <details class="picture-settings" open><summary>Veredelung</summary><div class="settings-grid">
- <label class="setting-field"><span>Holzart</span><select data-setting="woodSpecies" aria-label="Holzart"><option value="0">Mahagoni</option><option value="1">Nussbaum</option><option value="2">Kirsche</option><option value="3">Ebenholz</option><option value="4">Ahorn</option></select></label>
+ ${choice('woodOuter','Holzart · Außenrand',WOODS)}${choice('woodTrack','Holzart · Kugellaufbahn',WOODS)}${choice('woodInner','Holzart · Innenkessel',WOODS)}
+ ${choice('crossStyle','Mittelkreuz · Design',['Klassisch','Stern (8 Arme)','Krone','Schlicht (Kappe)','City Cafe (Medaillon)'])}
  ${field('brass','Mittelkreuz · Chrom bis Messing','%',0,1,.05)}${field('ballGloss','Kugel · Glanz','%',0,1,.05)}
  ${field('lightPlay','Lichtspiel · wandernde Spiegelung','%',0,1,.05)}${field('feltBackground','Filz-Hintergrund','%',0,1,.05)}
  <label class="switch"><input type="checkbox" data-setting="pocketGlow"> Gewinnfach leuchtet auf</label>
@@ -35,6 +36,8 @@ export function settingsForm(){return `<div class="settings-grid">
  <label class="switch"><input type="checkbox" data-setting="correction"> TV-Blickwinkel korrigieren</label>
  ${field('diagonal','Bildschirm','Zoll',24,120,1,'number')}${field('bottomHeight','Unterkante','m',0,4,.05,'number')}${field('distance','Abstand','m',1,10,.1,'number')}${field('eyeHeight','Augenhöhe','m',.5,2.2,.05,'number')}
  </div><p>Voreinstellung: 55 Zoll · Unterkante 2 m · Abstand 3,5 m · Augenhöhe 1,2 m. Korrektur im Vollbild vom Sitzplatz aus beurteilen.</p></details>`;}
+const WOODS=['Mahagoni','Nussbaum','Kirsche','Ebenholz','Ahorn'];
+function choice(key:string,label:string,options:string[]){return `<label class="setting-field"><span>${label}</span><select data-setting="${key}" aria-label="${label}">${options.map((o,i)=>`<option value="${i}">${o}</option>`).join('')}</select></label>`;}
 function field(key:string,label:string,unit:string,min:number,max:number,step:number,type='range'){return `<label class="setting-field"><span>${label}<output data-value="${key}"></output></span><input type="${type}" min="${min}" max="${max}" step="${step}" data-setting="${key}" data-unit="${unit}" aria-label="${label}"></label>`;}
 export function fillSettings(root:HTMLElement,settings:Settings){root.querySelectorAll<HTMLInputElement>('[data-setting]').forEach(input=>{const key=input.dataset.setting as keyof Settings,value=settings[key];if(document.activeElement!==input){if(input.type==='checkbox')input.checked=Boolean(value);else input.value=String(value);}const output=root.querySelector<HTMLOutputElement>(`[data-value="${key}"]`);if(output){const numeric=Number(value);output.textContent=input.dataset.unit==='%'?`${Math.round(numeric*100)} %`:`${numeric.toLocaleString('de-DE',{maximumFractionDigits:2})} ${input.dataset.unit}`;}});}
 export function settingsPatch(event:Event){const input=event.target as HTMLInputElement;if(!input.matches('[data-setting]'))return null;if(input.type!=='checkbox'&&(!input.validity.valid||input.value===''))return null;return {[input.dataset.setting!]:input.type==='checkbox'?input.checked:Number(input.value)} as Partial<Settings>;}

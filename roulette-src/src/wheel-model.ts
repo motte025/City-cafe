@@ -47,29 +47,13 @@ export class WheelModel {
  private colors={red:new T.MeshPhysicalMaterial({color:0x990b21,roughness:.31,metalness:.08,clearcoat:.65}),black:new T.MeshPhysicalMaterial({color:0x070b10,roughness:.31,metalness:.12,clearcoat:.65}),green:new T.MeshPhysicalMaterial({color:0x006b3f,roughness:.31,metalness:.08,clearcoat:.65})};
  private pockets={red:new T.MeshStandardMaterial({color:0x740c20,roughness:.42}),black:new T.MeshStandardMaterial({color:0x090f14,roughness:.44}),green:new T.MeshStandardMaterial({color:0x005736,roughness:.42})};
  private labels:T.MeshBasicMaterial;
- // Goldener Schriftring auf der inneren Kesselfläche ("CITY-CAFE KLAGENFURT", umlaufend,
- // Ende geht nahtlos in den Anfang über). polygonOffset wie bei den Zierringen, sonst
- // droht an der fast planparallelen Fläche wieder Z-Fighting (siehe wheel-shape.ts).
+ // Goldene Schrift auf der inneren Kesselfläche (feststehend, siehe lettering()). polygonOffset wie bei
+ // den Zierringen, sonst droht an der fast planparallelen Fläche wieder Z-Fighting (siehe wheel-shape.ts).
  private gold=new T.MeshStandardMaterial({transparent:true,metalness:.75,roughness:.32,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
- private logoTexture(){
-  const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=440;
-  const ctx=canvas.getContext('2d')!;
-  const repeats=3,unit=2048/repeats,phrase='CITY-CAFE KLAGENFURT   \u2726   ',font='700 256px Georgia, "Times New Roman", serif';
-  ctx.textBaseline='middle';ctx.textAlign='left';ctx.font=font;
-  const natural=ctx.measureText(phrase).width;
-  for(let i=0;i<repeats;i++){
-   ctx.save();ctx.translate(i*unit,canvas.height/2);ctx.scale(unit/natural,1);
-   const grad=ctx.createLinearGradient(0,-140,0,140);
-   grad.addColorStop(0,'#fbecc0');grad.addColorStop(.45,'#d9ad52');grad.addColorStop(.55,'#a97c2e');grad.addColorStop(1,'#f6e0a4');
-   ctx.fillStyle=grad;ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.shadowOffsetY=5;
-   ctx.font=font;ctx.fillText(phrase,0,0);
-   ctx.restore();
-  }
-  const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=8;return texture;
- }
  constructor(renderer:T.WebGLRenderer){
-  this.setWood(0,.5,.5);
-  this.gold.map=this.logoTexture();
+  this.setWood(0,0,0,.5,.5);
+  this.drawLettering(true);{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.gold.map=tex;}
+  
   const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;this.numberCanvas=atlas;
   const map=new T.CanvasTexture(atlas);map.colorSpace=T.SRGBColorSpace;map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
   this.labels=new T.MeshBasicMaterial({map,transparent:true,depthWrite:false,toneMapped:false});this.drawNumbers(false);
@@ -87,9 +71,10 @@ export class WheelModel {
   this.inner.color.copy(this.wood.color).multiplyScalar(s.innerTone);
   this.wood.color.multiplyScalar(s.outerTone);this.track.color.multiplyScalar(s.trackTone);
   for(const [mat,gloss] of [[this.inner,s.innerGloss],[this.wood,s.outerGloss]] as const){mat.roughness=.65-gloss*.5;mat.clearcoat=gloss;}
-  this.setWood(s.woodSpecies,s.grainTrack,s.grainInner);this.drawNumbers(s.goldNumbers);
+  this.setWood(s.woodOuter,s.woodTrack,s.woodInner,s.grainTrack,s.grainInner);
+  if(s.crossStyle!==this.crossStyle){this.crossStyle=s.crossStyle;this.buildCross();}this.drawNumbers(s.goldNumbers);
   const brass=new T.Color(0xcf9f4a);this.chrome.color.copy(new T.Color(0xd5e0e8).lerp(brass,s.brass));this.crossMetal.color.copy(this.metal.color).lerp(brass,s.brass);this.crossMetal.roughness=this.metal.roughness;
-  this.emblemVisible=s.centerLogo;const em=this.turning.getObjectByName('emblem');if(em)em.visible=s.centerLogo;
+  this.drawLettering(s.centerLogo);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
@@ -115,10 +100,9 @@ export class WheelModel {
   // r=1,36 hinweg). Das Zentrum (r < 1,02, Richtung Nabe) bleibt frei für künftige Veranstaltungen.
   // +LOGO_LIFT und polygonOffset auf this.gold: zusammen wie bei den Zierringen gegen Z-Fighting
   // (siehe wheel-shape.ts) – hier vorsorglich gleich mit eingebaut statt es erst zu entdecken.
-  const LOGO_LIFT=.2/MM_PER_UNIT;
-  const logo=this.lathe(r,[[1.525,.345+LOGO_LIFT],[1.36,.447+LOGO_LIFT],[1.02,.653+LOGO_LIFT]],this.gold);
-  logo.castShadow=false;
-  this.emblem(r);
+  // Seit 27.09.2026 feststehend (im nicht drehenden Teil): oben „CITY-CAFE“, unten „KLAGENFURT“ und
+  // das Emblem stehen nie auf dem Kopf; das Holz dreht sich darunter weiter.
+  this.lettering(f);
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius<2.45))this.ring(r,radius,y,t,m);
   this.ring(r,1.53,.348,.016,b);
   const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,DIVIDER_HEIGHT-FLOOR-.012);wall.lineTo(-.009,DIVIDER_HEIGHT-FLOOR-.012);wall.closePath();
@@ -136,15 +120,41 @@ export class WheelModel {
   this.lathe(r,[[0,.825],[.34,.825],[.365,.855],[.365,.94],[.30,.97],[.26,1.04],[.19,1.20],[.16,1.37],[.22,1.49],[.225,1.53],[.13,1.555],[0,1.555]],this.crossMetal);
   this.ring(r,.354,.88,.01,b);this.ring(r,.31,.965,.01,this.chrome);this.ring(r,.213,1.51,.012,this.chrome);
   for(let i=0;i<20;i++){const a=i*TAU/20;const flute=this.mesh(r,new T.CylinderGeometry(.008,.011,.095,6),this.chrome);flute.position.set(Math.sin(a)*.35,.925,-Math.cos(a)*.35);}
-  for(let i=0;i<4;i++){
-   const a=i*TAU/4,arm=this.mesh(r,new T.CylinderGeometry(.021,.033,.67,16),this.crossMetal);arm.rotation.z=Math.PI/2;arm.rotation.y=-a;arm.position.set(Math.cos(a)*.43,1.105,Math.sin(a)*.43);
-   const sleeve=this.mesh(r,new T.CylinderGeometry(.036,.036,.13,16),this.satin);sleeve.rotation.copy(arm.rotation);sleeve.position.set(Math.cos(a)*.39,1.105,Math.sin(a)*.39);
-   const end=this.mesh(r,new T.SphereGeometry(.060,20,14),this.chrome);end.position.set(Math.cos(a)*.775,1.105,Math.sin(a)*.775);
-  }
   for(const group of [f,r]){
    batchMeshes(group);
    for(const mesh of group.children as T.Mesh[]){mesh.geometry.scale(1,shape.bowlDepth,1);mesh.geometry.computeBoundingSphere();}
   }
+  // Mittelkreuz als eigene Gruppe (nicht zusammengefasst), damit die Variante ohne Neubau wechseln kann.
+  this.crossGroup.scale.y=shape.bowlDepth;r.add(this.crossGroup);this.buildCross();
+ }
+ private crossGroup=new T.Group();private crossStyle=0;private medallion:T.MeshStandardMaterial|null=null;
+ /**
+  * Mittelkreuz-Varianten: 0 Klassisch (4 Arme, Kugelenden), 1 Stern (8 Arme), 2 Krone (4 Arme mit
+  * Tulpenenden und Krönchen), 3 Schlicht (flache polierte Kappe ohne Arme), 4 City Cafe (Medaillon
+  * mit „CC · CITY CAFE“ oben, kurze Arme mit Scheiben).
+  */
+ /** Medaillon gegen die Rotordrehung halten, damit „CC“ nie auf dem Kopf steht. */
+ uprightCoin(rotorAngle:number){const coin=this.crossGroup.getObjectByName('coin');if(coin)coin.rotation.y=rotorAngle;}
+ private buildCross(){
+  const g=this.crossGroup;for(const child of [...g.children]){if(child instanceof T.Mesh)child.geometry.dispose();g.remove(child);}
+  const arm=(a:number,len:number,y:number,thin=1)=>{const m=this.mesh(g,new T.CylinderGeometry(.021*thin,.033*thin,len,16),this.crossMetal);m.rotation.z=Math.PI/2;m.rotation.y=-a;m.position.set(Math.cos(a)*(.1+len/2),y,Math.sin(a)*(.1+len/2));
+   const sleeve=this.mesh(g,new T.CylinderGeometry(.036*thin,.036*thin,.13,16),this.satin);sleeve.rotation.copy(m.rotation);sleeve.position.set(Math.cos(a)*.39,y,Math.sin(a)*.39);return .1+len;};
+  const at=(a:number,r:number,y:number,o:T.Object3D)=>{o.position.set(Math.cos(a)*r,y,Math.sin(a)*r);return o;};
+  const style=this.crossStyle;
+  if(style===1)for(let i=0;i<8;i++){const a=i*TAU/8,len=i%2?.46:.67,end=arm(a,len,1.105,i%2?.75:1);at(a,end,1.105,this.mesh(g,new T.SphereGeometry(i%2?.042:.058,18,12),this.chrome));}
+  else if(style===2){for(let i=0;i<4;i++){const a=i*TAU/4,end=arm(a,.62,1.105);const tulip=at(a,end+.04,1.105,this.mesh(g,new T.ConeGeometry(.08,.2,16),this.chrome));tulip.rotation.z=-Math.PI/2;tulip.rotation.y=-a;at(a,end+.12,1.105,this.mesh(g,new T.SphereGeometry(.035,14,10),this.chrome));}
+   const band=this.mesh(g,new T.CylinderGeometry(.2,.2,.05,40,1,true),this.crossMetal);band.position.y=1.58;
+   for(let i=0;i<8;i++){const a=i*TAU/8;at(a,.2,1.66,this.mesh(g,new T.ConeGeometry(.035,.14,12),this.chrome));at(a,.2,1.74,this.mesh(g,new T.SphereGeometry(.022,10,8),this.chrome));}
+   const ball=this.mesh(g,new T.SphereGeometry(.06,16,12),this.chrome);ball.position.set(0,1.64,0);}
+  else if(style===3){const cap=this.mesh(g,new T.CylinderGeometry(.33,.36,.06,48),this.crossMetal);cap.position.y=1.06;const dome=this.mesh(g,new T.SphereGeometry(.3,40,16,0,TAU,0,Math.PI/2),this.chrome);dome.position.y=1.09;dome.scale.y=.35;}
+  else if(style===4){for(let i=0;i<4;i++){const a=i*TAU/4+TAU/8,end=arm(a,.5,1.105,.85);const disc=at(a,end,1.105,this.mesh(g,new T.CylinderGeometry(.075,.075,.025,28),this.chrome));disc.rotation.z=Math.PI/2;disc.rotation.y=-a;}
+   if(!this.medallion){const c=document.createElement('canvas');c.width=c.height=512;const ctx=c.getContext('2d')!,gold=ctx.createLinearGradient(0,0,0,512);gold.addColorStop(0,'#fff0c0');gold.addColorStop(.5,'#d9ad52');gold.addColorStop(1,'#9c7127');
+    ctx.fillStyle='#1a0f08';ctx.beginPath();ctx.arc(256,256,250,0,TAU);ctx.fill();ctx.strokeStyle=gold;ctx.lineWidth=14;ctx.beginPath();ctx.arc(256,256,236,0,TAU);ctx.stroke();ctx.lineWidth=5;ctx.beginPath();ctx.arc(256,256,212,0,TAU);ctx.stroke();
+    ctx.fillStyle=gold;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 150px Georgia, serif';ctx.fillText('CC',256,236);ctx.font='700 46px Georgia, serif';ctx.fillText('CITY CAFE',256,350);
+    const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.medallion=new T.MeshStandardMaterial({map:tex,metalness:.6,roughness:.35});}
+   const coin=new T.Mesh(new T.CylinderGeometry(.24,.24,.03,48),[this.chrome,this.medallion,this.chrome]);coin.castShadow=true;coin.position.y=1.63;coin.name='coin';g.add(coin);
+  }
+  else for(let i=0;i<4;i++){const a=i*TAU/4,end=arm(a,.67,1.105);at(a,end,1.105,this.mesh(g,new T.SphereGeometry(.060,20,14),this.chrome));}
  }
  private mesh(parent:T.Group,geometry:T.BufferGeometry,material:T.Material,cast=true,receive=true){const mesh=new T.Mesh(geometry,material);mesh.castShadow=cast;mesh.receiveShadow=receive;parent.add(mesh);return mesh;}
  private lathe(parent:T.Group,profile:number[][],material:T.Material){return this.mesh(parent,new T.LatheGeometry(profile.map(([x,y])=>new T.Vector2(x,y)),128),material);}
@@ -176,8 +186,8 @@ export class WheelModel {
  }
  private woodCache=new Map<string,T.CanvasTexture>();
  /** Holz für Außenrand, Laufbahn und Innenkessel setzen; Texturen je Holzart/Maserung nur einmal zeichnen. */
- private setWood(species:number,grainTrack:number,grainInner:number){
-  const want=new Map<T.MeshPhysicalMaterial,string>([[this.wood,`${species}/0.5`],[this.track,`${species}/${Math.round(grainTrack*20)/20}`],[this.inner,`${species}/${Math.round(grainInner*20)/20}`]]);
+ private setWood(outer:number,track:number,inner:number,grainTrack:number,grainInner:number){
+  const want=new Map<T.MeshPhysicalMaterial,string>([[this.wood,`${outer}/0.5`],[this.track,`${track}/${Math.round(grainTrack*20)/20}`],[this.inner,`${inner}/${Math.round(grainInner*20)/20}`]]);
   for(const [mat,key] of want){let tex=this.woodCache.get(key);if(!tex){const [sp,g]=key.split('/').map(Number);tex=this.woodTexture(g,sp);this.woodCache.set(key,tex);}if(mat.map!==tex){mat.map=tex;mat.needsUpdate=true;}}
   const used=new Set(want.values());for(const [key,tex] of this.woodCache)if(!used.has(key)){tex.dispose();this.woodCache.delete(key);}
  }
@@ -189,23 +199,30 @@ export class WheelModel {
   ORDER.forEach((n,i)=>{const x=i%8*256,y=Math.floor(i/8)*320;let fill:string|CanvasGradient='#fff5db';if(gold){const g=ctx.createLinearGradient(0,y+60,0,y+280);g.addColorStop(0,'#fff0c0');g.addColorStop(.5,'#e2b454');g.addColorStop(1,'#b8862e');fill=g;}ctx.strokeStyle='#1b100c';ctx.strokeText(String(n),x+128,y+168,236);ctx.fillStyle=fill;ctx.fillText(String(n),x+128,y+168,236);});
   if(this.labels.map)this.labels.map.needsUpdate=true;
  }
- /** Goldenes Emblem um die Nabe (r 0,43–0,99), folgt der Neigung der Innenfläche. */
- private emblemMaterial:T.MeshStandardMaterial|null=null;private emblemVisible=true;
- private emblem(parent:T.Group){
-  if(!this.emblemMaterial){
-   const c=document.createElement('canvas');c.width=c.height=1024;const ctx=c.getContext('2d')!,m=512,gold=ctx.createLinearGradient(0,0,0,1024);gold.addColorStop(0,'#fbecc0');gold.addColorStop(.5,'#d9ad52');gold.addColorStop(1,'#a97c2e');
-   ctx.strokeStyle=gold;ctx.fillStyle=gold;ctx.lineWidth=10;for(const r of [505,488,410,396]){ctx.beginPath();ctx.arc(m,m,r,0,Math.PI*2);ctx.stroke();}
-   ctx.font='700 66px Georgia, serif';ctx.textBaseline='middle';ctx.textAlign='center';
-   const arc=(text:string,bottom:boolean)=>{const chars=[...text],step=.082;let a=-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*449,bottom?m+Math.cos(a)*449:m-Math.cos(a)*449);ctx.rotate(bottom?-a:a);ctx.fillText(ch,0,0);ctx.restore();a+=step;}};
-   arc('CITY CAFE',false);arc('FISCHL',true);
-   for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*449,m-Math.cos(a)*449);ctx.font='700 56px Georgia, serif';ctx.fillText('\u2726',0,0);ctx.restore();}
-   const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;
-   this.emblemMaterial=new T.MeshStandardMaterial({map:tex,transparent:true,metalness:.75,roughness:.3,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
+ /** Feststehende Goldschrift auf der Innenfläche (r 0,43–1,525): Schriftring und optional Emblem um die Nabe. */
+ private letteringCanvas:HTMLCanvasElement|null=null;private letteringLogo:boolean|null=null;
+ private drawLettering(logo:boolean){
+  if(this.letteringLogo===logo&&this.letteringCanvas)return;this.letteringLogo=logo;
+  const c=this.letteringCanvas??=document.createElement('canvas');c.width=c.height=2048;const ctx=c.getContext('2d')!,m=1024,u=1024/1.525;ctx.clearRect(0,0,2048,2048);
+  const gold=ctx.createLinearGradient(0,0,0,2048);gold.addColorStop(0,'#fbecc0');gold.addColorStop(.45,'#d9ad52');gold.addColorStop(.55,'#a97c2e');gold.addColorStop(1,'#f6e0a4');
+  ctx.fillStyle=gold;ctx.strokeStyle=gold;ctx.textBaseline='middle';ctx.textAlign='center';ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.shadowOffsetY=4;
+  // Text auf einem Bogen: oben mit Buchstaben nach außen, unten nach innen – beide lesbar.
+  const arc=(text:string,radius:number,font:string,step:number,bottom:boolean,center=0)=>{ctx.font=font;const chars=[...text];let a=center-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*radius,bottom?m+Math.cos(a)*radius:m-Math.cos(a)*radius);ctx.rotate(bottom?-a:a);ctx.fillText(ch,0,0);ctx.restore();a+=step;}};
+  const ring=1.27*u;arc('CITY-CAFE',ring,'700 150px Georgia, "Times New Roman", serif',.118,false);arc('KLAGENFURT',ring,'700 150px Georgia, "Times New Roman", serif',.112,true);
+  for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*ring,m);ctx.font='700 110px Georgia, serif';ctx.fillText('\u2726',0,0);ctx.restore();}
+  if(logo){
+   ctx.lineWidth=12;for(const r of [.977,.95,.8,.775]){ctx.beginPath();ctx.arc(m,m,r*u,0,Math.PI*2);ctx.stroke();}
+   arc('CITY CAFE',.875*u,'700 82px Georgia, serif',.1,false);arc('FISCHL',.875*u,'700 82px Georgia, serif',.1,true);
+   for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*.875*u,m);ctx.font='700 64px Georgia, serif';ctx.fillText('\u2726',0,0);ctx.restore();}
   }
-  const g=new T.RingGeometry(.43,.99,128,6),p=g.getAttribute('position'),lift=.2/MM_PER_UNIT;
-  const h=(r:number)=>r>=1.02?.653:r>=.62?.804+(r-.62)*(.653-.804)/(1.02-.62):.804+(r-.62)*(.839-.804)/(.40-.62);
-  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),r=Math.hypot(x,y);p.setXYZ(i,x,h(r)+lift,-y);}
-  g.computeVertexNormals();const mesh=this.mesh(parent,g,this.emblemMaterial);mesh.castShadow=false;mesh.name='emblem';mesh.visible=this.emblemVisible;
+  if(this.gold.map)this.gold.map.needsUpdate=true;
+ }
+ private lettering(parent:T.Group){
+  const g=new T.RingGeometry(.43,1.525,160,10),p=g.getAttribute('position'),lift=.2/MM_PER_UNIT;
+  const pts=[[1.525,.345],[1.36,.447],[1.02,.653],[.62,.804],[.40,.839]];
+  const h=(r:number)=>{for(let i=1;i<pts.length;i++){const [r0,y0]=pts[i-1],[r1,y1]=pts[i];if(r<=r0&&r>=r1)return y0+(r-r0)*(y1-y0)/(r1-r0);}return r>1.525?.345:.839;};
+  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i);p.setXYZ(i,x,h(Math.hypot(x,y))+lift,-y);}
+  g.computeVertexNormals();const mesh=this.mesh(parent,g,this.gold);mesh.castShadow=false;
  }
  private glow:T.Mesh|null=null;private depth=1;
  /** Gewinnfach hervorheben (Index in ORDER) oder mit null ausblenden. */

@@ -15,11 +15,13 @@ export function startDisplay(){
  // Retire the previous continuous noise bed once, including saved TV settings.
  try{if(!localStorage.getItem('atelier-audio-v2')){settings.ambience=0;localStorage.setItem('atelier-audio-v2','1');}}catch{settings.ambience=0;}
  try{if(!localStorage.getItem('atelier-audio-v3')){settings.ambience=.35;localStorage.setItem('atelier-audio-v3','1');}}catch{settings.ambience=.35;}
+ // Kessel füllt seit 27.09.2026 den Raum zwischen den Linien; alte Radgröße einmalig auf 100 %.
+ try{if(!localStorage.getItem('atelier-fit-v1')){settings.zoom=1;localStorage.setItem('atelier-fit-v1','1');}}catch{}
  // Schnelleres Tempo (27.09.2026): einmalig 4 s Pause und 12 s Kugelrunde, auch bei gespeicherten Einstellungen.
  try{if(!localStorage.getItem('atelier-tempo-v1')){settings.delay=4;settings.duration=12;localStorage.setItem('atelier-tempo-v1','1');}}catch{settings.delay=4;settings.duration=12;}
  if(params.has('eco'))settings.economy=params.get('eco')!=='0';
  const cycle=new Cycle(),sound=new Sound(),relay=new Relay('tv'),session=crypto.randomUUID();let wheel:Wheel;
- let pendingMatch:{mode:Match['mode'];players:number;rounds?:number|null}|null=null;let match:Match|null=null,matchSpin:number|null=null,matchKey='',drawElapsed=0,drawTick=0;const DRAW_MS=2800;const DEFAULT_ROUNDS=30,celebration=new Celebration(app,180,()=>{if(!match?.finished)return;match=null;matchSpin=null;cycle.start(DEFAULT_ROUNDS);render();});
+ let pendingMatch:{mode:Match['mode'];players:number;rounds?:number|null}|null=null;let fitKey='';let match:Match|null=null,matchSpin:number|null=null,matchKey='',drawElapsed=0,drawTick=0;const DRAW_MS=2800;const DEFAULT_ROUNDS=30,celebration=new Celebration(app,180,()=>{if(!match?.finished)return;match=null;matchSpin=null;cycle.start(DEFAULT_ROUNDS);render();});
  let nextIndex:number|null=null,planKey='',tickInfo:{dt:number;before:number}|null=null,lastCountdown=NaN,lastCounting=false;let message='',throwInfo='Erster Abwurf bei 0 · Kessel ↻ · Kugel ↺',lastCommand='',lastHistory='',lastBroadcast=0,lastPaint=0;
  try{wheel=new Wheel($('wheel'));}catch{$('message').textContent='Dieser Browser benötigt WebGL 2. Bitte Hardwarebeschleunigung aktivieren.';return;}
  function configure(patch:unknown){settings=applySettings(settings,patch);if(cycle.delay!==settings.delay)cycle.setDelay(settings.delay);wheel.setPerformance(settings.economy,settings.renderScale);wheel.setDesign(settings);wheel.ballDiameter=settings.ballDiameter;wheel.ballMass=settings.ballMass;wheel.ballBounce=settings.ballBounce;wheel.durationSetting=settings.duration;wheel.durationSpread=settings.durationSpread;wheel.ballRunMin=settings.pocketRunMin;wheel.ballRunMax=settings.pocketRunMax;wheel.deflectorResistanceRadial=settings.deflectorResistanceRadial;wheel.deflectorResistanceTangential=settings.deflectorResistanceTangential;replan();wheel.zoom=settings.zoom;wheel.setTV(true,settings);wheel.renderer.toneMappingExposure=1.02*settings.brightness;document.body.style.setProperty('--tv-text-scale',String(settings.textScale));document.body.style.setProperty('--felt',String(settings.feltBackground));sound.configure(settings.effects,settings.ambience,settings.muted);if(typeof layoutWheel==='function')requestAnimationFrame(()=>layoutWheel());fillSettings($('settings-dialog'),settings);try{localStorage.setItem('atelier-show-settings',JSON.stringify(settings));}catch{}}
@@ -63,15 +65,27 @@ export function startDisplay(){
  // Kessel: in voller Größe mittig zwischen rechtem Tafelrand und der Info-Spalte rechts.
  function layoutMatch(){
   const panel=$('match-panel');if(!match||panel.hidden){layoutWheel();return;}
-  let fit=1;panel.style.setProperty('--fit','1');
-  while(fit>.45&&(panel.scrollHeight>panel.clientHeight+1||panel.scrollWidth>panel.clientWidth+1)){fit-=.03;panel.style.setProperty('--fit',fit.toFixed(2));}
+  // Schriftgröße einmal je Spiel/Bildschirm festlegen – mit dem breitesten möglichen Inhalt, damit sie
+  // während des Spiels nicht springt (vorher: bei jedem neuen Wert neu berechnet).
+  const m=match,key=[m.players.length,m.mode,m.rounds,innerWidth,innerHeight,settings.textScale].join('/');
+  if(key!==fitKey){fitKey=key;const rows=$('match-rows'),round=$('match-round'),keep=[rows.innerHTML,round.textContent];
+   const r=m.rounds===null?'99':`${m.rounds}/${m.rounds}`,big=m.target??36*(m.rounds??10);
+   rows.innerHTML=m.players.map(()=>`<tr class="turn lead"><th>▶ Spieler 10 <span class="match-lead-star">★</span></th><td class="rnd">${r}</td><td>${big}</td><td class="gap noch">${m.target===null?'−':''}${big}</td>${m.target===null?'':'<td><span class="match-chip red">36</span></td>'}</tr>`).join('');
+   round.textContent=m.rounds===null?'Runde 99':`Runde ${m.rounds} von ${m.rounds}`;
+   let fit=1;panel.style.setProperty('--fit','1');
+   while(fit>.45&&(panel.scrollHeight>panel.clientHeight+1||panel.scrollWidth>panel.clientWidth+1)){fit-=.02;panel.style.setProperty('--fit',fit.toFixed(2));}
+   rows.innerHTML=keep[0];round.textContent=keep[1];}
   layoutWheel();
  }
  // Kessel: oben bis knapp unter die Linie der Kopfzeile; im Spielmodus zusätzlich mittig zwischen Tafel und rechter Info-Spalte.
  function layoutWheel(){
-  const b=wheel.rimBounds(),line=document.querySelector<HTMLElement>('.show-header')!.getBoundingClientRect().bottom;
-  const y=Math.min(0,Math.round(line-6-b.top));let x=0;const panel=$('match-panel');
-  if(match&&!panel.hidden){const left=panel.getBoundingClientRect().right,info=document.querySelector<HTMLElement>('.result-panel')!.getBoundingClientRect(),right=info.width>0?info.left:innerWidth;x=Math.round((left+right)/2-(b.left+b.right)/2);}
+  // Kessel füllt den Raum zwischen oberer und unterer Linie (Radgröße 100 % = genau dazwischen) und
+  // steht mittig zwischen linker Spalte (Tafel bzw. Countdown) und rechter Info-Spalte.
+  const top=document.querySelector<HTMLElement>('.show-header')!.getBoundingClientRect().bottom,strip=document.querySelector<HTMLElement>('.result-strip')!.getBoundingClientRect(),bottom=strip.height>0?strip.top:innerHeight,gap=6;
+  const panel=$('match-panel'),leftEl=match&&!panel.hidden?panel:document.querySelector<HTMLElement>('.cycle-panel')!,lr=leftEl.getBoundingClientRect(),left=lr.width>0?lr.right:0;
+  const info=document.querySelector<HTMLElement>('.result-panel')!.getBoundingClientRect(),right=info.width>0?info.left:innerWidth;
+  for(let i=0;i<3;i++){const b=wheel.rimBounds(),scale=Math.min((bottom-top-2*gap)/(b.bottom-b.top),(right-left-2*gap)/(b.right-b.left))*settings.zoom;if(Math.abs(scale-1)<.004)break;wheel.setFit(wheel.fit*scale);}
+  const b=wheel.rimBounds(),y=Math.round((top+bottom)/2-(b.top+b.bottom)/2),x=match&&!panel.hidden?Math.round((left+right)/2-(b.left+b.right)/2):0;
   document.body.style.setProperty('--wheel-x',`${x}px`);document.body.style.setProperty('--wheel-y',`${y}px`);
  }
  addEventListener('resize',()=>{matchKey='';render();});void document.fonts?.ready.then(()=>{matchKey='';render();});
