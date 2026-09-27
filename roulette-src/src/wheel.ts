@@ -14,7 +14,7 @@ import {DEFAULT_TV,tvProjection,type TVSettings} from './tv-projection';
 export class Wheel {
  renderer:T.WebGLRenderer;scene=new T.Scene();rotor=new T.Group();ball:T.Mesh;
  camera=new T.PerspectiveCamera(37,1,.1,60);
- angle=0;speed=0;timeScale=1;durationSetting=16;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
+ angle=0;speed=0;timeScale=1;durationSetting=12;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
  ballDiameter=21;ballMass=8.7;ballBounce=1;ballRunMin=5;ballRunMax=15;deflectorResistanceRadial=30;deflectorResistanceTangential=30;
  readonly planner=new BallPlanner();
  /** Zähler für die Messung: wie oft die Keyframe-Rückfallebene statt der Physik lief. */

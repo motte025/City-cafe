@@ -6,7 +6,7 @@ Eine automatische europäische Roulette-Anzeige ohne Setzfeld oder Geldfunktione
 
 https://motte025.github.io/City-cafe/roulette/
 
-Das Rad startet nach 8 Sekunden. Standard: 12 Runden; nach jeder Landung folgen erneut 8 Sekunden Countdown. Die letzten zehn Gewinnzahlen stehen unten. Einmal „Ton aktivieren“ anklicken, danach bei Bedarf Vollbild einschalten.
+Das Rad startet nach 4 Sekunden. Standard: 12 Runden; nach jeder Landung folgen erneut 4 Sekunden Countdown. Die letzten zehn Gewinnzahlen stehen unten. Einmal „Ton aktivieren“ anklicken, danach bei Bedarf Vollbild einschalten.
 
 ## Handy-Fernbedienung
 
@@ -25,6 +25,7 @@ Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 30
 - Wer beginnt, lost der Computer aus (Web Crypto); links läuft dazu kurz ein Licht über die Spieler, der Countdown wartet solange. Danach dreht der Computer reihum – jede Landung zählt für den Spieler, der dran ist. Die Zahl kommt wie immer aus `randomIndex()` (Web Crypto, gleichverteilt); der Spielmodus liest das Ergebnis nur mit und greift nicht ein.
 - **Runden**: jeder hat so viele Würfe wie gewählt (Standard 10), die Zahlen werden addiert, die höchste Summe gewinnt (Gleichstand: mehrere Sieger). Tafel: Punkte, Würfe, Abstand zum Führenden.
 - **301 / 501**: wer als Erster genau auf 301 bzw. 501 kommt, gewinnt sofort. Führt eine Zahl darüber hinaus, zählt sie nicht („überworfen“). Mit Rundenlimit gewinnt sonst am Ende, wer am nächsten dran ist. Tafel: Punkte, noch nötig, und ab 36 fehlenden Punkten die Zahl, mit der man ausmacht (in Rot/Schwarz/Grün).
+- Dauer (Simulation, 4 s Pause + 12 s Kugel ≈ 17–18 s je Wurf): 301 mit 5 Spielern ~30 Min., mit 10 ~50 Min.; 501 mit 5 Spielern ~45 Min., mit 10 ~1 Std. 25 Min. Ein Rundenlimit verkürzt das.
 - Läuft beim Start gerade eine Kugel, zählt erst die nächste. Pause/Fortsetzen/Jetzt drehen wirken wie gewohnt. Nach Spielende hält das Rad an und der Sieger wird 30 Sekunden gefeiert: Konfetti in Kesselfarben, Lichtstrahlen, Pokal, Name in Gold und Siegertreppchen der besten drei (`src/celebration.ts`). Solange die Feier läuft, meldet der TV dem Dashboard „läuft noch“, damit der Slot nicht mittendrin wechselt.
 - Logik: `src/match.ts`, Tests: `tests/match.test.ts`. Zum Testen ohne Handy: `?testspiel=x301&spieler=4&runden=10&punkte=280` (`runden=0` = ohne Limit, `punkte` = Startpunkte je Spieler, damit das Ende schnell kommt).
 
@@ -108,7 +109,7 @@ Pausieren, Neustart und Lauftext unter dem Kessel sind auf dem TV ausgeblendet. 
 
 Neu: Innenkessel, Außenrand und Kugellaufbahn separat heller/dunkler stellen, Innen- und Außenglanz getrennt regeln und Taschenfarben abstimmen.
 
-Die Rundendauer schwankt unabhängig vom Ergebnis um den eingestellten Mittelwert: standardmäßig 16 ± 3 Sekunden, also 13–19 Sekunden ab Abwurf. Der vorherige Richtungswechsel kommt hinzu. Abweichung 0–5 Sekunden in der Fernbedienung einstellbar. Eine konstante Animationsdauer hat die Gewinnwahrscheinlichkeiten ebenfalls nicht verändert: Das Endfach wird unabhängig mit Web Crypto gleichverteilt gezogen.
+Die Rundendauer schwankt unabhängig vom Ergebnis um den eingestellten Mittelwert: standardmäßig 12 ± 3 Sekunden, also 10–15 Sekunden ab Abwurf (kürzer als 10 s wird nie gedreht; seit 27.09.2026, vorher 16 ± 3 s und 8 s Pause – bestehende Einstellungen werden einmalig umgestellt). Der vorherige Richtungswechsel kommt hinzu. Abweichung 0–5 Sekunden in der Fernbedienung einstellbar. Eine konstante Animationsdauer hat die Gewinnwahrscheinlichkeiten ebenfalls nicht verändert: Das Endfach wird unabhängig mit Web Crypto gleichverteilt gezogen.
 # Kugelbewegung – 23.09.2026
 
 Die TV-Anzeige erzeugt pro Wurf ein unabhängiges 32-Bit-Bewegungsprofil: variabler Abstieg, 4–7 Kontakte vor dem Taschenbereich und 4–7 abklingende Taschenkontakte. Letzte Bewegung: seitlicher Rückprall und Ausrollen zur äußeren Taschenwand; kein Zentrieren. Die Endposition bleibt relativ zum Rotor erhalten. Das Ergebnis wird weiterhin unabhängig und unverzerrt über Web Crypto gewählt.
