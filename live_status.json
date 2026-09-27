@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-09-27T14:57:49Z",
+  "checked_at": "2026-09-27T15:02:48Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "deejayfamily",
@@ -17,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈 | !challenge !sport | TY Raiders: @multimodalmusic",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Lazy relaxed vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈 | !challenge !sport | TY Raiders: @multimodalmusic",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
