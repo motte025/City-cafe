@@ -39,7 +39,9 @@ Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 30
 
 ## Veredelung (Fernbedienung → „Veredelung“)
 
-Alles sofort wirksam, „Design zurücksetzen“ gilt auch hier: Holzart (Mahagoni, Nussbaum, Kirsche, Ebenholz, Ahorn), Mittelkreuz Chrom bis Messing (eigenes Material, Zierringe bleiben), Kugel-Glanz, Lichtspiel (kreisendes warmes Licht, 0 % = aus), Filz-Hintergrund (0 % = aus), Gewinnfach leuchtet auf (bis zum nächsten Abwurf), Zahlen in Gold, Emblem „CITY CAFE · FISCHL“ um die Nabe.
+Alles sofort wirksam, „Design zurücksetzen“ gilt auch hier: Holzart getrennt für Außenrand, Kugellaufbahn und Innenkessel (Mahagoni, Nussbaum, Kirsche, Ebenholz, Ahorn), Mittelkreuz-Design (Klassisch, Stern mit 8 Armen, Krone, Schlicht, City Cafe mit aufrecht stehendem „CC“-Medaillon), Mittelkreuz Chrom bis Messing (eigenes Material, Zierringe bleiben), Kugel-Glanz, Lichtspiel (kreisendes warmes Licht, 0 % = aus), Filz-Hintergrund (0 % = aus), Gewinnfach leuchtet auf (bis zum nächsten Abwurf), Zahlen in Gold, Emblem „CITY CAFE · FISCHL“ um die Nabe. Schriftring („CITY-CAFE“ oben, „KLAGENFURT“ unten) und Emblem stehen fest und sind immer lesbar; das Holz dreht sich darunter.
+
+**Layout:** Der Kessel füllt den Raum zwischen oberer und unterer Linie (Radgröße 100 % = genau dazwischen), die Tafel reicht bis zur unteren Linie. Die Tafelschrift wird einmal je Spiel mit dem breitesten möglichen Inhalt festgelegt und bleibt dann gleich.
 
 **Kugel fällt nicht heraus:** `tests/ball-escape.test.ts` prüft 72 Würfe mit allen Extremwerten (18–21 mm, 5,3–10,5 g, Sprungstärke 50–140 %, Rauten 0/100 %, flacher/tiefer Kessel, 8°/28°). Größter Abstand der Kugelmitte 3,025 (Holzrand 3,13), Ruhe immer in einem Fach. Nicht gefundene Extremwürfe laufen über die Keyframe-Rückfallebene, deren Bahn fest innerhalb der Laufbahn liegt.
 

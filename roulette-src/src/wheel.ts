@@ -14,7 +14,7 @@ import {DEFAULT_TV,tvProjection,type TVSettings} from './tv-projection';
 export class Wheel {
  renderer:T.WebGLRenderer;scene=new T.Scene();rotor=new T.Group();ball:T.Mesh;
  camera=new T.PerspectiveCamera(37,1,.1,60);
- angle=0;speed=0;timeScale=1;durationSetting=12;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
+ angle=0;speed=0;timeScale=1;/** automatischer Maßstab, damit der Kessel zwischen die Linien passt (display.ts) */fit=1;durationSetting=12;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
  ballDiameter=21;ballMass=8.7;ballBounce=1;ballRunMin=5;ballRunMax=15;deflectorResistanceRadial=30;deflectorResistanceTangential=30;
  readonly planner=new BallPlanner();
  /** Zähler für die Messung: wie oft die Keyframe-Rückfallebene statt der Physik lief. */
@@ -73,11 +73,12 @@ export class Wheel {
   for(let i=0;i<72;i++){const a=i/72*Math.PI*2;v.set(Math.sin(a)*3.4,1.04,-Math.cos(a)*3.4).project(this.camera);const x=(v.x+1)/2*width,y=(1-v.y)/2*height;top=Math.min(top,y);bottom=Math.max(bottom,y);left=Math.min(left,x);right=Math.max(right,x);}
   return {top,bottom,left,right};
  }
+ setFit(value:number){const v=Math.max(.5,Math.min(2,value));if(Math.abs(v-this.fit)<.002)return;this.fit=v;this.resize();}
  setTV(enabled:boolean,settings:TVSettings){this.tvEnabled=enabled;this.tvSettings=settings;this.resize();}
  private resize(){
   const {width,height}=this.host.getBoundingClientRect();if(width<=0||height<=0)return;
   const buffer=bufferSize(width,height,devicePixelRatio,this.economy,this.renderScale);this.renderer.setSize(buffer.width,buffer.height,false);this.camera.aspect=width/height;this.shadowDirty=true;this.profile?.reset();
-  const tilt=this.design.cameraTilt*Math.PI/180,distance=15.5/this.zoom/Math.min(1,this.camera.aspect);
+  const tilt=this.design.cameraTilt*Math.PI/180,distance=15.5/(this.zoom*this.fit)/Math.min(1,this.camera.aspect);
   this.camera.position.set(0,.3+Math.cos(tilt)*distance,Math.sin(tilt)*distance);this.camera.up.set(0,0,-1);this.camera.lookAt(0,.3,0);this.camera.updateProjectionMatrix();
   if(this.tvEnabled&&this.tvSettings.correction){const p=tvProjection(this.tvSettings);const warp=new T.Matrix4().set(p.scale,0,0,0,0,p.scale*p.stretch,0,0,0,0,.2,0,0,-p.keystone*p.scale,0,1);this.camera.projectionMatrix.premultiply(warp);this.camera.projectionMatrixInverse.copy(this.camera.projectionMatrix).invert();}
  }
@@ -173,6 +174,7 @@ export class Wheel {
    else if(p.impact!==this.impact){this.impact=p.impact;if(p.impact>=0)this.onImpact?.(Math.max(.12,1-p.impact/14));}
    if(p.done){this.shadowDirty=true;this.rotor.attach(this.ball);const actual=pocketForAngle(Math.atan2(this.ball.position.x,-this.ball.position.z));this.lastIndex=actual;this.motion=null;if(this.design.pocketGlow){this.model.highlightPocket(actual);this.glowTime=0;}if(this.pendingShape)this.applyShape(this.pendingShape);this.onLand?.(actual);}
   }else{const next=coast(this.speed,dt);this.angle+=next.angle;this.speed=next.speed;this.rotor.rotation.y=-this.angle;}
+  this.model.uprightCoin(this.angle);
   if(this.glowTime>=0){this.glowTime+=dt;this.model.glowPulse(this.glowTime);}
   this.sweepAngle+=dt*.35;this.sweep.intensity=this.design.lightPlay*9;this.sweep.position.set(Math.sin(this.sweepAngle)*3.4,3.2,-Math.cos(this.sweepAngle)*3.4);
   const updateShadow=shadowDue(time,this.lastShadow,this.economy,!!this.preparation||!!this.motion||Math.abs(this.speed)>.0001,this.shadowDirty);this.renderer.shadowMap.needsUpdate=updateShadow;if(updateShadow){this.lastShadow=time;this.shadowDirty=false;}
