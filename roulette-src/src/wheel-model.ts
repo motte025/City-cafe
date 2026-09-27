@@ -212,9 +212,10 @@ export class WheelModel {
   const gold=ctx.createLinearGradient(0,0,0,2048);gold.addColorStop(0,'#fbecc0');gold.addColorStop(.45,'#d9ad52');gold.addColorStop(.55,'#a97c2e');gold.addColorStop(1,'#f6e0a4');
   ctx.fillStyle=gold;ctx.strokeStyle=gold;ctx.textBaseline='middle';ctx.textAlign='center';ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.shadowOffsetY=4;
   // Text auf einem Bogen: oben mit Buchstaben nach außen, unten nach innen – beide lesbar.
-  const arc=(text:string,radius:number,font:string,step:number,bottom:boolean,center=0)=>{ctx.font=font;const chars=[...text];let a=center-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*radius,bottom?m+Math.cos(a)*radius:m-Math.cos(a)*radius);ctx.rotate(bottom?-a:a);ctx.fillText(ch,0,0);ctx.restore();a+=step;}};
+  // stretch: Buchstaben in Richtung Mitte höher ziehen (Breite ist durch den Umfang begrenzt, Höhe nicht); dunkle Kontur hebt das Gold vom Holz ab.
+  const arc=(text:string,radius:number,font:string,step:number,bottom:boolean,center=0,stretch=1)=>{ctx.font=font;const px=parseFloat(font.replace(/^\D*/,''))||100;ctx.lineWidth=Math.max(2,px*.035);ctx.lineJoin='round';ctx.strokeStyle='rgba(28,12,4,.6)';const chars=[...text];let a=center-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*radius,bottom?m+Math.cos(a)*radius:m-Math.cos(a)*radius);ctx.rotate(bottom?-a:a);ctx.scale(1,stretch);ctx.strokeText(ch,0,0);ctx.fillText(ch,0,0);ctx.restore();a+=step;}ctx.strokeStyle=gold;};
   // Hinten (oben im Bild) der Name, vorne ein frei wählbarer Text zwischen den beiden Sternen; lange Texte werden enger und kleiner gesetzt.
-  const ring=1.27*u,fitArc=(text:string,bottom:boolean)=>{const n=Math.max(1,[...text].length),step=Math.min(.118,(Math.PI-.42)/Math.max(1,n-1)),px=Math.round(Math.min(150,step*ring*1.28));arc(text,ring,`700 ${px}px Georgia, "Times New Roman", serif`,step,bottom);};
+  const ring=1.275*u,fitArc=(text:string,bottom:boolean)=>{const n=Math.max(1,[...text].length),step=Math.min(.13,(Math.PI-.34)/Math.max(1,n-1)),px=Math.round(Math.min(160,step*ring*1.22)),stretch=Math.min(1.55,190/px);arc(text,ring,`700 ${px}px Georgia, "Times New Roman", serif`,step,bottom,0,stretch);};
   fitArc('CITY-CAFE KLAGENFURT',false);if(front)fitArc(front,true);
   for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*ring,m);ctx.font='700 110px Georgia, serif';ctx.fillText('\u2726',0,0);ctx.restore();}
   if(logo){

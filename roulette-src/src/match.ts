@@ -9,23 +9,25 @@
  * - „Runden“: jeder Spieler bekommt so viele Würfe wie gewählt (Standard 10),
  *   die Zahlen werden addiert, am Ende gewinnt die höchste Summe
  *   (Gleichstand: mehrere Sieger).
- * - „301“/„501“: wer als Erster genau auf 301 bzw. 501 kommt, gewinnt sofort.
+ * - „201“/„301“/„501“: wer genau auf das Ziel kommt, hat ausgemacht. Die angefangene Runde wird
+ *   immer fertig gespielt; machen darin mehrere aus, teilen sie sich den Sieg.
  *   Eine Zahl, die über das Ziel hinausführt, zählt nicht („überworfen“).
  *   Ab 36 fehlenden Punkten gibt es genau eine Zahl, die ausmacht.
  *   Optional mit Rundenlimit: trifft bis dahin niemand genau, gewinnt, wer
  *   am nächsten dran ist.
  */
-export type MatchMode='rounds'|'x301'|'x501';
-export const MATCH_MODES:MatchMode[]=['rounds','x301','x501'];
+export type MatchMode='rounds'|'x201'|'x301'|'x501';
+export const MATCH_MODES:MatchMode[]=['rounds','x201','x301','x501'];
 export const MIN_PLAYERS=2,MAX_PLAYERS=12,MATCH_ROUNDS=10,MIN_ROUNDS=1,MAX_ROUNDS=50;
-export const ROUND_PRESETS=[3,5,10,15,20,30];
-export const modeLabel=(m:MatchMode)=>m==='rounds'?'Runden':m==='x301'?'301':'501';
-export const modeTarget=(m:MatchMode)=>m==='x301'?301:m==='x501'?501:null;
+export const ROUND_PRESETS=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30];
+export const modeLabel=(m:MatchMode)=>m==='rounds'?'Runden':m.slice(1);
+export const modeTarget=(m:MatchMode)=>m==='rounds'?null:Number(m.slice(1));
 export const isMatchMode=(v:unknown):v is MatchMode=>MATCH_MODES.includes(v as MatchMode);
 /** Gleichverteilte Zufallszahl 0 … n−1 (Web Crypto, Rejection Sampling wie randomIndex). */
 export function randomBelow(n:number,read:()=>number=()=>crypto.getRandomValues(new Uint32Array(1))[0]){const limit=Math.floor(2**32/n)*n;let v;do{v=read();}while(v>=limit);return v%n;}
 
-export interface MatchPlayer {name:string;score:number;throws:number}
+/** out: hat genau ausgemacht (wirft nicht mehr); finish: die Zahl, mit der ausgemacht wurde. */
+export interface MatchPlayer {name:string;score:number;throws:number;out?:boolean;finish?:number}
 export interface MatchThrow {player:number;number:number;counted:boolean;bust:boolean;win:boolean}
 /** exact = genau getroffen, rounds = Rundenlimit erreicht */
 export type MatchEnd='exact'|'rounds';
@@ -41,7 +43,7 @@ export class Match {
   if(rounds===null?this.target===null:(!Number.isInteger(rounds)||rounds<MIN_ROUNDS||rounds>MAX_ROUNDS))throw new Error('Ungültige Rundenzahl');
   if(!Number.isInteger(first)||first<0||first>=count)throw new Error('Ungültiger Beginner');
   this.rounds=rounds;this.first=first;this.turn=first;
-  this.players=Array.from({length:count},(_,i)=>({name:`Spieler ${i+1}`,score:0,throws:0}));
+  this.players=Array.from({length:count},(_,i)=>({name:`Spieler ${i+1}`,score:0,throws:0,out:false}));
  }
  /** Punkte, die dem Spieler noch fehlen (nur 301/501). */
  needed(i:number){return this.target===null?null:this.target-this.players[i].score;}
@@ -57,15 +59,19 @@ export class Match {
   if(this.target!==null){
    const rest=this.target-p.score;
    if(number>rest){counted=false;bust=true;}
-   else{p.score+=number;if(number===rest){win=true;this.finished=true;this.end='exact';this.winners=[i];}}
+   else{p.score+=number;if(number===rest){win=true;p.out=true;p.finish=number;}}
   }else p.score+=number;
   this.last={player:i,number,counted,bust,win};
-  if(!this.finished)this.advance();
+  this.advance();
   return this.last;
  }
  private advance(){
-  this.turn=(this.turn+1)%this.players.length;
-  if(this.turn!==this.first)return;
+  // Wer schon ausgemacht hat, wird übersprungen; am Rundenende entscheidet sich das Spiel.
+  const n=this.players.length;let wrapped=false;
+  do{this.turn=(this.turn+1)%n;if(this.turn===this.first)wrapped=true;}while(this.players[this.turn].out&&!wrapped);
+  if(!wrapped)return;this.turn=this.first;
+  const exact=this.players.flatMap((p,i)=>p.out?[i]:[]);
+  if(exact.length){this.finished=true;this.end='exact';this.winners=exact;return;}
   if(this.rounds!==null&&this.round>=this.rounds){
    // Rundenlimit: höchste Summe, bei 301/501 also am nächsten am Ziel.
    this.finished=true;this.end='rounds';const best=Math.max(...this.players.map(p=>p.score));

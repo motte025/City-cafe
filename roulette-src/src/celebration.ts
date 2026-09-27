@@ -6,7 +6,9 @@
  * Pokal und Medaillen sind eigene Grafiken statt Emojis, damit sie auf jedem
  * Gerät gleich golden aussehen.
  */
-export interface CelebrationInfo {title:string;name:string;detail:string;podium:{place:number;name:string;score:string}[]}
+export interface CelebrationInfo {title:string;name:string;detail:string;podium:{place:number;name:string;score:string}[];
+ /** Endtabelle aller Spieler, letzte Zahl und Spieldauer (rechte Spalte der Karte) */
+ table?:{place:number;name:string;score:number;extra:string;winner:boolean}[];last?:{number:number;color:string;by:string}|null;time?:string}
 const COLORS=['#e6c26f','#f6e2a8','#b8872f','#c0283f','#0c8a55','#f3efe4'];
 const TROPHY=`<svg viewBox="0 0 120 130" aria-hidden="true"><defs><linearGradient id="cg" x1="0" x2="1"><stop offset="0" stop-color="#8a5d17"/><stop offset=".35" stop-color="#f7dc8b"/><stop offset=".55" stop-color="#fff4cf"/><stop offset=".75" stop-color="#d9a841"/><stop offset="1" stop-color="#7a5012"/></linearGradient></defs>
  <path d="M30 14h60v10c0 26-12 42-30 46-18-4-30-20-30-46z" fill="url(#cg)"/><path d="M30 22H14c0 18 8 28 20 30M90 22h16c0 18-8 28-20 30" fill="none" stroke="url(#cg)" stroke-width="7" stroke-linecap="round"/>
@@ -18,7 +20,7 @@ export class Celebration {
  private root:HTMLElement;private canvas:HTMLCanvasElement;private raf=0;private timer=0;private bits:Bit[]=[];private last=0;private nextBurst=0;private economy=false;
  constructor(host:HTMLElement,private seconds=180,private onDone:()=>void=()=>{}){
   this.root=document.createElement('div');this.root.className='celebration';this.root.hidden=true;
-  this.root.innerHTML=`<canvas class="celebration-confetti"></canvas><div class="celebration-rays"></div><div class="celebration-card"><div class="celebration-trophy">${TROPHY}</div><div class="celebration-title"></div><h2 class="celebration-name"></h2><p class="celebration-detail"></p><ol class="celebration-podium"></ol></div>`;
+  this.root.innerHTML=`<canvas class="celebration-confetti"></canvas><div class="celebration-rays"></div><div class="celebration-card"><div class="celebration-main"><div class="celebration-trophy">${TROPHY}</div><div class="celebration-title"></div><h2 class="celebration-name"></h2><p class="celebration-detail"></p><ol class="celebration-podium"></ol></div><aside class="celebration-side" hidden><div class="celebration-side-head"><span>ENDSTAND</span><em class="celebration-time"></em></div><table class="celebration-table"><tbody></tbody></table><div class="celebration-last"><span>LETZTE ZAHL</span><b class="celebration-last-chip"></b><em class="celebration-last-by"></em></div></aside></div>`;
   host.append(this.root);this.canvas=this.root.querySelector('canvas')!;
  }
  get active(){return !this.root.hidden;}
@@ -28,6 +30,10 @@ export class Celebration {
   // Treppchen: Zweiter links, Sieger in der Mitte, Dritter rechts – nach Rangfolge, nicht nach Platzziffer (Gleichstand!).
   const podium=q('.celebration-podium');podium.innerHTML='';
   info.podium.forEach((p,rank)=>{const li=document.createElement('li');li.className=`step-${rank+1}`;li.innerHTML=`${medal(p.place)}<b></b><em></em>`;li.querySelector('b')!.textContent=p.name;li.querySelector('em')!.textContent=p.score;podium.append(li);});
+  const side=q('.celebration-side'),rows=info.table??[];side.hidden=rows.length===0;
+  const body=q('.celebration-table tbody');body.innerHTML='';for(const r of rows){const tr=document.createElement('tr');if(r.winner)tr.className='winner';tr.innerHTML='<td></td><th></th><td></td><td></td>';const c=tr.children;c[0].textContent=`${r.place}.`;c[1].textContent=r.name;c[2].textContent=String(r.score);c[3].textContent=r.extra;body.append(tr);}
+  side.style.setProperty('--rows',String(Math.max(4,rows.length)));q('.celebration-time').textContent=info.time?`Spielzeit ${info.time}`:'';
+  const chip=q('.celebration-last-chip');q('.celebration-last').hidden=!info.last;if(info.last){chip.textContent=String(info.last.number);chip.className=`celebration-last-chip ${info.last.color}`;q('.celebration-last-by').textContent=info.last.by;}
   this.root.hidden=false;this.root.classList.remove('play');void this.root.offsetWidth;this.root.classList.add('play');
   this.resize();const {width:w,height:h}=this.canvas;
   this.bits=Array.from({length:economy?120:260},()=>this.confetti(w,(Math.random()*1.4-.6)*h));
