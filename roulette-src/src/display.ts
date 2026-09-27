@@ -15,6 +15,8 @@ export function startDisplay(){
  // Retire the previous continuous noise bed once, including saved TV settings.
  try{if(!localStorage.getItem('atelier-audio-v2')){settings.ambience=0;localStorage.setItem('atelier-audio-v2','1');}}catch{settings.ambience=0;}
  try{if(!localStorage.getItem('atelier-audio-v3')){settings.ambience=.35;localStorage.setItem('atelier-audio-v3','1');}}catch{settings.ambience=.35;}
+ // Schnelleres Tempo (27.09.2026): einmalig 4 s Pause und 12 s Kugelrunde, auch bei gespeicherten Einstellungen.
+ try{if(!localStorage.getItem('atelier-tempo-v1')){settings.delay=4;settings.duration=12;localStorage.setItem('atelier-tempo-v1','1');}}catch{settings.delay=4;settings.duration=12;}
  if(params.has('eco'))settings.economy=params.get('eco')!=='0';
  const cycle=new Cycle(),sound=new Sound(),relay=new Relay('tv'),session=crypto.randomUUID();let wheel:Wheel;
  let match:Match|null=null,matchSpin:number|null=null,matchKey='',drawElapsed=0,drawTick=0;const DRAW_MS=2800;const celebration=new Celebration(app);
