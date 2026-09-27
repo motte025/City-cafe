@@ -128,8 +128,10 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   getestet (kein voller Testlauf wie bei `roulette-src`), da reine
   Entscheidungsvorlage.
 - **Roulette-Spielmodus** (27.09.2026, erster Versuch): 2–10 Spieler, Modi
-  „Runden“ (3–30 wählbar, höchste Summe) sowie 301/501 (genau treffen, überworfen zählt
-  nicht, ab 36 Rest wird die Ausmach-Zahl angezeigt). Nur per Fernbedienung
+  „Runden“ (höchste Summe) sowie 301/501 (genau treffen, überworfen zählt
+  nicht, ab 36 Rest wird die Ausmach-Zahl angezeigt), Rundenzahl 3–30 wählbar
+  (bei 301/501 auch ohne Limit). Beginner wird ausgelost, Sieger mit Konfetti
+  und Treppchen gefeiert. Nur per Fernbedienung
   aktivierbar, Punktetafel links am TV. Der Computer dreht reihum, das
   Ergebnis bleibt reiner Zufall. Beschreibung: `roulette-src/README.md`.
   Steht in `roulette-src` und ist **nur** nach `roulette-vorschau-spiel/`

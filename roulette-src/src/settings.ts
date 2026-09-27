@@ -10,4 +10,4 @@ export function applySettings(current:Settings,patch:unknown):Settings{const nex
  if(next.pocketRunMin>next.pocketRunMax){if('pocketRunMax' in (patch as object)&&!('pocketRunMin' in (patch as object)))next.pocketRunMin=next.pocketRunMax;else next.pocketRunMax=next.pocketRunMin;}
  return next;}
 export interface State {session:string;phase:string;seconds:number;remaining:number|null;total:number|null;completed:number;history:number[];message:string;throwInfo:string;settings:Settings;audioReady:boolean;lastCommand:string;running:boolean;designPending?:boolean;match?:MatchState|null}
-export type Command={action:'start';rounds:number|null}|{action:'pause'|'resume'|'stop'|'now'|'hello'}|{action:'settings';patch:Partial<Settings>}|{action:'match';mode:MatchMode;players:number;rounds?:number}|{action:'matchEnd'};
+export type Command={action:'start';rounds:number|null}|{action:'pause'|'resume'|'stop'|'now'|'hello'}|{action:'settings';patch:Partial<Settings>}|{action:'match';mode:MatchMode;players:number;rounds?:number|null}|{action:'matchEnd'};

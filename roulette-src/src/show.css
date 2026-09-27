@@ -95,7 +95,9 @@
 .match-count-label{font-size:11px;color:#b5aa88;letter-spacing:1.5px;margin:16px 0 9px;text-transform:uppercase}
 .match-counts{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-bottom:14px}
 .match-counts button{padding:10px 0;font-size:18px;font-weight:600;background:#112e22;color:#ead3a2}
-.match-round-counts{grid-template-columns:repeat(6,1fr)}
+.match-round-counts{grid-template-columns:repeat(7,1fr)}
+.match-counts button[hidden]{display:none}
+.match-unlimited span{display:block;font-size:9px;font-weight:400}
 .match-rounds-box[hidden]{display:none}
 .match-counts button.selected{background:#ac8c50;color:#0b241a;border-color:#ddc183}
 .remote-actions .match-start{background:#6f5a2c;color:#fff1cf;border-color:#ddc18366}
@@ -109,3 +111,33 @@
 .remote-match-board li.turn{background:#d8b87233;outline:1px solid #e8c98377}
 .remote-match-board li b{font-size:18px;color:#f3ead2}
 .remote-match-board li small{color:#b9c2ad;min-width:5.5em;text-align:right}
+/* Auslosung, wer beginnt */
+.match-turn.drawing{background:linear-gradient(90deg,#8a6a2c,#d8b872,#8a6a2c);background-size:200% 100%;animation:match-draw 1s linear infinite}
+.match-table tr.draw th,.match-table tr.draw td{background:#e8c98355}
+@keyframes match-draw{to{background-position:-200% 0}}
+/* Siegerfeier */
+.celebration{position:fixed;inset:0;z-index:8;display:grid;place-items:center;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at center,#0a1c16cc 0,#030b08ee 70%)}
+.celebration[hidden]{display:none}
+.celebration-confetti{position:absolute;inset:0;width:100%;height:100%}
+.celebration-rays{position:absolute;left:50%;top:50%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;background:repeating-conic-gradient(from 0deg,#e6c26f22 0 6deg,transparent 6deg 18deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 55%);mask:radial-gradient(circle,#000 0,transparent 55%);animation:celebration-spin 40s linear infinite}
+.celebration-card{position:relative;text-align:center;padding:4vh 5vw 3.6vh;min-width:min(58vw,900px);max-width:88vw;border-radius:22px;border:2px solid #e6c26f;background:linear-gradient(180deg,#123126f2,#07170ff2);box-shadow:0 0 0 6px #e6c26f22,0 0 90px #e6c26f55,0 30px 80px #000c}
+.celebration.play .celebration-card{animation:celebration-in .9s cubic-bezier(.2,1.5,.4,1) both}
+.celebration-trophy{font-size:calc(13vh*var(--tv-text-scale,1));line-height:1;filter:drop-shadow(0 0 24px #f2cf7aaa)}
+.celebration.play .celebration-trophy{animation:celebration-bounce 1.6s ease-in-out .6s infinite}
+.celebration-title{margin-top:1.4vh;font-size:calc(clamp(14px,2.4vh,30px)*var(--tv-text-scale,1));letter-spacing:.35em;font-weight:700;color:#e6c26f}
+.celebration-name{margin:1vh 0 1.2vh;font:600 calc(clamp(34px,8.5vh,110px)*var(--tv-text-scale,1))/1.05 'Playfair Display',Georgia,serif;background:linear-gradient(100deg,#b8872f 10%,#fff3cc 40%,#e6c26f 55%,#b8872f 90%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:celebration-shine 3.5s linear infinite}
+.celebration-detail{margin:0 0 2.4vh;font-size:calc(clamp(16px,3.2vh,40px)*var(--tv-text-scale,1));color:#f3ead2}
+.celebration-podium{list-style:none;margin:0 auto;padding:0;display:flex;justify-content:center;align-items:flex-end;gap:1.6vw}
+.celebration-podium li{display:grid;justify-items:center;gap:.3vh;min-width:11vw;padding:1.2vh 1vw;border-radius:12px;background:#ffffff0d;border:1px solid #e6c26f44;font-size:calc(clamp(13px,2.4vh,30px)*var(--tv-text-scale,1))}
+.celebration-podium li span{font-size:1.6em;line-height:1}
+.celebration-podium li b{color:#fff3d6;white-space:nowrap}
+.celebration-podium li em{font-style:normal;color:#d8c79c;font-variant-numeric:tabular-nums}
+.celebration-podium li.place-1{order:2;padding-bottom:3vh;background:#e6c26f26;border-color:#e6c26f}
+.celebration-podium li.place-2{order:1}
+.celebration-podium li.place-3{order:3}
+@keyframes celebration-in{from{transform:scale(.3) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes celebration-bounce{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-2.2vh) rotate(-6deg)}60%{transform:translateY(0) rotate(5deg)}}
+@keyframes celebration-shine{to{background-position:-250% 0}}
+@keyframes celebration-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.celebration-rays,.celebration-name,.celebration.play .celebration-trophy{animation:none}}
+.remote-match .round-preset.selected:hover:enabled,.match-counts button.selected:hover:enabled{background:#ac8c50}
