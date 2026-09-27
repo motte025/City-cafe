@@ -27,7 +27,7 @@ export function startDisplay(){
  function command(cmd:Command){if(!cmd||typeof cmd!=='object')return;switch(cmd.action){case 'start':cycle.start(cmd.rounds);break;case 'pause':cycle.pause();break;case 'resume':cycle.resume();break;case 'stop':cycle.stop();break;case 'now':cycle.spinNow();break;case 'settings':configure(cmd.patch);break;
   // Spielmodus: Zyklus ohne Ende, der Computer dreht reihum. Eine gerade laufende Kugel zählt noch nicht mit.
   case 'match':startMatch(cmd.mode,cmd.players,cmd.rounds);break;
-  case 'matchEnd':if(!match)break;match=null;matchSpin=null;celebration.hide();cycle.stop();break;}render();}
+  case 'matchEnd':if(!match)break;match=null;matchSpin=null;celebration.hide();cycle.start(DEFAULT_ROUNDS);break;}render();}
  function snapshot():State{return {session,phase:cycle.phase,seconds:Math.ceil(cycle.countdown),remaining:cycle.remaining,total:cycle.total,completed:cycle.completed,history:[...cycle.history],message:statusText(),throwInfo,settings,audioReady:sound.ready,lastCommand,running:cycle.running||celebration.active,designPending:wheel.designPending,match:match?.state()??null};}
  function statusText(){if(match){const p=match.players[match.turn].name;if(match.finished)return `Spiel beendet · ${winnerText(match)}`;if(cycle.phase==='countdown')return `${p} ist dran · Abwurf in ${Math.ceil(cycle.countdown)} Sekunden`;if(cycle.phase==='spinning'&&matchSpin!==null)return `Die Kugel rollt für ${p}.`;}
   return cycle.phase==='countdown'?`Nächster Abwurf in ${Math.ceil(cycle.countdown)} Sekunden`:cycle.phase==='complete'?'Zyklus beendet. Bereit für die nächste Runde.':cycle.phase==='paused'?'Der Croupier pausiert.':message;}
