@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-27T12:02:47Z",
+  "checked_at": "2026-09-27T12:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -45,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈 | !challenge !sport",
       "game": "DJs"
     }
   ]
