@@ -127,7 +127,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   mehr, sondern Ergebnis der Physik. Modell B ist nur oberflächlich
   getestet (kein voller Testlauf wie bei `roulette-src`), da reine
   Entscheidungsvorlage.
-- **Roulette-Spielmodus** (27.09.2026, erster Versuch): 2–10 Spieler, Modi
+- **Roulette-Spielmodus** (27.09.2026, erster Versuch): 2–12 Spieler, Modi
   „Runden“ (höchste Summe) sowie 301/501 (genau treffen, überworfen zählt
   nicht, ab 36 Rest wird die Ausmach-Zahl angezeigt), Rundenzahl 3–30 wählbar
   (bei 301/501 auch ohne Limit). Beginner wird ausgelost, Sieger 3 Minuten mit Feuerwerk,

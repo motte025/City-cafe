@@ -74,7 +74,7 @@ export class WheelModel {
   this.setWood(s.woodOuter,s.woodTrack,s.woodInner,s.grainTrack,s.grainInner);
   if(s.crossStyle!==this.crossStyle){this.crossStyle=s.crossStyle;this.buildCross();}this.drawNumbers(s.goldNumbers);
   const brass=new T.Color(0xcf9f4a);this.chrome.color.copy(new T.Color(0xd5e0e8).lerp(brass,s.brass));this.crossMetal.color.copy(this.metal.color).lerp(brass,s.brass);this.crossMetal.roughness=this.metal.roughness;
-  this.drawLettering(s.centerLogo);
+  this.drawLettering(s.centerLogo,s.frontText);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
@@ -143,9 +143,13 @@ export class WheelModel {
   const style=this.crossStyle;
   if(style===1)for(let i=0;i<8;i++){const a=i*TAU/8,len=i%2?.46:.67,end=arm(a,len,1.105,i%2?.75:1);at(a,end,1.105,this.mesh(g,new T.SphereGeometry(i%2?.042:.058,18,12),this.chrome));}
   else if(style===2){for(let i=0;i<4;i++){const a=i*TAU/4,end=arm(a,.62,1.105);const tulip=at(a,end+.04,1.105,this.mesh(g,new T.ConeGeometry(.08,.2,16),this.chrome));tulip.rotation.z=-Math.PI/2;tulip.rotation.y=-a;at(a,end+.12,1.105,this.mesh(g,new T.SphereGeometry(.035,14,10),this.chrome));}
-   const band=this.mesh(g,new T.CylinderGeometry(.2,.2,.05,40,1,true),this.crossMetal);band.position.y=1.58;
-   for(let i=0;i<8;i++){const a=i*TAU/8;at(a,.2,1.66,this.mesh(g,new T.ConeGeometry(.035,.14,12),this.chrome));at(a,.2,1.74,this.mesh(g,new T.SphereGeometry(.022,10,8),this.chrome));}
-   const ball=this.mesh(g,new T.SphereGeometry(.06,16,12),this.chrome);ball.position.set(0,1.64,0);}
+   // Krone: breiter Reif mit acht nach außen geneigten Zacken und Perlen, von oben gut zu sehen
+   const band=this.mesh(g,new T.CylinderGeometry(.3,.24,.14,48),this.crossMetal);band.position.y=1.5;
+   const rim=this.mesh(g,new T.TorusGeometry(.3,.022,10,48),this.chrome);rim.rotation.x=Math.PI/2;rim.position.y=1.57;
+   for(let i=0;i<8;i++){const a=i*TAU/8,tilt=.6;const spike=at(a,.34,1.66,this.mesh(g,new T.ConeGeometry(.055,.24,14),this.crossMetal));spike.rotation.set(Math.sin(a)*tilt,0,-Math.cos(a)*tilt);
+    at(a,.41,1.76,this.mesh(g,new T.SphereGeometry(.04,14,10),this.chrome));at(a+TAU/16,.3,1.57,this.mesh(g,new T.SphereGeometry(.028,12,8),this.chrome));}
+   const ball=this.mesh(g,new T.SphereGeometry(.09,20,14),this.chrome);ball.position.set(0,1.66,0);
+   const post=this.mesh(g,new T.BoxGeometry(.04,.16,.04),this.crossMetal);post.position.y=1.8;const bar=this.mesh(g,new T.BoxGeometry(.12,.04,.04),this.crossMetal);bar.position.y=1.82;}
   else if(style===3){const cap=this.mesh(g,new T.CylinderGeometry(.33,.36,.06,48),this.crossMetal);cap.position.y=1.06;const dome=this.mesh(g,new T.SphereGeometry(.3,40,16,0,TAU,0,Math.PI/2),this.chrome);dome.position.y=1.09;dome.scale.y=.35;}
   else if(style===4){for(let i=0;i<4;i++){const a=i*TAU/4+TAU/8,end=arm(a,.5,1.105,.85);const disc=at(a,end,1.105,this.mesh(g,new T.CylinderGeometry(.075,.075,.025,28),this.chrome));disc.rotation.z=Math.PI/2;disc.rotation.y=-a;}
    if(!this.medallion){const c=document.createElement('canvas');c.width=c.height=512;const ctx=c.getContext('2d')!,gold=ctx.createLinearGradient(0,0,0,512);gold.addColorStop(0,'#fff0c0');gold.addColorStop(.5,'#d9ad52');gold.addColorStop(1,'#9c7127');
@@ -201,14 +205,17 @@ export class WheelModel {
  }
  /** Feststehende Goldschrift auf der Innenfläche (r 0,43–1,525): Schriftring und optional Emblem um die Nabe. */
  private letteringCanvas:HTMLCanvasElement|null=null;private letteringLogo:boolean|null=null;
- private drawLettering(logo:boolean){
-  if(this.letteringLogo===logo&&this.letteringCanvas)return;this.letteringLogo=logo;
+ private letteringText='';
+ private drawLettering(logo:boolean,front=this.letteringText){
+  if(this.letteringLogo===logo&&this.letteringText===front&&this.letteringCanvas)return;this.letteringLogo=logo;this.letteringText=front;
   const c=this.letteringCanvas??=document.createElement('canvas');c.width=c.height=2048;const ctx=c.getContext('2d')!,m=1024,u=1024/1.525;ctx.clearRect(0,0,2048,2048);
   const gold=ctx.createLinearGradient(0,0,0,2048);gold.addColorStop(0,'#fbecc0');gold.addColorStop(.45,'#d9ad52');gold.addColorStop(.55,'#a97c2e');gold.addColorStop(1,'#f6e0a4');
   ctx.fillStyle=gold;ctx.strokeStyle=gold;ctx.textBaseline='middle';ctx.textAlign='center';ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.shadowOffsetY=4;
   // Text auf einem Bogen: oben mit Buchstaben nach außen, unten nach innen – beide lesbar.
   const arc=(text:string,radius:number,font:string,step:number,bottom:boolean,center=0)=>{ctx.font=font;const chars=[...text];let a=center-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*radius,bottom?m+Math.cos(a)*radius:m-Math.cos(a)*radius);ctx.rotate(bottom?-a:a);ctx.fillText(ch,0,0);ctx.restore();a+=step;}};
-  const ring=1.27*u;arc('CITY-CAFE',ring,'700 150px Georgia, "Times New Roman", serif',.118,false);arc('KLAGENFURT',ring,'700 150px Georgia, "Times New Roman", serif',.112,true);
+  // Hinten (oben im Bild) der Name, vorne ein frei wählbarer Text zwischen den beiden Sternen; lange Texte werden enger und kleiner gesetzt.
+  const ring=1.27*u,fitArc=(text:string,bottom:boolean)=>{const n=Math.max(1,[...text].length),step=Math.min(.118,(Math.PI-.42)/Math.max(1,n-1)),px=Math.round(Math.min(150,step*ring*1.28));arc(text,ring,`700 ${px}px Georgia, "Times New Roman", serif`,step,bottom);};
+  fitArc('CITY-CAFE KLAGENFURT',false);if(front)fitArc(front,true);
   for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*ring,m);ctx.font='700 110px Georgia, serif';ctx.fillText('\u2726',0,0);ctx.restore();}
   if(logo){
    ctx.lineWidth=12;for(const r of [.977,.95,.8,.775]){ctx.beginPath();ctx.arc(m,m,r*u,0,Math.PI*2);ctx.stroke();}
