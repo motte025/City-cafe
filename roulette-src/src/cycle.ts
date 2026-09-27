@@ -1,6 +1,6 @@
 export type Phase='countdown'|'spinning'|'paused'|'complete';
 export class Cycle {
- phase:Phase='countdown';total:number|null=12;completed=0;countdown=8;delay=8;running=true;history:number[]=[];
+ phase:Phase='countdown';total:number|null=30;completed=0;countdown=8;delay=8;running=true;history:number[]=[];
  private serial=0;active:number|null=null;private pending:{total:number|null}|null=null;
  onSpin:((id:number)=>void)|null=null;
  get remaining(){return this.total===null?null:Math.max(0,this.total-this.completed)}

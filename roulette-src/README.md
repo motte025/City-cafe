@@ -6,7 +6,7 @@ Eine automatische europäische Roulette-Anzeige ohne Setzfeld oder Geldfunktione
 
 https://motte025.github.io/City-cafe/roulette/
 
-Das Rad startet nach 4 Sekunden. Standard: 12 Runden; nach jeder Landung folgen erneut 4 Sekunden Countdown. Die letzten zehn Gewinnzahlen stehen unten. Einmal „Ton aktivieren“ anklicken, danach bei Bedarf Vollbild einschalten.
+Das Rad startet nach 4 Sekunden. Standard: 30 Runden (seit 27.09.2026, vorher 12); nach jeder Landung folgen erneut 4 Sekunden Countdown. Die letzten zehn Gewinnzahlen stehen unten. Einmal „Ton aktivieren“ anklicken, danach bei Bedarf Vollbild einschalten.
 
 ## Handy-Fernbedienung
 
@@ -20,13 +20,13 @@ Die Fernbedienung verwendet die bereits vorhandene City-cafe-Firebase-Verbindung
 
 ## Spielmodus (2–10 Spieler)
 
-Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 301, 501), Rundenzahl (3, 5, 10, 15, 20, 30; bei 301/501 auch ∞ ohne Limit), Spieleranzahl 2–10, „Spiel starten“. Erst dann erscheint links am TV die Punktetafel (sie ersetzt dort den Countdown-Kreis); „Spiel beenden“ blendet sie wieder aus und hält das Rad an.
+Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 301, 501), Rundenzahl (3, 5, 10, 15, 20, 30; bei 301/501 auch ∞ ohne Limit), Spieleranzahl 2–10, „Spiel starten“. Erst dann erscheint links am TV die Punktetafel (sie ersetzt dort den Countdown-Kreis, der Kessel rückt dafür etwas nach rechts und wird etwas kleiner); „Spiel beenden“ blendet sie wieder aus und hält das Rad an.
 
-- Wer beginnt, lost der Computer aus (Web Crypto); links läuft dazu kurz ein Licht über die Spieler, der Countdown wartet solange. Danach dreht der Computer reihum – jede Landung zählt für den Spieler, der dran ist. Die Zahl kommt wie immer aus `randomIndex()` (Web Crypto, gleichverteilt); der Spielmodus liest das Ergebnis nur mit und greift nicht ein.
+- Wer beginnt, lost der Computer aus (Web Crypto); links läuft dazu kurz ein Licht über die Spieler, der Countdown wartet solange. Danach dreht der Computer reihum. Nach einer Landung bleibt der Werfer mit seiner Zahl markiert; erst mit dem nächsten Abwurf springt die Anzeige zum nächsten Spieler – jede Landung zählt für den Spieler, der dran ist. Die Zahl kommt wie immer aus `randomIndex()` (Web Crypto, gleichverteilt); der Spielmodus liest das Ergebnis nur mit und greift nicht ein.
 - **Runden**: jeder hat so viele Würfe wie gewählt (Standard 10), die Zahlen werden addiert, die höchste Summe gewinnt (Gleichstand: mehrere Sieger). Tafel: Punkte, Würfe, Abstand zum Führenden.
 - **301 / 501**: wer als Erster genau auf 301 bzw. 501 kommt, gewinnt sofort. Führt eine Zahl darüber hinaus, zählt sie nicht („überworfen“). Mit Rundenlimit gewinnt sonst am Ende, wer am nächsten dran ist. Tafel: Punkte, noch nötig, und ab 36 fehlenden Punkten die Zahl, mit der man ausmacht (in Rot/Schwarz/Grün).
 - Dauer (Simulation, 4 s Pause + 12 s Kugel ≈ 17–18 s je Wurf): 301 mit 5 Spielern ~30 Min., mit 10 ~50 Min.; 501 mit 5 Spielern ~45 Min., mit 10 ~1 Std. 25 Min. Ein Rundenlimit verkürzt das.
-- Läuft beim Start gerade eine Kugel, zählt erst die nächste. Pause/Fortsetzen/Jetzt drehen wirken wie gewohnt. Nach Spielende hält das Rad an und der Sieger wird 30 Sekunden gefeiert: Konfetti in Kesselfarben, Lichtstrahlen, Pokal, Name in Gold und Siegertreppchen der besten drei (`src/celebration.ts`). Solange die Feier läuft, meldet der TV dem Dashboard „läuft noch“, damit der Slot nicht mittendrin wechselt.
+- Läuft beim Start gerade eine Kugel, zählt erst die nächste. Pause/Fortsetzen/Jetzt drehen wirken wie gewohnt. Nach Spielende wird der Sieger 3 Minuten gefeiert: Feuerwerk, Konfetti in Kesselfarben, Lichtstrahlen, goldener Pokal, Name in Gold und Siegertreppchen (Sieger in der Mitte; Pokal und Medaillen als eigene Grafik, damit sie überall gleich aussehen; `src/celebration.ts`). Danach verschwindet die Tafel und der normale Zyklus (30 Runden) startet. Solange die Feier läuft, meldet der TV dem Dashboard „läuft noch“, damit der Slot nicht mittendrin wechselt.
 - Logik: `src/match.ts`, Tests: `tests/match.test.ts`. Zum Testen ohne Handy: `?testspiel=x301&spieler=4&runden=10&punkte=280` (`runden=0` = ohne Limit, `punkte` = Startpunkte je Spieler, damit das Ende schnell kommt).
 
 ## TV-Perspektive
