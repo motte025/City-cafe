@@ -17,7 +17,7 @@
  */
 export type MatchMode='rounds'|'x301'|'x501';
 export const MATCH_MODES:MatchMode[]=['rounds','x301','x501'];
-export const MIN_PLAYERS=2,MAX_PLAYERS=10,MATCH_ROUNDS=10,MIN_ROUNDS=1,MAX_ROUNDS=50;
+export const MIN_PLAYERS=2,MAX_PLAYERS=12,MATCH_ROUNDS=10,MIN_ROUNDS=1,MAX_ROUNDS=50;
 export const ROUND_PRESETS=[3,5,10,15,20,30];
 export const modeLabel=(m:MatchMode)=>m==='rounds'?'Runden':m==='x301'?'301':'501';
 export const modeTarget=(m:MatchMode)=>m==='x301'?301:m==='x501'?501:null;
