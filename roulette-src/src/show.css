@@ -64,7 +64,7 @@
 
 /* Spielmodus (nur per Fernbedienung): Punktetafel links neben dem Kessel, ersetzt dort den Countdown. */
 .display-page.match-on .cycle-panel{display:none}
-.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:15.5%;width:clamp(340px,34vw,700px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--fit,1));overflow:hidden}
+.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:15.5%;width:clamp(330px,31.5vw,650px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--fit,1));overflow:hidden}
 .match-panel>*{flex-shrink:0}
 .match-panel[hidden]{display:none}
 .match-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid #cbb58133;padding-bottom:1.1vh}
@@ -78,8 +78,8 @@
 .match-table thead th:first-child{text-align:left}
 .match-table tbody th,.match-table td{padding:.4vh .4vw;line-height:1.15;background:#ffffff08;white-space:nowrap}
 .match-table tbody th{text-align:left;font-weight:400;border-radius:8px 0 0 8px;width:100%}
-.match-table td{text-align:right;font-weight:500;padding-left:1.1vw}
-.match-table thead th+th{padding-left:1.1vw}
+.match-table td{text-align:right;font-weight:500;padding-left:.9vw}
+.match-table thead th+th{padding-left:.9vw}
 .match-table td:last-child{border-radius:0 8px 8px 0}
 .match-table td.noch{color:#f1d59a}
 .match-table tr.turn th,.match-table tr.turn td{background:#d8b87233;box-shadow:inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
@@ -151,9 +151,13 @@
 
 /* Führende(r): Stern am Namen, Punkte als goldene Marke; mehr Luft zwischen Punkte und Noch */
 .match-lead-star{color:#f1cf7e;font-size:.85em;margin-left:.25em}
-.match-lead-pts{display:inline-block;padding:0 .35em;border-radius:6px;background:#e2c27a;color:#10261c;font-weight:600;box-shadow:0 0 12px #e6c26f66}
 .match-table tr.lead th{color:#fff0c8}
-.match-table .gap{padding-left:2.8vw}
+.match-table .gap{padding-left:2.4vw}
 .match-table td.rnd{color:#b9c2ad;font-weight:400}
 .remote-actions .sound-button{grid-column:1/-1;background:#1d3a2e;color:#e7d7ad}
 .remote-actions .sound-button.muted{background:#3a2a1e;color:#f0c9a0}
+
+/* Filz-Hintergrund (Regler „Filz-Hintergrund“, 0 = aus): grünes Spieltisch-Tuch mit feiner Faserstruktur */
+.felt-layer{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:var(--felt,0);background:radial-gradient(ellipse at 50% 45%,#1f5a3f 0,#123a29 55%,#08180f 100%);}
+.felt-layer::after{content:'';position:absolute;inset:0;opacity:.55;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.setting-field select{width:100%;margin-top:6px;padding:10px 12px;border-radius:9px;border:1px solid #cbb58155;background:#112e22;color:#ead3a2;font:inherit}

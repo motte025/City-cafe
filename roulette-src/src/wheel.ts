@@ -28,7 +28,7 @@ export class Wheel {
  private preparation:{plan:ReturnType<typeof reversalPlan>;elapsed:number;total:number;index:number;variant:number;direction:1|-1;radius:number;y:number;offset:number;ticket:PlanTicket}|null=null;
  /** während des Countdowns vorbereiteter Wurf (Zielindex, vorhergesagter Rotorzustand, Planungsauftrag) */
  private prepared:{index:number;direction:1|-1;angle0:number;speed0:number;ticket:PlanTicket}|null=null;
- private impactCursor=0;
+ private impactCursor=0;private sweep:T.PointLight;private glowTime=-1;private sweepAngle=0;
  constructor(private host:HTMLElement){
   this.renderer=new T.WebGLRenderer({antialias:true,alpha:true});this.renderer.setPixelRatio(1);
   this.renderer.domElement.style.cssText='width:100%;height:100%;display:block';this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.shadowMap.autoUpdate=false;
@@ -41,6 +41,8 @@ export class Wheel {
   Object.assign(this.key.shadow.camera,{left:-4,right:4,top:4,bottom:-4});this.key.shadow.bias=-.00015;this.key.shadow.normalBias=.007;this.key.shadow.radius=2;this.scene.add(this.key);
   this.fill=new T.DirectionalLight(0xa8ccff,1.05);this.fill.position.set(3,4,-5);this.scene.add(this.fill);
   const rim=new T.DirectionalLight(0xffd29a,1.2);rim.position.set(1,2,-4);this.scene.add(rim);
+  // Lichtspiel: warmes Licht, das langsam über dem Kessel kreist und die Spiegelungen wandern lässt.
+  this.sweep=new T.PointLight(0xfff0d0,0,14,1.4);this.sweep.position.set(3,3.2,0);this.scene.add(this.sweep);
   this.model=new WheelModel(this.renderer);this.scene.add(this.model.fixed,this.rotor);this.rotor.add(this.model.turning);
   this.ball=new T.Mesh(new T.SphereGeometry(BALL_RADIUS,40,28),new T.MeshPhysicalMaterial({color:0xfff5db,roughness:.19,metalness:.04,clearcoat:1}));this.ball.scale.setScalar(ballRadiusFor(this.ballDiameter)/BALL_RADIUS);this.ball.castShadow=true;this.ball.position.set(0,this.ballSupport(2.9),-2.9);this.scene.add(this.ball);
   const ground=new T.Mesh(new T.PlaneGeometry(12,12),new T.ShadowMaterial({opacity:.4}));ground.rotation.x=-Math.PI/2;ground.position.y=-.36;ground.receiveShadow=true;this.scene.add(ground);
@@ -51,6 +53,8 @@ export class Wheel {
  get designPending(){return this.pendingShape!==null;}
  setDesign(settings:DesignSettings){
   const next={...settings};this.design=next;this.model.appearance(next);
+  const ball=this.ball.material as T.MeshPhysicalMaterial;ball.roughness=.45-next.ballGloss*.4;ball.clearcoat=Math.min(1,next.ballGloss*1.6);
+  if(!next.pocketGlow)this.model.highlightPocket(null);
   this.key.intensity=2.6+next.lightContrast*1.5;this.fill.intensity=1.35-next.lightContrast*.7;this.ambient.intensity=.9-next.lightContrast*.35;
   if(!sameShape(this.shape,next)){if(this.motion||this.preparation)this.pendingShape=next;else this.applyShape(next);}else this.pendingShape=null;
   this.shadowDirty=true;
@@ -99,6 +103,7 @@ export class Wheel {
  private current(request:PlanRequest){const b=request.ball,dr=request.deflectorResistance;return sameShape(request.shape,this.shape)&&b.diameter===this.ballDiameter&&b.mass===this.ballMass&&b.bounce===this.ballBounce&&request.runMin===this.ballRunMin&&request.runMax===this.ballRunMax&&dr?.radial===this.deflectorResistanceRadial&&dr?.tangential===this.deflectorResistanceTangential;}
  /** overshoot: wie weit der Countdown im auslösenden Bild schon abgelaufen war (s); fehlt bei „Jetzt drehen“. */
  spin(index:number,variant:number,overshoot?:number){
+  this.model.highlightPocket(null);this.glowTime=-1;
   this.scene.attach(this.ball);const direction=this.nextDirection;this.nextDirection=direction===1?-1:1;
   const prep=this.prepared;this.prepared=null;
   const planned=!!prep&&overshoot!==undefined&&prep.index===index&&prep.direction===direction&&this.current(prep.ticket.request);
@@ -166,8 +171,10 @@ export class Wheel {
    const hits=this.motion.plan?.impacts;
    if(hits){while(this.impactCursor<hits.length&&hits[this.impactCursor]<=this.elapsed){this.onImpact?.(hits[this.impactCursor+1]);this.impactCursor+=2;}}
    else if(p.impact!==this.impact){this.impact=p.impact;if(p.impact>=0)this.onImpact?.(Math.max(.12,1-p.impact/14));}
-   if(p.done){this.shadowDirty=true;this.rotor.attach(this.ball);const actual=pocketForAngle(Math.atan2(this.ball.position.x,-this.ball.position.z));this.lastIndex=actual;this.motion=null;if(this.pendingShape)this.applyShape(this.pendingShape);this.onLand?.(actual);}
+   if(p.done){this.shadowDirty=true;this.rotor.attach(this.ball);const actual=pocketForAngle(Math.atan2(this.ball.position.x,-this.ball.position.z));this.lastIndex=actual;this.motion=null;if(this.design.pocketGlow){this.model.highlightPocket(actual);this.glowTime=0;}if(this.pendingShape)this.applyShape(this.pendingShape);this.onLand?.(actual);}
   }else{const next=coast(this.speed,dt);this.angle+=next.angle;this.speed=next.speed;this.rotor.rotation.y=-this.angle;}
+  if(this.glowTime>=0){this.glowTime+=dt;this.model.glowPulse(this.glowTime);}
+  this.sweepAngle+=dt*.35;this.sweep.intensity=this.design.lightPlay*9;this.sweep.position.set(Math.sin(this.sweepAngle)*3.4,3.2,-Math.cos(this.sweepAngle)*3.4);
   const updateShadow=shadowDue(time,this.lastShadow,this.economy,!!this.preparation||!!this.motion||Math.abs(this.speed)>.0001,this.shadowDirty);this.renderer.shadowMap.needsUpdate=updateShadow;if(updateShadow){this.lastShadow=time;this.shadowDirty=false;}
   this.renderer.info.reset();const begin=this.profile?.begin()??0;this.renderer.render(this.scene,this.camera);this.profile?.end(begin,updateShadow,this.economy?'Sparsam':'Qualität');
  }

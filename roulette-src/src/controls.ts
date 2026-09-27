@@ -22,6 +22,14 @@ export function settingsForm(){return `<div class="settings-grid">
  ${field('innerGloss','Innenkessel · matt bis glänzend','%',0,1,.05)}${field('outerGloss','Außenrand · matt bis glänzend','%',0,1,.05)}
  ${field('grainTrack','Kugellaufbahn · Holzmaserung','%',0,1,.05)}${field('grainInner','Innenkessel · Holzmaserung','%',0,1,.05)}
  </div><p data-design-note>Form und Zahlen ändern sich nach einem laufenden Wurf. Blickwinkel, Licht und Texte reagieren sofort.</p><button type="button" data-design-reset>Design zurücksetzen</button></details>
+ <details class="picture-settings" open><summary>Veredelung</summary><div class="settings-grid">
+ <label class="setting-field"><span>Holzart</span><select data-setting="woodSpecies" aria-label="Holzart"><option value="0">Mahagoni</option><option value="1">Nussbaum</option><option value="2">Kirsche</option><option value="3">Ebenholz</option><option value="4">Ahorn</option></select></label>
+ ${field('brass','Mittelkreuz · Chrom bis Messing','%',0,1,.05)}${field('ballGloss','Kugel · Glanz','%',0,1,.05)}
+ ${field('lightPlay','Lichtspiel · wandernde Spiegelung','%',0,1,.05)}${field('feltBackground','Filz-Hintergrund','%',0,1,.05)}
+ <label class="switch"><input type="checkbox" data-setting="pocketGlow"> Gewinnfach leuchtet auf</label>
+ <label class="switch"><input type="checkbox" data-setting="goldNumbers"> Zahlen in Gold</label>
+ <label class="switch"><input type="checkbox" data-setting="centerLogo"> Emblem in der Kesselmitte</label>
+ </div><p>0 % schaltet Lichtspiel bzw. Filz aus. Alles wirkt sofort; „Design zurücksetzen“ setzt auch diese Werte zurück.</p></details>
  <details class="picture-settings"><summary>TV-Bild & Perspektive</summary><div class="settings-grid">
  ${field('brightness','Helligkeit','',.65,1.4,.05)}${field('zoom','Radgröße','',.75,1.15,.01)}
  <label class="switch"><input type="checkbox" data-setting="correction"> TV-Blickwinkel korrigieren</label>
