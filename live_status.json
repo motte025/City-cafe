@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-27T10:52:46Z",
+  "checked_at": "2026-09-27T11:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🎶OKTOBERFEST CHALLENGE🔥!SUBATHON | !subtember 🔥 !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
