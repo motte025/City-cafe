@@ -58,10 +58,20 @@ export function startDisplay(){
   celebration.show({title:tie?'GLEICHSTAND · GETEILTER SIEG':m.end==='exact'?`${m.target} · GENAU GETROFFEN`:'SIEGER',name:tie?names.join(' & '):`${names[0]} gewinnt!`,detail,
    podium:rank.slice(0,3).map(i=>({place:1+m.players.filter(p=>p.score>m.players[i].score).length,name:m.players[i].name,score:`${m.players[i].score} Punkte`}))},settings.economy);
  }
+ // Tafel: Schrift nur so weit verkleinern, bis alle Spieler und Spalten sichtbar sind (jeder TV hat andere Maße).
+ // Kessel: in voller Größe mittig zwischen rechtem Tafelrand und der Info-Spalte rechts.
+ function layoutMatch(){
+  const panel=$('match-panel');if(!match||panel.hidden){document.body.style.removeProperty('--wheel-shift');return;}
+  let fit=1;panel.style.setProperty('--fit','1');
+  while(fit>.45&&(panel.scrollHeight>panel.clientHeight+1||panel.scrollWidth>panel.clientWidth+1)){fit-=.03;panel.style.setProperty('--fit',fit.toFixed(2));}
+  const left=panel.getBoundingClientRect().right,info=document.querySelector<HTMLElement>('.result-panel')!.getBoundingClientRect(),right=info.width>0?info.left:innerWidth;
+  document.body.style.setProperty('--wheel-shift',`${Math.round((left+right)/2-innerWidth/2)}px`);
+ }
+ addEventListener('resize',()=>{matchKey='';render();});void document.fonts?.ready.then(()=>{matchKey='';render();});
  function winnerText(m:Match){const names=m.winners.map(i=>m.players[i].name);return names.length>1?`Gleichstand: ${names.join(', ')}`:`${names[0]} gewinnt!`;}
  // Anzeige links: nur sichtbar, solange über die Fernbedienung ein Spiel läuft.
  function renderMatch(){
-  document.body.classList.toggle('match-on',!!match);$('match-panel').hidden=!match;if(!match)return;
+  document.body.classList.toggle('match-on',!!match);$('match-panel').hidden=!match;if(!match){layoutMatch();return;}
   const m=match,x01=m.target!==null,counting=cycle.phase==='countdown'&&cycle.running,current=m.players[m.turn].name;
   // Auslosung: das Licht läuft reihum, wird langsamer und bleibt beim Beginner stehen.
   // Nur gezeichnete Bilder zählen (je höchstens 120 ms), damit die Auslosung auch auf einer langsamen Box ganz zu sehen ist.
@@ -86,6 +96,7 @@ export function startDisplay(){
     :`<td>${p.score}</td><td>${p.throws}/${m.rounds}</td><td>${best-p.score===0?(best>0?'<span class="match-lead">Führt</span>':'<span class="match-none">—</span>'):`−${best-p.score}`}</td>`;
    return `<tr class="${turn?'turn':''} ${won?'won':''} ${drawing&&turn?'draw':''}"><th>${won?'★ ':turn?'▶ ':''}${p.name}</th>${cells}</tr>`;}).join('');
   $('match-last').innerHTML=l?`Letzter Wurf: ${m.players[l.player].name} · <span class="match-chip ${color(l.number)}">${l.number}</span> ${l.win?'· ausgemacht!':l.bust?'· zählt nicht':''}`:'Der Computer dreht reihum für jeden Spieler.';
+  layoutMatch();
  }
  $('pause').onclick=()=>command({action:cycle.running?'pause':'resume'});$('start-default').onclick=()=>command({action:'start',rounds:DEFAULT_ROUNDS});
  $('settings-open').onclick=()=>{fillSettings($('settings-dialog'),settings);$<HTMLDialogElement>('settings-dialog').showModal();};document.querySelectorAll<HTMLButtonElement>('[data-close]').forEach(b=>b.onclick=()=>$<HTMLDialogElement>(b.dataset.close!).close());

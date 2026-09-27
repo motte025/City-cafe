@@ -64,17 +64,17 @@
 
 /* Spielmodus (nur per Fernbedienung): Punktetafel links neben dem Kessel, ersetzt dort den Countdown. */
 .display-page.match-on .cycle-panel{display:none}
-.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:15.5%;width:clamp(290px,27vw,560px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1));overflow:hidden}
+.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:15.5%;width:clamp(290px,27vw,560px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--fit,1));overflow:hidden}
 .match-panel>*{flex-shrink:0}
 .match-panel[hidden]{display:none}
 .match-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid #cbb58133;padding-bottom:1.1vh}
-.match-panel .match-head .eyebrow{font-size:calc(clamp(12px,1.9vh,22px)*var(--tv-text-scale,1));letter-spacing:2px;color:#cdbf98}
-.match-head strong{display:block;font:400 calc(clamp(20px,4vh,46px)*var(--tv-text-scale,1))/1.1 'Playfair Display',Georgia,serif;color:#ecd39c;margin-top:.4vh;white-space:nowrap}
-#match-round{font-size:calc(clamp(14px,2.5vh,28px)*var(--tv-text-scale,1));color:#e6dcc0;font-weight:400;letter-spacing:.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.match-turn{font-size:calc(clamp(15px,2.7vh,32px)*var(--tv-text-scale,1));font-weight:500;letter-spacing:.3px;color:#0b241a;background:#d8b872;border-radius:9px;padding:.8vh .9vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-.match-turn.winner{background:linear-gradient(90deg,#e9c77a,#f6e2a8,#e9c77a);font-size:calc(clamp(18px,3.4vh,40px)*var(--tv-text-scale,1))}
+.match-panel .match-head .eyebrow{font-size:calc(clamp(12px,1.9vh,22px)*var(--tv-text-scale,1)*var(--fit,1));letter-spacing:2px;color:#cdbf98}
+.match-head strong{display:block;font:400 calc(clamp(20px,4vh,46px)*var(--tv-text-scale,1)*var(--fit,1))/1.1 'Playfair Display',Georgia,serif;color:#ecd39c;margin-top:.4vh;white-space:nowrap}
+#match-round{font-size:calc(clamp(14px,2.5vh,28px)*var(--tv-text-scale,1)*var(--fit,1));color:#e6dcc0;font-weight:400;letter-spacing:.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.match-turn{font-size:calc(clamp(15px,2.7vh,32px)*var(--tv-text-scale,1)*var(--fit,1));font-weight:500;letter-spacing:.3px;color:#0b241a;background:#d8b872;border-radius:9px;padding:.8vh .9vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.match-turn.winner{background:linear-gradient(90deg,#e9c77a,#f6e2a8,#e9c77a);font-size:calc(clamp(18px,3.4vh,40px)*var(--tv-text-scale,1)*var(--fit,1))}
 .match-table{width:100%;border-collapse:separate;border-spacing:0 .45vh;font-variant-numeric:tabular-nums}
-.match-table thead th{font-size:calc(clamp(10px,1.6vh,18px)*var(--tv-text-scale,1));font-weight:500;letter-spacing:.4px;text-transform:uppercase;color:#bcb08c;text-align:right;padding:0 .4vw .3vh;white-space:nowrap}
+.match-table thead th{font-size:calc(clamp(10px,1.6vh,18px)*var(--tv-text-scale,1)*var(--fit,1));font-weight:500;letter-spacing:.4px;text-transform:uppercase;color:#bcb08c;text-align:right;padding:0 .4vw .3vh;white-space:nowrap}
 .match-table thead th:first-child{text-align:left}
 .match-table tbody th,.match-table td{padding:.4vh .4vw;line-height:1.15;background:#ffffff08;white-space:nowrap}
 .match-table tbody th{text-align:left;font-weight:400;border-radius:8px 0 0 8px;width:100%}
@@ -88,7 +88,7 @@
 .match-chip.red{background:#9c2439}.match-chip.black{background:#111b17}.match-chip.green{background:#0c7147}
 .match-none{color:#7f8f81;font-weight:400}
 .match-lead{color:#aee0a4}
-.match-panel .match-last{flex-shrink:1;min-height:0;overflow:hidden;margin:auto 0 0;font-size:calc(clamp(13px,2.2vh,26px)*var(--tv-text-scale,1));color:#ddd3b8;line-height:1.35;border-top:1px solid #cbb58126;padding-top:1vh}
+.match-panel .match-last{margin:auto 0 0;font-size:calc(clamp(13px,2.2vh,26px)*var(--tv-text-scale,1)*var(--fit,1));color:#ddd3b8;line-height:1.35;border-top:1px solid #cbb58126;padding-top:1vh}
 /* Spielmodus in der Fernbedienung */
 .remote-match{border:1px solid #d8b87255;background:#0b2219;border-radius:13px;padding:16px 14px 4px;margin-bottom:27px}
 .match-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
@@ -144,6 +144,6 @@
 @media(prefers-reduced-motion:reduce){.celebration-rays,.celebration-name,.celebration.play .celebration-trophy{animation:none}}
 .remote-match .round-preset.selected:hover:enabled,.match-counts button.selected:hover:enabled{background:#ac8c50}
 
-/* Spielmodus: Kessel etwas nach rechts und kleiner, damit die Tafel frei steht. */
+/* Spielmodus: Kessel in voller Größe mittig zwischen Tafel und rechter Info-Spalte (Verschiebung misst display.ts). */
 .scene canvas{transition:transform 1.2s ease}
-.display-page.match-on .scene canvas{transform:translateX(7.5vw) scale(.9)}
+.display-page.match-on .scene canvas{transform:translateX(var(--wheel-shift,0px))}
