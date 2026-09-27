@@ -94,12 +94,13 @@ export function startDisplay(){
   $('match-panel').style.setProperty('--rows',String(m.players.length));
   $('match-eyebrow').textContent=x01?'GENAU TREFFEN':'MEISTE PUNKTE';$('match-mode').textContent=x01?String(m.target):`${m.rounds} Runden`;
   $('match-round').textContent=m.rounds===null?`Runde ${m.round}`:`Runde ${m.round} von ${m.rounds}`;
-  $('match-columns').innerHTML=x01?'<th>Spieler</th><th>Punkte</th><th>Noch</th><th>Aus mit</th>':'<th>Spieler</th><th>Punkte</th><th>Würfe</th><th>Abstand</th>';
+  $('match-columns').innerHTML=x01?'<th>Spieler</th><th>Runde</th><th>Punkte</th><th class="gap">Noch</th><th>Aus mit</th>':'<th>Spieler</th><th>Runde</th><th>Punkte</th><th class="gap">Abstand</th>';
   const best=Math.max(...m.players.map(p=>p.score));
   $('match-rows').innerHTML=m.players.map((p,i)=>{
    const turn=!m.finished&&i===shown,won=m.winners.includes(i),out=x01?m.checkout(i):null,lead=!m.finished&&best>0&&p.score===best,pts=lead?`<span class="match-lead-pts">${p.score}</span>`:String(p.score);
-   const cells=x01?`<td>${pts}</td><td>${m.needed(i)}</td><td>${out===null?'<span class="match-none">—</span>':`<span class="match-chip ${color(out)}">${out}</span>`}</td>`
-    :`<td>${pts}</td><td>${p.throws}/${m.rounds}</td><td>${best-p.score===0?(best>0?'<span class="match-lead">Führt</span>':'<span class="match-none">—</span>'):`−${best-p.score}`}</td>`;
+   const rnd=`<td class="rnd">${p.throws}${m.rounds===null?'':`/${m.rounds}`}</td>`;
+   const cells=x01?`${rnd}<td>${pts}</td><td class="gap noch">${m.needed(i)}</td><td>${out===null?'<span class="match-none">—</span>':`<span class="match-chip ${color(out)}">${out}</span>`}</td>`
+    :`${rnd}<td>${pts}</td><td class="gap">${best-p.score===0?(best>0?'<span class="match-lead">Führt</span>':'<span class="match-none">—</span>'):`−${best-p.score}`}</td>`;
    return `<tr class="${turn?'turn':''} ${won?'won':''} ${lead?'lead':''} ${drawing&&turn?'draw':''}"><th>${won?'★ ':turn?'▶ ':''}${p.name}${lead?' <span class="match-lead-star">★</span>':''}</th>${cells}</tr>`;}).join('');
   $('match-last').innerHTML=l?`Letzter Wurf: ${m.players[l.player].name} · <span class="match-chip ${color(l.number)}">${l.number}</span> ${l.win?'· ausgemacht!':l.bust?'· zählt nicht':''}`:'Der Computer dreht reihum für jeden Spieler.';
   layoutMatch();

@@ -35,7 +35,7 @@ Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 30
 - **Holzmaserung:** Regler „Kugellaufbahn · Holzmaserung“ und „Innenkessel · Holzmaserung“ (0 % glatt, 50 % bisher, 100 % kräftige Fasern, Jahresringe, Poren, vereinzelte Äste).
 - **Kessel oben bündig** knapp unter der Linie der Kopfzeile (gemessen über den projizierten Kesselrand).
 - **Fernbedienung:** eigener Knopf „Ton an/aus“ (die einmalige Tonfreigabe am TV bleibt nötig).
-- **Spielmodus:** „Letzte 10 Zahlen“ beginnen bei Spielstart neu; Führende(r) mit Stern und goldenen Punkten; mehr Abstand zwischen Punkte und Noch.
+- **Spielmodus:** Spalte „Runde“ je Spieler (gespielte Runden, mit Limit z. B. 3/10); „Letzte 10 Zahlen“ beginnen bei Spielstart neu; Führende(r) mit Stern und goldenen Punkten; mehr Abstand zwischen Punkte und Noch.
 
 ## TV-Perspektive
 
