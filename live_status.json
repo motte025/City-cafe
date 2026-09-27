@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-27T09:52:46Z",
+  "checked_at": "2026-09-27T10:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🎶OKTOBERFEST CHALLENGE🔥!SUBATHON | !subtember 🔥 !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
