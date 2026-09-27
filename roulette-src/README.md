@@ -18,6 +18,16 @@ Zyklen: 10, 12, 30, 50, 100, 200 oder unendlich. Pause/Stop lassen eine laufende
 
 Die Fernbedienung verwendet die bereits vorhandene City-cafe-Firebase-Verbindung unter `djremote/<raum>/roulette`. Bestehende DJ-, Video- und Spielpfade bleiben unabhängig. Internet wird für die Fernbedienung benötigt. Ein Verbindungsabbruch hält die lokale TV-Animation nicht an.
 
+## Spielmodus (2–10 Spieler)
+
+Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 301, 501), Rundenzahl (3, 5, 10, 15, 20, 30; bei 301/501 auch ∞ ohne Limit), Spieleranzahl 2–10, „Spiel starten“. Erst dann erscheint links am TV die Punktetafel (sie ersetzt dort den Countdown-Kreis); „Spiel beenden“ blendet sie wieder aus und hält das Rad an.
+
+- Wer beginnt, lost der Computer aus (Web Crypto); links läuft dazu kurz ein Licht über die Spieler, der Countdown wartet solange. Danach dreht der Computer reihum – jede Landung zählt für den Spieler, der dran ist. Die Zahl kommt wie immer aus `randomIndex()` (Web Crypto, gleichverteilt); der Spielmodus liest das Ergebnis nur mit und greift nicht ein.
+- **Runden**: jeder hat so viele Würfe wie gewählt (Standard 10), die Zahlen werden addiert, die höchste Summe gewinnt (Gleichstand: mehrere Sieger). Tafel: Punkte, Würfe, Abstand zum Führenden.
+- **301 / 501**: wer als Erster genau auf 301 bzw. 501 kommt, gewinnt sofort. Führt eine Zahl darüber hinaus, zählt sie nicht („überworfen“). Mit Rundenlimit gewinnt sonst am Ende, wer am nächsten dran ist. Tafel: Punkte, noch nötig, und ab 36 fehlenden Punkten die Zahl, mit der man ausmacht (in Rot/Schwarz/Grün).
+- Läuft beim Start gerade eine Kugel, zählt erst die nächste. Pause/Fortsetzen/Jetzt drehen wirken wie gewohnt. Nach Spielende hält das Rad an und der Sieger wird 30 Sekunden gefeiert: Konfetti in Kesselfarben, Lichtstrahlen, Pokal, Name in Gold und Siegertreppchen der besten drei (`src/celebration.ts`). Solange die Feier läuft, meldet der TV dem Dashboard „läuft noch“, damit der Slot nicht mittendrin wechselt.
+- Logik: `src/match.ts`, Tests: `tests/match.test.ts`. Zum Testen ohne Handy: `?testspiel=x301&spieler=4&runden=10&punkte=280` (`runden=0` = ohne Limit, `punkte` = Startpunkte je Spieler, damit das Ende schnell kommt).
+
 ## TV-Perspektive
 
 Unter „Kessel-Design & Lesbarkeit“ lassen sich Blickwinkel, 3D-Tiefe, Gefälle des Zahlenkranzes, Zahlengröße, Holzfarbe, Silber/Gold-Ton, Glanz, Lichtkontrast und TV-Schriftgröße einstellen. Blickwinkel 0° entspricht der senkrechten Draufsicht. Die acht Rauten sind abwechselnd radial und tangential angeordnet; der Zahlenkranz fällt zu den vertieften Taschen ab.
