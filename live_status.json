@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-27T23:02:45Z",
+  "checked_at": "2026-09-27T23:17:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "♡ A VERY NORMAL NOT EVIL EMO-DM SUNDAY YIPPEEE🔥 !tip !NEWSONG🔥 !mods !mercy",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "chazz",
@@ -13,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "♡ A VERY NORMAL NOT EVIL EMO-DM SUNDAY YIPPEEE🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     }
   ]
