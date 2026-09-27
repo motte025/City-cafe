@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-27T14:52:45Z",
+  "checked_at": "2026-09-27T14:57:49Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Lazy relaxed vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈 | !challenge !sport | TY Raiders: @multimodalmusic",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈 | !challenge !sport | TY Raiders: @multimodalmusic",
       "game": "DJs"
     },
     {
@@ -48,13 +48,6 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
     }
   ]
