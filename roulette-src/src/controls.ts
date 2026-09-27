@@ -20,6 +20,7 @@ export function settingsForm(){return `<div class="settings-grid">
  ${field('innerTone','Innenkessel · dunkel bis hell','%',.15,1.4,.05)}${field('outerTone','Außenrand · dunkel bis hell','%',.15,1.4,.05)}
  ${field('trackTone','Kugellaufbahn · dunkel bis hell','%',.15,1.4,.05)}${field('pocketRichness','Taschen · Farbstärke','%',0,1,.05)}
  ${field('innerGloss','Innenkessel · matt bis glänzend','%',0,1,.05)}${field('outerGloss','Außenrand · matt bis glänzend','%',0,1,.05)}
+ ${field('grainTrack','Kugellaufbahn · Holzmaserung','%',0,1,.05)}${field('grainInner','Innenkessel · Holzmaserung','%',0,1,.05)}
  </div><p data-design-note>Form und Zahlen ändern sich nach einem laufenden Wurf. Blickwinkel, Licht und Texte reagieren sofort.</p><button type="button" data-design-reset>Design zurücksetzen</button></details>
  <details class="picture-settings"><summary>TV-Bild & Perspektive</summary><div class="settings-grid">
  ${field('brightness','Helligkeit','',.65,1.4,.05)}${field('zoom','Radgröße','',.75,1.15,.01)}

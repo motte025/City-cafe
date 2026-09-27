@@ -9,7 +9,7 @@
  * Stöße mit Restitution und Coulomb-Reibung, dazu Roll- und Luftwiderstand.
  */
 import {BALL_PHYSICS,G_EARTH,MM_PER_UNIT,deflectorMaterial,type MaterialName} from './ball-config';
-import {FLOOR,numberHeight,trackHeight,type WheelShape} from './wheel-shape';
+import {FLOOR,numberHeight,trackHeight,lipHeight,type WheelShape} from './wheel-shape';
 import {STEP,TAU,rotorState,type Motion} from './game';
 
 export const K_TRACK=0,K_DEFLECTOR=1,K_RING=2,K_DIVIDER=3,K_POCKET=4;
@@ -66,7 +66,7 @@ export function buildColliders(shape:WheelShape):Colliders{
  };
  // Fester Kessel (wheel-model: Laufbahn-Drehteil, Holzrand, Ringe aus rimProfile)
  const stator=profile([
-  [2.455,.425,2.49,.44,M_CONE,K_TRACK],[2.49,.44,2.7,.60,M_CONE,K_TRACK],[2.7,.60,2.9,.75,M_CONE,K_TRACK],
+  [2.455,lipHeight(shape),2.49,.44,M_CONE,K_TRACK],[2.49,.44,2.7,.60,M_CONE,K_TRACK],[2.7,.60,2.9,.75,M_CONE,K_TRACK],
   [2.9,.75,3.05,.80,M_TRACK,K_TRACK],[3.03,.80,3.035,.91,M_RAIL,K_TRACK],[3.035,.91,3.13,1.025,M_RAIL,K_TRACK],
  ],[[3.02,.795,.018,M_RAIL,K_TRACK],[3.115,.998,.027,M_RAIL,K_TRACK]]);
  // Rotor (Zahlenkranz-Sektoren, Ebenholz-Drehteil, Taschenboden, hintere Lippe, Innenkessel, Ringe)

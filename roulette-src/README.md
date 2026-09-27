@@ -29,6 +29,14 @@ Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 30
 - Läuft beim Start gerade eine Kugel, zählt erst die nächste. Pause/Fortsetzen/Jetzt drehen wirken wie gewohnt. Nach Spielende wird der Sieger 3 Minuten gefeiert: Feuerwerk, Konfetti in Kesselfarben, Lichtstrahlen, goldener Pokal, Name in Gold und Siegertreppchen (Sieger in der Mitte; Pokal und Medaillen als eigene Grafik, damit sie überall gleich aussehen; `src/celebration.ts`). Danach verschwindet die Tafel und der normale Zyklus (30 Runden) startet. Solange die Feier läuft, meldet der TV dem Dashboard „läuft noch“, damit der Slot nicht mittendrin wechselt.
 - Logik: `src/match.ts`, Tests: `tests/match.test.ts`. Zum Testen ohne Handy: `?testspiel=x301&spieler=4&runden=10&punkte=280` (`runden=0` = ohne Limit, `punkte` = Startpunkte je Spieler, damit das Ende schnell kommt).
 
+## Neu am 27.09.2026 (Vorschau)
+
+- **Kante Zahlen → Laufbahn:** Die Innenkante der Kugellaufbahn (r 2,455) liegt jetzt auf Höhe der Zahlenkranz-Außenkante (`lipHeight` in `wheel-shape.ts`, gleich im sichtbaren Modell und in der Physik). Vorher stand die Laufbahn bei 22° Gefälle rund 5 mm höher. Ein steileres Gefälle (26°) hätte die Stufe ebenfalls geschlossen, verschlechterte aber die Kugelsuche deutlich (53/60 statt 60/60, bis 3,4 s Rechenzeit) und wurde deshalb verworfen.
+- **Holzmaserung:** Regler „Kugellaufbahn · Holzmaserung“ und „Innenkessel · Holzmaserung“ (0 % glatt, 50 % bisher, 100 % kräftige Fasern, Jahresringe, Poren, vereinzelte Äste).
+- **Kessel oben bündig** knapp unter der Linie der Kopfzeile (gemessen über den projizierten Kesselrand).
+- **Fernbedienung:** eigener Knopf „Ton an/aus“ (die einmalige Tonfreigabe am TV bleibt nötig).
+- **Spielmodus:** „Letzte 10 Zahlen“ beginnen bei Spielstart neu; Führende(r) mit Stern und goldenen Punkten; mehr Abstand zwischen Punkte und Noch.
+
 ## TV-Perspektive
 
 Unter „Kessel-Design & Lesbarkeit“ lassen sich Blickwinkel, 3D-Tiefe, Gefälle des Zahlenkranzes, Zahlengröße, Holzfarbe, Silber/Gold-Ton, Glanz, Lichtkontrast und TV-Schriftgröße einstellen. Blickwinkel 0° entspricht der senkrechten Draufsicht. Die acht Rauten sind abwechselnd radial und tangential angeordnet; der Zahlenkranz fällt zu den vertieften Taschen ab.
