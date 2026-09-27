@@ -127,6 +127,17 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   mehr, sondern Ergebnis der Physik. Modell B ist nur oberflächlich
   getestet (kein voller Testlauf wie bei `roulette-src`), da reine
   Entscheidungsvorlage.
+- **Roulette-Spielmodus** (27.09.2026, erster Versuch): 2–10 Spieler, Modi
+  „Runden“ (3–30 wählbar, höchste Summe) sowie 301/501 (genau treffen, überworfen zählt
+  nicht, ab 36 Rest wird die Ausmach-Zahl angezeigt). Nur per Fernbedienung
+  aktivierbar, Punktetafel links am TV. Der Computer dreht reihum, das
+  Ergebnis bleibt reiner Zufall. Beschreibung: `roulette-src/README.md`.
+  Steht in `roulette-src` und ist **nur** nach `roulette-vorschau-spiel/`
+  gebaut — `roulette/` (das Dashboard) ist bewusst unberührt, weil ein Neubau
+  dorthin auch Schriftring, Rauten-Widerstand und Modell A mitbringen würde.
+  Vorschau: TV `roulette-vorschau-spiel/?raum=zuhause`, Handy
+  `roulette-vorschau-spiel/remote.html?raum=zuhause` (der Roulette-Reiter der
+  Sammel-Fernbedienung zeigt noch die alte Seite ohne Spielmodus).
 - **Schriftring "CITY-CAFE KLAGENFURT"**: goldener, umlaufender Schriftzug auf der
   inneren Kesselfläche, ganz außen direkt an der Kante zum Zahlenkranz
   (r 1,02–1,525, dieselben Eckpunkte wie die Fläche darunter, folgt also exakt

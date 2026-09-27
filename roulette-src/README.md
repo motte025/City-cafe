@@ -18,6 +18,16 @@ Zyklen: 10, 12, 30, 50, 100, 200 oder unendlich. Pause/Stop lassen eine laufende
 
 Die Fernbedienung verwendet die bereits vorhandene City-cafe-Firebase-Verbindung unter `djremote/<raum>/roulette`. Bestehende DJ-, Video- und Spielpfade bleiben unabhängig. Internet wird für die Fernbedienung benötigt. Ein Verbindungsabbruch hält die lokale TV-Animation nicht an.
 
+## Spielmodus (2–10 Spieler)
+
+Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 301, 501), beim Modus Runden die Rundenzahl (3, 5, 10, 15, 20, 30), Spieleranzahl 2–10, „Spiel starten“. Erst dann erscheint links am TV die Punktetafel (sie ersetzt dort den Countdown-Kreis); „Spiel beenden“ blendet sie wieder aus und hält das Rad an.
+
+- Der Computer dreht reihum für Spieler 1, 2, … – jede Landung zählt für den Spieler, der dran ist. Die Zahl kommt wie immer aus `randomIndex()` (Web Crypto, gleichverteilt); der Spielmodus liest das Ergebnis nur mit und greift nicht ein.
+- **Runden**: jeder hat so viele Würfe wie gewählt (Standard 10), die Zahlen werden addiert, die höchste Summe gewinnt (Gleichstand: mehrere Sieger). Tafel: Punkte, Würfe, Abstand zum Führenden.
+- **301 / 501**: wer als Erster genau auf 301 bzw. 501 kommt, gewinnt sofort. Führt eine Zahl darüber hinaus, zählt sie nicht („überworfen“). Tafel: Punkte, noch nötig, und ab 36 fehlenden Punkten die Zahl, mit der man ausmacht (in Rot/Schwarz/Grün).
+- Läuft beim Start gerade eine Kugel, zählt erst die nächste. Pause/Fortsetzen/Jetzt drehen wirken wie gewohnt. Nach Spielende hält das Rad an.
+- Logik: `src/match.ts`, Tests: `tests/match.test.ts`. Nur Entwicklungsserver: `/?dev&match=x301&players=4` (bzw. `match=rounds&rounds=5`) startet ein Spiel ohne Handy.
+
 ## TV-Perspektive
 
 Unter „Kessel-Design & Lesbarkeit“ lassen sich Blickwinkel, 3D-Tiefe, Gefälle des Zahlenkranzes, Zahlengröße, Holzfarbe, Silber/Gold-Ton, Glanz, Lichtkontrast und TV-Schriftgröße einstellen. Blickwinkel 0° entspricht der senkrechten Draufsicht. Die acht Rauten sind abwechselnd radial und tangential angeordnet; der Zahlenkranz fällt zu den vertieften Taschen ab.

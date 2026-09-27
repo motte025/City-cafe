@@ -61,3 +61,51 @@
  .display-page #round-progress{margin:8px 0 12px}
  .display-page .remaining{margin-top:8px}
 }
+
+/* Spielmodus (nur per Fernbedienung): Punktetafel links neben dem Kessel, ersetzt dort den Countdown. */
+.display-page.match-on .cycle-panel{display:none}
+.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:15.5%;width:clamp(290px,27vw,560px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.3vh,27vh / var(--rows),1.3vw)*var(--tv-text-scale,1));overflow:hidden}
+.match-panel>*{flex-shrink:0}
+.match-panel[hidden]{display:none}
+.match-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid #cbb58133;padding-bottom:1.1vh}
+.match-panel .match-head .eyebrow{font-size:calc(clamp(12px,1.9vh,22px)*var(--tv-text-scale,1));letter-spacing:2px;color:#cdbf98}
+.match-head strong{display:block;font:500 calc(clamp(20px,4vh,46px)*var(--tv-text-scale,1))/1.1 'Playfair Display',Georgia,serif;color:#ecd39c;margin-top:.4vh;white-space:nowrap}
+#match-round{font-size:calc(clamp(14px,2.5vh,28px)*var(--tv-text-scale,1));color:#e6dcc0;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+.match-turn{font-size:calc(clamp(16px,2.9vh,34px)*var(--tv-text-scale,1));font-weight:700;color:#0b241a;background:#d8b872;border-radius:9px;padding:.8vh .9vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.match-turn.winner{background:linear-gradient(90deg,#e9c77a,#f6e2a8,#e9c77a);font-size:calc(clamp(18px,3.4vh,40px)*var(--tv-text-scale,1))}
+.match-table{width:100%;border-collapse:separate;border-spacing:0 .45vh;font-variant-numeric:tabular-nums}
+.match-table thead th{font-size:calc(clamp(11px,1.75vh,20px)*var(--tv-text-scale,1));font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:#bcb08c;text-align:right;padding:0 .4vw .3vh;white-space:nowrap}
+.match-table thead th:first-child{text-align:left}
+.match-table tbody th,.match-table td{padding:.55vh .4vw;line-height:1.15;background:#ffffff08;white-space:nowrap}
+.match-table tbody th{text-align:left;font-weight:600;border-radius:8px 0 0 8px;width:100%}
+.match-table td{text-align:right;font-weight:700}
+.match-table td:last-child{border-radius:0 8px 8px 0}
+.match-table td:nth-child(3){color:#f1d59a}
+.match-table tr.turn th,.match-table tr.turn td{background:#d8b87233;box-shadow:inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
+.match-table tr.turn th{color:#ffe3a6;box-shadow:inset 3px 0 #e8c983,inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
+.match-table tr.won th,.match-table tr.won td{background:#e2c27a;color:#10261c}
+.match-chip{display:inline-block;min-width:1.9em;padding:0 .3em;border-radius:6px;text-align:center;color:#fff;border:1px solid #ffffff33}
+.match-chip.red{background:#9c2439}.match-chip.black{background:#111b17}.match-chip.green{background:#0c7147}
+.match-none{color:#7f8f81;font-weight:400}
+.match-lead{color:#aee0a4}
+.match-panel .match-last{flex-shrink:1;min-height:0;overflow:hidden;margin:auto 0 0;font-size:calc(clamp(13px,2.2vh,26px)*var(--tv-text-scale,1));color:#ddd3b8;line-height:1.35;border-top:1px solid #cbb58126;padding-top:1vh}
+/* Spielmodus in der Fernbedienung */
+.remote-match{border:1px solid #d8b87255;background:#0b2219;border-radius:13px;padding:16px 14px 4px;margin-bottom:27px}
+.match-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.match-count-label{font-size:11px;color:#b5aa88;letter-spacing:1.5px;margin:16px 0 9px;text-transform:uppercase}
+.match-counts{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-bottom:14px}
+.match-counts button{padding:10px 0;font-size:18px;font-weight:600;background:#112e22;color:#ead3a2}
+.match-round-counts{grid-template-columns:repeat(6,1fr)}
+.match-rounds-box[hidden]{display:none}
+.match-counts button.selected{background:#ac8c50;color:#0b241a;border-color:#ddc183}
+.remote-actions .match-start{background:#6f5a2c;color:#fff1cf;border-color:#ddc18366}
+.remote-match .remote-actions .stop-button{grid-column:auto}
+.remote-match-board{margin-top:14px}
+.remote-match-board:empty{display:none}
+.remote-match-board p{font-size:14px;font-weight:600;color:#ecd39c;margin:0 0 8px}
+.remote-match-board p.winner{color:#0b241a;background:#e2c27a;border-radius:8px;padding:8px 10px}
+.remote-match-board ol{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.remote-match-board li{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:baseline;padding:7px 10px;border-radius:8px;background:#ffffff08;font-variant-numeric:tabular-nums}
+.remote-match-board li.turn{background:#d8b87233;outline:1px solid #e8c98377}
+.remote-match-board li b{font-size:18px;color:#f3ead2}
+.remote-match-board li small{color:#b9c2ad;min-width:5.5em;text-align:right}
