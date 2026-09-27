@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-27T06:57:45Z",
+  "checked_at": "2026-09-27T07:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,20 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "l4uchm3ld3r",
+      "name": "L4uchm3ld3r",
+      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ SUNDAY FUNDAY - SUBTEMBER FINALE ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     }
   ]
