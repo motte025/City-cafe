@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-27T13:12:45Z",
+  "checked_at": "2026-09-27T13:27:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "l4uchm3ld3r",
-      "name": "L4uchm3ld3r",
-      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
       "game": "DJs"
     },
     {
@@ -24,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "l4uchm3ld3r",
+      "name": "L4uchm3ld3r",
+      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🎶OKTOBERFEST CHALLENGE🔥!SUBATHON | !subtember 🔥 !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈 | !challenge !sport | TY Raiders: @multimodalmusic",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Lazy relaxed vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈 | !challenge !sport | TY Raiders: @multimodalmusic",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🎶OKTOBERFEST CHALLENGE🔥!SUBATHON | !subtember 🔥 !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
