@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-27T20:17:45Z",
+  "checked_at": "2026-09-27T20:32:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "deejayfamily",
@@ -27,13 +34,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "DANCE Classics Sunday  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
       "game": "DJs"
     }
   ]
