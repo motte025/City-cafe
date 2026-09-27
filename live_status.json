@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-27T11:47:45Z",
+  "checked_at": "2026-09-27T11:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🎶OKTOBERFEST CHALLENGE🔥!SUBATHON | !subtember 🔥 !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
     }
   ]
