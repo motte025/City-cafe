@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-27T19:27:47Z",
+  "checked_at": "2026-09-27T19:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "DANCE Classics Sunday  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "DANCE Classics Sunday  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
       "game": "DJs"
     }
   ]
