@@ -64,7 +64,7 @@
 
 /* Spielmodus (nur per Fernbedienung): Punktetafel links neben dem Kessel, ersetzt dort den Countdown. */
 .display-page.match-on .cycle-panel{display:none}
-.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:15.5%;width:clamp(320px,31vw,640px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--fit,1));overflow:hidden}
+.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:15.5%;width:clamp(340px,34vw,700px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--fit,1));overflow:hidden}
 .match-panel>*{flex-shrink:0}
 .match-panel[hidden]{display:none}
 .match-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid #cbb58133;padding-bottom:1.1vh}
@@ -78,10 +78,10 @@
 .match-table thead th:first-child{text-align:left}
 .match-table tbody th,.match-table td{padding:.4vh .4vw;line-height:1.15;background:#ffffff08;white-space:nowrap}
 .match-table tbody th{text-align:left;font-weight:400;border-radius:8px 0 0 8px;width:100%}
-.match-table td{text-align:right;font-weight:500;padding-left:1.6vw}
-.match-table thead th+th{padding-left:1.6vw}
+.match-table td{text-align:right;font-weight:500;padding-left:1.1vw}
+.match-table thead th+th{padding-left:1.1vw}
 .match-table td:last-child{border-radius:0 8px 8px 0}
-.match-table td:nth-child(3){color:#f1d59a}
+.match-table td.noch{color:#f1d59a}
 .match-table tr.turn th,.match-table tr.turn td{background:#d8b87233;box-shadow:inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
 .match-table tr.turn th{color:#ffe3a6;box-shadow:inset 3px 0 #e8c983,inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
 .match-table tr.won th,.match-table tr.won td{background:#e2c27a;color:#10261c;font-weight:600}
@@ -153,6 +153,7 @@
 .match-lead-star{color:#f1cf7e;font-size:.85em;margin-left:.25em}
 .match-lead-pts{display:inline-block;padding:0 .35em;border-radius:6px;background:#e2c27a;color:#10261c;font-weight:600;box-shadow:0 0 12px #e6c26f66}
 .match-table tr.lead th{color:#fff0c8}
-.match-table td:nth-child(3),.match-table thead th:nth-child(3){padding-left:3.4vw}
+.match-table .gap{padding-left:2.8vw}
+.match-table td.rnd{color:#b9c2ad;font-weight:400}
 .remote-actions .sound-button{grid-column:1/-1;background:#1d3a2e;color:#e7d7ad}
 .remote-actions .sound-button.muted{background:#3a2a1e;color:#f0c9a0}
