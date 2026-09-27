@@ -1,25 +1,11 @@
 {
-  "checked_at": "2026-09-27T21:02:45Z",
+  "checked_at": "2026-09-27T21:12:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🎉❤️‍🔥 48 HOUR JOINT BIRTHDAY BONANZAAA Chazzy Wazzy / @officedrummer and Friends! 🎉🕺 REQUESTS OPEN !request !tip !patreon !youtube",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
@@ -31,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "DANCE Classics Sunday  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
