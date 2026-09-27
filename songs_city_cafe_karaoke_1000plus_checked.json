@@ -75490,16 +75490,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Bodo Wartke",
-    "title": "Barbaras Rhabarberbar",
+    "artist": "Shaggy",
+    "title": "Boombastic (Sting Remix)",
     "album": "",
-    "category": "Schlager",
+    "category": "International Party",
     "chart": "",
     "release_date": "",
     "tags": [
+      "International Party",
       "Party",
-      "Karaoke",
-      "Schlager"
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Wencke Myhre",
+    "title": "Er steht im Tor",
+    "album": "",
+    "category": "Schlager & Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Charts",
+      "German"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
