@@ -92,11 +92,13 @@
 .match-panel .match-last{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:auto 0 0;font-size:calc(clamp(13px,2.2vh,26px)*var(--tv-text-scale,1)*var(--fit,1));color:#ddd3b8;line-height:1.35;border-top:1px solid #cbb58126;padding-top:1vh}
 /* Spielmodus in der Fernbedienung */
 .remote-match{border:1px solid #d8b87255;background:#0b2219;border-radius:13px;padding:16px 14px 4px;margin-bottom:27px}
-.match-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.match-modes{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
 .match-count-label{font-size:11px;color:#b5aa88;letter-spacing:1.5px;margin:16px 0 9px;text-transform:uppercase}
 .match-counts{display:grid;grid-template-columns:repeat(11,1fr);gap:6px;margin-bottom:14px}
 .match-counts button{padding:10px 0;font-size:18px;font-weight:600;background:#112e22;color:#ead3a2}
 .match-round-counts{grid-template-columns:repeat(7,1fr)}
+.remote-actions .match-pause{grid-column:1/-1;background:#1d3a2e;color:#e7d7ad}
+.remote-actions .match-pause.paused{background:#6f5a2c;color:#fff1cf}
 .match-counts button[hidden]{display:none}
 .match-unlimited span{display:block;font-size:9px;font-weight:400}
 .match-rounds-box[hidden]{display:none}
@@ -162,3 +164,26 @@
 .felt-layer::after{content:'';position:absolute;inset:0;opacity:.55;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 .setting-field select{width:100%;margin-top:6px;padding:10px 12px;border-radius:9px;border:1px solid #cbb58155;background:#112e22;color:#ead3a2;font:inherit}
 .setting-field input[type=text]{width:100%;padding:11px;background:#091b13;border:1px solid #b6a07355;border-radius:7px;color:#f3e8ce;text-transform:uppercase}
+
+/* Feier: rechte Spalte mit Endstand, letzter Zahl und Spielzeit */
+.celebration-card{display:flex;gap:3vw;align-items:stretch;text-align:center}
+.celebration-main{flex:1 1 auto;min-width:0}
+.celebration-side{flex:0 0 auto;width:min(30vw,520px);display:flex;flex-direction:column;gap:1.2vh;text-align:left;border-left:1px solid #e6c26f44;padding-left:2.4vw;font-size:calc(min(2.4vh,34vh / var(--rows,8))*var(--tv-text-scale,1))}
+.celebration-side[hidden]{display:none}
+.celebration-side-head{display:flex;justify-content:space-between;align-items:baseline;letter-spacing:.25em;color:#e6c26f;font-weight:700;font-size:.9em}
+.celebration-side-head em{font-style:normal;letter-spacing:.05em;color:#d8c79c;font-weight:400}
+.celebration-table{width:100%;border-collapse:separate;border-spacing:0 .35vh;font-variant-numeric:tabular-nums}
+.celebration-table td,.celebration-table th{padding:.35vh .6vw;background:#ffffff0a;white-space:nowrap}
+.celebration-table th{text-align:left;font-weight:500;color:#fff3d6;width:100%}
+.celebration-table td{text-align:right;color:#e8dcc0}
+.celebration-table td:first-child{text-align:left;color:#b9ad8a;border-radius:7px 0 0 7px}
+.celebration-table td:last-child{border-radius:0 7px 7px 0;color:#b9c2ad;font-size:.85em}
+.celebration-table tr.winner td,.celebration-table tr.winner th{background:#e2c27a;color:#10261c;font-weight:600}
+.celebration-last{margin-top:auto;display:flex;align-items:center;gap:1vw;padding-top:1.2vh;border-top:1px solid #e6c26f33}
+.celebration-last span{letter-spacing:.2em;color:#e6c26f;font-weight:700;font-size:.85em}
+.celebration-last-chip{display:inline-grid;place-items:center;min-width:2.4em;height:2.1em;padding:0 .3em;border-radius:10px;font-size:1.6em;color:#fff;border:1px solid #ffffff44}
+.celebration-last-chip.red{background:#9c2439}.celebration-last-chip.black{background:#111b17}.celebration-last-chip.green{background:#0c7147}
+.celebration-last em{font-style:normal;color:#d8c79c}
+.match-right{display:flex;flex-direction:column;align-items:flex-end;gap:.3vh}
+.match-timer{font-size:calc(clamp(12px,2vh,24px)*var(--tv-text-scale,1)*var(--fit,1));color:#d8c79c;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.match-out{color:#aee0a4;font-weight:600}

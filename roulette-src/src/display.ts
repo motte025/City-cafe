@@ -4,7 +4,7 @@ export function startDisplay(){
  document.body.classList.add('display-page');const app=document.querySelector<HTMLElement>('#app')!;
  app.innerHTML=`<div class="felt-layer"></div><div id="wheel" class="scene"></div><div class="display-vignette"></div><header class="show-header"><div class="show-brand"><span class="brand-seal">A</span><div>ATELIER<small>EUROPEAN ROULETTE</small></div></div><div class="live-mark"><i></i> LIVE AM TISCH</div><nav><button id="audio-unlock">♫ Ton aktivieren</button><button id="pair">Handy verbinden</button><button id="settings-open" aria-label="Einstellungen">⚙</button><button id="fullscreen" aria-label="Vollbild">⛶</button></nav></header>
  <aside class="cycle-panel"><div class="eyebrow" id="timer-label">NÄCHSTER ABWURF</div><div class="count-ring" id="count-ring"><strong id="seconds">8</strong><span id="timer-unit">SEKUNDEN</span></div><div class="cycle-divider"></div><div class="eyebrow">DIESER ZYKLUS</div><div class="remaining"><strong id="remaining">30</strong><span>RUNDEN<br>ÜBRIG</span></div><p id="round-progress">0 von 30 gespielt</p><div class="cycle-actions"><button id="pause">Ⅱ Pausieren</button><button id="start-default">↻ 30 Runden</button></div></aside>
- <aside class="match-panel" id="match-panel" hidden><div class="match-head"><div><div class="eyebrow" id="match-eyebrow">SPIELMODUS</div><strong id="match-mode"></strong></div><div id="match-round"></div></div><div class="match-turn" id="match-turn"></div><table class="match-table"><thead><tr id="match-columns"></tr></thead><tbody id="match-rows"></tbody></table><p class="match-last" id="match-last"></p></aside>
+ <aside class="match-panel" id="match-panel" hidden><div class="match-head"><div><div class="eyebrow" id="match-eyebrow">SPIELMODUS</div><strong id="match-mode"></strong></div><div class="match-right"><div id="match-timer" class="match-timer">0:00</div><div id="match-round"></div></div></div><div class="match-turn" id="match-turn"></div><table class="match-table"><thead><tr id="match-columns"></tr></thead><tbody id="match-rows"></tbody></table><p class="match-last" id="match-last"></p></aside>
  <aside class="result-panel"><div class="eyebrow">LETZTE GEWINNZAHL</div><div id="latest" class="latest empty-result">—</div><div id="latest-color">Das Spiel beginnt.</div><div class="result-rule"></div><div class="eyebrow">AM KESSEL</div><p id="throw-info">Erster Abwurf bei Null</p><p class="connection" id="connection">Fernbedienung wird verbunden …</p></aside>
  <div class="table-message" id="message" role="status">Die nächste Kugel startet automatisch.</div><footer class="result-strip"><span>LETZTE 10<br>ZAHLEN</span><div id="history"></div><span id="room-label"></span></footer>
  <dialog id="settings-dialog"><div class="dialog-title"><h2>Croupier-Einstellungen</h2><button data-close="settings-dialog" aria-label="Schließen">✕</button></div><div class="preset-grid">${roundButtons()}</div><p class="helper">Eine laufende Kugelrunde wird immer zu Ende gespielt.</p>${settingsForm()}</dialog>
@@ -21,7 +21,7 @@ export function startDisplay(){
  try{if(!localStorage.getItem('atelier-tempo-v1')){settings.delay=4;settings.duration=12;localStorage.setItem('atelier-tempo-v1','1');}}catch{settings.delay=4;settings.duration=12;}
  if(params.has('eco'))settings.economy=params.get('eco')!=='0';
  const cycle=new Cycle(),sound=new Sound(),relay=new Relay('tv'),session=crypto.randomUUID();let wheel:Wheel;
- let pendingMatch:{mode:Match['mode'];players:number;rounds?:number|null}|null=null;let fitKey='';let match:Match|null=null,matchSpin:number|null=null,matchKey='',drawElapsed=0,drawTick=0;const DRAW_MS=2800;const DEFAULT_ROUNDS=30,celebration=new Celebration(app,180,()=>{if(!match?.finished)return;match=null;matchSpin=null;applyTempo();cycle.start(DEFAULT_ROUNDS);render();});
+ let pendingMatch:{mode:Match['mode'];players:number;rounds?:number|null}|null=null;let fitKey='',matchStart=0,matchEnd=0;let match:Match|null=null,matchSpin:number|null=null,matchKey='',drawElapsed=0,drawTick=0;const DRAW_MS=2800;const DEFAULT_ROUNDS=30,celebration=new Celebration(app,180,()=>{if(!match?.finished)return;match=null;matchSpin=null;applyTempo();cycle.start(DEFAULT_ROUNDS);render();});
  let nextIndex:number|null=null,planKey='',tickInfo:{dt:number;before:number}|null=null,lastCountdown=NaN,lastCounting=false;let message='',throwInfo='Erster Abwurf bei 0 · Kessel ↻ · Kugel ↺',lastCommand='',lastHistory='',lastBroadcast=0,lastPaint=0;
  try{wheel=new Wheel($('wheel'));}catch{$('message').textContent='Dieser Browser benötigt WebGL 2. Bitte Hardwarebeschleunigung aktivieren.';return;}
  // Pause, Rundendauer und Abweichung getrennt für normalen Zyklus und Spielmodus.
@@ -44,7 +44,7 @@ export function startDisplay(){
  cycle.onSpin=id=>{matchSpin=match&&!match.finished?id:null;message='Rien ne va plus. Die Kugel rollt.';const index=nextIndex??drawIndex();nextIndex=null;const overshoot=tickInfo?Math.max(0,tickInfo.dt-tickInfo.before):undefined;wheel.spin(index,crypto.getRandomValues(new Uint8Array(1))[0]%3,overshoot);};
  wheel.onPhase=p=>{message=p<0?'Richtungswechsel. Die nächste Kugel wird eingesetzt.':p===0?'Rien ne va plus. Die Kugel rollt.':p===1?'Die Kugel springt in den Zahlenkranz.':'Die Kugel pendelt aus …';};
  wheel.onImpact=strength=>sound.impact(strength);wheel.onPose=(angle,progress)=>sound.update(angle,progress);wheel.onLaunch=(n,dir)=>{sound.roll();throwInfo=`Abwurf bei ${n} · Kessel ${dir===1?'↻':'↺'} · Kugel ${dir===1?'↺':'↻'}`;};
- wheel.onLand=index=>{const id=cycle.active;if(id===null)return;cycle.land(id,ORDER[index]);sound.stop();if(pendingMatch){const p=pendingMatch;pendingMatch=null;startMatch(p.mode,p.players,p.rounds);}if(match&&id===matchSpin){matchSpin=null;match.record(ORDER[index]);if(match.finished){cycle.stop();celebrate(match);}}message=`${ORDER[index]} · ${color(ORDER[index])==='red'?'Rot':color(ORDER[index])==='black'?'Schwarz':'Grün'}`;render();void relay.send(snapshot());};
+ wheel.onLand=index=>{const id=cycle.active;if(id===null)return;cycle.land(id,ORDER[index]);sound.stop();if(pendingMatch){const p=pendingMatch;pendingMatch=null;startMatch(p.mode,p.players,p.rounds);}if(match&&id===matchSpin){matchSpin=null;match.record(ORDER[index]);if(match.finished){matchEnd=Date.now();cycle.stop();celebrate(match);}}message=`${ORDER[index]} · ${color(ORDER[index])==='red'?'Rot':color(ORDER[index])==='black'?'Schwarz':'Grün'}`;render();void relay.send(snapshot());};
  function render(){const counting=cycle.phase==='countdown',spinning=cycle.phase==='spinning';$('seconds').textContent=counting?String(Math.ceil(cycle.countdown)):spinning?'•':cycle.phase==='complete'?'✓':'Ⅱ';$('timer-label').textContent=counting?'NÄCHSTER ABWURF':spinning?'KUGEL IST IM SPIEL':cycle.phase==='complete'?'ZYKLUS BEENDET':'PAUSIERT';$('timer-unit').textContent=counting?'SEKUNDEN':spinning?'RIEN NE VA PLUS':'';$('count-ring').style.setProperty('--progress',`${counting?cycle.countdown/tempo().delay*360:0}deg`);$('count-ring').classList.toggle('is-spinning',spinning);$('remaining').textContent=cycle.remaining===null?'∞':String(cycle.remaining);$('round-progress').textContent=cycle.total===null?`${cycle.completed} Runden gespielt`:`${cycle.completed} von ${cycle.total} gespielt`;$('pause').textContent=cycle.running?'Ⅱ Pausieren':'▶ Fortsetzen';$('message').textContent=statusText();$('throw-info').textContent=throwInfo;
   const h=cycle.history.join(',');if(h!==lastHistory){lastHistory=h;const n=cycle.history[0];if(n===undefined){$('latest').textContent='—';$('latest').className='latest empty-result';$('latest-color').textContent='Das Spiel beginnt.';$('history').innerHTML='';}else{$('latest').textContent=String(n);$('latest').className=`latest ${color(n)}`;$('latest-color').textContent=color(n)==='red'?'ROT':color(n)==='black'?'SCHWARZ':'ZERO';$('history').innerHTML=cycle.history.map((v,i)=>`<span class="history-number ${color(v)} ${i===0?'newest':''}">${v}</span>`).join('');}}
   renderMatch();
@@ -54,15 +54,18 @@ export function startDisplay(){
  function startMatch(mode:Match['mode'],players:number,rounds?:number|null){
   const first=Number.isInteger(players)&&players>0?randomBelow(players):0;
   try{match=new Match(mode,players,rounds===undefined?(mode==='rounds'?MATCH_ROUNDS:null):rounds,first);}catch{return false;}
-  matchSpin=null;matchKey='';drawElapsed=0;drawTick=0;cycle.history=[];celebration.hide();applyTempo();cycle.start(null);return true;
+  matchSpin=null;matchKey='';drawElapsed=0;drawTick=0;cycle.history=[];celebration.hide();matchStart=Date.now();matchEnd=0;applyTempo();cycle.start(null);return true;
  }
  function celebrate(m:Match){
   const rank=m.ranking(),names=m.winners.map(i=>m.players[i].name),best=m.players[m.winners[0]],tie=names.length>1,l=m.last;
-  const detail=m.end==='exact'&&l?`Genau ${m.target}! Ausgemacht mit der ${l.number} in Runde ${m.round}.`
+  const w=m.players[m.winners[0]];
+  const detail=m.end==='exact'?(tie?`Genau ${m.target} – ausgemacht in Runde ${m.round}.`:`Genau ${m.target}! Ausgemacht mit der ${w.finish??l?.number} in Runde ${m.round}.`)
    :m.target!==null?`Nach ${m.rounds} ${m.rounds===1?'Runde':'Runden'} am nächsten an ${m.target}: ${best.score} Punkte.`
    :`${best.score} Punkte nach ${m.rounds} ${m.rounds===1?'Runde':'Runden'}.`;
   celebration.show({title:tie?'GLEICHSTAND · GETEILTER SIEG':m.end==='exact'?`${m.target} · GENAU GETROFFEN`:'SIEGER',name:tie?names.join(' & '):`${names[0]} gewinnt!`,detail,
-   podium:rank.slice(0,3).map(i=>({place:1+m.players.filter(p=>p.score>m.players[i].score).length,name:m.players[i].name,score:`${m.players[i].score} Punkte`}))},settings.economy);
+   podium:rank.slice(0,3).map(i=>({place:1+m.players.filter(p=>p.score>m.players[i].score).length,name:m.players[i].name,score:`${m.players[i].score} Punkte`})),
+   table:rank.map(i=>({place:1+m.players.filter(p=>p.score>m.players[i].score).length,name:m.players[i].name,score:m.players[i].score,extra:m.target!==null?(m.players[i].out?'✓ aus':`noch ${m.target-m.players[i].score}`):`${m.players[i].throws} Runden`,winner:m.winners.includes(i)})),
+   last:l?{number:l.number,color:color(l.number),by:m.players[l.player].name}:null,time:clockText(matchEnd-matchStart)},settings.economy);
  }
  // Tafel: Schrift nur so weit verkleinern, bis alle Spieler und Spalten sichtbar sind (jeder TV hat andere Maße).
  // Kessel: in voller Größe mittig zwischen rechtem Tafelrand und der Info-Spalte rechts.
@@ -92,6 +95,7 @@ export function startDisplay(){
   document.body.style.setProperty('--wheel-x',`${x}px`);document.body.style.setProperty('--wheel-y',`${y}px`);
  }
  addEventListener('resize',()=>{matchKey='';render();});void document.fonts?.ready.then(()=>{matchKey='';render();});
+ function clockText(ms:number){const t=Math.max(0,Math.floor(ms/1000)),h=Math.floor(t/3600),mi=Math.floor(t/60)%60,se=t%60;return h?`${h}:${String(mi).padStart(2,'0')}:${String(se).padStart(2,'0')}`:`${mi}:${String(se).padStart(2,'0')}`;}
  function winnerText(m:Match){const names=m.winners.map(i=>m.players[i].name);return names.length>1?`Gleichstand: ${names.join(', ')}`:`${names[0]} gewinnt!`;}
  // Anzeige links: nur sichtbar, solange über die Fernbedienung ein Spiel läuft.
  function renderMatch(){
@@ -104,9 +108,9 @@ export function startDisplay(){
   // Nach einer Landung bleibt der Werfer markiert (mit seinem Ergebnis); erst mit dem nächsten Abwurf wechselt die Anzeige.
   const rolling=cycle.phase==='spinning'&&matchSpin!==null,l=m.last,hold=!drawing&&!m.finished&&!rolling&&l!==null,shown=drawing?lit:hold?l!.player:m.turn,secs=`${Math.ceil(cycle.countdown)} s`;
   $('match-turn').textContent=drawing?'Auslosung: Wer beginnt?':m.finished?`★ ${winnerText(m)} ★`:rolling?`${current} · Kugel rollt …`
-   :hold?`${m.players[l!.player].name}: ${l!.number}${l!.bust?' · zu viel':''}${counting?` · ${secs}`:' · Pause'}`
+   :hold?`${m.players[l!.player].name}: ${l!.number}${l!.win?' · ausgemacht!':l!.bust?' · zu viel':''}${counting?` · ${secs}`:' · Pause'}`
    :counting?`${current} beginnt · ${secs}`:`${current} beginnt · Pause`;
-  $('match-turn').classList.toggle('winner',m.finished);
+  $('match-turn').classList.toggle('winner',m.finished);$('match-timer').textContent=`⏱ ${clockText((matchEnd||Date.now())-matchStart)}`;
   $('match-turn').classList.toggle('drawing',drawing);
   const key=JSON.stringify(m.state())+shown+drawing;if(key===matchKey)return;matchKey=key;
   $('match-panel').style.setProperty('--rows',String(m.players.length));
@@ -117,10 +121,10 @@ export function startDisplay(){
   $('match-rows').innerHTML=m.players.map((p,i)=>{
    const turn=!m.finished&&i===shown,won=m.winners.includes(i),out=x01?m.checkout(i):null,lead=!m.finished&&best>0&&p.score===best,pts=String(p.score);
    const rnd=`<td class="rnd">${p.throws}${m.rounds===null?'':`/${m.rounds}`}</td>`;
-   const cells=x01?`${rnd}<td>${pts}</td><td class="gap noch">${m.needed(i)}</td><td>${out===null?'<span class="match-none">—</span>':`<span class="match-chip ${color(out)}">${out}</span>`}</td>`
+   const cells=x01?`${rnd}<td>${pts}</td><td class="gap noch">${m.needed(i)}</td><td>${p.out?'<span class="match-out">✓ aus</span>':out===null?'<span class="match-none">—</span>':`<span class="match-chip ${color(out)}">${out}</span>`}</td>`
     :`${rnd}<td>${pts}</td><td class="gap">${best-p.score===0?(best>0?'<span class="match-lead">Führt</span>':'<span class="match-none">—</span>'):`−${best-p.score}`}</td>`;
    return `<tr class="${turn?'turn':''} ${won?'won':''} ${lead?'lead':''} ${drawing&&turn?'draw':''}"><th>${won?'★ ':turn?'▶ ':''}${p.name}${lead?' <span class="match-lead-star">★</span>':''}</th>${cells}</tr>`;}).join('');
-  $('match-last').innerHTML=l?`Letzter Wurf: ${m.players[l.player].name} · <span class="match-chip ${color(l.number)}">${l.number}</span> ${l.win?'· ausgemacht!':l.bust?'· zählt nicht':''}`:'Der Computer dreht reihum für jeden Spieler.';
+  $('match-last').innerHTML=l?`Letzter Wurf: ${m.players[l.player].name} · <span class="match-chip ${color(l.number)}">${l.number}</span> ${l.win?(m.finished?'· ausgemacht!':'· ausgemacht! Runde wird fertig gespielt'):l.bust?'· zählt nicht':''}`:'Der Computer dreht reihum für jeden Spieler.';
   layoutMatch();
  }
  $('pause').onclick=()=>command({action:cycle.running?'pause':'resume'});$('start-default').onclick=()=>command({action:'start',rounds:DEFAULT_ROUNDS});
