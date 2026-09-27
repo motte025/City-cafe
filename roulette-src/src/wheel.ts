@@ -63,6 +63,12 @@ export class Wheel {
   if(economy===this.economy&&scale===this.renderScale)return;this.economy=economy;this.renderScale=scale;
   const size=economy?1024:2048;if(this.key.shadow.mapSize.x!==size){this.key.shadow.map?.dispose();this.key.shadow.map=null;this.key.shadow.mapSize.set(size,size);}this.shadowDirty=true;this.resize();
  }
+ /** Bildschirmlage des äußeren Kesselrands (CSS-Pixel relativ zum Host), für das Ausrichten an der Kopfzeile. */
+ rimBounds(){
+  const {width,height}=this.host.getBoundingClientRect();let top=Infinity,bottom=-Infinity,left=Infinity,right=-Infinity;const v=new T.Vector3();
+  for(let i=0;i<72;i++){const a=i/72*Math.PI*2;v.set(Math.sin(a)*3.4,1.04,-Math.cos(a)*3.4).project(this.camera);const x=(v.x+1)/2*width,y=(1-v.y)/2*height;top=Math.min(top,y);bottom=Math.max(bottom,y);left=Math.min(left,x);right=Math.max(right,x);}
+  return {top,bottom,left,right};
+ }
  setTV(enabled:boolean,settings:TVSettings){this.tvEnabled=enabled;this.tvSettings=settings;this.resize();}
  private resize(){
   const {width,height}=this.host.getBoundingClientRect();if(width<=0||height<=0)return;

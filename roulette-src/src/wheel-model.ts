@@ -1,7 +1,7 @@
 import * as T from 'three';
 import {ORDER,STEP,TAU,color} from './game';
 import {batchMeshes} from './render-budget';
-import {DEFAULT_DESIGN,FLOOR,DIVIDER_HEIGHT,numberHeight,trackHeight,rimProfile,type DesignSettings,type WheelShape} from './wheel-shape';
+import {DEFAULT_DESIGN,FLOOR,DIVIDER_HEIGHT,numberHeight,trackHeight,lipHeight,rimProfile,type DesignSettings,type WheelShape} from './wheel-shape';
 import {MM_PER_UNIT} from './ball-config';
 
 export function deflectorGeometry(index:number){
@@ -88,6 +88,7 @@ export class WheelModel {
   this.inner.color.copy(this.wood.color).multiplyScalar(s.innerTone);
   this.wood.color.multiplyScalar(s.outerTone);this.track.color.multiplyScalar(s.trackTone);
   for(const [mat,gloss] of [[this.inner,s.innerGloss],[this.wood,s.outerGloss]] as const){mat.roughness=.65-gloss*.5;mat.clearcoat=gloss;}
+  this.setGrain('track',s.grainTrack);this.setGrain('inner',s.grainInner);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
@@ -97,7 +98,7 @@ export class WheelModel {
   this.lathe(f,[[3.28,.1],[3.40,.25],[3.40,.61],[3.35,.85],[3.24,1.02],[3.13,1.025],[3.035,.91],[3.03,.80],[3.09,.69]],this.wood);
   for(const [radius,y,t] of [[3.39,.31,.02],[3.37,.69,.016],[3.26,.99,.02],[3.115,.998,.027]])this.ring(f,radius,y,t,m);
   this.ring(f,3.195,1.04,.009,b);
-  this.lathe(f,[[3.05,.80],[2.9,.75],[2.7,.60],[2.49,.44],[2.455,.425]],this.track);
+  this.lathe(f,[[3.05,.80],[2.9,.75],[2.7,.60],[2.49,.44],[2.455,lipHeight(shape)]],this.track);
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius>2.45))this.ring(f,radius,y,t,m);
   for(let i=0;i<12;i++){
    const a=i*TAU/12,position=new T.Vector3(Math.sin(a)*3.20,1.032,-Math.cos(a)*3.20);
@@ -149,9 +150,30 @@ export class WheelModel {
   const vertices:number[]=[];for(let j=0;j<8;j++){const x=a-STEP/2+.003+j*(STEP-.006)/8,z=x+(STEP-.006)/8;for(const [r,t] of [[inner,x],[outer,z],[outer,x],[inner,x],[inner,z],[outer,z]])vertices.push(Math.sin(t)*r,height(r),-Math.cos(t)*r);}
   const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geometry.computeVertexNormals();return this.mesh(parent,geometry,material,false,true);
  }
- private woodTexture(){
+ /**
+  * Holztextur mit einstellbarer Maserung (0 = glatt, 0,5 = bisheriges Bild, 1 = kräftige Fasern,
+  * Jahresringe und vereinzelte Äste). Feste Zufallsfolge, damit sich das Holz beim Verstellen nicht
+  * „neu würfelt“, sondern nur deutlicher oder schwächer wird.
+  */
+ private woodTexture(strength=.5){
   const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=512;const ctx=canvas.getContext('2d')!;ctx.fillStyle='#71321b';ctx.fillRect(0,0,2048,512);
-  for(let i=0;i<1600;i++){ctx.strokeStyle=`rgba(${i%3===0?'239,154,67':'29,8,4'},${.07+(i%7)*.025})`;ctx.lineWidth=.3+i%4*.35;ctx.beginPath();for(let x=0;x<=2048;x+=8){const y=i/1600*512+8*Math.sin(x*.004+i*.045)+3*Math.sin(x*.016+i*.17);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
+  const k=Math.min(2,strength*2),extra=Math.max(0,strength*2-1);let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let i=0;i<1600;i++){ctx.strokeStyle=`rgba(${i%3===0?'239,154,67':'29,8,4'},${Math.min(1,(.07+(i%7)*.025)*k)})`;ctx.lineWidth=.3+i%4*.35;ctx.beginPath();for(let x=0;x<=2048;x+=8){const y=i/1600*512+8*Math.sin(x*.004+i*.045)+3*Math.sin(x*.016+i*.17);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
+  if(extra>0){
+   // Jahresringe: breite, dunkle, weich geschwungene Bänder
+   for(let i=0;i<46;i++){const y0=rnd()*512,amp=6+rnd()*18,f=.0015+rnd()*.003,ph=rnd()*6;ctx.strokeStyle=`rgba(25,7,3,${(.12+rnd()*.18)*extra})`;ctx.lineWidth=1.5+rnd()*4;ctx.beginPath();for(let x=0;x<=2048;x+=8){const y=y0+amp*Math.sin(x*f+ph)+4*Math.sin(x*.011+i);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
+   // Poren: feine, kurze helle und dunkle Striche
+   for(let i=0;i<2600;i++){const x=rnd()*2048,y=rnd()*512,l=4+rnd()*14;ctx.strokeStyle=rnd()<.5?`rgba(20,6,2,${.25*extra})`:`rgba(240,170,90,${.12*extra})`;ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+l,y+(rnd()-.5)*1.5);ctx.stroke();}
+   // Äste: wenige dunkle Augen mit Ringen
+   for(let i=0;i<5;i++){const x=rnd()*2048,y=rnd()*512;for(let r=0;r<6;r++){ctx.strokeStyle=`rgba(28,8,3,${(.35-r*.05)*extra})`;ctx.lineWidth=1.2;ctx.beginPath();ctx.ellipse(x,y,10+r*9,3+r*3,0,0,Math.PI*2);ctx.stroke();}}
+  }
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.wrapS=texture.wrapT=T.RepeatWrapping;texture.repeat.set(2,1);texture.anisotropy=8;return texture;
+ }
+ private grain={track:.5,inner:.5};
+ /** Maserung von Laufbahn bzw. Innenkessel ändern (nur neu zeichnen, wenn sich der Wert ändert). */
+ private setGrain(which:'track'|'inner',value:number){
+  const v=Math.round(value*20)/20;if(this.grain[which]===v)return;this.grain[which]=v;
+  const mat=which==='track'?this.track:this.inner,old=mat.map;mat.map=v===.5?this.wood.map:this.woodTexture(v);mat.needsUpdate=true;
+  if(old&&old!==this.wood.map)old.dispose();
  }
 }

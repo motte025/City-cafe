@@ -22,7 +22,7 @@ export function startDisplay(){
  let match:Match|null=null,matchSpin:number|null=null,matchKey='',drawElapsed=0,drawTick=0;const DRAW_MS=2800;const DEFAULT_ROUNDS=30,celebration=new Celebration(app,180,()=>{if(!match?.finished)return;match=null;matchSpin=null;cycle.start(DEFAULT_ROUNDS);render();});
  let nextIndex:number|null=null,planKey='',tickInfo:{dt:number;before:number}|null=null,lastCountdown=NaN,lastCounting=false;let message='',throwInfo='Erster Abwurf bei 0 · Kessel ↻ · Kugel ↺',lastCommand='',lastHistory='',lastBroadcast=0,lastPaint=0;
  try{wheel=new Wheel($('wheel'));}catch{$('message').textContent='Dieser Browser benötigt WebGL 2. Bitte Hardwarebeschleunigung aktivieren.';return;}
- function configure(patch:unknown){settings=applySettings(settings,patch);if(cycle.delay!==settings.delay)cycle.setDelay(settings.delay);wheel.setPerformance(settings.economy,settings.renderScale);wheel.setDesign(settings);wheel.ballDiameter=settings.ballDiameter;wheel.ballMass=settings.ballMass;wheel.ballBounce=settings.ballBounce;wheel.durationSetting=settings.duration;wheel.durationSpread=settings.durationSpread;wheel.ballRunMin=settings.pocketRunMin;wheel.ballRunMax=settings.pocketRunMax;wheel.deflectorResistanceRadial=settings.deflectorResistanceRadial;wheel.deflectorResistanceTangential=settings.deflectorResistanceTangential;replan();wheel.zoom=settings.zoom;wheel.setTV(true,settings);wheel.renderer.toneMappingExposure=1.02*settings.brightness;document.body.style.setProperty('--tv-text-scale',String(settings.textScale));sound.configure(settings.effects,settings.ambience,settings.muted);fillSettings($('settings-dialog'),settings);try{localStorage.setItem('atelier-show-settings',JSON.stringify(settings));}catch{}}
+ function configure(patch:unknown){settings=applySettings(settings,patch);if(cycle.delay!==settings.delay)cycle.setDelay(settings.delay);wheel.setPerformance(settings.economy,settings.renderScale);wheel.setDesign(settings);wheel.ballDiameter=settings.ballDiameter;wheel.ballMass=settings.ballMass;wheel.ballBounce=settings.ballBounce;wheel.durationSetting=settings.duration;wheel.durationSpread=settings.durationSpread;wheel.ballRunMin=settings.pocketRunMin;wheel.ballRunMax=settings.pocketRunMax;wheel.deflectorResistanceRadial=settings.deflectorResistanceRadial;wheel.deflectorResistanceTangential=settings.deflectorResistanceTangential;replan();wheel.zoom=settings.zoom;wheel.setTV(true,settings);wheel.renderer.toneMappingExposure=1.02*settings.brightness;document.body.style.setProperty('--tv-text-scale',String(settings.textScale));sound.configure(settings.effects,settings.ambience,settings.muted);if(typeof layoutWheel==='function')requestAnimationFrame(()=>layoutWheel());fillSettings($('settings-dialog'),settings);try{localStorage.setItem('atelier-show-settings',JSON.stringify(settings));}catch{}}
  configure(settings);
  function command(cmd:Command){if(!cmd||typeof cmd!=='object')return;switch(cmd.action){case 'start':cycle.start(cmd.rounds);break;case 'pause':cycle.pause();break;case 'resume':cycle.resume();break;case 'stop':cycle.stop();break;case 'now':cycle.spinNow();break;case 'settings':configure(cmd.patch);break;
   // Spielmodus: Zyklus ohne Ende, der Computer dreht reihum. Eine gerade laufende Kugel zählt noch nicht mit.
@@ -40,7 +40,7 @@ export function startDisplay(){
  wheel.onImpact=strength=>sound.impact(strength);wheel.onPose=(angle,progress)=>sound.update(angle,progress);wheel.onLaunch=(n,dir)=>{sound.roll();throwInfo=`Abwurf bei ${n} · Kessel ${dir===1?'↻':'↺'} · Kugel ${dir===1?'↺':'↻'}`;};
  wheel.onLand=index=>{const id=cycle.active;if(id===null)return;cycle.land(id,ORDER[index]);sound.stop();if(match&&id===matchSpin){matchSpin=null;match.record(ORDER[index]);if(match.finished){cycle.stop();celebrate(match);}}message=`${ORDER[index]} · ${color(ORDER[index])==='red'?'Rot':color(ORDER[index])==='black'?'Schwarz':'Grün'}`;render();void relay.send(snapshot());};
  function render(){const counting=cycle.phase==='countdown',spinning=cycle.phase==='spinning';$('seconds').textContent=counting?String(Math.ceil(cycle.countdown)):spinning?'•':cycle.phase==='complete'?'✓':'Ⅱ';$('timer-label').textContent=counting?'NÄCHSTER ABWURF':spinning?'KUGEL IST IM SPIEL':cycle.phase==='complete'?'ZYKLUS BEENDET':'PAUSIERT';$('timer-unit').textContent=counting?'SEKUNDEN':spinning?'RIEN NE VA PLUS':'';$('count-ring').style.setProperty('--progress',`${counting?cycle.countdown/settings.delay*360:0}deg`);$('count-ring').classList.toggle('is-spinning',spinning);$('remaining').textContent=cycle.remaining===null?'∞':String(cycle.remaining);$('round-progress').textContent=cycle.total===null?`${cycle.completed} Runden gespielt`:`${cycle.completed} von ${cycle.total} gespielt`;$('pause').textContent=cycle.running?'Ⅱ Pausieren':'▶ Fortsetzen';$('message').textContent=statusText();$('throw-info').textContent=throwInfo;
-  const h=cycle.history.join(',');if(h!==lastHistory){lastHistory=h;const n=cycle.history[0];$('latest').textContent=String(n);$('latest').className=`latest ${color(n)}`;$('latest-color').textContent=color(n)==='red'?'ROT':color(n)==='black'?'SCHWARZ':'ZERO';$('history').innerHTML=cycle.history.map((v,i)=>`<span class="history-number ${color(v)} ${i===0?'newest':''}">${v}</span>`).join('');}
+  const h=cycle.history.join(',');if(h!==lastHistory){lastHistory=h;const n=cycle.history[0];if(n===undefined){$('latest').textContent='—';$('latest').className='latest empty-result';$('latest-color').textContent='Das Spiel beginnt.';$('history').innerHTML='';}else{$('latest').textContent=String(n);$('latest').className=`latest ${color(n)}`;$('latest-color').textContent=color(n)==='red'?'ROT':color(n)==='black'?'SCHWARZ':'ZERO';$('history').innerHTML=cycle.history.map((v,i)=>`<span class="history-number ${color(v)} ${i===0?'newest':''}">${v}</span>`).join('');}}
   renderMatch();
   $('audio-unlock').textContent=sound.error?sound.error:sound.ready?(settings.muted?'♫ Ton einschalten':'♫ Ton ausschalten'):'♫ Ton aktivieren';
  }
@@ -48,7 +48,7 @@ export function startDisplay(){
  function startMatch(mode:Match['mode'],players:number,rounds?:number|null){
   const first=Number.isInteger(players)&&players>0?randomBelow(players):0;
   try{match=new Match(mode,players,rounds===undefined?(mode==='rounds'?MATCH_ROUNDS:null):rounds,first);}catch{return false;}
-  matchSpin=null;matchKey='';drawElapsed=0;drawTick=0;celebration.hide();cycle.start(null);return true;
+  matchSpin=null;matchKey='';drawElapsed=0;drawTick=0;cycle.history=[];celebration.hide();cycle.start(null);return true;
  }
  function celebrate(m:Match){
   const rank=m.ranking(),names=m.winners.map(i=>m.players[i].name),best=m.players[m.winners[0]],tie=names.length>1,l=m.last;
@@ -61,11 +61,17 @@ export function startDisplay(){
  // Tafel: Schrift nur so weit verkleinern, bis alle Spieler und Spalten sichtbar sind (jeder TV hat andere Maße).
  // Kessel: in voller Größe mittig zwischen rechtem Tafelrand und der Info-Spalte rechts.
  function layoutMatch(){
-  const panel=$('match-panel');if(!match||panel.hidden){document.body.style.removeProperty('--wheel-shift');return;}
+  const panel=$('match-panel');if(!match||panel.hidden){layoutWheel();return;}
   let fit=1;panel.style.setProperty('--fit','1');
   while(fit>.45&&(panel.scrollHeight>panel.clientHeight+1||panel.scrollWidth>panel.clientWidth+1)){fit-=.03;panel.style.setProperty('--fit',fit.toFixed(2));}
-  const left=panel.getBoundingClientRect().right,info=document.querySelector<HTMLElement>('.result-panel')!.getBoundingClientRect(),right=info.width>0?info.left:innerWidth;
-  document.body.style.setProperty('--wheel-shift',`${Math.round((left+right)/2-innerWidth/2)}px`);
+  layoutWheel();
+ }
+ // Kessel: oben bis knapp unter die Linie der Kopfzeile; im Spielmodus zusätzlich mittig zwischen Tafel und rechter Info-Spalte.
+ function layoutWheel(){
+  const b=wheel.rimBounds(),line=document.querySelector<HTMLElement>('.show-header')!.getBoundingClientRect().bottom;
+  const y=Math.min(0,Math.round(line+10-b.top));let x=0;const panel=$('match-panel');
+  if(match&&!panel.hidden){const left=panel.getBoundingClientRect().right,info=document.querySelector<HTMLElement>('.result-panel')!.getBoundingClientRect(),right=info.width>0?info.left:innerWidth;x=Math.round((left+right)/2-(b.left+b.right)/2);}
+  document.body.style.setProperty('--wheel-x',`${x}px`);document.body.style.setProperty('--wheel-y',`${y}px`);
  }
  addEventListener('resize',()=>{matchKey='';render();});void document.fonts?.ready.then(()=>{matchKey='';render();});
  function winnerText(m:Match){const names=m.winners.map(i=>m.players[i].name);return names.length>1?`Gleichstand: ${names.join(', ')}`:`${names[0]} gewinnt!`;}
@@ -91,10 +97,10 @@ export function startDisplay(){
   $('match-columns').innerHTML=x01?'<th>Spieler</th><th>Punkte</th><th>Noch</th><th>Aus mit</th>':'<th>Spieler</th><th>Punkte</th><th>Würfe</th><th>Abstand</th>';
   const best=Math.max(...m.players.map(p=>p.score));
   $('match-rows').innerHTML=m.players.map((p,i)=>{
-   const turn=!m.finished&&i===shown,won=m.winners.includes(i),out=x01?m.checkout(i):null;
-   const cells=x01?`<td>${p.score}</td><td>${m.needed(i)}</td><td>${out===null?'<span class="match-none">—</span>':`<span class="match-chip ${color(out)}">${out}</span>`}</td>`
-    :`<td>${p.score}</td><td>${p.throws}/${m.rounds}</td><td>${best-p.score===0?(best>0?'<span class="match-lead">Führt</span>':'<span class="match-none">—</span>'):`−${best-p.score}`}</td>`;
-   return `<tr class="${turn?'turn':''} ${won?'won':''} ${drawing&&turn?'draw':''}"><th>${won?'★ ':turn?'▶ ':''}${p.name}</th>${cells}</tr>`;}).join('');
+   const turn=!m.finished&&i===shown,won=m.winners.includes(i),out=x01?m.checkout(i):null,lead=!m.finished&&best>0&&p.score===best,pts=lead?`<span class="match-lead-pts">${p.score}</span>`:String(p.score);
+   const cells=x01?`<td>${pts}</td><td>${m.needed(i)}</td><td>${out===null?'<span class="match-none">—</span>':`<span class="match-chip ${color(out)}">${out}</span>`}</td>`
+    :`<td>${pts}</td><td>${p.throws}/${m.rounds}</td><td>${best-p.score===0?(best>0?'<span class="match-lead">Führt</span>':'<span class="match-none">—</span>'):`−${best-p.score}`}</td>`;
+   return `<tr class="${turn?'turn':''} ${won?'won':''} ${lead?'lead':''} ${drawing&&turn?'draw':''}"><th>${won?'★ ':turn?'▶ ':''}${p.name}${lead?' <span class="match-lead-star">★</span>':''}</th>${cells}</tr>`;}).join('');
   $('match-last').innerHTML=l?`Letzter Wurf: ${m.players[l.player].name} · <span class="match-chip ${color(l.number)}">${l.number}</span> ${l.win?'· ausgemacht!':l.bust?'· zählt nicht':''}`:'Der Computer dreht reihum für jeden Spieler.';
   layoutMatch();
  }

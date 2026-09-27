@@ -145,6 +145,14 @@
 @media(prefers-reduced-motion:reduce){.celebration-rays,.celebration-name,.celebration.play .celebration-trophy{animation:none}}
 .remote-match .round-preset.selected:hover:enabled,.match-counts button.selected:hover:enabled{background:#ac8c50}
 
-/* Spielmodus: Kessel in voller Größe mittig zwischen Tafel und rechter Info-Spalte (Verschiebung misst display.ts). */
+/* Kessel oben bündig unter der Kopfzeile; im Spielmodus mittig zwischen Tafel und rechter Info-Spalte (misst display.ts). */
 .scene canvas{transition:transform 1.2s ease}
-.display-page.match-on .scene canvas{transform:translateX(var(--wheel-shift,0px))}
+.display-page .scene canvas{transform:translate(var(--wheel-x,0px),var(--wheel-y,0px))}
+
+/* Führende(r): Stern am Namen, Punkte als goldene Marke; mehr Luft zwischen Punkte und Noch */
+.match-lead-star{color:#f1cf7e;font-size:.85em;margin-left:.25em}
+.match-lead-pts{display:inline-block;padding:0 .35em;border-radius:6px;background:#e2c27a;color:#10261c;font-weight:600;box-shadow:0 0 12px #e6c26f66}
+.match-table tr.lead th{color:#fff0c8}
+.match-table td:nth-child(3),.match-table thead th:nth-child(3){padding-left:3.4vw}
+.remote-actions .sound-button{grid-column:1/-1;background:#1d3a2e;color:#e7d7ad}
+.remote-actions .sound-button.muted{background:#3a2a1e;color:#f0c9a0}
