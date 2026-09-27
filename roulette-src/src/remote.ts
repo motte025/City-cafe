@@ -37,7 +37,7 @@ export function startRemote(){
  document.querySelectorAll<HTMLButtonElement>('[data-match-rounds]').forEach(b=>b.onclick=()=>{matchRounds=Number(b.dataset.matchRounds)||null;renderMatch();});
  document.querySelectorAll<HTMLButtonElement>('[data-players]').forEach(b=>b.onclick=()=>{matchPlayers=Number(b.dataset.players);renderMatch();});
  $('match-start').onclick=()=>{if(state?.match&&!state.match.finished&&!confirm('Laufendes Spiel abbrechen und neu starten?'))return;void send({action:'match',mode:matchMode,players:matchPlayers,rounds:matchRounds});};
- $('match-end').onclick=()=>{if(state?.match&&!state.match.finished&&!confirm('Spiel wirklich beenden? Das Rad hält an.'))return;void send({action:'matchEnd'});};
+ $('match-end').onclick=()=>{if(state?.match&&!state.match.finished&&!confirm('Spiel wirklich beenden? Danach läuft der normale Zyklus weiter.'))return;void send({action:'matchEnd'});};
  document.querySelectorAll<HTMLButtonElement>('[data-rounds]').forEach(b=>b.onclick=()=>void send({action:'start',rounds:b.dataset.rounds==='infinite'?null:Number(b.dataset.rounds)}));
  document.querySelectorAll<HTMLButtonElement>('[data-action]').forEach(b=>b.onclick=()=>void send({action:b.dataset.action} as Command));
  document.querySelector<HTMLButtonElement>('[data-design-reset]')!.onclick=()=>{if(debounce!==null)clearTimeout(debounce);pendingPatch={};void send({action:'settings',patch:DEFAULT_DESIGN});};
