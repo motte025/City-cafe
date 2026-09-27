@@ -36,6 +36,8 @@ export class WheelModel {
  private metal=new T.MeshStandardMaterial({metalness:.93,roughness:.23,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
  private satin=new T.MeshStandardMaterial({metalness:.85,roughness:.35});
  private chrome=new T.MeshStandardMaterial({color:0xd5e0e8,metalness:.97,roughness:.17});
+ /** Mittelkreuz (Nabe und Arme): eigenes Metall, damit „Chrom bis Messing“ nur das Kreuz färbt. */
+ private crossMetal=new T.MeshStandardMaterial({metalness:.93,roughness:.23});
  /** Gedämpfteres, mattes Metall nur für die 8 Rauten – heller Chrom stach zu sehr gegen das dunkle Holz hervor. */
  private deflectorMetal=new T.MeshStandardMaterial({color:0x8b939c,metalness:.6,roughness:.5});
  private ebony=new T.MeshPhysicalMaterial({color:0x080c0e,metalness:.3,roughness:.3,clearcoat:.65});
@@ -66,14 +68,11 @@ export class WheelModel {
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=8;return texture;
  }
  constructor(renderer:T.WebGLRenderer){
-  this.wood.map=this.woodTexture();this.track.map=this.wood.map;
-  this.inner.map=this.wood.map;
+  this.setWood(0,.5,.5);
   this.gold.map=this.logoTexture();
-  const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;const ctx=atlas.getContext('2d')!;
-  ctx.font='700 230px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;
-  ORDER.forEach((n,i)=>{const x=i%8*256,y=Math.floor(i/8)*320;ctx.strokeStyle='#1b100c';ctx.strokeText(String(n),x+128,y+168,236);ctx.fillStyle='#fff5db';ctx.fillText(String(n),x+128,y+168,236);});
+  const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;this.numberCanvas=atlas;
   const map=new T.CanvasTexture(atlas);map.colorSpace=T.SRGBColorSpace;map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
-  this.labels=new T.MeshBasicMaterial({map,transparent:true,depthWrite:false,toneMapped:false});
+  this.labels=new T.MeshBasicMaterial({map,transparent:true,depthWrite:false,toneMapped:false});this.drawNumbers(false);
   this.rebuild(DEFAULT_DESIGN);this.appearance(DEFAULT_DESIGN);
  }
  appearance(s:DesignSettings){
@@ -88,10 +87,13 @@ export class WheelModel {
   this.inner.color.copy(this.wood.color).multiplyScalar(s.innerTone);
   this.wood.color.multiplyScalar(s.outerTone);this.track.color.multiplyScalar(s.trackTone);
   for(const [mat,gloss] of [[this.inner,s.innerGloss],[this.wood,s.outerGloss]] as const){mat.roughness=.65-gloss*.5;mat.clearcoat=gloss;}
-  this.setGrain('track',s.grainTrack);this.setGrain('inner',s.grainInner);
+  this.setWood(s.woodSpecies,s.grainTrack,s.grainInner);this.drawNumbers(s.goldNumbers);
+  const brass=new T.Color(0xcf9f4a);this.chrome.color.copy(new T.Color(0xd5e0e8).lerp(brass,s.brass));this.crossMetal.color.copy(this.metal.color).lerp(brass,s.brass);this.crossMetal.roughness=this.metal.roughness;
+  this.emblemVisible=s.centerLogo;const em=this.turning.getObjectByName('emblem');if(em)em.visible=s.centerLogo;
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
+  this.depth=shape.bowlDepth;this.glow=null; // Geometrie wird unten mit entsorgt, bei Bedarf neu anlegen
   for(const group of [this.fixed,this.turning]){for(const child of [...group.children]){if(child instanceof T.Mesh)child.geometry.dispose();group.remove(child);}}
   const f=this.fixed,r=this.turning,m=this.metal,b=this.ebony;
   this.lathe(f,[[0,-.24],[3.14,-.24],[3.34,-.12],[3.40,.10],[3.40,.27],[3.33,.35]],b);
@@ -116,6 +118,7 @@ export class WheelModel {
   const LOGO_LIFT=.2/MM_PER_UNIT;
   const logo=this.lathe(r,[[1.525,.345+LOGO_LIFT],[1.36,.447+LOGO_LIFT],[1.02,.653+LOGO_LIFT]],this.gold);
   logo.castShadow=false;
+  this.emblem(r);
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius<2.45))this.ring(r,radius,y,t,m);
   this.ring(r,1.53,.348,.016,b);
   const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,DIVIDER_HEIGHT-FLOOR-.012);wall.lineTo(-.009,DIVIDER_HEIGHT-FLOOR-.012);wall.closePath();
@@ -130,11 +133,11 @@ export class WheelModel {
    const label=this.mesh(r,numberGeometry(i,shape),this.labels,false,false);label.renderOrder=1;
   });
   // Tall turned spindle, fluted collar and slender polished arms.
-  this.lathe(r,[[0,.825],[.34,.825],[.365,.855],[.365,.94],[.30,.97],[.26,1.04],[.19,1.20],[.16,1.37],[.22,1.49],[.225,1.53],[.13,1.555],[0,1.555]],m);
+  this.lathe(r,[[0,.825],[.34,.825],[.365,.855],[.365,.94],[.30,.97],[.26,1.04],[.19,1.20],[.16,1.37],[.22,1.49],[.225,1.53],[.13,1.555],[0,1.555]],this.crossMetal);
   this.ring(r,.354,.88,.01,b);this.ring(r,.31,.965,.01,this.chrome);this.ring(r,.213,1.51,.012,this.chrome);
   for(let i=0;i<20;i++){const a=i*TAU/20;const flute=this.mesh(r,new T.CylinderGeometry(.008,.011,.095,6),this.chrome);flute.position.set(Math.sin(a)*.35,.925,-Math.cos(a)*.35);}
   for(let i=0;i<4;i++){
-   const a=i*TAU/4,arm=this.mesh(r,new T.CylinderGeometry(.021,.033,.67,16),m);arm.rotation.z=Math.PI/2;arm.rotation.y=-a;arm.position.set(Math.cos(a)*.43,1.105,Math.sin(a)*.43);
+   const a=i*TAU/4,arm=this.mesh(r,new T.CylinderGeometry(.021,.033,.67,16),this.crossMetal);arm.rotation.z=Math.PI/2;arm.rotation.y=-a;arm.position.set(Math.cos(a)*.43,1.105,Math.sin(a)*.43);
    const sleeve=this.mesh(r,new T.CylinderGeometry(.036,.036,.13,16),this.satin);sleeve.rotation.copy(arm.rotation);sleeve.position.set(Math.cos(a)*.39,1.105,Math.sin(a)*.39);
    const end=this.mesh(r,new T.SphereGeometry(.060,20,14),this.chrome);end.position.set(Math.cos(a)*.775,1.105,Math.sin(a)*.775);
   }
@@ -155,25 +158,62 @@ export class WheelModel {
   * Jahresringe und vereinzelte Äste). Feste Zufallsfolge, damit sich das Holz beim Verstellen nicht
   * „neu würfelt“, sondern nur deutlicher oder schwächer wird.
   */
- private woodTexture(strength=.5){
-  const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=512;const ctx=canvas.getContext('2d')!;ctx.fillStyle='#71321b';ctx.fillRect(0,0,2048,512);
+ private woodTexture(strength=.5,species=0){
+  // Holzarten: Grundton, helle und dunkle Faser (0 Mahagoni = bisheriges Holz)
+  const [base,light,dark]=[['#71321b','239,154,67','29,8,4'],['#4a2f1f','196,140,88','18,10,5'],['#8a3f22','246,170,110','40,12,6'],['#1f1714','120,92,70','6,4,3'],['#b8875a','250,214,160','90,56,28']][species]??['#71321b','239,154,67','29,8,4'];
+  const canvas=document.createElement('canvas');canvas.width=2048;canvas.height=512;const ctx=canvas.getContext('2d')!;ctx.fillStyle=base;ctx.fillRect(0,0,2048,512);
   const k=Math.min(2,strength*2),extra=Math.max(0,strength*2-1);let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
-  for(let i=0;i<1600;i++){ctx.strokeStyle=`rgba(${i%3===0?'239,154,67':'29,8,4'},${Math.min(1,(.07+(i%7)*.025)*k)})`;ctx.lineWidth=.3+i%4*.35;ctx.beginPath();for(let x=0;x<=2048;x+=8){const y=i/1600*512+8*Math.sin(x*.004+i*.045)+3*Math.sin(x*.016+i*.17);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
+  for(let i=0;i<1600;i++){ctx.strokeStyle=`rgba(${i%3===0?light:dark},${Math.min(1,(.07+(i%7)*.025)*k)})`;ctx.lineWidth=.3+i%4*.35;ctx.beginPath();for(let x=0;x<=2048;x+=8){const y=i/1600*512+8*Math.sin(x*.004+i*.045)+3*Math.sin(x*.016+i*.17);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
   if(extra>0){
    // Jahresringe: breite, dunkle, weich geschwungene Bänder
-   for(let i=0;i<46;i++){const y0=rnd()*512,amp=6+rnd()*18,f=.0015+rnd()*.003,ph=rnd()*6;ctx.strokeStyle=`rgba(25,7,3,${(.12+rnd()*.18)*extra})`;ctx.lineWidth=1.5+rnd()*4;ctx.beginPath();for(let x=0;x<=2048;x+=8){const y=y0+amp*Math.sin(x*f+ph)+4*Math.sin(x*.011+i);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
+   for(let i=0;i<46;i++){const y0=rnd()*512,amp=6+rnd()*18,f=.0015+rnd()*.003,ph=rnd()*6;ctx.strokeStyle=`rgba(${dark},${(.12+rnd()*.18)*extra})`;ctx.lineWidth=1.5+rnd()*4;ctx.beginPath();for(let x=0;x<=2048;x+=8){const y=y0+amp*Math.sin(x*f+ph)+4*Math.sin(x*.011+i);if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.stroke();}
    // Poren: feine, kurze helle und dunkle Striche
-   for(let i=0;i<2600;i++){const x=rnd()*2048,y=rnd()*512,l=4+rnd()*14;ctx.strokeStyle=rnd()<.5?`rgba(20,6,2,${.25*extra})`:`rgba(240,170,90,${.12*extra})`;ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+l,y+(rnd()-.5)*1.5);ctx.stroke();}
+   for(let i=0;i<2600;i++){const x=rnd()*2048,y=rnd()*512,l=4+rnd()*14;ctx.strokeStyle=rnd()<.5?`rgba(${dark},${.25*extra})`:`rgba(${light},${.12*extra})`;ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+l,y+(rnd()-.5)*1.5);ctx.stroke();}
    // Äste: wenige dunkle Augen mit Ringen
-   for(let i=0;i<5;i++){const x=rnd()*2048,y=rnd()*512;for(let r=0;r<6;r++){ctx.strokeStyle=`rgba(28,8,3,${(.35-r*.05)*extra})`;ctx.lineWidth=1.2;ctx.beginPath();ctx.ellipse(x,y,10+r*9,3+r*3,0,0,Math.PI*2);ctx.stroke();}}
+   for(let i=0;i<5;i++){const x=rnd()*2048,y=rnd()*512;for(let r=0;r<6;r++){ctx.strokeStyle=`rgba(${dark},${(.35-r*.05)*extra})`;ctx.lineWidth=1.2;ctx.beginPath();ctx.ellipse(x,y,10+r*9,3+r*3,0,0,Math.PI*2);ctx.stroke();}}
   }
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;texture.wrapS=texture.wrapT=T.RepeatWrapping;texture.repeat.set(2,1);texture.anisotropy=8;return texture;
  }
- private grain={track:.5,inner:.5};
- /** Maserung von Laufbahn bzw. Innenkessel ändern (nur neu zeichnen, wenn sich der Wert ändert). */
- private setGrain(which:'track'|'inner',value:number){
-  const v=Math.round(value*20)/20;if(this.grain[which]===v)return;this.grain[which]=v;
-  const mat=which==='track'?this.track:this.inner,old=mat.map;mat.map=v===.5?this.wood.map:this.woodTexture(v);mat.needsUpdate=true;
-  if(old&&old!==this.wood.map)old.dispose();
+ private woodCache=new Map<string,T.CanvasTexture>();
+ /** Holz für Außenrand, Laufbahn und Innenkessel setzen; Texturen je Holzart/Maserung nur einmal zeichnen. */
+ private setWood(species:number,grainTrack:number,grainInner:number){
+  const want=new Map<T.MeshPhysicalMaterial,string>([[this.wood,`${species}/0.5`],[this.track,`${species}/${Math.round(grainTrack*20)/20}`],[this.inner,`${species}/${Math.round(grainInner*20)/20}`]]);
+  for(const [mat,key] of want){let tex=this.woodCache.get(key);if(!tex){const [sp,g]=key.split('/').map(Number);tex=this.woodTexture(g,sp);this.woodCache.set(key,tex);}if(mat.map!==tex){mat.map=tex;mat.needsUpdate=true;}}
+  const used=new Set(want.values());for(const [key,tex] of this.woodCache)if(!used.has(key)){tex.dispose();this.woodCache.delete(key);}
  }
+ private numberCanvas:HTMLCanvasElement|null=null;private numbersGold:boolean|null=null;
+ /** Zahlen auf dem Kranz: Elfenbein (Standard) oder Gold. */
+ private drawNumbers(gold:boolean){
+  if(this.numbersGold===gold||!this.numberCanvas)return;this.numbersGold=gold;const ctx=this.numberCanvas.getContext('2d')!;ctx.clearRect(0,0,2048,2048);
+  ctx.font='700 230px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;
+  ORDER.forEach((n,i)=>{const x=i%8*256,y=Math.floor(i/8)*320;let fill:string|CanvasGradient='#fff5db';if(gold){const g=ctx.createLinearGradient(0,y+60,0,y+280);g.addColorStop(0,'#fff0c0');g.addColorStop(.5,'#e2b454');g.addColorStop(1,'#b8862e');fill=g;}ctx.strokeStyle='#1b100c';ctx.strokeText(String(n),x+128,y+168,236);ctx.fillStyle=fill;ctx.fillText(String(n),x+128,y+168,236);});
+  if(this.labels.map)this.labels.map.needsUpdate=true;
+ }
+ /** Goldenes Emblem um die Nabe (r 0,43–0,99), folgt der Neigung der Innenfläche. */
+ private emblemMaterial:T.MeshStandardMaterial|null=null;private emblemVisible=true;
+ private emblem(parent:T.Group){
+  if(!this.emblemMaterial){
+   const c=document.createElement('canvas');c.width=c.height=1024;const ctx=c.getContext('2d')!,m=512,gold=ctx.createLinearGradient(0,0,0,1024);gold.addColorStop(0,'#fbecc0');gold.addColorStop(.5,'#d9ad52');gold.addColorStop(1,'#a97c2e');
+   ctx.strokeStyle=gold;ctx.fillStyle=gold;ctx.lineWidth=10;for(const r of [505,488,410,396]){ctx.beginPath();ctx.arc(m,m,r,0,Math.PI*2);ctx.stroke();}
+   ctx.font='700 66px Georgia, serif';ctx.textBaseline='middle';ctx.textAlign='center';
+   const arc=(text:string,bottom:boolean)=>{const chars=[...text],step=.082;let a=-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*449,bottom?m+Math.cos(a)*449:m-Math.cos(a)*449);ctx.rotate(bottom?-a:a);ctx.fillText(ch,0,0);ctx.restore();a+=step;}};
+   arc('CITY CAFE',false);arc('FISCHL',true);
+   for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*449,m-Math.cos(a)*449);ctx.font='700 56px Georgia, serif';ctx.fillText('\u2726',0,0);ctx.restore();}
+   const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;
+   this.emblemMaterial=new T.MeshStandardMaterial({map:tex,transparent:true,metalness:.75,roughness:.3,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
+  }
+  const g=new T.RingGeometry(.43,.99,128,6),p=g.getAttribute('position'),lift=.2/MM_PER_UNIT;
+  const h=(r:number)=>r>=1.02?.653:r>=.62?.804+(r-.62)*(.653-.804)/(1.02-.62):.804+(r-.62)*(.839-.804)/(.40-.62);
+  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),r=Math.hypot(x,y);p.setXYZ(i,x,h(r)+lift,-y);}
+  g.computeVertexNormals();const mesh=this.mesh(parent,g,this.emblemMaterial);mesh.castShadow=false;mesh.name='emblem';mesh.visible=this.emblemVisible;
+ }
+ private glow:T.Mesh|null=null;private depth=1;
+ /** Gewinnfach hervorheben (Index in ORDER) oder mit null ausblenden. */
+ highlightPocket(index:number|null){
+  if(!this.glow){const mat=new T.MeshBasicMaterial({color:0xffd27a,transparent:true,opacity:0,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide});this.glow=new T.Mesh(new T.RingGeometry(0,.2,40),mat);this.glow.rotation.x=-Math.PI/2;this.glow.renderOrder=5;}
+  if(index===null){this.glow.visible=false;return;}
+  const a=index*STEP;this.glow.position.set(Math.sin(a)*1.785,FLOOR*this.depth+.006,-Math.cos(a)*1.785);this.glow.visible=true;if(this.glow.parent!==this.turning)this.turning.add(this.glow);
+ }
+ /** Leuchten pulsieren lassen (t in Sekunden seit der Landung). */
+ glowPulse(t:number){if(!this.glow?.visible)return;const m=this.glow.material as T.MeshBasicMaterial;m.opacity=t<8?(.75+.25*Math.sin(t*5))*Math.min(1,t*3):Math.max(0,.75*(1-(t-8)/2));if(t>10)this.glow.visible=false;}
 }

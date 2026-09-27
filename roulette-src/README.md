@@ -37,6 +37,12 @@ Nur über die Fernbedienung, Abschnitt **Spielmodus**: Modus wählen (Runden, 30
 - **Fernbedienung:** eigener Knopf „Ton an/aus“ (die einmalige Tonfreigabe am TV bleibt nötig).
 - **Spielmodus:** Spalte „Runde“ je Spieler (gespielte Runden, mit Limit z. B. 3/10); „Letzte 10 Zahlen“ beginnen bei Spielstart neu; Führende(r) mit Stern und goldenen Punkten; mehr Abstand zwischen Punkte und Noch.
 
+## Veredelung (Fernbedienung → „Veredelung“)
+
+Alles sofort wirksam, „Design zurücksetzen“ gilt auch hier: Holzart (Mahagoni, Nussbaum, Kirsche, Ebenholz, Ahorn), Mittelkreuz Chrom bis Messing (eigenes Material, Zierringe bleiben), Kugel-Glanz, Lichtspiel (kreisendes warmes Licht, 0 % = aus), Filz-Hintergrund (0 % = aus), Gewinnfach leuchtet auf (bis zum nächsten Abwurf), Zahlen in Gold, Emblem „CITY CAFE · FISCHL“ um die Nabe.
+
+**Kugel fällt nicht heraus:** `tests/ball-escape.test.ts` prüft 72 Würfe mit allen Extremwerten (18–21 mm, 5,3–10,5 g, Sprungstärke 50–140 %, Rauten 0/100 %, flacher/tiefer Kessel, 8°/28°). Größter Abstand der Kugelmitte 3,025 (Holzrand 3,13), Ruhe immer in einem Fach. Nicht gefundene Extremwürfe laufen über die Keyframe-Rückfallebene, deren Bahn fest innerhalb der Laufbahn liegt.
+
 ## TV-Perspektive
 
 Unter „Kessel-Design & Lesbarkeit“ lassen sich Blickwinkel, 3D-Tiefe, Gefälle des Zahlenkranzes, Zahlengröße, Holzfarbe, Silber/Gold-Ton, Glanz, Lichtkontrast und TV-Schriftgröße einstellen. Blickwinkel 0° entspricht der senkrechten Draufsicht. Die acht Rauten sind abwechselnd radial und tangential angeordnet; der Zahlenkranz fällt zu den vertieften Taschen ab.
