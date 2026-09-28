@@ -64,7 +64,7 @@
 
 /* Spielmodus (nur per Fernbedienung): Punktetafel links neben dem Kessel, ersetzt dort den Countdown. */
 .display-page.match-on .cycle-panel{display:none}
-.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:calc(14% + .8vh);width:clamp(330px,31.5vw,650px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--fit,1));overflow:hidden}
+.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:calc(14% + .8vh);width:clamp(340px,33vw,680px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--fit,1));overflow:hidden}
 .match-panel>*{flex-shrink:0}
 .match-panel[hidden]{display:none}
 .match-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid #cbb58133;padding-bottom:1.1vh}
@@ -78,8 +78,8 @@
 .match-table thead th:first-child{text-align:left}
 .match-table tbody th,.match-table td{padding:.4vh .4vw;line-height:1.15;background:#ffffff08;white-space:nowrap}
 .match-table tbody th{text-align:left;font-weight:400;border-radius:8px 0 0 8px;width:100%}
-.match-table td{text-align:right;font-weight:500;padding-left:.9vw}
-.match-table thead th+th{padding-left:.9vw}
+.match-table td{text-align:right;font-weight:500;padding-left:.75vw}
+.match-table thead th+th{padding-left:.75vw}
 .match-table td:last-child{border-radius:0 8px 8px 0}
 .match-table td.noch{color:#f1d59a}
 .match-table tr.turn th,.match-table tr.turn td{background:#d8b87233;box-shadow:inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
@@ -154,7 +154,7 @@
 /* Führende(r): Stern am Namen, Punkte als goldene Marke; mehr Luft zwischen Punkte und Noch */
 .match-lead-star{color:#f1cf7e;font-size:.85em;margin-left:.25em}
 .match-table tr.lead th{color:#fff0c8}
-.match-table .gap{padding-left:2.4vw}
+.match-table .gap{padding-left:1.9vw}
 .match-table td.rnd{color:#b9c2ad;font-weight:400}
 .remote-actions .sound-button{grid-column:1/-1;background:#1d3a2e;color:#e7d7ad}
 .remote-actions .sound-button.muted{background:#3a2a1e;color:#f0c9a0}
@@ -195,3 +195,9 @@
 .celebration-card:has(.celebration-side:not([hidden])) .celebration-name{font-size:calc(clamp(30px,6.8vh,90px)*var(--tv-text-scale,1));white-space:nowrap;margin:.6vh 0 .8vh}
 .celebration-card:has(.celebration-side:not([hidden])) .celebration-detail{font-size:calc(clamp(14px,2.6vh,32px)*var(--tv-text-scale,1));margin-bottom:1.8vh}
 .celebration-card:has(.celebration-side:not([hidden])) .celebration-podium li.step-1{padding:1.4vh 1.2vw 3vh}
+.match-table .pl{color:#b9ad8a;font-weight:400;padding-right:.2vw;text-align:left;width:1%}
+.match-table tbody th{border-radius:0}
+.match-table td.pl{border-radius:8px 0 0 8px}
+.match-table tr.turn td.pl{box-shadow:inset 3px 0 #e8c983,inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
+.match-table tr.turn th{box-shadow:inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
+.match-table thead th:nth-child(2){text-align:left}
