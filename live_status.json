@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T15:22:46Z",
+  "checked_at": "2026-09-28T15:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Music Monday <3 -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
       "game": "DJs"
     },
     {
