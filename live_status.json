@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T13:02:46Z",
+  "checked_at": "2026-09-28T13:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Montagsquicky <3 (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Montagsquicky <3 (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
