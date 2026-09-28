@@ -220,3 +220,8 @@
 body.embedded .remote-heading .eyebrow,body.embedded .remote-heading h1,body.embedded .remote-room{display:none}
 body.embedded .remote-heading{justify-content:flex-end}
 body.embedded .remote-shell{padding-top:10px}
+
+/* Wer das Spiel begonnen hat: goldene Fahne vor der Rundenzahl */
+.match-table .match-first{display:inline-block;color:#e8c983;font-size:.95em;margin-right:.35em;text-shadow:0 0 6px #e8c98366}
+.match-table tr.won .match-first{color:#10261c;text-shadow:none}
+.match-first-legend{color:#e8c983;white-space:nowrap;margin-left:.4em}
