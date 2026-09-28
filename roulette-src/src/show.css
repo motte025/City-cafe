@@ -201,3 +201,22 @@
 .match-table tr.turn td.pl{box-shadow:inset 3px 0 #e8c983,inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
 .match-table tr.turn th{box-shadow:inset 0 1px #e8c98377,inset 0 -1px #e8c98377}
 .match-table thead th:nth-child(2){text-align:left}
+/* Fernbedienung aufgeräumt: Karten, aufklappbare Einstellungs-Gruppen */
+.remote-card{border:1px solid #bda77944;background:#0a2017;border-radius:13px;padding:16px 14px 10px;margin-bottom:22px}
+.remote-card.remote-match{border-color:#d8b87266;background:#0b2219}
+.card-title{font:600 18px 'DM Sans',Arial,sans-serif;letter-spacing:.3px;color:#ecd39c;margin:0 0 12px}
+.remote-settings .picture-settings{border-top:1px solid #bda77922;padding:4px 0}
+.remote-settings .picture-settings+.picture-settings{margin-top:0}
+.remote-settings .picture-settings summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;padding:12px 2px;font-size:15px;color:#f0e2bd}
+.remote-settings .picture-settings summary::-webkit-details-marker{display:none}
+.remote-settings .picture-settings summary::after{content:'▾';color:#b5aa88;transition:transform .2s}
+.remote-settings .picture-settings[open] summary::after{transform:rotate(180deg)}
+.remote-settings .picture-settings>.settings-grid{padding:6px 0 14px}
+.remote-settings>[data-design-reset]{width:100%;margin:14px 0 6px}
+.rules{margin-top:14px;border-top:1px solid #bda77922;padding-top:6px}
+.rules summary{cursor:pointer;padding:8px 0;color:#d9c9a0}
+.rules p{font-size:13px;line-height:1.5;color:#c9ceb9;margin:6px 0}
+#command-feedback:empty{display:none}
+body.embedded .remote-heading .eyebrow,body.embedded .remote-heading h1,body.embedded .remote-room{display:none}
+body.embedded .remote-heading{justify-content:flex-end}
+body.embedded .remote-shell{padding-top:10px}

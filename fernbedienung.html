@@ -103,7 +103,8 @@
     var SEITEN = [
         { schluessel: 'yt', text: '🎬 Videos', datei: 'yt-fernbedienung.html', raumParameter: true },
         { schluessel: 'dj', text: '🎧 DJ', datei: 'dj-fernbedienung.html', raumParameter: true },
-        { schluessel: 'roulette', text: '🎰 Roulette', datei: 'roulette/remote.html', raumParameter: true },
+        // Seit 28.09.2026 die neue Roulette-Fernbedienung (Spielmodus, aufgeräumt fürs Handy).
+        { schluessel: 'roulette', text: '🎰 Roulette', datei: 'roulette-vorschau-spiel/remote.html', raumParameter: true },
         // Das Kartenspiel braucht die Kennung der laufenden Runde - dieselbe,
         // die sonst im QR-Code am Screen steht. Der Screen meldet sie im Status
         // mit, hier wird sie als ?session=... angehaengt.
@@ -133,8 +134,9 @@
         });
         try { localStorage.setItem('fbTeil', aktiv); } catch (e) {}
 
-        // Weckknopf nur beim Roulette zeigen.
-        el('weckzeile').hidden = seite.schluessel !== 'roulette';
+        // Weckknopf ausgeblendet: er holte den alten Roulette-Slot aufs Dashboard, der seit
+        // 26.09.2026 abgeschaltet ist; die neue Roulette-Seite läuft eigenständig am TV.
+        el('weckzeile').hidden = true;
 
         if (seite.brauchtSpiel && !spielSession) {
             el('hinweis').hidden = false;
