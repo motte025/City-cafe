@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-28T19:42:51Z",
+  "checked_at": "2026-09-28T20:02:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 91 😈 | Harder Styles | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "⭐️ MUTE MONDAY - GERMAN EDITION (🇩🇪 / 🇺🇸) ⭐️ !Regeln !Suptember !Ziele !Shakes !Holy !Moumint !Shop !Socials",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 91 😈 | Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
