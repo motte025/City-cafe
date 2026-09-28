@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T15:52:45Z",
+  "checked_at": "2026-09-28T16:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Montagsquicky <3 (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Emvae & Moxes + Seth Troxler | El Tony Mate Selected Sessions | Amsterdam | Beatport Live",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Emvae & Moxes + Seth Troxler | El Tony Mate Selected Sessions | Amsterdam | Beatport Live",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Motiviert in die neue Woche! Auf geht´s! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
