@@ -137,6 +137,9 @@ export function startDisplay(){
  document.querySelectorAll<HTMLButtonElement>('[data-rounds]').forEach(b=>b.onclick=()=>{command({action:'start',rounds:b.dataset.rounds==='infinite'?null:Number(b.dataset.rounds)});$<HTMLDialogElement>('settings-dialog').close();});
  $('settings-dialog').oninput=event=>{const patch=settingsPatch(event);if(patch)configure(patch);};
  document.querySelector<HTMLButtonElement>('[data-design-reset]')!.onclick=()=>configure(DEFAULT_DESIGN);
+ // Ton ist Standard: sofort freigeben, wenn der Browser es erlaubt (Kiosk/App), sonst bei der ersten Bedienung irgendwo am TV.
+ async function audioOn(){if(sound.ready)return;try{await sound.unlock();}catch{return;}if(!sound.ready)return;configure(settings);if(wheel.motion)sound.roll(wheel.rollProgress);render();}
+ void audioOn();for(const type of ['pointerdown','keydown','touchstart'])addEventListener(type,event=>{if(!(event.target as Element|null)?.closest?.('#audio-unlock'))void audioOn();},{capture:true});
  $('audio-unlock').onclick=async()=>{if(!sound.ready){try{await sound.unlock();}catch{sound.error='Tonfreigabe fehlgeschlagen. Bitte erneut versuchen.';}configure(settings);if(wheel.motion)sound.roll(wheel.rollProgress);}else configure({muted:!settings.muted});render();};
  $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{message='Vollbild bitte über den Browser aktivieren.';}};
  const remoteUrl=`https://motte025.github.io/City-cafe/fernbedienung.html?teil=roulette&raum=${encodeURIComponent(room)}`;$<HTMLAnchorElement>('remote-link').href=remoteUrl;$('room-label').textContent='CITY CAFE';$('pair-room').textContent=`Screen: ${room}`;
