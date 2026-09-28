@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T14:12:46Z",
+  "checked_at": "2026-09-28T14:22:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Montagsquicky <3 (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 91 😈 | Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
