@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T11:57:46Z",
+  "checked_at": "2026-09-28T12:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🎶 GOOD VIBES ONLY 🔥!OUT !youtube !huambo | !subtember 🔥 !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
