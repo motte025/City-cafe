@@ -66,10 +66,13 @@
 <header>
     <div class="zeile" id="tabs"></div>
     <div class="zeile" id="boxen"></div>
-    <div class="ton-label">Hos’n Obe · Spielton am Screen</div>
-    <div class="zeile" id="tonzeile" aria-label="Spielton">
-        <button type="button" id="ton-an">🔊 Ton an</button>
-        <button type="button" id="ton-aus">🔇 Ton aus</button>
+    <!-- Spielton gehört nur zu Hos'n Obe: nur in diesem Reiter sichtbar. -->
+    <div id="spielton" hidden>
+        <div class="ton-label">Hos’n Obe · Spielton am Screen</div>
+        <div class="zeile" id="tonzeile" aria-label="Spielton">
+            <button type="button" id="ton-an">🔊 Ton an</button>
+            <button type="button" id="ton-aus">🔇 Ton aus</button>
+        </div>
     </div>
     <div class="screen" id="screen">Screen wird gesucht …</div>
 </header>
@@ -90,7 +93,7 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-09-25-spielton';
+    var FASSUNG = '2026-09-28-roulette';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 
@@ -127,6 +130,7 @@
             k.className = k.dataset.teil === aktiv ? 'aktiv' : '';
         });
         try { localStorage.setItem('fbTeil', aktiv); } catch (e) {}
+        el('spielton').hidden = seite.schluessel !== 'spiel';
 
         if (seite.brauchtSpiel && !spielSession) {
             el('hinweis').hidden = false;
