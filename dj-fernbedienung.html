@@ -277,6 +277,12 @@
         <button id="stoppen">Stopp</button>
     </div>
 
+    <h2>Ton am Screen</h2>
+    <div class="wahl" id="ton-wahl">
+        <button type="button" id="ton-an" aria-pressed="true">🔊 Ton an</button>
+        <button type="button" id="ton-aus" aria-pressed="false">🔇 Ton aus</button>
+    </div>
+
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -692,10 +698,26 @@
         });
     }
 
+    // Twitch-Ton an/aus: gilt fuer den Stream am Screen (mpv und Browser),
+    // bleibt gespeichert, bis er wieder umgeschaltet wird.
+    function tonSenden(aus) {
+        if (!verbindung) return;
+        tonZeigen(aus);
+        NET.befehlSenden(verbindung, { aktion: 'ton', stumm: aus }).catch(function (err) {
+            console.warn('[DJ-Fernbedienung] Senden fehlgeschlagen:', err);
+            standSetzen('fehler', 'Konnte nicht senden — Datenbank-Regeln prüfen');
+        });
+    }
+    function tonZeigen(aus) {
+        el('ton-an').setAttribute('aria-pressed', aus ? 'false' : 'true');
+        el('ton-aus').setAttribute('aria-pressed', aus ? 'true' : 'false');
+    }
+
     var restTicker = null;
     function statusAnzeigen(status) {
         if (restTicker) { clearInterval(restTicker); restTicker = null; }
         markenSetzen(status);
+        if (status && typeof status.tonAus === 'boolean') tonZeigen(status.tonAus);
 
         if (!status) {
             standSetzen('', 'Screen meldet sich noch nicht');
@@ -751,6 +773,8 @@
         });
         el('starten').addEventListener('click', function () { senden('start'); });
         el('stoppen').addEventListener('click', function () { senden('stop'); });
+        el('ton-an').addEventListener('click', function () { tonSenden(false); });
+        el('ton-aus').addEventListener('click', function () { tonSenden(true); });
 
         twitchTokenAusUrlHolen();
 

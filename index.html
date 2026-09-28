@@ -7267,6 +7267,26 @@
         // Ton des Nightlife-Videos: Lautstaerke 0-100 und Lautheitsausgleich.
         // Gilt fuer mpv wie fuers Embed und ueberlebt einen Neustart der Seite.
         let nlTon = { vol: 100, lautheit: false };
+        // Twitch-Ton an/aus (DJ-Fernbedienung). Auf der Box spielt mpv den
+        // Stream; der Supervisor liest window.nlTonWunsch. Solange der DJ-Slot
+        // laeuft und der Ton aus sein soll, meldet der Getter deshalb
+        // Lautstaerke 0 (eigene id) - verlaesst der Screen den Slot, kommt die
+        // YouTube-Einstellung mit ihrer alten id zurueck und gilt wieder. So
+        // braucht es kein Update des Supervisors auf der Box.
+        let djStumm = false;
+        try { djStumm = localStorage.getItem('cityCafeDjStumm') === '1'; } catch (e) {}
+        let nlTonBasis = null;
+        Object.defineProperty(window, 'nlTonWunsch', {
+            configurable: true,
+            set(v) { nlTonBasis = v; },
+            get() {
+                const basis = nlTonBasis || { id: 'standard', vol: 100, lautheit: false };
+                let djLaeuft = false;
+                try { djLaeuft = mediaStateIndex === DJ_SLOT_INDEX; } catch (e) {}
+                if (!djStumm || !djLaeuft) return basis;
+                return { id: basis.id + '-dj-stumm', vol: 0, lautheit: basis.lautheit };
+            }
+        });
         try {
             const gespeichert = JSON.parse(localStorage.getItem('cityCafeNlTon') || 'null');
             if (gespeichert && typeof gespeichert === 'object') {
@@ -8165,7 +8185,7 @@
             if (djExternEintrag) {
                 lage.extern = true;
                 lage.spielt = window.djExternLaeuft === true;
-                lage.stumm = false;
+                lage.stumm = djStumm;
                 return lage;
             }
             const rahmen = document.querySelector('#dj-live-player .dj-player-frame iframe');
@@ -8228,6 +8248,7 @@
                 // Screen keinen Stream an (siehe ktSpielLaeuft).
                 spielLaeuft: !!(window.ktSpielLaeuft && window.ktSpielLaeuft()),
                 abgelehnt: djFernAbgelehnt,
+                tonAus:  djStumm,
                 // Der echte Zustand am Screen:
                 spielt:  lage.spielt,
                 stumm:   lage.stumm,
@@ -8253,6 +8274,21 @@
         function djFernBefehlAusfuehren(befehl) {
             if (!befehl || !befehl.id || befehl.id === djFernLetzteId) return;
             djFernLetzteId = befehl.id;
+
+            if (befehl.aktion === 'ton') {
+                // Twitch-Ton an/aus. mpv (Box) folgt ueber nlTonWunsch, der
+                // Browser-Player hier direkt.
+                djStumm = !!befehl.stumm;
+                try { localStorage.setItem('cityCafeDjStumm', djStumm ? '1' : '0'); } catch (e) {}
+                if (djStumm) {
+                    try { if (djTwitchSpieler) djTwitchSpieler.setMuted(true); } catch (e) {}
+                } else if (djQualiLage) {
+                    // djTonNachziehen dreht im naechsten Takt regulaer auf.
+                    djQualiLage.tonAn = false; djQualiLage.tonBlockiert = false;
+                }
+                djFernStatusMelden();
+                return;
+            }
 
             if (befehl.aktion === 'stop') {
                 djFern = null;
@@ -9119,6 +9155,7 @@
         function djTonNachziehen(laeuft) {
             const wunsch = DJ_LIVE_CONFIG.tonLautstaerke;
             if (!djTwitchSpieler || !djQualiLage) return;
+            if (djStumm) return;                  // Ton per Fernbedienung aus
             if (!(wunsch > 0) || djQualiLage.tonBlockiert) return;
 
             if (!djQualiLage.tonAn) {
