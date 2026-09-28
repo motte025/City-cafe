@@ -14,7 +14,7 @@ gibt:
 |---|---|---|
 | 🎬 Videos | `yt-fernbedienung.html` | YouTube-Videos suchen und auf den Screen schicken |
 | 🎧 DJ | `dj-fernbedienung.html` | Twitch-DJ auswählen, Qualität, Laufzeit |
-| 🎰 Roulette | `roulette/remote.html` | Roulette am Fernseher steuern (von Codex) |
+| 🎰 Roulette | `roulette-vorschau-spiel/remote.html` | Roulette mit Spielmodus steuern (seit 28.09.2026; TV-Seite `roulette-vorschau-spiel/?raum=…`) |
 | 🃏 Hos'n Obe | `hosn-obe.html` | Das Kartenspiel mitspielen |
 
 Zum Speichern am Handy: die Adresse auf den Startbildschirm legen. Der Rest

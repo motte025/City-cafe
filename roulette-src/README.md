@@ -10,6 +10,9 @@ Das Rad startet nach 4 Sekunden. Standard: 30 Runden (seit 27.09.2026, vorher 12
 
 ## Handy-Fernbedienung
 
+Seit 28.09.2026 steckt die neue Fernbedienung im Roulette-Reiter der gemeinsamen Fernbedienung (`fernbedienung.html` → `roulette-vorschau-spiel/remote.html`). Aufbau fürs Handy: Status, Spielmodus, normales Roulette, darunter alle Einstellungen eingeklappt in Gruppen (Ton, Tempo, Kugel & Einlauf, Kessel, Holz, Schrift & Mittelkreuz, TV-Bild). In der gemeinsamen Fernbedienung entfällt der eigene Kopf.
+
+
 https://motte025.github.io/City-cafe/fernbedienung.html?teil=roulette
 
 Den gleichen Screen auswählen wie am TV. Standardraum ist `city-cafe`. Für andere Screens die TV-Adresse mit `?raum=SCREENNAME` öffnen. „Handy verbinden“ am TV zeigt den passenden QR-Code. Pro Screen nur eine Roulette-TV-Seite öffnen.
