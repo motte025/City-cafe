@@ -212,6 +212,8 @@ function runPocket(sim:BallSim,rec:Scratch,globalStep:number,d:Descent,needed:nu
 // ---------------------------------------------------------------- Suche
 const mulberry=(seed:number)=>()=>{let t=(seed=(seed+0x6D2B79F5)|0);t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};
 
+/** Streuung je Wurf (siehe planThrow): Tempo ±7 %, radial ±0,35, Hüpfer bis 0,5, Drall 60–140 %; Rautentreffer in 70 % Pflicht; bis zu 3 passende Würfe sammeln. */
+export const VARY={speed:.14,radial:.8,hop:.5,spinMin:.3,spinMax:1.8,hitShare:.7,pool:2,poolBudget:40};
 /** Startwerte für die Wahl des Abwurfzeitpunkts; werden während der Suche aus den Ergebnissen nachgeführt. */
 const EXPECT={descent:.7,pocket:1.3};
 /** Zähler für Messskripte (Trichter der Suche). */
@@ -229,6 +231,9 @@ export function* planThrow(req:PlanRequest):Generator<void,PlanResult>{
  // für diese Bevorzugung (PREFER_HIT_BUDGET Kandidaten ab dem ersten Rückfall) aufgebraucht ist.
  let fallback:BallPlan|null=null,fallbackAt=-1;
  const PREFER_HIT_BUDGET=180;
+ // Nicht immer den ersten passenden Wurf: mehrere sammeln und zufällig einen nehmen; Rautentreffer nur meistens verlangen.
+ const wantHit=rnd()<VARY.hitShare,pool:BallPlan[]=[];let poolAt=-1;
+ const pick=()=>pool[Math.floor(rnd()*pool.length)];
  for(const relaxed of [false,true]){
   const tol=relaxed?BALL_SEARCH.relaxedDuration:BALL_WINDOWS.durationTolerance;
   const maxCand=relaxed?BALL_SEARCH.relaxedCandidates:BALL_SEARCH.candidates;
@@ -242,10 +247,21 @@ export function* planThrow(req:PlanRequest):Generator<void,PlanResult>{
    const i=fixedCount-steps,delta=req.launchAngle-ref.ang[i];
    const sim=new BallSim({colliders:col,ball:req.ball,direction:req.direction,startSpeed:req.rotorSpeed,rotorStart:req.rotorStart,rotor:true,deflectors:true,deflectorResistance:req.deflectorResistance});
    const st=rotate(ref.hand,delta);st[9]=steps*DT_REC;st[10]=(req.seed^Math.imul(c+1+(relaxed?7919:0),0x9E3779B1))|0;
+   // Jeder Kandidat verlässt die Laufbahn etwas anders (Tempo, nach innen/außen, kleiner Hüpfer, Drall):
+   // sonst liefe jeder Wurf ab der Übergabe gleich an die Rauten heran und wirkte gesteuert.
+   // Die Gewinnzahl ist davon unberührt (vorher gezogen), es ändert sich nur die Bewegung.
+   // (jeder zweite Kandidat im strengen Durchgang; die übrigen und der gelockerte Rückfall suchen wie früher ohne
+   // Streuung, damit auch enge Einlauf-Bereiche zuverlässig gefunden werden)
+   if(!relaxed&&c%2===0){const j=mulberry((req.seed^Math.imul(c+1,0x27D4EB2D))>>>0),f=1+(j()*2-1)*VARY.speed,rr=Math.hypot(st[0],st[2])||1,vr=(j()*2-1)*VARY.radial;
+    st[3]=st[3]*f+st[0]/rr*vr;st[5]=st[5]*f+st[2]/rr*vr;st[4]+=j()*VARY.hop-VARY.hop*.2;const w=VARY.spinMin+j()*(VARY.spinMax-VARY.spinMin);st[6]*=w;st[7]*=w;st[8]*=w;}
    sim.setState(st);
    rec.n=0;
    const d=runDescent(sim,rec,steps*REC,st[9]+2.5);
-   if(c%4===3){yield;if(req.timeBudgetMs!==undefined&&now()-t0>req.timeBudgetMs)return {ok:false,candidates,variants,computeMs:now()-t0,reason:'Zeitbudget erschöpft'};}
+   if(c%4===3){yield;
+    // Zeitbudget: schon gefundene Würfe nicht verwerfen; ab der Hälfte nicht mehr weiter sammeln.
+    if(req.timeBudgetMs!==undefined){const used=now()-t0;
+     if(pool.length&&used>req.timeBudgetMs*.5)return pick();
+     if(used>req.timeBudgetMs)return pool.length?pick():fallback??{ok:false,candidates,variants,computeMs:used,reason:'Zeitbudget erschöpft'};}}
    planStats.descents++;
    if(!d.ok)continue;
    planStats.entered++;
@@ -281,12 +297,14 @@ export function* planThrow(req:PlanRequest):Generator<void,PlanResult>{
     if(!clamped&&Math.abs(total-req.duration)>tol)continue;
     if(p.offset<BALL_WINDOWS.restOffsetMin)continue;
     const result=assemble(req,ref,i,steps,delta,sim.R,rec,d,p,descentEv,{candidates,variants,relaxed,clamped,t0});
-    if(result.deflectorHits>=1)return result;
-    if(!fallback){fallback=result;fallbackAt=candidates;}
+    if(!wantHit||result.deflectorHits>=1){pool.push(result);if(poolAt<0)poolAt=candidates;if(pool.length>=VARY.pool)return pick();}
+    else if(!fallback){fallback=result;fallbackAt=candidates;}
    }
-   if(fallback&&candidates-fallbackAt>PREFER_HIT_BUDGET)return fallback;
+   if(pool.length&&candidates-poolAt>VARY.poolBudget)return pick();
+   if(!pool.length&&fallback&&candidates-fallbackAt>PREFER_HIT_BUDGET)return fallback;
   }
  }
+ if(pool.length)return pick();
  if(fallback)return fallback;
  return {ok:false,candidates,variants,computeMs:now()-t0,reason:'keine passende Bewegung'};
 }
