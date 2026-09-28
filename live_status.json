@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T20:02:45Z",
+  "checked_at": "2026-09-28T20:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 91 😈 | Harder Styles | !insta !holy !SF #Werbung",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 28✨1H POWER HOUR | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -20,13 +20,6 @@
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Motiviert in die neue Woche! Auf geht´s! <3 !release @just_jenny_official @two_crazy_girls",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 28✨1H POWER HOUR | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
