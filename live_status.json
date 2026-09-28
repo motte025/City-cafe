@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T13:57:47Z",
+  "checked_at": "2026-09-28T14:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !goals | !subtember | !tip ✨",
       "game": "DJs"
     }
   ]
