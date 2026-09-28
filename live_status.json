@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T19:02:46Z",
+  "checked_at": "2026-09-28T19:22:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Motiviert in die neue Woche! Auf geht´s! <3 !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 28✨1H POWER HOUR | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
