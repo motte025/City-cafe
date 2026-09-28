@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-28T17:17:48Z",
+  "checked_at": "2026-09-28T17:32:52Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "beatportofficial",
       "name": "BeatportOfficial",
       "title": "Emvae & Moxes + Seth Troxler | El Tony Mate Selected Sessions | Amsterdam | Beatport Live",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "⭐️ MUTE MONDAY - GERMAN EDITION (🇩🇪 / 🇺🇸) ⭐️ !Regeln !Suptember !Ziele !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
