@@ -4,8 +4,8 @@
     'use strict';
 
     var files = {
-        card: 'audio/hosn-card-click.mpeg',
-        swap: 'audio/hosn-card-swap.mpeg',
+        card: 'audio/hosn-card-swap.mpeg',
+        swap: 'audio/hosn-card-click.mpeg',
         deal: 'roulette/audio/evian-hit-1.ogg',
         knock: 'roulette/audio/evian-hit-2.ogg',
         finish: 'roulette/audio/evian-hit-3.ogg',
@@ -59,9 +59,30 @@
 
     function cue(move, phase) {
         if (move) {
-            if (move.type === 'single' || move.type === 'all') play('swap');
-            else if (move.type === 'dealerReplace') { play('dealer'); setTimeout(function () { play('swap'); }, 500); }
-            else if (move.type === 'dealerKeep' || move.type === 'pass') play('card');
+            // Eine Karte legt sich nach 1,5 s auf die Mitte; 0,2 s danach
+            // hebt die Zielkarte ab. Beim Dreiertausch starten sie versetzt.
+            if (move.type === 'single' || move.type === 'all') {
+                var count = move.type === 'all' ? 3 : 1;
+                for (var i = 0; i < count; i++) {
+                    (function (offset) {
+                        setTimeout(function () { play('swap'); }, offset);
+                        setTimeout(function () { play('swap'); }, offset + 1700);
+                        setTimeout(function () { play('swap'); }, offset + 3200);
+                    })(i * 260);
+                }
+            } else if (move.type === 'dealerReplace') {
+                play('dealer');
+                for (var j = 0; j < 3; j++) {
+                    (function (offset) {
+                        setTimeout(function () { play('swap'); }, offset);
+                        setTimeout(function () { play('swap'); }, offset + 1700);
+                        setTimeout(function () { play('swap'); }, offset + 3200);
+                    })(j * 260);
+                }
+            } else if (move.type === 'dealerKeep') {
+                for (var k = 0; k < 3; k++)
+                    setTimeout(function () { play('card'); }, k * 260);
+            } else if (move.type === 'pass') play('card');
             if (move.knock) setTimeout(function () { play('knock'); }, 500);
             if (move.fire || move.type === 'fire' || move.type === 'tablefire') play('finish');
         }

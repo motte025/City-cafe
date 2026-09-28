@@ -196,7 +196,7 @@ eq('Drilling-Wert bekommt ein Komma', E.formatScore(30.5), '30,5');
 [2, 3, 4, 5, 6].forEach(function (n) {
     var d = E.deal(n);
     eq('Deal ' + n + ' Spieler: ' + n + ' Hände', Object.keys(d.hands).length, n);
-    eq('Deal ' + n + ' Spieler: 3 Mittenkarten', d.middleCards.length, 3);
+    eq('Deal ' + n + ' Spieler: Mitte bleibt zuerst leer', d.middleCards.length, 0);
     eq('Deal ' + n + ' Spieler: drei Karten fuer den Teiler', d.dealerReplacement.length, 3);
     eq('Deal ' + n + ' Spieler: Teiler sitzt vor dem Starter',
        d.dealerSeat, (d.starterSeat - 1 + n) % n);
@@ -208,6 +208,12 @@ eq('Drilling-Wert bekommt ein Komma', E.formatScore(30.5), '30,5');
     }
     eq('Deal ' + n + ' Spieler: keine Karte doppelt', new Set(all).size, all.length);
 });
+function dealWithCenter(count, rng, chances) {
+    var dealt = E.deal(count, rng, chances);
+    // Testvariante: der Teiler behaelt seine ersten drei Karten.
+    dealt.middleCards = dealt.dealerReplacement.slice();
+    return dealt;
+}
 /*
  * ---------- Ziehungschance hoher Karten ----------
  *
@@ -222,7 +228,7 @@ check('Standard laesst hohe Karten seltener ziehen',
 function dealtRanks(chances, rounds) {
     var aces = 0, high = 0, low = 0;
     for (var q = 0; q < rounds; q++) {
-        var dd = E.deal(4, null, chances);
+        var dd = dealWithCenter(4, null, chances);
         var cards = dd.middleCards.slice();
         for (var s2 = 0; s2 < 4; s2++) cards = cards.concat(dd.hands[s2]);
         cards.forEach(function (c) {
@@ -256,7 +262,7 @@ check('Dafuer kommen mehr niedrige Karten ins Spiel',
 function seatAverages(chances, rounds) {
     var sums = [0, 0, 0, 0, 0, 0], midSum = 0;
     for (var q = 0; q < rounds; q++) {
-        var dd = E.deal(6, null, chances);
+        var dd = dealWithCenter(6, null, chances);
         for (var s4 = 0; s4 < 6; s4++) sums[s4] += E.scoreHand(dd.hands[s4]).score;
         midSum += E.scoreHand(dd.middleCards).score;
     }
@@ -276,7 +282,7 @@ eq('Gewichteter Stapel ist duplikatfrei', new Set(wShuf).size, 32);
 function fireAtDeal(chances, rounds) {
     var hits = 0;
     for (var q = 0; q < rounds; q++) {
-        var dd = E.deal(4, null, chances);
+        var dd = dealWithCenter(4, null, chances);
         var f = E.scoreHand(dd.middleCards).fire;
         for (var s3 = 0; s3 < 4 && !f; s3++) f = E.scoreHand(dd.hands[s3]).fire;
         if (f) hits++;
@@ -397,7 +403,7 @@ eq('Computer ohne Hand zieht nicht', E.botDecide([], ['HA', 'S9', 'D7'], {}).typ
  */
 var worse = 0, suboptimal = 0, passes = 0, knocks = 0, swaps = 0;
 for (var bt = 0; bt < 4000; bt++) {
-    var d = E.deal(2);
+    var d = dealWithCenter(2);
     var h = d.hands[0], mid = d.middleCards;
     var before = E.scoreHand(h).score;
     var canPassNow = bt % 4 !== 0;
@@ -445,7 +451,7 @@ console.log('Computer-Statistik: ' + swaps + ' Tausche, ' + knocks + ' mal aufge
 // Aufgehen nur mit brauchbarer Hand - direkt wie auch nach einem Tausch
 var knockLow = 0;
 for (var kb = 0; kb < 2000; kb++) {
-    var dk = E.deal(2);
+    var dk = dealWithCenter(2);
     var hk = dk.hands[0];
     var mk = E.botDecide(hk, dk.middleCards, { canKnock: true, canKnockDirect: true, canPass: true });
     if (mk.type === 'knock' && E.scoreHand(hk).score < E.BOT_KNOCK_SOLID) knockLow++;
@@ -465,7 +471,7 @@ eq('Computer geht nie mit schwacher Hand auf', knockLow, 0);
  */
 var spaetKnockLow = 0;
 for (var sk = 0; sk < 2000; sk++) {
-    var ds = E.deal(2);
+    var ds = dealWithCenter(2);
     var hs = ds.hands[0];
     var ms = E.botDecide(hs, ds.middleCards, {
         canKnock: true, canPass: false,
@@ -490,7 +496,7 @@ var flushMid = ['H7', 'HK', 'HA'];
     var label = idx === 0 ? 'Drilling' : 'drei gleiche Farben';
     var seen = {};
     for (var t = 0; t < 400; t++) {
-        var d = E.deal(2);
+        var d = dealWithCenter(2);
         var mv = E.botDecide(d.hands[0], mid.slice(), {
             canKnock: t % 2 === 0, canKnockDirect: t % 3 === 0, canPass: t % 3 !== 0,
             turnsPlayed: t % 9, playerCount: 3
@@ -540,7 +546,7 @@ var maxTurnsSeen = 0, endless = 0;
 var simKnocks = 0;
 for (var sim = 0; sim < 600; sim++) {
     var count = 2 + (sim % 5);
-    var d = E.deal(count);
+    var d = dealWithCenter(count);
     var hands = d.hands, middle = d.middleCards.slice();
     var turns = 0, knockedBy = null, finalLeft = null, seat = d.starterSeat, done = false;
     var passUsedBySeat = {};
@@ -629,7 +635,7 @@ eq('Computer-Entscheidung hängt nur von Hand und Mitte ab', Object.keys(decisio
 var dupes = 0;
 for (var dz = 0; dz < 2000; dz++) {
     var dd = E.deal(6);
-    var all = dd.middleCards.slice();
+    var all = dd.dealerReplacement.slice();
     for (var sx = 0; sx < 6; sx++) all = all.concat(dd.hands[sx], [dd.starterCards[sx]]);
     if (new Set(all).size !== all.length) dupes++;
 }

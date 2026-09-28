@@ -804,12 +804,13 @@
     }
 
     function dealerChoicePending() {
-        return isMyTurn() && Number(pub.dealerSeat) === mySeat &&
+        return pub.phase === 'dealerChoice' && Number(pub.dealerSeat) === mySeat &&
                !pub.dealerChoiceDone;
     }
 
     function chooseDealerCards(replace) {
-        if (busy || !dealerChoicePending()) return;
+        if (busy || !dealerChoicePending() || dealerReplacement.length !== 3 ||
+            Date.now() < Number(pub.dealerReadyAt || Infinity)) return;
         busy = true;
         var oldHand = myHand.slice();
         var nextHand = replace ? dealerReplacement.slice() : oldHand;
@@ -818,7 +819,7 @@
             lastMove: { type: replace ? 'dealerReplace' : 'dealerKeep',
                         seat: mySeat, gave: replace ? oldHand : null }
         };
-        if (replace) updates.middleCards = oldHand;
+        updates.middleCards = replace ? oldHand : dealerReplacement.slice();
         var save = replace ? writeHand(nextHand)
             : KtNet.privateRef(db, sessionId, mySeat).update({ dealerReplacement: null });
         save.then(function () { return KtNet.publicRef(db, sessionId).update(updates); })
@@ -1006,6 +1007,20 @@
         // Computer-Runde: der Gast schaut nur zu, auch mit eigenem Deck.
         if (pub.botGame) return;
 
+        if (dealerChoicePending()) {
+            var dealerHint = document.createElement('div');
+            dealerHint.className = 'kt-turn-hint';
+            dealerHint.textContent = 'Du bist Teiler. Behalte deine ersten drei Karten: Drei Stapelkarten kommen in die leere Mitte. Oder lege deine Karten in die Mitte und ziehe drei neue.';
+            els.actions.appendChild(dealerHint);
+            if (dealerReplacement.length !== 3 || Date.now() < Number(pub.dealerReadyAt || Infinity)) {
+                els.actions.appendChild(button('Karten werden ausgeteilt …', 'kt-btn-big', function () {}, true));
+                return;
+            }
+            els.actions.appendChild(button('ERSTE DREI KARTEN BEHALTEN', 'kt-btn-confirm kt-btn-big', function () { chooseDealerCards(false); }));
+            els.actions.appendChild(button('IN DIE MITTE LEGEN · DREI NEUE ZIEHEN', 'kt-btn-big', function () { chooseDealerCards(true); }));
+            return;
+        }
+
         /*
          * Sechs-Sekunden-Fenster: getauscht ist getauscht, jetzt entscheidet
          * sich nur noch, ob man aufgeht.
@@ -1027,20 +1042,6 @@
         }
 
         if (!isMyTurn()) return;
-
-        if (dealerChoicePending()) {
-            var dealerHint = document.createElement('div');
-            dealerHint.className = 'kt-turn-hint';
-            dealerHint.textContent = 'Du bist Teiler: Sieh dir deine ersten drei Karten an. Du kannst sie behalten oder alle drei in die Mitte legen und drei neue ziehen.';
-            els.actions.appendChild(dealerHint);
-            if (dealerReplacement.length !== 3) {
-                els.actions.appendChild(button('Karten werden geladen …', 'kt-btn-big', function () {}, true));
-                return;
-            }
-            els.actions.appendChild(button('ERSTE DREI KARTEN BEHALTEN', 'kt-btn-confirm kt-btn-big', function () { chooseDealerCards(false); }));
-            els.actions.appendChild(button('IN DIE MITTE LEGEN · DREI NEUE ZIEHEN', 'kt-btn-big', function () { chooseDealerCards(true); }));
-            return;
-        }
 
         /*
          * Am eigenen Zug ist die Statusbox ausgeblendet - der Hinweis auf die
@@ -1138,7 +1139,9 @@
         show(els.scrollHint, mayEnd);
 
         var lobbyish = phase === 'idle' || phase === 'hostSelect' || phase === 'countSelect';
-        var showCards = myHand.length === 3 && !lobbyish;
+        var dealtToPlayers = phase === 'dealerChoice' && Date.now() >= Number(pub.dealerReadyAt || Infinity);
+        var showCards = myHand.length === 3 && (dealtToPlayers || phase === 'playing' ||
+            phase === 'knocked' || phase === 'reveal');
         show(els.handPanel, showCards);
         show(els.middlePanel, (pub.middleCards || []).length === 3 && !lobbyish);
 
@@ -1212,6 +1215,12 @@
                 els.statusExtra.appendChild(firstNote);
             }
 
+        } else if (phase === 'dealerChoice') {
+            setStatus(dealerChoicePending() ? 'Du bist Teiler!' : 'Der Teiler entscheidet',
+                dealerChoicePending() ? 'Schau dir deine ersten drei Karten an und wähle unten.'
+                    : 'Die Mitte bleibt leer, bis der Teiler gewählt hat.',
+                dealerChoicePending() ? 'is-myturn' : 'is-turnof');
+
         } else if (phase === 'playing' || phase === 'knocked') {
             var knockNote = (pub.knockedBySeat !== null && pub.knockedBySeat !== undefined)
                 ? ' · ' + (Number(pub.knockedBySeat) === mySeat ? 'Du bist' : seatName(pub.knockedBySeat) + ' ist') + ' aufgegangen'
@@ -1222,7 +1231,7 @@
             } else if (myTurn) {
                 // Am eigenen Zug braucht es keine Statusbox - die Knoepfe darunter
                 // sagen alles, und der Platz gehoert den Karten.
-                setStatus(dealerChoicePending() ? 'Du bist Teiler!' : 'Du bist dran!', '', 'is-myturn');
+                setStatus('Du bist dran!', '', 'is-myturn');
             } else {
                 setStatus(seatName(pub.currentTurnSeat) + ' ist dran',
                     'Warte, bis du dran bist.' + knockNote, 'is-turnof');
@@ -1257,15 +1266,17 @@
 
         // Am eigenen Zug verschwindet die Statusbox zugunsten grosser Knoepfe -
         // dieses schmale Band bleibt trotzdem stehen, damit man immer sieht, wer dran ist.
-        var showTurnBanner = (phase === 'playing' || phase === 'knocked') && !pub.botGame;
+        var showTurnBanner = (phase === 'dealerChoice' || phase === 'playing' || phase === 'knocked') && !pub.botGame;
         if (showTurnBanner) {
-            els.turnBanner.textContent = myTurn ? (dealerChoicePending() ? 'Teiler: Karten wählen' : 'Du bist dran') : seatName(pub.currentTurnSeat) + ' ist dran';
-            els.turnBanner.classList.toggle('is-myturn', myTurn);
+            els.turnBanner.textContent = dealerChoicePending() ? 'Teiler: Karten wählen'
+                : phase === 'dealerChoice' ? seatName(pub.dealerSeat) + ' wählt die Mitte'
+                : myTurn ? 'Du bist dran' : seatName(pub.currentTurnSeat) + ' ist dran';
+            els.turnBanner.classList.toggle('is-myturn', myTurn || dealerChoicePending());
         }
         show(els.turnBanner, showTurnBanner);
 
         // Am eigenen Zug verschwindet die Statusbox zugunsten grosser Knoepfe.
-        show(els.status, !isMyTurn());
+        show(els.status, !isMyTurn() && !dealerChoicePending());
 
         renderActions();
     }
@@ -1423,9 +1434,9 @@
             var val = snap.val();
             myHand = (val && val.hand) || [];
             dealerReplacement = (val && val.dealerReplacement) || [];
-            // Auch eine bereits ausgeteilte Feuer-Hand beendet die Runde sofort -
-            // schon waehrend der Geber-Ermittlung.
-            if (pub.phase === 'starter' || pub.phase === 'playing' || pub.phase === 'knocked') {
+            // Vor der Teiler-Wahl bleibt die Runde offen; Feuer gilt erst,
+            // sobald die Mitte steht und das eigentliche Spiel beginnt.
+            if (pub.phase === 'playing' || pub.phase === 'knocked') {
                 checkFire(myHand);
             }
             render();
@@ -1469,6 +1480,9 @@
     function onPublic(snap) {
         var prevPhase = pub.phase;
         pub = snap.val() || {};
+        if (pub.phase === 'dealerChoice' && pub.dealerReadyAt) {
+            setTimeout(render, Math.max(0, Number(pub.dealerReadyAt) - Date.now()) + 50);
+        }
         watchSound(pub.remoteRoom || 'city-cafe');
         var stamp = pub.lastMove ? JSON.stringify(pub.lastMove) + ':' + (pub.turnsPlayed || 0) : '';
         if (stamp && stamp !== soundMoveStamp) {
@@ -1477,6 +1491,7 @@
         }
         if (pub.phase !== prevPhase) Sound.cue(null, pub.phase);
         if (pub.phase !== 'reveal') { publishedReveal = false; firePublished = false; }
+        if (pub.phase === 'playing' && prevPhase !== 'playing' && myHand.length === 3) checkFire(myHand);
 
         // Neue Runde: alter Sitzplatz gilt nicht mehr.
         if (prevPhase === 'reveal' && pub.phase === 'idle') {

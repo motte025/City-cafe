@@ -114,8 +114,8 @@
      * Platz 1 an, und der hat einen echten Vorteil - er sieht die Mitte als
      * Erster und darf als Erster zugreifen.
      *
-     * Verbrauch bei sechs Spielern: 18 Handkarten + 3 Mitte + 6 Geberkarten
-     * + 3 Ersatzkarten fuer den Teiler = 30 von 32.
+     * Verbrauch bei sechs Spielern: 18 Handkarten + 6 Geberkarten +
+     * 3 Karten fuer Mitte ODER neue Teilerhand = 27 von 32.
      */
     function deal(playerCount, rng, chances) {
         if (playerCount < 2 || playerCount > 6) throw new Error('Spieleranzahl muss 2-6 sein, war: ' + playerCount);
@@ -136,20 +136,14 @@
          * staerksten Karten. Gemessen waren das bei Chance 0,5 schon 15,3 zu
          * 15,8 Punkte im Schnitt - mit staerkerer Gewichtung noch mehr.
          */
-        // Drei weitere Karten bleiben fuer die einmalige Wahl des Teilers
-        // reserviert. Auch bei sechs Plaetzen sind es nur 30 von 32 Karten.
-        var inPlay = weightedShuffle(buildDeck(), rng, draw).slice(0, 4 * playerCount + 6);
+        // Die drei Zusatzkarten gehen entweder in die Mitte oder zum Teiler.
+        var inPlay = weightedShuffle(buildDeck(), rng, draw).slice(0, 4 * playerCount + 3);
         var deck = shuffle(inPlay, rng);
         var hands = {};
         var at = 0;
-        var seat;
-        for (seat = 0; seat < playerCount; seat++) {
-            hands[seat] = [deck[at++], deck[at++], deck[at++]];
-        }
-        var middleCards = [deck[at++], deck[at++], deck[at++]];
-
         var starterCards = {};
         var starterSeat = 0;
+        var seat;
         for (seat = 0; seat < playerCount; seat++) {
             starterCards[seat] = deck[at++];
             if (seat > 0 && compareCards(starterCards[seat], starterCards[starterSeat]) > 0) {
@@ -157,11 +151,22 @@
             }
         }
         var dealerSeat = (starterSeat - 1 + playerCount) % playerCount;
+
+        // Alle anderen bekommen ihre Karten reihum; der Teiler nimmt seine
+        // eigenen drei erst danach. Auf dem Tisch liegt noch keine Mitte.
+        for (seat = 0; seat < playerCount; seat++) hands[seat] = [];
+        for (var round = 0; round < 3; round++) {
+            for (var offset = 0; offset < playerCount - 1; offset++) {
+                seat = (starterSeat + offset) % playerCount;
+                hands[seat].push(deck[at++]);
+            }
+        }
+        hands[dealerSeat] = [deck[at++], deck[at++], deck[at++]];
         var dealerReplacement = [deck[at++], deck[at++], deck[at++]];
 
         return {
             hands: hands,
-            middleCards: middleCards,
+            middleCards: [],
             starterCards: starterCards,
             starterSeat: starterSeat,
             dealerSeat: dealerSeat,

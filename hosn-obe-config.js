@@ -34,6 +34,7 @@ window.HOSN_OBE_CONFIG = {
     turnTimeoutSeconds: 120, // wer zwei Minuten nicht zieht, wird übersprungen
     revealSeconds: 30,       // wie lange das Ergebnis samt weinendem Smiley am TV steht
     starterSeconds: 7,       // Anzeige „wer beginnt“: jeder zieht eine Karte, die höchste fängt an
+    dealerChoiceSeconds: 30, // Zeit fuer die Wahl des Teilers nach dem Austeilen
     swapWindowSeconds: 6,    // nach dem Tausch bleibt so lange Zeit zum Aufgehen
     roundTargetSeconds: 95,  // Ziel-Spieldauer einer Runde; danach wird aufgedeckt
 
@@ -43,8 +44,8 @@ window.HOSN_OBE_CONFIG = {
     // Chance für alle 32 Karten endete rund jede dritte Runde mit Feuer.
     // Punkte und Regeln bleiben unverändert — hohe Karten bleiben nur öfter
     // im ungenutzten Rest des Stapels liegen (im Spiel sind je nach
-    // Spieleranzahl nur 14 bis 30 der 32 Karten samt Geber-Ermittlung und
-    // reservierten Teilerkarten).
+    // Spieleranzahl nur 11 bis 27 der 32 Karten samt Geber-Ermittlung und
+    // drei Zusatzkarten fuer Mitte oder Teiler).
     // Gemessen über je 4000 simulierte Computer-Runden pro Spieleranzahl:
     //   Ass/hoch    2 Sp.  3 Sp.  4 Sp.  5 Sp.  6 Sp.  Schnitt  Ø Hand
     //   1.0 / 1.0    16%    27%    38%    45%    50%     35%      15.8

@@ -362,8 +362,14 @@ async function run() {
     });
     check('Spieleranzahl-Knöpfe sind groß (>=90px hoch)', countBtnSize >= 90, countBtnSize + 'px');
 
-    await phone1.evaluate(() => {
-        Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '2').click();
+    // Der Datenbank-Callback kann die Auswahl bereits zeichnen, bevor die
+    // vorige Modus-Aktion ihr busy-Flag freigibt. Erst den Start abwarten.
+    await waitFor('Anzahlwahl angenommen', async () => {
+        if (pubNow().phase !== 'countSelect') return true;
+        await phone1.evaluate(() => {
+            Array.from(document.querySelectorAll('.kt-count-btn')).find(b => b.textContent === '2').click();
+        });
+        return pubNow().phase !== 'countSelect';
     });
     await sleep(800);
     await waitFor('beide Plätze belegt',
@@ -426,12 +432,58 @@ async function run() {
         JSON.stringify(starterState.seats));
     check('Der Smiley ist kein Bedienelement', starterState.inert);
 
-    await waitFor('Spielbeginn nach der Geber-Anzeige', () => pubNow().phase === 'playing');
+    await waitFor('Teilerphase nach der Geber-Anzeige', () => pubNow().phase === 'dealerChoice');
+    check('Mitte bleibt beim Austeilen leer', !(pubNow().middleCards || []).length);
+    const dealerSeat = Number(pubNow().dealerSeat);
+    const dealDelays = await tv.evaluate(() =>
+        Array.from(document.querySelectorAll('#kt-seats .kt-seat')).map(seat =>
+            Array.from(seat.querySelectorAll('.kt-fan-card')).flatMap(card =>
+                card.getAnimations().map(a => a.effect.getTiming().delay))));
+    const dealerDelays = dealDelays[dealerSeat] || [];
+    const othersDelays = dealDelays.flatMap((delays, seat) => seat === dealerSeat ? [] : delays);
+    check('Teiler bekommt alle drei Karten zuletzt', dealerDelays.length === 3 &&
+        othersDelays.length === 3 && Math.min(...dealerDelays) > Math.max(...othersDelays),
+        JSON.stringify(dealDelays));
+    const dealerPrivate = tree.games[sessionId].private[dealerSeat];
+    const originalDealerHand = dealerPrivate.hand.slice();
+    const reservedCards = dealerPrivate.dealerReplacement.slice();
+    const dealerPhoneSeat = await phone1.evaluate(() => {
+        const badge = document.getElementById('kt-seat-badge').textContent;
+        return Number(/Spieler (\d)/.exec(badge)[1]) - 1;
+    });
+    const dealerPhone = dealerPhoneSeat === dealerSeat ? phone1 : phone2;
+    await waitFor('Teiler-Wahl bereit', () => dealerPhone.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).some(b =>
+            b.textContent === 'ERSTE DREI KARTEN BEHALTEN')));
+    const dealerButtons = await dealerPhone.evaluate(() =>
+        Array.from(document.querySelectorAll('.kt-btn')).map(b => b.textContent));
+    check('Teiler kann seine Karten behalten oder in die Mitte legen',
+        dealerButtons.some(t => /DREI NEUE ZIEHEN/.test(t)));
+    const keepDealerCards = process.env.KT_DEALER_KEEP === '1';
+    await dealerPhone.evaluate(keep => {
+        Array.from(document.querySelectorAll('.kt-btn'))
+            .find(b => keep ? b.textContent === 'ERSTE DREI KARTEN BEHALTEN'
+                : /DREI NEUE ZIEHEN/.test(b.textContent)).click();
+    }, keepDealerCards);
+    await waitFor('Teilerentscheidung gespeichert', () => !!pubNow().dealerChoiceDone);
+    check(keepDealerCards ? 'Drei Stapelkarten liegen in der Mitte' : 'Abgelehnte Teilerkarten liegen in der Mitte',
+        JSON.stringify(pubNow().middleCards) === JSON.stringify(keepDealerCards ? reservedCards : originalDealerHand));
+    check(keepDealerCards ? 'Teiler behaelt seine ersten drei Karten' : 'Teiler zieht die reservierten drei Karten',
+        JSON.stringify(tree.games[sessionId].private[dealerSeat].hand) === JSON.stringify(keepDealerCards ? originalDealerHand : reservedCards));
+    check('Teilerwahl verbraucht keinen Zug', pubNow().turnsPlayed === 0);
+    await waitFor('Spielbeginn nach der Teiler-Wahl', () => pubNow().phase === 'playing');
 
     const pubAfterDeal = pubNow();
     check('Ausgeteilt, Phase playing', pubAfterDeal.phase === 'playing', pubAfterDeal.phase);
     check('Drei Karten in der Mitte', (pubAfterDeal.middleCards || []).length === 3);
     check('turnsPlayed startet bei 0', pubAfterDeal.turnsPlayed === 0, String(pubAfterDeal.turnsPlayed));
+    if (process.env.KT_DEALER_ONLY === '1') {
+        await browser.close();
+        server.close();
+        if (results.some(r => !r.ok)) throw new Error('Teilerablauf fehlgeschlagen');
+        console.log('Teilerablauf vollstaendig geprüft.');
+        return;
+    }
 
     check('Countdown-Zahl ist geleert',
         (await tv.evaluate(() => document.getElementById('kt-banner-timer').textContent)) === '',
@@ -512,28 +564,6 @@ async function run() {
         const seat = Number(pubNow().currentTurnSeat);
         const s1 = await seatOf(phone1);
         const p = s1 === seat ? phone1 : phone2;
-        if (seat === Number(pubNow().dealerSeat) && !pubNow().dealerChoiceDone) {
-            await waitFor('Teiler-Wahl bereit', () => p.evaluate(() =>
-                Array.from(document.querySelectorAll('.kt-btn')).some(b =>
-                    b.textContent === 'ERSTE DREI KARTEN BEHALTEN')));
-            check('Teiler bekommt die Wahl zwischen Behalten und drei neuen Karten',
-                (await buttonsOf(p)).some(t => /DREI NEUE ZIEHEN/.test(t)));
-            const privateDeck = tree.games[sessionId].private[seat];
-            const firstThree = privateDeck.hand.slice();
-            const replacement = privateDeck.dealerReplacement.slice();
-            const replace = !E.scoreHand(replacement).fire;
-            await clickButton(p, replace
-                ? 'IN DIE MITTE LEGEN · DREI NEUE ZIEHEN'
-                : 'ERSTE DREI KARTEN BEHALTEN');
-            await waitFor('Teiler-Wahl gespeichert', () => !!pubNow().dealerChoiceDone);
-            check('Teiler-Wahl verbraucht keinen regulaeren Zug', Number(pubNow().currentTurnSeat) === seat);
-            if (replace) {
-                check('Abgelehnte Karten liegen in der Mitte',
-                    JSON.stringify(pubNow().middleCards) === JSON.stringify(firstThree));
-                check('Teiler hat drei neue Karten erhalten',
-                    JSON.stringify(tree.games[sessionId].private[seat].hand) === JSON.stringify(replacement));
-            }
-        }
         // Warten, bis das Handy den Zug auch anzeigt.
         await waitFor('Zug-Ansicht bereit', () => p.evaluate(() =>
             document.querySelectorAll('#kt-hand-cards .kt-card.is-pickable').length > 0 ||
@@ -828,7 +858,7 @@ async function run() {
     await waitFor('beide Decks vergeben',
         () => Object.keys(pubNow2().seats || {}).length === 2);
     await waitFor('Computer-Runde läuft',
-        () => ['starter', 'playing', 'knocked', 'reveal'].includes(pubNow2().phase));
+        () => ['starter', 'dealerChoice', 'playing', 'knocked', 'reveal'].includes(pubNow2().phase));
     await sleep(1500);
 
     const started = pubNow2();
@@ -838,7 +868,7 @@ async function run() {
     check('Beide Plätze sind an Gäste vergeben',
         Object.keys(started.seats || {}).length === 2, JSON.stringify(started.seats || {}));
     check('Runde läuft (Geber oder Spiel)',
-        ['starter', 'playing', 'knocked', 'reveal'].includes(started.phase), started.phase);
+        ['starter', 'dealerChoice', 'playing', 'knocked', 'reveal'].includes(started.phase), started.phase);
 
     // Der QR im laufenden Spiel ist ersatzlos weg - gescannt wird in der Lobby.
     const noQr = await tv2.evaluate(() => !document.getElementById('kt-joinqr'));

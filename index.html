@@ -10386,7 +10386,7 @@
             const host = ktEl('kt-seats');
             const phase = ktPub.phase;
             const count = Number(ktPub.playerCount) || 0;
-            const show = count >= 2 && (phase === 'starter' || phase === 'playing' ||
+            const show = count >= 2 && (phase === 'starter' || phase === 'dealerChoice' || phase === 'playing' ||
                                         phase === 'knocked' || phase === 'reveal');
             ktSetShown(host, show);
             if (!show) return;
@@ -10417,7 +10417,8 @@
                 // In der Computer-Runde spielt der TV jeden Platz - auch die, auf
                 // denen (noch) kein Gast sitzt. Ausgegraut wird dort nichts.
                 const occupied = ktIsBotGame() || !!(seats[seat] && seats[seat].uid);
-                const isTurn = phase !== 'reveal' && phase !== 'starter' && displaySeat === seat;
+                const isTurn = phase === 'dealerChoice' ? seat === Number(ktPub.dealerSeat)
+                    : phase !== 'reveal' && phase !== 'starter' && displaySeat === seat;
                 const inWindow = isTurn && Number(ktPub.swapWindowSeat) === seat;
                 ktSetClass(el.wrap, 'is-empty', !occupied);
                 ktSetClass(el.wrap, 'is-active', isTurn);
@@ -10452,6 +10453,7 @@
                     : ktWeiterSeat === seat ? 'weiter'
                     : !occupied ? 'frei'
                     : inWindow ? 'aufgehen?'
+                    : phase === 'dealerChoice' && isTurn ? 'Teiler wählt'
                     : isTurn ? 'am Zug' : '';
                 ktSetShown(el.tag, !!tagText);
                 if (tagText) ktSetText(el.tag, tagText);
@@ -10475,6 +10477,7 @@
          * abgegebene unterwegs ist. Siehe ktAnimateLastMove().
          */
         let ktMiddleHold = {};
+        let ktMiddleHide = {};
         let ktSeatHide = {};
 
         function ktBuildMiddle() {
@@ -10500,7 +10503,7 @@
             // Aufdecken. Vorher verschwanden sie in dem Moment, in dem die
             // Runde endete, teils mitten im letzten Tausch.
             const show = cards.length === 3 &&
-                (phase === 'playing' || phase === 'knocked' || phase === 'reveal');
+                (phase === 'dealerChoice' || phase === 'playing' || phase === 'knocked' || phase === 'reveal');
             ktSetShown(wrap, show);
             if (!show) { ktSetShown(hint, false); return; }
 
@@ -10508,6 +10511,7 @@
             cards.forEach((code, index) => {
                 const slot = ktMiddleEls[index];
                 if (!slot) return;
+                slot.el.style.visibility = ktMiddleHide[index] ? 'hidden' : '';
                 // Waehrend des Tauschs bleibt die alte Karte liegen, bis die
                 // eigene Karte darauf gelandet ist - siehe ktAnimateLastMove().
                 const showCode = ktMiddleHold.hasOwnProperty(index) ? ktMiddleHold[index] : code;
@@ -10584,10 +10588,10 @@
                     ? 'Jetzt scannen — jeder bekommt eigene Karten'
                     : 'Scannen und mitspielen') :
                 phase === 'starter' ? 'Höchste Karte beginnt' :
+                phase === 'dealerChoice' ? (ktDealerNotice || ktName(ktPub.dealerSeat) +
+                    ' ist Teiler — erste drei Karten behalten oder in die Mitte legen?') :
                 phase === 'playing' ? (ktDealerNotice
                     ? ktDealerNotice
-                    : Number(ktPub.currentTurnSeat) === Number(ktPub.dealerSeat) && !ktPub.dealerChoiceDone
-                        ? ktName(ktPub.dealerSeat) + ' ist Teiler — erste drei Karten behalten oder neu ziehen?'
                     : ktWeiterSeat !== null
                     ? ktName(ktWeiterSeat) + ' sagt weiter'
                     : inWindow
@@ -10883,12 +10887,12 @@
          * Austeilen zum Zusehen.
          *
          * Bisher lagen die Karten mit einem Schlag da. Jetzt fliegen sie aus
-         * dem Talon reihum IM UHRZEIGERSINN zu den Plaetzen - beim Geber
-         * beginnend, drei Runden lang, danach die drei Karten in die Mitte.
+         * dem Talon reihum IM UHRZEIGERSINN zu den Plaetzen. Der Teiler
+         * bekommt seine drei Karten zuletzt; die Mitte bleibt leer.
          * Das ist der Moment, den man vom Wirtshaustisch kennt.
          *
-         * Gezeigt wird das beim Uebergang in 'playing': da ist der Tisch frei
-         * zu sehen. Waehrend 'starter' liegt die Geber-Ermittlung darueber.
+         * Gezeigt wird das beim Uebergang in 'dealerChoice'. Waehrend
+         * 'starter' liegt die Geber-Ermittlung darueber.
          */
         const KT_GEBEN_MS = 520;         // Flugzeit einer einzelnen Karte
         const KT_GEBEN_ABSTAND = 135;    // Abstand zwischen zwei Karten
@@ -10903,15 +10907,14 @@
             if (stage) stage.classList.toggle('kt-vor-geben', !!an);
         }
 
-        // Rueckgabe: wie lange das Austeilen dauert (ms) - danach darf die
-        // Geber-Ermittlung eingeblendet werden.
+        // Rueckgabe: Austeildauer (ms) - danach darf der Teiler entscheiden.
         function ktGebenAnimieren() {
             const deck = ktEl('kt-deck');
             const quelle = (ktActive && deck && !deck.hidden) ? ktStageGeom(deck) : null;
             if (!quelle) return 0;
             const count = Number(ktPub.playerCount) || 0;
-            const geber = Number(ktPub.starterSeat);
-            const ab = isFinite(geber) ? geber : 0;
+            const starter = Number(ktPub.starterSeat);
+            const ab = isFinite(starter) ? starter : 0;
 
             // Eine Karte vom Talon an ihren Platz holen. Die Ruhelage (Faecher-
             // Versatz bzw. Schraeglauf in der Mitte) steht im inline-transform
@@ -10937,7 +10940,7 @@
 
             let nr = 0;
             for (let runde = 0; runde < 3; runde++) {
-                for (let i = 0; i < count; i++) {
+                for (let i = 0; i < count - 1; i++) {
                     const seat = (ab + i) % count;
                     const platz = ktSeatEls[seat];
                     if (!platz || !platz.cards[runde]) continue;
@@ -10945,9 +10948,9 @@
                     nr++;
                 }
             }
-            for (let i = 0; i < (ktMiddleEls || []).length; i++) {
-                const slot = ktMiddleEls[i];
-                if (slot && slot.el) fliegen(slot.el, nr++ * KT_GEBEN_ABSTAND);
+            const dealer = ktSeatEls[Number(ktPub.dealerSeat)];
+            for (let i = 0; i < 3; i++) {
+                if (dealer && dealer.cards[i]) fliegen(dealer.cards[i], nr++ * KT_GEBEN_ABSTAND);
             }
             return nr ? (nr - 1) * KT_GEBEN_ABSTAND + KT_GEBEN_MS + 120 : 0;
         }
@@ -10978,7 +10981,8 @@
              * aus: die Karte flog irgendwohin, und in der Mitte lag nichts mehr.
              * Der genaue Wert folgt unten, sobald totalMs feststeht.
              */
-            if (move.type === 'single' || move.type === 'all' || move.type === 'dealerReplace') {
+            if (move.type === 'single' || move.type === 'all' ||
+                move.type === 'dealerReplace' || move.type === 'dealerKeep') {
                 ktFliegtBis = Date.now() + KT_FLY_MS * 2 + KT_FLY_GAP + 2 * 260 + 300;
             }
 
@@ -11011,6 +11015,8 @@
 
             const seat = Number(move.seat);
             let totalMs = 0;
+            if ((move.type === 'dealerKeep' || move.type === 'dealerReplace') && !ktMiddleEls)
+                ktBuildMiddle();
 
             /*
              * Solange eine Karte fliegt, gehoert sie NIRGENDWO hin: der Platz,
@@ -11082,17 +11088,37 @@
                 runSwap(idx, move.gave, move.took, hIdx, 0);
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP;
 
+            } else if (move.type === 'dealerKeep') {
+                const deck = ktStageGeom(ktEl('kt-deck'));
+                const step = 260;
+                totalMs = KT_FLY_MS + 2 * step;
+                for (let i = 0; i < 3; i++) ktMiddleHide[i] = true;
+                ktRenderMiddle();
+                for (let i = 0; i < 3; i++) {
+                    const center = ktMiddlePose(cards[i], i);
+                    ktFly('BACK', deck, center, i * step, () => {
+                        delete ktMiddleHide[i];
+                        ktRenderMiddle();
+                    });
+                }
             } else if (move.type === 'dealerReplace') {
                 const deck = ktStageGeom(ktEl('kt-deck'));
                 const gave = move.gave || [];
                 const step = 260;
                 totalMs = KT_FLY_MS * 2 + KT_FLY_GAP + 2 * step;
-                for (let i = 0; i < 3; i++) ktSeatHide[seat + ':' + i] = true;
+                for (let i = 0; i < 3; i++) {
+                    ktSeatHide[seat + ':' + i] = true;
+                    ktMiddleHide[i] = true;
+                }
                 ktRenderSeats();
+                ktRenderMiddle();
                 for (let i = 0; i < 3; i++) {
                     const hand = ktSeatCardGeom(seat, i);
                     const center = ktMiddlePose(cards[i], i);
-                    ktFly(gave[i], hand, center, i * step, null);
+                    ktFly(gave[i], hand, center, i * step, () => {
+                        delete ktMiddleHide[i];
+                        ktRenderMiddle();
+                    });
                     later(() => ktFly('BACK', deck, hand, 0, () => showSeatCard(i)),
                           i * step + KT_FLY_MS + KT_FLY_GAP);
                 }
@@ -11181,7 +11207,7 @@
             // Der Talon gehoert auf den Tisch, solange eine Runde laeuft.
             const talon = ktEl('kt-deck');
             if (talon) {
-                talon.hidden = ['starter', 'playing', 'knocked', 'reveal']
+                talon.hidden = ['starter', 'dealerChoice', 'playing', 'knocked', 'reveal']
                     .indexOf(ktPub.phase) < 0;
                 if (!talon.hidden) ktTalonZumGeber(talon);
             }
@@ -11323,6 +11349,7 @@
 
             const dealt = KtEngine.deal(count, null, ktDrawChances());
             ktMirrorHands = dealt.hands;
+            ktDealerReplacement = dealt.dealerReplacement;
 
             const writes = [];
             for (let seat = 0; seat < count; seat++) {
@@ -11334,9 +11361,8 @@
 
             Promise.all(writes).then(() => KtNet.publicRef(ktDb, ktSessionId).update({
                 playerCount: count,
-                middleCards: dealt.middleCards,
-                // Erst die Geber-Ermittlung zeigen, danach schaltet der TV auf
-                // 'playing' um (siehe ktOnPhaseChange).
+                middleCards: null,
+                // Erst Startspieler ermitteln, dann austeilen und Teilerwahl.
                 phase: 'starter',
                 starterCards: dealt.starterCards,
                 starterSeat: dealt.starterSeat,
@@ -11419,7 +11445,7 @@
                 botSeats: seatsOpen,
                 mode: seatsOpen ? 'botDecks' : 'botOnly',
                 playerCount: players,
-                middleCards: dealt.middleCards,
+                middleCards: null,
                 phase: 'starter',
                 starterCards: dealt.starterCards,
                 starterSeat: dealt.starterSeat,
@@ -11484,8 +11510,19 @@
             KtNet.publicRef(ktDb, ktSessionId).update(updates).catch(() => {});
         }
 
-        function ktBeginPlaying() {
+        function ktBeginDealerChoice() {
             if (!ktReady() || ktPub.phase !== 'starter') return;
+            const count = Number(ktPub.playerCount) || 2;
+            const duration = (3 * count - 1) * KT_GEBEN_ABSTAND + KT_GEBEN_MS + 120;
+            KtNet.publicRef(ktDb, ktSessionId).update({
+                phase: 'dealerChoice', dealerReadyAt: Date.now() + duration
+            })
+                .catch(err => console.warn('[Hos’n Obe] Teiler-Phase fehlgeschlagen:', err));
+        }
+
+        function ktBeginPlaying() {
+            if (!ktReady() || ktPub.phase !== 'dealerChoice' ||
+                !ktPub.dealerChoiceDone || (ktPub.middleCards || []).length !== 3) return;
             if (ktMiddleIsFire()) { ktTriggerTableFire(); return; }
             if (ktPendingFireSeat >= 0) {
                 const seat = ktPendingFireSeat;
@@ -11504,6 +11541,31 @@
             }).catch(err => console.warn('[Hos’n Obe] Rundenstart fehlgeschlagen:', err));
         }
 
+        function ktBotChooseDealer() {
+            if (!ktReady() || ktPub.phase !== 'dealerChoice' || ktPub.dealerChoiceDone ||
+                !ktDealerReplacement || ktDealerReplacement.length !== 3) return;
+            const seat = Number(ktPub.dealerSeat);
+            const first = ktMirrorHands[seat];
+            if (!first || first.length !== 3) return;
+            // Der Computer beurteilt nur die ersten drei Karten. Die
+            // unbekannten Stapelkarten beeinflussen seine Wahl nicht.
+            const replace = KtEngine.scoreHand(first).score < 20;
+            if (replace) ktMirrorHands[seat] = ktDealerReplacement.slice();
+            if (replace && KtEngine.scoreHand(ktMirrorHands[seat]).fire)
+                ktPendingFireSeat = seat;
+            const middle = replace ? first.slice() : ktDealerReplacement.slice();
+            const updates = {
+                dealerChoiceDone: true,
+                middleCards: middle,
+                lastMove: { type: replace ? 'dealerReplace' : 'dealerKeep', seat: seat,
+                            gave: replace ? first.slice() : null }
+            };
+            ktDealerReplacement = null;
+            KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: ktMirrorHands[seat] })
+                .then(() => KtNet.publicRef(ktDb, ktSessionId).update(updates))
+                .catch(err => console.warn('[Hos’n Obe] Teiler-Wahl fehlgeschlagen:', err));
+        }
+
         function ktBotPlayTurn() {
             if (!ktIsBotGame() || !ktReady()) return;
             const phase = ktPub.phase;
@@ -11514,34 +11576,6 @@
             const hand = ktMirrorHands[seat];
             const middle = (ktPub.middleCards || []).slice();
             if (!hand || hand.length !== 3 || middle.length !== 3) return;
-
-            // Der Teiler entscheidet vor seinem ersten regulaeren Tauschzug.
-            // Die drei Ersatzkarten sind nur in seinem privaten Fach bekannt.
-            if (seat === Number(ktPub.dealerSeat) && !ktPub.dealerChoiceDone &&
-                ktDealerReplacement && ktDealerReplacement.length === 3) {
-                // Der Computer kennt die Ersatzkarten bei der Entscheidung
-                // nicht: wie ein Gast beurteilt er nur seine ersten drei.
-                const replace = KtEngine.scoreHand(hand).score < 20;
-                if (replace) ktMirrorHands[seat] = ktDealerReplacement.slice();
-                const dealerUpdate = {
-                    dealerChoiceDone: true,
-                    lastMove: { type: replace ? 'dealerReplace' : 'dealerKeep', seat: seat,
-                                gave: replace ? hand.slice() : null }
-                };
-                if (replace) dealerUpdate.middleCards = hand.slice();
-                if (replace && KtEngine.scoreHand(ktMirrorHands[seat]).fire) {
-                    dealerUpdate.phase = 'reveal';
-                    dealerUpdate.fireBySeat = seat;
-                    dealerUpdate['revealedHands/' + seat] = ktMirrorHands[seat];
-                    dealerUpdate.lastMove.fire = true;
-                }
-                ktDealerReplacement = null;
-                KtNet.privateRef(ktDb, ktSessionId, seat).set({ hand: ktMirrorHands[seat] })
-                    .then(() => KtNet.publicRef(ktDb, ktSessionId).update(dealerUpdate))
-                    .then(() => { if (dealerUpdate.phase !== 'reveal') ktArmBotTurn(); })
-                    .catch(err => console.warn('[Hos’n Obe] Teiler-Wahl fehlgeschlagen:', err));
-                return;
-            }
 
             const canKnock = !ktHasKnocked() && (Number(ktPub.turnsPlayed) || 0) >= count;
             // Der Computer bekommt NUR seine eigene Hand und die offene Mitte -
@@ -11718,10 +11752,6 @@
                 swapWindowSeat: null,
                 lastMove: { type: 'skip', seat: seat }
             };
-            if (seat === Number(ktPub.dealerSeat) && !ktPub.dealerChoiceDone) {
-                updates.dealerChoiceDone = true;
-                KtNet.privateRef(ktDb, ktSessionId, seat).update({ dealerReplacement: null }).catch(() => {});
-            }
             if (ktHasKnocked()) {
                 const left = (Number(ktPub.finalTurnsRemaining) || 0) - 1;
                 updates.finalTurnsRemaining = left;
@@ -11858,6 +11888,7 @@
             ktSeatLayoutKey = '';        // Struktur beim naechsten Zeichnen neu aufbauen
             ktMiddleEls = null;
             ktMiddleHold = {};
+            ktMiddleHide = {};
             ktSeatHide = {};
             ktStarterKey = '';
             ktBotPassUsed = {};
@@ -11893,6 +11924,7 @@
                     starterSeat: null,
                     dealerSeat: null,
                     dealerChoiceDone: null,
+                    dealerReadyAt: null,
                     revealedHands: null,
                     scores: null,
                     loserSeat: null,
@@ -11944,11 +11976,30 @@
             } else if (phase === 'starter') {
                 // Reihenfolge wie am Tisch: zuerst wird ausgespielt, wer
                 // beginnt - dabei liegt noch nichts aus -, danach teilt der
-                // Geber aus (siehe 'playing').
+                // Geber aus (siehe 'dealerChoice').
                 ktEnterGame();
                 ktClearRoundBudget();
                 ktVorGeben(true);
-                ktStartCountdown(KT.starterSeconds || 7, ktBeginPlaying);
+                ktStartCountdown(KT.starterSeconds || 7, ktBeginDealerChoice);
+
+            } else if (phase === 'dealerChoice') {
+                ktEnterGame();
+                ktVorGeben(false);
+                const dauer = ktGebenAnimieren();
+                if (ktIsBotGame()) {
+                    setTimeout(ktBotChooseDealer, dauer + 600);
+                } else {
+                    ktPhaseTimer = setTimeout(() => {
+                        if (ktPub.phase !== 'dealerChoice' || ktPub.dealerChoiceDone) return;
+                        // Ohne Antwort behaelt der Teiler seine ersten drei;
+                        // damit bleibt die Runde auch bei verlorenem Handy spielbar.
+                        KtNet.publicRef(ktDb, ktSessionId).update({
+                            dealerChoiceDone: true,
+                            middleCards: ktDealerReplacement.slice(),
+                            lastMove: { type: 'dealerKeep', seat: Number(ktPub.dealerSeat) }
+                        }).catch(() => {});
+                    }, dauer + (KT.dealerChoiceSeconds || 30) * 1000);
+                }
 
             } else if (phase === 'playing' || phase === 'knocked') {
                 ktEnterGame();
@@ -11957,16 +12008,8 @@
                     if (ktIsBotGame()) ktArmBotTurn();
                     else ktArmTurnTimeout();
                 };
-                // Erster Zug der Runde: vorher wird ausgeteilt. Der erste
-                // Spieler ist erst dran, wenn alle Karten liegen.
-                if (phase === 'playing' && (Number(ktPub.turnsPlayed) || 0) === 0) {
-                    const dauer = ktGebenAnimieren();
-                    ktVorGeben(false);
-                    later(losgehen, dauer);
-                } else {
-                    ktVorGeben(false);
-                    losgehen();
-                }
+                ktVorGeben(false);
+                losgehen();
 
             } else if (phase === 'reveal') {
                 ktEnterGame();
@@ -12054,6 +12097,12 @@
             }
 
             ktRender();
+            if (phase === 'dealerChoice' && ktPub.dealerChoiceDone &&
+                (ktPub.middleCards || []).length === 3) {
+                if (ktPhaseTimer) { clearTimeout(ktPhaseTimer); ktPhaseTimer = null; }
+                const delay = Math.max(0, ktFliegtBis - Date.now()) + 250;
+                ktPhaseTimer = setTimeout(() => { ktPhaseTimer = null; ktBeginPlaying(); }, delay);
+            }
         }
 
         function ktInit() {
