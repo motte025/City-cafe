@@ -21,7 +21,7 @@ export class Celebration {
  constructor(host:HTMLElement,private seconds=180,private onDone:()=>void=()=>{}){
   this.root=document.createElement('div');this.root.className='celebration';this.root.hidden=true;
   this.root.innerHTML=`<canvas class="celebration-confetti"></canvas><div class="celebration-rays"></div><div class="celebration-card"><div class="celebration-main"><div class="celebration-trophy">${TROPHY}</div><div class="celebration-title"></div><h2 class="celebration-name"></h2><p class="celebration-detail"></p><ol class="celebration-podium"></ol></div><aside class="celebration-side" hidden><div class="celebration-side-head"><span>ENDSTAND</span><em class="celebration-time"></em></div><table class="celebration-table"><tbody></tbody></table><div class="celebration-last"><span>LETZTE ZAHL</span><b class="celebration-last-chip"></b><em class="celebration-last-by"></em></div></aside></div>`;
-  host.append(this.root);this.canvas=this.root.querySelector('canvas')!;
+  host.append(this.root);addEventListener('resize',()=>{if(this.active)this.fit();});this.canvas=this.root.querySelector('canvas')!;
  }
  get active(){return !this.root.hidden;}
  show(info:CelebrationInfo,economy=false){
@@ -34,12 +34,14 @@ export class Celebration {
   const body=q('.celebration-table tbody');body.innerHTML='';for(const r of rows){const tr=document.createElement('tr');if(r.winner)tr.className='winner';tr.innerHTML='<td></td><th></th><td></td><td></td>';const c=tr.children;c[0].textContent=`${r.place}.`;c[1].textContent=r.name;c[2].textContent=String(r.score);c[3].textContent=r.extra;body.append(tr);}
   side.style.setProperty('--rows',String(Math.max(4,rows.length)));q('.celebration-time').textContent=info.time?`Spielzeit ${info.time}`:'';
   const chip=q('.celebration-last-chip');q('.celebration-last').hidden=!info.last;if(info.last){chip.textContent=String(info.last.number);chip.className=`celebration-last-chip ${info.last.color}`;q('.celebration-last-by').textContent=info.last.by;}
-  this.root.hidden=false;this.root.classList.remove('play');void this.root.offsetWidth;this.root.classList.add('play');
+  this.root.hidden=false;this.fit();this.root.classList.remove('play');void this.root.offsetWidth;this.root.classList.add('play');
   this.resize();const {width:w,height:h}=this.canvas;
   this.bits=Array.from({length:economy?120:260},()=>this.confetti(w,(Math.random()*1.4-.6)*h));
   this.nextBurst=0;cancelAnimationFrame(this.raf);this.last=0;this.raf=requestAnimationFrame(t=>this.frame(t));
   clearTimeout(this.timer);this.timer=window.setTimeout(()=>{this.hide();this.onDone();},this.seconds*1000);
  }
+ /** Karte als Ganzes verkleinern, bis sie vollständig ins Bild passt (viele Spieler, kleine Bildschirme). */
+ private fit(){const card=this.root.querySelector<HTMLElement>('.celebration-card')!;card.style.zoom='1';const h=card.offsetHeight,w=card.offsetWidth,z=Math.min(1,innerHeight*.94/h,innerWidth*.96/w);card.style.zoom=z<1?z.toFixed(3):'1';}
  /** Feier sofort beenden (ohne onDone), z. B. bei neuem Spiel oder „Spiel beenden“. */
  hide(){this.root.hidden=true;cancelAnimationFrame(this.raf);clearTimeout(this.timer);this.bits=[];}
  private resize(){const s=Math.min(1,devicePixelRatio||1);this.canvas.width=Math.round(innerWidth*s);this.canvas.height=Math.round(innerHeight*s);}

@@ -187,3 +187,11 @@
 .match-right{display:flex;flex-direction:column;align-items:flex-end;gap:.3vh}
 .match-timer{font-size:calc(clamp(12px,2vh,24px)*var(--tv-text-scale,1)*var(--fit,1));color:#d8c79c;font-variant-numeric:tabular-nums;letter-spacing:.5px}
 .match-out{color:#aee0a4;font-weight:600}
+
+/* Feier mit Endstand: Pokal und Name kompakter, Name einzeilig, Karte nie höher als das Bild */
+.celebration-card{max-width:94vw;box-sizing:border-box}
+.celebration-card:has(.celebration-side:not([hidden])){padding:3vh 3vw}
+.celebration-card:has(.celebration-side:not([hidden])) .celebration-trophy svg{width:calc(11vh*var(--tv-text-scale,1))}
+.celebration-card:has(.celebration-side:not([hidden])) .celebration-name{font-size:calc(clamp(30px,6.8vh,90px)*var(--tv-text-scale,1));white-space:nowrap;margin:.6vh 0 .8vh}
+.celebration-card:has(.celebration-side:not([hidden])) .celebration-detail{font-size:calc(clamp(14px,2.6vh,32px)*var(--tv-text-scale,1));margin-bottom:1.8vh}
+.celebration-card:has(.celebration-side:not([hidden])) .celebration-podium li.step-1{padding:1.4vh 1.2vw 3vh}
