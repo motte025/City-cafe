@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-29T22:57:45Z",
+  "checked_at": "2026-09-29T23:12:47Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "♡🔥 TUNESDAY ORDER OF YAPPUCINNO WITH A DASH OF EVIL🔥 !tip !NEWSONG🔥 !mods !mercy",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "roice",
@@ -13,13 +20,6 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Press Play and Record ✨ !charity",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "♡🔥 TUNESDAY ORDER OF YAPPUCINNO WITH A DASH OF EVIL🔥 !tip !NEWSONG🔥 !mods !mercy",
       "game": "DJs"
     }
   ]
