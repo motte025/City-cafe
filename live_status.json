@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-09-29T15:02:45Z",
+  "checked_at": "2026-09-29T15:17:46Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 HARD STYLE ☆ !holy !naturtreu 🔴🔴",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 92 😈 | Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -13,6 +13,13 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 HARD STYLE ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
@@ -34,13 +41,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 92 😈 | Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
