@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roulette-Abend · City Cafe</title>
+<!--
+  Vollbild-Werbung für den Roulette-Spielmodus (TV, 16:9).
+  Die Folien laufen in einer Schleife; die Seite selbst bleibt so lange
+  stehen, wie der Zyklus sie zeigt (z. B. 5 Minuten).
+
+  Anpassen per Adresse, ohne Code:
+    ?preis=Cocktail%20nach%20Wahl   – was es zu gewinnen gibt
+    ?wann=Freitag%20ab%2020%20Uhr   – wann gespielt wird
+    ?folie=8                        – Sekunden pro Folie (Standard 12)
+
+  Mitspielen ist gratis – kein Einsatz. Die Preise spendiert das Haus.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#e8c983;--gold2:#f7e2a8;--deep:#0a2a1d;--felt:#0f3d2a;--ink:#f3efe4;--muted:#b9c2ad;--red:#c0283f}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#061a12;color:var(--ink);font-family:'DM Sans',system-ui,sans-serif}
+body{background:radial-gradient(ellipse at 50% 35%,#16553a 0%,var(--felt) 38%,#06180f 100%)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;
+ background-image:repeating-linear-gradient(45deg,#ffffff06 0 2px,transparent 2px 5px),repeating-linear-gradient(-45deg,#00000010 0 2px,transparent 2px 6px)}
+.frame{position:fixed;inset:2.2vmin;border:1px solid #e8c98355;border-radius:1.6vmin;pointer-events:none;z-index:5}
+.frame::after{content:"";position:absolute;inset:.7vmin;border:1px solid #e8c98322;border-radius:1.2vmin}
+.brand{position:fixed;top:5vh;left:5vw;z-index:6;display:flex;align-items:center;gap:1.2vw;letter-spacing:.5vw;font-size:1.6vw;color:var(--gold);font-weight:500}
+.brand b{font-family:'Playfair Display',serif;font-weight:700;font-size:2vw;letter-spacing:.3vw}
+.brand i{width:.55vw;height:.55vw;border-radius:50%;background:var(--red);box-shadow:0 0 1vw var(--red)}
+.slide{position:fixed;inset:0;display:grid;align-items:center;padding:13vh 6vw 12vh;opacity:0;visibility:hidden;transition:opacity 1.1s ease,visibility 1.1s}
+.slide.on{opacity:1;visibility:visible}
+.two{grid-template-columns:1fr 1.15fr;gap:4.5vw}
+.eyebrow{font-size:1.35vw;letter-spacing:.45vw;color:var(--gold);text-transform:uppercase;margin-bottom:2.4vh}
+h1,h2{font-family:'Playfair Display',serif;font-weight:700;line-height:1.02;color:#fff8e6}
+h1{font-size:6.4vw}
+h2{font-size:4.3vw;margin-bottom:3vh}
+h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
+.lead{font-size:1.95vw;line-height:1.45;color:#e7e1cf;max-width:40vw}
+.lead strong{color:var(--gold2);font-weight:700}
+.shot{position:relative;border-radius:1.4vmin;overflow:hidden;aspect-ratio:16/9;box-shadow:0 3vh 7vh #000a,0 0 0 1px #e8c98388,0 0 0 .6vmin #e8c98322}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:var(--o,50% 50%)}
+.slide.on .shot img{animation:kenburns var(--kb,14s) ease-out forwards}
+@keyframes kenburns{from{transform:scale(1)}to{transform:scale(var(--z,1.1))}}
+.shot .tag{position:absolute;right:1.4vw;top:1.4vw;background:#0a2a1dd9;border:1px solid #e8c98377;color:var(--gold2);font-size:1.15vw;letter-spacing:.2vw;padding:.6vh 1vw;border-radius:99px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2.4vw;margin-top:5vh}
+.step{background:#ffffff0a;border:1px solid #e8c98344;border-radius:1.4vmin;padding:4vh 2vw 4.4vh;position:relative}
+.step .n{font-family:'Playfair Display',serif;font-size:5.2vw;line-height:1;color:var(--gold);margin-bottom:2vh}
+.step h3{font-size:2.05vw;margin-bottom:1.4vh;color:#fff8e6}
+.step p{font-size:1.45vw;line-height:1.45;color:var(--muted)}
+.center{text-align:center;justify-items:center}
+.modes{display:grid;gap:2.2vh;margin-top:1vh}
+.mode{display:flex;gap:1.6vw;align-items:center;background:#ffffff0a;border:1px solid #e8c98344;border-radius:1.2vmin;padding:2vh 1.6vw}
+.mode .chip{flex:0 0 auto;min-width:7.4vw;text-align:center;font-family:'Playfair Display',serif;font-size:2.3vw;color:#10261c;background:linear-gradient(180deg,var(--gold2),var(--gold));border-radius:.9vmin;padding:.8vh .8vw}
+.mode b{display:block;font-size:1.7vw;color:#fff8e6;margin-bottom:.4vh}
+.mode span{font-size:1.35vw;color:var(--muted);line-height:1.35}
+.prize{margin-top:4.5vh;display:inline-flex;flex-direction:column;align-items:center;gap:1.2vh;padding:3.6vh 4vw;border-radius:1.6vmin;background:linear-gradient(180deg,#e8c98326,#e8c9830d);border:1px solid #e8c983aa;box-shadow:0 0 6vh #e8c98322}
+.prize small{font-size:1.25vw;letter-spacing:.4vw;color:var(--gold);text-transform:uppercase}
+.prize strong{font-family:'Playfair Display',serif;font-size:3.6vw;color:#fff8e6}
+.free{margin-top:3.4vh;font-size:1.7vw;color:#e7e1cf}
+.free b{color:var(--gold2)}
+.when{margin-top:1.4vh;font-size:2.2vw;color:var(--gold2);font-weight:700}
+.wheel-bg{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.wheel-bg i{position:absolute;right:-12vh;top:50%;width:115vh;height:115vh;transform:translateY(-50%);border-radius:50%;opacity:.22;
+ background:url(bilder/kessel.png) -90.9vh -26.9vh/296.8vh auto no-repeat;animation:turn 90s linear infinite}
+@keyframes turn{to{transform:translateY(-50%) rotate(360deg)}}
+.dots{position:fixed;left:50%;bottom:5.2vh;transform:translateX(-50%);display:flex;gap:.8vw;z-index:6}
+.dots i{width:3.2vw;height:.45vh;border-radius:99px;background:#e8c98333;overflow:hidden;position:relative}
+.dots i.on::after{content:"";position:absolute;inset:0;background:var(--gold);transform-origin:left;animation:fill var(--dur,12s) linear forwards}
+.dots i.done{background:#e8c98399}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.foot{position:fixed;right:5vw;top:5.4vh;z-index:6;font-size:1.25vw;letter-spacing:.3vw;color:var(--muted)}
+.rise>*{opacity:0;transform:translateY(3vh)}
+.slide.on .rise>*{animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+.slide.on .rise>*:nth-child(2){animation-delay:.18s}.slide.on .rise>*:nth-child(3){animation-delay:.36s}.slide.on .rise>*:nth-child(4){animation-delay:.54s}.slide.on .rise>*:nth-child(5){animation-delay:.72s}
+@keyframes rise{to{opacity:1;transform:none}}
+.slide.on .steps .step{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.slide.on .steps .step:nth-child(2){animation-delay:.35s}.slide.on .steps .step:nth-child(3){animation-delay:.7s}
+.spark{position:fixed;inset:0;pointer-events:none;z-index:1}
+</style>
+</head>
+<body>
+<div class="frame"></div>
+<div class="brand"><i></i><b>CITY CAFE</b> KLAGENFURT</div>
+<div class="foot">ROULETTE · SPIELABEND</div>
+<canvas class="spark" id="spark"></canvas>
+
+<!-- 1 · Aufmacher -->
+<section class="slide two">
+ <div class="wheel-bg"><i></i></div>
+ <div class="rise">
+  <div class="eyebrow">Neu im City Cafe</div>
+  <h1>Der <em>Roulette</em>-<br>Abend</h1>
+  <p class="lead" style="margin-top:3.4vh">Ein echter Kessel auf dem großen Schirm, eine Tafel, die live mitzählt – und am Ende wird <strong>gefeiert</strong>.</p>
+ </div>
+ <div class="shot" style="--o:50% 50%;--z:1.18"><img src="bilder/kessel.png" alt="Der Roulette-Kessel am TV"><span class="tag">LIVE AM TV</span></div>
+</section>
+
+<!-- 2 · So geht's -->
+<section class="slide center">
+ <div>
+  <div class="rise"><div class="eyebrow">So einfach geht’s</div><h2>Drei Schritte <em>zum Sieg</em></h2></div>
+  <div class="steps">
+   <div class="step"><div class="n">1</div><h3>Eintragen</h3><p>Sag an der Bar Bescheid – 2 bis 12 Leute pro Partie. Jede und jeder bekommt einen Platz auf der Tafel.</p></div>
+   <div class="step"><div class="n">2</div><h3>Zuschauen &amp; mitfiebern</h3><p>Der Computer wirft die Kugel reihum für jeden. Reines Glück – niemand greift ein, auch wir nicht.</p></div>
+   <div class="step"><div class="n">3</div><h3>Jubeln</h3><p>Die Tafel zählt live mit. Wer am Ende vorne liegt, steht ganz oben auf dem Podest.</p></div>
+  </div>
+ </div>
+</section>
+
+<!-- 3 · Die Tafel -->
+<section class="slide two">
+ <div class="rise">
+  <div class="eyebrow">Die Spielarten</div>
+  <h2>Wähl dein <em>Spiel</em></h2>
+  <div class="modes">
+   <div class="mode"><div class="chip">Runden</div><div><b>Meiste Punkte gewinnt</b><span>Jede gefallene Zahl zählt. Nach der letzten Runde hat die höchste Summe die Nase vorn.</span></div></div>
+   <div class="mode"><div class="chip">301</div><div><b>Genau treffen</b><span>Wie beim Dart: exakt auf 201, 301 oder 501 kommen. Zu viel zählt nicht – die Spannung steigt bis zur letzten Kugel.</span></div></div>
+  </div>
+ </div>
+ <div class="shot" style="--o:14% 40%;--z:1.2"><img src="bilder/tafel.png" alt="Die Tafel mit Live-Tabelle"><span class="tag">LIVE-TABELLE</span></div>
+</section>
+
+<!-- 4 · Siegerfeier -->
+<section class="slide two">
+ <div class="shot" style="--o:50% 45%;--z:1.1"><img src="bilder/sieg.png" alt="Siegerfeier mit Podest"><span class="tag">SIEGEREHRUNG</span></div>
+ <div class="rise">
+  <div class="eyebrow">Das große Finale</div>
+  <h2>Pokal, Podest <em>&amp; Feuerwerk</em></h2>
+  <p class="lead">Der Sieger steht in der Mitte, das ganze Lokal sieht’s auf dem Schirm. Drei Minuten Ruhm – garantiert.</p>
+ </div>
+</section>
+
+<!-- 5 · Preis & Mitmachen -->
+<section class="slide center">
+ <div class="rise">
+  <div class="eyebrow">Mitspielen im City Cafe</div>
+  <h2>Dein Glück. <em>Unser Kessel.</em></h2>
+  <div class="prize"><small>Für den Sieger – vom Haus</small><strong id="preis">Ein Getränk nach Wahl</strong></div>
+  <p class="free"><b>Mitspielen kostet nichts</b> – einfach an der Bar melden.</p>
+  <p class="when" id="wann">Frag an der Bar, wann die nächste Partie startet!</p>
+ </div>
+</section>
+
+<div class="dots" id="dots"></div>
+
+<script>
+(function(){
+ 'use strict';
+ var q=new URLSearchParams(location.search);
+ var txt=function(id,v){if(v){var e=document.getElementById(id);e.textContent=v.slice(0,60);}};
+ txt('preis',q.get('preis'));txt('wann',q.get('wann'));
+ var sek=Math.max(5,Math.min(60,Number(q.get('folie'))||12));
+ var slides=[].slice.call(document.querySelectorAll('.slide')),dots=document.getElementById('dots');
+ slides.forEach(function(){dots.appendChild(document.createElement('i'));});
+ var marks=[].slice.call(dots.children),cur=-1;
+ document.documentElement.style.setProperty('--dur',sek+'s');document.documentElement.style.setProperty('--kb',(sek+2)+'s');
+ function show(i){cur=i%slides.length;
+  slides.forEach(function(s,k){s.classList.toggle('on',k===cur);});
+  marks.forEach(function(m,k){m.classList.remove('on');m.classList.toggle('done',k<cur);void m.offsetWidth;if(k===cur)m.classList.add('on');});}
+ show(0);setInterval(function(){show(cur+1);},sek*1000);
+
+ // Sanft schwebende Goldfunken im Hintergrund.
+ var c=document.getElementById('spark'),x=c.getContext('2d'),P=[];
+ function size(){c.width=innerWidth;c.height=innerHeight;}size();addEventListener('resize',size);
+ for(var i=0;i<46;i++)P.push({x:Math.random(),y:Math.random(),r:.6+Math.random()*1.8,v:.01+Math.random()*.03,a:Math.random()*6});
+ var last=0;(function tick(t){var dt=last?Math.min(.1,(t-last)/1000):0;last=t;x.clearRect(0,0,c.width,c.height);
+  P.forEach(function(p){p.y-=p.v*dt;p.a+=dt;if(p.y<-.02){p.y=1.02;p.x=Math.random();}
+   x.globalAlpha=.25+.25*Math.sin(p.a);x.fillStyle='#f3d792';x.beginPath();x.arc(p.x*c.width,p.y*c.height,p.r*c.height/900,0,7);x.fill();});
+  requestAnimationFrame(tick);})(0);
+})();
+</script>
+</body>
+</html>
