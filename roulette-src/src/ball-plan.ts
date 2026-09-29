@@ -75,7 +75,7 @@ interface Reference {
  maxLaunch:number;
 }
 const colliderCache=new Map<string,Colliders>(),refCache=new Map<string,Reference>();
-const shapeKey=(s:WheelShape)=>`${s.bowlDepth.toFixed(4)}/${s.numberSlope.toFixed(3)}/${s.numberSize.toFixed(3)}`;
+const shapeKey=(s:WheelShape)=>`${s.bowlDepth.toFixed(4)}/${s.numberSlope.toFixed(3)}/${s.numberSize.toFixed(3)}/${s.fretHeight.toFixed(2)}`;
 const ballKey=(b:BallParams)=>`${b.diameter.toFixed(3)}/${b.mass.toFixed(3)}/${b.bounce.toFixed(3)}`;
 export function collidersFor(shape:WheelShape){const k=shapeKey(shape);let c=colliderCache.get(k);if(!c){c=buildColliders(shape);colliderCache.set(k,c);if(colliderCache.size>6)colliderCache.delete(colliderCache.keys().next().value!);}return c;}
 

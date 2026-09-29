@@ -68,11 +68,11 @@
 .match-panel>*{flex-shrink:0}
 .match-panel[hidden]{display:none}
 .match-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid #cbb58133;padding-bottom:1.1vh}
-.match-panel .match-head .eyebrow{font-size:calc(clamp(12px,1.9vh,22px)*var(--tv-text-scale,1)*var(--fit,1));letter-spacing:2px;color:#cdbf98}
-.match-head strong{display:block;font:400 calc(clamp(20px,4vh,46px)*var(--tv-text-scale,1)*var(--fit,1))/1.1 'Playfair Display',Georgia,serif;color:#ecd39c;margin-top:.4vh;white-space:nowrap}
-#match-round{font-size:calc(clamp(14px,2.5vh,28px)*var(--tv-text-scale,1)*var(--fit,1));color:#e6dcc0;font-weight:400;letter-spacing:.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.match-turn{font-size:calc(clamp(15px,2.7vh,32px)*var(--tv-text-scale,1)*var(--fit,1));font-weight:500;letter-spacing:.3px;color:#0b241a;background:#d8b872;border-radius:9px;padding:.8vh .9vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-.match-turn.winner{background:linear-gradient(90deg,#e9c77a,#f6e2a8,#e9c77a);font-size:calc(clamp(18px,3.4vh,40px)*var(--tv-text-scale,1)*var(--fit,1))}
+.match-panel .match-head .eyebrow{font-size:calc(clamp(12px,1.9vh,22px)*var(--tv-text-scale,1)*var(--hfit,var(--fit,1)));letter-spacing:2px;color:#cdbf98}
+.match-head strong{display:block;font:400 calc(clamp(20px,4vh,46px)*var(--tv-text-scale,1)*var(--hfit,var(--fit,1)))/1.1 'Playfair Display',Georgia,serif;color:#ecd39c;margin-top:.4vh;white-space:nowrap}
+#match-round{font-size:calc(clamp(14px,2.5vh,28px)*var(--tv-text-scale,1)*var(--hfit,var(--fit,1)));color:#e6dcc0;font-weight:400;letter-spacing:.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.match-turn{font-size:calc(clamp(15px,2.7vh,32px)*var(--tv-text-scale,1)*var(--hfit,var(--fit,1)));font-weight:500;letter-spacing:.3px;color:#0b241a;background:#d8b872;border-radius:9px;padding:.8vh .9vw;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.match-turn.winner{background:linear-gradient(90deg,#e9c77a,#f6e2a8,#e9c77a);font-size:calc(clamp(18px,3.4vh,40px)*var(--tv-text-scale,1)*var(--hfit,var(--fit,1)))}
 .match-table{width:100%;border-collapse:separate;border-spacing:0 .45vh;font-variant-numeric:tabular-nums}
 .match-table thead th{font-size:calc(clamp(10px,1.6vh,18px)*var(--tv-text-scale,1)*var(--fit,1));font-weight:500;letter-spacing:.4px;text-transform:uppercase;color:#bcb08c;text-align:right;padding:0 .4vw .3vh;white-space:nowrap}
 .match-table thead th:first-child{text-align:left}
@@ -89,7 +89,7 @@
 .match-chip.red{background:#9c2439}.match-chip.black{background:#111b17}.match-chip.green{background:#0c7147}
 .match-none{color:#7f8f81;font-weight:400}
 .match-lead{color:#aee0a4}
-.match-panel .match-last{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:auto 0 0;font-size:calc(clamp(13px,2.2vh,26px)*var(--tv-text-scale,1)*var(--fit,1));color:#ddd3b8;line-height:1.35;border-top:1px solid #cbb58126;padding-top:1vh}
+.match-panel .match-last{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:auto 0 0;font-size:calc(clamp(13px,2.2vh,26px)*var(--tv-text-scale,1)*var(--hfit,var(--fit,1)));color:#ddd3b8;line-height:1.35;border-top:1px solid #cbb58126;padding-top:1vh}
 /* Spielmodus in der Fernbedienung */
 .remote-match{border:1px solid #d8b87255;background:#0b2219;border-radius:13px;padding:16px 14px 4px;margin-bottom:27px}
 .match-modes{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
@@ -185,7 +185,7 @@
 .celebration-last-chip.red{background:#9c2439}.celebration-last-chip.black{background:#111b17}.celebration-last-chip.green{background:#0c7147}
 .celebration-last em{font-style:normal;color:#d8c79c}
 .match-right{display:flex;flex-direction:column;align-items:flex-end;gap:.3vh}
-.match-timer{font-size:calc(clamp(12px,2vh,24px)*var(--tv-text-scale,1)*var(--fit,1));color:#d8c79c;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.match-timer{font-size:calc(clamp(12px,2vh,24px)*var(--tv-text-scale,1)*var(--hfit,var(--fit,1)));color:#d8c79c;font-variant-numeric:tabular-nums;letter-spacing:.5px}
 .match-out{color:#aee0a4;font-weight:600}
 
 /* Feier mit Endstand: Pokal und Name kompakter, Name einzeilig, Karte nie höher als das Bild */
@@ -250,7 +250,7 @@ body.embedded .remote-shell{padding-top:10px}
 .match-table thead th{font-size:calc(var(--f)*.6);letter-spacing:.03em}
 .match-table tbody th,.match-table td{line-height:1.08;padding-top:calc(var(--f)*.16);padding-bottom:calc(var(--f)*.16)}
 .match-table{border-spacing:0 calc(var(--f)*.2)}
-.match-panel .match-last{font-size:calc(var(--f)*.78)}
+
 
 /* Goldene Zeile – endgültig: alle Zellen gleich (keine Linien einzelner Zellen), Balken innen links. */
 .match-table tbody tr.turn>th,.match-table tbody tr.turn>td{background:#d8b87236;box-shadow:none;color:#ffe7b0}
@@ -278,7 +278,7 @@ body.embedded .remote-shell{padding-top:10px}
 .match-table tbody th,.match-table td{line-height:1.2;padding-top:calc(var(--f)*.24);padding-bottom:calc(var(--f)*.24)}
 .match-table tbody tr.turn>td.pl{border-radius:3px 0 0 3px;box-shadow:inset calc(var(--f)*.2) 0 #e8c983}
 .match-table tbody tr.turn>*:last-child{border-radius:0 3px 3px 0}
-.match-panel .match-last{font-size:calc(var(--f)*1)}
+
 .match-panel .match-last{font-size:calc(var(--f)*.92);white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 /* Mittelweg: genug Luft um die Schrift (TV-Foto), ohne die Schrift unnötig zu verkleinern. */
 .match-table{border-spacing:0 calc(var(--f)*.26)}
@@ -308,3 +308,7 @@ body.embedded .remote-shell{padding-top:10px}
 .match-table tbody th,.match-table td{padding-top:calc(var(--f)*.2 + var(--row-extra,0px));padding-bottom:calc(var(--f)*.2 + var(--row-extra,0px))}
 .match-table thead th{font-size:calc(var(--f)*var(--hf,.86))}
 .tv-info{font-size:12px;color:#8f9a86;word-break:break-word;margin:10px 0 0}
+
+/* Name im goldenen Balken nie abschneiden – passt er nicht, wird die Schrift kleiner (Messung sieht den Überlauf). */
+.match-turn.split{overflow:visible;grid-template-columns:max-content 1fr max-content}
+.match-turn.split .t-name{overflow:visible;text-overflow:clip;white-space:nowrap}

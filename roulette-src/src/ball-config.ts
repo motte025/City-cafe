@@ -92,7 +92,7 @@ export const BALL_WINDOWS = {
 /** Suche nach einem passenden Wurf. Grenzen in Kandidaten, nicht in Zeit: so bleibt alles deterministisch. */
 export const BALL_SEARCH = {
  /** Abwurf-Kandidaten in der strengen Suche. */
- candidates:900,
+ candidates:1800,
  /** Rauheits-Varianten der Taschenphase je passendem Kandidaten. */
  pocketVariants:1,
  /** … und so viele, wenn die erste Variante schon nahe am nötigen Laufweg endet. */
@@ -102,7 +102,7 @@ export const BALL_SEARCH = {
  /** … wird nach so vielen Kandidaten auf ±3 und danach auf den ganzen Bereich erweitert. */
  widenAfter:[220,450] as [number,number],
  /** Gelockerte zweite Suche (nur falls die strenge scheitert). */
- relaxedCandidates:300,relaxedDuration:1.2,relaxedSettle:1.2,
+ relaxedCandidates:700,relaxedDuration:1.2,relaxedSettle:1.2,
 };
 
 /**

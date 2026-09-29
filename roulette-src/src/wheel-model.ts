@@ -1,7 +1,7 @@
 import * as T from 'three';
 import {ORDER,STEP,TAU,color} from './game';
 import {batchMeshes} from './render-budget';
-import {DEFAULT_DESIGN,FLOOR,DIVIDER_HEIGHT,numberHeight,trackHeight,lipHeight,rimProfile,type DesignSettings,type WheelShape} from './wheel-shape';
+import {DEFAULT_DESIGN,FLOOR,dividerTop,numberHeight,trackHeight,lipHeight,rimProfile,type DesignSettings,type WheelShape} from './wheel-shape';
 import {MM_PER_UNIT} from './ball-config';
 
 export function deflectorGeometry(index:number){
@@ -112,7 +112,7 @@ export class WheelModel {
   this.lettering(f);
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius<2.45))this.ring(r,radius,y,t,m);
   this.ring(r,1.53,.348,.016,b);
-  const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,DIVIDER_HEIGHT-FLOOR-.012);wall.lineTo(-.009,DIVIDER_HEIGHT-FLOOR-.012);wall.closePath();
+  const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,dividerTop(shape)-FLOOR-.012);wall.lineTo(-.009,dividerTop(shape)-FLOOR-.012);wall.closePath();
   ORDER.forEach((n,i)=>{
    const a=i*STEP;
    this.sector(r,2.04,2.425,a,x=>numberHeight(x,shape),this.colors[color(n)]);

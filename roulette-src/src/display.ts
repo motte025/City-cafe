@@ -82,7 +82,7 @@ export function startDisplay(){
   const m=match,key=[m.players.length,m.mode,m.rounds,innerWidth,innerHeight,settings.textScale,settings.panelWidth,settings.panelHeight].join('/');
   if(key!==fitKey){fitKey=key;const rows=$('match-rows'),round=$('match-round'),keep=[rows.innerHTML,round.textContent];
    // Zusätzliche Zeilenhöhe der letzten Messung zuerst zurücknehmen – sonst schrumpft die Schrift bei jeder Neuberechnung weiter.
-   panel.style.setProperty('--row-extra','0px');
+   panel.style.setProperty('--row-extra','0px');panel.style.removeProperty('--hfit');
    const longest=m.players.reduce((a,p)=>p.name.length>a.length?p.name:a,''),r=String(m.rounds??99),big=m.target??36*(m.rounds??10);
    rows.innerHTML=m.players.map((_,k)=>`<tr class="turn lead"><td class="pl">${m.players.length}.</td><th>${longest} <span class="match-lead-star">★</span></th><td class="rnd"><span class="match-first">⚑</span>${r}</td><td>${big}</td><td class="gap noch">${m.target===null?'−':''}${big}</td>${m.target===null?'':'<td><span class="match-chip red">36</span></td>'}</tr>`+(SEP_AFTER.includes(k+1)&&k+1<m.players.length?SEP_ROW:'')).join('');
    round.textContent=m.rounds===null?'Runde 99':`Runde ${m.rounds} von ${m.rounds}`;
@@ -95,6 +95,12 @@ export function startDisplay(){
    panel.style.setProperty('--fit',(lo+.03).toFixed(3));const byWidth=panel.scrollWidth>panel.clientWidth+1;
    if(byWidth){panel.style.setProperty('--hf','.7');const lo2=search();if(lo2>lo+.01)lo=lo2;else panel.style.setProperty('--hf','.86');}
    panel.style.setProperty('--fit',lo.toFixed(3));
+   const bar=$('match-turn'),barKeep=[bar.className,bar.innerHTML];bar.className='match-turn split';bar.innerHTML=`<span class="t-name">${longest}</span><span class="t-mid">Kugel rollt …</span><span class="t-time">Pause</span>`;
+   // Kopf (Spielart, Runde, Uhr), goldener Balken und „Letzter Wurf“ eigenständig vergrößern: bei wenigen Spielern
+   // begrenzt die Breite die Tabelle, darunter bleibt Platz – den nutzt der Kopf (höchstens 1,6-fach).
+   panel.style.setProperty('--hfit',lo.toFixed(3));{let a=lo,b=lo*1.4;const ok=(h:number)=>{panel.style.setProperty('--hfit',h.toFixed(3));return panel.scrollHeight<=panel.clientHeight+1&&panel.scrollWidth<=panel.clientWidth+1;};
+    if(ok(b))a=b;else for(let i=0;i<10;i++){const m=(a+b)/2;if(ok(m))a=m;else b=m;}panel.style.setProperty('--hfit',a.toFixed(3));}
+   bar.className=barKeep[0];bar.innerHTML=barKeep[1];
    // Ist die Breite der Engpass, bleibt unten Platz: den gleichmäßig als Zeilenhöhe verteilen (höchstens +0,4 Schrifthöhen je Zeile).
    panel.style.setProperty('--row-extra','0px');
    const fpx=parseFloat(getComputedStyle(panel).fontSize)||16,tb=panel.querySelector('.match-table')!.getBoundingClientRect(),lt=$('match-last').getBoundingClientRect();

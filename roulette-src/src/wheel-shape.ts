@@ -2,14 +2,19 @@ import {MM_PER_UNIT} from './ball-config';
 
 export const DEFAULT_DESIGN = {
  bowlDepth:1.15, numberSlope:22, numberSize:1, cameraTilt:16,
+ /** Steghöhe zwischen den Taschen über dem Taschenboden in mm. Vorher fest ~27 mm (höher als die Kugel).
+  *  11 mm = gut halb so hoch wie die Kugel (21 mm); darunter rollt die Kugel über die Stege und findet kaum Ruhe. */
+ fretHeight:11,
  woodWarmth:.65, gloss:.65, metalWarmth:.3, lightContrast:.65, textScale:1,
  innerTone:1,outerTone:1,trackTone:1,innerGloss:.25,outerGloss:.25,pocketRichness:.5,grainTrack:.5,grainInner:.5,
  frontText:'DEMNÄCHST IM CITY-CAFE: HALLOWEEN PARTY',woodOuter:0,woodTrack:0,woodInner:0,crossStyle:0,brass:0,ballGloss:.65,lightPlay:.4,feltBackground:.6,pocketGlow:true,goldNumbers:false,centerLogo:true,
  fretBrass:.3,fretGloss:.72,diamondBrass:.3,diamondGloss:.43,
 };
 export type DesignSettings=typeof DEFAULT_DESIGN;
-export type WheelShape=Pick<DesignSettings,'bowlDepth'|'numberSlope'|'numberSize'>;
+export type WheelShape=Pick<DesignSettings,'bowlDepth'|'numberSlope'|'numberSize'|'fretHeight'>;
 export const FLOOR=.075, DIVIDER_HEIGHT=.245;
+/** Oberkante der Stege (ungestreckte Einheiten, vor der 3D-Tiefe). fretHeight gilt in echten mm nach der Tiefe. */
+export function dividerTop(shape:WheelShape){return FLOOR+shape.fretHeight/MM_PER_UNIT/shape.bowlDepth;}
 export function numberHeight(r:number,shape:WheelShape=DEFAULT_DESIGN){return .235+(r-2.04)*Math.tan(shape.numberSlope*Math.PI/180);}
 export function bowlProfile(shape:WheelShape=DEFAULT_DESIGN):number[][]{
  return [[1.53,.34],[1.585,FLOOR],[1.985,FLOOR],[2.04,.235],[2.425,numberHeight(2.425,shape)],[2.49,.44],[2.7,.60],[2.9,.75],[3.05,.80]];
@@ -67,4 +72,4 @@ export function surfaceClearance(r:number,ballRadius:number,shape:WheelShape=DEF
  }
  return result;
 }
-export function sameShape(a:WheelShape,b:WheelShape){return a.bowlDepth===b.bowlDepth&&a.numberSlope===b.numberSlope&&a.numberSize===b.numberSize;}
+export function sameShape(a:WheelShape,b:WheelShape){return a.bowlDepth===b.bowlDepth&&a.numberSlope===b.numberSlope&&a.numberSize===b.numberSize&&a.fretHeight===b.fretHeight;}

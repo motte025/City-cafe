@@ -14,7 +14,7 @@ export function settingsForm(){const group=(title:string,body:string,note='')=>`
  ${field('deflectorResistanceRadial','Rauten radial · Widerstand','%',0,100,5)}${field('deflectorResistanceTangential','Rauten tangential · Widerstand','%',0,100,5)}${field('ballGloss','Kugel · Glanz','%',0,1,.05)}`,
  '<p>Ab dem nächsten Wurf. Einlauf = Taschen, die die Kugel ab dem Taschenkranz noch wandert. Rauten-Widerstand 0 % = verlustfreier Abprall, 100 % = kein Rückprall.</p>'),
  group('🎡 Kessel · Form & Licht',`${field('cameraTilt','Blickwinkel · 0° = von oben','°',0,32,1)}${field('bowlDepth','3D-Tiefe','%',.85,1.45,.05)}
- ${field('numberSlope','Gefälle des Zahlenkranzes','°',8,28,1)}${field('numberSize','Zahlen auf dem Kessel','%',.85,1.08,.01)}
+ ${field('numberSlope','Gefälle des Zahlenkranzes','°',8,28,1)}${field('fretHeight','Steghöhe der Taschen · früher 27 mm','mm',11,25,.5)}${field('numberSize','Zahlen auf dem Kessel','%',.85,1.08,.01)}
  ${field('gloss','Glanz & Reflexionen','%',0,1,.05)}${field('lightContrast','Lichtkontrast','%',0,1,.05)}${field('lightPlay','Lichtspiel · wandernde Spiegelung','%',0,1,.05)}
  ${field('metalWarmth','Metall · Silber bis Gold','%',0,1,.05)}${field('fretBrass','Stege der Taschen · Chrom bis Messing','%',0,1,.05)}${field('fretGloss','Stege der Taschen · matt bis Glanz','%',0,1,.05)}${field('diamondBrass','Rauten · Chrom bis Messing','%',0,1,.05)}${field('diamondGloss','Rauten · matt bis Glanz','%',0,1,.05)}${field('pocketRichness','Taschen · Farbstärke','%',0,1,.05)}
  <label class="switch"><input type="checkbox" data-setting="pocketGlow"> Gewinnfach leuchtet auf</label>

@@ -5,7 +5,7 @@ import {BALL_PHYSICS,BALL_WINDOWS,G_EARTH,MM_PER_UNIT,deflectorMaterial} from '.
 import {buildColliders,BallSim,surfaceDistance} from '../src/ball-physics';
 import {collidersFor,planThrowSync,planInternals,type BallPlan,type PlanRequest} from '../src/ball-plan';
 import {deflectorGeometry} from '../src/wheel-model';
-import {DEFAULT_DESIGN,DIVIDER_HEIGHT,FLOOR,rimProfile,type WheelShape} from '../src/wheel-shape';
+import {DEFAULT_DESIGN,dividerTop,FLOOR,rimProfile,type WheelShape} from '../src/wheel-shape';
 import {STEP,TAU} from '../src/game';
 import {applySettings,DEFAULT_SETTINGS} from '../src/settings';
 import {checkPlan} from './ball-check';
@@ -31,9 +31,9 @@ test('Kollisionsgeometrie der Rauten ist die sichtbare Geometrie (alle Kesseltie
 });
 
 test('Stege: jede sichtbare Ecke liegt auf der Kollisionsfläche (Fase inklusive)',()=>{
- const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,DIVIDER_HEIGHT-FLOOR-.012);wall.lineTo(-.009,DIVIDER_HEIGHT-FLOOR-.012);wall.closePath();
- for(const bowlDepth of [.85,1.45]){
-  const shape={...DEFAULT_DESIGN,bowlDepth},col=buildColliders(shape);
+ for(const [bowlDepth,fretHeight] of [[.85,11],[1.45,11],[1.15,11],[1.15,25]]){
+  const shape={...DEFAULT_DESIGN,bowlDepth,fretHeight},col=buildColliders(shape);
+  const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,dividerTop(shape)-FLOOR-.012);wall.lineTo(-.009,dividerTop(shape)-FLOOR-.012);wall.closePath();
   const g=new T.ExtrudeGeometry(wall,{depth:.398,bevelEnabled:true,bevelThickness:.004,bevelSize:.004,bevelSegments:2,steps:1,curveSegments:1});
   g.translate(0,FLOOR+.008,-.199);const a=3*STEP,mesh=new T.Mesh(g);mesh.position.set(Math.sin(a+STEP/2)*1.785,0,-Math.cos(a+STEP/2)*1.785);mesh.rotation.y=-(a+STEP/2);mesh.updateMatrix();g.applyMatrix4(mesh.matrix);g.scale(1,bowlDepth,1);
   const p=g.getAttribute('position');let worst=0;

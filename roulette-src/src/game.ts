@@ -1,11 +1,11 @@
 import type {BallPlan} from './ball-plan';
-import {DEFAULT_DESIGN,FLOOR,DIVIDER_HEIGHT,surfaceClearance,type WheelShape} from './wheel-shape';
+import {DEFAULT_DESIGN,FLOOR,dividerTop,surfaceClearance,type WheelShape} from './wheel-shape';
 export const ORDER = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
 export const RED = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
 export const color = (n:number) => n===0?'green':RED.has(n)?'red':'black';
 export const TAU = Math.PI*2, STEP = TAU/37;
 export const BALL_RADIUS=.083, POCKET_RADIUS=1.79, POCKET_Y=FLOOR*DEFAULT_DESIGN.bowlDepth+BALL_RADIUS;
-export const DIVIDER_TOP=DIVIDER_HEIGHT*DEFAULT_DESIGN.bowlDepth;
+export const DIVIDER_TOP=dividerTop(DEFAULT_DESIGN)*DEFAULT_DESIGN.bowlDepth;
 export function restingOffset(variant:number){return [{angle:.025,radius:-.032},{angle:-.021,radius:.040},{angle:.012,radius:.009}][variant%3];}
 export function pocketForAngle(angle:number){return ((Math.round(angle/STEP)%37)+37)%37;}
 export class PlaybackClock {
@@ -97,7 +97,7 @@ export function sample(m:Motion,elapsed:number){
   impact=6+j;
  }
  // Keep the sphere above the raised metal dividers during each crossing.
- if(radius<2.025&&radius>1.55){const relative=((angle-rotor)%STEP+STEP)%STEP;const distance=Math.max(0,radius*Math.abs(Math.sin(relative-STEP/2))-.018);if(distance<BALL_RADIUS)y=Math.max(y,DIVIDER_HEIGHT*shape.bowlDepth+Math.sqrt(BALL_RADIUS**2-distance**2));}
+ if(radius<2.025&&radius>1.55){const relative=((angle-rotor)%STEP+STEP)%STEP;const distance=Math.max(0,radius*Math.abs(Math.sin(relative-STEP/2))-.018);if(distance<BALL_RADIUS)y=Math.max(y,dividerTop(shape)*shape.bowlDepth+Math.sqrt(BALL_RADIUS**2-distance**2));}
  if(t<launchDuration){const launch=smooth(t/launchDuration);radius=(m.initialRadius??2.9)+(2.9-(m.initialRadius??2.9))*launch;y=(m.initialY??supportHeight(2.9,shape))+(supportHeight(2.9,shape)-(m.initialY??supportHeight(2.9,shape)))*launch+.64*Math.sin(Math.PI*t/launchDuration);}
  return {angle,rotor,radius,y,speed:rotorState(m,t).speed,impact,done:elapsed>=m.duration,index:m.index};
 }

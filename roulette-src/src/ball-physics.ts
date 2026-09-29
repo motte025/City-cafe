@@ -9,7 +9,7 @@
  * Stöße mit Restitution und Coulomb-Reibung, dazu Roll- und Luftwiderstand.
  */
 import {BALL_PHYSICS,G_EARTH,MM_PER_UNIT,deflectorMaterial,type MaterialName} from './ball-config';
-import {FLOOR,numberHeight,trackHeight,lipHeight,type WheelShape} from './wheel-shape';
+import {FLOOR,dividerTop,numberHeight,trackHeight,lipHeight,type WheelShape} from './wheel-shape';
 import {STEP,TAU,rotorState,type Motion} from './game';
 
 export const K_TRACK=0,K_DEFLECTOR=1,K_RING=2,K_DIVIDER=3,K_POCKET=4;
@@ -96,7 +96,7 @@ export function buildColliders(shape:WheelShape):Colliders{
   bounds.set([cx,cy,cz,rad],index*4);
  }
  // Steg: Querschnitt (±.015 unten, ±.009 oben, 0,158 hoch ab FLOOR+.008), Fase .004, radial 1,785 ± .199
- const t=offsetTrapezoid(.015,FLOOR+.008,.009,FLOOR+.008+.158,.004);
+ const t=offsetTrapezoid(.015,FLOOR+.008,.009,dividerTop(shape)-.004,.004);
  return {shape:{...shape},stator,rotor,deflectorTris,deflectorBounds:bounds,deflectorPoints:points,
   divider:{hwB:t.hwB,yB:t.yB*bd,hwT:t.hwT,yT:t.yT*bd,rc:1.785,half:.199+.004}};
 }
