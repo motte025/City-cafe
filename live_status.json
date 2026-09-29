@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-09-28T23:17:45Z",
-  "live": []
+  "checked_at": "2026-09-29T00:57:46Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "I'M BACK⭐Japan haul show & tell then WE JAMMIN 🎵",
+      "game": "DJs"
+    }
+  ]
 }
