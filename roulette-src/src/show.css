@@ -299,3 +299,11 @@ body.embedded .remote-shell{padding-top:10px}
 .match-table thead th:not(:first-child):not(:nth-child(2)){padding-left:calc(var(--f)*.9)}
 .match-table tbody th,.match-table td{padding-top:calc(var(--f)*.22 + var(--row-extra,0px));padding-bottom:calc(var(--f)*.22 + var(--row-extra,0px))}
 .match-table thead th{font-size:calc(var(--f)*.86);letter-spacing:0}
+/* Korrektur (TV-Foto): feste Abstände kosteten Breite und damit Schriftgröße. Abstände entstehen jetzt aus dem
+   freien Platz (Tabelle 100 % breit, Spalten automatisch verteilt); fest bleibt nur ein kleiner Mindestabstand. */
+.match-table td:not(.pl),.match-table thead th:not(:first-child):not(:nth-child(2)){padding-left:calc(var(--f)*.45)}
+.match-table thead th.two{white-space:normal;line-height:1.05}
+.match-table thead th{vertical-align:bottom}
+.match-table thead th{padding-top:0;padding-bottom:calc(var(--f)*.1);line-height:1}
+.match-table tbody th,.match-table td{padding-top:calc(var(--f)*.2 + var(--row-extra,0px));padding-bottom:calc(var(--f)*.2 + var(--row-extra,0px))}
+.match-table thead th{font-size:calc(var(--f)*var(--hf,.86))}

@@ -80,13 +80,19 @@ export function startDisplay(){
   // während des Spiels nicht springt (vorher: bei jedem neuen Wert neu berechnet).
   const m=match,key=[m.players.length,m.mode,m.rounds,innerWidth,innerHeight,settings.textScale,settings.panelWidth,settings.panelHeight].join('/');
   if(key!==fitKey){fitKey=key;const rows=$('match-rows'),round=$('match-round'),keep=[rows.innerHTML,round.textContent];
+   // Zusätzliche Zeilenhöhe der letzten Messung zuerst zurücknehmen – sonst schrumpft die Schrift bei jeder Neuberechnung weiter.
+   panel.style.setProperty('--row-extra','0px');
    const longest=m.players.reduce((a,p)=>p.name.length>a.length?p.name:a,''),r=String(m.rounds??99),big=m.target??36*(m.rounds??10);
    rows.innerHTML=m.players.map((_,k)=>`<tr class="turn lead"><td class="pl">${m.players.length}.</td><th>${longest} <span class="match-lead-star">★</span></th><td class="rnd"><span class="match-first">⚑</span>${r}</td><td>${big}</td><td class="gap noch">${m.target===null?'−':''}${big}</td>${m.target===null?'':'<td><span class="match-chip red">36</span></td>'}</tr>`+(SEP_AFTER.includes(k+1)&&k+1<m.players.length?SEP_ROW:'')).join('');
    round.textContent=m.rounds===null?'Runde 99':`Runde ${m.rounds} von ${m.rounds}`;
    // Größte Schrift suchen, bei der der breiteste mögliche Inhalt noch ganz hineinpasst (auch größer als 100 %,
    // z. B. bei wenigen Spielern oder schmaler, hoher Tafel). Obergrenze 160 %, damit 2 Spieler nicht riesig werden.
    const fits=(f:number)=>{panel.style.setProperty('--fit',f.toFixed(3));return panel.scrollHeight<=panel.clientHeight+1&&panel.scrollWidth<=panel.clientWidth+1;};
-   let lo=.3,hi=1.6;if(fits(hi))lo=hi;else for(let i=0;i<12;i++){const mid=(lo+hi)/2;if(fits(mid))lo=mid;else hi=mid;}
+   const search=()=>{let lo=.3,hi=1.6;if(fits(hi))return hi;for(let i=0;i<12;i++){const mid=(lo+hi)/2;if(fits(mid))lo=mid;else hi=mid;}return lo;};
+   // Spaltenköpfe groß (86 %) – sind sie aber bei schmaler Tafel der Engpass, werden nur die Köpfe kleiner, nicht die Werte.
+   panel.style.setProperty('--hf','.86');let lo=search();
+   panel.style.setProperty('--fit',(lo+.03).toFixed(3));const byWidth=panel.scrollWidth>panel.clientWidth+1;
+   if(byWidth){panel.style.setProperty('--hf','.7');const lo2=search();if(lo2>lo+.01)lo=lo2;else panel.style.setProperty('--hf','.86');}
    panel.style.setProperty('--fit',lo.toFixed(3));
    // Ist die Breite der Engpass, bleibt unten Platz: den gleichmäßig als Zeilenhöhe verteilen (höchstens +0,4 Schrifthöhen je Zeile).
    panel.style.setProperty('--row-extra','0px');
