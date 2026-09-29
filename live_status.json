@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-29T15:17:46Z",
+  "checked_at": "2026-09-29T15:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 HARD STYLE ☆ !holy !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 HARD STYLE ☆ !holy !naturtreu 🔴🔴",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
       "game": "DJs"
     },
     {
