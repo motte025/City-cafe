@@ -77500,16 +77500,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Vicky Leandros",
-    "title": "Die Bouzouki klang durch die Sommernacht",
+    "artist": "Robin Schulz",
+    "title": "Sun Goes Down (feat. Jasmine Thompson) - Radio Mix",
     "album": "",
-    "category": "Schlager",
+    "category": "Party-Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Schlager"
+      "Party-Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Emma Bunton",
+    "title": "Free Me",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
