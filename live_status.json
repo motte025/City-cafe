@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-29T20:32:46Z",
+  "checked_at": "2026-09-29T20:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,13 +20,6 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴 HARD STYLE ☆ !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Captain Hook b2b  Ace Ventura  | Dune x ARTCORE |  @monegrosfestival | Beatport Live @beatport",
       "game": "DJs"
     }
   ]
