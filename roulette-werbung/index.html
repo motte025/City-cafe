@@ -10,11 +10,11 @@
   stehen, wie der Zyklus sie zeigt (z. B. 5 Minuten).
 
   Anpassen per Adresse, ohne Code:
-    ?preis=Cocktail%20nach%20Wahl   – was es zu gewinnen gibt
+    ?preis=Cocktail%20nach%20Wahl   – optional: Preis vom Haus (sonst ausgeblendet)
     ?wann=Freitag%20ab%2020%20Uhr   – wann gespielt wird
     ?folie=8                        – Sekunden pro Folie (Standard 12)
 
-  Mitspielen ist gratis – kein Einsatz. Die Preise spendiert das Haus.
+  Die Werbung beschreibt nur das Spiel am Schirm – ohne Geld oder Einsätze.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
@@ -58,6 +58,7 @@ h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
 .mode span{font-size:1.35vw;color:var(--muted);line-height:1.35}
 .prize{margin-top:4.5vh;display:inline-flex;flex-direction:column;align-items:center;gap:1.2vh;padding:3.6vh 4vw;border-radius:1.6vmin;background:linear-gradient(180deg,#e8c98326,#e8c9830d);border:1px solid #e8c983aa;box-shadow:0 0 6vh #e8c98322}
 .prize small{font-size:1.25vw;letter-spacing:.4vw;color:var(--gold);text-transform:uppercase}
+.prize[hidden]{display:none}
 .prize strong{font-family:'Playfair Display',serif;font-size:3.6vw;color:#fff8e6}
 .free{margin-top:3.4vh;font-size:1.7vw;color:#e7e1cf}
 .free b{color:var(--gold2)}
@@ -138,8 +139,9 @@ h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
  <div class="rise">
   <div class="eyebrow">Mitspielen im City Cafe</div>
   <h2>Dein Glück. <em>Unser Kessel.</em></h2>
-  <div class="prize"><small>Für den Sieger – vom Haus</small><strong id="preis">Ein Getränk nach Wahl</strong></div>
-  <p class="free"><b>Mitspielen kostet nichts</b> – einfach an der Bar melden.</p>
+  <div class="prize" id="preis-box" hidden><small>Für den Sieger – vom Haus</small><strong id="preis"></strong></div>
+  <div class="prize" id="fakten"><small>Pro Partie</small><strong>Bis 12 Spieler · 4 Spielarten · 1 Sieger</strong></div>
+  <p class="free"><b>Wer holt sich den Titel?</b> Einfach an der Bar melden – der Kessel wartet.</p>
   <p class="when" id="wann">Frag an der Bar, wann die nächste Partie startet!</p>
  </div>
 </section>
@@ -151,7 +153,7 @@ h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
  'use strict';
  var q=new URLSearchParams(location.search);
  var txt=function(id,v){if(v){var e=document.getElementById(id);e.textContent=v.slice(0,60);}};
- txt('preis',q.get('preis'));txt('wann',q.get('wann'));
+ if(q.get('preis')){txt('preis',q.get('preis'));document.getElementById('preis-box').hidden=false;document.getElementById('fakten').hidden=true;}txt('wann',q.get('wann'));
  var sek=Math.max(5,Math.min(60,Number(q.get('folie'))||12));
  var slides=[].slice.call(document.querySelectorAll('.slide')),dots=document.getElementById('dots');
  slides.forEach(function(){dots.appendChild(document.createElement('i'));});
