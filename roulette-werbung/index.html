@@ -114,6 +114,21 @@ h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
 .slide.on .legend li:nth-child(4){animation-delay:2.1s}.slide.on .legend li:nth-child(5){animation-delay:2.6s}.slide.on .legend li:nth-child(6){animation-delay:3.1s}
 .slide.on .board-note{animation:rise .8s 3.6s both}
 .soon{display:inline-block;margin-bottom:2.6vh;padding:.9vh 1.6vw;border-radius:99px;background:linear-gradient(180deg,#e9cf8e,#d8b872);color:#10261c;font-weight:700;font-size:1.5vw;letter-spacing:.4vw;text-transform:uppercase;box-shadow:0 0 3vh #e8c98355}
+
+.facts{list-style:none;display:grid;gap:2.2vh;margin-top:1vh}
+.facts li{border-left:.3vw solid var(--gold);padding:.4vh 0 .4vh 1.4vw}
+.facts b{display:block;font-size:1.75vw;color:#fff8e6;margin-bottom:.4vh}
+.facts span{font-size:1.4vw;line-height:1.4;color:var(--muted)}
+.facts em{color:var(--gold2);font-style:normal;font-weight:700}
+.steps.four{grid-template-columns:repeat(4,1fr);gap:1.8vw}
+.step .n.sm{font-size:3.4vw;font-family:inherit}
+.step p b{color:var(--gold2)}
+.phone-slide{grid-template-columns:1.3fr .9fr}
+.phone{justify-self:center;height:72vh;aspect-ratio:auto;border-radius:3vmin;padding:1.2vmin;background:#050d09;box-shadow:0 3vh 7vh #000c,0 0 0 1px #e8c98388;overflow:hidden}
+.phone img{height:100%;width:auto;display:block;border-radius:2vmin}
+.slide.on .steps.four .step:nth-child(4){animation-delay:1.05s}
+.slide.on .facts li{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.slide.on .facts li:nth-child(2){animation-delay:.3s}.slide.on .facts li:nth-child(3){animation-delay:.6s}.slide.on .facts li:nth-child(4){animation-delay:.9s}
 </style>
 </head>
 <body>
@@ -131,6 +146,33 @@ h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
   <p class="lead" style="margin-top:3.4vh">Ein echter Kessel, eine Tafel, die live mitzählt – und am Ende wird <strong>gefeiert</strong>. Bald geht’s los – dann <strong>jederzeit</strong> spielbar.</p>
  </div>
  <div class="shot" style="--o:50% 50%;--z:1.18"><img src="bilder/kessel.png" alt="Der Roulette-Kessel am TV"><span class="tag">LIVE AM TV</span></div>
+</section>
+
+<!-- E1 · European Roulette: der Kessel -->
+<section class="slide two" data-sek="20">
+ <div class="rise">
+  <div class="eyebrow">European Roulette</div>
+  <h2>Der <em>Kessel</em></h2>
+  <ul class="facts">
+   <li><b>37 Fächer</b><span>Zahlen 0 bis 36 – mit nur <em>einer</em> Null, wie in Europas Casinos. Die amerikanische Variante hat zwei.</span></li>
+   <li><b>Die Zahlenfolge</b><span>Nicht der Reihe nach: Rot und Schwarz wechseln sich ab, hohe und niedrige, gerade und ungerade Zahlen sind gleichmäßig verteilt.</span></li>
+   <li><b>Fächer &amp; Stege</b><span>Metallstege trennen die Fächer. Die Kugel springt oft noch ein paar Fächer weiter, bevor sie liegen bleibt.</span></li>
+  </ul>
+ </div>
+ <div class="shot" style="--o:50% 50%;--z:1.35"><img src="bilder/kessel.png" alt="Der Kessel"><span class="tag">37 FÄCHER · EINE NULL</span></div>
+</section>
+
+<!-- E2 · European Roulette: Kugel, Gegenlauf, Rauten -->
+<section class="slide center" data-sek="24">
+ <div>
+  <div class="rise"><div class="eyebrow">European Roulette</div><h2>Kugel, Gegenlauf <em>&amp; Rauten</em></h2></div>
+  <div class="steps four">
+   <div class="step"><div class="n sm">⚪</div><h3>Die Kugel</h3><p><b>21 mm</b> Durchmesser, <b>8,7 g</b> – eine Turnierkugel wie in modernen Casinos. Früher aus Elfenbein, heute aus Kunststoff.</p></div>
+   <div class="step"><div class="n sm">↻ ↺</div><h3>Gegenlauf</h3><p>Kessel und Kugel drehen <b>gegeneinander</b>. Das macht die Kugel über dem Kessel schnell und unberechenbar. Die Richtung wechselt bei <b>jedem Wurf</b>.</p></div>
+   <div class="step"><div class="n sm">◆</div><h3>Die Rauten</h3><p><b>8 Metallrauten</b> auf der Laufbahn, abwechselnd längs und quer. Fällt die Kugel, prallt sie daran ab – jeder Lauf endet anders.</p></div>
+   <div class="step"><div class="n sm">🎲</div><h3>Echter Zufall</h3><p>Jede Zahl bestimmt ein <b>kryptografischer Zufallsgenerator</b>. Die Kugel rollt dazu physikalisch berechnet – niemand kann eingreifen.</p></div>
+  </div>
+ </div>
 </section>
 
 <!-- 2 · So geht's -->
@@ -152,7 +194,7 @@ h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
   <h2>Wähl dein <em>Spiel</em></h2>
   <div class="modes">
    <div class="mode"><div class="chip">Runden</div><div><b>Meiste Punkte gewinnt</b><span>3 bis 30 Runden. Jede gefallene Zahl zählt, am Ende hat die höchste Summe die Nase vorn.</span></div></div>
-   <div class="mode"><div class="chip">301</div><div><b>Genau treffen</b><span>Wie beim Dart: exakt auf 201, 301 oder 501 kommen. Zu viel zählt nicht – die Runde wird immer fertig gespielt.</span></div></div>
+   <div class="mode"><div class="chip">301</div><div><b>Genau treffen</b><span>Wie beim Dart: exakt auf 201, 301 oder 501 kommen. Zu viel zählt nicht. Dauert’s zu lange, entscheidet das Rundenlimit.</span></div></div>
   </div>
  </div>
  <div class="shot" style="--o:50% 50%;--z:1.12"><img src="bilder/tafel.png" alt="Die Tafel mit Live-Tabelle"><span class="tag">LIVE-TABELLE</span></div>
@@ -186,6 +228,43 @@ h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
   </ol>
  </div>
  <p class="board-note">Bei „Runden“ steht statt „Noch“ der <b>Abstand</b> zum Führenden – statt „Aus mit“ gibt’s keine Zielzahl.</p>
+</section>
+
+<!-- R · Regeln beim Ausmachen -->
+<section class="slide center" data-sek="20">
+ <div>
+  <div class="rise"><div class="eyebrow">201 · 301 · 501 – die Regeln</div><h2>Ausmachen <em>wie beim Dart</em></h2></div>
+  <div class="steps">
+   <div class="step"><div class="n sm">🎯</div><h3>Genau treffen</h3><p>Nur wer <b>exakt</b> auf das Ziel kommt, macht aus. Führt eine Zahl darüber hinaus, zählt sie nicht – <b>überworfen</b>.</p></div>
+   <div class="step"><div class="n sm">↻</div><h3>Runde fertig spielen</h3><p>Macht jemand aus, wird die Runde <b>trotzdem zu Ende gespielt</b>. Schaffen es mehrere in derselben Runde, teilen sie sich den Sieg.</p></div>
+   <div class="step"><div class="n sm">⏱</div><h3>Rundenlimit</h3><p>Dauert es zu lange, endet die Partie nach dem Limit (3 bis 30 Runden oder ohne Limit). Dann gewinnt, wer <b>am nächsten</b> am Ziel ist.</p></div>
+  </div>
+ </div>
+</section>
+
+<!-- Z · 12 Spieler -->
+<section class="slide two">
+ <div class="rise">
+  <div class="eyebrow">Große Runde</div>
+  <h2>Bis zu <em>12 Spieler</em></h2>
+  <p class="lead">Alle auf einer Tafel – live sortiert nach Punkten. Wer vorne liegt, bekommt den Stern, wer dran ist, die goldene Zeile.</p>
+ </div>
+ <div class="shot" style="--o:14% 50%;--z:1.12"><img src="bilder/tafel12.png" alt="Tafel mit 12 Spielern"><span class="tag">12 SPIELER</span></div>
+</section>
+
+<!-- F · Fernbedienung -->
+<section class="slide two phone-slide">
+ <div class="rise">
+  <div class="eyebrow">Gestartet an der Bar</div>
+  <h2>Alles per <em>Fernbedienung</em></h2>
+  <ul class="facts">
+   <li><b>Spielart</b><span>Runden, 201, 301 oder 501.</span></li>
+   <li><b>Runden</b><span>3 bis 30 – bei 201/301/501 auch ohne Limit.</span></li>
+   <li><b>Spieler</b><span>2 bis 12. Wer beginnt, lost der Computer aus.</span></li>
+   <li><b>Start, kurze Pause, Ende</b><span>Das Personal hat die Partie jederzeit im Griff.</span></li>
+  </ul>
+ </div>
+ <div class="phone"><img src="bilder/fernbedienung.png" alt="Spieleinstellungen auf der Fernbedienung"></div>
 </section>
 
 <!-- 5 · Siegerfeier -->

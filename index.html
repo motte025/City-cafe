@@ -7927,10 +7927,10 @@
         // sowohl runMasterSequence als auch djStopPlayer sie kennen muessen.
         const DJ_SLOT_INDEX = 0.9;
         const MITTAGSTELLER_SLOT_INDEX = 0.8;
-        // Roulette-Werbung ("Demnaechst"): 5 Minuten im Vollbild am Ende jedes
+        // Roulette-Werbung ("Demnaechst"): 8 Minuten im Vollbild am Ende jedes
         // Zyklus. ?werbung=0 schaltet sie fuer diesen Screen ab.
         const WERBUNG_SLOT_INDEX = 11;
-        const WERBUNG_DAUER_MS = 5 * 60 * 1000;
+        const WERBUNG_DAUER_MS = 8 * 60 * 1000;
         const WERBUNG_AN = !/(?:^|[?&])werbung=0(?:&|$)/.test(location.search);
         function werbungAus() {
             const f = document.getElementById('roulette-werbung-fullscreen');
