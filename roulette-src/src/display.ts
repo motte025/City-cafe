@@ -75,11 +75,14 @@ export function startDisplay(){
   // während des Spiels nicht springt (vorher: bei jedem neuen Wert neu berechnet).
   const m=match,key=[m.players.length,m.mode,m.rounds,innerWidth,innerHeight,settings.textScale,settings.panelWidth,settings.panelHeight].join('/');
   if(key!==fitKey){fitKey=key;const rows=$('match-rows'),round=$('match-round'),keep=[rows.innerHTML,round.textContent];
-   const r=m.rounds===null?'99':`${m.rounds}/${m.rounds}`,big=m.target??36*(m.rounds??10);
-   rows.innerHTML=m.players.map(()=>`<tr class="turn lead"><td class="pl">12.</td><th>▶ Spieler 10 <span class="match-lead-star">★</span></th><td class="rnd"><span class="match-first">⚑</span>${r}</td><td>${big}</td><td class="gap noch">${m.target===null?'−':''}${big}</td>${m.target===null?'':'<td><span class="match-chip red">36</span></td>'}</tr>`).join('');
+   const longest=m.players.reduce((a,p)=>p.name.length>a.length?p.name:a,''),r=String(m.rounds??99),big=m.target??36*(m.rounds??10);
+   rows.innerHTML=m.players.map(()=>`<tr class="turn lead"><td class="pl">${m.players.length}.</td><th>${longest} <span class="match-lead-star">★</span></th><td class="rnd"><span class="match-first">⚑</span>${r}</td><td>${big}</td><td class="gap noch">${m.target===null?'−':''}${big}</td>${m.target===null?'':'<td><span class="match-chip red">36</span></td>'}</tr>`).join('');
    round.textContent=m.rounds===null?'Runde 99':`Runde ${m.rounds} von ${m.rounds}`;
-   let fit=1;panel.style.setProperty('--fit','1');
-   while(fit>.45&&(panel.scrollHeight>panel.clientHeight+1||panel.scrollWidth>panel.clientWidth+1)){fit-=.02;panel.style.setProperty('--fit',fit.toFixed(2));}
+   // Größte Schrift suchen, bei der der breiteste mögliche Inhalt noch ganz hineinpasst (auch größer als 100 %,
+   // z. B. bei wenigen Spielern oder schmaler, hoher Tafel). Obergrenze 160 %, damit 2 Spieler nicht riesig werden.
+   const fits=(f:number)=>{panel.style.setProperty('--fit',f.toFixed(3));return panel.scrollHeight<=panel.clientHeight+1&&panel.scrollWidth<=panel.clientWidth+1;};
+   let lo=.3,hi=1.6;if(fits(hi))lo=hi;else for(let i=0;i<12;i++){const mid=(lo+hi)/2;if(fits(mid))lo=mid;else hi=mid;}
+   panel.style.setProperty('--fit',lo.toFixed(3));
    rows.innerHTML=keep[0];round.textContent=keep[1];}
   layoutWheel();
  }
@@ -124,10 +127,10 @@ export function startDisplay(){
   const order=m.players.map((_,i)=>i).sort((a,b)=>m.players[b].score-m.players[a].score||a-b);
   rowsEl.innerHTML=order.map(i=>{const p=m.players[i],place=1+m.players.filter(q=>q.score>p.score).length;
    const turn=!m.finished&&i===shown,won=m.winners.includes(i),out=x01?m.checkout(i):null,lead=!m.finished&&best>0&&p.score===best,pts=String(p.score);
-   const rnd=`<td class="rnd">${i===m.first&&!drawing?'<span class="match-first" title="Hat das Spiel begonnen">⚑</span>':''}${p.throws}${m.rounds===null?'':`/${m.rounds}`}</td>`;
+   const rnd=`<td class="rnd">${i===m.first&&!drawing?'<span class="match-first" title="Hat das Spiel begonnen">⚑</span>':''}${p.throws}</td>`;
    const cells=x01?`${rnd}<td>${pts}</td><td class="gap noch">${m.needed(i)}</td><td>${p.out?'<span class="match-out">✓ aus</span>':out===null?'<span class="match-none">—</span>':`<span class="match-chip ${color(out)}">${out}</span>`}</td>`
     :`${rnd}<td>${pts}</td><td class="gap">${best-p.score===0?(best>0?'<span class="match-lead">Führt</span>':'<span class="match-none">—</span>'):`−${best-p.score}`}</td>`;
-   return `<tr data-p="${i}" class="${turn?'turn':''} ${won?'won':''} ${lead?'lead':''} ${drawing&&turn?'draw':''}"><td class="pl">${place}.</td><th>${won?'★ ':turn?'▶ ':''}${p.name}${lead?' <span class="match-lead-star">★</span>':''}</th>${cells}</tr>`;}).join('');
+   return `<tr data-p="${i}" class="${turn?'turn':''} ${won?'won':''} ${lead?'lead':''} ${drawing&&turn?'draw':''}"><td class="pl">${place}.</td><th>${won?'★ ':''}${p.name}${lead?' <span class="match-lead-star">★</span>':''}</th>${cells}</tr>`;}).join('');
   for(const r of Array.from(rowsEl.querySelectorAll<HTMLElement>('tr[data-p]'))){const old=before.get(r.dataset.p!);if(old===undefined)continue;const dy=old-r.getBoundingClientRect().top;if(Math.abs(dy)>2)r.animate([{transform:`translateY(${dy}px)`},{transform:'none'}],{duration:700,easing:'cubic-bezier(.2,.8,.2,1)'});}
   $('match-last').innerHTML=l?`Letzter Wurf: ${m.players[l.player].name} · <span class="match-chip ${color(l.number)}">${l.number}</span> ${l.win?(m.finished?'· ausgemacht!':'· ausgemacht! Runde wird fertig gespielt'):l.bust?'· zählt nicht':''}`:'Der Computer dreht reihum. <span class="match-first-legend">⚑ hat begonnen</span>';
   layoutMatch();

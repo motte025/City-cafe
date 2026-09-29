@@ -64,7 +64,7 @@
 
 /* Spielmodus (nur per Fernbedienung): Punktetafel links neben dem Kessel, ersetzt dort den Countdown. */
 .display-page.match-on .cycle-panel{display:none}
-.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:calc(14% + .8vh);width:clamp(340px,33vw,680px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--panel-w,1)*var(--fit,1));overflow:hidden}
+.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:calc(14% + .8vh);width:clamp(340px,33vw,680px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;--f:calc(min(3.2vh,25vh / var(--rows))*var(--tv-text-scale,1)*var(--fit,1));font-size:var(--f);overflow:hidden}
 .match-panel>*{flex-shrink:0}
 .match-panel[hidden]{display:none}
 .match-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid #cbb58133;padding-bottom:1.1vh}
@@ -236,3 +236,18 @@ body.embedded .remote-shell{padding-top:10px}
 .match-table tr.turn>td.pl{box-shadow:inset .35vw 0 #e8c983;border-radius:8px 0 0 8px}
 .match-table tr.turn>*:last-child{border-radius:0 8px 8px 0}
 .match-table tr.turn th{color:#ffe7b0;font-weight:500}
+
+/* Spaltenabstände wachsen mit der Schrift (vorher feste vw-Werte – bei schmaler Tafel wurde deshalb die Schrift klein). */
+.match-table tbody th,.match-table td{padding-left:calc(var(--f)*.35);padding-right:calc(var(--f)*.35)}
+.match-table td,.match-table thead th+th{padding-left:calc(var(--f)*.5)}
+.match-table thead th{padding-left:calc(var(--f)*.35);padding-right:calc(var(--f)*.35)}
+.match-table .gap,.match-table thead th.gap{padding-left:calc(var(--f)*.9)}
+.match-table .pl{padding-right:calc(var(--f)*.15)}
+/* Zeilenhöhe ebenfalls an der Schrift ausrichten – so passt bei 12 Spielern mehr Schrift in die Höhe. */
+.match-table{border-spacing:0 calc(var(--f)*.24)}
+.match-table tbody th,.match-table td{padding-top:calc(var(--f)*.2);padding-bottom:calc(var(--f)*.2)}
+/* Spaltenköpfe kleiner als die Werte, damit nicht die Überschrift die Spaltenbreite bestimmt. */
+.match-table thead th{font-size:calc(var(--f)*.6);letter-spacing:.03em}
+.match-table tbody th,.match-table td{line-height:1.08;padding-top:calc(var(--f)*.16);padding-bottom:calc(var(--f)*.16)}
+.match-table{border-spacing:0 calc(var(--f)*.2)}
+.match-panel .match-last{font-size:calc(var(--f)*.78)}
