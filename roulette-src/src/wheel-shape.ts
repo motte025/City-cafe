@@ -5,6 +5,7 @@ export const DEFAULT_DESIGN = {
  woodWarmth:.65, gloss:.65, metalWarmth:.3, lightContrast:.65, textScale:1,
  innerTone:1,outerTone:1,trackTone:1,innerGloss:.25,outerGloss:.25,pocketRichness:.5,grainTrack:.5,grainInner:.5,
  frontText:'DEMNÄCHST IM CITY-CAFE: HALLOWEEN PARTY',woodOuter:0,woodTrack:0,woodInner:0,crossStyle:0,brass:0,ballGloss:.65,lightPlay:.4,feltBackground:.6,pocketGlow:true,goldNumbers:false,centerLogo:true,
+ fretBrass:.3,fretGloss:.72,diamondBrass:.3,diamondGloss:.43,
 };
 export type DesignSettings=typeof DEFAULT_DESIGN;
 export type WheelShape=Pick<DesignSettings,'bowlDepth'|'numberSlope'|'numberSize'>;

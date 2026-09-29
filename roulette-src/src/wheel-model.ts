@@ -40,6 +40,8 @@ export class WheelModel {
  private crossMetal=new T.MeshStandardMaterial({metalness:.93,roughness:.23});
  /** Gedämpfteres, mattes Metall nur für die 8 Rauten – heller Chrom stach zu sehr gegen das dunkle Holz hervor. */
  private deflectorMetal=new T.MeshStandardMaterial({color:0x8b939c,metalness:.6,roughness:.5});
+ /** Stege zwischen den Taschen: eigenes Material (Chrom bis Messing, matt bis Glanz per Fernbedienung). */
+ private fretMetal=new T.MeshStandardMaterial({metalness:.93,roughness:.23,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
  private ebony=new T.MeshPhysicalMaterial({color:0x080c0e,metalness:.3,roughness:.3,clearcoat:.65});
  private wood=new T.MeshPhysicalMaterial({roughness:.27,metalness:.06,clearcoat:.7,clearcoatRoughness:.18});
  private track=new T.MeshPhysicalMaterial({roughness:.3,metalness:.2,clearcoat:.6});
@@ -74,6 +76,9 @@ export class WheelModel {
   this.setWood(s.woodOuter,s.woodTrack,s.woodInner,s.grainTrack,s.grainInner);
   if(s.crossStyle!==this.crossStyle){this.crossStyle=s.crossStyle;this.buildCross();}this.drawNumbers(s.goldNumbers);
   const brass=new T.Color(0xcf9f4a);this.chrome.color.copy(new T.Color(0xd5e0e8).lerp(brass,s.brass));this.crossMetal.color.copy(this.metal.color).lerp(brass,s.brass);this.crossMetal.roughness=this.metal.roughness;
+  // Stege und Rauten: Chrom ↔ Messing, matt ↔ Hochglanz (Metalness hoch, Rauheit über den Glanzregler).
+  this.fretMetal.color.copy(new T.Color(0xd2dce0).lerp(new T.Color(0xd4a553),s.fretBrass));this.fretMetal.roughness=.62-s.fretGloss*.54;this.fretMetal.metalness=.7+s.fretGloss*.2;
+  this.deflectorMetal.color.copy(new T.Color(0x9aa3ab).lerp(new T.Color(0xd9aa52),s.diamondBrass));this.deflectorMetal.roughness=.8-s.diamondGloss*.62;this.deflectorMetal.metalness=.45+s.diamondGloss*.3;
   this.drawLettering(s.centerLogo,s.frontText);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
@@ -110,7 +115,7 @@ export class WheelModel {
    const a=i*STEP;
    this.sector(r,2.04,2.425,a,x=>numberHeight(x,shape),this.colors[color(n)]);
    this.sector(r,1.585,1.985,a,()=>FLOOR,this.pockets[color(n)]);
-   const divider=this.mesh(r,new T.ExtrudeGeometry(wall,{depth:.398,bevelEnabled:true,bevelThickness:.004,bevelSize:.004,bevelSegments:2,steps:1,curveSegments:1}),m);
+   const divider=this.mesh(r,new T.ExtrudeGeometry(wall,{depth:.398,bevelEnabled:true,bevelThickness:.004,bevelSize:.004,bevelSegments:2,steps:1,curveSegments:1}),this.fretMetal);
    divider.geometry.translate(0,FLOOR+.008,-.199);divider.position.set(Math.sin(a+STEP/2)*1.785,0,-Math.cos(a+STEP/2)*1.785);divider.rotation.y=-(a+STEP/2);
    // Raised, gently chamfered rear lip makes each enamel bed a real recessed pocket.
    this.sector(r,1.976,1.993,a,()=>FLOOR+.013,this.satin);

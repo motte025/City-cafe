@@ -16,7 +16,7 @@ export function settingsForm(){const group=(title:string,body:string,note='')=>`
  group('🎡 Kessel · Form & Licht',`${field('cameraTilt','Blickwinkel · 0° = von oben','°',0,32,1)}${field('bowlDepth','3D-Tiefe','%',.85,1.45,.05)}
  ${field('numberSlope','Gefälle des Zahlenkranzes','°',8,28,1)}${field('numberSize','Zahlen auf dem Kessel','%',.85,1.08,.01)}
  ${field('gloss','Glanz & Reflexionen','%',0,1,.05)}${field('lightContrast','Lichtkontrast','%',0,1,.05)}${field('lightPlay','Lichtspiel · wandernde Spiegelung','%',0,1,.05)}
- ${field('metalWarmth','Metall · Silber bis Gold','%',0,1,.05)}${field('pocketRichness','Taschen · Farbstärke','%',0,1,.05)}
+ ${field('metalWarmth','Metall · Silber bis Gold','%',0,1,.05)}${field('fretBrass','Stege der Taschen · Chrom bis Messing','%',0,1,.05)}${field('fretGloss','Stege der Taschen · matt bis Glanz','%',0,1,.05)}${field('diamondBrass','Rauten · Chrom bis Messing','%',0,1,.05)}${field('diamondGloss','Rauten · matt bis Glanz','%',0,1,.05)}${field('pocketRichness','Taschen · Farbstärke','%',0,1,.05)}
  <label class="switch"><input type="checkbox" data-setting="pocketGlow"> Gewinnfach leuchtet auf</label>
  <label class="switch"><input type="checkbox" data-setting="goldNumbers"> Zahlen in Gold</label>`,
  '<p data-design-note>Form und Zahlen ändern sich nach einem laufenden Wurf. Blickwinkel, Licht und Texte reagieren sofort.</p>'),
