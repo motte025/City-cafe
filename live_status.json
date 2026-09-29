@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-29T17:12:47Z",
+  "checked_at": "2026-09-29T17:17:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Runde 2 Harderstyles Eskalation  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 29✨Ruhiger Mittwoch? | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
