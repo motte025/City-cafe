@@ -77919,16 +77919,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Tineke Schouten",
-    "title": "Bingo's, Lotto's",
+    "artist": "Claudia Jung",
+    "title": "Domani L'amore Vincera",
     "album": "",
-    "category": "Après-Ski & Ballermann",
+    "category": "Party-Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Après-Ski & Ballermann"
+      "Party-Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Fernando Express",
+    "title": "Die Sonne Von Capri",
+    "album": "",
+    "category": "Schlager & Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager & Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
