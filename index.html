@@ -443,6 +443,9 @@
             will-change: transform;
         }
         .poster-image.active { opacity: 1; z-index: 2; }
+        #media-view-mittagsteller img {
+            width: 100%; height: 100%; object-fit: contain; display: block;
+        }
         .poster-ambient-glaze {
             position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%);
@@ -2435,6 +2438,9 @@
             </div>
 
             <div class="card media-zone" id="card-media">
+                <div class="media-inner-view" id="media-view-mittagsteller">
+                    <img src="mittagsteller-querformat.jpg" alt="Gasthaus Reiterklause Mittagsteller">
+                </div>
                 <div class="media-inner-view active" id="media-view-poster">
                     <div class="poster-container" id="poster-container">
                         <img class="poster-image active" id="poster1" src="plakat_tag.webp" alt="Plakat Ebene 1">
@@ -7906,6 +7912,8 @@
         // Position des DJ-Slots in der Rotation. Steht als Konstante hier, weil
         // sowohl runMasterSequence als auch djStopPlayer sie kennen muessen.
         const DJ_SLOT_INDEX = 0.9;
+        const MITTAGSTELLER_SLOT_INDEX = 0.8;
+        const MITTAGSTELLER_DAUER_MS = 2 * 60 * 1000;
 
         // Nightlife steht hinter der Dart-Strecke - vor dem Tag/Nacht-Plakat.
         const NL_SLOT_INDEX = -0.5;
@@ -12849,8 +12857,13 @@
                 // ausgeblendeten Ansicht ablehnt.
                 djVorpuffern();
 
-                mediaStateIndex = DJ_SLOT_INDEX;
+                mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
                 globalMasterTimer = later(runMasterSequence, 35000);
+
+            } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {
+                document.getElementById('media-view-mittagsteller').classList.add('active');
+                mediaStateIndex = DJ_SLOT_INDEX;
+                globalMasterTimer = later(runMasterSequence, MITTAGSTELLER_DAUER_MS);
 
             } else if (mediaStateIndex === DJ_SLOT_INDEX) {
                 // DJ-Live liegt bewusst weit vorne im Zyklus: geht jemand live, soll
