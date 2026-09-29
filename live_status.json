@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-09-29T16:07:45Z",
+  "checked_at": "2026-09-29T16:22:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 Mute Marathon Tag 92 😈 | Dance Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "18-20 Uhr: SUNSHINE Back2the90s mit @chris_nitro",
       "game": "DJs"
     },
     {
@@ -27,13 +34,6 @@
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
       "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈 | TY Raiders: @goblin_dj",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "18-20 Uhr: SUNSHINE Back2the90s mit @chris_nitro",
       "game": "DJs"
     }
   ]
