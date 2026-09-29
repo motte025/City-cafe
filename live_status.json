@@ -1,20 +1,6 @@
 {
-  "checked_at": "2026-09-29T19:47:47Z",
+  "checked_at": "2026-09-29T21:22:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 92 😈 | Dance Styles | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "ailenax",
@@ -24,23 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 HARD STYLE ☆ !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Captain Hook b2b  Ace Ventura  | Dune x ARTCORE |  @monegrosfestival | Beatport Live @beatport",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Press Play and Record ✨ !charity",
       "game": "DJs"
     }
   ]
