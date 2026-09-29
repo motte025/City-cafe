@@ -7914,6 +7914,17 @@
         const DJ_SLOT_INDEX = 0.9;
         const MITTAGSTELLER_SLOT_INDEX = 0.8;
         const MITTAGSTELLER_DAUER_MS = 2 * 60 * 1000;
+        function mittagstellerRestzeitMs() {
+            const teile = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit',
+                day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+            }).formatToParts(new Date());
+            const wert = typ => Number(teile.find(teil => teil.type === typ).value);
+            const datum = wert('year') * 10000 + wert('month') * 100 + wert('day');
+            const sekunden = wert('hour') * 3600 + wert('minute') * 60 + wert('second');
+            if (datum > 20261002 || sekunden < 7 * 3600 || sekunden >= 14 * 3600 + 30 * 60) return 0;
+            return (14 * 3600 + 30 * 60 - sekunden) * 1000;
+        }
 
         // Nightlife steht hinter der Dart-Strecke - vor dem Tag/Nacht-Plakat.
         const NL_SLOT_INDEX = -0.5;
@@ -12861,9 +12872,15 @@
                 globalMasterTimer = later(runMasterSequence, 35000);
 
             } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {
+                const restzeit = mittagstellerRestzeitMs();
+                if (!restzeit) {
+                    mediaStateIndex = DJ_SLOT_INDEX;
+                    runMasterSequence();
+                    return;
+                }
                 document.getElementById('media-view-mittagsteller').classList.add('active');
                 mediaStateIndex = DJ_SLOT_INDEX;
-                globalMasterTimer = later(runMasterSequence, MITTAGSTELLER_DAUER_MS);
+                globalMasterTimer = later(runMasterSequence, Math.min(MITTAGSTELLER_DAUER_MS, restzeit));
 
             } else if (mediaStateIndex === DJ_SLOT_INDEX) {
                 // DJ-Live liegt bewusst weit vorne im Zyklus: geht jemand live, soll
