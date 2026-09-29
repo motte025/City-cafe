@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-29T17:32:45Z",
+  "checked_at": "2026-09-29T17:37:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,13 +31,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner w/ @alexvaganza 🍒✨💞💋🌈 | TY Raiders: @goblin_dj",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
@@ -45,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Runde 2 Harderstyles Eskalation  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner w/ @alexvaganza 🍒✨💞💋🌈 | TY Raiders: @goblin_dj",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "KiNK (Live) + Captain Hook b2b Ace Ventura | Dune x ARTCORE | Monegros | Beatport Live",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Runde 2 Harderstyles Eskalation  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
