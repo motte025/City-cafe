@@ -439,11 +439,16 @@ def mpv_befehl(*teile):
 
 def mpv_time_pos():
     """time-pos ueber IPC; None, wenn mpv (noch) keine Position hat oder nicht antwortet."""
+    return mpv_eigenschaft("time-pos")
+
+
+def mpv_eigenschaft(name):
+    """Eine mpv-Eigenschaft ueber IPC lesen (z. B. time-pos, duration); None, wenn nicht da."""
     try:
         with socket.socket(socket.AF_UNIX) as s:
             s.settimeout(1.0)
             s.connect(MPV_SOCK)
-            s.sendall(b'{"command":["get_property","time-pos"],"request_id":1}\n')
+            s.sendall((json.dumps({"command": ["get_property", name], "request_id": 1}) + "\n").encode())
             buf = b""
             while True:
                 chunk = s.recv(4096)
@@ -644,7 +649,12 @@ def main():
             if sek and mpv is not None:
                 if mpv_befehl("seek", sek, "relative"):
                     log(f"Gespult: {sek:+d}s")
-                    last_pos, last_progress = None, time.time()   # Watchdog nicht ausloesen
+                    # Nach dem Sprung puffert mpv neu und meldet kurz keine Position.
+                    # Frist fuer "erstes Bild" neu beginnen - vorher hielt der Waechter
+                    # das fuer einen Ausfall, beendete mpv und das Video begann im
+                    # Browser wieder vorn.
+                    last_pos, last_progress = None, time.time()
+                    started = time.time()
 
         # Suchauftrag der Handy-Fernbedienung: yt-dlp braucht ein paar Sekunden,
         # deshalb im eigenen Thread - die Schleife muss weiterlaufen.
@@ -758,6 +768,12 @@ def main():
                         # sichtbar; ab da muss Chromium nicht mehr mitdekodieren.
                         cdp_eval(page_id, "try { nlPlayer.pauseVideo(); } catch (e) {} 1")
                         embed_paused = True
+                        # Laenge an das Dashboard melden: das angehaltene Embed kennt sie
+                        # nicht, ohne Laenge startete jedes Video bei 0 (nlStartSekunde).
+                        dauer = mpv_eigenschaft("duration")
+                        if isinstance(dauer, (int, float)) and dauer > 0 and shown.startswith("yt:"):
+                            cdp_eval(page_id, "window.nlDauerExtern = "
+                                     + json.dumps({"schluessel": shown[3:], "dauer": int(dauer)}) + "; 1")
                         log(f"mpv laeuft nach {now - started:.1f}s, Embed angehalten")
                     elif last_pos is not None and window_seen and art == "cam" and not embed_paused:
                         embed_paused = True

@@ -7122,7 +7122,12 @@
             const schluessel = nlGeladen && nlGeladen.schluessel;
             if (!schluessel) return;
             let laenge = 0;
-            if (nlGeladen.datei) {
+            // Spielt mpv (Box), meldet der Supervisor die Laenge (window.nlDauerExtern) -
+            // das angehaltene Embed kennt sie nicht.
+            const extern = window.nlDauerExtern;
+            if (extern && extern.schluessel === schluessel && extern.dauer > 0) {
+                laenge = Number(extern.dauer) || 0;
+            } else if (nlGeladen.datei) {
                 if (nlVideoEl && isFinite(nlVideoEl.duration)) laenge = nlVideoEl.duration || 0;
             } else if (nlPlayerBereit) {
                 // Waehrend eines Werbeblocks meldet der Player dessen Laenge -
