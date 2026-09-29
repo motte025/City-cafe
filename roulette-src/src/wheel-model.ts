@@ -77,8 +77,10 @@ export class WheelModel {
   if(s.crossStyle!==this.crossStyle){this.crossStyle=s.crossStyle;this.buildCross();}this.drawNumbers(s.goldNumbers);
   const brass=new T.Color(0xcf9f4a);this.chrome.color.copy(new T.Color(0xd5e0e8).lerp(brass,s.brass));this.crossMetal.color.copy(this.metal.color).lerp(brass,s.brass);this.crossMetal.roughness=this.metal.roughness;
   // Stege und Rauten: Chrom ↔ Messing, matt ↔ Hochglanz (Metalness hoch, Rauheit über den Glanzregler).
-  this.fretMetal.color.copy(new T.Color(0xd2dce0).lerp(new T.Color(0xd4a553),s.fretBrass));this.fretMetal.roughness=.62-s.fretGloss*.54;this.fretMetal.metalness=.7+s.fretGloss*.2;
-  this.deflectorMetal.color.copy(new T.Color(0x9aa3ab).lerp(new T.Color(0xd9aa52),s.diamondBrass));this.deflectorMetal.roughness=.8-s.diamondGloss*.62;this.deflectorMetal.metalness=.45+s.diamondGloss*.3;
+  this.fretMetal.color.copy(new T.Color(0xd2dce0).lerp(new T.Color(0xd4a553),s.fretBrass));this.fretMetal.roughness=.85-s.fretGloss*.72;this.fretMetal.metalness=.6-s.fretGloss*.25;
+  this.deflectorMetal.color.copy(new T.Color(0x9aa3ab).lerp(new T.Color(0xd9aa52),s.diamondBrass));this.deflectorMetal.roughness=.85-s.diamondGloss*.72;this.deflectorMetal.metalness=.55-s.diamondGloss*.25;
+  // Glanz: glatte Oberfläche mit hellen Lichtkanten. Die Umgebung ist bewusst schwach – reines Spiegelmetall wirkte dort dunkel statt blank,
+  // deshalb sinkt der Metallanteil mit dem Glanz leicht, die Farbe bleibt hell und die Lichter setzen scharfe Glanzpunkte.
   this.drawLettering(s.centerLogo,s.frontText);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
