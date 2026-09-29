@@ -12,7 +12,7 @@
   Anpassen per Adresse, ohne Code:
     ?preis=Cocktail%20nach%20Wahl   – optional: Preis vom Haus (sonst ausgeblendet)
     ?wann=Heute%20ab%2020%20Uhr     – optionaler Hinweis unten
-    ?folie=8                        – Sekunden pro Folie (Standard 12; die Tafel-Erklärung doppelt so lang)
+    ?folie=8                        – Sekunden pro Folie (Standard 20; Erklärfolien entsprechend länger)
 
   Die Werbung beschreibt nur das Spiel am Schirm – ohne Geld oder Einsätze.
 -->
@@ -282,7 +282,7 @@ h1 em,h2 em{font-style:italic;font-weight:500;color:var(--gold)}
  var q=new URLSearchParams(location.search);
  var txt=function(id,v){if(v){var e=document.getElementById(id);e.textContent=v.slice(0,60);}};
  if(q.get('preis')){txt('preis',q.get('preis'));document.getElementById('preis-box').hidden=false;document.getElementById('fakten').hidden=true;}txt('wann',q.get('wann'));
- var sek=Math.max(5,Math.min(60,Number(q.get('folie'))||12));
+ var sek=Math.max(5,Math.min(60,Number(q.get('folie'))||20));
  var slides=[].slice.call(document.querySelectorAll('.slide')),dots=document.getElementById('dots');
  slides.forEach(function(){dots.appendChild(document.createElement('i'));});
  var marks=[].slice.call(dots.children),cur=-1;
