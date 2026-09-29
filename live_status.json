@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-29T18:47:45Z",
+  "checked_at": "2026-09-29T19:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Runde 2 Harderstyles Eskalation  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Kink + Captain Hook b2b  Ace Ventura | Dune x ARTCORE |  Monegros Festival | Beatport Live @beatport",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Kink + Ace Ventura b2b Captain Hook | Dune x ARTCORE |  @monegrosfestival | Beatport Live @beatport",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Runde 2 Harderstyles Eskalation  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
