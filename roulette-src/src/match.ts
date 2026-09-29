@@ -27,7 +27,8 @@ export const isMatchMode=(v:unknown):v is MatchMode=>MATCH_MODES.includes(v as M
 export function randomBelow(n:number,read:()=>number=()=>crypto.getRandomValues(new Uint32Array(1))[0]){const limit=Math.floor(2**32/n)*n;let v;do{v=read();}while(v>=limit);return v%n;}
 
 /** out: hat genau ausgemacht (wirft nicht mehr); finish: die Zahl, mit der ausgemacht wurde. */
-export interface MatchPlayer {name:string;score:number;throws:number;out?:boolean;finish?:number}
+/** hist: alle Würfe der Reihe nach, kommagetrennt; x = überworfen (zählt nicht), * = ausgemacht. */
+export interface MatchPlayer {name:string;score:number;throws:number;out?:boolean;finish?:number;hist?:string}
 export interface MatchThrow {player:number;number:number;counted:boolean;bust:boolean;win:boolean}
 /** exact = genau getroffen, rounds = Rundenlimit erreicht */
 export type MatchEnd='exact'|'rounds';
@@ -61,6 +62,7 @@ export class Match {
    if(number>rest){counted=false;bust=true;}
    else{p.score+=number;if(number===rest){win=true;p.out=true;p.finish=number;}}
   }else p.score+=number;
+  p.hist=(p.hist?p.hist+',':'')+number+(bust?'x':win?'*':'');
   this.last={player:i,number,counted,bust,win};
   this.advance();
   return this.last;

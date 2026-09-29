@@ -20,7 +20,7 @@ export function startRemote(){
  <section class="remote-card remote-settings"><h2 class="card-title">⚙ Einstellungen</h2>${settingsForm()}<p class="audio-hint" id="audio-hint">Ton einmal am TV unter ⚙ → Ton aktivieren freigeben.</p></section>
  <section class="remote-card"><h2 class="card-title">Letzte 10 Zahlen</h2><div id="remote-history" class="remote-history"></div></section>
  <footer class="remote-footer"><a id="open-tv" target="_blank" rel="noopener">TV-Anzeige öffnen ↗</a><span>Ein Screen · eine Steuerung</span></footer></main>`;
- const $=<T extends HTMLElement>(id:string)=>document.getElementById(id)! as T;const relay=new Relay('remote');let matchMode:MatchMode='x301',matchPlayers=2,matchRounds:number|null=null;let state:State|null=null,lastReceived=0,pendingId:string|null=null,debounce:number|null=null,pendingPatch={};
+ const $=<T extends HTMLElement>(id:string)=>document.getElementById(id)! as T;const relay=new Relay('remote');const openHist=new Set<string>();let matchMode:MatchMode='x301',matchPlayers=2,matchRounds:number|null=null;let state:State|null=null,lastReceived=0,pendingId:string|null=null,debounce:number|null=null,pendingPatch={};
  $('remote-room').textContent=`Screen: ${room}`;$<HTMLAnchorElement>('open-tv').href=`./index.html?raum=${encodeURIComponent(room)}`;
  fillSettings($('app'),DEFAULT_SETTINGS);
  function isLive(){return !!state&&Date.now()-lastReceived<6500&&relay.connected;}
@@ -36,14 +36,24 @@ export function startRemote(){
   document.querySelectorAll<HTMLElement>('[data-match-rounds]').forEach(el=>el.classList.toggle('selected',(Number(el.dataset.matchRounds)||null)===matchRounds));document.querySelector<HTMLElement>('.match-unlimited')!.hidden=matchMode==='rounds';
   document.querySelectorAll<HTMLElement>('[data-players]').forEach(el=>el.classList.toggle('selected',Number(el.dataset.players)===matchPlayers));
   const m=state?.match??null;$<HTMLButtonElement>('match-end').disabled=!isLive()||!m;$('match-start').textContent=m&&!m.finished?'↻ Neues Spiel':'▶ Spiel starten';
-  if(!m){$('remote-match-board').innerHTML='';return;}
-  const x01=m.target!==null,head=m.finished?`🏆 ${m.winners.map(i=>esc(m.players[i]?.name??'')).join(', ')} ${m.winners.length>1?'– Gleichstand':'gewinnt!'}`:`${esc(m.players[m.turn].name)} ist dran · Runde ${m.round}${m.rounds===null?'':` von ${m.rounds}`}`;
-  $('remote-match-board').innerHTML=`<p class="${m.finished?'winner':''}">${m.rounds!==null?`${m.rounds} Runden`:modeLabel(m.mode)} · ${head}</p><ol>${m.players.map((p,i)=>`<li class="${!m.finished&&i===m.turn?'turn':''}"><span>${esc(p.name)}</span><b>${p.score}</b><small>${x01?(p.out?'✓ aus':`noch ${m.target!-p.score}`):`${p.throws} Würfe`}</small></li>`).join('')}</ol>`;
+  const last=state?.lastMatch??null,show=m??last?.match??null;
+  if(!show){$('remote-match-board').innerHTML='';return;}
+  const x01=show.target!==null,head=show.finished?`🏆 ${show.winners.map(i=>esc(show.players[i]?.name??'')).join(', ')} ${show.winners.length>1?'– Gleichstand':'gewinnt!'}`:`${esc(show.players[show.turn].name)} ist dran · Runde ${show.round}${show.rounds===null?'':` von ${show.rounds}`}`;
+  // Ohne laufendes Spiel: das zuletzt gespeicherte Spiel mit Datum und Dauer.
+  const title=!m&&last?`<p class="last-title">Letztes Spiel · ${new Date(last.end).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} · Dauer ${Math.max(1,Math.round((last.end-last.start)/60000))} min</p>`:'';
+  const order=show.players.map((_,i)=>i).sort((a,b)=>show.players[b].score-show.players[a].score||a-b);
+  $('remote-match-board').innerHTML=`${title}<p class="${show.finished?'winner':''}">${show.rounds!==null?`${show.rounds} Runden`:modeLabel(show.mode)} · ${head}</p><ol>${order.map(i=>{const p=show.players[i],open=openHist.has(p.name);
+   return `<li class="${m&&!show.finished&&i===show.turn?'turn':''} ${open?'open':''}" data-hist="${esc(p.name)}"><span>${open?'▾':'▸'} ${esc(p.name)}</span><b>${p.score}</b><small>${x01?(p.out?'✓ aus':`noch ${show.target!-p.score}`):`${p.throws} Würfe`}</small>${open?histList(p.hist):''}</li>`;}).join('')}</ol><p class="hist-hint">Spieler antippen: alle Würfe anzeigen</p>`;
  }
+ /** Wurf-Historie eines Spielers: Runde, Zahl, Zwischenstand; überworfen durchgestrichen, ausgemacht mit ✓. */
+ function histList(h:string|undefined){const items=(h??'').split(',').filter(Boolean);if(!items.length)return '<div class="hist">Noch kein Wurf.</div>';
+  let sum=0;return `<div class="hist">${items.map((t,k)=>{const n=parseInt(t,10),bust=t.endsWith('x'),win=t.endsWith('*');if(!bust)sum+=n;
+   return `<span class="${bust?'bust':win?'win':''}"><em>R${k+1}</em><b class="${color(n)}">${n}</b><i>${bust?'zählt nicht':win?'✓ aus':`= ${sum}`}</i></span>`;}).join('')}</div>`;}
  async function send(command:Command){if(!isLive()||!state){$('command-feedback').textContent='Der TV ist gerade nicht erreichbar.';return;}$('command-feedback').textContent='Wird gesendet …';pendingId=await relay.send({session:state.session,command});if(!pendingId)$('command-feedback').textContent='Nicht gesendet. Bitte Verbindung prüfen.';}
  document.querySelectorAll<HTMLButtonElement>('[data-match-mode]').forEach(b=>b.onclick=()=>{matchMode=b.dataset.matchMode as MatchMode;if(matchMode==='rounds'&&matchRounds===null)matchRounds=MATCH_ROUNDS;renderMatch();});
  document.querySelectorAll<HTMLButtonElement>('[data-match-rounds]').forEach(b=>b.onclick=()=>{matchRounds=Number(b.dataset.matchRounds)||null;renderMatch();});
  document.querySelectorAll<HTMLButtonElement>('[data-players]').forEach(b=>b.onclick=()=>{matchPlayers=Number(b.dataset.players);renderMatch();});
+ $('remote-match-board').onclick=e=>{const li=(e.target as Element).closest<HTMLElement>('[data-hist]');if(!li)return;const k=li.dataset.hist!;if(openHist.has(k))openHist.delete(k);else openHist.add(k);renderMatch();};
  $('match-pause').onclick=()=>{if(state)void send({action:state.running?'pause':'resume'});};
  $('remote-sound').onclick=()=>{if(state)void send({action:'settings',patch:{muted:!state.settings.muted}});};
  $('match-start').onclick=()=>{if(state?.match&&!state.match.finished&&!confirm('Laufendes Spiel abbrechen und neu starten?'))return;void send({action:'match',mode:matchMode,players:matchPlayers,rounds:matchRounds});};
@@ -52,5 +62,5 @@ export function startRemote(){
  document.querySelectorAll<HTMLButtonElement>('[data-action]').forEach(b=>b.onclick=()=>void send({action:b.dataset.action} as Command));
  document.querySelector<HTMLButtonElement>('[data-design-reset]')!.onclick=()=>{if(debounce!==null)clearTimeout(debounce);pendingPatch={};void send({action:'settings',patch:DEFAULT_DESIGN});};
  $('app').addEventListener('input',event=>{const patch=settingsPatch(event);if(!patch)return;pendingPatch={...pendingPatch,...patch};if(state){state.settings=applySettings(state.settings,patch);fillSettings($('app'),state.settings);}if(debounce!==null)clearTimeout(debounce);debounce=window.setTimeout(()=>{void send({action:'settings',patch:pendingPatch});pendingPatch={};},250);});
- relay.onMessage=body=>{if(!body||typeof body!=='object')return;const v=body as State;if(typeof v.session!=='string'||typeof v.phase!=='string'||!v.settings)return;state={...v,history:Array.isArray(v.history)?v.history.filter(n=>Number.isInteger(n)&&n>=0&&n<=36).slice(0,10):[],settings:applySettings(DEFAULT_SETTINGS,v.settings),match:readMatchState(v.match)};lastReceived=Date.now();render();};relay.onConnection=()=>render();void relay.connect(room);window.setInterval(render,1000);render();
+ relay.onMessage=body=>{if(!body||typeof body!=='object')return;const v=body as State;if(typeof v.session!=='string'||typeof v.phase!=='string'||!v.settings)return;state={...v,history:Array.isArray(v.history)?v.history.filter(n=>Number.isInteger(n)&&n>=0&&n<=36).slice(0,10):[],settings:applySettings(DEFAULT_SETTINGS,v.settings),match:readMatchState(v.match),lastMatch:(()=>{const l=v.lastMatch;const mm=l&&readMatchState(l.match);return mm&&Number.isFinite(l!.start)&&Number.isFinite(l!.end)?{match:mm,start:l!.start,end:l!.end}:null;})()};lastReceived=Date.now();render();};relay.onConnection=()=>render();void relay.connect(room);window.setInterval(render,1000);render();
 }
