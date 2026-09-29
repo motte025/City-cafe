@@ -290,3 +290,12 @@ body.embedded .remote-shell{padding-top:10px}
 .match-turn.split .t-mid{text-align:center;white-space:nowrap}
 .match-turn.split .t-time{text-align:right;white-space:nowrap}
 .match-turn .match-chip{font-size:1em;padding:0 .35em}
+
+/* TV-Fotos: Spaltenköpfe größer; freier Platz verteilt sich auf alle Spalten (nicht nur auf „Spieler“),
+   damit Runde / Punkte / Noch / Aus mit nicht rechts zusammenkleben; Restplatz unten wird Zeilenhöhe. */
+.match-table thead th{font-size:calc(var(--f)*.74);letter-spacing:.02em}
+.match-table tbody th{width:auto}
+.match-table td:not(.pl){padding-left:calc(var(--f)*.9)}
+.match-table thead th:not(:first-child):not(:nth-child(2)){padding-left:calc(var(--f)*.9)}
+.match-table tbody th,.match-table td{padding-top:calc(var(--f)*.22 + var(--row-extra,0px));padding-bottom:calc(var(--f)*.22 + var(--row-extra,0px))}
+.match-table thead th{font-size:calc(var(--f)*.86);letter-spacing:0}

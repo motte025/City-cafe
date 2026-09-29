@@ -88,6 +88,11 @@ export function startDisplay(){
    const fits=(f:number)=>{panel.style.setProperty('--fit',f.toFixed(3));return panel.scrollHeight<=panel.clientHeight+1&&panel.scrollWidth<=panel.clientWidth+1;};
    let lo=.3,hi=1.6;if(fits(hi))lo=hi;else for(let i=0;i<12;i++){const mid=(lo+hi)/2;if(fits(mid))lo=mid;else hi=mid;}
    panel.style.setProperty('--fit',lo.toFixed(3));
+   // Ist die Breite der Engpass, bleibt unten Platz: den gleichmäßig als Zeilenhöhe verteilen (höchstens +0,4 Schrifthöhen je Zeile).
+   panel.style.setProperty('--row-extra','0px');
+   const fpx=parseFloat(getComputedStyle(panel).fontSize)||16,tb=panel.querySelector('.match-table')!.getBoundingClientRect(),lt=$('match-last').getBoundingClientRect();
+   const free=lt.top-tb.bottom-fpx*.9,extra=Math.max(0,Math.min(free/(m.players.length*2),fpx*.4));
+   panel.style.setProperty('--row-extra',`${extra.toFixed(1)}px`);if(panel.scrollHeight>panel.clientHeight+1)panel.style.setProperty('--row-extra','0px');
    rows.innerHTML=keep[0];round.textContent=keep[1];}
   layoutWheel();
  }
@@ -102,7 +107,7 @@ export function startDisplay(){
   const b=wheel.rimBounds(),y=Math.round((top+bottom)/2-(b.top+b.bottom)/2),x=match&&!panel.hidden?Math.round((left+right)/2-(b.left+b.right)/2):0;
   document.body.style.setProperty('--wheel-x',`${x+Math.round(settings.wheelX*innerWidth)}px`);document.body.style.setProperty('--wheel-y',`${y+Math.round(settings.wheelY*innerHeight)}px`);
  }
- addEventListener('resize',()=>{matchKey='';render();});void document.fonts?.ready.then(()=>{matchKey='';render();});
+ addEventListener('resize',()=>{matchKey='';render();});void document.fonts?.ready.then(()=>{matchKey='';fitKey='';render();});
  function clockText(ms:number){const t=Math.max(0,Math.floor(ms/1000)),h=Math.floor(t/3600),mi=Math.floor(t/60)%60,se=t%60;return h?`${h}:${String(mi).padStart(2,'0')}:${String(se).padStart(2,'0')}`:`${mi}:${String(se).padStart(2,'0')}`;}
  function winnerText(m:Match){const names=m.winners.map(i=>m.players[i].name);return names.length>1?`Gleichstand: ${names.join(', ')}`:`${names[0]} gewinnt!`;}
  // Anzeige links: nur sichtbar, solange über die Fernbedienung ein Spiel läuft.
