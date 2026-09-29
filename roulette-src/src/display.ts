@@ -115,9 +115,13 @@ export function startDisplay(){
   const drawT=Math.min(1,drawElapsed/DRAW_MS),drawing=drawT<1&&m.last===null,n=m.players.length,steps=2*n+m.first,lit=drawing?Math.floor(steps*(1-(1-drawT)**3))%n:m.turn;
   // Nach einer Landung bleibt der Werfer markiert (mit seinem Ergebnis); erst mit dem nächsten Abwurf wechselt die Anzeige.
   const rolling=cycle.phase==='spinning'&&matchSpin!==null,l=m.last,hold=!drawing&&!m.finished&&!rolling&&l!==null,shown=drawing?lit:hold?l!.player:m.turn,secs=`${Math.ceil(cycle.countdown)} s`;
-  $('match-turn').textContent=drawing?'Auslosung: Wer beginnt?':m.finished?`★ ${winnerText(m)} ★`:rolling?`${current} · Kugel rollt …`
-   :hold?`${m.players[l!.player].name}: ${l!.number}${l!.win?' · ausgemacht!':l!.bust?' · zu viel':''}${counting?` · ${secs}`:' · Pause'}`
-   :counting?`${current} beginnt · ${secs}`:`${current} beginnt · Pause`;
+  // Goldener Balken: Name links, Zahl bzw. Zustand in der Mitte, Countdown rechts – mit viel Abstand, gut lesbar.
+  const bar=$('match-turn'),parts=drawing?null:m.finished?null:rolling?[current,'Kugel rollt …','']
+   :hold?[m.players[l!.player].name,`<span class="match-chip ${color(l!.number)}">${l!.number}</span>${l!.win?' ausgemacht!':l!.bust?' zu viel':''}`,counting?secs:'Pause']
+   :[current,'beginnt',counting?secs:'Pause'];
+  bar.classList.toggle('split',!!parts);
+  if(parts)bar.innerHTML=`<span class="t-name"></span><span class="t-mid">${parts[1]}</span><span class="t-time"></span>`,bar.querySelector('.t-name')!.textContent=parts[0],bar.querySelector('.t-time')!.textContent=parts[2];
+  else bar.textContent=drawing?'Auslosung: Wer beginnt?':`★ ${winnerText(m)} ★`;
   $('match-turn').classList.toggle('winner',m.finished);$('match-timer').textContent=`⏱ ${clockText((matchEnd||Date.now())-matchStart)}`;
   $('match-turn').classList.toggle('drawing',drawing);
   const key=JSON.stringify(m.state())+shown+drawing;if(key===matchKey)return;matchKey=key;

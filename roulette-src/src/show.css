@@ -283,3 +283,10 @@ body.embedded .remote-shell{padding-top:10px}
 /* Mittelweg: genug Luft um die Schrift (TV-Foto), ohne die Schrift unnötig zu verkleinern. */
 .match-table{border-spacing:0 calc(var(--f)*.26)}
 .match-table tbody th,.match-table td{line-height:1.15;padding-top:calc(var(--f)*.22);padding-bottom:calc(var(--f)*.22)}
+
+/* Goldener Balken geteilt: Name | Zahl | Countdown – je ein Drittel, damit die Werte nicht aneinanderkleben. */
+.match-turn.split{display:grid;grid-template-columns:1.25fr 1fr .75fr;align-items:center;gap:1em;text-align:left;padding-left:1em;padding-right:1em}
+.match-turn.split .t-name{overflow:hidden;text-overflow:ellipsis}
+.match-turn.split .t-mid{text-align:center;white-space:nowrap}
+.match-turn.split .t-time{text-align:right;white-space:nowrap}
+.match-turn .match-chip{font-size:1em;padding:0 .35em}
