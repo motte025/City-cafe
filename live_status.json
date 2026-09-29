@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-29T17:17:47Z",
+  "checked_at": "2026-09-29T17:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "✨DAY 29✨Ruhiger Mittwoch? | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -38,6 +38,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Runde 2 Harderstyles Eskalation  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
@@ -45,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "✨DAY 29✨Ruhiger Mittwoch? | !bier | !zug | !prep | !holy | #werbung",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "KiNK (Live) + Captain Hook b2b Ace Ventura | Dune x ARTCORE | Monegros | Beatport Live",
       "game": "DJs"
     }
   ]
