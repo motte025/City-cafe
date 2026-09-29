@@ -7,7 +7,7 @@ import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {bufferSize,shadowDue} from './render-budget';
 import {RenderProfile} from './render-profile';
 import {WheelModel} from './wheel-model';
-import {DEFAULT_DESIGN,sameShape,surfaceClearance,type DesignSettings,type WheelShape} from './wheel-shape';
+import {DEFAULT_DESIGN,FLOOR,sameShape,surfaceClearance,type DesignSettings,type WheelShape} from './wheel-shape';
 import {ORDER,STEP,TAU,sample,PlaybackClock,coast,BALL_RADIUS,reversalPlan,sampleReversal,launchPosition,pocketForAngle,type Motion} from './game';
 import {DEFAULT_TV,tvProjection,type TVSettings} from './tv-projection';
 
@@ -29,6 +29,8 @@ export class Wheel {
  /** während des Countdowns vorbereiteter Wurf (Zielindex, vorhergesagter Rotorzustand, Planungsauftrag) */
  private prepared:{index:number;direction:1|-1;angle0:number;speed0:number;ticket:PlanTicket}|null=null;
  private impactCursor=0;private sweep:T.PointLight;private glowTime=-1;private sweepAngle=0;
+ /** Nach dem Landen: die Kugel rollt in der Tasche sanft nach außen an die Wand (Fliehkraft des weiterdrehenden Kessels). */
+ private settle:{t:number;dur:number;r0:number;r1:number;a:number;y:number;last:number}|null=null;
  constructor(private host:HTMLElement){
   this.renderer=new T.WebGLRenderer({antialias:true,alpha:true});this.renderer.setPixelRatio(1);
   this.renderer.domElement.style.cssText='width:100%;height:100%;display:block';this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=T.PCFSoftShadowMap;this.renderer.shadowMap.autoUpdate=false;
@@ -48,6 +50,26 @@ export class Wheel {
   const ground=new T.Mesh(new T.PlaneGeometry(12,12),new T.ShadowMaterial({opacity:.4}));ground.rotation.x=-Math.PI/2;ground.position.y=-.36;ground.receiveShadow=true;this.scene.add(ground);
   for(const event of ['visibilitychange','freeze','resume'])document.addEventListener(event,()=>{this.clock.reset();this.profile?.reset();this.shadowDirty=true;});
   new ResizeObserver(()=>this.resize()).observe(host);this.resize();this.renderer.setAnimationLoop(t=>this.frame(t));
+ }
+ private startSettle(){
+  // Ruhelage im Rotor: Winkel beibehalten, Radius bis an die äußere Taschenwand (Wand leicht geneigt, Kugel liegt an).
+  const p=this.ball.position,r0=Math.hypot(p.x,p.z),a=Math.atan2(p.x,-p.z),R=BALL_RADIUS*this.ball.scale.x,d=this.shape.bowlDepth;
+  const yBot=(FLOOR-.006)*d,yTop=.229*d,wallAt=(y:number)=>1.985+Math.max(0,Math.min(1,(y-yBot)/(yTop-yBot)))*.055;
+  const r1=wallAt(p.y)-R*.95-.002;
+  if(!(r1>r0+.004)){this.settle=null;return;}
+  // Je schneller der Kessel noch dreht, desto zügiger rollt sie nach außen (0,55–1,4 s).
+  const w=Math.abs(this.speed),dur=Math.max(.55,Math.min(1.4,(r1-r0)/.12*(1.2/(.6+w))));
+  this.settle={t:0,dur,r0,r1,a,y:p.y,last:r0};
+ }
+ private stepSettle(dt:number){
+  const s=this.settle;if(!s)return;s.t+=dt;const u=Math.min(1,s.t/s.dur);
+  // Weich anrollen und auslaufen, an der Wand ein kaum sichtbares Nachfedern.
+  const ease=u<1?1-Math.pow(1-u,3):1,bounce=u>=1?0:Math.max(0,u-.8)/.2,rebound=-.006*Math.sin(Math.PI*bounce)*(1-bounce);
+  const r=s.r0+(s.r1-s.r0)*ease+rebound,R=BALL_RADIUS*this.ball.scale.x;
+  this.ball.position.set(Math.sin(s.a)*r,s.y,-Math.cos(s.a)*r);
+  // Rollen statt Gleiten: Drehung um die Achse quer zur Rollrichtung.
+  const axis=new T.Vector3(Math.cos(s.a),0,Math.sin(s.a));this.ball.rotateOnWorldAxis(axis.applyQuaternion(this.rotor.getWorldQuaternion(new T.Quaternion())),(r-s.last)/R);s.last=r;
+  this.shadowDirty=true;if(u>=1)this.settle=null;
  }
  private ballSupport(radius:number){return surfaceClearance(radius,BALL_RADIUS*this.ball.scale.x,this.shape);}
  get designPending(){return this.pendingShape!==null;}
@@ -105,7 +127,7 @@ export class Wheel {
  /** overshoot: wie weit der Countdown im auslösenden Bild schon abgelaufen war (s); fehlt bei „Jetzt drehen“. */
  spin(index:number,variant:number,overshoot?:number){
   this.model.highlightPocket(null);this.glowTime=-1;
-  this.scene.attach(this.ball);const direction=this.nextDirection;this.nextDirection=direction===1?-1:1;
+  this.settle=null;this.scene.attach(this.ball);const direction=this.nextDirection;this.nextDirection=direction===1?-1:1;
   const prep=this.prepared;this.prepared=null;
   const planned=!!prep&&overshoot!==undefined&&prep.index===index&&prep.direction===direction&&this.current(prep.ticket.request);
   let angle=this.angle,speed=this.speed,elapsed=0,ticket:PlanTicket;
@@ -172,8 +194,8 @@ export class Wheel {
    const hits=this.motion.plan?.impacts;
    if(hits){while(this.impactCursor<hits.length&&hits[this.impactCursor]<=this.elapsed){this.onImpact?.(hits[this.impactCursor+1]);this.impactCursor+=2;}}
    else if(p.impact!==this.impact){this.impact=p.impact;if(p.impact>=0)this.onImpact?.(Math.max(.12,1-p.impact/14));}
-   if(p.done){this.shadowDirty=true;this.rotor.attach(this.ball);const actual=pocketForAngle(Math.atan2(this.ball.position.x,-this.ball.position.z));this.lastIndex=actual;this.motion=null;if(this.design.pocketGlow){this.model.highlightPocket(actual);this.glowTime=0;}if(this.pendingShape)this.applyShape(this.pendingShape);this.onLand?.(actual);}
-  }else{const next=coast(this.speed,dt);this.angle+=next.angle;this.speed=next.speed;this.rotor.rotation.y=-this.angle;}
+   if(p.done){this.shadowDirty=true;this.rotor.attach(this.ball);this.startSettle();const actual=pocketForAngle(Math.atan2(this.ball.position.x,-this.ball.position.z));this.lastIndex=actual;this.motion=null;if(this.design.pocketGlow){this.model.highlightPocket(actual);this.glowTime=0;}if(this.pendingShape)this.applyShape(this.pendingShape);this.onLand?.(actual);}
+  }else{const next=coast(this.speed,dt);this.angle+=next.angle;this.speed=next.speed;this.rotor.rotation.y=-this.angle;this.stepSettle(dt);}
   this.model.uprightCoin(this.angle);
   if(this.glowTime>=0){this.glowTime+=dt;this.model.glowPulse(this.glowTime);}
   this.sweepAngle+=dt*.35;this.sweep.intensity=this.design.lightPlay*9;this.sweep.position.set(Math.sin(this.sweepAngle)*3.4,3.2,-Math.cos(this.sweepAngle)*3.4);
