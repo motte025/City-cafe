@@ -251,3 +251,11 @@ body.embedded .remote-shell{padding-top:10px}
 .match-table tbody th,.match-table td{line-height:1.08;padding-top:calc(var(--f)*.16);padding-bottom:calc(var(--f)*.16)}
 .match-table{border-spacing:0 calc(var(--f)*.2)}
 .match-panel .match-last{font-size:calc(var(--f)*.78)}
+
+/* Goldene Zeile – endgültig: alle Zellen gleich (keine Linien einzelner Zellen), Balken innen links. */
+.match-table tbody tr.turn>th,.match-table tbody tr.turn>td{background:#d8b87236;box-shadow:none;color:#ffe7b0}
+.match-table tbody tr.turn>td.pl{box-shadow:inset calc(var(--f)*.22) 0 #e8c983;color:#f1d59a}
+.match-table tbody tr.turn>td.noch{color:#ffe7b0}
+.match-table tbody tr.draw>th,.match-table tbody tr.draw>td{background:#e8c98350}
+/* Trennlinie: feine Goldlinie, zur Mitte hin kräftiger */
+.match-table tr.sep>td{padding:0;height:1px;line-height:0;font-size:0;background:linear-gradient(90deg,transparent,#e8c98399 20%,#e8c983cc 50%,#e8c98399 80%,transparent)}
