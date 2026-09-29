@@ -77839,36 +77839,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "The Jackson 5",
-    "title": "Who's Lovin' You",
+    "artist": "Uwe Busse",
+    "title": "Träume können fliegen",
     "album": "",
-    "category": "80s Party",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
       "Party",
-      "Karaoke",
-      "80s Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Alain Clark",
-    "title": "Father & Friend",
-    "album": "",
-    "category": "Deutsch-Pop",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Karaoke",
-      "Deutsch-Pop"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
