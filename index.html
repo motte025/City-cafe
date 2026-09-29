@@ -448,6 +448,12 @@
             background: #21150c;
         }
         #mittagsteller-fullscreen.active { display: block; }
+        /* Roulette-Werbung: eigene Vollbildseite im iframe, nur waehrend des Slots im DOM */
+        #roulette-werbung-fullscreen {
+            display: none; position: absolute; inset: 0; z-index: 600; background: #061a12;
+        }
+        #roulette-werbung-fullscreen.active { display: block; }
+        #roulette-werbung-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
         #mittagsteller-fullscreen img {
             width: 100%; height: 100%; object-fit: contain; display: block;
         }
@@ -3050,6 +3056,8 @@
         </div>
 
         <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-24 · v6.1</div>
+
+        <div id="roulette-werbung-fullscreen"></div>
 
         <div id="mittagsteller-fullscreen">
             <img src="mittagsteller-querformat.jpg" alt="Gasthaus Reiterklause Mittagsteller">
@@ -7919,6 +7927,17 @@
         // sowohl runMasterSequence als auch djStopPlayer sie kennen muessen.
         const DJ_SLOT_INDEX = 0.9;
         const MITTAGSTELLER_SLOT_INDEX = 0.8;
+        // Roulette-Werbung ("Demnaechst"): 5 Minuten im Vollbild am Ende jedes
+        // Zyklus. ?werbung=0 schaltet sie fuer diesen Screen ab.
+        const WERBUNG_SLOT_INDEX = 11;
+        const WERBUNG_DAUER_MS = 5 * 60 * 1000;
+        const WERBUNG_AN = !/(?:^|[?&])werbung=0(?:&|$)/.test(location.search);
+        function werbungAus() {
+            const f = document.getElementById('roulette-werbung-fullscreen');
+            if (!f) return;
+            f.classList.remove('active');
+            f.innerHTML = '';   // iframe wirklich entfernen - spart auf der Box Rechenzeit
+        }
         const MITTAGSTELLER_DAUER_MS = 2 * 60 * 1000;
         function mittagstellerRestzeitMs() {
             const teile = new Intl.DateTimeFormat('en-CA', {
@@ -12759,6 +12778,7 @@
             // Verhindert, dass eine abgeloeste Sequenz im Hintergrund weiterlaeuft.
             cancelSequenceTimers();
             document.getElementById('mittagsteller-fullscreen').classList.remove('active');
+            werbungAus();
 
             document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
             // Ein ausgeblendetes iframe streamt weiter - die Player muessen deshalb
@@ -12966,8 +12986,20 @@
             } else if (mediaStateIndex === 9) {
                 runMusicSlidesState(10); // -> Trinkspiel V1 (Foto)
 
+            } else if (mediaStateIndex === WERBUNG_SLOT_INDEX) {
+                mediaStateIndex = QR_SLOT_INDEX;
+                if (!WERBUNG_AN) { runMasterSequence(); return; }
+                const f = document.getElementById('roulette-werbung-fullscreen');
+                const rahmen = document.createElement('iframe');
+                rahmen.src = 'roulette-werbung/?_t=' + Date.now();
+                rahmen.setAttribute('scrolling', 'no');
+                rahmen.setAttribute('title', 'Roulette - demnaechst');
+                f.appendChild(rahmen);
+                f.classList.add('active');
+                globalMasterTimer = later(runMasterSequence, WERBUNG_DAUER_MS); // -> Zyklusanfang
+
             } else {
-                runPhotoTrinkspielV1(QR_SLOT_INDEX); // -> wieder an den Zyklusanfang (QR-Codes)
+                runPhotoTrinkspielV1(WERBUNG_SLOT_INDEX); // -> Roulette-Werbung, danach Zyklusanfang
             }
         }
         (function initialPoster() {
