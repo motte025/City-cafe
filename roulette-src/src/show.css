@@ -322,3 +322,21 @@ body.embedded .remote-shell{padding-top:10px}
 .match-names-grid input{flex:1;min-width:0;padding:9px 10px;border-radius:8px;border:1px solid #cbb58155;background:#091b13;color:#f3e8ce;font:inherit}
 .match-names-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .match-names-actions button{flex:1 1 auto}
+
+/* K.-o.-Modus: Ausgeschiedene gedimmt, Stechen gold, Sicherheit grün, Verlierer rot */
+.match-table tr.gone th,.match-table tr.gone td{opacity:.45}
+.match-table .ko-status{color:#cfc6a8;font-weight:400}
+.match-table .ko-status.is-out{color:#c9848c}
+.match-table .ko-status.is-safe{color:#8fd1a8}
+.match-table .ko-status.is-tie{color:#ffd98a;font-weight:600}
+.match-table tr.loser th,.match-table tr.loser td{background:#8a1f2e55;color:#ffd7d7}
+.match-modes{grid-template-columns:repeat(3,1fr)}
+
+/* Jetons: oben links die Bank (statt Logo), unten rechts der Tisch (statt Schriftzug) */
+.show-header .chips-box{height:100%;width:clamp(220px,21vw,520px);display:block;letter-spacing:0}
+.chips-box canvas.chips{display:block;width:100%;height:100%}
+.result-strip .chips-table-box{justify-self:end;height:100%;width:clamp(200px,18vw,440px)}
+.result-strip{grid-template-columns:minmax(130px,1fr) auto minmax(200px,1fr)}
+.result-strip .chips-table-box{height:calc(100% - 12px);align-self:center}
+.show-header .chips-box{height:calc(100% - 14px);align-self:center}
+.match-table .match-chip.prev{opacity:.5}

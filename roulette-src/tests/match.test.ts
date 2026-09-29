@@ -15,3 +15,13 @@ test('Machen mehrere in derselben Runde aus, teilen sie sich den Sieg; 201 funkt
 test('Beginner: Reihenfolge und Runden zählen ab dem ausgelosten Spieler',()=>{const m=new Match('rounds',4,2,2);assert.equal(m.turn,2);const order:number[]=[];for(let i=0;i<8;i++){order.push(m.turn);m.record(1);}assert.deepEqual(order,[2,3,0,1,2,3,0,1]);assert.ok(m.finished);assert.throws(()=>new Match('rounds',3,5,3));const s=JSON.parse(JSON.stringify(m.state()));assert.equal(readMatchState({...s,first:7}),null);});
 test('Auslosung ist gleichverteilt und lehnt den Überhang ab',()=>{const limit=Math.floor(2**32/3)*3;const seq=[limit,limit+1,7];assert.equal(randomBelow(3,()=>seq.shift()!),1);const counts=[0,0,0,0,0];for(let i=0;i<50000;i++)counts[randomBelow(5)]++;for(const c of counts)assert.ok(Math.abs(c-10000)<500,String(counts));});
 test('Wurf-Historie: jeder Wurf wird mitgeschrieben, überworfen und ausgemacht gekennzeichnet',()=>{const m=new Match('x301',2);m.players[0].score=290;m.record(12);m.record(5);m.record(11);assert.equal(m.players[0].hist,'12x,11*');assert.equal(m.players[1].hist,'5');const s=JSON.parse(JSON.stringify(m.state()));assert.equal(readMatchState(s)!.players[0].hist,'12x,11*');});
+test('K.o. (Letzter gewinnt): niedrigste Zahl scheidet aus, Stechen bei Gleichstand, Plätze stimmen',()=>{const m=new Match('ko',4,null,0);
+ m.record(10);m.record(3);m.record(20);m.record(15);assert.ok(m.players[1].out);assert.equal(m.players[1].place,4);assert.deepEqual(m.pool,[0,2,3]);assert.equal(m.turn,0);assert.equal(m.event?.kind,'out');
+ m.record(5);m.record(5);m.record(30);assert.ok(m.tie);assert.deepEqual(m.pool,[0,2]);assert.equal(m.event?.kind,'tie');
+ m.record(7);m.record(9);assert.ok(m.players[0].out);assert.equal(m.players[0].place,3);assert.deepEqual(m.pool,[2,3]);
+ m.record(0);m.record(1);assert.ok(m.finished);assert.equal(m.end,'ko');assert.deepEqual(m.winners,[3]);assert.equal(m.players[3].place,1);assert.equal(m.players[2].place,2);
+ assert.deepEqual(m.ranking(),[3,2,0,1]);assert.equal(m.record(5),null);});
+test('K.o. (Letzter verliert): höchste Zahl ist sicher, der Letzte ist Verlierer',()=>{const m=new Match('kol',3,null,1);
+ assert.equal(m.turn,1);assert.deepEqual(m.pool,[1,2,0]);m.record(36);m.record(2);m.record(4);assert.equal(m.players[1].place,1);assert.equal(m.event?.kind,'safe');
+ m.record(8);m.record(3);assert.ok(m.finished);assert.equal(m.loser,0);assert.deepEqual(m.winners,[]);assert.equal(m.players[0].place,3);assert.equal(m.players[2].place,2);
+ const s=JSON.parse(JSON.stringify(m.state()));assert.ok(readMatchState(s));assert.throws(()=>new Match('ko',3,5));});
