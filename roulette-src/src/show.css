@@ -64,7 +64,7 @@
 
 /* Spielmodus (nur per Fernbedienung): Punktetafel links neben dem Kessel, ersetzt dort den Countdown. */
 .display-page.match-on .cycle-panel{display:none}
-.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:calc(14% + .8vh);width:clamp(340px,33vw,680px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--fit,1));overflow:hidden}
+.match-panel{--rows:4;position:fixed;z-index:2;left:3.3%;top:13.5%;bottom:calc(14% + .8vh);width:clamp(340px,33vw,680px);display:flex;flex-direction:column;gap:1.3vh;padding:1.8vh 1.4vw;border:1px solid #cbb58155;border-radius:14px;background:linear-gradient(180deg,#081a15ee,#06130fdd);box-shadow:0 12px 40px #0008;color:#f3ead2;font-size:calc(min(3.2vh,25vh / var(--rows),1.25vw)*var(--tv-text-scale,1)*var(--panel-scale,1)*var(--fit,1));overflow:hidden}
 .match-panel>*{flex-shrink:0}
 .match-panel[hidden]{display:none}
 .match-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;border-bottom:1px solid #cbb58133;padding-bottom:1.1vh}
@@ -225,3 +225,14 @@ body.embedded .remote-shell{padding-top:10px}
 .match-table .match-first{display:inline-block;color:#e8c983;font-size:.95em;margin-right:.35em;text-shadow:0 0 6px #e8c98366}
 .match-table tr.won .match-first{color:#10261c;text-shadow:none}
 .match-first-legend{color:#e8c983;white-space:nowrap;margin-left:.4em}
+
+/* Ohne die zwei Querlinien (Kopf und Zahlenleiste) – die Flächen bleiben als Grenzen für den Kessel. */
+.show-header{border-bottom:0}.result-strip{border-top:0}
+/* Tafelgröße (Fernbedienung): Breite und Schrift mit --panel-scale; kleiner = auch niedriger, größer = nur breiter. */
+.match-panel{width:calc(clamp(340px,33vw,680px)*var(--panel-scale,1));bottom:calc(86.5vh - (71.7vh * min(1,var(--panel-scale,1))))}
+/* Goldene Zeile (wer dran ist): gleiche Höhe wie alle Zeilen, ruhige Goldfläche mit Balken links – ohne Rahmenlinien je Zelle. */
+.match-table{border-spacing:0 .5vh}
+.match-table tr.turn>*{background:#d8b8723d;box-shadow:none}
+.match-table tr.turn>td.pl{box-shadow:inset .35vw 0 #e8c983;border-radius:8px 0 0 8px}
+.match-table tr.turn>*:last-child{border-radius:0 8px 8px 0}
+.match-table tr.turn th{color:#ffe7b0;font-weight:500}
