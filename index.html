@@ -443,6 +443,14 @@
             will-change: transform;
         }
         .poster-image.active { opacity: 1; z-index: 2; }
+        #mittagsteller-fullscreen {
+            display: none; position: absolute; inset: 0; z-index: 600;
+            background: #21150c;
+        }
+        #mittagsteller-fullscreen.active { display: block; }
+        #mittagsteller-fullscreen img {
+            width: 100%; height: 100%; object-fit: contain; display: block;
+        }
         .poster-ambient-glaze {
             position: absolute; top: 0; left: 0; width: 1280px; height: 815px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%);
@@ -3042,6 +3050,10 @@
         </div>
 
         <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-24 · v6.1</div>
+
+        <div id="mittagsteller-fullscreen">
+            <img src="mittagsteller-querformat.jpg" alt="Gasthaus Reiterklause Mittagsteller">
+        </div>
 
         <!-- Champions-League-Tabelle im Vollbild: eigenes Element direkt unter
              #dashboard-scaler (nicht unter .media-zone), damit sie per z-index
@@ -7906,6 +7918,19 @@
         // Position des DJ-Slots in der Rotation. Steht als Konstante hier, weil
         // sowohl runMasterSequence als auch djStopPlayer sie kennen muessen.
         const DJ_SLOT_INDEX = 0.9;
+        const MITTAGSTELLER_SLOT_INDEX = 0.8;
+        const MITTAGSTELLER_DAUER_MS = 2 * 60 * 1000;
+        function mittagstellerRestzeitMs() {
+            const teile = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit',
+                day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+            }).formatToParts(new Date());
+            const wert = typ => Number(teile.find(teil => teil.type === typ).value);
+            const datum = wert('year') * 10000 + wert('month') * 100 + wert('day');
+            const sekunden = wert('hour') * 3600 + wert('minute') * 60 + wert('second');
+            if (datum > 20261002 || sekunden < 7 * 3600 || sekunden >= 14 * 3600 + 30 * 60) return 0;
+            return (14 * 3600 + 30 * 60 - sekunden) * 1000;
+        }
 
         // Nightlife steht hinter der Dart-Strecke - vor dem Tag/Nacht-Plakat.
         const NL_SLOT_INDEX = -0.5;
@@ -12733,6 +12758,7 @@
             // Erst alle Timer der vorherigen Ansicht abraeumen, dann die neue starten.
             // Verhindert, dass eine abgeloeste Sequenz im Hintergrund weiterlaeuft.
             cancelSequenceTimers();
+            document.getElementById('mittagsteller-fullscreen').classList.remove('active');
 
             document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
             // Ein ausgeblendetes iframe streamt weiter - die Player muessen deshalb
@@ -12849,8 +12875,19 @@
                 // ausgeblendeten Ansicht ablehnt.
                 djVorpuffern();
 
-                mediaStateIndex = DJ_SLOT_INDEX;
+                mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
                 globalMasterTimer = later(runMasterSequence, 35000);
+
+            } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {
+                const restzeit = mittagstellerRestzeitMs();
+                if (!restzeit) {
+                    mediaStateIndex = DJ_SLOT_INDEX;
+                    runMasterSequence();
+                    return;
+                }
+                document.getElementById('mittagsteller-fullscreen').classList.add('active');
+                mediaStateIndex = DJ_SLOT_INDEX;
+                globalMasterTimer = later(runMasterSequence, Math.min(MITTAGSTELLER_DAUER_MS, restzeit));
 
             } else if (mediaStateIndex === DJ_SLOT_INDEX) {
                 // DJ-Live liegt bewusst weit vorne im Zyklus: geht jemand live, soll
