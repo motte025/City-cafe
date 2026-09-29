@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-29T14:57:46Z",
+  "checked_at": "2026-09-29T15:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -35,6 +35,20 @@
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 92 😈 | Dance Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #695 with Dusky",
+      "game": "Music"
     }
   ]
 }
