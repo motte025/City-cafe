@@ -77877,5 +77877,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "Sean Kingston",
+    "title": "Fire Burning",
+    "album": "",
+    "category": "Club / Hip Hop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Club",
+      "Hip Hop",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
