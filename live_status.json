@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-29T11:52:46Z",
+  "checked_at": "2026-09-29T12:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s Day - Best of 2000-2009 - Live aus Studio 2",
       "game": "DJs"
     }
   ]
