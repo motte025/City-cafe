@@ -22,6 +22,8 @@ export const MIN_PLAYERS=2,MAX_PLAYERS=12,MATCH_ROUNDS=10,MIN_ROUNDS=1,MAX_ROUND
 export const ROUND_PRESETS=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30];
 export const modeLabel=(m:MatchMode)=>m==='rounds'?'Runden':m.slice(1);
 export const modeTarget=(m:MatchMode)=>m==='rounds'?null:Number(m.slice(1));
+/** Spielername von der Fernbedienung: höchstens 16 Zeichen, keine Steuerzeichen; leer → „Spieler n“. */
+export function cleanName(v:unknown,i:number){const s=typeof v==='string'?v.replace(/[\u0000-\u001f\u007f<>]/g,'').replace(/\s+/g,' ').trim().slice(0,16):'';return s||`Spieler ${i+1}`;}
 export const isMatchMode=(v:unknown):v is MatchMode=>MATCH_MODES.includes(v as MatchMode);
 /** Gleichverteilte Zufallszahl 0 … n−1 (Web Crypto, Rejection Sampling wie randomIndex). */
 export function randomBelow(n:number,read:()=>number=()=>crypto.getRandomValues(new Uint32Array(1))[0]){const limit=Math.floor(2**32/n)*n;let v;do{v=read();}while(v>=limit);return v%n;}

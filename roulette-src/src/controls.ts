@@ -5,7 +5,8 @@ import type {Settings} from './settings';
  */
 export function settingsForm(){const group=(title:string,body:string,note='')=>`<details class="picture-settings"><summary>${title}</summary><div class="settings-grid">${body}</div>${note}</details>`;return [
  group('🔊 Ton',`${field('effects','Kugel & Aufpraller','%',0,1,.05)}${field('ambience','Hintergrundgeräusch','%',0,1,.05)}
- <label class="switch"><input type="checkbox" data-setting="muted" data-invert> Ton an</label>`),
+ <label class="switch"><input type="checkbox" data-setting="muted" data-invert> Ton an</label>
+ <label class="switch"><input type="checkbox" data-setting="announce"> Zahlenansage (Croupier-Stimme)</label>`),
  group('⏱ Tempo',`${field('delay','Normal · Pause vor dem Abwurf','s',3,60,1)}${field('duration','Normal · Dauer der Kugelrunde','s',12,25,1)}${field('durationSpread','Normal · Abweichung ±','s',0,5,.5)}
  ${field('matchDelay','Spielmodus · Pause vor dem Abwurf','s',3,60,1)}${field('matchDuration','Spielmodus · Dauer der Kugelrunde','s',12,25,1)}${field('matchSpread','Spielmodus · Abweichung ±','s',0,5,.5)}`,
  '<p>Normaler Zyklus und Spielmodus haben ein eigenes Tempo.</p>'),
@@ -28,6 +29,7 @@ export function settingsForm(){const group=(title:string,body:string,note='')=>`
  <label class="switch"><input type="checkbox" data-setting="centerLogo"> Emblem „City Cafe · Fischl“</label>
  ${choice('crossStyle','Mittelkreuz · Design',['Klassisch','Stern (8 Arme)','Krone','Schlicht (Kappe)','City Cafe (Medaillon)'])}${field('brass','Mittelkreuz · Chrom bis Messing','%',0,1,.05)}`),
  group('📺 TV-Bild & Darstellung',`${field('brightness','Helligkeit','',.65,1.4,.05)}${field('zoom','Kesselgröße · 100 % = volle Höhe','%',.75,1.15,.01)}${field('wheelX','Kessel verschieben · links ↔ rechts','%',-.2,.2,.01)}${field('wheelY','Kessel verschieben · hoch ↕ runter','%',-.15,.15,.01)}${field('panelWidth','Tafel · Breite (Spielmodus)','%',.7,1.3,.05)}${field('panelHeight','Tafel · Höhe (Spielmodus)','%',.6,1.1,.05)}${field('textScale','TV-Texte vergrößern','%',.85,1.3,.05)}${field('feltBackground','Filz-Hintergrund','%',0,1,.05)}
+ <label class="switch"><input type="checkbox" data-setting="cinematic"> Kamerafahrt beim Einlaufen · Zeitlupe beim entscheidenden Wurf</label>
  <label class="switch"><input type="checkbox" data-setting="economy"> Sparsame Darstellung (TV-Box)</label>${field('renderScale','3D-Auflösung im Sparmodus','%',.5,1,.05)}
  <label class="switch"><input type="checkbox" data-setting="correction"> TV-Blickwinkel korrigieren</label>
  ${field('diagonal','Bildschirm','Zoll',24,120,1,'number')}${field('bottomHeight','Unterkante','m',0,4,.05,'number')}${field('distance','Abstand','m',1,10,.1,'number')}${field('eyeHeight','Augenhöhe','m',.5,2.2,.05,'number')}`,

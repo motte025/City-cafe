@@ -14,7 +14,9 @@ import {DEFAULT_TV,tvProjection,type TVSettings} from './tv-projection';
 export class Wheel {
  renderer:T.WebGLRenderer;scene=new T.Scene();rotor=new T.Group();ball:T.Mesh;
  camera=new T.PerspectiveCamera(37,1,.1,60);
- angle=0;speed=0;timeScale=1;/** automatischer Maßstab, damit der Kessel zwischen die Linien passt (display.ts) */fit=1;durationSetting=12;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
+ angle=0;speed=0;timeScale=1;
+ /** Kamerafahrt beim Einlaufen (Einstellung) und Zeitlupe für entscheidende Würfe (setzt display.ts je Wurf). */
+ cinematic=true;dramatic=false;private cine=1;private slow=1;private holdCine=0;/** automatischer Maßstab, damit der Kessel zwischen die Linien passt (display.ts) */fit=1;durationSetting=12;durationSpread=3;zoom=1;motion:Motion|null=null;elapsed=0;
  ballDiameter=21;ballMass=8.7;ballBounce=1;ballRunMin=5;ballRunMax=15;deflectorResistanceRadial=30;deflectorResistanceTangential=30;
  readonly planner=new BallPlanner();
  /** Zähler für die Messung: wie oft die Keyframe-Rückfallebene statt der Physik lief. */
@@ -91,8 +93,10 @@ export class Wheel {
  }
  /** Bildschirmlage des äußeren Kesselrands (CSS-Pixel relativ zum Host), für das Ausrichten an der Kopfzeile. */
  rimBounds(){
+  const c=this.cine;if(c!==1){this.cine=1;this.placeCamera();}
   const {width,height}=this.host.getBoundingClientRect();let top=Infinity,bottom=-Infinity,left=Infinity,right=-Infinity;const v=new T.Vector3();
   for(let i=0;i<72;i++){const a=i/72*Math.PI*2;v.set(Math.sin(a)*3.4,1.04,-Math.cos(a)*3.4).project(this.camera);const x=(v.x+1)/2*width,y=(1-v.y)/2*height;top=Math.min(top,y);bottom=Math.max(bottom,y);left=Math.min(left,x);right=Math.max(right,x);}
+  if(c!==1){this.cine=c;this.placeCamera();}
   return {top,bottom,left,right};
  }
  setFit(value:number){const v=Math.max(.5,Math.min(2,value));if(Math.abs(v-this.fit)<.002)return;this.fit=v;this.resize();}
@@ -100,7 +104,10 @@ export class Wheel {
  private resize(){
   const {width,height}=this.host.getBoundingClientRect();if(width<=0||height<=0)return;
   const buffer=bufferSize(width,height,devicePixelRatio,this.economy,this.renderScale);this.renderer.setSize(buffer.width,buffer.height,false);this.camera.aspect=width/height;this.shadowDirty=true;this.profile?.reset();
-  const tilt=this.design.cameraTilt*Math.PI/180,distance=15.5/(this.zoom*this.fit)/Math.min(1,this.camera.aspect);
+  this.placeCamera();
+ }
+ private placeCamera(){
+  const tilt=this.design.cameraTilt*Math.PI/180,distance=15.5/(this.zoom*this.fit*this.cine)/Math.min(1,this.camera.aspect);
   this.camera.position.set(0,.3+Math.cos(tilt)*distance,Math.sin(tilt)*distance);this.camera.up.set(0,0,-1);this.camera.lookAt(0,.3,0);this.camera.updateProjectionMatrix();
   if(this.tvEnabled&&this.tvSettings.correction){const p=tvProjection(this.tvSettings);const warp=new T.Matrix4().set(p.scale,0,0,0,0,p.scale*p.stretch,0,0,0,0,.2,0,0,-p.keystone*p.scale,0,1);this.camera.projectionMatrix.premultiply(warp);this.camera.projectionMatrixInverse.copy(this.camera.projectionMatrix).invert();}
  }
@@ -179,7 +186,14 @@ export class Wheel {
   return `${phase} · ${this.elapsed.toFixed(2)} / ${pl.restTime.toFixed(2)} s\nLaufweg ${pl.run} Taschen ab Tasche ${ORDER[pl.entryPocket]} · Rauten ${pl.deflectorHits}\nKontakte bisher ${contacts} · Abwurf ${(pl.launchSpeed/TAU).toFixed(2)} U/s\n${plan}\nWürfe ${this.stats.throws} · Rückfall ${this.stats.fallbacks}`;
  }
  private frame(time:number){
-  const dt=this.clock.tick(time,!document.hidden)*this.timeScale;if(document.hidden)return;
+  const raw=this.clock.tick(time,!document.hidden);if(document.hidden)return;
+  // Kamerafahrt: sobald die Kugel absteigt, fährt die Kamera sanft näher (bis 1,16×); zurück, wenn der nächste Wurf vorbereitet wird.
+  const inPockets=!!this.motion&&this.phase>=1,cineTarget=this.cinematic&&(inPockets||(!this.motion&&!this.preparation&&this.cine>1.001&&this.holdCine>0))?1.16:1;
+  if(!this.motion&&!this.preparation&&this.holdCine>0)this.holdCine-=raw;
+  const nc=this.cine+(cineTarget-this.cine)*(1-Math.exp(-raw*1.6));if(Math.abs(nc-this.cine)>.0004){this.cine=nc;this.placeCamera();this.shadowDirty=true;}else if(this.cine!==cineTarget&&Math.abs(cineTarget-this.cine)<=.0004){this.cine=cineTarget;this.placeCamera();}
+  // Zeitlupe nur beim entscheidenden Wurf, nur in den Taschen (0,55×), weich ein- und ausgeblendet.
+  const slowTarget=this.dramatic&&!!this.motion&&this.phase>=2?.55:1;this.slow+=(slowTarget-this.slow)*(1-Math.exp(-raw*3));
+  const dt=raw*this.timeScale*this.slow;
   if(this.preparation){
    const p=this.preparation;p.elapsed+=dt;const aligned=sampleReversal(p.plan,p.elapsed);this.angle=aligned.angle;this.speed=aligned.speed;this.rotor.rotation.y=-this.angle;
    // Einsetzen: endet exakt am Abwurfpunkt des vorab gerechneten Wurfs (sonst am Punkt der Rückfallebene)
@@ -194,7 +208,7 @@ export class Wheel {
    const hits=this.motion.plan?.impacts;
    if(hits){while(this.impactCursor<hits.length&&hits[this.impactCursor]<=this.elapsed){this.onImpact?.(hits[this.impactCursor+1]);this.impactCursor+=2;}}
    else if(p.impact!==this.impact){this.impact=p.impact;if(p.impact>=0)this.onImpact?.(Math.max(.12,1-p.impact/14));}
-   if(p.done){this.shadowDirty=true;this.rotor.attach(this.ball);this.startSettle();const actual=pocketForAngle(Math.atan2(this.ball.position.x,-this.ball.position.z));this.lastIndex=actual;this.motion=null;if(this.design.pocketGlow){this.model.highlightPocket(actual);this.glowTime=0;}if(this.pendingShape)this.applyShape(this.pendingShape);this.onLand?.(actual);}
+   if(p.done){this.shadowDirty=true;this.rotor.attach(this.ball);this.startSettle();this.holdCine=3.5;this.dramatic=false;const actual=pocketForAngle(Math.atan2(this.ball.position.x,-this.ball.position.z));this.lastIndex=actual;this.motion=null;if(this.design.pocketGlow){this.model.highlightPocket(actual);this.glowTime=0;}if(this.pendingShape)this.applyShape(this.pendingShape);this.onLand?.(actual);}
   }else{const next=coast(this.speed,dt);this.angle+=next.angle;this.speed=next.speed;this.rotor.rotation.y=-this.angle;this.stepSettle(dt);}
   this.model.uprightCoin(this.angle);
   if(this.glowTime>=0){this.glowTime+=dt;this.model.glowPulse(this.glowTime);}

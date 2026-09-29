@@ -1,0 +1,3 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {numberWord,announcement} from '../src/voice';
+test('Zahlenansage: alle 37 Zahlen als deutsches Wort, mit Farbe',()=>{assert.equal(numberWord(0),'Zéro');assert.equal(numberWord(17),'Siebzehn');assert.equal(numberWord(21),'Einundzwanzig');assert.equal(numberWord(30),'Dreißig');assert.equal(numberWord(36),'Sechsunddreißig');
+ for(let n=0;n<=36;n++)assert.ok(numberWord(n).length>2);assert.equal(announcement(17),'Siebzehn, schwarz.');assert.equal(announcement(0),'Zéro.');assert.equal(announcement(32,'Mario macht aus'),'Zweiunddreißig, rot. Mario macht aus.');});
