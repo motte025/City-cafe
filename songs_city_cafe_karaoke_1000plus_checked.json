@@ -79475,56 +79475,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Eagles",
-    "title": "Hotel California",
+    "artist": "Elton John",
+    "title": "Goodbye Yellow Brick Road",
     "album": "",
-    "category": "Rock",
+    "category": "Rock / Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Rock",
-      "Party",
-      "Karaoke"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Justin Timberlake",
-    "title": "Cry Me a River",
-    "album": "",
-    "category": "90s Party",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Karaoke",
-      "90s Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Lale Andersen",
-    "title": "Ein Schiff wird kommen",
-    "album": "",
-    "category": "Schlager",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Schlager",
-      "Evergreen",
-      "Kult"
+      "Klassiker",
+      "Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
