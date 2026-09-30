@@ -7,7 +7,7 @@ export const DEFAULT_DESIGN = {
  fretHeight:11,
  woodWarmth:.65, gloss:.65, metalWarmth:.3, lightContrast:.65, textScale:1,
  innerTone:1,outerTone:1,trackTone:1,innerGloss:.25,outerGloss:.25,pocketRichness:.5,grainTrack:.5,grainInner:.5,
- frontText:'DEMNÄCHST IM CITY-CAFE: HALLOWEEN PARTY',frontText2:'',woodOuter:0,woodTrack:0,woodInner:0,crossStyle:0,brass:0,ballGloss:.65,lightPlay:.4,feltBackground:.6,pocketGlow:true,goldNumbers:false,centerLogo:true,
+ frontText:'DEMNÄCHST IM CITY-CAFE: HALLOWEEN PARTY',frontText2:'',woodOuter:0,woodTrack:0,woodInner:0,crossStyle:0,brass:0,ballGloss:.65,lightPlay:.4,feltBackground:.6,pocketGlow:true,goldNumbers:false,emblem:false,
  textFont:0,textWeight:700,textSpacing:1,textEffect:0,textOutline:.6,textSize:1,
  /** Rückseite des Innenkessels (Werbetafel): eigene Texte und eigener Schriftstil. */
  backText:'CITY-CAFE KLAGENFURT',backText2:'',backFont:0,backWeight:700,backSpacing:1,backEffect:0,backOutline:.6,backSize:1,

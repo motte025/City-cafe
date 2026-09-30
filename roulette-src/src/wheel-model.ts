@@ -54,7 +54,7 @@ export class WheelModel {
  private gold=new T.MeshStandardMaterial({transparent:true,metalness:.75,roughness:.32,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
  constructor(renderer:T.WebGLRenderer){
   this.setWood(0,0,0,.5,.5);
-  this.drawLettering(true,DEFAULT_DESIGN);{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.gold.map=tex;}
+  this.drawLettering(DEFAULT_DESIGN.emblem,DEFAULT_DESIGN);{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.gold.map=tex;}
   
   const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;this.numberCanvas=atlas;
   const map=new T.CanvasTexture(atlas);map.colorSpace=T.SRGBColorSpace;map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
@@ -81,7 +81,7 @@ export class WheelModel {
   this.deflectorMetal.color.copy(new T.Color(0x9aa3ab).lerp(new T.Color(0xd9aa52),s.diamondBrass));this.deflectorMetal.roughness=.85-s.diamondGloss*.72;this.deflectorMetal.metalness=.55-s.diamondGloss*.25;
   // Glanz: glatte Oberfläche mit hellen Lichtkanten. Die Umgebung ist bewusst schwach – reines Spiegelmetall wirkte dort dunkel statt blank,
   // deshalb sinkt der Metallanteil mit dem Glanz leicht, die Farbe bleibt hell und die Lichter setzen scharfe Glanzpunkte.
-  this.drawLettering(s.centerLogo,s);
+  this.drawLettering(s.emblem,s);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
@@ -257,7 +257,8 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
   const ring=1.275*u,fitArc=(text:string,bottom:boolean,radius=ring,scale=1)=>{const n=Math.max(1,[...text].length),maxStep=(Math.PI-.34)/Math.max(1,n-1),step=Math.min(.13*spacing,maxStep),px=Math.round(Math.min(160,Math.min(.13,maxStep)*radius*1.22)*size*scale),stretch=Math.min(1.55,190*scale/px);arc(text,radius,px,step,bottom,stretch);};
   // Eine Zeile liegt auf dem Hauptring; mit zwei Zeilen teilen sich beide den freien Ring: die erste weiter außen und etwas kleiner,
   // die zweite näher zur Kesselmitte – ohne das Emblem zu berühren.
-  const lines=(a:string,b:string,bottom:boolean)=>{if(a&&b){fitArc(a,bottom,1.375*u,.88);fitArc(b,bottom,1.11*u,.8);}else if(a)fitArc(a,bottom);else if(b)fitArc(b,bottom);};
+  // Ohne Emblem ist der Innenring frei: beide Zeilen größer und mit mehr Abstand.
+  const lines=(a:string,b:string,bottom:boolean)=>{if(a&&b){if(logo){fitArc(a,bottom,1.375*u,.88);fitArc(b,bottom,1.11*u,.8);}else{fitArc(a,bottom,1.37*u,1);fitArc(b,bottom,1.03*u,.95);}}else if(a)fitArc(a,bottom);else if(b)fitArc(b,bottom);};
   use('back');lines(d.backText,d.backText2,false);
   use('front');lines(d.frontText,d.frontText2,true);
   const star=(rad:number,px:number)=>{for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*rad,m);ctx.font=`700 ${px}px Georgia, serif`;glyph('✦',px);ctx.restore();}};
