@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-30T12:57:47Z",
+  "checked_at": "2026-09-30T13:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "KROKO IST ZURÜCK! | 1 Sub = 1 Zahnn | !holy !logitech #werbung",
       "game": "DJs"
     },
     {
