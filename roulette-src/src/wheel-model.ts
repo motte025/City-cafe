@@ -83,7 +83,7 @@ export class WheelModel {
   this.deflectorMetal.color.copy(new T.Color(0x9aa3ab).lerp(new T.Color(0xd9aa52),s.diamondBrass));this.deflectorMetal.roughness=.85-s.diamondGloss*.72;this.deflectorMetal.metalness=.55-s.diamondGloss*.25;
   // Glanz: glatte Oberfläche mit hellen Lichtkanten. Die Umgebung ist bewusst schwach – reines Spiegelmetall wirkte dort dunkel statt blank,
   // deshalb sinkt der Metallanteil mit dem Glanz leicht, die Farbe bleibt hell und die Lichter setzen scharfe Glanzpunkte.
-  this.drawLettering(s.emblem,s);this.drawEngraving(s.trackEngraving,s.trackEngraveSize);
+  this.drawLettering(s.emblem,s);this.drawEngraving(s);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
@@ -298,10 +298,11 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
   if(this.gold.map)this.gold.map.needsUpdate=true;
  }
  /** Gravur „City Cafe“ auf der Kugellaufbahn (Textur, siehe track-engraving.ts). */
- private drawEngraving(style:number,size:number){
-  const key=`${style}|${size}`;if(key===this.engraveKey&&this.engraveCanvas)return;this.engraveKey=key;
-  for(const f of engravingFonts(style)){const probe=`600 40px ${f}`;try{if(!document.fonts.check(probe))void document.fonts.load(probe).then(()=>{if(this.engraveKey===key){this.engraveKey='';this.drawEngraving(style,size);}});}catch{}}
-  const c=this.engraveCanvas??=document.createElement('canvas');drawEngraving(c,style,size);
+ private drawEngraving(d:DesignSettings){
+  const style=d.trackEngraving,o={size:d.trackEngraveSize,text:d.trackEngraveText,font:d.trackEngraveFont,weight:d.trackEngraveWeight,spacing:d.trackEngraveSpacing,effect:d.trackEngraveEffect,depth:d.trackEngraveDepth,color:d.trackEngraveColor,y:d.trackEngraveY};
+  const key=JSON.stringify([style,o]);if(key===this.engraveKey&&this.engraveCanvas)return;this.engraveKey=key;
+  for(const f of engravingFonts(style,o.font)){const probe=`600 40px ${f}`;try{if(!document.fonts.check(probe))void document.fonts.load(probe).then(()=>{if(this.engraveKey===key){this.engraveKey='';this.drawEngraving(d);}});}catch{}}
+  const c=this.engraveCanvas??=document.createElement('canvas');drawEngraving(c,style,o);
   if(!this.engrave.map){const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.engrave.map=tex;this.engrave.needsUpdate=true;}
   this.engrave.map.needsUpdate=true;this.engrave.visible=style>0;
  }
