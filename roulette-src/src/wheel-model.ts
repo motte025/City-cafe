@@ -277,7 +277,7 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
    if(a&&b){
     // Rückseite liegt oben, also am weit entfernten Rand: perspektivisch gestaucht, stößt schnell an den Zahlenkranz und an die Speichen des Mittelkreuzes.
     // Deshalb dort kleiner, weiter zur Kesselmitte und mit begrenzter Streckung.
-    if(!bottom){one(a,1,1.4*u,1.05);one(b,2,1.15*u,.9);}
+    if(!bottom){one(a,1,1.42*u,1);one(b,2,1.04*u,1.05);}
     else if(logo){one(a,1,1.375*u,.88);one(b,2,1.11*u,.8);}else{one(a,1,1.41*u,1);one(b,2,.97*u,.95);}
    }else if(a)one(a,1,bottom?ring:1.3*u,bottom?1:1.15);else if(b)one(b,2,bottom?ring:1.3*u,bottom?1:1.15);};
   lines('back',d.backText,d.backText2,false);
