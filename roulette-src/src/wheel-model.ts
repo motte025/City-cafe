@@ -43,7 +43,7 @@ export class WheelModel {
  /** Stege zwischen den Taschen: eigenes Material (Chrom bis Messing, matt bis Glanz per Fernbedienung). */
  private fretMetal=new T.MeshStandardMaterial({metalness:.93,roughness:.23,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
  private ebony=new T.MeshPhysicalMaterial({color:0x080c0e,metalness:.3,roughness:.3,clearcoat:.65});
- private wood=new T.MeshPhysicalMaterial({roughness:.27,metalness:.06,clearcoat:.7,clearcoatRoughness:.18});
+ private wood=new T.MeshPhysicalMaterial({roughness:.27,metalness:.06,clearcoat:.7,clearcoatRoughness:.3});
  private track=new T.MeshPhysicalMaterial({roughness:.3,metalness:.2,clearcoat:.6});
  private inner=this.wood.clone();
  private colors={red:new T.MeshPhysicalMaterial({color:0x990b21,roughness:.31,metalness:.08,clearcoat:.65}),black:new T.MeshPhysicalMaterial({color:0x070b10,roughness:.31,metalness:.12,clearcoat:.65}),green:new T.MeshPhysicalMaterial({color:0x006b3f,roughness:.31,metalness:.08,clearcoat:.65})};
@@ -215,13 +215,15 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
  private static readonly FONTS=['Georgia, "Times New Roman", serif','"Playfair Display", Georgia, serif','Cinzel, Georgia, serif','"Cormorant Garamond", Georgia, serif','"Bodoni Moda", Georgia, serif','"Great Vibes", cursive','Limelight, Georgia, serif','Italiana, Georgia, serif','"Abril Fatface", Georgia, serif','"Cinzel Decorative", Georgia, serif'];
  /** Innenkessel als Werbetafel: vorne und hinten je zwei Textzeilen, jede Seite mit eigener Schriftart, Stärke, Größe, Abstand, Effekt und Kontur. */
  private drawLettering(logo:boolean,d:DesignSettings){
-  const key=JSON.stringify([logo,d.frontText,d.frontText2,d.backText,d.backText2,d.textFont,d.textWeight,d.textSize,d.textSpacing,d.textEffect,d.textOutline,d.backFont,d.backWeight,d.backSize,d.backSpacing,d.backEffect,d.backOutline,d.text2Font,d.text2Weight,d.text2Size,d.text2Spacing,d.text2Effect,d.text2Outline,d.back2Font,d.back2Weight,d.back2Size,d.back2Spacing,d.back2Effect,d.back2Outline]);
+  const key=JSON.stringify([logo,d.frontText,d.frontText2,d.backText,d.backText2,d.textFont,d.textWeight,d.textSize,d.textSpacing,d.textEffect,d.textOutline,d.backFont,d.backWeight,d.backSize,d.backSpacing,d.backEffect,d.backOutline,d.text2Font,d.text2Weight,d.text2Size,d.text2Spacing,d.text2Effect,d.text2Outline,d.back2Font,d.back2Weight,d.back2Size,d.back2Spacing,d.back2Effect,d.back2Outline,d.textColor,d.text2Color,d.backColor,d.back2Color]);
   if(this.letteringKey===key&&this.letteringCanvas)return;this.letteringKey=key;
   const F=WheelModel.FONTS;
   // Webschriften nachladen; danach einmal neu zeichnen (sonst bleibt die Ersatzschrift stehen).
   for(const [f,w] of [[d.textFont,d.textWeight],[d.backFont,d.backWeight],[d.text2Font,d.text2Weight],[d.back2Font,d.back2Weight]]){const probe=`${w} 40px ${F[f]??F[0]}`;try{if(!document.fonts.check(probe)){void document.fonts.load(probe).then(()=>{if(this.letteringKey===key){this.letteringKey='';this.drawLettering(logo,d);}});}}catch{}}
   const c=this.letteringCanvas??=document.createElement('canvas');c.width=c.height=2048;const ctx=c.getContext('2d')!,m=1024,u=1024/1.525;ctx.clearRect(0,0,2048,2048);
-  const goldFor=(eff:number)=>{const g=ctx.createLinearGradient(0,0,0,2048);
+  const TINTS=[['#ffffff','#d6d6d6'],['#ff8a8a','#a31424'],['#8ff0a4','#1f8a45'],['#8fc4ff','#2a5fb8'],['#ffbf7a','#d1621b'],['#d3a8ff','#6b3bb0']];
+  const goldFor=(eff:number,col=0)=>{const g=ctx.createLinearGradient(0,0,0,2048);
+   if(col>0){const [a,b]=TINTS[col-1];g.addColorStop(0,a);g.addColorStop(.5,b);g.addColorStop(1,a);return g;}
    if(eff===3){g.addColorStop(0,'#fff6d4');g.addColorStop(.18,'#e9c46a');g.addColorStop(.32,'#fff1bd');g.addColorStop(.5,'#9c6f22');g.addColorStop(.62,'#f1d484');g.addColorStop(.8,'#b98a36');g.addColorStop(1,'#fdeeb8');}
    else if(eff===2){g.addColorStop(0,'#5a3a17');g.addColorStop(1,'#2b1a0a');}
    else if(eff===6){g.addColorStop(0,'#ffffff');g.addColorStop(.4,'#cfd6dc');g.addColorStop(.55,'#8b959c');g.addColorStop(1,'#f4f7f9');}
@@ -233,7 +235,7 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
    return g;};
   // Stil der Seite, die gerade gezeichnet wird.
   let family=F[d.textFont]??F[0],weight=d.textWeight,size=d.textSize,spacing=d.textSpacing,eff=d.textEffect,outline=d.textOutline,gold=goldFor(eff);
-  const use=(side:'front'|'back',line:1|2=1)=>{const p=(side==='back'?'back':'text')+(line===2?'2':''),v=d as unknown as Record<string,number>;family=F[v[p+'Font']]??F[0];weight=v[p+'Weight'];size=v[p+'Size'];spacing=v[p+'Spacing'];eff=v[p+'Effect'];outline=v[p+'Outline'];gold=goldFor(eff);
+  const use=(side:'front'|'back',line:1|2=1)=>{const p=(side==='back'?'back':'text')+(line===2?'2':''),v=d as unknown as Record<string,number>;family=F[v[p+'Font']]??F[0];weight=v[p+'Weight'];size=v[p+'Size'];spacing=v[p+'Spacing'];eff=v[p+'Effect'];outline=v[p+'Outline'];gold=goldFor(eff,v[p+'Color']);
    ctx.fillStyle=gold;ctx.strokeStyle=gold;ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.shadowOffsetY=4;};
   ctx.textBaseline='middle';ctx.textAlign='center';use('front');
   // Ein Buchstabe mit dem gewählten Effekt; (0,0) liegt schon an der richtigen Stelle im gedrehten System.
@@ -258,13 +260,21 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
   // stretch: Buchstaben in Richtung Mitte höher ziehen (Breite ist durch den Umfang begrenzt, Höhe nicht).
   const arc=(text:string,radius:number,px:number,step:number,bottom:boolean,stretch=1)=>{ctx.font=`${weight} ${px}px ${family}`;const chars=[...text];let a=-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*radius,bottom?m+Math.cos(a)*radius:m-Math.cos(a)*radius);ctx.rotate(bottom?-a:a);ctx.scale(1,stretch);glyph(ch,px);ctx.restore();a+=step;}};
   // Lange Texte werden enger und kleiner gesetzt.
-  const ring=1.275*u,fitArc=(text:string,bottom:boolean,radius=ring,scale=1)=>{const n=Math.max(1,[...text].length),maxStep=(Math.PI-.34)/Math.max(1,n-1),step=Math.min(.13*spacing,maxStep),px=Math.round(Math.min(160,Math.min(.13,maxStep)*radius*1.22)*size*scale),stretch=Math.min(1.55,190*scale/px);arc(text,radius,px,step,bottom,stretch);};
+  // Jeder Buchstabe bekommt seine echte Breite plus gleichmäßigen Abstand (vorher fester Winkel je Buchstabe: breite Buchstaben stießen aneinander).
+  // Wird der Text länger als der Halbkreis, schrumpft die ganze Zeile.
+  const ring=1.275*u,fitArc=(text:string,bottom:boolean,radius=ring,scale=1)=>{
+   const chars=[...text],n=chars.length;if(!n)return;
+   let px=Math.round(Math.min(160,.13*radius*1.22)*size*scale);
+   const measure=(p:number)=>{ctx.font=`${weight} ${p}px ${family}`;const w=chars.map(c=>ctx.measureText(c).width),gap=p*.16*spacing;return {w,gap,len:w.reduce((x,y)=>x+y,0)+gap*(n-1)};};
+   let s=measure(px);const maxLen=(Math.PI-.34)*radius;if(s.len>maxLen){px=Math.floor(px*maxLen/s.len);s=measure(px);}
+   const stretch=Math.min(1.55,190*scale/px);let a=-s.len/2/radius;
+   chars.forEach((ch,i)=>{const mid=a+s.w[i]/2/radius;a+=(s.w[i]+s.gap)/radius;ctx.save();ctx.translate(m+Math.sin(mid)*radius,bottom?m+Math.cos(mid)*radius:m-Math.cos(mid)*radius);ctx.rotate(bottom?-mid:mid);ctx.scale(1,stretch);glyph(ch,px);ctx.restore();});};
   // Eine Zeile liegt auf dem Hauptring; mit zwei Zeilen teilen sich beide den freien Ring: die erste weiter außen und etwas kleiner,
   // die zweite näher zur Kesselmitte – ohne das Emblem zu berühren.
   // Ohne Emblem ist der Innenring frei: beide Zeilen größer und mit mehr Abstand.
   const lines=(side:'front'|'back',a:string,b:string,bottom:boolean)=>{
    const one=(t:string,l:1|2,radius:number,scale:number)=>{use(side,l);fitArc(t,bottom,radius,scale);};
-   if(a&&b){if(logo){one(a,1,1.375*u,.88);one(b,2,1.11*u,.8);}else{one(a,1,1.37*u,1);one(b,2,1.03*u,.95);}}else if(a)one(a,1,ring,1);else if(b)one(b,2,ring,1);};
+   if(a&&b){if(logo){one(a,1,1.375*u,.88);one(b,2,1.11*u,.8);}else{one(a,1,1.41*u,1);one(b,2,.97*u,.95);}}else if(a)one(a,1,ring,1);else if(b)one(b,2,ring,1);};
   lines('back',d.backText,d.backText2,false);
   lines('front',d.frontText,d.frontText2,true);use('front');
   const star=(rad:number,px:number)=>{for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*rad,m);ctx.font=`700 ${px}px Georgia, serif`;glyph('✦',px);ctx.restore();}};
