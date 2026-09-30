@@ -87,6 +87,8 @@ MPV_HWDEC = os.environ.get("CITYCAFE_HWDEC", "no")
 MPV_DEMUXER_MIB = os.environ.get("CITYCAFE_DEMUXER_MIB", "48")
 MPV_DEMUXER_BACK_MIB = os.environ.get("CITYCAFE_DEMUXER_BACK_MIB", "8")
 MPV_PROFILE = os.environ.get("CITYCAFE_MPV_PROFILE", "fast")
+#   CITYCAFE_CAM_CACHE_SECS=8   (Dartcam-Puffer in Sekunden, Standard 3)
+CAM_CACHE_SECS = os.environ.get("CITYCAFE_CAM_CACHE_SECS", "3")
 
 
 def log(msg):
@@ -873,8 +875,8 @@ def main():
                 # paar Sekunden Verzoegerung stoeren beim Dart nicht.
                 # framedrop=vo: lieber ein Bild auslassen als hinterherhinken.
                 mpv = subprocess.Popen(args + ["--rtsp-transport=tcp", "--no-audio",
-                                               "--cache=yes", "--cache-secs=3",
-                                               "--demuxer-readahead-secs=3",
+                                               "--cache=yes", f"--cache-secs={CAM_CACHE_SECS}",
+                                               f"--demuxer-readahead-secs={CAM_CACHE_SECS}",
                                                "--framedrop=vo", want[4:]],
                                        env=env, preexec_fn=mpv_dies_with_us)
                 log("Auftritt: Dartcam")

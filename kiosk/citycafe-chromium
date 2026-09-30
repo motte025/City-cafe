@@ -27,13 +27,24 @@ CACHEBUST="$(date +%s)"
 # Auf dem ODROID leer lassen. CITYCAFE_OUTPUT: Name des Bildschirmausgangs
 # (Standard HDMI-A-1; auf dem W1 mit `swaymsg -t get_outputs` nachsehen).
 OUTPUT="${CITYCAFE_OUTPUT:-HDMI-A-1}"
+# CITYCAFE_RAUM / CITYCAFE_BOXNAME: welcher Screen das ist. Standard ist der
+# Fernseher zuhause; im Cafe CITYCAFE_RAUM=city-cafe (dort kein Roulette-Spiel,
+# nur die Werbung). Boxname leer = das Dashboard nimmt "City Cafe".
+RAUM="${CITYCAFE_RAUM:-zuhause}"
+BOXNAME="${CITYCAFE_BOXNAME-Zuhause}"
+# Erweiterungen nur laden, wenn sie auf dem Geraet liegen (nicht im Repo).
+EXT=""
+for e in /opt/citycafe/twitch-autostart /opt/citycafe/h264-force /opt/citycafe/youtube-kiosk-ui; do
+  if [ -d "$e" ]; then EXT="${EXT:+$EXT,}$e"; fi
+done
 # Ein 4K-Desktop macht Browser-Video ohne Hardware-Decoder unnoetig teuer.
 wlr-randr --output "$OUTPUT" --mode 1920x1080@60Hz || true
 # shellcheck disable=SC2086
 exec chromium \
   ${CITYCAFE_CHROMIUM_EXTRA:-} \
   --ozone-platform=wayland \
-  --app="https://motte025.github.io/City-cafe/?kiosk=1&raum=zuhause&boxname=Zuhause&_t=${CACHEBUST}" \
+  ${EXT:+--load-extension=$EXT} \
+  --app="https://motte025.github.io/City-cafe/?kiosk=1&raum=${RAUM}${BOXNAME:+&boxname=$BOXNAME}&_t=${CACHEBUST}" \
   --disable-features=Translate,MediaRouter,OptimizationHints,AutofillServerCommunication,BackForwardCache \
   --disable-site-isolation-trials \
   --disable-background-networking \
@@ -43,7 +54,6 @@ exec chromium \
   --no-default-browser-check \
   --disable-session-crashed-bubble \
   --autoplay-policy=no-user-gesture-required \
-  --load-extension=/opt/citycafe/twitch-autostart,/opt/citycafe/h264-force,/opt/citycafe/youtube-kiosk-ui \
   --remote-debugging-address=127.0.0.1 \
   --remote-debugging-port=9222 \
   --user-data-dir=/home/citycafe/.config/chromium-kiosk
