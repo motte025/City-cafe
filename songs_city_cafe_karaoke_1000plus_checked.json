@@ -79333,5 +79333,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "T-Pain",
+    "title": "Up Down (Do This All Day) (Feat. B.o.B)",
+    "album": "",
+    "category": "Hip Hop / Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Hip Hop",
+      "Groove",
+      "Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
