@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-30T19:47:46Z",
+  "checked_at": "2026-09-30T19:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,13 +27,6 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "STUDIO SESSION | LYAH NOIR",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "helping a friend in need !gofundme !info",
       "game": "DJs"
     },
     {
