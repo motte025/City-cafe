@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-09-30T07:07:46Z",
+  "checked_at": "2026-09-30T07:22:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Gutän Morgän  Quicky bis 11 Uhr ! (MIXED)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ SUBTEMBER FINALE ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Gutän Morgän  Quicky bis 11 Uhr ! (MIXED)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
