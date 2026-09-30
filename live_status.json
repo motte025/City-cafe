@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-30T22:22:45Z",
+  "checked_at": "2026-09-30T22:27:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🔥 BERGFETE -  Gemischte Musik 🔥 !Suptember !Rentnerfels 🔥 !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "HARD N' HEAVY",
       "game": "DJs"
     },
     {
