@@ -100,7 +100,9 @@ export class WheelModel {
    const slit=this.mesh(f,new T.BoxGeometry(.031,.002,.004),b);slit.position.copy(position);slit.position.y+=.006;slit.rotation.y=-a;
   }
   for(let i=0;i<8;i++)this.mesh(f,deflectorGeometry(i),this.deflectorMetal);
-  this.lathe(r,[[0,.012],[2.44,.012],[2.44,numberHeight(2.425,shape)],[2.425,numberHeight(2.425,shape)-.006],[2.04,.229],[1.985,FLOOR-.006],[1.585,FLOOR-.006],[1.53,.34],[.53,.82],[0,.83]],b);
+  // Unter dem Innenkessel knickt das Ebenholz gleich hinter dem Ring bei r=1,53 nach unten ab: vorher lag es an der Kante nur
+  // 0,3 mm unter dem Holz des Innenkessels – Z-Fighting, am TV als gezackter Rand rund um den Innenkessel sichtbar.
+  this.lathe(r,[[0,.012],[2.44,.012],[2.44,numberHeight(2.425,shape)],[2.425,numberHeight(2.425,shape)-.006],[2.04,.229],[1.985,FLOOR-.006],[1.585,FLOOR-.006],[1.53,.34],[1.515,.31],[.53,.78],[.42,.82],[0,.83]],b);
   this.lathe(r,[[1.525,.345],[1.36,.447],[1.02,.653],[.62,.804],[.40,.839]],this.inner);
   // Schriftring ganz außen auf der Innenfläche, bis an die Kante des Zahlenkranzes (r 1,02–1,525
   // – dieselben Eckpunkte wie die Fläche darunter, also exakt deren Neigung über den Knick bei
@@ -220,7 +222,8 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
   const F=WheelModel.FONTS;
   // Webschriften nachladen; danach einmal neu zeichnen (sonst bleibt die Ersatzschrift stehen).
   for(const [f,w] of [[d.textFont,d.textWeight],[d.backFont,d.backWeight],[d.text2Font,d.text2Weight],[d.back2Font,d.back2Weight]]){const probe=`${w} 40px ${F[f]??F[0]}`;try{if(!document.fonts.check(probe)){void document.fonts.load(probe).then(()=>{if(this.letteringKey===key){this.letteringKey='';this.drawLettering(logo,d);}});}}catch{}}
-  const c=this.letteringCanvas??=document.createElement('canvas');c.width=c.height=2048;const ctx=c.getContext('2d')!,m=1024,u=1024/1.525;ctx.clearRect(0,0,2048,2048);
+  const c=this.letteringCanvas??=document.createElement('canvas');// 3072 px statt 2048: schärfere Buchstabenkanten, v. a. an der schräg gesehenen Rückseite. Gezeichnet wird weiter in 2048er-Koordinaten.
+  if(c.width!==3072)c.width=c.height=3072;const ctx=c.getContext('2d')!,m=1024,u=1024/1.525;ctx.setTransform(1.5,0,0,1.5,0,0);ctx.clearRect(0,0,2048,2048);
   const TINTS=[['#ffffff','#d6d6d6'],['#ff8a8a','#a31424'],['#8ff0a4','#1f8a45'],['#8fc4ff','#2a5fb8'],['#ffbf7a','#d1621b'],['#d3a8ff','#6b3bb0']];
   const goldFor=(eff:number,col=0)=>{const g=ctx.createLinearGradient(0,0,0,2048);
    if(col>0){const [a,b]=TINTS[col-1];g.addColorStop(0,a);g.addColorStop(.5,b);g.addColorStop(1,a);return g;}
