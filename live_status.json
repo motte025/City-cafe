@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-30T17:32:45Z",
+  "checked_at": "2026-09-30T17:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "KROKO IST ZURÜCK! | 1 Sub = 1 Zahn | !holy !logitech #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Suptember !Rentnerfels 🔥 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -41,13 +48,6 @@
       "channel": "roice",
       "name": "roice",
       "title": "helping a friend in need !gofundme !info",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Suptember !Rentnerfels 🔥 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
