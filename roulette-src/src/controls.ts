@@ -26,6 +26,7 @@ export function settingsForm(){const group=(title:string,body:string,note='')=>`
  ${field('outerTone','Außenrand · dunkel bis hell','%',.15,1.4,.05)}${field('trackTone','Kugellaufbahn · dunkel bis hell','%',.15,1.4,.05)}${field('innerTone','Innenkessel · dunkel bis hell','%',.15,1.4,.05)}
  ${field('outerGloss','Außenrand · matt bis glänzend','%',0,1,.05)}${field('innerGloss','Innenkessel · matt bis glänzend','%',0,1,.05)}`),
  group('✨ Schrift & Mittelkreuz',`<label class="setting-field"><span>Text vorne im Kessel</span><input type="text" maxlength="48" data-setting="frontText" aria-label="Text vorne im Kessel" placeholder="leer = kein Text"></label>
+ <label class="setting-field"><span>2. Textzeile vorne · über der ersten</span><input type="text" maxlength="48" data-setting="frontText2" aria-label="Zweite Textzeile vorne" placeholder="leer = keine zweite Zeile"></label>
  ${choice('textFont','Schriftart',['Georgia (klassisch)','Playfair Display (elegant)','Cinzel (römische Kapitalen)','Cormorant Garamond (fein)','Bodoni Moda (Casino)'])}${field('textWeight','Strichstärke · dünn bis fett','',400,900,100)}${field('textSize','Schriftgröße','%',.8,1.15,.01)}${field('textSpacing','Buchstabenabstand','%',.75,1.3,.05)}
  ${choice('textEffect','Effekt',['Gold (klassisch)','Geprägt (erhaben)','Eingraviert','Glanzgold (Metall)','Leuchtend','Elfenbein'])}${field('textOutline','Kontur (dunkle Kante)','%',0,1,.05)}
  <label class="switch"><input type="checkbox" data-setting="centerLogo"> Emblem „City Cafe · Fischl“</label>

@@ -54,7 +54,7 @@ export class WheelModel {
  private gold=new T.MeshStandardMaterial({transparent:true,metalness:.75,roughness:.32,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
  constructor(renderer:T.WebGLRenderer){
   this.setWood(0,0,0,.5,.5);
-  this.drawLettering(true,'',DEFAULT_DESIGN);{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.gold.map=tex;}
+  this.drawLettering(true,'',DEFAULT_DESIGN,'');{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.gold.map=tex;}
   
   const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;this.numberCanvas=atlas;
   const map=new T.CanvasTexture(atlas);map.colorSpace=T.SRGBColorSpace;map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
@@ -81,7 +81,7 @@ export class WheelModel {
   this.deflectorMetal.color.copy(new T.Color(0x9aa3ab).lerp(new T.Color(0xd9aa52),s.diamondBrass));this.deflectorMetal.roughness=.85-s.diamondGloss*.72;this.deflectorMetal.metalness=.55-s.diamondGloss*.25;
   // Glanz: glatte Oberfläche mit hellen Lichtkanten. Die Umgebung ist bewusst schwach – reines Spiegelmetall wirkte dort dunkel statt blank,
   // deshalb sinkt der Metallanteil mit dem Glanz leicht, die Farbe bleibt hell und die Lichter setzen scharfe Glanzpunkte.
-  this.drawLettering(s.centerLogo,s.frontText,s);
+  this.drawLettering(s.centerLogo,s.frontText,s,s.frontText2);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
@@ -212,15 +212,15 @@ export class WheelModel {
  }
  /** Feststehende Goldschrift auf der Innenfläche (r 0,43–1,525): Schriftring und optional Emblem um die Nabe. */
 private letteringCanvas:HTMLCanvasElement|null=null;private letteringLogo:boolean|null=null;
- private letteringText='';private letteringKey='';
+ private letteringText='';private letteringText2='';private letteringKey='';
  private static readonly FONTS=['Georgia, "Times New Roman", serif','"Playfair Display", Georgia, serif','Cinzel, Georgia, serif','"Cormorant Garamond", Georgia, serif','"Bodoni Moda", Georgia, serif'];
  /** Innenkessel-Schrift: Schriftart, Stärke, Größe, Abstand, Effekt und Kontur sind einstellbar (Fernbedienung). */
- private drawLettering(logo:boolean,front=this.letteringText,st:Pick<DesignSettings,'textFont'|'textWeight'|'textSize'|'textSpacing'|'textEffect'|'textOutline'>=DEFAULT_DESIGN){
-  const key=[logo,front,st.textFont,st.textWeight,st.textSize.toFixed(2),st.textSpacing.toFixed(2),st.textEffect,st.textOutline.toFixed(2)].join('|');
-  if(this.letteringKey===key&&this.letteringCanvas)return;this.letteringKey=key;this.letteringLogo=logo;this.letteringText=front;
+ private drawLettering(logo:boolean,front=this.letteringText,st:Pick<DesignSettings,'textFont'|'textWeight'|'textSize'|'textSpacing'|'textEffect'|'textOutline'>=DEFAULT_DESIGN,front2=this.letteringText2){
+  const key=[logo,front,front2,st.textFont,st.textWeight,st.textSize.toFixed(2),st.textSpacing.toFixed(2),st.textEffect,st.textOutline.toFixed(2)].join('|');
+  if(this.letteringKey===key&&this.letteringCanvas)return;this.letteringKey=key;this.letteringLogo=logo;this.letteringText=front;this.letteringText2=front2;
   const family=WheelModel.FONTS[st.textFont]??WheelModel.FONTS[0],weight=st.textWeight;
   // Webschrift nachladen; danach einmal neu zeichnen (sonst bleibt die Ersatzschrift stehen).
-  try{const probe=`${weight} 40px ${family}`;if(!document.fonts.check(probe)){void document.fonts.load(probe).then(()=>{if(this.letteringKey===key){this.letteringKey='';this.drawLettering(logo,front,st);}});}}catch{}
+  try{const probe=`${weight} 40px ${family}`;if(!document.fonts.check(probe)){void document.fonts.load(probe).then(()=>{if(this.letteringKey===key){this.letteringKey='';this.drawLettering(logo,front,st,front2);}});}}catch{}
   const c=this.letteringCanvas??=document.createElement('canvas');c.width=c.height=2048;const ctx=c.getContext('2d')!,m=1024,u=1024/1.525;ctx.clearRect(0,0,2048,2048);
   const eff=st.textEffect,outline=st.textOutline;
   const gold=ctx.createLinearGradient(0,0,0,2048);
@@ -251,8 +251,11 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringLogo:boolea
   // stretch: Buchstaben in Richtung Mitte höher ziehen (Breite ist durch den Umfang begrenzt, Höhe nicht).
   const arc=(text:string,radius:number,px:number,step:number,bottom:boolean,center=0,stretch=1)=>{ctx.font=`${weight} ${px}px ${family}`;const chars=[...text];let a=center-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*radius,bottom?m+Math.cos(a)*radius:m-Math.cos(a)*radius);ctx.rotate(bottom?-a:a);ctx.scale(1,stretch);glyph(ch,px);ctx.restore();a+=step;}};
   // Hinten (oben im Bild) der Name, vorne ein frei wählbarer Text zwischen den beiden Sternen; lange Texte werden enger und kleiner gesetzt.
-  const ring=1.275*u,fitArc=(text:string,bottom:boolean)=>{const n=Math.max(1,[...text].length),maxStep=(Math.PI-.34)/Math.max(1,n-1),step=Math.min(.13*st.textSpacing,maxStep),px=Math.round(Math.min(160,Math.min(.13,maxStep)*ring*1.22)*st.textSize),stretch=Math.min(1.55,190/px);arc(text,ring,px,step,bottom,0,stretch);};
-  fitArc('CITY-CAFE KLAGENFURT',false);if(front)fitArc(front,true);
+  const ring=1.275*u,fitArc=(text:string,bottom:boolean,radius=ring,scale=1)=>{const n=Math.max(1,[...text].length),maxStep=(Math.PI-.34)/Math.max(1,n-1),step=Math.min(.13*st.textSpacing,maxStep),px=Math.round(Math.min(160,Math.min(.13,maxStep)*radius*1.22)*st.textSize*scale),stretch=Math.min(1.55,190*scale/px);arc(text,radius,px,step,bottom,0,stretch);};
+  fitArc('CITY-CAFE KLAGENFURT',false);
+  // Vorne: eine Zeile auf dem Hauptring; mit zweiter Zeile teilen sich beide den freien Ring (erste etwas weiter außen und kleiner,
+  // zweite darüber Richtung Kesselmitte), ohne das Emblem zu berühren.
+  if(front&&front2){fitArc(front,true,1.375*u,.88);fitArc(front2,true,1.11*u,.8);}else if(front)fitArc(front,true);else if(front2)fitArc(front2,true);
   const star=(rad:number,size:number)=>{for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*rad,m);ctx.font=`700 ${size}px Georgia, serif`;glyph('✦',size);ctx.restore();}};
   star(ring,110);
   if(logo){
