@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-30T00:17:48Z",
+  "checked_at": "2026-09-30T00:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "roice",
       "name": "roice",
       "title": "welcome to an alien world !bewbs !morestreams !alt !schedule",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Trippy Jerome & Stuff ✨ !charity",
       "game": "DJs"
     }
   ]
