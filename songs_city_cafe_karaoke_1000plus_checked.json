@@ -78795,34 +78795,14 @@
     "auto_discovered": true
   },
   {
-    "artist": "Alcoholic Sunrise",
-    "title": "Die Korken knallen",
+    "artist": "Jefferson Airplane",
+    "title": "White Rabbit",
     "album": "",
-    "category": "Schlager",
+    "category": "Rock",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Party",
-      "Karaoke",
-      "Schlager"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Memphis May Fire",
-    "title": "Somebody",
-    "album": "",
-    "category": "Modern",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Modern",
+      "Rock",
       "Party",
       "Karaoke"
     ],
