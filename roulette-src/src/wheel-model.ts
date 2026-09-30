@@ -54,7 +54,7 @@ export class WheelModel {
  private gold=new T.MeshStandardMaterial({transparent:true,metalness:.75,roughness:.32,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
  constructor(renderer:T.WebGLRenderer){
   this.setWood(0,0,0,.5,.5);
-  this.drawLettering(DEFAULT_DESIGN.emblem,DEFAULT_DESIGN);{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.gold.map=tex;}
+  this.drawLettering(DEFAULT_DESIGN.emblem,DEFAULT_DESIGN);{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=renderer.capabilities.getMaxAnisotropy();this.gold.map=tex;}
   
   const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;this.numberCanvas=atlas;
   const map=new T.CanvasTexture(atlas);map.colorSpace=T.SRGBColorSpace;map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
@@ -275,7 +275,9 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
   const lines=(side:'front'|'back',a:string,b:string,bottom:boolean)=>{
    const one=(t:string,l:1|2,radius:number,scale:number)=>{use(side,l);fitArc(t,bottom,radius,scale);};
    // Vorne und hinten gleich: hinten gespiegelt (Buchstaben zur Kesselmitte hin lesbar), gleiche Radien, Größen und Streckung.
-   if(a&&b){if(logo){one(a,1,1.375*u,.88);one(b,2,1.11*u,.8);}else{one(a,1,1.41*u,1);one(b,2,.97*u,.95);}}
+   // Ausnahme hinten, 1. Zeile: am fernen Rand verdecken Taschenkranz und Stege von vorne gesehen den äußersten Streifen
+   // (Buchstabenköpfe abgeschnitten, Konturen zerfranst) – deshalb dort etwas weiter zur Mitte.
+   if(a&&b){if(logo){one(a,1,1.375*u,.88);one(b,2,1.11*u,.8);}else{one(a,1,bottom?1.41*u:1.3*u,1);one(b,2,.97*u,.95);}}
    else if(a)one(a,1,ring,1);else if(b)one(b,2,ring,1);};
   lines('back',d.backText,d.backText2,false);
   lines('front',d.frontText,d.frontText2,true);use('front');
