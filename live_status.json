@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-09-30T03:02:45Z",
-  "live": []
+  "checked_at": "2026-09-30T05:57:45Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Gutän Morgän  Quicky bis 11 Uhr ! (MIXED)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
+    }
+  ]
 }
