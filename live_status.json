@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-09-30T17:02:46Z",
+  "checked_at": "2026-09-30T17:22:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "HARD N' HEAVY",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "tschessy",
@@ -34,13 +41,6 @@
       "channel": "roice",
       "name": "roice",
       "title": "helping a friend in need !gofundme !info",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "HARD N' HEAVY",
       "game": "DJs"
     }
   ]
