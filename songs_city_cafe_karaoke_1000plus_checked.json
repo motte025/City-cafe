@@ -79475,16 +79475,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Elton John",
-    "title": "Goodbye Yellow Brick Road",
+    "artist": "Eagles",
+    "title": "Hotel California",
     "album": "",
-    "category": "Rock / Party",
+    "category": "Rock",
     "chart": "",
     "release_date": "",
     "tags": [
       "Rock",
-      "Klassiker",
-      "Party"
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Shawn Mendes",
+    "title": "Lost in Japan",
+    "album": "",
+    "category": "Modern",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Modern",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
