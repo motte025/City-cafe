@@ -12,8 +12,10 @@ export function batchMeshes(group:T.Group){
   group.add(merged);meshes.forEach(mesh=>{group.remove(mesh);mesh.geometry.dispose();});
  }
 }
-export function bufferSize(width:number,height:number,dpr:number,economy:boolean,scale:number){
- const ratio=economy?Math.min(1,1280/width,720/height)*Math.max(.5,Math.min(1,scale)):Math.min(Math.max(1,dpr),2);
+/** ss: Kantenglättung durch Überabtastung (nur ohne Sparmodus) – das 3D-Bild wird größer gerechnet und vom Browser
+ *  auf den Bildschirm verkleinert. Gegen Treppen und flimmernde Punkte an dünnen Ringen, am TV deutlich sichtbar. */
+export function bufferSize(width:number,height:number,dpr:number,economy:boolean,scale:number,ss=1){
+ const ratio=economy?Math.min(1,1280/width,720/height)*Math.max(.5,Math.min(1,scale)):Math.min(Math.max(1,dpr)*Math.max(1,Math.min(2,ss)),2);
  return {width:Math.max(1,Math.round(width*ratio)),height:Math.max(1,Math.round(height*ratio))};
 }
 /** Shadow cadence follows wall time; visual motion remains sampled at every frame. */

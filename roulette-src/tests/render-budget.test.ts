@@ -1,7 +1,7 @@
 ﻿import test from 'node:test';import assert from 'node:assert/strict';
 import * as T from 'three';import {batchMeshes,bufferSize,shadowDue} from '../src/render-budget';import {applySettings,DEFAULT_SETTINGS} from '../src/settings';import {readFileSync} from 'node:fs';
 test('Renderpuffer begrenzt Pixeldichte und erhält das Anzeigeformat',()=>{
- assert.deepEqual(bufferSize(1920,1080,2,true,1),{width:1280,height:720});assert.deepEqual(bufferSize(1280,720,2,true,.75),{width:960,height:540});assert.deepEqual(bufferSize(800,450,2,true,1),{width:800,height:450});assert.deepEqual(bufferSize(1280,720,2,false,.5),{width:2560,height:1440});
+ assert.deepEqual(bufferSize(1920,1080,1,false,1,1.5),{width:2880,height:1620});assert.deepEqual(bufferSize(1920,1080,2,false,1,1.5),{width:3840,height:2160});assert.deepEqual(bufferSize(1920,1080,1,true,1,2),{width:1280,height:720});assert.deepEqual(bufferSize(1920,1080,2,true,1),{width:1280,height:720});assert.deepEqual(bufferSize(1280,720,2,true,.75),{width:960,height:540});assert.deepEqual(bufferSize(800,450,2,true,1),{width:800,height:450});assert.deepEqual(bufferSize(1280,720,2,false,.5),{width:2560,height:1440});
  const portrait=bufferSize(720,1280,2,true,1);assert.equal(portrait.height,720);assert.ok(Math.abs(portrait.width/portrait.height-720/1280)<.002);
 });
 test('Sparmodus aktualisiert Schatten begrenzt, finale Landung sofort',()=>{

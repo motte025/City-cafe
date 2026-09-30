@@ -23,7 +23,7 @@ export class Wheel {
  stats={throws:0,fallbacks:0};
  onLand:((index:number)=>void)|null=null;onPhase:((phase:number)=>void)|null=null;onImpact:((strength:number)=>void)|null=null;
  onLaunch:((previousNumber:number,direction:1|-1)=>void)|null=null;onPose:((angle:number,progress:number)=>void)|null=null;
- private profile?:RenderProfile;private economy=false;private renderScale=1;private lastShadow=-Infinity;private shadowDirty=true;
+ private profile?:RenderProfile;private economy=false;private renderScale=1;private supersample=1;private lastShadow=-Infinity;private shadowDirty=true;
  private clock=new PlaybackClock();private phase=-1;private impact=-1;private tvEnabled=true;private tvSettings={...DEFAULT_TV};
  private lastIndex=0;private nextDirection:1|-1=1;private design={...DEFAULT_DESIGN};private shape:WheelShape={...DEFAULT_DESIGN};private pendingShape:WheelShape|null=null;
  private model:WheelModel;private key:T.DirectionalLight;private fill:T.DirectionalLight;private ambient:T.HemisphereLight;
@@ -87,8 +87,10 @@ export class Wheel {
   this.shape={...shape};this.pendingShape=null;this.model.rebuild(this.shape);this.model.appearance(this.design);
   this.ball.position.y=this.ballSupport(Math.hypot(this.ball.position.x,this.ball.position.z));this.shadowDirty=true;
  }
- setPerformance(economy:boolean,scale:number){
-  if(economy===this.economy&&scale===this.renderScale)return;this.economy=economy;this.renderScale=scale;
+ /** Tatsächliche Größe des 3D-Bilds (für die TV-Meldung in der Fernbedienung). */
+ bufferInfo(){const c=this.renderer.domElement;return `${c.width}×${c.height}`;}
+ setPerformance(economy:boolean,scale:number,ss=1){
+  if(economy===this.economy&&scale===this.renderScale&&ss===this.supersample)return;this.economy=economy;this.renderScale=scale;this.supersample=ss;
   const size=economy?1024:2048;if(this.key.shadow.mapSize.x!==size){this.key.shadow.map?.dispose();this.key.shadow.map=null;this.key.shadow.mapSize.set(size,size);}this.shadowDirty=true;this.resize();
  }
  /** Bildschirmlage des äußeren Kesselrands (CSS-Pixel relativ zum Host), für das Ausrichten an der Kopfzeile. */
@@ -103,7 +105,7 @@ export class Wheel {
  setTV(enabled:boolean,settings:TVSettings){this.tvEnabled=enabled;this.tvSettings=settings;this.resize();}
  private resize(){
   const {width,height}=this.host.getBoundingClientRect();if(width<=0||height<=0)return;
-  const buffer=bufferSize(width,height,devicePixelRatio,this.economy,this.renderScale);this.renderer.setSize(buffer.width,buffer.height,false);this.camera.aspect=width/height;this.shadowDirty=true;this.profile?.reset();
+  const buffer=bufferSize(width,height,devicePixelRatio,this.economy,this.renderScale,this.supersample);this.renderer.setSize(buffer.width,buffer.height,false);this.camera.aspect=width/height;this.shadowDirty=true;this.profile?.reset();
   this.placeCamera();
  }
  private placeCamera(){
