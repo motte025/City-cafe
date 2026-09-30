@@ -78637,36 +78637,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Amy Macdonald",
-    "title": "Slow It Down",
+    "artist": "Gitte Haenning",
+    "title": "Schau Mal An",
     "album": "",
-    "category": "Deutsch-Pop",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Schlager",
       "Party",
-      "Karaoke",
-      "Deutsch-Pop"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Evelyn \"Champagne\" King",
-    "title": "I'm In Love",
-    "album": "",
-    "category": "Party & Rock",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
