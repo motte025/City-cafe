@@ -7,11 +7,8 @@ set -eu
 # Zeitstempel macht die URL bei jedem Start neu, damit immer frisch geladen wird.
 CACHEBUST="$(date +%s)"
 
-# Sparsam mit dem Arbeitsspeicher (die Box hat nur 2 GB, dazu mpv daneben):
-# --disable-site-isolation-trials: sonst bekommt jedes fremde iframe (YouTube,
-#   Twitch) einen eigenen Renderer-Prozess mit je 50-100 MB. Im Kiosk laeuft
-#   nur das eigene Dashboard mit bekannten Einbettungen - der Schutz, den die
-#   Trennung bietet, bringt hier nichts.
+# --disable-site-isolation-trials ist raus: es sparte auf dem ODROID (2 GB)
+#   Speicher, blendet in neueren Chromium-Fassungen aber eine Warnleiste ein.
 # --disable-background-networking / -sync / -default-apps und die Features
 #   unten: Hintergrunddienste eines normalen Desktop-Browsers (Uebersetzer,
 #   Casting, Vorschlags-Downloads, Sync), die am Fernseher niemand braucht,
@@ -46,7 +43,6 @@ exec chromium \
   ${EXT:+--load-extension=$EXT} \
   --app="https://motte025.github.io/City-cafe/?kiosk=1&raum=${RAUM}${BOXNAME:+&boxname=$BOXNAME}&_t=${CACHEBUST}" \
   --disable-features=Translate,MediaRouter,OptimizationHints,AutofillServerCommunication,BackForwardCache \
-  --disable-site-isolation-trials \
   --disable-background-networking \
   --disable-sync \
   --disable-default-apps \
