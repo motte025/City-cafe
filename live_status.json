@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-30T13:52:45Z",
+  "checked_at": "2026-09-30T13:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ TRANCE MUSIC - SUBTEMBER FINALE | !goals | !subtember | !tip ✨",
       "game": "DJs"
     }
   ]
