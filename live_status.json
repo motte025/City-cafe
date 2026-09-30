@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-09-30T15:02:45Z",
+  "checked_at": "2026-09-30T15:17:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "KROKO IST ZURÜCK! | 1 Sub = 1 Zahn | !holy !logitech #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ TRANCE MUSIC - SUBTEMBER FINALE | !goals | !subtember | !tip ✨",
       "game": "DJs"
     },
     {
@@ -24,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ TRANCE MUSIC - SUBTEMBER FINALE | !goals | !subtember | !tip ✨",
       "game": "DJs"
     }
   ]
