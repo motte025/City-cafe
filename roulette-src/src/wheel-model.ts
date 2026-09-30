@@ -212,24 +212,28 @@ export class WheelModel {
  }
  /** Feststehende Goldschrift auf der Innenfläche (r 0,43–1,525): Schriftring und optional Emblem um die Nabe. */
 private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
- private static readonly FONTS=['Georgia, "Times New Roman", serif','"Playfair Display", Georgia, serif','Cinzel, Georgia, serif','"Cormorant Garamond", Georgia, serif','"Bodoni Moda", Georgia, serif'];
+ private static readonly FONTS=['Georgia, "Times New Roman", serif','"Playfair Display", Georgia, serif','Cinzel, Georgia, serif','"Cormorant Garamond", Georgia, serif','"Bodoni Moda", Georgia, serif','"Great Vibes", cursive','Limelight, Georgia, serif','Italiana, Georgia, serif','"Abril Fatface", Georgia, serif','"Cinzel Decorative", Georgia, serif'];
  /** Innenkessel als Werbetafel: vorne und hinten je zwei Textzeilen, jede Seite mit eigener Schriftart, Stärke, Größe, Abstand, Effekt und Kontur. */
  private drawLettering(logo:boolean,d:DesignSettings){
-  const key=JSON.stringify([logo,d.frontText,d.frontText2,d.backText,d.backText2,d.textFont,d.textWeight,d.textSize,d.textSpacing,d.textEffect,d.textOutline,d.backFont,d.backWeight,d.backSize,d.backSpacing,d.backEffect,d.backOutline]);
+  const key=JSON.stringify([logo,d.frontText,d.frontText2,d.backText,d.backText2,d.textFont,d.textWeight,d.textSize,d.textSpacing,d.textEffect,d.textOutline,d.backFont,d.backWeight,d.backSize,d.backSpacing,d.backEffect,d.backOutline,d.text2Font,d.text2Weight,d.text2Size,d.text2Spacing,d.text2Effect,d.text2Outline,d.back2Font,d.back2Weight,d.back2Size,d.back2Spacing,d.back2Effect,d.back2Outline]);
   if(this.letteringKey===key&&this.letteringCanvas)return;this.letteringKey=key;
   const F=WheelModel.FONTS;
   // Webschriften nachladen; danach einmal neu zeichnen (sonst bleibt die Ersatzschrift stehen).
-  for(const [f,w] of [[d.textFont,d.textWeight],[d.backFont,d.backWeight]]){const probe=`${w} 40px ${F[f]??F[0]}`;try{if(!document.fonts.check(probe)){void document.fonts.load(probe).then(()=>{if(this.letteringKey===key){this.letteringKey='';this.drawLettering(logo,d);}});}}catch{}}
+  for(const [f,w] of [[d.textFont,d.textWeight],[d.backFont,d.backWeight],[d.text2Font,d.text2Weight],[d.back2Font,d.back2Weight]]){const probe=`${w} 40px ${F[f]??F[0]}`;try{if(!document.fonts.check(probe)){void document.fonts.load(probe).then(()=>{if(this.letteringKey===key){this.letteringKey='';this.drawLettering(logo,d);}});}}catch{}}
   const c=this.letteringCanvas??=document.createElement('canvas');c.width=c.height=2048;const ctx=c.getContext('2d')!,m=1024,u=1024/1.525;ctx.clearRect(0,0,2048,2048);
   const goldFor=(eff:number)=>{const g=ctx.createLinearGradient(0,0,0,2048);
    if(eff===3){g.addColorStop(0,'#fff6d4');g.addColorStop(.18,'#e9c46a');g.addColorStop(.32,'#fff1bd');g.addColorStop(.5,'#9c6f22');g.addColorStop(.62,'#f1d484');g.addColorStop(.8,'#b98a36');g.addColorStop(1,'#fdeeb8');}
    else if(eff===2){g.addColorStop(0,'#5a3a17');g.addColorStop(1,'#2b1a0a');}
+   else if(eff===6){g.addColorStop(0,'#ffffff');g.addColorStop(.4,'#cfd6dc');g.addColorStop(.55,'#8b959c');g.addColorStop(1,'#f4f7f9');}
+   else if(eff===7){g.addColorStop(0,'#ffd9b8');g.addColorStop(.45,'#d9895a');g.addColorStop(.55,'#9c5530');g.addColorStop(1,'#f0b48c');}
+   else if(eff===8){g.addColorStop(0,'#ff8a92');g.addColorStop(.5,'#c4232f');g.addColorStop(1,'#8f1421');}
+   else if(eff===9){g.addColorStop(0,'#ffffff');g.addColorStop(1,'#e8f2ff');}
    else if(eff===5){g.addColorStop(0,'#fffaf0');g.addColorStop(.5,'#eadfc4');g.addColorStop(1,'#fffaf0');}
    else{g.addColorStop(0,'#fbecc0');g.addColorStop(.45,'#d9ad52');g.addColorStop(.55,'#a97c2e');g.addColorStop(1,'#f6e0a4');}
    return g;};
   // Stil der Seite, die gerade gezeichnet wird.
   let family=F[d.textFont]??F[0],weight=d.textWeight,size=d.textSize,spacing=d.textSpacing,eff=d.textEffect,outline=d.textOutline,gold=goldFor(eff);
-  const use=(side:'front'|'back')=>{const back=side==='back';family=F[back?d.backFont:d.textFont]??F[0];weight=back?d.backWeight:d.textWeight;size=back?d.backSize:d.textSize;spacing=back?d.backSpacing:d.textSpacing;eff=back?d.backEffect:d.textEffect;outline=back?d.backOutline:d.textOutline;gold=goldFor(eff);
+  const use=(side:'front'|'back',line:1|2=1)=>{const p=(side==='back'?'back':'text')+(line===2?'2':''),v=d as unknown as Record<string,number>;family=F[v[p+'Font']]??F[0];weight=v[p+'Weight'];size=v[p+'Size'];spacing=v[p+'Spacing'];eff=v[p+'Effect'];outline=v[p+'Outline'];gold=goldFor(eff);
    ctx.fillStyle=gold;ctx.strokeStyle=gold;ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.shadowOffsetY=4;};
   ctx.textBaseline='middle';ctx.textAlign='center';use('front');
   // Ein Buchstabe mit dem gewählten Effekt; (0,0) liegt schon an der richtigen Stelle im gedrehten System.
@@ -241,8 +245,8 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
     edge(px*.05,'rgba(28,12,4,.55)');ctx.fillStyle=gold;ctx.shadowColor='rgba(20,10,0,.4)';ctx.shadowBlur=4;ctx.fillText(ch,0,0);
    }else if(eff===2){ // eingraviert: heller Rand unten, dunkle Kerbe
     ctx.shadowColor='transparent';ctx.fillStyle='rgba(255,226,160,.7)';ctx.fillText(ch,1.8*k,2.2*k);ctx.fillStyle=gold;ctx.fillText(ch,0,0);edge(px*.02,'rgba(0,0,0,.6)');
-   }else if(eff===4){ // leuchtend
-    ctx.shadowColor='rgba(255,205,110,.95)';ctx.shadowBlur=34*k;ctx.fillStyle=gold;ctx.fillText(ch,0,0);ctx.fillText(ch,0,0);ctx.shadowBlur=10*k;edge(px*.03,'rgba(30,14,4,.5)');ctx.fillStyle=gold;ctx.fillText(ch,0,0);
+   }else if(eff===4||eff===9){ // leuchtend (gold / weiß)
+    ctx.shadowColor=eff===9?'rgba(210,235,255,.95)':'rgba(255,205,110,.95)';ctx.shadowBlur=34*k;ctx.fillStyle=gold;ctx.fillText(ch,0,0);ctx.fillText(ch,0,0);ctx.shadowBlur=10*k;edge(px*.03,'rgba(30,14,4,.5)');ctx.fillStyle=gold;ctx.fillText(ch,0,0);
    }else if(eff===3){ // glanzgold: dunkle Kante, helle Innenlinie
     edge(px*.06,'rgba(30,14,4,.7)');ctx.shadowColor='rgba(20,10,0,.5)';ctx.shadowBlur=6;ctx.fillStyle=gold;ctx.fillText(ch,0,0);ctx.shadowColor='transparent';ctx.lineWidth=Math.max(1,px*.012);ctx.strokeStyle='rgba(255,250,225,.75)';ctx.strokeText(ch,0,0);
    }else{ // 0 klassisch, 5 elfenbein
@@ -258,9 +262,11 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
   // Eine Zeile liegt auf dem Hauptring; mit zwei Zeilen teilen sich beide den freien Ring: die erste weiter außen und etwas kleiner,
   // die zweite näher zur Kesselmitte – ohne das Emblem zu berühren.
   // Ohne Emblem ist der Innenring frei: beide Zeilen größer und mit mehr Abstand.
-  const lines=(a:string,b:string,bottom:boolean)=>{if(a&&b){if(logo){fitArc(a,bottom,1.375*u,.88);fitArc(b,bottom,1.11*u,.8);}else{fitArc(a,bottom,1.37*u,1);fitArc(b,bottom,1.03*u,.95);}}else if(a)fitArc(a,bottom);else if(b)fitArc(b,bottom);};
-  use('back');lines(d.backText,d.backText2,false);
-  use('front');lines(d.frontText,d.frontText2,true);
+  const lines=(side:'front'|'back',a:string,b:string,bottom:boolean)=>{
+   const one=(t:string,l:1|2,radius:number,scale:number)=>{use(side,l);fitArc(t,bottom,radius,scale);};
+   if(a&&b){if(logo){one(a,1,1.375*u,.88);one(b,2,1.11*u,.8);}else{one(a,1,1.37*u,1);one(b,2,1.03*u,.95);}}else if(a)one(a,1,ring,1);else if(b)one(b,2,ring,1);};
+  lines('back',d.backText,d.backText2,false);
+  lines('front',d.frontText,d.frontText2,true);use('front');
   const star=(rad:number,px:number)=>{for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*rad,m);ctx.font=`700 ${px}px Georgia, serif`;glyph('✦',px);ctx.restore();}};
   star(ring,110);
   if(logo){
