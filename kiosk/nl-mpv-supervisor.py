@@ -75,6 +75,18 @@ MPV_SOCK = "/tmp/mpv-nl.sock"
 # brauchen, bevor es abgeschossen wird und das YouTube-Embed weiterlaeuft.
 FIRST_FRAME_TIMEOUT = 20
 STALL_TIMEOUT = 10
+# mpv-Darstellung je Geraet. Die Vorgaben sind die des ODROID N2+ (Software-
+# Decoding, kleine Puffer, 2 GB RAM) - ohne Umgebungsvariablen aendert sich dort
+# nichts. Auf dem x86-Rechner (ACEMAGIC W1, AMD) gesetzt, z. B. in
+# ~/.config/environment.d/citycafe.conf oder im sway-Start:
+#   CITYCAFE_HWDEC=vaapi        (oder "auto-safe"; Standard "no")
+#   CITYCAFE_DEMUXER_MIB=150    (Vorlauf-Puffer, Standard 48)
+#   CITYCAFE_DEMUXER_BACK_MIB=50
+#   CITYCAFE_MPV_PROFILE=gpu-hq (Standard "fast"; mit dem Standard-VO "gpu")
+MPV_HWDEC = os.environ.get("CITYCAFE_HWDEC", "no")
+MPV_DEMUXER_MIB = os.environ.get("CITYCAFE_DEMUXER_MIB", "48")
+MPV_DEMUXER_BACK_MIB = os.environ.get("CITYCAFE_DEMUXER_BACK_MIB", "8")
+MPV_PROFILE = os.environ.get("CITYCAFE_MPV_PROFILE", "fast")
 
 
 def log(msg):
@@ -825,8 +837,9 @@ def main():
             # und haelt 50 MiB Rueckblick - auf der Box mit 2 GB RAM, neben
             # Chromium, zu viel. 48 MiB sind bei 1080p immer noch rund eine
             # Minute Vorlauf; zurueckgespult wird im Slot nur per Fernbedienung.
-            args = ["mpv", "--hwdec=no", "--vo=gpu", "--profile=fast", "--sid=no",
-                    "--demuxer-max-bytes=48MiB", "--demuxer-max-back-bytes=8MiB",
+            args = ["mpv", f"--hwdec={MPV_HWDEC}", "--vo=gpu", f"--profile={MPV_PROFILE}", "--sid=no",
+                    f"--demuxer-max-bytes={MPV_DEMUXER_MIB}MiB",
+                    f"--demuxer-max-back-bytes={MPV_DEMUXER_BACK_MIB}MiB",
                     "--no-osc", "--osd-level=0", "--no-input-default-bindings",
                     "--really-quiet", "--input-ipc-server=/tmp/mpv-nl.sock",
                     "--log-file=/home/citycafe/mpv-nl.log", f"--volume={ton_vol}"]

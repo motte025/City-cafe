@@ -1,9 +1,6 @@
 #!/bin/sh
 set -eu
 
-# A 4K desktop makes software-decoded browser video needlessly expensive.
-wlr-randr --output HDMI-A-1 --mode 1920x1080@60Hz || true
-
 # GitHub Pages liefert index.html mit Cache-Control: max-age=600. Chromiums
 # eigener Festplatten-Cache ueberlebt Prozess-Neustarts, also wuerde ein
 # Neustart innerhalb dieser 10 Minuten trotzdem den alten Stand zeigen. Der
@@ -24,7 +21,17 @@ CACHEBUST="$(date +%s)"
 # --app statt --kiosk: unter sway darf Chromium nicht im Vollbild stehen (sonst
 # laege es ueber dem mpv-Fenster des Nightlife-Slots). --kiosk ohne Vollbild
 # blendet Tabs und Adressleiste ein, --app zeigt nur die Seite.
+# CITYCAFE_CHROMIUM_EXTRA: zusaetzliche Schalter je Geraet (nur Schalter ohne
+# Leerzeichen), z. B. auf dem x86-Rechner mit AMD-Grafik
+#   CITYCAFE_CHROMIUM_EXTRA="--enable-features=VaapiVideoDecoder,VaapiVideoDecodeLinuxGL"
+# Auf dem ODROID leer lassen. CITYCAFE_OUTPUT: Name des Bildschirmausgangs
+# (Standard HDMI-A-1; auf dem W1 mit `swaymsg -t get_outputs` nachsehen).
+OUTPUT="${CITYCAFE_OUTPUT:-HDMI-A-1}"
+# Ein 4K-Desktop macht Browser-Video ohne Hardware-Decoder unnoetig teuer.
+wlr-randr --output "$OUTPUT" --mode 1920x1080@60Hz || true
+# shellcheck disable=SC2086
 exec chromium \
+  ${CITYCAFE_CHROMIUM_EXTRA:-} \
   --ozone-platform=wayland \
   --app="https://motte025.github.io/City-cafe/?kiosk=1&raum=zuhause&boxname=Zuhause&_t=${CACHEBUST}" \
   --disable-features=Translate,MediaRouter,OptimizationHints,AutofillServerCommunication,BackForwardCache \
