@@ -36,8 +36,9 @@ class ChipCanvas {
   const n=this.stacks.length,t=Math.max(.05,Math.min(1.2,tilt)),squash=Math.cos(t),side=Math.sin(t);
   const maxN=this.bank?11:8,label=this.bank?Math.max(40,h*.5):0;
   // Radius so, dass alle Stapel nebeneinander und der höchste Stapel in die Höhe passen
-  const r=Math.min((w-label)/(n*2.25),h*.9/(2*squash+maxN*.19*side*2)),th=r*.19*side*2,gap=r*2.25;
-  const x0=label+gap/2+r*.3,base=h*.92-r*squash;
+  // Breite: n Stapel à 2,25 r, rechts und links je etwas Rand – nichts darf über den Canvas ragen (vorher rechts abgeschnitten).
+  const r=Math.min((w-label-4)/(n*2.25+.25),h*.88/(2*squash+maxN*.19*side*2)),th=r*.19*side*2,gap=r*2.25;
+  const x0=label+2+r*.125+gap/2,base=h*.9-r*squash;
   if(this.bank){
    // Jeton-Kasten: dunkles Holz mit Goldkante, perspektivisch wie die Stapel
    const tw=gap*n+r*.5,tx=x0-gap/2-r*.25,ty=base-r*squash*1.25,tb=base+r*squash*1.15;g.fillStyle='#1b0f0a';g.strokeStyle='#b8924d';g.lineWidth=1.2;

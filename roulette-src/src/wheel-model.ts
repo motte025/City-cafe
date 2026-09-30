@@ -54,7 +54,7 @@ export class WheelModel {
  private gold=new T.MeshStandardMaterial({transparent:true,metalness:.75,roughness:.32,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
  constructor(renderer:T.WebGLRenderer){
   this.setWood(0,0,0,.5,.5);
-  this.drawLettering(true);{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.gold.map=tex;}
+  this.drawLettering(true,'',DEFAULT_DESIGN);{const tex=new T.CanvasTexture(this.letteringCanvas!);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.gold.map=tex;}
   
   const atlas=document.createElement('canvas');atlas.width=atlas.height=2048;this.numberCanvas=atlas;
   const map=new T.CanvasTexture(atlas);map.colorSpace=T.SRGBColorSpace;map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
@@ -81,7 +81,7 @@ export class WheelModel {
   this.deflectorMetal.color.copy(new T.Color(0x9aa3ab).lerp(new T.Color(0xd9aa52),s.diamondBrass));this.deflectorMetal.roughness=.85-s.diamondGloss*.72;this.deflectorMetal.metalness=.55-s.diamondGloss*.25;
   // Glanz: glatte Oberfläche mit hellen Lichtkanten. Die Umgebung ist bewusst schwach – reines Spiegelmetall wirkte dort dunkel statt blank,
   // deshalb sinkt der Metallanteil mit dem Glanz leicht, die Farbe bleibt hell und die Lichter setzen scharfe Glanzpunkte.
-  this.drawLettering(s.centerLogo,s.frontText);
+  this.drawLettering(s.centerLogo,s.frontText,s);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
@@ -211,24 +211,54 @@ export class WheelModel {
   if(this.labels.map)this.labels.map.needsUpdate=true;
  }
  /** Feststehende Goldschrift auf der Innenfläche (r 0,43–1,525): Schriftring und optional Emblem um die Nabe. */
- private letteringCanvas:HTMLCanvasElement|null=null;private letteringLogo:boolean|null=null;
- private letteringText='';
- private drawLettering(logo:boolean,front=this.letteringText){
-  if(this.letteringLogo===logo&&this.letteringText===front&&this.letteringCanvas)return;this.letteringLogo=logo;this.letteringText=front;
+private letteringCanvas:HTMLCanvasElement|null=null;private letteringLogo:boolean|null=null;
+ private letteringText='';private letteringKey='';
+ private static readonly FONTS=['Georgia, "Times New Roman", serif','"Playfair Display", Georgia, serif','Cinzel, Georgia, serif','"Cormorant Garamond", Georgia, serif','"Bodoni Moda", Georgia, serif'];
+ /** Innenkessel-Schrift: Schriftart, Stärke, Größe, Abstand, Effekt und Kontur sind einstellbar (Fernbedienung). */
+ private drawLettering(logo:boolean,front=this.letteringText,st:Pick<DesignSettings,'textFont'|'textWeight'|'textSize'|'textSpacing'|'textEffect'|'textOutline'>=DEFAULT_DESIGN){
+  const key=[logo,front,st.textFont,st.textWeight,st.textSize.toFixed(2),st.textSpacing.toFixed(2),st.textEffect,st.textOutline.toFixed(2)].join('|');
+  if(this.letteringKey===key&&this.letteringCanvas)return;this.letteringKey=key;this.letteringLogo=logo;this.letteringText=front;
+  const family=WheelModel.FONTS[st.textFont]??WheelModel.FONTS[0],weight=st.textWeight;
+  // Webschrift nachladen; danach einmal neu zeichnen (sonst bleibt die Ersatzschrift stehen).
+  try{const probe=`${weight} 40px ${family}`;if(!document.fonts.check(probe)){void document.fonts.load(probe).then(()=>{if(this.letteringKey===key){this.letteringKey='';this.drawLettering(logo,front,st);}});}}catch{}
   const c=this.letteringCanvas??=document.createElement('canvas');c.width=c.height=2048;const ctx=c.getContext('2d')!,m=1024,u=1024/1.525;ctx.clearRect(0,0,2048,2048);
-  const gold=ctx.createLinearGradient(0,0,0,2048);gold.addColorStop(0,'#fbecc0');gold.addColorStop(.45,'#d9ad52');gold.addColorStop(.55,'#a97c2e');gold.addColorStop(1,'#f6e0a4');
+  const eff=st.textEffect,outline=st.textOutline;
+  const gold=ctx.createLinearGradient(0,0,0,2048);
+  if(eff===3){gold.addColorStop(0,'#fff6d4');gold.addColorStop(.18,'#e9c46a');gold.addColorStop(.32,'#fff1bd');gold.addColorStop(.5,'#9c6f22');gold.addColorStop(.62,'#f1d484');gold.addColorStop(.8,'#b98a36');gold.addColorStop(1,'#fdeeb8');}
+  else if(eff===2){gold.addColorStop(0,'#5a3a17');gold.addColorStop(1,'#2b1a0a');}
+  else if(eff===5){gold.addColorStop(0,'#fffaf0');gold.addColorStop(.5,'#eadfc4');gold.addColorStop(1,'#fffaf0');}
+  else{gold.addColorStop(0,'#fbecc0');gold.addColorStop(.45,'#d9ad52');gold.addColorStop(.55,'#a97c2e');gold.addColorStop(1,'#f6e0a4');}
   ctx.fillStyle=gold;ctx.strokeStyle=gold;ctx.textBaseline='middle';ctx.textAlign='center';ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.shadowOffsetY=4;
+  // Ein Buchstabe mit dem gewählten Effekt; (0,0) liegt schon an der richtigen Stelle im gedrehten System.
+  const glyph=(ch:string,px:number)=>{
+   const k=px/100;ctx.lineJoin='round';
+   const edge=(w:number,col:string)=>{if(outline<=0)return;ctx.shadowColor='transparent';ctx.lineWidth=Math.max(1.5,w*outline);ctx.strokeStyle=col;ctx.strokeText(ch,0,0);};
+   if(eff===1){ // geprägt: Licht oben links, Schatten unten rechts
+    ctx.shadowColor='transparent';ctx.fillStyle='rgba(20,8,0,.75)';ctx.fillText(ch,3.2*k,3.6*k);ctx.fillStyle='rgba(255,244,205,.85)';ctx.fillText(ch,-2.2*k,-2.4*k);
+    edge(px*.05,'rgba(28,12,4,.55)');ctx.fillStyle=gold;ctx.shadowColor='rgba(20,10,0,.4)';ctx.shadowBlur=4;ctx.fillText(ch,0,0);
+   }else if(eff===2){ // eingraviert: heller Rand unten, dunkle Kerbe
+    ctx.shadowColor='transparent';ctx.fillStyle='rgba(255,226,160,.7)';ctx.fillText(ch,1.8*k,2.2*k);ctx.fillStyle=gold;ctx.fillText(ch,0,0);edge(px*.02,'rgba(0,0,0,.6)');
+   }else if(eff===4){ // leuchtend
+    ctx.shadowColor='rgba(255,205,110,.95)';ctx.shadowBlur=34*k;ctx.fillStyle=gold;ctx.fillText(ch,0,0);ctx.fillText(ch,0,0);ctx.shadowBlur=10*k;edge(px*.03,'rgba(30,14,4,.5)');ctx.fillStyle=gold;ctx.fillText(ch,0,0);
+   }else if(eff===3){ // glanzgold: dunkle Kante, helle Innenlinie
+    edge(px*.06,'rgba(30,14,4,.7)');ctx.shadowColor='rgba(20,10,0,.5)';ctx.shadowBlur=6;ctx.fillStyle=gold;ctx.fillText(ch,0,0);ctx.shadowColor='transparent';ctx.lineWidth=Math.max(1,px*.012);ctx.strokeStyle='rgba(255,250,225,.75)';ctx.strokeText(ch,0,0);
+   }else{ // 0 klassisch, 5 elfenbein
+    edge(px*.07,'rgba(28,12,4,.6)');ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.fillStyle=gold;ctx.fillText(ch,0,0);
+   }
+   ctx.shadowColor='rgba(20,10,0,.55)';ctx.shadowBlur=8;ctx.fillStyle=gold;ctx.strokeStyle=gold;
+  };
   // Text auf einem Bogen: oben mit Buchstaben nach außen, unten nach innen – beide lesbar.
-  // stretch: Buchstaben in Richtung Mitte höher ziehen (Breite ist durch den Umfang begrenzt, Höhe nicht); dunkle Kontur hebt das Gold vom Holz ab.
-  const arc=(text:string,radius:number,font:string,step:number,bottom:boolean,center=0,stretch=1)=>{ctx.font=font;const px=parseFloat(font.replace(/^\D*/,''))||100;ctx.lineWidth=Math.max(2,px*.035);ctx.lineJoin='round';ctx.strokeStyle='rgba(28,12,4,.6)';const chars=[...text];let a=center-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*radius,bottom?m+Math.cos(a)*radius:m-Math.cos(a)*radius);ctx.rotate(bottom?-a:a);ctx.scale(1,stretch);ctx.strokeText(ch,0,0);ctx.fillText(ch,0,0);ctx.restore();a+=step;}ctx.strokeStyle=gold;};
+  // stretch: Buchstaben in Richtung Mitte höher ziehen (Breite ist durch den Umfang begrenzt, Höhe nicht).
+  const arc=(text:string,radius:number,px:number,step:number,bottom:boolean,center=0,stretch=1)=>{ctx.font=`${weight} ${px}px ${family}`;const chars=[...text];let a=center-step*(chars.length-1)/2;for(const ch of chars){ctx.save();ctx.translate(m+Math.sin(a)*radius,bottom?m+Math.cos(a)*radius:m-Math.cos(a)*radius);ctx.rotate(bottom?-a:a);ctx.scale(1,stretch);glyph(ch,px);ctx.restore();a+=step;}};
   // Hinten (oben im Bild) der Name, vorne ein frei wählbarer Text zwischen den beiden Sternen; lange Texte werden enger und kleiner gesetzt.
-  const ring=1.275*u,fitArc=(text:string,bottom:boolean)=>{const n=Math.max(1,[...text].length),step=Math.min(.13,(Math.PI-.34)/Math.max(1,n-1)),px=Math.round(Math.min(160,step*ring*1.22)),stretch=Math.min(1.55,190/px);arc(text,ring,`700 ${px}px Georgia, "Times New Roman", serif`,step,bottom,0,stretch);};
+  const ring=1.275*u,fitArc=(text:string,bottom:boolean)=>{const n=Math.max(1,[...text].length),maxStep=(Math.PI-.34)/Math.max(1,n-1),step=Math.min(.13*st.textSpacing,maxStep),px=Math.round(Math.min(160,Math.min(.13,maxStep)*ring*1.22)*st.textSize),stretch=Math.min(1.55,190/px);arc(text,ring,px,step,bottom,0,stretch);};
   fitArc('CITY-CAFE KLAGENFURT',false);if(front)fitArc(front,true);
-  for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*ring,m);ctx.font='700 110px Georgia, serif';ctx.fillText('\u2726',0,0);ctx.restore();}
+  const star=(rad:number,size:number)=>{for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*rad,m);ctx.font=`700 ${size}px Georgia, serif`;glyph('✦',size);ctx.restore();}};
+  star(ring,110);
   if(logo){
    ctx.lineWidth=12;for(const r of [.977,.95,.8,.775]){ctx.beginPath();ctx.arc(m,m,r*u,0,Math.PI*2);ctx.stroke();}
-   arc('CITY CAFE',.875*u,'700 82px Georgia, serif',.1,false);arc('FISCHL',.875*u,'700 82px Georgia, serif',.1,true);
-   for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*.875*u,m);ctx.font='700 64px Georgia, serif';ctx.fillText('\u2726',0,0);ctx.restore();}
+   arc('CITY CAFE',.875*u,Math.round(82*st.textSize),.1*st.textSpacing,false);arc('FISCHL',.875*u,Math.round(82*st.textSize),.1*st.textSpacing,true);
+   star(.875*u,64);
   }
   if(this.gold.map)this.gold.map.needsUpdate=true;
  }
