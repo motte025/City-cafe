@@ -1,4 +1,5 @@
 import type {Settings} from './settings';
+import {ENGRAVING_NAMES} from './track-engraving';
 /**
  * Einstellungen in aufklappbaren Gruppen (Fernbedienung und TV-Dialog). Alle Gruppen starten
  * eingeklappt – am Handy sieht man zuerst nur die Überschriften und öffnet, was man braucht.
@@ -25,6 +26,7 @@ export function settingsForm(){const group=(title:string,body:string,note='')=>`
  ${field('woodWarmth','Holz · dunkel bis warm','%',0,1,.05)}${field('grainTrack','Kugellaufbahn · Maserung','%',0,1,.05)}${field('grainInner','Innenkessel · Maserung','%',0,1,.05)}
  ${field('outerTone','Außenrand · dunkel bis hell','%',.15,1.4,.05)}${field('trackTone','Kugellaufbahn · dunkel bis hell','%',.15,1.4,.05)}${field('innerTone','Innenkessel · dunkel bis hell','%',.15,1.4,.05)}
  ${field('outerGloss','Außenrand · matt bis glänzend','%',0,1,.05)}${field('innerGloss','Innenkessel · matt bis glänzend','%',0,1,.05)}`),
+ group('🪙 Gravur in der Kugellaufbahn (oben)',`${choice('trackEngraving','Gravur „City Cafe“',ENGRAVING_NAMES)}${field('trackEngraveSize','Größe der Gravur','%',.6,1.4,.01)}`,'<p>Nur Zierde oben auf der Laufbahn zwischen den beiden oberen Rauten, die Kugel spürt nichts davon.</p>'),
  group('🎭 Vorlagen für die Werbetafel',`<label class="setting-field" style="grid-column:1/-1"><span>Vorlage laden (füllt Texte, Farben, Effekte vorne und hinten)</span><select data-preset aria-label="Vorlage für die Werbetafel"><option value="">— Vorlage wählen —</option>${PRESETS.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('')}</select></label>`,'<p>Danach lassen sich alle Texte und Stile darunter weiter einzeln anpassen.</p>'),
  group('✨ Innenkessel · Vorderseite (Schrift)',`<label class="setting-field"><span>Text vorne · 1. Zeile (außen)</span><input type="text" maxlength="48" data-setting="frontText" aria-label="Text vorne im Kessel" placeholder="leer = kein Text"></label>
  <label class="setting-field"><span>Text vorne · 2. Zeile (darüber, Richtung Mitte)</span><input type="text" maxlength="48" data-setting="frontText2" aria-label="Zweite Textzeile vorne" placeholder="leer = keine zweite Zeile"></label>

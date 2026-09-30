@@ -3,6 +3,7 @@ import {ORDER,STEP,TAU,color} from './game';
 import {batchMeshes} from './render-budget';
 import {DEFAULT_DESIGN,FLOOR,dividerTop,numberHeight,trackHeight,lipHeight,rimProfile,type DesignSettings,type WheelShape} from './wheel-shape';
 import {MM_PER_UNIT} from './ball-config';
+import {drawEngraving,engravingFonts} from './track-engraving';
 
 export function deflectorGeometry(index:number){
  const a=(index+.5)*TAU/8,rotation=index%2?Math.PI/2:0;
@@ -49,6 +50,7 @@ export class WheelModel {
  private colors={red:new T.MeshPhysicalMaterial({color:0x990b21,roughness:.31,metalness:.08,clearcoat:.65}),black:new T.MeshPhysicalMaterial({color:0x070b10,roughness:.31,metalness:.12,clearcoat:.65}),green:new T.MeshPhysicalMaterial({color:0x006b3f,roughness:.31,metalness:.08,clearcoat:.65})};
  private pockets={red:new T.MeshStandardMaterial({color:0x740c20,roughness:.42}),black:new T.MeshStandardMaterial({color:0x090f14,roughness:.44}),green:new T.MeshStandardMaterial({color:0x005736,roughness:.42})};
  private labels:T.MeshBasicMaterial;
+ private engrave=new T.MeshStandardMaterial({transparent:true,roughness:.5,metalness:.15,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3});private engraveCanvas:HTMLCanvasElement|null=null;private engraveKey='';
  // Goldene Schrift auf der inneren Kesselfläche (feststehend, siehe lettering()). polygonOffset wie bei
  // den Zierringen, sonst droht an der fast planparallelen Fläche wieder Z-Fighting (siehe wheel-shape.ts).
  private gold=new T.MeshStandardMaterial({transparent:true,metalness:.75,roughness:.32,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
@@ -81,7 +83,7 @@ export class WheelModel {
   this.deflectorMetal.color.copy(new T.Color(0x9aa3ab).lerp(new T.Color(0xd9aa52),s.diamondBrass));this.deflectorMetal.roughness=.85-s.diamondGloss*.72;this.deflectorMetal.metalness=.55-s.diamondGloss*.25;
   // Glanz: glatte Oberfläche mit hellen Lichtkanten. Die Umgebung ist bewusst schwach – reines Spiegelmetall wirkte dort dunkel statt blank,
   // deshalb sinkt der Metallanteil mit dem Glanz leicht, die Farbe bleibt hell und die Lichter setzen scharfe Glanzpunkte.
-  this.drawLettering(s.emblem,s);
+  this.drawLettering(s.emblem,s);this.drawEngraving(s.trackEngraving,s.trackEngraveSize);
   for(const [key,mat] of Object.entries(this.pockets)){mat.color.set(key==='red'?0x740c20:key==='green'?0x005736:0x090f14).multiplyScalar(.6+s.pocketRichness*.8);}
  }
  rebuild(shape:WheelShape){
@@ -111,7 +113,7 @@ export class WheelModel {
   // (siehe wheel-shape.ts) – hier vorsorglich gleich mit eingebaut statt es erst zu entdecken.
   // Seit 27.09.2026 feststehend (im nicht drehenden Teil): oben „CITY-CAFE“, unten „KLAGENFURT“ und
   // das Emblem stehen nie auf dem Kopf; das Holz dreht sich darunter weiter.
-  this.lettering(f);
+  this.lettering(f);this.engraving(f);
   for(const [radius,y,t] of rimProfile(shape).filter(([radius])=>radius<2.45))this.ring(r,radius,y,t,m);
   this.ring(r,1.53,.348,.016,b);
   const wall=new T.Shape();wall.moveTo(-.015,0);wall.lineTo(.015,0);wall.lineTo(.009,dividerTop(shape)-FLOOR-.012);wall.lineTo(-.009,dividerTop(shape)-FLOOR-.012);wall.closePath();
@@ -294,6 +296,22 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
    star(.875*u,64);
   }
   if(this.gold.map)this.gold.map.needsUpdate=true;
+ }
+ /** Gravur „City Cafe“ auf der Kugellaufbahn (Textur, siehe track-engraving.ts). */
+ private drawEngraving(style:number,size:number){
+  const key=`${style}|${size}`;if(key===this.engraveKey&&this.engraveCanvas)return;this.engraveKey=key;
+  for(const f of engravingFonts(style)){const probe=`600 40px ${f}`;try{if(!document.fonts.check(probe))void document.fonts.load(probe).then(()=>{if(this.engraveKey===key){this.engraveKey='';this.drawEngraving(style,size);}});}catch{}}
+  const c=this.engraveCanvas??=document.createElement('canvas');drawEngraving(c,style,size);
+  if(!this.engrave.map){const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.engrave.map=tex;this.engrave.needsUpdate=true;}
+  this.engrave.map.needsUpdate=true;this.engrave.visible=style>0;
+ }
+ private engraving(parent:T.Group){
+  // Band zwischen den beiden oberen Rauten (bei ±22,5°), Radius 2,52–2,90 ohne die Metallringe bei 2,47 und 2,93.
+  const half=.35,r0=2.52,r1=2.9,radii=[2.52,2.6,2.7,2.8,2.9],n=48,pos:number[]=[],uv:number[]=[],idx:number[]=[];
+  for(let i=0;i<=n;i++){const a=-half+2*half*i/n;radii.forEach(r=>{pos.push(Math.sin(a)*r,trackHeight(r)+.005,-Math.cos(a)*r);uv.push(i/n,(r-r0)/(r1-r0));});}
+  const k=radii.length;for(let i=0;i<n;i++)for(let j=0;j<k-1;j++){const a=i*k+j,b=(i+1)*k+j;idx.push(a,b,a+1,b,b+1,a+1);}
+  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();
+  const mesh=this.mesh(parent,g,this.engrave);mesh.castShadow=false;mesh.receiveShadow=false;mesh.renderOrder=2;
  }
  private lettering(parent:T.Group){
   const g=new T.RingGeometry(.43,1.525,160,10),p=g.getAttribute('position'),lift=.2/MM_PER_UNIT;
