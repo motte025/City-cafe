@@ -11,36 +11,30 @@ const DENOMS:Denom[]=[
  {value:'100',base:'#15181b',edge:'#e2c27a',inlay:'#e9dcbc',ink:'#15181b',side:'#0d0f11'},
  {value:'500',base:'#efe4c8',edge:'#9e1b2c',inlay:'#9e1b2c',ink:'#f3ead2',side:'#cfc2a1'},
 ];
-const FACE=176;
-const faces=new Map<number,HTMLCanvasElement>();
-function face(d:number){
- let c=faces.get(d);if(c)return c;
- const k=DENOMS[d],R=FACE/2;c=document.createElement('canvas');c.width=c.height=FACE;const g=c.getContext('2d')!;g.translate(R,R);
- g.fillStyle=k.base;g.beginPath();g.arc(0,0,R-1,0,Math.PI*2);g.fill();
- // Randeinlagen (sechs Streifen), wie bei echten Jetons
- g.fillStyle=k.edge;for(let i=0;i<6;i++){g.save();g.rotate(i*Math.PI/3);g.beginPath();g.moveTo(-R*.13,-R+1);g.lineTo(R*.13,-R+1);g.lineTo(R*.1,-R*.74);g.lineTo(-R*.1,-R*.74);g.closePath();g.fill();g.restore();}
- g.strokeStyle='#d9b465';g.lineWidth=R*.035;g.beginPath();g.arc(0,0,R*.69,0,Math.PI*2);g.stroke();
- g.fillStyle=k.inlay;g.beginPath();g.arc(0,0,R*.64,0,Math.PI*2);g.fill();
- g.strokeStyle=k.ink;g.globalAlpha=.35;g.lineWidth=R*.012;g.beginPath();g.arc(0,0,R*.56,0,Math.PI*2);g.stroke();g.globalAlpha=1;
- // „CITY CAFE“ im Bogen oben, Wert in der Mitte, „KLAGENFURT“ klein unten
- const arc=(text:string,radius:number,size:number,top:boolean)=>{g.font=`600 ${size}px 'DM Sans',Arial,sans-serif`;g.fillStyle=k.ink;g.textAlign='center';g.textBaseline='middle';
-  const chars=[...text],step=size*.78/radius,start=-(chars.length-1)*step/2;
-  chars.forEach((ch,i)=>{g.save();const a=start+i*step;g.rotate(top?a:-a);g.translate(0,top?-radius:radius);if(!top)g.rotate(0);g.fillText(ch,0,0);g.restore();});};
- arc('CITY CAFE',R*.46,R*.15,true);arc('KLAGENFURT',R*.47,R*.1,false);
- g.font=`500 ${R*(k.value.length>2?.34:.42)}px 'Playfair Display',Georgia,serif`;g.fillStyle=k.ink;g.textAlign='center';g.textBaseline='middle';g.fillText(k.value,0,R*.03);
- faces.set(d,c);return c;
+/** Oberseite direkt als Vektorgrafik zeichnen (scharf in jeder Größe; vorher ein verkleinertes Bild → matschig). */
+function drawFace(g:CanvasRenderingContext2D,R:number,d:number,px:number){
+ const k=DENOMS[d];
+ g.fillStyle=k.base;g.beginPath();g.arc(0,0,R,0,Math.PI*2);g.fill();
+ g.fillStyle=k.edge;for(let i=0;i<6;i++){g.save();g.rotate(i*Math.PI/3);g.beginPath();g.moveTo(-R*.14,-R);g.lineTo(R*.14,-R);g.lineTo(R*.1,-R*.72);g.lineTo(-R*.1,-R*.72);g.closePath();g.fill();g.restore();}
+ g.strokeStyle='#d9b465';g.lineWidth=Math.max(.6,R*.045);g.beginPath();g.arc(0,0,R*.68,0,Math.PI*2);g.stroke();
+ g.fillStyle=k.inlay;g.beginPath();g.arc(0,0,R*.62,0,Math.PI*2);g.fill();
+ g.fillStyle=k.ink;g.textAlign='center';g.textBaseline='middle';
+ // Schrift nur, wenn sie am Bildschirm lesbar groß wird (px = Bildschirmpixel je Einheit)
+ if(R*px>=22){const size=R*.17,radius=R*.45,chars=[...'CITY CAFE'],step=size*.8/radius,start=-(chars.length-1)*step/2;g.font=`700 ${size}px 'DM Sans',Arial,sans-serif`;
+  chars.forEach((ch,i)=>{g.save();g.rotate(start+i*step);g.translate(0,-radius);g.fillText(ch,0,0);g.restore();});}
+ g.font=`600 ${R*(k.value.length>2?.36:.46)}px 'Playfair Display',Georgia,serif`;g.fillText(k.value,0,R*(R*px>=22?.12:.04));
 }
 interface Stack {denom:number;count:number;x:number;rot:number[];jit:number[];adding:number;removing:number}
 class ChipCanvas {
  stacks:Stack[]=[];constructor(readonly canvas:HTMLCanvasElement,readonly bank:boolean,counts:number[]){
-  this.stacks=counts.map((n,i)=>({denom:i%DENOMS.length,count:n,x:0,rot:[],jit:[],adding:0,removing:0}));for(const s of this.stacks)for(let k=0;k<40;k++){s.rot.push((Math.random()-.5)*.9);s.jit.push((Math.random()-.5)*.05);}
+  this.stacks=counts.map((n,i)=>({denom:i%DENOMS.length,count:n,x:0,rot:[],jit:[],adding:0,removing:0}));for(const s of this.stacks)for(let k=0;k<40;k++){s.rot.push((Math.random()-.5)*.35);s.jit.push((Math.random()-.5)*.05);}
  }
  draw(tilt:number){
-  const c=this.canvas,w=c.clientWidth,h=c.clientHeight;if(w<=0||h<=0)return;const dpr=Math.min(2,devicePixelRatio||1);
+  const c=this.canvas,w=c.clientWidth,h=c.clientHeight;if(w<=0||h<=0)return;const dpr=Math.min(3,(devicePixelRatio||1)*1.5);
   if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);}
   const g=c.getContext('2d')!;g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,w,h);
   const n=this.stacks.length,t=Math.max(.05,Math.min(1.2,tilt)),squash=Math.cos(t),side=Math.sin(t);
-  const maxN=this.bank?15:11,label=this.bank?Math.max(40,h*.5):0;
+  const maxN=this.bank?11:8,label=this.bank?Math.max(40,h*.5):0;
   // Radius so, dass alle Stapel nebeneinander und der höchste Stapel in die Höhe passen
   const r=Math.min((w-label)/(n*2.25),h*.9/(2*squash+maxN*.19*side*2)),th=r*.19*side*2,gap=r*2.25;
   const x0=label+gap/2+r*.3,base=h*.92-r*squash;
@@ -51,7 +45,7 @@ class ChipCanvas {
    g.save();g.fillStyle='#e1c892';g.font=`500 ${Math.max(10,h*.12)}px 'DM Sans',Arial,sans-serif`;g.textAlign='left';g.textBaseline='middle';g.translate(2,base-r*squash*.1);g.fillText('BANK',0,0);g.restore();
   }
   this.stacks.forEach((s,i)=>{
-   const cx=x0+i*gap;s.x=cx;const d=DENOMS[s.denom],f=face(s.denom),total=s.count;
+   const cx=x0+i*gap;s.x=cx;const d=DENOMS[s.denom],total=s.count;
    const grad=g.createLinearGradient(cx-r,0,cx+r,0);grad.addColorStop(0,shade(d.side,-.45));grad.addColorStop(.38,shade(d.side,.18));grad.addColorStop(.55,d.side);grad.addColorStop(1,shade(d.side,-.55));
    for(let k=0;k<total;k++){
     let lift=0,alpha=1;
@@ -61,10 +55,10 @@ class ChipCanvas {
     // Seitenband mit Einlagen
     g.fillStyle=grad;g.beginPath();g.ellipse(cx+jx,cy,r,r*squash,0,0,Math.PI);g.lineTo(cx+jx-r,cy-th);g.ellipse(cx+jx,cy-th,r,r*squash,0,Math.PI,0,true);g.closePath();g.fill();
     g.fillStyle=d.edge;const rot=s.rot[k%40];
-    for(let j=0;j<6;j++){const a=rot+j*Math.PI/3,cs=Math.cos(a);if(cs<=.15)continue;const x=cx+jx+r*Math.sin(a),ww=r*.26*cs;g.fillRect(x-ww/2,cy-th+r*squash*cs*.98,ww,th);}
+    for(let j=0;j<6;j++){const a=rot+j*Math.PI/3,cs=Math.cos(a);if(cs<=.15)continue;const x=cx+jx+r*Math.sin(a),ww=r*.26*cs;g.fillRect(x-ww/2,cy-th*.88+r*squash*cs*.98,ww,th*.76);}
     g.strokeStyle='rgba(0,0,0,.35)';g.lineWidth=.6;g.beginPath();g.ellipse(cx+jx,cy,r,r*squash,0,0,Math.PI);g.stroke();
     if(k===total-1||(k===total-2&&(s.adding>0||s.removing>0))){
-     g.save();g.translate(cx+jx,cy-th);g.scale(1,squash);g.rotate(rot);g.drawImage(f,-r,-r,2*r,2*r);g.restore();
+     g.save();g.translate(cx+jx,cy-th);g.scale(1,squash);g.rotate(rot);drawFace(g,r,s.denom,dpr);g.restore();
      // Glanz von oben links, wie das Licht über dem Kessel
      const gl=g.createRadialGradient(cx+jx-r*.35,cy-th-r*squash*.4,0,cx+jx,cy-th,r);gl.addColorStop(0,'rgba(255,248,225,.28)');gl.addColorStop(1,'rgba(255,248,225,0)');
      g.fillStyle=gl;g.beginPath();g.ellipse(cx+jx,cy-th,r,r*squash,0,0,Math.PI*2);g.fill();
@@ -79,8 +73,8 @@ function shade(hex:string,f:number){const v=parseInt(hex.slice(1),16),ch=[v>>16,
 export class ChipScene {
  private bank:ChipCanvas;private table:ChipCanvas;private tilt=16*Math.PI/180;private raf=0;private timer=0;private moving=false;
  constructor(bankCanvas:HTMLCanvasElement,tableCanvas:HTMLCanvasElement){
-  this.bank=new ChipCanvas(bankCanvas,true,[12,9,11,8]);this.table=new ChipCanvas(tableCanvas,false,[5,4,6,3]);
-  addEventListener('resize',()=>this.redraw());void document.fonts?.ready.then(()=>{faces.clear();this.redraw();});
+  this.bank=new ChipCanvas(bankCanvas,true,[9,7,8,6]);this.table=new ChipCanvas(tableCanvas,false,[4,3,5,3]);
+  addEventListener('resize',()=>this.redraw());void document.fonts?.ready.then(()=>this.redraw());
   this.redraw();this.schedule();
  }
  setTilt(deg:number){const t=deg*Math.PI/180;if(Math.abs(t-this.tilt)<.001)return;this.tilt=t;this.redraw();}
@@ -90,9 +84,9 @@ export class ChipScene {
  private move(){
   if(document.hidden||this.moving){this.schedule();return;}
   const d=Math.floor(Math.random()*DENOMS.length),bs=this.bank.stacks[d],ts=this.table.stacks[d];
-  const toTable=ts.count<=2?true:bs.count<=5?false:Math.random()<.5,amount=1+Math.floor(Math.random()*3);
+  const toTable=ts.count<=2?true:bs.count<=4?false:Math.random()<.5,amount=1+Math.floor(Math.random()*3);
   const from=toTable?bs:ts,to=toTable?ts:bs,fromC=toTable?this.bank:this.table,toC=toTable?this.table:this.bank;
-  let left=Math.min(amount,from.count-(toTable?5:2),(toTable?11:15)-to.count);if(left<=0){this.schedule();return;}
+  let left=Math.min(amount,from.count-(toTable?4:2),(toTable?8:11)-to.count);if(left<=0){this.schedule();return;}
   this.moving=true;
   const step=()=>{if(left<=0){this.moving=false;this.schedule();return;}left--;
    this.animate(fromC,from,'removing',()=>{from.count--;to.count++;to.adding=1;this.animate(toC,to,'adding',()=>setTimeout(step,120));});};
