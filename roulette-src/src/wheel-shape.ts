@@ -8,7 +8,7 @@ export const DEFAULT_DESIGN = {
  woodWarmth:.65, gloss:.65, metalWarmth:.3, lightContrast:.65, textScale:1,
  innerTone:1,outerTone:1,trackTone:1,innerGloss:.25,outerGloss:.25,pocketRichness:.5,grainTrack:.5,grainInner:.5,
  frontText:'DEMNÄCHST IM CITY-CAFE: HALLOWEEN PARTY',frontText2:'',woodOuter:0,woodTrack:0,woodInner:0,crossStyle:0,brass:0,ballGloss:.65,lightPlay:.4,feltBackground:.6,pocketGlow:true,goldNumbers:false,emblem:false,
- textFont:0,textWeight:700,textSpacing:1,textEffect:0,textOutline:.6,textSize:1,trackEngraving:0,trackEngraveSize:1,trackEngraveText:'',trackEngraveFont:0,trackEngraveWeight:0,trackEngraveSpacing:1,trackEngraveEffect:0,trackEngraveDepth:1,trackEngraveColor:0,trackEngraveY:0,textColor:0,text2Color:0,backColor:0,back2Color:0,text2Font:0,text2Weight:700,text2Spacing:1,text2Effect:0,text2Outline:.6,text2Size:1,
+ textFont:0,textWeight:700,textSpacing:1,textEffect:0,textOutline:.6,textSize:1,trackEngraving:0,trackEngraveSize:1,trackEngraveText:'',trackEngraveFont:0,trackEngraveWeight:0,trackEngraveSpacing:1,trackEngraveEffect:0,trackEngraveDepth:1,trackEngraveColor:0,trackEngraveY:0,trackEngraveText2:'',trackEngraveFont2:0,trackEngraveWeight2:0,trackEngraveSize2:1,trackEngraveSpacing2:1,trackEngraveEffect2:0,trackEngraveColor2:0,textColor:0,text2Color:0,backColor:0,back2Color:0,text2Font:0,text2Weight:700,text2Spacing:1,text2Effect:0,text2Outline:.6,text2Size:1,
  /** Rückseite des Innenkessels (Werbetafel): eigene Texte und eigener Schriftstil. */
  backText:'CITY-CAFE KLAGENFURT',backText2:'',backFont:0,backWeight:700,backSpacing:1,backEffect:0,backOutline:.6,backSize:1,back2Font:0,back2Weight:700,back2Spacing:1,back2Effect:0,back2Outline:.6,back2Size:1,
  fretBrass:.3,fretGloss:.72,diamondBrass:.3,diamondGloss:.43,

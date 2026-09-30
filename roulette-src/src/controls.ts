@@ -1,5 +1,5 @@
 import type {Settings} from './settings';
-import {ENGRAVING_NAMES,ENGRAVING_FONT_NAMES,ENGRAVING_WEIGHT_NAMES,ENGRAVING_EFFECT_NAMES,ENGRAVING_COLOR_NAMES} from './track-engraving';
+import {ENGRAVING_NAMES,ENGRAVING_FONT_NAMES,ENGRAVING_WEIGHT_NAMES,ENGRAVING_EFFECT_NAMES,ENGRAVING_COLOR_NAMES,ENGRAVING_FONT2_NAMES,ENGRAVING_WEIGHT2_NAMES,ENGRAVING_EFFECT2_NAMES,ENGRAVING_COLOR2_NAMES} from './track-engraving';
 /**
  * Einstellungen in aufklappbaren Gruppen (Fernbedienung und TV-Dialog). Alle Gruppen starten
  * eingeklappt – am Handy sieht man zuerst nur die Überschriften und öffnet, was man braucht.
@@ -30,7 +30,12 @@ export function settingsForm(){const group=(title:string,body:string,note='')=>`
  ${choice('trackEngraveFont','Schriftart',ENGRAVING_FONT_NAMES)}${choice('trackEngraveWeight','Strichstärke',ENGRAVING_WEIGHT_NAMES)}
  ${field('trackEngraveSize','Schriftgröße','%',.6,1.4,.01)}${field('trackEngraveSpacing','Buchstabenabstand','%',.6,1.6,.05)}
  ${choice('trackEngraveEffect','Effekt',ENGRAVING_EFFECT_NAMES)}${choice('trackEngraveColor','Farbe',ENGRAVING_COLOR_NAMES)}
- ${field('trackEngraveDepth','Tiefe · Kontrast der Gravur','%',.4,1.6,.05)}${field('trackEngraveY','Lage · innen ↔ außen','%',-1,1,.05)}`,'<p>Nur Zierde oben auf der Laufbahn zwischen den beiden oberen Rauten, die Kugel spürt nichts davon.</p>'),
+ ${field('trackEngraveDepth','Tiefe · Kontrast der Gravur','%',.4,1.6,.05)}${field('trackEngraveY','Lage · innen ↔ außen','%',-1,1,.05)}
+ <b class="setting-sub">Gravur · Textzeile 2 (darunter)</b>
+ <label class="setting-field" style="grid-column:1/-1"><span>Text der 2. Zeile (leer = keine)</span><input type="text" maxlength="48" data-setting="trackEngraveText2" aria-label="Zweite Zeile der Gravur" placeholder="z. B. KLAGENFURT"></label>
+ ${choice('trackEngraveFont2','Schriftart',ENGRAVING_FONT2_NAMES)}${choice('trackEngraveWeight2','Strichstärke',ENGRAVING_WEIGHT2_NAMES)}
+ ${field('trackEngraveSize2','Schriftgröße','%',.6,1.4,.01)}${field('trackEngraveSpacing2','Buchstabenabstand','%',.6,1.6,.05)}
+ ${choice('trackEngraveEffect2','Effekt',ENGRAVING_EFFECT2_NAMES)}${choice('trackEngraveColor2','Farbe',ENGRAVING_COLOR2_NAMES)}`,'<p>Nur Zierde oben auf der Laufbahn zwischen den beiden oberen Rauten, die Kugel spürt nichts davon.</p>'),
  group('🎭 Vorlagen für die Werbetafel',`<label class="setting-field" style="grid-column:1/-1"><span>Vorlage laden (füllt Texte, Farben, Effekte vorne und hinten)</span><select data-preset aria-label="Vorlage für die Werbetafel"><option value="">— Vorlage wählen —</option>${PRESETS.map((p,i)=>`<option value="${i}">${p.name}</option>`).join('')}</select></label>`,'<p>Danach lassen sich alle Texte und Stile darunter weiter einzeln anpassen.</p>'),
  group('✨ Innenkessel · Vorderseite (Schrift)',`<label class="setting-field"><span>Text vorne · 1. Zeile (außen)</span><input type="text" maxlength="48" data-setting="frontText" aria-label="Text vorne im Kessel" placeholder="leer = kein Text"></label>
  <label class="setting-field"><span>Text vorne · 2. Zeile (darüber, Richtung Mitte)</span><input type="text" maxlength="48" data-setting="frontText2" aria-label="Zweite Textzeile vorne" placeholder="leer = keine zweite Zeile"></label>

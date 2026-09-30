@@ -299,9 +299,9 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
  }
  /** Gravur „City Cafe“ auf der Kugellaufbahn (Textur, siehe track-engraving.ts). */
  private drawEngraving(d:DesignSettings){
-  const style=d.trackEngraving,o={size:d.trackEngraveSize,text:d.trackEngraveText,font:d.trackEngraveFont,weight:d.trackEngraveWeight,spacing:d.trackEngraveSpacing,effect:d.trackEngraveEffect,depth:d.trackEngraveDepth,color:d.trackEngraveColor,y:d.trackEngraveY};
+  const style=d.trackEngraving,o={size:d.trackEngraveSize,text:d.trackEngraveText,font:d.trackEngraveFont,weight:d.trackEngraveWeight,spacing:d.trackEngraveSpacing,effect:d.trackEngraveEffect,depth:d.trackEngraveDepth,color:d.trackEngraveColor,y:d.trackEngraveY,text2:d.trackEngraveText2,font2:d.trackEngraveFont2,weight2:d.trackEngraveWeight2,size2:d.trackEngraveSize2,spacing2:d.trackEngraveSpacing2,effect2:d.trackEngraveEffect2,color2:d.trackEngraveColor2};
   const key=JSON.stringify([style,o]);if(key===this.engraveKey&&this.engraveCanvas)return;this.engraveKey=key;
-  for(const f of engravingFonts(style,o.font)){const probe=`600 40px ${f}`;try{if(!document.fonts.check(probe))void document.fonts.load(probe).then(()=>{if(this.engraveKey===key){this.engraveKey='';this.drawEngraving(d);}});}catch{}}
+  for(const f of engravingFonts(style,o.font,o.font2)){const probe=`600 40px ${f}`;try{if(!document.fonts.check(probe))void document.fonts.load(probe).then(()=>{if(this.engraveKey===key){this.engraveKey='';this.drawEngraving(d);}});}catch{}}
   const c=this.engraveCanvas??=document.createElement('canvas');drawEngraving(c,style,o);
   if(!this.engrave.map){const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;tex.anisotropy=8;this.engrave.map=tex;this.engrave.needsUpdate=true;}
   this.engrave.map.needsUpdate=true;this.engrave.visible=style>0;
