@@ -264,10 +264,10 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
   // Wird der Text länger als der Halbkreis, schrumpft die ganze Zeile.
   const ring=1.275*u,fitArc=(text:string,bottom:boolean,radius=ring,scale=1)=>{
    const chars=[...text],n=chars.length;if(!n)return;
-   let px=Math.round(Math.min(160,.13*radius*1.22)*size*scale);
+   let px=Math.round(Math.min(bottom?160:190,.13*radius*1.22)*size*scale);
    const measure=(p:number)=>{ctx.font=`${weight} ${p}px ${family}`;const w=chars.map(c=>ctx.measureText(c).width),gap=p*.16*spacing;return {w,gap,len:w.reduce((x,y)=>x+y,0)+gap*(n-1)};};
-   let s=measure(px);const maxLen=(Math.PI-.34)*radius;if(s.len>maxLen){px=Math.floor(px*maxLen/s.len);s=measure(px);}
-   const stretch=Math.min(bottom?1.55:1.3,190*scale/px);let a=-s.len/2/radius;
+   let s=measure(px);const maxLen=(Math.PI-(bottom?.34:.2))*radius;if(s.len>maxLen){px=Math.floor(px*maxLen/s.len);s=measure(px);}
+   const stretch=Math.min(bottom?1.55:1.7,190*scale/px);let a=-s.len/2/radius;
    chars.forEach((ch,i)=>{const mid=a+s.w[i]/2/radius;a+=(s.w[i]+s.gap)/radius;ctx.save();ctx.translate(m+Math.sin(mid)*radius,bottom?m+Math.cos(mid)*radius:m-Math.cos(mid)*radius);ctx.rotate(bottom?-mid:mid);ctx.scale(1,stretch);glyph(ch,px);ctx.restore();});};
   // Eine Zeile liegt auf dem Hauptring; mit zwei Zeilen teilen sich beide den freien Ring: die erste weiter außen und etwas kleiner,
   // die zweite näher zur Kesselmitte – ohne das Emblem zu berühren.
@@ -277,9 +277,9 @@ private letteringCanvas:HTMLCanvasElement|null=null;private letteringKey='';
    if(a&&b){
     // Rückseite liegt oben, also am weit entfernten Rand: perspektivisch gestaucht, stößt schnell an den Zahlenkranz und an die Speichen des Mittelkreuzes.
     // Deshalb dort kleiner, weiter zur Kesselmitte und mit begrenzter Streckung.
-    if(!bottom){one(a,1,1.3*u,.8);one(b,2,1.09*u,.72);}
+    if(!bottom){one(a,1,1.4*u,1.05);one(b,2,1.15*u,.9);}
     else if(logo){one(a,1,1.375*u,.88);one(b,2,1.11*u,.8);}else{one(a,1,1.41*u,1);one(b,2,.97*u,.95);}
-   }else if(a)one(a,1,bottom?ring:1.24*u,bottom?1:.9);else if(b)one(b,2,bottom?ring:1.24*u,bottom?1:.9);};
+   }else if(a)one(a,1,bottom?ring:1.3*u,bottom?1:1.15);else if(b)one(b,2,bottom?ring:1.3*u,bottom?1:1.15);};
   lines('back',d.backText,d.backText2,false);
   lines('front',d.frontText,d.frontText2,true);use('front');
   const star=(rad:number,px:number)=>{for(const a of [Math.PI/2,-Math.PI/2]){ctx.save();ctx.translate(m+Math.sin(a)*rad,m);ctx.font=`700 ${px}px Georgia, serif`;glyph('✦',px);ctx.restore();}};
