@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-30T17:22:46Z",
+  "checked_at": "2026-09-30T17:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "roice",
       "name": "roice",
       "title": "helping a friend in need !gofundme !info",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Suptember !Rentnerfels 🔥 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
