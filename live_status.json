@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-30T17:47:45Z",
+  "checked_at": "2026-09-30T18:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "KROKO IST ZURÜCK! | 1 Sub = 1 Zahn | !holy !logitech #werbung",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Suptember !Rentnerfels 🔥 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Suptember !Rentnerfels 🔥 !Shakes !Holy !Moumint !Shop !Socials",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "KROKO IST ZURÜCK! | 1 Sub = 1 Zahn | !holy !logitech #werbung",
       "game": "DJs"
     },
     {
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ TRANCE MUSIC - SUBTEMBER FINALE | !goals | !subtember | !tip ✨",
+      "channel": "roice",
+      "name": "roice",
+      "title": "helping a friend in need !gofundme !info",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "helping a friend in need !gofundme !info",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | LYAH NOIR",
       "game": "DJs"
     }
   ]
