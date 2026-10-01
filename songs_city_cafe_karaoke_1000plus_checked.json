@@ -81468,16 +81468,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Kristina Bach",
-    "title": "Hitmedley Alles von mir",
+    "artist": "Miss Shiva",
+    "title": "Ultimate Temptation (single cut)",
     "album": "",
-    "category": "Schlager & Party",
+    "category": "90s Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
-      "Charts",
-      "German"
+      "Party",
+      "Karaoke",
+      "90s Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Bette Midler",
+    "title": "Wind Beneath My Wings",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
