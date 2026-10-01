@@ -79755,16 +79755,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Claudia Jung",
-    "title": "Schmetterlinge",
+    "artist": "Olaf Henning",
+    "title": "Das war ne echt geile Zeit",
     "album": "",
-    "category": "Schlager",
+    "category": "Ballermann & Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
       "Party",
-      "Pop"
+      "Karaoke",
+      "Ballermann & Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
@@ -79775,16 +79775,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Justin Timberlake",
-    "title": "Cry Me a River",
+    "artist": "Andrea Jürgens",
+    "title": "Ich krieg nie genug von dir (Long Version)",
     "album": "",
-    "category": "Party & Rock",
+    "category": "Schlager & Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke",
+      "Schlager & Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Cindy & Bert",
+    "title": "Immer wieder sonntags",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
+      "Evergreen",
+      "Kult"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
