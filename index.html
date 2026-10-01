@@ -7685,17 +7685,28 @@
             mediaStateIndex = nextStateIndex;
             // Wunsch vom Handy laeuft so lange wie dort gewaehlt, sonst gilt die
             // normale Standzeit des Slots.
-            const standzeit = (fernWunsch && nlFern.bisWann !== -1)
-                ? Math.max(5000, nlFern.bisWann - Date.now())
+            // "Bis Stopp" (bisWann -1) hat keine Standzeit: dann nur jede Minute
+            // nachsehen, ob der Wunsch noch gilt. Vorher galt dafuer die normale
+            // Standzeit von 4 Minuten, und das Video brach mitten drin ab. Es
+            // endet mit "Stopp" am Handy, einem neuen Wunsch oder am Videoende
+            // (nlVideoFertig).
+            const bisStopp = fernWunsch && nlFern.bisWann === -1;
+            const standzeit = bisStopp ? 60000
+                : fernWunsch ? Math.max(5000, nlFern.bisWann - Date.now())
                 : NL_CONFIG.sekundenProVideo * 1000;
-            globalMasterTimer = later(() => {
+            const standzeitUm = () => {
+                if (bisStopp && nlFern && nlFern.bisWann === -1 && nlAktiv) {
+                    globalMasterTimer = later(standzeitUm, 60000);
+                    return;
+                }
                 if (fernWunsch && nlFern && nlFern.bisWann !== -1 && nlFern.bisWann <= Date.now()) {
                     nlFern = null;           // Wunsch abgelaufen, zurueck in die Rotation
                     window.nlWunschFormat = null;
                     nlFernStatusMelden();
                 }
                 runMasterSequence();
-            }, standzeit);
+            };
+            globalMasterTimer = later(standzeitUm, standzeit);
         }
 
         // ------------------------------------------------------------------
