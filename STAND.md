@@ -70,12 +70,15 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   (Länge von yt-dlp); Wünsche vom Handy beginnen von vorn.
 - **Bluetooth zur Anlage**: 1Mii B03 Pro (Empfänger, RX) zuhause gekoppelt;
   **der im Café muss dort noch einmal gekoppelt werden** (`bluetoothctl`:
-  scan, pair, trust). `/usr/local/bin/citycafe-bt` (nur auf dem W1, nicht im
-  Repo) hält die Verbindung, zählt sie aber nur als verbunden, wenn es den
-  PipeWire-Ausgang `bluez_output…` gibt, baut sie sonst neu auf und setzt
-  danach 90 % auf genau diesen Ausgang. Die Fernbedienung kann über den
-  Supervisor verbinden/trennen/prüfen; „verbunden" heißt dort ebenfalls: Ton
-  geht zur Anlage.
+  scan, pair, trust – mit Agent, sonst wird der Schlüssel nicht gespeichert).
+  **Verbunden und getrennt wird nur per Knopf** in der Handy-Fernbedienung
+  (Wunsch des Betreibers): „Trennen" trennt und blockiert den Empfänger
+  (sonst meldet er sich nach ~30 s von selbst wieder), „Verbinden" hebt die
+  Sperre auf; die Kopplung bleibt, der Zustand übersteht Neustarts.
+  „Verbunden" heißt: der PipeWire-Ausgang `bluez_output…` existiert, der Ton
+  geht zur Anlage. `/usr/local/bin/citycafe-bt` (nur auf dem W1) verbindet
+  nie selbst, es setzt nur einen neu aufgetauchten Bluetooth-Ausgang als
+  Standard mit 90 %.
 - **Nächtliche Aktualisierung** (`citycafe-update.timer`, täglich 8:30):
   `pacman -Syu`, dann Supervisor und Chromium-Starter aus GitHub `main`
   (nur nach Syntaxprüfung; abschaltbar in `/etc/citycafe-update.conf`),
@@ -233,7 +236,7 @@ wieder live gerechnet.
 - Was sway per `exec` startet, überlebt einen sway-Neustart. Jeder solche
   Dienst muss beim Start seine alte Instanz beenden (wie Supervisor und
   `citycafe-bt`), sonst laufen Kopien gegeneinander — so blockierten sich
-  drei `citycafe-bt` beim Bluetooth-Verbinden.
+  drei (damals noch selbst verbindende) `citycafe-bt` beim Bluetooth-Verbinden.
 - Supervisor allein neu starten (Dashboard läuft weiter): Prozess per PID
   beenden, dann als `citycafe` mit geladener `citycafe.env` per `setsid`
   starten — ohne die Variablen fehlen VA-API, Raum und Puffer.

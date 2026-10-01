@@ -52,15 +52,22 @@ der hängt per Kabel an der Anlage. In der YouTube-Fernbedienung gibt es dafür
 „🔵 Bluetooth zur Anlage“ mit Verbinden, Trennen und Prüfen. Der Supervisor
 führt das mit `bluetoothctl` aus und stellt die Tonausgabe mit `pactl` auf den
 Empfänger um. „Verbunden" meldet er nur, wenn der Tonkanal steht
-(PipeWire-Ausgang `bluez_output…`). Daneben hält `citycafe-bt` die
-Verbindung von selbst und setzt 90 %.
+(PipeWire-Ausgang `bluez_output…`). Verbunden wird nur per Knopf: „Trennen"
+blockiert den Empfänger zusätzlich, „Verbinden" hebt das auf. `citycafe-bt`
+verbindet nie selbst, es setzt nur einen neuen Bluetooth-Ausgang mit 90 %.
 
 Koppeln (einmal je Empfänger, also zuhause und im Café):
 
 ```sh
-bluetoothctl            # dann: power on, scan on, warten bis „B03“ erscheint,
-                        # pair ADRESSE, trust ADRESSE, connect ADRESSE, quit
+bluetoothctl            # dann: agent NoInputNoOutput, default-agent,
+                        # power on, pairable on, scan on, warten bis „B03“
+                        # erscheint, pair ADRESSE, trust ADRESSE,
+                        # connect ADRESSE, quit
+bluetoothctl info ADRESSE | grep Bonded    # muss "yes" sein
 ```
+
+Ohne Agent klappt das Koppeln zwar, der Schlüssel wird aber nicht gespeichert
+(`Bonded: no`) – nach dem ersten Trennen ist die Kopplung dann weg.
 
 Zum Koppeln am B03 Pro die Bluetooth-Taste gedrückt halten, bis die Anzeige
 blinkt; das Fenster ist nur kurz offen. Gefunden wird das Gerät über einen

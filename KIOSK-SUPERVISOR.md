@@ -82,8 +82,11 @@ waren für die 2 GB des ODROID nötig; der W1 nimmt 512 MiB.
   `bluetoothctl` aus und meldet in `window.nlBtStatus` zurück. „Verbunden"
   heißt nur dann verbunden, wenn es den PipeWire-Ausgang `bluez_output…` gibt
   – die Verbindung allein reicht nicht (hält ein anderes Gerät den Tonkanal
-  des B03 Pro, lehnt er A2DP ab). Daneben hält `/usr/local/bin/citycafe-bt`
-  (nur auf dem W1) die Verbindung von selbst und setzt 90 %.
+  des B03 Pro, lehnt er A2DP ab). „Trennen" blockiert den Empfänger zusätzlich
+  (er verbände sich sonst nach ~30 s von selbst), „Verbinden" hebt das auf.
+  Nach einem Neustart des Supervisors wird ein alter Auftrag nicht wiederholt.
+  Verbunden wird nur per Knopf; `/usr/local/bin/citycafe-bt` (nur auf dem W1)
+  setzt lediglich einen neuen Bluetooth-Ausgang als Standard mit 90 %.
 * **Aufräumen**: `/tmp` liegt im Arbeitsspeicher. Alle 30 Minuten entfernt er
   liegengebliebene Auspackordner von `yt-dlp`; ein volles `/tmp` hat schon
   einmal dazu geführt, dass der Kernel Chromium abgeschossen hat.
