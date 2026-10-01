@@ -5699,27 +5699,28 @@
         }
 
         // ---------- Veranstaltungen in Kärnten ----------
-        // Recherchiert & mit dir abgestimmt (Stand: Aug 2026). "noch offen" = vom Veranstalter
-        // selbst noch nicht bekannt gegeben, keine Lücke unsererseits.
+        // Recherchiert (Stand: 1. Okt 2026). "noch offen" = vom Veranstalter selbst
+        // noch nicht bekannt gegeben, keine Lücke unsererseits.
+        // bis = letzter Tag (JJJJ-MM-TT): danach fällt der Eintrag von selbst aus
+        // der Liste, das Widget veraltet also nicht. Ist nichts mehr übrig, wird
+        // der Slot übersprungen - dann ist es Zeit für neue Termine.
         const KAERNTEN_EVENTS = [
-            { date: "2.–5. Sep", name: "Internationale Holzmesse", location: "Klagenfurt", time: "tagsüber" },
-            { date: "4. Sep", name: "Kastelruther Spatzen", location: "Burgarena Finkenstein", time: "20:00 Uhr" },
-            { date: "4.–7. Sep", name: "Bleiburger Wiesenmarkt", location: "Bleiburg", time: "Freyungszug Sa 12:00 Uhr" },
-            { date: "4.–20. Sep", name: "Tage der Alpen-Adria Küche", location: "Klagenfurt", time: "laufendes Programm" },
-            { date: "5. Sep", name: "Maite Kelly & Band (ausverkauft)", location: "Burgarena Finkenstein", time: "20:00 Uhr" },
-            { date: "7. Sep", name: "Maite Kelly & Band", location: "Burgarena Finkenstein", time: "20:00 Uhr" },
-            { date: "8.–13. Sep", name: "European Bike Week", location: "Faaker See", time: "Parade Sa 12.09." },
-            { date: "12. Sep", name: "Konzert am Steg", location: "Strandbad Klagenfurt", time: "noch offen" },
-            { date: "16.–20. Sep", name: "Herbstmesse", location: "Klagenfurt", time: "täglich 9–18 Uhr" },
-            { date: "17.–19. Sep", name: "Alpen-Adria Genussmeile", location: "Klagenfurt", time: "noch offen" },
-            { date: "26. Sep", name: "Fäaschtbänkler", location: "Messe Klagenfurt", time: "18:00 Uhr" },
-            { date: "26. Sep–5. Okt", name: "St. Veiter Wiesenmarkt", location: "St. Veit an der Glan", time: "Festzug 10:00 Uhr" },
-            { date: "24.–26. Okt", name: "Ursulamarkt", location: "Klagenfurt", time: "noch offen" },
-            { date: "13.–15. Nov", name: "Familien- & Brauchtumsmesse", location: "Klagenfurt", time: "tagsüber" },
-            { date: "14. Nov–24. Dez", name: "Christkindlmarkt", location: "Klagenfurt", time: "täglich 10–19 Uhr" },
-            { date: "21. Nov", name: "Krampuslauf", location: "Klagenfurt", time: "ca. 19:00 Uhr" },
-            { date: "Advent, Do–So", name: "Hafenknistern", location: "Lendhafen Klagenfurt", time: "noch offen" },
-            { date: "27.–31. Dez", name: "Silvestermarkt", location: "Klagenfurt", time: "noch offen" }
+            { date: "26. Sep–5. Okt", bis: "2026-10-05", name: "St. Veiter Wiesenmarkt", location: "St. Veit an der Glan", time: "täglich" },
+            { date: "2. Okt", bis: "2026-10-02", name: "Dame – Der Weg ist das Ziel 2.0", location: "Messehalle 4 Klagenfurt", time: "20:00 Uhr" },
+            { date: "3. Okt", bis: "2026-10-03", name: "Lange Nacht der Museen", location: "ganz Kärnten", time: "18–24 Uhr" },
+            { date: "7. Okt", bis: "2026-10-07", name: "Grissemann & Stachel: Rouladen", location: "Konzerthaus Klagenfurt", time: "20:00 Uhr" },
+            { date: "8.–9. Okt", bis: "2026-10-09", name: "The Addams Family – Musical", location: "Congress Center Villach", time: "19:30 Uhr" },
+            { date: "10. Okt", bis: "2026-10-10", name: "Chris Steger & Band – Dahoam Tour", location: "Congress Center Villach", time: "20:00 Uhr" },
+            { date: "15. Okt", bis: "2026-10-15", name: "Niko Nagl – Antiheld", location: "McMullens Klagenfurt", time: "19:30 Uhr" },
+            { date: "15.–31. Okt", bis: "2026-10-31", name: "KLAMOUR – Mode & Lifestyle", location: "Innenstadt Klagenfurt", time: "laufendes Programm" },
+            { date: "24.–26. Okt", bis: "2026-10-26", name: "Ursulamarkt", location: "Messegelände Klagenfurt", time: "7–19 Uhr" },
+            { date: "31. Okt", bis: "2026-10-31", name: "Dunkelgraue Lieder – Hommage an Ludwig Hirsch", location: "Villach", time: "20:00 Uhr" },
+            { date: "13.–15. Nov", bis: "2026-11-15", name: "Familien- & Brauchtumsmesse", location: "Messe Klagenfurt", time: "täglich 9–18 Uhr" },
+            { date: "14. Nov–24. Dez", bis: "2026-12-24", name: "Christkindlmarkt", location: "Neuer Platz Klagenfurt", time: "täglich 10–19 Uhr" },
+            { date: "20.–21. Nov", bis: "2026-11-21", name: "Rock'n'Roll Akrobatik-WM", location: "Wörthersee Stadion", time: "Finale ab 18:00 Uhr" },
+            { date: "21. Nov", bis: "2026-11-21", name: "Krampuslauf", location: "Innenstadt Klagenfurt", time: "ca. 19:00 Uhr" },
+            { date: "26. Nov–20. Dez", bis: "2026-12-20", name: "Hafenknistern", location: "Lendhafen Klagenfurt", time: "Do–So" },
+            { date: "27.–31. Dez", bis: "2026-12-31", name: "Silvestermarkt", location: "Neuer Platz Klagenfurt", time: "noch offen" }
         ];
         const EVENTS_PER_PAGE = 6;
         const EVENT_ROW_MS = 2000; // jede Veranstaltung leuchtet 2s auf
@@ -5729,7 +5730,16 @@
             for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
             return out;
         }
-        const EVENT_PAGES = chunkArray(KAERNTEN_EVENTS, EVENTS_PER_PAGE);
+        let EVENT_PAGES = [];
+
+        // Nur Veranstaltungen, deren letzter Tag (bis) heute oder spaeter ist -
+        // nach Wiener Datum, nicht nach der Uhr der Box.
+        function aktuelleEventSeiten() {
+            const heute = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit', day: '2-digit'
+            }).format(new Date());
+            return chunkArray(KAERNTEN_EVENTS.filter(e => !e.bis || e.bis >= heute), EVENTS_PER_PAGE);
+        }
 
         function renderEventsPage(pageEvents, pageIndex) {
             document.getElementById('events-page-indicator').textContent = `Seite ${pageIndex + 1}/${EVENT_PAGES.length}`;
@@ -5745,6 +5755,12 @@
         }
 
         function runEventsState(nextStateIndex) {
+            EVENT_PAGES = aktuelleEventSeiten();
+            if (!EVENT_PAGES.length) {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
             document.getElementById('media-view-events').classList.add('active');
             let pageIdx = 0;
 
