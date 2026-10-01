@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-10-01T00:37:47Z",
-  "live": []
+  "checked_at": "2026-10-01T00:47:45Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Presents Breakthrough Live with Dasha. Sponsored by !LISTERINE®",
+      "game": "Music"
+    }
+  ]
 }
