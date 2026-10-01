@@ -85,6 +85,10 @@ waren für die 2 GB des ODROID nötig; der W1 nimmt 512 MiB.
   des B03 Pro, lehnt er A2DP ab). „Trennen" blockiert den Empfänger zusätzlich
   (er verbände sich sonst nach ~30 s von selbst), „Verbinden" hebt das auf.
   Nach einem Neustart des Supervisors wird ein alter Auftrag nicht wiederholt.
+  Mehrere gekoppelte Empfänger sind möglich: „Verbinden" wartet nach dem
+  Entsperren 4 s (der Empfänger meldet sich oft selbst, ein gleichzeitiger
+  connect scheitert dann mit „busy"), probiert dann der Reihe nach und wartet
+  bis 20 s auf den Tonkanal; „Trennen" trennt und sperrt alle.
   Verbunden wird nur per Knopf; `/usr/local/bin/citycafe-bt` (nur auf dem W1)
   setzt lediglich einen neuen Bluetooth-Ausgang als Standard mit 90 %.
 * **Aufräumen**: `/tmp` liegt im Arbeitsspeicher. Alle 30 Minuten entfernt er

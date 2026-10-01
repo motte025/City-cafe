@@ -68,9 +68,12 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   räumt `/tmp` auf und startet den Browser neu, wenn er hängt. Beim ersten
   Auftritt eines Zyklus-Videos wählt er selbst einen zufälligen Startpunkt
   (Länge von yt-dlp); Wünsche vom Handy beginnen von vorn.
-- **Bluetooth zur Anlage**: 1Mii B03 Pro (Empfänger, RX) zuhause gekoppelt;
-  **der im Café muss dort noch einmal gekoppelt werden** (`bluetoothctl`:
-  scan, pair, trust – mit Agent, sonst wird der Schlüssel nicht gespeichert).
+- **Bluetooth zur Anlage**: 1Mii B03 Pro (Empfänger, RX) gekoppelt; der
+  Betreiber nimmt genau diesen ins Café mit, dort ist also kein Koppeln
+  nötig. Ein weiterer Empfänger müsste einmal gekoppelt werden
+  (`bluetoothctl`: scan, pair, trust – mit Agent, sonst wird der Schlüssel
+  nicht gespeichert); der Supervisor kommt mit mehreren gekoppelten zurecht
+  („Verbinden" nimmt den ersten erreichbaren, wartet bis 20 s auf den Ton).
   **Verbunden und getrennt wird nur per Knopf** in der Handy-Fernbedienung
   (Wunsch des Betreibers): „Trennen" trennt und blockiert den Empfänger
   (sonst meldet er sich nach ~30 s von selbst wieder), „Verbinden" hebt die
