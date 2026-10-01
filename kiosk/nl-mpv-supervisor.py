@@ -360,12 +360,26 @@ def bluetooth(was):
             # Verbunden, aber ohne Tonkanal: einmal sauber neu aufbauen.
             bt_cmd("disconnect", adresse)
             time.sleep(2)
-        # Der Reihe nach probieren; der erste erreichbare gewinnt.
+        # Nach dem Entsperren meldet sich der Empfaenger oft selbst (letztes
+        # Geraet) - ein gleichzeitiger connect scheitert dann mit "busy" /
+        # "refused", obwohl es Sekunden spaeter steht. Darum kurz warten und
+        # danach der Reihe nach probieren; der erste erreichbare gewinnt.
+        time.sleep(4)
         for a, n in sorted(geraete, key=lambda g: g[0] != adresse):
-            bt_cmd("connect", a, timeout=30)
+            if not bt_verbunden(a):
+                bt_cmd("connect", a, timeout=30)
             if bt_verbunden(a):
                 adresse, name = a, n
                 break
+        else:
+            # Kein connect hat geklappt - vielleicht steht die Verbindung, die
+            # der Empfaenger selbst aufgebaut hat, inzwischen doch.
+            for _ in range(10):
+                treffer = next(((a, n) for a, n in geraete if bt_verbunden(a)), None)
+                if treffer:
+                    adresse, name = treffer
+                    break
+                time.sleep(2)
     elif was == "trennen":
         # Nur trennen reicht nicht: der Empfaenger meldet sich nach ~30 s von
         # selbst wieder (letztes Geraet, "trusted"). Blockiert lehnt der W1
@@ -378,7 +392,7 @@ def bluetooth(was):
     senke = None
     if verbunden:
         # Der Tonkanal kommt ein paar Sekunden nach der Verbindung.
-        for _ in range(8 if was == "verbinden" else 1):
+        for _ in range(20 if was == "verbinden" else 1):
             senke = bt_senke(adresse)
             if senke:
                 break
