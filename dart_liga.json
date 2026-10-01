@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-09-27T11:00:34Z",
+  "aktualisiert": "2026-10-01T11:04:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -27,19 +27,19 @@
         {
           "rang": 3,
           "team": "DC Fighting Penguins „Waddling Arrows“",
-          "spiele": 2,
-          "siege": 2,
+          "spiele": 3,
+          "siege": 3,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 4
+          "punkte": 6
         },
         {
           "rang": 4,
           "team": "DC Cafe Seven",
-          "spiele": 1,
+          "spiele": 2,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 0,
+          "niederlagen": 1,
           "punkte": 2
         },
         {
@@ -194,6 +194,16 @@
         },
         {
           "rang": 6,
+          "spieler": "BERGLER Benjamin",
+          "spiele": 6,
+          "siege": 4,
+          "niederlagen": 2,
+          "legs_plus": 12,
+          "legs_minus": 10,
+          "punkte": 12
+        },
+        {
+          "rang": 7,
           "spieler": "ELEZOSKI Serif",
           "spiele": 4,
           "siege": 3,
@@ -203,7 +213,17 @@
           "punkte": 11
         },
         {
-          "rang": 7,
+          "rang": 8,
+          "spieler": "JAMMER Fabian",
+          "spiele": 5,
+          "siege": 3,
+          "niederlagen": 2,
+          "legs_plus": 10,
+          "legs_minus": 10,
+          "punkte": 10
+        },
+        {
+          "rang": 9,
           "spieler": "JAHN Andreas",
           "spiele": 6,
           "siege": 3,
@@ -213,27 +233,17 @@
           "punkte": 10
         },
         {
-          "rang": 8,
-          "spieler": "BERGLER Benjamin",
-          "spiele": 4,
+          "rang": 10,
+          "spieler": "JAHN Corinna",
+          "spiele": 3,
           "siege": 3,
-          "niederlagen": 1,
+          "niederlagen": 0,
           "legs_plus": 9,
-          "legs_minus": 6,
+          "legs_minus": 1,
           "punkte": 9
         },
         {
-          "rang": 9,
-          "spieler": "HOCHEGGER Andrea",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 7,
-          "legs_minus": 3,
-          "punkte": 7
-        },
-        {
-          "rang": 10,
+          "rang": 11,
           "spieler": "HOCHEGGER Martin",
           "spiele": 3,
           "siege": 2,
@@ -243,7 +253,17 @@
           "punkte": 7
         },
         {
-          "rang": 11,
+          "rang": 12,
+          "spieler": "HOCHEGGER Andrea",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 3,
+          "punkte": 7
+        },
+        {
+          "rang": 13,
           "spieler": "ASPRIAN Johann",
           "spiele": 3,
           "siege": 2,
@@ -253,7 +273,17 @@
           "punkte": 7
         },
         {
-          "rang": 12,
+          "rang": 14,
+          "spieler": "BRUNNER Jürgen",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 5,
+          "punkte": 7
+        },
+        {
+          "rang": 15,
           "spieler": "FELLNER Johann",
           "spiele": 4,
           "siege": 2,
@@ -263,17 +293,7 @@
           "punkte": 7
         },
         {
-          "rang": 13,
-          "spieler": "JAHN Corinna",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 6,
-          "legs_minus": 1,
-          "punkte": 6
-        },
-        {
-          "rang": 14,
+          "rang": 16,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 3,
           "siege": 2,
@@ -283,17 +303,17 @@
           "punkte": 6
         },
         {
-          "rang": 15,
-          "spieler": "BRUNNER Jürgen",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 5,
-          "legs_minus": 2,
-          "punkte": 5
+          "rang": 17,
+          "spieler": "SCHNEIDER Hermann",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 6,
+          "punkte": 6
         },
         {
-          "rang": 16,
+          "rang": 18,
           "spieler": "POLZER Hannah",
           "spiele": 2,
           "siege": 2,
@@ -303,17 +323,17 @@
           "punkte": 5
         },
         {
-          "rang": 17,
-          "spieler": "JAMMER Fabian",
+          "rang": 19,
+          "spieler": "SIMONITSCH Erhard",
           "spiele": 3,
           "siege": 1,
           "niederlagen": 2,
           "legs_plus": 5,
-          "legs_minus": 7,
+          "legs_minus": 6,
           "punkte": 5
         },
         {
-          "rang": 18,
+          "rang": 20,
           "spieler": "KOLLER Elias",
           "spiele": 6,
           "siege": 1,
@@ -323,7 +343,7 @@
           "punkte": 5
         },
         {
-          "rang": 19,
+          "rang": 21,
           "spieler": "SCHECK Guenther",
           "spiele": 2,
           "siege": 2,
@@ -333,37 +353,7 @@
           "punkte": 4
         },
         {
-          "rang": 20,
-          "spieler": "SCHNEIDER Hermann",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 3,
-          "punkte": 4
-        },
-        {
-          "rang": 21,
-          "spieler": "KREUZER Silvia",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 4,
-          "punkte": 4
-        },
-        {
           "rang": 22,
-          "spieler": "FRIEßNEGGER Sarah",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 4,
-          "punkte": 4
-        },
-        {
-          "rang": 23,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 2,
           "siege": 1,
@@ -373,7 +363,27 @@
           "punkte": 4
         },
         {
+          "rang": 23,
+          "spieler": "KREUZER Silvia",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 4,
+          "punkte": 4
+        },
+        {
           "rang": 24,
+          "spieler": "FRIEßNEGGER Sarah",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 4,
+          "punkte": 4
+        },
+        {
+          "rang": 25,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 3,
           "siege": 1,
@@ -383,7 +393,17 @@
           "punkte": 4
         },
         {
-          "rang": 25,
+          "rang": 26,
+          "spieler": "LUBE Mario",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 5,
+          "punkte": 4
+        },
+        {
+          "rang": 27,
           "spieler": "KOGLER Sabine",
           "spiele": 3,
           "siege": 1,
@@ -393,7 +413,7 @@
           "punkte": 4
         },
         {
-          "rang": 26,
+          "rang": 28,
           "spieler": "JESENKO Julia",
           "spiele": 2,
           "siege": 1,
@@ -403,33 +423,13 @@
           "punkte": 3
         },
         {
-          "rang": 27,
+          "rang": 29,
           "spieler": "BÄCKER Josephine",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
           "legs_plus": 3,
           "legs_minus": 6,
-          "punkte": 3
-        },
-        {
-          "rang": 28,
-          "spieler": "GORICNIK Cornelia",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
-          "legs_plus": 3,
-          "legs_minus": 8,
-          "punkte": 3
-        },
-        {
-          "rang": 29,
-          "spieler": "FRIEßNEGGER Gerhard",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
-          "legs_plus": 3,
-          "legs_minus": 8,
           "punkte": 3
         },
         {
@@ -444,16 +444,36 @@
         },
         {
           "rang": 31,
-          "spieler": "REINISCH Jessica",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 2,
-          "legs_minus": 4,
-          "punkte": 2
+          "spieler": "FRIEßNEGGER Gerhard",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 3,
+          "legs_minus": 8,
+          "punkte": 3
         },
         {
           "rang": 32,
+          "spieler": "GORICNIK Cornelia",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 3,
+          "legs_minus": 8,
+          "punkte": 3
+        },
+        {
+          "rang": 33,
+          "spieler": "REINISCH Jessica",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 2,
+          "legs_minus": 7,
+          "punkte": 2
+        },
+        {
+          "rang": 34,
           "spieler": "AMBROS Thomas",
           "spiele": 3,
           "siege": 0,
@@ -463,27 +483,17 @@
           "punkte": 2
         },
         {
-          "rang": 33,
-          "spieler": "SIMONITSCH Erhard",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 1,
-          "legs_minus": 3,
-          "punkte": 1
-        },
-        {
-          "rang": 34,
-          "spieler": "LUBE Mario",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 1,
-          "legs_minus": 3,
-          "punkte": 1
-        },
-        {
           "rang": 35,
+          "spieler": "SIMONITSCH Christopher",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 1,
+          "legs_minus": 2,
+          "punkte": 1
+        },
+        {
+          "rang": 36,
           "spieler": "KERNSTOCK Michael",
           "spiele": 2,
           "siege": 0,
@@ -493,7 +503,7 @@
           "punkte": 1
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "JAHN Christian",
           "spiele": 3,
           "siege": 0,
@@ -503,7 +513,7 @@
           "punkte": 1
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "GORICNIK Michael",
           "spiele": 4,
           "siege": 0,
@@ -513,7 +523,7 @@
           "punkte": 1
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "PROVNIK Gabriele",
           "spiele": 1,
           "siege": 0,
@@ -523,7 +533,7 @@
           "punkte": 0
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -533,7 +543,7 @@
           "punkte": 0
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
@@ -543,7 +553,7 @@
           "punkte": 0
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "APOVNIK Gabriele",
           "spiele": 3,
           "siege": 0,
@@ -553,7 +563,7 @@
           "punkte": 0
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "JAHN Herbert",
           "spiele": 5,
           "siege": 0,
