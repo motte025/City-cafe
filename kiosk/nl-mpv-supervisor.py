@@ -303,6 +303,25 @@ def bt_geraet():
     return None, None
 
 
+def bt_senke(adresse):
+    """Name des PipeWire-Ausgangs zum Empfaenger oder None. Nur wenn es ihn
+    gibt, geht wirklich Ton hin - "Connected: yes" allein heisst das nicht:
+    haelt ein anderes Geraet den Tonkanal des Empfaengers, steht die
+    Verbindung, aber der Empfaenger lehnt den A2DP-Kanal ab."""
+    kennung = "bluez_output." + adresse.replace(":", "_")
+    try:
+        env = {**os.environ, **session_env()}
+        senken = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True,
+                                text=True, timeout=10, env=env).stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    for zeile in senken.splitlines():
+        felder = zeile.split("\t")
+        if len(felder) > 1 and felder[1].startswith(kennung):
+            return felder[1]
+    return None
+
+
 def bluetooth(was):
     """verbinden / trennen / status -> {verbunden, text}"""
     adresse, name = bt_geraet()
@@ -311,27 +330,37 @@ def bluetooth(was):
                 "text": f"kein gekoppeltes Geraet mit „{BT_NAME}“ im Namen - einmal am Screen koppeln"}
     if was == "verbinden":
         bt_cmd("power", "on")
+        if "Connected: yes" in bt_cmd("info", adresse) and not bt_senke(adresse):
+            # Verbunden, aber ohne Tonkanal: einmal sauber neu aufbauen.
+            bt_cmd("disconnect", adresse)
+            time.sleep(2)
         bt_cmd("connect", adresse, timeout=30)
     elif was == "trennen":
         bt_cmd("disconnect", adresse)
     verbunden = "Connected: yes" in bt_cmd("info", adresse)
-    if verbunden and was == "verbinden":
-        # Ton dorthin umleiten (PipeWire/PulseAudio). Klappt das nicht, bleibt
-        # die bisherige Ausgabe - die Verbindung steht trotzdem.
+    senke = None
+    if verbunden:
+        # Der Tonkanal kommt ein paar Sekunden nach der Verbindung.
+        for _ in range(8 if was == "verbinden" else 1):
+            senke = bt_senke(adresse)
+            if senke:
+                break
+            time.sleep(1)
+    if senke and was == "verbinden":
         try:
             env = {**os.environ, **session_env()}
-            senken = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True,
-                                    text=True, timeout=10, env=env).stdout
-            for zeile in senken.splitlines():
-                felder = zeile.split("\t")
-                if len(felder) > 1 and "bluez" in felder[1]:
-                    subprocess.run(["pactl", "set-default-sink", felder[1]], timeout=10, env=env)
-                    break
+            subprocess.run(["pactl", "set-default-sink", senke], timeout=10, env=env)
         except (OSError, subprocess.TimeoutExpired) as e:
             log(f"Bluetooth: Ton nicht umgeleitet ({type(e).__name__})")
-    text = f"{name}: " + ("verbunden" if verbunden else "nicht verbunden")
+    if senke:
+        text = f"{name}: verbunden, Ton geht zur Anlage"
+    elif verbunden:
+        text = (f"{name}: verbunden, aber kein Tonkanal - Empfaenger ist vermutlich "
+                "mit einem anderen Geraet (Handy?) belegt")
+    else:
+        text = f"{name}: nicht verbunden"
     log(f"Bluetooth {was}: {text}")
-    return {"verbunden": verbunden, "text": text}
+    return {"verbunden": bool(senke), "text": text}
 
 
 def sway(*args):
