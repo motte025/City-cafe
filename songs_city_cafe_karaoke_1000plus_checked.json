@@ -80473,16 +80473,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Silly",
-    "title": "Bataillon d' amour",
+    "artist": "Marta Sánchez",
+    "title": "Vuela",
     "album": "",
-    "category": "Schlager",
+    "category": "Dance & Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
+      "Latin",
+      "Dance",
+      "Retro"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Guys 'n' Dolls",
+    "title": "There's A Whole Lot Of Loving",
+    "album": "",
+    "category": "Après-Ski & Ballermann",
+    "chart": "",
+    "release_date": "",
+    "tags": [
       "Party",
-      "Karaoke"
+      "Karaoke",
+      "Après-Ski & Ballermann"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
