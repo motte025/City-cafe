@@ -5,7 +5,7 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 22. September 2026.
+Letzte Durchsicht: 1. Oktober 2026 (ODROID durch ACEMAGIC W1 ersetzt).
 
 ## Was das Projekt ist
 
@@ -29,6 +29,7 @@ Antwortsprache im Gespräch: Deutsch.
 | `roulette/` | Gebaute Roulette-Seite (stammt von Codex) |
 | `roulette-src/` | Deren Quelle (Vite + TypeScript) |
 | `kiosk/` | Supervisor, sway-Konfiguration, Chromium-Starter der Box |
+| `W1-UMSTELLUNG.md` | Einstellwerte (`CITYCAFE_*`) und Reihenfolge der W1-Einrichtung |
 | `README.md` | Wegweiser über alle Bauteile |
 | `FERNBEDIENUNGEN.md` | Wie die Fernbedienungen zusammenspielen |
 | `KIOSK-SUPERVISOR.md` | Wie der Aufpasser auf der Box arbeitet |
@@ -40,29 +41,60 @@ sich auf den Push zu verlassen.
 
 ## Geräte
 
-**ODROID N2+ am Fernseher**, Zugang `ssh odroid`, Benutzer `citycafe`. Darauf
-laufen sway und Chromium im Kiosk (`--app`), dazu
-`/opt/citycafe/nl-mpv-supervisor.py`. Der Supervisor liest über die
-Debug-Schnittstelle von Chromium den Zustand des Dashboards und legt Videos und
-Streams mit mpv passgenau über das Browserfenster. Er löst YouTube-Adressen mit
-yt-dlp auf, sucht für die Fernbedienung, räumt `/tmp` auf und startet den
-Browser neu, wenn dieser hängt. Die Box hat nur **2 GB RAM**; was dagegen
-getan ist (Vorladen ohne Puffer, Puffergrenzen für mpv, yt-dlp als Zipapp,
-zram) und wie es eingerichtet wird, steht in `KIOSK-SUPERVISOR.md` unter
-„Arbeitsspeicher".
+**Den ODROID gibt es nicht mehr.** Seit 30.09.2026 läuft der Kiosk auf dem
+**ACEMAGIC W1** (Ryzen 7 H255, Radeon 780M, 15 GB RAM).
 
-**Selbst-Aktualisierung**: Das Dashboard prüft alle fünf Minuten, ob sich
+**ACEMAGIC W1**, Zugang vom Beelink `ssh w1` (Benutzer `sabrina`, Schlüssel
+`~/.ssh/citycafe_w1_ed25519`, `sudo` ohne Passwort über
+`/etc/sudoers.d/10-sabrina`). Dual-Boot: EndeavourOS neben Windows, GRUB
+startet nach 5 s EndeavourOS (im BIOS an erster Stelle), Windows ist im
+GRUB-Menü wählbar. KDE ist installiert, sein Anmeldebildschirm aber
+abgeschaltet; Ruhezustand/Standby sind gesperrt.
+
+- **Kiosk-Benutzer `citycafe`**: Autologin auf tty1, `~/.bash_profile` lädt
+  `~/.config/citycafe.env` und startet sway in einer Schleife. sway startet
+  `citycafe-chromium`, den Supervisor und `citycafe-bt`.
+- **Einstellungen je Gerät** in `/home/citycafe/.config/citycafe.env`:
+  `CITYCAFE_RAUM=city-cafe` (Café, kein Roulette-Spiel, nur die Werbung),
+  `CITYCAFE_HWDEC=vaapi`, mpv-Puffer 512/64 MiB, `CITYCAFE_CAM_CACHE_SECS=8`
+  (Dartcam), `CITYCAFE_VOLUME=0.9`, Chromium mit VA-API-Schaltern. Ohne
+  Variablen verhalten sich Starter und Supervisor wie früher (Raum
+  `zuhause`).
+- **Supervisor** `/opt/citycafe/nl-mpv-supervisor.py`: liest über die
+  Debug-Schnittstelle (Port 9222) den Zustand des Dashboards und legt Videos,
+  Twitch und Dartcam mit mpv passgenau über das Browserfenster
+  (Hardware-Dekodierung VA-API). Er löst YouTube mit yt-dlp auf (Cookies aus
+  dem Kiosk-Profil, YouTube Premium angemeldet), sucht für die Fernbedienung,
+  räumt `/tmp` auf und startet den Browser neu, wenn er hängt. Beim ersten
+  Auftritt eines Zyklus-Videos wählt er selbst einen zufälligen Startpunkt
+  (Länge von yt-dlp); Wünsche vom Handy beginnen von vorn.
+- **Bluetooth zur Anlage**: 1Mii B03 Pro (Empfänger, RX) zuhause gekoppelt;
+  **der im Café muss dort noch einmal gekoppelt werden** (`bluetoothctl`:
+  scan, pair, trust). `/usr/local/bin/citycafe-bt` (nur auf dem W1, nicht im
+  Repo) hält die Verbindung, zählt sie aber nur als verbunden, wenn es den
+  PipeWire-Ausgang `bluez_output…` gibt, baut sie sonst neu auf und setzt
+  danach 90 % auf genau diesen Ausgang. Die Fernbedienung kann über den
+  Supervisor verbinden/trennen/prüfen; „verbunden" heißt dort ebenfalls: Ton
+  geht zur Anlage.
+- **Nächtliche Aktualisierung** (`citycafe-update.timer`, täglich 8:30):
+  `pacman -Syu`, dann Supervisor und Chromium-Starter aus GitHub `main`
+  (nur nach Syntaxprüfung; abschaltbar in `/etc/citycafe-update.conf`),
+  Neustart nur bei Änderungen. Protokoll `/var/log/citycafe-update.log`.
+  **Was auf `main` liegt, landet also am nächsten Morgen auf dem W1.**
+- Logs: `/home/citycafe/nl-mpv-supervisor.log`, `mpv-nl.log`,
+  `citycafe-bt.log`. Bildschirmfoto: `grim` als `citycafe` mit
+  `XDG_RUNTIME_DIR=/run/user/1001` und `WAYLAND_DISPLAY` aus diesem Ordner.
+
+**Selbst-Aktualisierung des Dashboards**: Es prüft alle fünf Minuten, ob sich
 `index.html` auf GitHub Pages geändert hat, und lädt sich dann beim nächsten
-Slotwechsel neu (nicht während Hos'n Obe oder eines Handy-Wunsches). Ein
-Dashboard-Update braucht also keinen Neustart der Box mehr. Dateien auf der
-Box (Supervisor, Chromium-Starter) erreicht das nicht. Abschalten mit
-`?autoupdate=0`.
+Slotwechsel neu (nicht während Hos'n Obe oder eines Handy-Wunsches, auch
+nicht während „Bis Stopp"). Abschalten mit `?autoupdate=0`.
 
-**ACEMAGIC W1 (bestellt)**, soll mit CachyOS im Kiosk-Betrieb laufen und den
-ODROID ablösen oder ergänzen. Zu tun, sobald er da ist: das Kiosk-Gerüst aus
-`kiosk/` übertragen, Videobeschleunigung auf VA-API statt der Amlogic-Wege
-umstellen, einen SSH-Zugang wie `odroid` einrichten. Auf x86 rechnet das
-Roulette wieder live in voller Qualität — Sparmodus aus, 3D-Auflösung 100 %.
+**Beelink SER5** (zuhause, von hier aus wird gearbeitet) soll später ebenfalls
+EndeavourOS bekommen und dann den Fernseher zuhause (`raum=zuhause`) zeigen.
+
+Auf x86 rechnet das Roulette wieder live in voller Qualität — Sparmodus aus,
+3D-Auflösung 100 %.
 
 Verbunden sind Dashboard und Fernbedienungen über eine Firebase-Datenbank unter
 `djremote/<raum>/`. Der Raum `zuhause` ist der Fernseher zuhause; dort läuft
@@ -75,7 +107,13 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   gedrückt werden muss.
 - **Fernbedienungen**: sechs automatische Vorschläge; nach jedem gestarteten
   Video sechs neue, die zum eben gesehenen passen. Schriftgrößen für Handy,
-  Tablet und PC getrennt.
+  Tablet und PC getrennt. Neu: „Bluetooth zur Anlage" (Verbinden/Trennen/
+  Prüfen) in der YouTube-Fernbedienung.
+- **Nightlife/YouTube**: Zyklus-Videos steigen zufällig ein (4-Minuten-Slot).
+  Wünsche vom Handy beginnen von vorn und laufen die gewählte Zeit; „Bis
+  Stopp" läuft bis Stopp, neuem Wunsch oder Videoende (vorher brach es nach
+  4 Minuten ab, behoben 01.10.). Ein Wunsch ohne Ort zeigt seinen Titel groß
+  in der Überschrift, darunter „Per Fernbedienung gestartet".
 - **Hos'n Obe**: Reihenfolge im Uhrzeigersinn, eigene Tischfotos als
   Hintergrund, Kartengeber mit Talon, Rundenanzeige rechts oben, Schluss nach
   acht Runden mit an die Spielerzahl angepasstem Zeitbudget. Der Computer
@@ -108,11 +146,10 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   prallt verlustfrei ab), 100 % = totaler Widerstand (kein Rückprall,
   maximale Reibung). Die acht Rauten wechseln sich radial/tangential ab.
   **Nur in `roulette-src` (Quellcode), noch NICHT in `roulette/` gebaut und
-  deployed** — der Nutzer wechselt gerade vom ODROID auf ein ACEMAGIC W1
-  mit EndeavourOS, das Gerät kommt erst am Folgetag. Bis der Rechner
-  gewechselt ist, soll sich am laufenden Dashboard nichts ändern. Vor dem
-  nächsten Deploy: `npm run build` in `roulette-src`, dist nach `roulette/`
-  kopieren.
+  deployed** — zurückgehalten, solange vom ODROID auf den W1 gewechselt wurde.
+  Der Wechsel ist seit 30.09. erledigt; ob und wann gebaut wird, entscheidet
+  der Betreiber. Vor dem nächsten Deploy: `npm run build` in `roulette-src`,
+  dist nach `roulette/` kopieren.
   **Zwei Modell-Vorschauen zur Auswahl** (beide isoliert, Dashboard
   unberührt): **Modell A** (`roulette-vorschau/`) — wie bisher: Zahl wird
   vorab gezogen, die Suche bevorzugt jetzt aber Rautentreffer statt sie zu
@@ -171,11 +208,16 @@ wieder live gerechnet.
 
 ## Feste Regeln
 
-- `/boot/boot.ini.1786897722` niemals einspielen.
-- YouTube- und Google-Cookies auf der Box nie löschen.
-- Keine Zugangsdaten ins Repo.
+- YouTube- und Google-Cookies auf der Box nie löschen (Kiosk-Profil
+  `/home/citycafe/.config/chromium-kiosk`, dort ist YouTube Premium
+  angemeldet).
+- Keine Zugangsdaten ins Repo. (Achtung: `DART_CAM_URL` in `index.html` enthält
+  das Kamera-Passwort im Klartext und ist damit öffentlich.)
 - Verweigerte Berechtigungen nicht umgehen, sondern nachfragen.
-- Keine großen Mediendateien auf der Speicherkarte der Box ablegen.
+- Nichts an Partitionen, Bootloader oder Windows auf dem W1 ändern ohne
+  ausdrückliche Freigabe.
+- Hochgeladen wird nur nach Freigabe des Betreibers.
+- Im Café läuft das Roulette-Spiel nicht, nur die Werbung.
 
 ## Arbeitsweisen, die sich bewährt haben
 
@@ -186,6 +228,15 @@ wieder live gerechnet.
   eigenen Befehlszeile, die Sitzung stirbt mit. Über die Prozessnummer gehen.
 - Skripte in Dateien schreiben und mit `scp` übertragen, statt sie in
   ssh-Heredocs zusammenzusetzen.
+- Die Arbeitskopie auf dem Beelink hat Windows-Zeilenenden (CRLF). Vor dem
+  Übertragen auf den W1 mit `tr -d '\r'` bereinigen, sonst bricht `sh` ab.
+- Was sway per `exec` startet, überlebt einen sway-Neustart. Jeder solche
+  Dienst muss beim Start seine alte Instanz beenden (wie Supervisor und
+  `citycafe-bt`), sonst laufen Kopien gegeneinander — so blockierten sich
+  drei `citycafe-bt` beim Bluetooth-Verbinden.
+- Supervisor allein neu starten (Dashboard läuft weiter): Prozess per PID
+  beenden, dann als `citycafe` mit geladener `citycafe.env` per `setsid`
+  starten — ohne die Variablen fehlen VA-API, Raum und Puffer.
 - Bei Bildschirmaufnahmen immer ein echtes Einzelbild des Bildschirms ansehen.
   Der Zustand der Seite sagt nichts darüber, was tatsächlich im Bild landet.
 - Änderungen erst auf der Box nachprüfen — am besten mit einem Bildschirmfoto —

@@ -1,70 +1,49 @@
-# Umstellung auf den ACEMAGIC W1 (Claude Code in PowerShell auf dem Beelink)
+# Umstellung auf den ACEMAGIC W1 – erledigt (30.09.2026)
 
-Arbeitsanleitung für die Sitzung, in der Claude Code vom Beelink aus den W1 per
-SSH einrichtet. Sie ersetzt nicht `STAND.md` und `KIOSK-SUPERVISOR.md`, sondern
-sagt, in welcher Reihenfolge und womit der ODROID abgelöst wird.
+Der W1 (Ryzen 7 H255, Radeon 780M, 15 GB RAM) läuft im Café als Kiosk und hat
+den ODROID abgelöst; den ODROID gibt es nicht mehr. Aktueller Stand und
+Zugang: `STAND.md` (Abschnitt „Geräte"), Einstellwerte und Betrieb des
+Supervisors: `KIOSK-SUPERVISOR.md`. Diese Datei hält fest, wie eingerichtet
+wurde – als Vorlage für den nächsten Rechner (geplant: Beelink SER5 zuhause).
 
-## Ausgangslage
+## So wurde eingerichtet
 
-- **W1** (Ryzen 7 H255, EndeavourOS) ist online und soll im Café den ODROID
-  ablösen. Er rechnet auf x86, also ohne Sparmodus und mit Hardware-Decoding über
-  VA-API statt der Amlogic-Wege.
-- **Beelink SER5 5800H** (zuhause) bekommt danach ebenfalls EndeavourOS.
-- Das Kiosk-Gerüst liegt in `kiosk/`: `sway-citycafe.conf`, `citycafe-chromium`
-  (Starter), `nl-mpv-supervisor.py` (Aufpasser), `citycafe-zram` (beim W1 nicht
-  nötig, genug RAM).
-- Der Supervisor und der Chromium-Starter lassen sich jetzt **per
-  Umgebungsvariablen** je Gerät einstellen. Ohne Variablen verhalten sie sich
-  wie auf dem ODROID, dort muss nichts geändert werden.
-
-| Variable | Wirkt auf | ODROID (Standard) | Vorschlag W1 |
-| --- | --- | --- | --- |
-| `CITYCAFE_HWDEC` | mpv `--hwdec` | `no` | `vaapi` (bei Problemen `auto-safe`) |
-| `CITYCAFE_DEMUXER_MIB` | mpv Vorlauf-Puffer | `48` | `150` |
-| `CITYCAFE_DEMUXER_BACK_MIB` | mpv Rückblick | `8` | `50` |
-| `CITYCAFE_MPV_PROFILE` | mpv `--profile` | `fast` | `gpu-hq` oder `fast`, nach Test |
-| `CITYCAFE_OUTPUT` | Bildschirmausgang für `wlr-randr` | `HDMI-A-1` | Name aus `swaymsg -t get_outputs` |
-| `CITYCAFE_CHROMIUM_EXTRA` | zusätzliche Chromium-Schalter | leer | `--enable-features=VaapiVideoDecoder,VaapiVideoDecodeLinuxGL` |
-
-Gesetzt werden sie dort, wo sway und der Supervisor starten (z. B. in
-`~/.config/environment.d/citycafe.conf` oder oben in `~/.bash_profile` vor dem
-Start von sway). Die Werte in der Spalte „W1“ sind Startpunkte, nicht geprüft.
-
-## Reihenfolge
-
-1. **SSH-Zugang** wie `odroid` einrichten: Schlüsselanmeldung, Benutzer
-   `citycafe`, Eintrag `w1` in `~/.ssh/config` auf dem Beelink.
-2. **Pakete**: `sway`, `chromium`, `mpv`, `python`, `yt-dlp`, `streamlink`,
-   `wlr-randr`, Mesa mit VA-API (`libva-mesa-driver`, `libva-utils`).
-   `vainfo` muss H.264 (und möglichst VP9/AV1) als Decode-Profil zeigen.
-3. **Dateien** aus dem Repo nach `/usr/local/bin/` und `/opt/citycafe/`
-   (`citycafe-chromium`, `nl-mpv-supervisor.py`, `sway-citycafe.conf`). In
-   `sway-citycafe.conf` steht der Ausgang `HDMI-A-1` fest: Namen prüfen und dort
-   sowie in `CITYCAFE_OUTPUT` anpassen.
-4. **Chromium-Erweiterungen** (`twitch-autostart`, `h264-force`,
-   `youtube-kiosk-ui` unter `/opt/citycafe/`) vom ODROID übernehmen. Sie liegen
-   nicht im Repo.
-5. **Autostart**: wie auf dem ODROID die Schleife in `~/.bash_profile`, die sway
-   nach einem Ende von Chromium neu startet.
-6. **Raum** prüfen: Die Datei im Repo nennt `raum=zuhause` (Fernseher zuhause).
-   Für das Café den Raum und den `boxname` aus dem laufenden Starter des ODROID
-   übernehmen (`ssh odroid cat /usr/local/bin/citycafe-chromium`).
-7. **Test** ohne den ODROID auszuschalten: W1 und ODROID gleichzeitig am selben
-   Raum würden sich gegenseitig stören, deshalb den W1 zuerst an einem eigenen
-   Testraum (`raum=w1test`) laufen lassen.
-8. **Umschalten**: Raum auf den Café-Raum stellen, ODROID aus.
-
-## Was nach dem Umzug zu prüfen ist
-
-- Dashboard läuft im Kiosk, Rotation wechselt die Slots.
-- Nightlife (YouTube über mpv) zeigt Bild und Ton; `nl-mpv-supervisor.log` ohne
-  Fehler, mpv-Log zeigt `Using hardware decoding (vaapi)`.
-- DJ-Stream (Twitch über streamlink und mpv) startet von allein.
-- Dartcam (RTSP) läuft.
-- Fernbedienungen (YouTube, DJ, Hos'n Obe) erreichen den W1 über Firebase.
-- **Roulette** nicht im Café anzeigen (Vorgabe). Nur die Werbung
-  `roulette-werbung/` läuft dort.
-- Nach einem Neustart kommt alles ohne Handgriff wieder hoch.
+1. **EndeavourOS neben Windows** vom USB-Stick („Neben Windows installieren",
+   100 GB, GRUB als Bootloader – die Windows-EFI-Partition hat nur 100 MB,
+   zu klein für systemd-boot). Vorher in Windows: Schnellstart aus, BitLocker
+   geprüft (`manage-bde -status C:`). Secure Boot im BIOS aus.
+2. **Startreihenfolge** im BIOS auf EndeavourOS gestellt – `efibootmgr -o`
+   allein hielt nicht, das BIOS setzte Windows wieder nach vorn.
+3. **SSH**: `sshd` aktiviert; auf dem Beelink Schlüssel
+   `~/.ssh/citycafe_w1_ed25519` und Eintrag `w1` in `~/.ssh/config`
+   (Benutzer `sabrina`). Der öffentliche Schlüssel kam per kurzem
+   `curl … | sh` vom Beelink auf den W1, weil die Passworteingabe über das
+   Eingabefeld von Claude Code nicht geht. `sudo` ohne Passwort für `sabrina`
+   (`/etc/sudoers.d/10-sabrina`).
+4. **Pakete**: `sway chromium mpv yt-dlp streamlink wlr-randr libva-utils
+   libva-mesa-driver grim`, Bluetooth (`bluez bluez-utils`,
+   `bluetooth.service` aktiviert). `vainfo` zeigt H.264, HEVC, VP9, AV1.
+5. **Kiosk-Benutzer `citycafe`** (Gruppen video, render, audio, input),
+   Autologin auf tty1 (`getty@tty1.service.d/autologin.conf`),
+   `~/.bash_profile` lädt `~/.config/citycafe.env` und startet sway in einer
+   Schleife. `plasmalogin` (KDE-Anmeldung) deaktiviert, Ruhezustand per
+   `systemctl mask sleep.target suspend.target …` gesperrt.
+6. **Dateien aus `kiosk/`**: `citycafe-chromium` nach `/usr/local/bin/`,
+   `nl-mpv-supervisor.py` nach `/opt/citycafe/`, `sway-citycafe.conf` als
+   `~citycafe/.config/sway/config` (dazu eine Zeile für `citycafe-bt`, die
+   eine alte Instanz vorher beendet). `/opt/citycafe/bin/yt-dlp` ist ein
+   Link auf das Paket.
+7. **Einstellungen** (`citycafe.env`): siehe Tabelle in
+   `KIOSK-SUPERVISOR.md`. Die drei Chromium-Erweiterungen des ODROID gingen
+   mit ihm verloren; `h264-force` wird nicht mehr gebraucht, der Starter lädt
+   Erweiterungen nur, wenn sie vorhanden sind.
+8. **Google-Anmeldung** im Kiosk-Profil (YouTube Premium): über die
+   Debug-Schnittstelle ein Fenster `accounts.google.com` geöffnet
+   (`curl -X PUT "http://127.0.0.1:9222/json/new?…"`), am Gerät angemeldet.
+   Der Supervisor liest die Cookies aus `chromium-kiosk`; nach einer
+   Neuinstallation muss die Anmeldung wiederholt werden.
+9. **Bluetooth**: siehe unten.
+10. **Nächtliches Update** `citycafe-update.timer` (8:30), siehe `STAND.md`.
 
 ## Bluetooth zur Anlage (1Mii B03 Pro)
 
@@ -72,36 +51,37 @@ Der W1 schickt seinen Ton per Bluetooth an den 1Mii B03 Pro (Schalter **RX**),
 der hängt per Kabel an der Anlage. In der YouTube-Fernbedienung gibt es dafür
 „🔵 Bluetooth zur Anlage“ mit Verbinden, Trennen und Prüfen. Der Supervisor
 führt das mit `bluetoothctl` aus und stellt die Tonausgabe mit `pactl` auf den
-Empfänger um.
+Empfänger um. „Verbunden" meldet er nur, wenn der Tonkanal steht
+(PipeWire-Ausgang `bluez_output…`). Daneben hält `citycafe-bt` die
+Verbindung von selbst und setzt 90 %.
 
-Einmalig auf dem W1:
+Koppeln (einmal je Empfänger, also zuhause und im Café):
 
 ```sh
-sudo pacman -S --needed bluez bluez-utils
-sudo systemctl enable --now bluetooth
 bluetoothctl            # dann: power on, scan on, warten bis „B03“ erscheint,
                         # pair ADRESSE, trust ADRESSE, connect ADRESSE, quit
 ```
 
 Zum Koppeln am B03 Pro die Bluetooth-Taste gedrückt halten, bis die Anzeige
-blinkt. Gefunden wird das Gerät über einen Teil des Namens (Standard „B03“,
-änderbar mit `CITYCAFE_BT_NAME`), eine Adresse steht nicht im Repo.
+blinkt; das Fenster ist nur kurz offen. Gefunden wird das Gerät über einen
+Teil des Namens (Standard „B03“, änderbar mit `CITYCAFE_BT_NAME`), eine
+Adresse steht nicht im Repo. Der Codec ist aptX HD.
+
+Steht die Verbindung, aber ohne Ton („Device or resource busy" /
+„Permission denied" im `journalctl -u bluetooth`): Liefen mehrere
+`citycafe-bt` gleichzeitig? Hält ein anderes Gerät (Handy) den Tonkanal?
+Sonst `bluetoothctl remove ADRESSE` und neu koppeln – das hat am 01.10.
+geholfen.
+
+## Noch offen
+
+- B03 Pro im Café koppeln.
+- Dartcam im Café-Netz prüfen.
 
 ## Regeln (aus `STAND.md`)
 
 - Keine Zugangsdaten, Schlüssel oder Tokens ins Repo.
 - Verweigerte Berechtigungen nicht umgehen; fragen.
-- Die Datei `boot.ini.1786897722` des ODROID nie einspielen.
-- Keine YouTube- oder Google-Cookies auf der Box löschen.
-- Der Supervisor liest Cookies aus `chromium-kiosk`: nach einer Neuinstallation
-  muss Chromium einmal im Google-Konto angemeldet werden (Premium ohne Werbung).
-
-## Vorlage für Claude Code auf dem Beelink
-
-> Wir richten den ACEMAGIC W1 (EndeavourOS, Ryzen 7 H255) als City-Cafe-Kiosk
-> ein und lösen damit den ODROID im Café ab. Lies zuerst `STAND.md`,
-> `KIOSK-SETUP.md`, `KIOSK-SUPERVISOR.md` und `W1-UMSTELLUNG.md` im Repo
-> `motte025/City-cafe`. Arbeite die Reihenfolge in `W1-UMSTELLUNG.md` ab, per
-> SSH auf den W1. Zeig mir vor jedem Schritt, was du ändern willst, und lade
-> nichts ins Repo hoch, bevor ich es freigebe. Prüfe `vainfo`, bevor du
-> `CITYCAFE_HWDEC=vaapi` setzt, und teste zuerst mit einem eigenen Testraum.
+- Nichts an Partitionen, Bootloader oder Windows ohne Freigabe.
+- Keine YouTube- oder Google-Cookies im Kiosk-Profil löschen.
+- Im Café kein Roulette-Spiel, nur die Werbung.
