@@ -345,13 +345,18 @@ def bluetooth(was):
             log(f"Bluetooth: {BT_AUS_DATEI} nicht gesetzt ({type(e).__name__})")
     if was == "verbinden":
         bt_cmd("power", "on")
+        bt_cmd("unblock", adresse)
         if "Connected: yes" in bt_cmd("info", adresse) and not bt_senke(adresse):
             # Verbunden, aber ohne Tonkanal: einmal sauber neu aufbauen.
             bt_cmd("disconnect", adresse)
             time.sleep(2)
         bt_cmd("connect", adresse, timeout=30)
     elif was == "trennen":
+        # Nur trennen reicht nicht: der Empfaenger meldet sich nach ~30 s von
+        # selbst wieder (letztes Geraet, "trusted"). Blockiert lehnt der W1
+        # das ab; die Kopplung bleibt, "Verbinden" hebt die Sperre auf.
         bt_cmd("disconnect", adresse)
+        bt_cmd("block", adresse)
     verbunden = "Connected: yes" in bt_cmd("info", adresse)
     senke = None
     if verbunden:
@@ -675,7 +680,7 @@ def main():
     sucher = None         # laufender Such-Thread der Handy-Fernbedienung
     such_id = ""          # zuletzt bearbeiteter Suchauftrag
     bt_arbeiter = None    # laufender Bluetooth-Thread (connect dauert Sekunden)
-    bt_id = ""            # zuletzt bearbeiteter Bluetooth-Auftrag
+    bt_id = None          # zuletzt bearbeiteter Bluetooth-Auftrag (None: noch keiner gesehen)
     spul_id = ""          # zuletzt ausgefuehrter Vor-/Zuruecksprung
     ton_id = ""           # zuletzt uebernommene Ton-Einstellung
     ton_vol = 100         # Lautstaerke des Videos in Prozent
@@ -784,7 +789,12 @@ def main():
 
         # Bluetooth-Auftrag der Handy-Fernbedienung, ebenfalls im eigenen Thread.
         bt_auftrag = state.get("bt") or {}
-        if (bt_auftrag.get("id") and bt_auftrag["id"] != bt_id
+        if bt_id is None:
+            # Erster Blick nach dem Start: ein Auftrag, der schon auf der Seite
+            # liegt, ist alt - nicht wiederholen (sonst trennte ein Neustart des
+            # Supervisors nach einem "Trennen" gleich noch einmal).
+            bt_id = bt_auftrag.get("id") or ""
+        elif (bt_auftrag.get("id") and bt_auftrag["id"] != bt_id
                 and not (bt_arbeiter is not None and bt_arbeiter.is_alive())):
             bt_id = bt_auftrag["id"]
 
