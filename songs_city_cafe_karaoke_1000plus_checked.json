@@ -79615,16 +79615,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Data",
-    "title": "One in a Million",
+    "artist": "Edwin Rosen",
+    "title": "schau dir zu",
     "album": "",
-    "category": "Party & Rock",
+    "category": "Deutsch-Pop",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Rock",
-      "Anthem"
+      "Karaoke",
+      "Deutsch-Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Stefanie Hertel",
+    "title": "Das Paradies in deinen Augen",
+    "album": "",
+    "category": "Schlager & Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager & Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
