@@ -79755,55 +79755,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Olaf Henning",
-    "title": "Das war ne echt geile Zeit",
-    "album": "",
-    "category": "Ballermann & Party",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Karaoke",
-      "Ballermann & Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Andrea Jürgens",
-    "title": "Ich krieg nie genug von dir (Long Version)",
-    "album": "",
-    "category": "Schlager & Karaoke",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Karaoke",
-      "Schlager & Karaoke"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Alpentrio Tirol",
-    "title": "Da drob'n auf'm Berg steht a Kircherl",
+    "artist": "Claudia Jung",
+    "title": "Schmetterlinge",
     "album": "",
     "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Schlager",
-      "Kult"
+      "Party",
+      "Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Justin Timberlake",
+    "title": "Cry Me a River",
+    "album": "",
+    "category": "Party & Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Rock",
+      "Anthem"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
