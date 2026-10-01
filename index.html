@@ -12817,6 +12817,11 @@
             // Verhindert, dass eine abgeloeste Sequenz im Hintergrund weiterlaeuft.
             cancelSequenceTimers();
             document.getElementById('mittagsteller-fullscreen').classList.remove('active');
+            // Die CL-Tabelle im Vollbild haengt ausserhalb von .media-inner-view
+            // und verschwindet sonst nur ueber ihren eigenen Zeitgeber - den
+            // loescht ein Wunsch vom Handy (cancelSequenceTimers), und die
+            // Tabelle blieb ueber dem Nightlife-Slot und dem mpv-Fenster stehen.
+            document.getElementById('ucl-fullscreen-table').classList.remove('active');
             werbungAus();
 
             document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));
