@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-01T11:57:46Z",
+  "checked_at": "2026-10-01T12:07:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥LAST DAY SUBTEMBER !SUBATHON🔥PP 2nd month!🎶 GOOD VIBES ONLY🔥 !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
       "game": "DJs"
     }
   ]
