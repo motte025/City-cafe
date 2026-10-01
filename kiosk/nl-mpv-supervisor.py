@@ -287,6 +287,10 @@ def session_env():
 # scan on, pair, trust); die Fernbedienung verbindet und trennt nur. Gefunden
 # wird das Geraet ueber einen Teil seines Namens, so steht keine Adresse im Repo.
 BT_NAME = os.environ.get("CITYCAFE_BT_NAME", "B03")
+# Nach "Trennen" am Handy liegt diese Datei da; ein Waechter, der die
+# Verbindung sonst von selbst haelt (citycafe-bt auf dem W1), laesst den
+# Empfaenger dann in Ruhe, bis "Verbinden" sie wieder entfernt.
+BT_AUS_DATEI = os.environ.get("CITYCAFE_BT_AUS", "/home/citycafe/.citycafe-bt-aus")
 
 
 def bt_cmd(*args, timeout=20):
@@ -331,6 +335,14 @@ def bluetooth(was):
     if not adresse:
         return {"verbunden": False,
                 "text": f"kein gekoppeltes Geraet mit „{BT_NAME}“ im Namen - einmal am Screen koppeln"}
+    if was in ("verbinden", "trennen"):
+        try:
+            if was == "trennen":
+                open(BT_AUS_DATEI, "w").close()
+            elif os.path.exists(BT_AUS_DATEI):
+                os.remove(BT_AUS_DATEI)
+        except OSError as e:
+            log(f"Bluetooth: {BT_AUS_DATEI} nicht gesetzt ({type(e).__name__})")
     if was == "verbinden":
         bt_cmd("power", "on")
         if "Connected: yes" in bt_cmd("info", adresse) and not bt_senke(adresse):
