@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-01T13:07:45Z",
+  "checked_at": "2026-10-01T13:22:48Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 94 😈 FINALE! | Harder Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "jenniferleedj",
@@ -13,13 +20,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 94 😈 FINALE! | Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
