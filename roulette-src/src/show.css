@@ -10,6 +10,8 @@
 .display-page{--tv-text-scale:1}
 .display-page .show-header .live-mark{position:absolute;left:50%;transform:translateX(-50%);display:flex;justify-content:center;white-space:nowrap;font-size:calc(clamp(16px,1.3vw,26px)*var(--tv-text-scale));letter-spacing:2.5px;color:#e2cca0;font-weight:600}
 .display-page .live-mark i{width:8px;height:8px;background:#d7bb7b;box-shadow:0 0 16px #d7bb7b88}
+/* Unsichtbares Gegenstück zum Punkt: so steht der Schriftzug selbst genau in der Bildmitte über dem Kessel. */
+.display-page .live-mark::after{content:'';width:8px;height:8px;flex:none}
 .display-page .show-brand small{font-size:calc(clamp(10px,.72vw,14px)*var(--tv-text-scale));color:#b1baaa;letter-spacing:2px}
 .display-page .show-header button{font-size:calc(clamp(12px,.82vw,16px)*var(--tv-text-scale))}
 .display-page .cycle-panel,.display-page .result-panel{width:clamp(225px,17vw,325px);top:25%}
@@ -320,6 +322,12 @@ body.embedded .remote-shell{padding-top:10px}
 .match-names-grid label{display:flex;align-items:center;gap:6px}
 .match-names-grid span{min-width:1.6em;text-align:right;color:#bcb08c;font-variant-numeric:tabular-nums}
 .match-names-grid input{flex:1;min-width:0;padding:9px 10px;border-radius:8px;border:1px solid #cbb58155;background:#091b13;color:#f3e8ce;font:inherit}
+.names-known{margin-top:12px}
+.names-known-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.name-chip{display:inline-flex;align-items:stretch;border:1px solid #cbb58155;border-radius:999px;overflow:hidden;background:#ffffff0a}
+.name-chip button{border:0;border-radius:0;background:transparent;color:#f3e8ce;font:inherit;padding:8px 12px;cursor:pointer;min-height:0}
+.name-chip button:active{background:#cbb58133}
+.name-chip .name-forget{padding:8px 10px;color:#bcb08c;border-left:1px solid #cbb58133}
 .match-names-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .match-names-actions button{flex:1 1 auto}
 
