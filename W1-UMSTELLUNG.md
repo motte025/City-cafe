@@ -66,6 +66,27 @@ Start von sway). Die Werte in der Spalte „W1“ sind Startpunkte, nicht geprü
   `roulette-werbung/` läuft dort.
 - Nach einem Neustart kommt alles ohne Handgriff wieder hoch.
 
+## Bluetooth zur Anlage (1Mii B03 Pro)
+
+Der W1 schickt seinen Ton per Bluetooth an den 1Mii B03 Pro (Schalter **RX**),
+der hängt per Kabel an der Anlage. In der YouTube-Fernbedienung gibt es dafür
+„🔵 Bluetooth zur Anlage“ mit Verbinden, Trennen und Prüfen. Der Supervisor
+führt das mit `bluetoothctl` aus und stellt die Tonausgabe mit `pactl` auf den
+Empfänger um.
+
+Einmalig auf dem W1:
+
+```sh
+sudo pacman -S --needed bluez bluez-utils
+sudo systemctl enable --now bluetooth
+bluetoothctl            # dann: power on, scan on, warten bis „B03“ erscheint,
+                        # pair ADRESSE, trust ADRESSE, connect ADRESSE, quit
+```
+
+Zum Koppeln am B03 Pro die Bluetooth-Taste gedrückt halten, bis die Anzeige
+blinkt. Gefunden wird das Gerät über einen Teil des Namens (Standard „B03“,
+änderbar mit `CITYCAFE_BT_NAME`), eine Adresse steht nicht im Repo.
+
 ## Regeln (aus `STAND.md`)
 
 - Keine Zugangsdaten, Schlüssel oder Tokens ins Repo.

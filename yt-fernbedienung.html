@@ -193,6 +193,15 @@
 </details>
 
 <details>
+    <summary>🔵 Bluetooth zur Anlage</summary>
+    <div class="feldname">Status: <span id="btstatus">unbekannt</span></div>
+    <div class="zeiten" id="btknoepfe"></div>
+    <div class="hinweis">Schickt den Ton des Screens per Bluetooth an den Empfänger an der
+        Anlage (1Mii B03 Pro, Schalter auf RX). Gekoppelt wird einmal am Screen selbst,
+        hier wird nur verbunden und getrennt.</div>
+</details>
+
+<details>
     <summary>⚙️ Laufzeit, Auflösung, Bildrate</summary>
     <div class="feldname">Laufzeit</div>
     <div class="zeiten" id="zeiten"></div>
@@ -400,6 +409,12 @@
             el('laut').value = s.lautstaerke;
             el('lautwert').textContent = s.lautstaerke + ' %';
         }
+        // Bluetooth-Empfaenger an der Anlage: meldet der Supervisor des Screens
+        // (nl-mpv-supervisor.py, ueber das Dashboard). Aeltere Screens melden nichts.
+        if (s.bluetooth && typeof s.bluetooth === 'object') {
+            el('btstatus').textContent = s.bluetooth.text
+                || (s.bluetooth.verbunden ? 'verbunden' : 'nicht verbunden');
+        }
         if (typeof s.lautheit === 'boolean') {
             lautheitAn = s.lautheit;
             [].forEach.call(el('lautheit').children, function (k, i) {
@@ -451,6 +466,19 @@
         if (/^[A-Za-z0-9_-]{11}$/.test(String(text).trim())) return String(text).trim();
         return null;
     }
+
+    // --- Bluetooth ----------------------------------------------------------
+    [['🔗 Verbinden', 'verbinden'], ['✂️ Trennen', 'trennen'], ['🔄 Prüfen', 'status']]
+        .forEach(function (k) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = k[0];
+            b.addEventListener('click', function () {
+                el('btstatus').textContent = 'wird ausgeführt …';
+                senden({ aktion: 'bluetooth', was: k[1] });
+            });
+            el('btknoepfe').appendChild(b);
+        });
 
     function senden(befehl) {
         if (!verb) {

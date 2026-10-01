@@ -196,6 +196,8 @@ STATE_EXPR = """JSON.stringify({
   // Laeuft gerade eine Runde Hos'n Obe? Dann muss mpv aus bleiben - sein
   // Fenster liegt sonst ueber dem Kartentisch.
   spiel: (typeof window.ktSpielLaeuft === 'function') ? !!window.ktSpielLaeuft() : false,
+  // Bluetooth-Empfaenger an der Anlage: { id, was } (verbinden/trennen/status)
+  bt: (typeof window.nlBtAuftrag !== 'undefined' && window.nlBtAuftrag) ? window.nlBtAuftrag : null,
   // Dart-Abend-Modus: RTSP-Dartcam. Die Adresse kommt vom Dashboard
   // (DART_CAM_URL in index.html), damit ein Kamerawechsel keinen Eingriff
   // auf der Box braucht.
@@ -273,6 +275,61 @@ def session_env():
         if "WAYLAND_DISPLAY" in env:
             return {k: env[k] for k in keys if k in env}
     return {}
+
+
+# Bluetooth-Empfaenger an der Anlage (1Mii B03 Pro auf RX): der Screen schickt
+# seinen Ton dorthin. Gekoppelt wird einmal von Hand am Geraet (bluetoothctl:
+# scan on, pair, trust); die Fernbedienung verbindet und trennt nur. Gefunden
+# wird das Geraet ueber einen Teil seines Namens, so steht keine Adresse im Repo.
+BT_NAME = os.environ.get("CITYCAFE_BT_NAME", "B03")
+
+
+def bt_cmd(*args, timeout=20):
+    try:
+        r = subprocess.run(["bluetoothctl", *args], capture_output=True, text=True, timeout=timeout)
+        return r.stdout
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return f"FEHLER {type(e).__name__}"
+
+
+def bt_geraet():
+    """Adresse des gekoppelten Empfaengers. -> (adresse, name) oder (None, None)"""
+    for zeile in bt_cmd("devices", "Paired").splitlines():
+        teile = zeile.split(" ", 2)   # "Device AA:BB:.. Name"
+        if len(teile) == 3 and teile[0] == "Device" and BT_NAME.lower() in teile[2].lower():
+            return teile[1], teile[2]
+    return None, None
+
+
+def bluetooth(was):
+    """verbinden / trennen / status -> {verbunden, text}"""
+    adresse, name = bt_geraet()
+    if not adresse:
+        return {"verbunden": False,
+                "text": f"kein gekoppeltes Geraet mit „{BT_NAME}“ im Namen - einmal am Screen koppeln"}
+    if was == "verbinden":
+        bt_cmd("power", "on")
+        bt_cmd("connect", adresse, timeout=30)
+    elif was == "trennen":
+        bt_cmd("disconnect", adresse)
+    verbunden = "Connected: yes" in bt_cmd("info", adresse)
+    if verbunden and was == "verbinden":
+        # Ton dorthin umleiten (PipeWire/PulseAudio). Klappt das nicht, bleibt
+        # die bisherige Ausgabe - die Verbindung steht trotzdem.
+        try:
+            env = {**os.environ, **session_env()}
+            senken = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True,
+                                    text=True, timeout=10, env=env).stdout
+            for zeile in senken.splitlines():
+                felder = zeile.split("\t")
+                if len(felder) > 1 and "bluez" in felder[1]:
+                    subprocess.run(["pactl", "set-default-sink", felder[1]], timeout=10, env=env)
+                    break
+        except (OSError, subprocess.TimeoutExpired) as e:
+            log(f"Bluetooth: Ton nicht umgeleitet ({type(e).__name__})")
+    text = f"{name}: " + ("verbunden" if verbunden else "nicht verbunden")
+    log(f"Bluetooth {was}: {text}")
+    return {"verbunden": verbunden, "text": text}
 
 
 def sway(*args):
@@ -562,6 +619,8 @@ def main():
     resolver = None       # laufender yt-dlp-Thread
     sucher = None         # laufender Such-Thread der Handy-Fernbedienung
     such_id = ""          # zuletzt bearbeiteter Suchauftrag
+    bt_arbeiter = None    # laufender Bluetooth-Thread (connect dauert Sekunden)
+    bt_id = ""            # zuletzt bearbeiteter Bluetooth-Auftrag
     spul_id = ""          # zuletzt ausgefuehrter Vor-/Zuruecksprung
     ton_id = ""           # zuletzt uebernommene Ton-Einstellung
     ton_vol = 100         # Lautstaerke des Videos in Prozent
@@ -667,6 +726,21 @@ def main():
                     # Browser wieder vorn.
                     last_pos, last_progress = None, time.time()
                     started = time.time()
+
+        # Bluetooth-Auftrag der Handy-Fernbedienung, ebenfalls im eigenen Thread.
+        bt_auftrag = state.get("bt") or {}
+        if (bt_auftrag.get("id") and bt_auftrag["id"] != bt_id
+                and not (bt_arbeiter is not None and bt_arbeiter.is_alive())):
+            bt_id = bt_auftrag["id"]
+
+            def bt_lauf(bid=bt_id, was=str(bt_auftrag.get("was", "status")), seite=page_id):
+                ergebnis = {"id": bid, **bluetooth(was)}
+                try:
+                    cdp_eval(seite, "window.nlBtStatus = " + json.dumps(ergebnis) + "; 1")
+                except (OSError, ValueError, ConnectionError) as e:
+                    log(f"Bluetooth-Ergebnis nicht zustellbar: {e}")
+            bt_arbeiter = threading.Thread(target=bt_lauf, daemon=True)
+            bt_arbeiter.start()
 
         # Suchauftrag der Handy-Fernbedienung: yt-dlp braucht ein paar Sekunden,
         # deshalb im eigenen Thread - die Schleife muss weiterlaufen.

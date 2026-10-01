@@ -7357,6 +7357,8 @@
                 // Hos'n Obe hat Vorrang: solange gespielt wird, nimmt der
                 // Screen kein Video an (siehe ktSpielLaeuft).
                 spielLaeuft: !!(window.ktSpielLaeuft && window.ktSpielLaeuft()),
+                // Bluetooth-Empfaenger: { verbunden, text } vom Supervisor.
+                bluetooth: window.nlBtStatus || null,
                 abgelehnt: nlFernAbgelehnt,
                 // Laufende Hos'n-Obe-Runde: dieselbe Kennung wie im QR-Code am
                 // Screen. Damit kann die Sammel-Fernbedienung das Kartenspiel
@@ -7426,6 +7428,15 @@
                                           vorschlaege: !!befehl.vorschlaege,
                                           aehnlichZu: String(befehl.aehnlichZu || '').slice(0, 20) };
                 nlFernStatusMelden();
+                return;
+            }
+
+            if (befehl.aktion === 'bluetooth') {
+                // Bluetooth-Empfaenger an der Anlage verbinden/trennen. Ausgefuehrt
+                // vom Kiosk-Supervisor (liest window.nlBtAuftrag, meldet das Ergebnis
+                // in window.nlBtStatus). Ohne Supervisor passiert einfach nichts.
+                const was = ['verbinden', 'trennen', 'status'].includes(befehl.was) ? befehl.was : 'status';
+                window.nlBtAuftrag = { id: befehl.id, was: was };
                 return;
             }
 
@@ -7502,7 +7513,14 @@
         }
 
         // Treffer des Supervisors ans Handy weiterreichen.
+        let nlBtLetzteId = '';
         function nlTrefferWeiterreichen() {
+            // Neues Bluetooth-Ergebnis vom Supervisor: gleich ans Handy melden.
+            const bt = window.nlBtStatus;
+            if (bt && bt.id && bt.id !== nlBtLetzteId && nlFernVerb) {
+                nlBtLetzteId = bt.id;
+                nlFernStatusMelden();
+            }
             const t = window.nlSucheTreffer;
             if (!t || !t.id || t.id === nlTrefferLetzteId || !nlFernVerb) return;
             nlTrefferLetzteId = t.id;
