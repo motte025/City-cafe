@@ -301,13 +301,20 @@ def bt_cmd(*args, timeout=20):
         return f"FEHLER {type(e).__name__}"
 
 
-def bt_geraet():
-    """Adresse des gekoppelten Empfaengers. -> (adresse, name) oder (None, None)"""
+def bt_geraete():
+    """Alle gekoppelten Empfaenger -> [(adresse, name), ...]. Es koennen
+    mehrere sein (zuhause und im Cafe je ein B03 Pro) - welcher in Reichweite
+    ist, zeigt erst der Verbindungsversuch."""
+    geraete = []
     for zeile in bt_cmd("devices", "Paired").splitlines():
         teile = zeile.split(" ", 2)   # "Device AA:BB:.. Name"
         if len(teile) == 3 and teile[0] == "Device" and BT_NAME.lower() in teile[2].lower():
-            return teile[1], teile[2]
-    return None, None
+            geraete.append((teile[1], teile[2]))
+    return geraete
+
+
+def bt_verbunden(adresse):
+    return "Connected: yes" in bt_cmd("info", adresse)
 
 
 def bt_senke(adresse):
@@ -331,8 +338,8 @@ def bt_senke(adresse):
 
 def bluetooth(was):
     """verbinden / trennen / status -> {verbunden, text}"""
-    adresse, name = bt_geraet()
-    if not adresse:
+    geraete = bt_geraete()
+    if not geraete:
         return {"verbunden": False,
                 "text": f"kein gekoppeltes Geraet mit „{BT_NAME}“ im Namen - einmal am Screen koppeln"}
     if was in ("verbinden", "trennen"):
@@ -343,21 +350,31 @@ def bluetooth(was):
                 os.remove(BT_AUS_DATEI)
         except OSError as e:
             log(f"Bluetooth: {BT_AUS_DATEI} nicht gesetzt ({type(e).__name__})")
+    # Gemeint ist der gerade verbundene Empfaenger, sonst der erste.
+    adresse, name = next(((a, n) for a, n in geraete if bt_verbunden(a)), geraete[0])
     if was == "verbinden":
         bt_cmd("power", "on")
-        bt_cmd("unblock", adresse)
-        if "Connected: yes" in bt_cmd("info", adresse) and not bt_senke(adresse):
+        for a, _ in geraete:
+            bt_cmd("unblock", a)
+        if bt_verbunden(adresse) and not bt_senke(adresse):
             # Verbunden, aber ohne Tonkanal: einmal sauber neu aufbauen.
             bt_cmd("disconnect", adresse)
             time.sleep(2)
-        bt_cmd("connect", adresse, timeout=30)
+        # Der Reihe nach probieren; der erste erreichbare gewinnt.
+        for a, n in sorted(geraete, key=lambda g: g[0] != adresse):
+            bt_cmd("connect", a, timeout=30)
+            if bt_verbunden(a):
+                adresse, name = a, n
+                break
     elif was == "trennen":
         # Nur trennen reicht nicht: der Empfaenger meldet sich nach ~30 s von
         # selbst wieder (letztes Geraet, "trusted"). Blockiert lehnt der W1
         # das ab; die Kopplung bleibt, "Verbinden" hebt die Sperre auf.
-        bt_cmd("disconnect", adresse)
-        bt_cmd("block", adresse)
-    verbunden = "Connected: yes" in bt_cmd("info", adresse)
+        # Alle sperren - sonst verbaende sich der andere Empfaenger.
+        for a, _ in geraete:
+            bt_cmd("disconnect", a)
+            bt_cmd("block", a)
+    verbunden = bt_verbunden(adresse)
     senke = None
     if verbunden:
         # Der Tonkanal kommt ein paar Sekunden nach der Verbindung.
