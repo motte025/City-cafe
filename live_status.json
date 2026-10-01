@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-01T21:12:46Z",
+  "checked_at": "2026-10-01T21:22:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "HandsUp & Hardstyle  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
-      "title": "💫 Oktoberfest-Livecam Ein Kessel Buntes ✨ !charity",
+      "title": "💫 DJ SAMMY IN DA HOUSE! 💫",
       "game": "DJs"
     }
   ]
