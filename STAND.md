@@ -120,6 +120,19 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   Stopp" läuft bis Stopp, neuem Wunsch oder Videoende (vorher brach es nach
   4 Minuten ab, behoben 01.10.). Ein Wunsch ohne Ort zeigt seinen Titel groß
   in der Überschrift, darunter „Per Fernbedienung gestartet".
+- **Vollbild-Ansichten außerhalb von `.media-inner-view`** (CL-Tabelle
+  `#ucl-fullscreen-table`, Mittagsteller, Roulette-Werbung, Dart-Anheizer)
+  muss `runMasterSequence()` selbst abbauen – ihr eigener Zeitgeber geht bei
+  einem Wunsch vom Handy (`cancelSequenceTimers`) verloren. Die CL-Tabelle
+  fehlte dort und blieb über Nightlife und mpv stehen (behoben 01.10.).
+  Wer eine neue Vollbild-Ebene einbaut, trägt sie dort mit ein.
+- **Veranstaltungen in Kärnten** (großes Widget, `KAERNTEN_EVENTS` in
+  `index.html`): Stand 01.10.2026, Termine bis Silvester. Jeder Eintrag hat
+  ein Enddatum `bis`; danach fällt er nach Wiener Datum von selbst heraus, bei
+  leerer Liste wird der Slot übersprungen. **Spätestens im Dezember neue
+  Termine für 2027 eintragen** (nach dem 31.12. ist die Liste leer). Offen:
+  Uhrzeit Krampuslauf (ca. 19:00 aus der alten Liste), genauer Saal
+  „Dunkelgraue Lieder" in Villach.
 - **Hos'n Obe**: Reihenfolge im Uhrzeigersinn, eigene Tischfotos als
   Hintergrund, Kartengeber mit Talon, Rundenanzeige rechts oben, Schluss nach
   acht Runden mit an die Spielerzahl angepasstem Zeitbudget. Der Computer
