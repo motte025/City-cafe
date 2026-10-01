@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-01T01:17:45Z",
+  "checked_at": "2026-10-01T01:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,13 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Presents Breakthrough Live with Dasha. Sponsored by !LISTERINE®",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "down the rabbit hole 🐇",
+      "game": "DJs"
     }
   ]
 }
