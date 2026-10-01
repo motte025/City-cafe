@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-01T15:27:45Z",
+  "checked_at": "2026-10-01T15:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,17 +31,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Oktoberfest-Livecam Ein Kessel Buntes ✨ !charity",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #613 with Eric Luttrell (Recorded Live at Explorations)",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Oktoberfest-Livecam Ein Kessel Buntes ✨ !charity",
+      "game": "DJs"
     }
   ]
 }
