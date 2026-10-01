@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-01T16:57:45Z",
+  "checked_at": "2026-10-01T17:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -48,6 +48,13 @@
       "channel": "beatportofficial",
       "name": "BeatportOfficial",
       "title": "Face2Face with Melé",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SLEM RECORDS RADIO | DANCA",
       "game": "DJs"
     }
   ]
