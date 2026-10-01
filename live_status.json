@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-01T00:02:45Z",
+  "checked_at": "2026-10-01T00:07:49Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🔥 BERGFETE -  Gemischte Musik 🔥 !Suptember !Rentnerfels 🔥 !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     }
   ]
