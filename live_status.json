@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-01T09:42:45Z",
+  "checked_at": "2026-10-01T09:52:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🐶🌭🦴 MURPHY’S 5TH BIRTHDAY PARTY!! 🦴🐶🌭 Give Murph a Bday Pup Cup !murphbday 3 YEAR 17K FRONT PAGE STREAM TOMOZ !!! !tip",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥LAST DAY SUBTEMBER !SUBATHON🔥PP 2nd month!🎶 GOOD VIBES ONLY🔥 !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
