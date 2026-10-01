@@ -79715,15 +79715,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Amigos",
-    "title": "Engel der Liebe",
+    "artist": "Haftbefehl",
+    "title": "RADW",
     "album": "",
-    "category": "Schlager",
+    "category": "Party-Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
-      "Kult"
+      "Party",
+      "Karaoke",
+      "Party-Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Miranda Cosgrove",
+    "title": "Kissin U",
+    "album": "",
+    "category": "Internationale Party-Hits",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Internationale Party-Hits"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
