@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-01T17:02:45Z",
+  "checked_at": "2026-10-01T17:07:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,13 +41,6 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Oktoberfest-Livecam Ein Kessel Buntes ✨ !charity",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Face2Face with Melé",
       "game": "DJs"
     },
     {
