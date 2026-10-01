@@ -242,6 +242,9 @@ FLAECHE = {"yt": ("media-view-nightlife", "nl-player-frame"),
 # Die Dartcam ist ein Live-Strom im Lokal-Netz: faellt sie aus, nach kurzer
 # Pause neu verbinden statt zehn Minuten zu sperren wie ein kaputtes Video.
 CAM_RETRY_AFTER = 5
+# Standzeit eines Nightlife-Slots im Zyklus (NL_CONFIG.sekundenProVideo im
+# Dashboard) - fuer den Zufalls-Einstieg beim ersten Auftritt eines Videos.
+NL_SLOT_SEKUNDEN = 240
 # Mit Puffer darf die Kamera kurz haengen, ohne gleich neu verbunden zu werden -
 # ein Neuverbinden selbst kostet mehrere Sekunden Schwarzbild.
 CAM_STALL_TIMEOUT = 20
@@ -390,19 +393,28 @@ def mpv_window_rect():
 
 
 def resolve(video_id, fmt=FORMAT):
-    """-> (video_url, audio_url|None) oder None"""
+    """-> (video_url, audio_url|None, laenge_sek|None) oder None"""
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
                 [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
-                 "-f", fmt, "-g", f"https://www.youtube.com/watch?v={video_id}"],
+                 "-f", fmt, "--print", "duration", "--print", "urls",
+                 f"https://www.youtube.com/watch?v={video_id}"],
                 capture_output=True, text=True, timeout=30)
         except (subprocess.TimeoutExpired, OSError) as fehler:
             log(f"{os.path.basename(programm)} fuer {video_id}: {type(fehler).__name__}")
             continue
-        urls = [l for l in out.stdout.splitlines() if l.startswith("http")]
+        zeilen = out.stdout.splitlines()
+        urls = [l for l in zeilen if l.startswith("http")]
+        laenge = None
+        for l in zeilen:
+            try:
+                laenge = int(float(l))
+                break
+            except ValueError:
+                pass
         if urls:
-            return urls[0], (urls[1] if len(urls) > 1 else None)
+            return urls[0], (urls[1] if len(urls) > 1 else None), laenge
         log(f"{os.path.basename(programm)} ohne URL fuer {video_id}: {out.stderr.strip()[-200:]}")
     return None
 
@@ -952,8 +964,15 @@ def main():
                 args.append(f"--af={LAUTHEIT_FILTER}")
             env = {**os.environ, **session_env()}
             if want.startswith("yt:") and nl_ok:
-                video_url, audio_url = cache[cache_key]
+                video_url, audio_url, laenge = cache[cache_key]
                 start = state.get("start") or 0
+                # Beim ersten Auftritt kennt das Dashboard die Laenge noch nicht
+                # und gibt 0 vor; yt-dlp kennt sie schon. Dann hier zufaellig
+                # einsteigen - nie so spaet, dass der Slot ins Videoende laeuft.
+                # Wuensche vom Handy (state["wunsch"] gesetzt) kommen von vorn.
+                if (not start and not state.get("wunsch") and laenge
+                        and laenge > NL_SLOT_SEKUNDEN + 30):
+                    start = random.randint(0, laenge - NL_SLOT_SEKUNDEN - 30)
                 args.append(f"--start={start}")
                 if audio_url:
                     args.append(f"--audio-file={audio_url}")
