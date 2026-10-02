@@ -82885,16 +82885,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Graham Bonney",
-    "title": "Du bist viel zu schön",
+    "artist": "Die Toten Hosen",
+    "title": "Düsseldorf",
     "album": "",
-    "category": "Schlager",
+    "category": "Deutsch Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Schlager"
+      "Deutsch Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Knochenfabrik",
+    "title": "Grüne Haare",
+    "album": "",
+    "category": "Deutsch Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Deutsch Karaoke",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
