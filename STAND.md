@@ -111,10 +111,32 @@ auch das Roulette, im Café ist es nicht eingeblendet.
 - **Rotation**: Endet ein selbst gestartetes Video oder ein DJ-Stream, übernimmt
   die Standardrotation sofort wieder, ohne dass an der Fernbedienung etwas
   gedrückt werden muss.
-- **Fernbedienungen**: sechs automatische Vorschläge; nach jedem gestarteten
-  Video sechs neue, die zum eben gesehenen passen. Schriftgrößen für Handy,
-  Tablet und PC getrennt. Neu: „Bluetooth zur Anlage" (Verbinden/Trennen/
-  Prüfen) in der YouTube-Fernbedienung.
+- **Fernbedienungen**: Schriftgrößen für Handy, Tablet und PC getrennt. Der
+  Reiter „🎵 Musik" (früher „Videos") ist die neue Musik-Fernbedienung, siehe
+  unten.
+- **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, umgesetzt 02./03.10.2026
+  auf dem Branch `youtube-musik`, auf dem W1 im Raum `musiktest` getestet):
+  Warteschlange, die Gäste per Handy füllen und der Chef (mit PIN) sortiert;
+  ist sie leer, läuft der YouTube-Mix zum letzten Song (Rückfall Last.fm, dann
+  Titelsuche), höchstens 60 min ohne neuen Wunsch (`YT_RADIO_MAX_MIN`).
+  „Musik starten" ohne Song nimmt die Stimmungs-Playlist nach Uhrzeit
+  (`yt_playlists.json`; ohne Links Platzhalter aus der Songs-Datenbank, die
+  der Supervisor beim Abspielen sucht). Der TV ist die einzige Quelle der
+  Reihenfolge (`yt-warteschlange.js`, 103 Checks), meldet `yt/jetzt`,
+  `yt/radio`, `yt/listen`. TV: obere Leiste „Als Nächstes" (2 Titel), Kopf-
+  zeile mit Songtitel/Künstler·Genre·Jahr, Zeit, CITY CAFE, Fortschritt,
+  Seitenleiste „Passt dazu", Ticker „▶ JETZT LÄUFT", Wunsch- (5 s) und Tor-
+  Einblendung (15 s); umschaltbar Vollbild (eigene Ebene, mpv wird nur
+  umgelegt, kein Neustart). QR „Song wünschen" zeichnet mpv selbst
+  (overlay-add, braucht `python-pillow`). Videofenster normal unverändert
+  83/248, 1200×675 (mit sway nachgemessen). Gemessen: < 3 s Stille zwischen
+  zwei Songs mit Vorladen, Neustart macht mit dem nächsten Titel weiter,
+  Hos'n Obe hat Vorrang. **Noch offen:** Firebase-Regeln und Chef-PIN
+  (`docs/youtube-musik/FIREBASE-REGELN.md`), Merge nach `main`, Test mit
+  echtem Handy, echter Bluetooth-Fernbedienung und QR aus 3 m. Die
+  YouTube-Mixe sind mit Konto-Cookies auf den Verlauf des Premium-Kontos
+  zugeschnitten (Lobpreis-Lieder in jedem Mix); `CITYCAFE_MIX_COOKIES=0`
+  holt sie ohne Konto.
 - **Nightlife/YouTube**: Zyklus-Videos steigen zufällig ein (4-Minuten-Slot).
   Wünsche vom Handy beginnen von vorn und laufen die gewählte Zeit; „Bis
   Stopp" läuft bis Stopp, neuem Wunsch oder Videoende (vorher brach es nach

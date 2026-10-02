@@ -12,7 +12,7 @@ gibt:
 
 | Reiter | Seite | Wofür |
 |---|---|---|
-| 🎬 Videos | `yt-fernbedienung.html` | YouTube-Videos suchen und auf den Screen schicken |
+| 🎵 Musik | `yt-fernbedienung.html` | YouTube-Musik: Reiter Jetzt, Suche, Passt dazu, Listen, Mehr; Gäste wünschen, der Chef (PIN) steuert (siehe `YOUTUBE-MUSIK-SETUP.md`) |
 | 🎧 DJ | `dj-fernbedienung.html` | Twitch-DJ auswählen, Qualität, Laufzeit |
 | 🎰 Roulette | `roulette-vorschau-spiel/remote.html` | Roulette mit Spielmodus steuern (seit 28.09.2026; TV-Seite `roulette-vorschau-spiel/?raum=…`) |
 | 🃏 Hos'n Obe | `hosn-obe.html` | Das Kartenspiel mitspielen |
@@ -42,6 +42,7 @@ falschen Fernseher landet:
 * `yt/treffer` – Suchergebnisse vom Screen zurück ans Handy
 * `yt/status` – was der Screen gerade tut (inkl. laufender Hos'n-Obe-Runde)
 * `yt/liste` – selbst hinzugefügte Videos (Dauerliste)
+* `yt/wuensche`, `yt/warteschlange`, `yt/radio`, `yt/jetzt`, `yt/listen` – YouTube-Musik; `chef/geraete` – Chef-Anmeldung (Regeln: `docs/youtube-musik/FIREBASE-REGELN.md`)
 * `roulette/…` – die Roulette-Steuerung (von Codex)
 
 Gesucht wird **nicht** am Handy, sondern auf der Box mit `yt-dlp` – deshalb
@@ -56,7 +57,7 @@ braucht es keinen YouTube-Schlüssel und kein Google-Konto.
 * **Vorschläge**: Beim Öffnen holt die Video-Seite von selbst sechs Vorschläge,
   gemischt aus mehreren Suchbegriffen. Nach jedem gestarteten Video kommen
   sechs neue, die zum gerade gestarteten passen (Titelsuche – YouTubes eigene
-  Mix-Listen gibt `yt-dlp` nicht her).
+  Seit 02.10.2026 kommt „Passt dazu“ aus YouTubes eigenem Mix (list=RD…), das liest yt-dlp).
 * **Hos'n Obe hat Vorrang**: Läuft eine Runde, nimmt der Screen weder Video
   noch Stream an; beide Seiten sperren dann den Startknopf.
 * **Twitch-Anmeldung** öffnet ein eigenes Fenster – `id.twitch.tv` verbietet die
