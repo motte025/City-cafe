@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T05:27:45Z",
+  "checked_at": "2026-10-02T05:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "✨❤️‍🔥🦄 3 YEAR TWITCH PARTNER 17K CELEBRATION STREAM ❤️‍🔥🦄✨ REQUESTS OPEN !request !tip !merch !patreon !youtube",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Elderbook + Eli & Fur | Beatport Live | Los Angeles",
       "game": "DJs"
     }
   ]
