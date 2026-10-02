@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T13:17:45Z",
+  "checked_at": "2026-10-02T13:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,13 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Live with Don Toliver. Sponsored by !Wendy's",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "ICH BIN DAS CHAOS | !holy !logitech #werbung",
+      "game": "DJs"
     },
     {
       "platform": "twitch",
