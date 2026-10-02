@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T13:22:45Z",
+  "checked_at": "2026-10-02T13:37:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ Back to the 90s - Charts, Euro Dance, Rock, RnB, HipHop & more | !tip ✨",
       "game": "DJs"
     }
   ]
