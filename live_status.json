@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T02:57:45Z",
+  "checked_at": "2026-10-02T03:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "nyybeats",
       "name": "NyyBeats",
       "title": "🔥♡ UNIVERSAL MUSIC LIVE IS BACK AND FROM THE NEW STUDIO RAIDING THERE AFTER SOME SICK TUNES!!! AHHHHH 🔥 !mods !mercy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Elderbook + Eli & Fur | Beatport Live | Los Angeles",
       "game": "DJs"
     }
   ]
