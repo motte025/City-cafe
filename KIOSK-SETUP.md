@@ -1,5 +1,10 @@
 # Dashboard im Chrome-Kiosk auf Android TV
 
+> **Heute läuft der Kiosk auf dem ACEMAGIC W1 (EndeavourOS), siehe `W1-UMSTELLUNG.md`.**
+> Für die YouTube-Musik braucht der Aufpasser dort `python-pillow`
+> (`sudo pacman -S python-pillow`, am 03.10.2026 installiert) – damit zeichnet
+> mpv den QR-Code „Song wünschen“ ins Video.
+
 Warum ueberhaupt: In der Lumify-App laufen Werbung und Ruckler, in Chrome nicht.
 Zwei verschiedene Engines - die App benutzt die **Android System WebView** (auf
 Custom-ROMs oft Jahre alt), Chrome bringt seine eigene mit. Und Chrome ist im

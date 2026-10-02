@@ -193,7 +193,7 @@ yt-dlp braucht zum Auflösen 10 bis 25 Sekunden. Ohne Gegenmaßnahme entsteht
 nach jedem Song eine Pause. Deshalb:
 
 - Der TV meldet dem Supervisor den **nächsten** Titel, sobald der aktuelle
-  weniger als 60 s Restlaufzeit hat (`window.nlVorladen = {videoId, fmt}`).
+  weniger als 60 s Restlaufzeit hat (`window.nlMusikVorladen = {videoId, hoehe, fps}` – umgesetzt so benannt, weil `nlVorladen` schon eine Dashboard-Funktion ist).
 - Der Supervisor löst ihn im Hintergrund auf (vorhandener Cache
   `cache_key`) und startet ihn beim Wechsel ohne neuen yt-dlp-Lauf.
 - Ändert sich die Reihenfolge, wird neu vorgeladen. Höchstens **ein**
