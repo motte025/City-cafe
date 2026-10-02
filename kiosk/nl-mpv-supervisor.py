@@ -17,6 +17,7 @@ import glob
 import json
 import os
 import random
+import re
 import signal
 import socket
 import struct
@@ -67,6 +68,30 @@ def format_waehlen(hoehe=0, fps=0):
     stufen.append(f"bestvideo{grund}+bestaudio[ext=m4a]")
     stufen.append(f"best{grund}")
     return "/".join(stufen)
+
+
+# Musik (Warteschlange, Radio-Mix, Playlists - YOUTUBE-MUSIK-SETUP.md 5.6):
+# 1080p60, sonst die naechstbeste Stufe - Aufloesung vor Bildrate (1080p30 ist
+# auf dem TV schaerfer als 720p60), dann H.264 bevorzugt. Kein hartes
+# H.264-Filter: der W1 (Radeon 780M) dekodiert VP9 und AV1 per VA-API, am
+# 02.10.2026 gemessen 17-19 % eines Kerns fuer 1080p60 in allen drei Codecs.
+# "res" zaehlt die kleinere Kantenlaenge, Breitbild 1920x804 gilt als 1080p.
+# CITYCAFE_NUR_H264=1 erzwingt wieder H.264 (fuer schwaechere Geraete).
+# Nightlife und DJ bleiben bei format_waehlen() bzw. TWITCH_QUALITAET.
+MUSIK_NUR_H264 = os.environ.get("CITYCAFE_NUR_H264", "") == "1"
+
+
+def musik_format(hoehe=0, fps=0):
+    """-> (format, sortierung) fuer yt-dlp. hoehe/fps vom Handy sind Obergrenzen."""
+    h = hoehe if hoehe in (480, 720, 1080) else 1080
+    f = 30 if fps == 30 else 60
+    # -S "fps:30" bevorzugt nur, begrenzt aber nicht - 30 fps vom Handy ist
+    # eine Obergrenze (schwaches WLAN), darum dann vorne ein hartes Filter.
+    takt = "[fps<=31]" if f == 30 else ""
+    codec = "[vcodec^=avc1]" if MUSIK_NUR_H264 else ""
+    stufen = [f"bv*{codec}{takt}+ba[ext=m4a]", f"bv*{codec}{takt}+ba"] if takt else []
+    stufen += [f"bv*{codec}+ba[ext=m4a]", f"bv*{codec}+ba", f"b{codec}", "b"]
+    return "/".join(stufen), f"res:{h},fps:{f},vcodec:avc1,acodec:m4a"
 RETRY_FAILED_AFTER = 600   # Sekunden, bis ein fehlgeschlagenes Video neu versucht wird
 POLL_SECONDS = 0.5
 LOG = "/home/citycafe/nl-mpv-supervisor.log"
@@ -191,6 +216,15 @@ STATE_EXPR = """JSON.stringify({
   suche: (typeof window.nlSucheAuftrag !== 'undefined' && window.nlSucheAuftrag) ? window.nlSucheAuftrag : null,
   // Wunsch-Aufloesung/-Bildrate vom Handy (0 = egal).
   wunsch: (typeof window.nlWunschFormat !== 'undefined' && window.nlWunschFormat) ? window.nlWunschFormat : null,
+  // Musikbetrieb (Warteschlange/Radio/Playlist, YOUTUBE-MUSIK-SETUP.md): andere
+  // Qualitaetswahl, Start immer von vorn.
+  musik: !!window.nlMusik,
+  // Naechster Song zum Vorladen: { videoId, hoehe, fps } (5.2)
+  vorladen: window.nlVorladen || null,
+  // Radio-Mix zum Song: { id, videoId } -> window.nlMixErgebnis
+  mix: window.nlMixAuftrag || null,
+  // Playlist lesen: { id, quelle } -> window.nlPlaylistErgebnis
+  playlist: window.nlPlaylistAuftrag || null,
   // Vor-/Zuruecksprung vom Handy: { id, sek }
   spulen: (typeof window.nlSpulAuftrag !== 'undefined' && window.nlSpulAuftrag) ? window.nlSpulAuftrag : null,
   // Ton des Videos: { id, vol (0-100), lautheit (Ausgleich an/aus) }
@@ -210,7 +244,8 @@ STATE_EXPR = """JSON.stringify({
 # guenstig genug fuer diese Box (loudnorm waere deutlich teurer).
 LAUTHEIT_FILTER = "dynaudnorm=g=5:f=250:r=0.9:p=0.5"
 
-SUCH_TREFFER = 15         # so viele Treffer bekommt das Handy zu sehen
+SUCH_TREFFER = 25         # so viele Treffer bekommt das Handy zu sehen
+SUCH_TREFFER_MAX = 75     # "Mehr laden" am Handy: in Schritten von 25 bis hierhin
 
 # Waechter fuer den Kiosk-Browser: antwortet die Debug-Schnittstelle so lange
 # nicht mehr, ist Chromium haengen geblieben (nicht nur kurz beschaeftigt).
@@ -440,13 +475,17 @@ def mpv_window_rect():
     return None
 
 
-def resolve(video_id, fmt=FORMAT):
-    """-> (video_url, audio_url|None, laenge_sek|None) oder None"""
+def resolve(video_id, fmt=FORMAT, sortierung=None):
+    """-> (video_url, audio_url|None, laenge_sek|None) oder None.
+    Mit sortierung (Musik) wird die tatsaechlich gewaehlte Qualitaet geloggt."""
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
                 [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
-                 "-f", fmt, "--print", "duration", "--print", "urls",
+                 "-f", fmt, *(["-S", sortierung] if sortierung else []),
+                 "--print", "duration",
+                 "--print", "QUALI %(format_id)s|%(resolution)s|%(fps)s|%(vcodec)s",
+                 "--print", "urls",
                  f"https://www.youtube.com/watch?v={video_id}"],
                 capture_output=True, text=True, timeout=30)
         except (subprocess.TimeoutExpired, OSError) as fehler:
@@ -462,6 +501,9 @@ def resolve(video_id, fmt=FORMAT):
             except ValueError:
                 pass
         if urls:
+            if sortierung:
+                quali = next((l[6:] for l in zeilen if l.startswith("QUALI ")), "?")
+                log(f"Qualitaet {video_id}: {quali}")
             return urls[0], (urls[1] if len(urls) > 1 else None), laenge
         log(f"{os.path.basename(programm)} ohne URL fuer {video_id}: {out.stderr.strip()[-200:]}")
     return None
@@ -475,7 +517,7 @@ def suchen(text, anzahl=None):
         try:
             out = subprocess.run(
                 [programm, "--js-runtimes", "node", "--flat-playlist", "--print",
-                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s",
+                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s",
                  f"ytsearch{anzahl}:{text}"],
                 capture_output=True, text=True, timeout=60)
         except (subprocess.TimeoutExpired, OSError) as fehler:
@@ -486,15 +528,26 @@ def suchen(text, anzahl=None):
             break
     if out is None:
         return []
-    treffer = []
-    for zeile in out.stdout.splitlines():
-        teile = zeile.split("\t")
-        if len(teile) >= 2 and len(teile[0]) == 11:
-            treffer.append({"videoId": teile[0], "titel": teile[1],
-                            "kanal": teile[2] if len(teile) > 2 else "",
-                            "dauer": teile[3] if len(teile) > 3 else ""})
+    treffer = treffer_lesen(out.stdout)
     if not treffer:
         log(f"Suche ohne Treffer: {text!r} {out.stderr.strip()[-120:]}")
+    return treffer
+
+
+def treffer_lesen(ausgabe):
+    """yt-dlp-Zeilen "id<TAB>titel<TAB>kanal<TAB>dauer_text<TAB>dauer_sek" -> Treffer."""
+    treffer = []
+    for zeile in ausgabe.splitlines():
+        teile = zeile.split("\t")
+        if len(teile) >= 2 and len(teile[0]) == 11:
+            t = {"videoId": teile[0], "titel": teile[1],
+                 "kanal": teile[2] if len(teile) > 2 and teile[2] != "NA" else "",
+                 "dauer": teile[3] if len(teile) > 3 and teile[3] != "NA" else ""}
+            try:
+                t["dauerSek"] = int(float(teile[4]))
+            except (IndexError, ValueError):
+                pass
+            treffer.append(t)
     return treffer
 
 
@@ -521,16 +574,19 @@ VORSCHLAG_BEGRIFFE = [
 # Dashboard war weg (OOM am 21.09.2026, 01:54 bis 01:57). Vier Suchen
 # hintereinander dauern rund 12 s und bleiben im Rahmen.
 VORSCHLAG_BEGRIFFE_JE_LAUF = 3
-# So viele automatische Vorschlaege bekommt das Handy - bewusst wenige: sie
-# werden nach jedem gestarteten Video ohnehin durch passende ersetzt.
-VORSCHLAG_ANZAHL = 6
+# So viele automatische Vorschlaege bekommt das Handy (Spec 7.2: 12). Je
+# Begriff werden 4 geholt - 3 Begriffe x 4 reicht, die Suchen bleiben
+# nacheinander (siehe oben).
+VORSCHLAG_ANZAHL = 12
+# "Passt dazu" am Handy und Radio-Mix am TV: so viele Titel aus dem Mix.
+MIX_ANZAHL = 25
 
 
 def vorschlaege():
     """Gemischte Vorschlaege aus mehreren Suchbegriffen. -> Liste von Treffern."""
     begriffe = random.sample(VORSCHLAG_BEGRIFFE,
                              min(VORSCHLAG_BEGRIFFE_JE_LAUF, len(VORSCHLAG_BEGRIFFE)))
-    je = max(2, -(-VORSCHLAG_ANZAHL // len(begriffe)))     # aufgerundet
+    je = max(4, -(-VORSCHLAG_ANZAHL // len(begriffe)))     # aufgerundet
     listen = {b: suchen(b, je) for b in begriffe}
 
     # Reihum einsammeln: erst der beste Treffer jedes Begriffs, dann der
@@ -547,14 +603,92 @@ def vorschlaege():
     return gemischt[:VORSCHLAG_ANZAHL]
 
 
-def aehnliche(video_id, titel):
-    """Vorschlaege, die zum gerade gestarteten Video passen.
+def mix(video_id, anzahl=MIX_ANZAHL):
+    """YouTube-Radio-Mix zum Video (list=RD<id>) -> Liste von Treffern, ohne das
+    Video selbst. Ein einziger yt-dlp-Lauf, 1-2 s. Am 02.10.2026 auf dem W1 mit
+    den Premium-Cookies geprueft: 25 passende Titel. Leer, wenn YouTube keinen
+    Mix liefert ("Unable to recognize playlist", z. B. nicht verfuegbares Video)."""
+    if not re.fullmatch(r"[A-Za-z0-9_-]{11}", str(video_id or "")):
+        return []
+    out = None
+    for programm in ytdlp_programme():
+        try:
+            out = subprocess.run(
+                [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                 "--flat-playlist", "--playlist-end", str(anzahl + 1), "--print",
+                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s",
+                 f"https://www.youtube.com/watch?v={video_id}&list=RD{video_id}"],
+                capture_output=True, text=True, timeout=60)
+        except (subprocess.TimeoutExpired, OSError) as fehler:
+            log(f"Mix mit {os.path.basename(programm)}: {type(fehler).__name__} ({video_id})")
+            out = None
+            continue
+        if out.stdout.strip():
+            break
+    treffer = [t for t in treffer_lesen(out.stdout if out else "") if t["videoId"] != video_id]
+    if not treffer:
+        log(f"Mix zu {video_id} leer: {(out.stderr if out else '').strip()[-120:]}")
+    return treffer[:anzahl]
 
-    YouTubes eigene Mix-Liste (list=RD...) gibt yt-dlp nicht her, deshalb wird
-    nach dem Titel gesucht: das liefert dieselbe Art von verwandten Videos.
-    Das gestartete Video selbst faellt raus, und je Kanal kommen hoechstens
-    zwei - sonst stuenden sechs Folgen derselben Reihe untereinander.
+
+# Playlists (yt_playlists.json): 24 h zwischengespeichert. /tmp liegt im
+# Arbeitsspeicher, deshalb unter ~/.cache - ein paar kleine JSON-Dateien.
+PLAYLIST_CACHE = "/home/citycafe/.cache/citycafe"
+PLAYLIST_CACHE_SEKUNDEN = 24 * 3600
+PLAYLIST_MAX = 200
+
+
+def playlist_lesen(quelle):
+    """YouTube-Playlist (Link) -> Liste von Treffern, aus dem Cache oder frisch."""
+    m = re.search(r"[?&]list=([A-Za-z0-9_-]+)", str(quelle or ""))
+    if not m:
+        return []
+    datei = os.path.join(PLAYLIST_CACHE, f"playlist-{m.group(1)}.json")
+    try:
+        if time.time() - os.path.getmtime(datei) < PLAYLIST_CACHE_SEKUNDEN:
+            with open(datei) as f:
+                return json.load(f)
+    except (OSError, ValueError):
+        pass
+    out = None
+    for programm in ytdlp_programme():
+        try:
+            out = subprocess.run(
+                [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                 "--flat-playlist", "--playlist-end", str(PLAYLIST_MAX), "--print",
+                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s",
+                 f"https://www.youtube.com/playlist?list={m.group(1)}"],
+                capture_output=True, text=True, timeout=120)
+        except (subprocess.TimeoutExpired, OSError) as fehler:
+            log(f"Playlist mit {os.path.basename(programm)}: {type(fehler).__name__}")
+            out = None
+            continue
+        if out.stdout.strip():
+            break
+    treffer = treffer_lesen(out.stdout if out else "")
+    if treffer:
+        try:
+            os.makedirs(PLAYLIST_CACHE, exist_ok=True)
+            with open(datei, "w") as f:
+                json.dump(treffer, f)
+        except OSError as e:
+            log(f"Playlist-Cache nicht geschrieben: {e}")
+    log(f"Playlist {m.group(1)}: {len(treffer)} Titel")
+    return treffer
+
+
+def aehnliche(video_id, titel):
+    """Vorschlaege, die zum gerade gestarteten Video passen ("Passt dazu").
+
+    Erste Wahl ist YouTubes eigener Mix (mix(), list=RD...) - das geht mit
+    aktuellem yt-dlp (geprueft 02.10.2026). Liefert YouTube keinen, wird nach
+    dem Titel gesucht: das gestartete Video faellt raus, und je Kanal kommen
+    hoechstens zwei - sonst stuenden Folgen derselben Reihe untereinander.
     """
+    gemixt = mix(video_id, 20)
+    if gemixt:
+        log(f"Aehnliche zu {video_id}: {len(gemixt)} aus dem YouTube-Mix")
+        return gemixt
     stichwort = " ".join(str(titel or "").split()[:8])
     if not stichwort:
         return vorschlaege()
@@ -707,9 +841,15 @@ def main():
     target = {"x": 83, "y": 248, "w": 1200, "h": 675}
     next_place_check = 0
     window_seen = False
-    resolver = None       # laufender yt-dlp-Thread
-    sucher = None         # laufender Such-Thread der Handy-Fernbedienung
+    resolver = None       # laufender yt-dlp-Thread fuer das aktuelle Video
+    # Neben-Arbeiter: Suche, Vorladen, Mix und Playlist teilen sich EINEN Thread,
+    # also hoechstens ein yt-dlp-Prozess zusaetzlich zum resolver (OOM vom
+    # 21.09.2026). Reihenfolge, wenn mehreres ansteht: Suche (jemand wartet am
+    # Handy), Vorladen (Song endet bald), Mix, Playlist.
+    neben = None
     such_id = ""          # zuletzt bearbeiteter Suchauftrag
+    mix_id = ""           # zuletzt bearbeiteter Mix-Auftrag
+    playlist_id = ""      # zuletzt bearbeiteter Playlist-Auftrag
     bt_arbeiter = None    # laufender Bluetooth-Thread (connect dauert Sekunden)
     bt_id = None          # zuletzt bearbeiteter Bluetooth-Auftrag (None: noch keiner gesehen)
     spul_id = ""          # zuletzt ausgefuehrter Vor-/Zuruecksprung
@@ -838,33 +978,86 @@ def main():
             bt_arbeiter = threading.Thread(target=bt_lauf, daemon=True)
             bt_arbeiter.start()
 
-        # Suchauftrag der Handy-Fernbedienung: yt-dlp braucht ein paar Sekunden,
-        # deshalb im eigenen Thread - die Schleife muss weiterlaufen.
-        auftrag = state.get("suche") or {}
-        if (auftrag.get("id") and auftrag["id"] != such_id
-                and not (sucher is not None and sucher.is_alive())):
-            such_id = auftrag["id"]
+        # Wunsch-Aufloesung/-Bildrate vom Handy, im Musikbetrieb eigene
+        # Qualitaetswahl (musik_format) und eigener Cache-Schluessel.
+        musik = bool(state.get("musik"))
+        wunsch = state.get("wunsch") or {}
+        w_hoehe = int(wunsch.get("hoehe") or 0)
+        w_fps = int(wunsch.get("fps") or 0)
 
-            def suchlauf(sid=such_id, text=str(auftrag.get("text", ""))[:100], seite=page_id,
-                         gemischt=bool(auftrag.get("vorschlaege")),
-                         aehnlich=str(auftrag.get("aehnlichZu") or "")[:20]):
-                # Automatische Vorschlaege beim Oeffnen der Fernbedienung:
-                # mehrere Begriffe gemischt statt 15 Treffer zu einem Thema.
-                if aehnlich:
-                    treffer = aehnliche(aehnlich, text)
-                elif gemischt:
-                    treffer = vorschlaege()
-                else:
-                    treffer = suchen(text)
-                if not gemischt:
-                    log(f"Suche {text!r}: {len(treffer)} Treffer")
-                try:
-                    cdp_eval(seite, "window.nlSucheTreffer = "
-                             + json.dumps({"id": sid, "liste": treffer}) + "; 1")
-                except (OSError, ValueError, ConnectionError) as e:
-                    log(f"Treffer nicht zustellbar: {e}")
-            sucher = threading.Thread(target=suchlauf, daemon=True)
-            sucher.start()
+        def schluessel_fuer(vid, hoehe, fps, ist_musik):
+            return f"{vid}|{hoehe}|{fps}" + ("|m" if ist_musik else "")
+
+        def in_cache(key, urls):
+            cache[key] = urls
+            for old in list(cache)[:-4]:   # nur die letzten paar behalten
+                cache.pop(old, None)
+
+        def zustellen(seite, ausdruck, was):
+            try:
+                cdp_eval(seite, ausdruck)
+            except (OSError, ValueError, ConnectionError) as e:
+                log(f"{was} nicht zustellbar: {e}")
+
+        # Neben-Arbeiter (siehe oben): immer nur eine Aufgabe zur Zeit.
+        if not (neben is not None and neben.is_alive()):
+            aufgabe = None
+            auftrag = state.get("suche") or {}
+            vor = state.get("vorladen") or {}
+            vor_vid = str(vor.get("videoId") or "")
+            vor_key = schluessel_fuer(vor_vid, int(vor.get("hoehe") or 0),
+                                      int(vor.get("fps") or 0), True) if vor_vid else ""
+            mix_auftrag = state.get("mix") or {}
+            pl_auftrag = state.get("playlist") or {}
+            if auftrag.get("id") and auftrag["id"] != such_id:
+                such_id = auftrag["id"]
+
+                def aufgabe(sid=such_id, text=str(auftrag.get("text", ""))[:100], seite=page_id,
+                            gemischt=bool(auftrag.get("vorschlaege")),
+                            aehnlich=str(auftrag.get("aehnlichZu") or "")[:20],
+                            anzahl=max(SUCH_TREFFER, min(SUCH_TREFFER_MAX, int(auftrag.get("anzahl") or 0)))):
+                    # Automatische Vorschlaege beim Oeffnen der Fernbedienung:
+                    # mehrere Begriffe gemischt statt vieler Treffer zu einem Thema.
+                    if aehnlich:
+                        treffer = aehnliche(aehnlich, text)
+                    elif gemischt:
+                        treffer = vorschlaege()
+                    else:
+                        treffer = suchen(text, anzahl)
+                    if not gemischt:
+                        log(f"Suche {text!r}: {len(treffer)} Treffer")
+                    zustellen(seite, "window.nlSucheTreffer = "
+                              + json.dumps({"id": sid, "liste": treffer}) + "; 1", "Treffer")
+            elif (vor_key and vor_key not in cache
+                    and time.time() - failed.get(vor_vid, 0) >= RETRY_FAILED_AFTER):
+                def aufgabe(key=vor_key, vid=vor_vid, h=int(vor.get("hoehe") or 0),
+                            f=int(vor.get("fps") or 0)):
+                    fmt_m, sort_m = musik_format(h, f)
+                    urls = resolve(vid, fmt_m, sort_m)
+                    if urls:
+                        in_cache(key, urls)
+                        log(f"Naechster Song vorgeladen: {key}")
+                    else:
+                        failed[vid] = time.time()
+            elif mix_auftrag.get("id") and mix_auftrag["id"] != mix_id:
+                mix_id = mix_auftrag["id"]
+
+                def aufgabe(mid=mix_id, vid=str(mix_auftrag.get("videoId") or ""), seite=page_id,
+                            anzahl=max(5, min(MIX_ANZAHL, int(mix_auftrag.get("anzahl") or MIX_ANZAHL)))):
+                    liste = mix(vid, anzahl)
+                    log(f"Mix zu {vid}: {len(liste)} Titel")
+                    zustellen(seite, "window.nlMixErgebnis = "
+                              + json.dumps({"id": mid, "videoId": vid, "liste": liste}) + "; 1", "Mix")
+            elif pl_auftrag.get("id") and pl_auftrag["id"] != playlist_id:
+                playlist_id = pl_auftrag["id"]
+
+                def aufgabe(pid=playlist_id, quelle=str(pl_auftrag.get("quelle") or ""), seite=page_id):
+                    liste = playlist_lesen(quelle)
+                    zustellen(seite, "window.nlPlaylistErgebnis = "
+                              + json.dumps({"id": pid, "quelle": quelle, "liste": liste}) + "; 1", "Playlist")
+            if aufgabe:
+                neben = threading.Thread(target=aufgabe, daemon=True)
+                neben.start()
 
         # Vorladen: URL schon aufloesen, solange der Slot noch nicht dran ist.
         # Klappt es nicht, spielt einfach das YouTube-Embed wie bisher weiter.
@@ -873,21 +1066,19 @@ def main():
         # Widget hinein (so gesehen: ~25 s).
         # Wunsch-Aufloesung/-Bildrate vom Handy: eigener Cache-Schluessel, sonst
         # laege noch die Adresse der vorigen Qualitaet bereit.
-        wunsch = state.get("wunsch") or {}
-        w_hoehe = int(wunsch.get("hoehe") or 0)
-        w_fps = int(wunsch.get("fps") or 0)
-        fmt = format_waehlen(w_hoehe, w_fps)
-        cache_key = f"{schluessel}|{w_hoehe}|{w_fps}"
+        if musik:
+            fmt, sortierung = musik_format(w_hoehe, w_fps)
+        else:
+            fmt, sortierung = format_waehlen(w_hoehe, w_fps), None
+        cache_key = schluessel_fuer(schluessel, w_hoehe, w_fps, musik)
 
         recently_failed = time.time() - failed.get(schluessel, 0) < RETRY_FAILED_AFTER
         busy = resolver is not None and resolver.is_alive()
         if youtube and cache_key not in cache and not recently_failed and not busy:
-            def work(key=cache_key, vid=schluessel, auswahl=fmt):
-                urls = resolve(vid, auswahl)
+            def work(key=cache_key, vid=schluessel, auswahl=fmt, sort=sortierung):
+                urls = resolve(vid, auswahl, sort)
                 if urls:
-                    cache[key] = urls
-                    for old in list(cache)[:-3]:   # nur die letzten paar behalten
-                        cache.pop(old, None)
+                    in_cache(key, urls)
                     log(f"Vorgeladen: {key}")
                 else:
                     failed[vid] = time.time()
@@ -1023,7 +1214,7 @@ def main():
                 # und gibt 0 vor; yt-dlp kennt sie schon. Dann hier zufaellig
                 # einsteigen - nie so spaet, dass der Slot ins Videoende laeuft.
                 # Wuensche vom Handy (state["wunsch"] gesetzt) kommen von vorn.
-                if (not start and not state.get("wunsch") and laenge
+                if (not start and not state.get("wunsch") and not musik and laenge
                         and laenge > NL_SLOT_SEKUNDEN + 30):
                     start = random.randint(0, laenge - NL_SLOT_SEKUNDEN - 30)
                 args.append(f"--start={start}")
@@ -1032,6 +1223,7 @@ def main():
                 args.append(video_url)
                 mpv = subprocess.Popen(args, env=env, preexec_fn=mpv_dies_with_us)
                 log(f"Auftritt: {schluessel} ab {start}s"
+                    + (" (Musik)" if musik else "")
                     + (f" (Wunsch {w_hoehe or 1080}p{w_fps or ''})" if (w_hoehe or w_fps) else ""))
             elif want.startswith("twitch:") and dj_ok:
                 feeder = subprocess.Popen(
