@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-02T22:42:45Z",
+  "checked_at": "2026-10-02T22:57:51Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "SPACE INVADERS",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
