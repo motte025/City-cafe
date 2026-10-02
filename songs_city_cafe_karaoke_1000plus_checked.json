@@ -83460,8 +83460,8 @@
     "auto_discovered": true
   },
   {
-    "artist": "Mr. Schnabel",
-    "title": "Wo sind die Headz?",
+    "artist": "Howard Carpendale",
+    "title": "Nachts, Wenn Alles Schläft...",
     "album": "",
     "category": "Schlager",
     "chart": "",
@@ -83470,26 +83470,6 @@
       "Party",
       "Karaoke",
       "Schlager"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Amy Winehouse",
-    "title": "Rehab",
-    "album": "",
-    "category": "Pop Party",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Party",
-      "Karaoke",
-      "Pop Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
