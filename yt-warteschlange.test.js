@@ -218,6 +218,41 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     eq('Wiener Minute im Winter (UTC+1)', W.wienerMinute(new Date(Date.UTC(2026, 11, 24, 23, 30))), 30);
 })();
 
+// --- titelZerlegen: echte Titel aus Mixen und Suchen (02.10.2026) --------------------
+[
+    ['Helene Fischer - Atemlos durch die Nacht', 'Helene Fischer (Official)', 'Helene Fischer', 'Atemlos durch die Nacht'],
+    ['Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)', 'Rick Astley', 'Rick Astley', 'Never Gonna Give You Up'],
+    ['LP - Tightrope (Official Music Video)', 'LP', 'LP', 'Tightrope'],
+    ['MIKA - Happy Ending (Long Version) (Official Music Video)', 'MIKA', 'MIKA', 'Happy Ending (Long Version)'],
+    ['The Weeknd & Ariana Grande – Save Your Tears (Live on The 2021 iHeart Radio Music Awards)', 'The Weeknd',
+        'The Weeknd & Ariana Grande', 'Save Your Tears (Live on The 2021 iHeart Radio Music Awards)'],
+    ['Lukas Graham - 7 Years [Official Music Video]', 'Lukas Graham', 'Lukas Graham', '7 Years'],
+    ['Alan Walker - Faded (Live Performance)', 'Alan Walker', 'Alan Walker', 'Faded (Live Performance)'],
+    ['Roland Kaiser, Maite Kelly - Warum hast du nicht nein gesagt (Club Mix / Visualizer)', 'Mein Herz schlägt Schlager and Roland Kaiser',
+        'Roland Kaiser, Maite Kelly', 'Warum hast du nicht nein gesagt (Club Mix)'],
+    ['DJ Ötzi - Der hellste Stern (Böhmischer Traum) (Offizielles Musikvideo)', 'ICH FIND SCHLAGER TOLL', 'DJ Ötzi', 'Der hellste Stern (Böhmischer Traum)'],
+    ['Helene Fischer - Achterbahn (Live - Die Stadion-Tour)', 'Helene Fischer (Official)', 'Helene Fischer', 'Achterbahn (Live - Die Stadion-Tour)'],
+    ['Maite Kelly - Sieben Leben für dich [Offizielles Video]', 'ICH FIND SCHLAGER TOLL', 'Maite Kelly', 'Sieben Leben für dich'],
+    ['Stereoact feat. Kerstin Ott - Die Immer Lacht (Official Video HD)', 'Kontor.TV', 'Stereoact feat. Kerstin Ott', 'Die Immer Lacht'],
+    ["GIGI D'AGOSTINO - L'AMOUR TOUJOURS ( OFFICIAL VIDEO )", "GIGI D'AGOSTINO", "GIGI D'AGOSTINO", "L'AMOUR TOUJOURS"],
+    ['NENA | 99 Luftballons [1983] [Offizielles HD Musikvideo]', 'NENA', 'NENA', '99 Luftballons'],
+    ["MATTHIAS REIM - Verdammt Ich Lieb Dich (OFFICIAL VIDEO) 'REIM' Album (HITBOX)", 'HITBOX', 'MATTHIAS REIM', 'Verdammt Ich Lieb Dich'],
+    ['Schwarze Rose', 'Ibo - Topic', 'Ibo', 'Schwarze Rose'],
+    ['Ich sterb für dich', 'VanessaMaiVEVO', 'Vanessa Mai', 'Ich sterb für dich'],
+    ['Oceans (Where Feet May Fail) - Hillsong UNITED - Live in Israel', 'Hillsong UNITED', 'Hillsong UNITED', 'Oceans (Where Feet May Fail) - Live in Israel'],
+    ['DJ Ötzi, Nik P. - Ein Stern (der deinen Namen trägt)', 'DJ Ötzi', 'DJ Ötzi, Nik P.', 'Ein Stern (der deinen Namen trägt)'],
+    ['Ben Zucker - Was für eine geile Zeit (Live in Berlin / 2019)', 'ICH FIND SCHLAGER TOLL', 'Ben Zucker', 'Was für eine geile Zeit (Live in Berlin / 2019)'],
+    ['Queen - Bohemian Rhapsody (Official Video Remastered)', 'Queen Official', 'Queen', 'Bohemian Rhapsody'],
+    ['Pharrell Williams - Happy (Lyrics)', 'Lyrics Channel', 'Pharrell Williams', 'Happy'],
+    ['Andreas Gabalier - Hulapalu - Official Video', 'Andreas Gabalier', 'Andreas Gabalier', 'Hulapalu']
+].forEach(function (f) {
+    var z = W.titelZerlegen(f[0], f[1]);
+    eq('titelZerlegen: ' + f[0], [z.kuenstler, z.songtitel], [f[2], f[3]]);
+});
+eq('Jahr aus [1983]', W.titelZerlegen('NENA | 99 Luftballons [1983] [Offizielles HD Musikvideo]', 'NENA').jahr, 1983);
+eq('ohne Titel: Kanal', W.titelZerlegen('', 'Roland Kaiser - Topic').kuenstler, 'Roland Kaiser');
+eq('Kanalname ohne VEVO', W.kanalName('RolandKaiserVEVO'), 'Roland Kaiser');
+
 // --- Dauer lesen ---------------------------------------------------------------------
 eq('3:40 -> 220', W.sekunden({ dauer: '3:40' }), 220);
 eq('1:02:03 -> 3723', W.sekunden({ dauer: '1:02:03' }), 3723);

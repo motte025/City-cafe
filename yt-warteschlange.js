@@ -322,7 +322,112 @@
         return h * 60 + m;
     }
 
+    // --- Titel aufbereiten (Spec 6.4) ----------------------------------------
+    // "Helene Fischer - Atemlos durch die Nacht (Official Video) [4K]"
+    //   -> { kuenstler: 'Helene Fischer', songtitel: 'Atemlos durch die Nacht' }
+
+    // Woerter, die nur Verpackung sind. Eine Klammer, die nur daraus (und aus
+    // Jahreszahlen) besteht, faellt weg; "Live" gehoert NICHT dazu.
+    var ZUSATZ = ['official', 'officiel', 'oficial', 'offizielles', 'offizieller', 'offizielle',
+        'music', 'musik', 'video', 'musikvideo', 'videoclip', 'clip', 'audio', 'lyrics', 'lyric',
+        'hd', 'hq', 'uhd', '4k', '8k', '1080p', '720p', 'remaster', 'remastered', 'visualizer',
+        'visualiser', 'explicit', 'mv', 'the', 'full', 'new', 'with', 'version'];
+    var ZUSATZ_SET = {};
+    ZUSATZ.forEach(function (w) { ZUSATZ_SET[w] = true; });
+
+    function nurZusatz(text) {
+        var woerter = String(text).toLowerCase().split(/[\s\/|,&+\-–]+/).filter(Boolean);
+        if (!woerter.length) return true;
+        if (woerter.indexOf('live') >= 0) return false;
+        var echteZusatzwoerter = woerter.filter(function (w) { return ZUSATZ_SET[w]; }).length;
+        return echteZusatzwoerter > 0 && woerter.every(function (w) { return ZUSATZ_SET[w] || /^(19|20)\d\d$/.test(w); })
+            && !woerter.every(function (w) { return w === 'the' || w === 'new' || w === 'with' || w === 'full' || w === 'version'; });
+    }
+
+    // Klammerinhalt aufraeumen: reine Verpackung weg, gemischte Teile kuerzen
+    // ("Club Mix / Visualizer" -> "Club Mix").
+    function klammerAufraeumen(inhalt, kanalNorm) {
+        var t = String(inhalt).trim();
+        if (/^(19|20)\d\d$/.test(t)) return { weg: true, jahr: Number(t) };
+        if (nurZusatz(t)) return { weg: true };
+        if (kanalNorm && normal(t) === kanalNorm) return { weg: true };
+        var teile = t.split(/\s*[\/|]\s*/);
+        if (teile.length > 1) {
+            var rest = teile.filter(function (x) { return !nurZusatz(x); });
+            if (!rest.length) return { weg: true };
+            return { text: rest.join(' / ') };
+        }
+        return { text: t };
+    }
+
+    function normal(s) {
+        return String(s || '').toLowerCase().replace(/[^a-z0-9äöüß]+/g, '');
+    }
+
+    function kanalName(kanal) {
+        var k = String(kanal || '').trim();
+        k = k.replace(/\s+and\s+.*$/i, '');               // "ICH FIND SCHLAGER TOLL and Maite Kelly"
+        k = k.replace(/\s*-\s*Topic$/i, '');
+        k = k.replace(/\s*\((Official|Offiziell)\)$/i, '');
+        if (/VEVO$/.test(k)) {
+            k = k.replace(/VEVO$/, '');
+            if (k.indexOf(' ') < 0) k = k.replace(/([a-zäöü])([A-ZÄÖÜ])/g, '$1 $2');   // "RolandKaiser"
+        }
+        return k.trim();
+    }
+
+    function klammernAufraeumen(text, kanalNorm, info) {
+        var ergebnis = String(text).replace(/\s*[(\[]\s*([^()\[\]]*?)\s*[)\]]/g, function (ganz, inhalt) {
+            var k = klammerAufraeumen(inhalt, kanalNorm);
+            if (k.jahr && !info.jahr) info.jahr = k.jahr;
+            if (k.weg) return '';
+            var auf = ganz.trim().charAt(0), zu = auf === '[' ? ']' : ')';
+            return ' ' + auf + k.text + zu;
+        });
+        // "... 'REIM' Album" (Albumhinweis am Ende)
+        ergebnis = ergebnis.replace(/\s+['"‘’„“][^'"‘’„“]+['"‘’„“]\s+Album$/i, '');
+        return ergebnis.replace(/\s{2,}/g, ' ').trim();
+    }
+
+    /**
+     * YouTube-Titel -> { kuenstler, songtitel, jahr }.
+     * Trennt am ersten " - " / " – " (ersatzweise " | "); ohne Trenner ist der
+     * Kanal (ohne " - Topic" / "VEVO") der Kuenstler. Steht der Kanal hinter dem
+     * Trenner ("Oceans - Hillsong UNITED - Live"), wird getauscht.
+     */
+    function titelZerlegen(titel, kanal) {
+        var info = { jahr: null };
+        var kanalKlar = kanalName(kanal);
+        var kanalNorm = normal(kanalKlar);
+        var roh = String(titel || '').replace(/\s+/g, ' ').trim();
+        var teile = roh.split(/\s+[-–—]\s+/);
+        if (teile.length < 2) {
+            var rohr = roh.split(/\s+\|\s+/);
+            if (rohr.length >= 2) teile = rohr;
+        }
+        var kuenstler, song;
+        if (teile.length >= 2) {
+            kuenstler = teile[0];
+            song = teile.slice(1).join(' - ');
+            var zweiter = normal(klammernAufraeumen(teile[1], '', {}));
+            if (kanalNorm && zweiter === kanalNorm && normal(teile[0]).indexOf(kanalNorm) < 0) {
+                kuenstler = teile[1];
+                song = [teile[0]].concat(teile.slice(2)).join(' - ');
+            }
+        } else {
+            kuenstler = kanalKlar;
+            song = roh;
+        }
+        kuenstler = klammernAufraeumen(kuenstler, '', info);
+        song = klammernAufraeumen(song, kanalNorm, info);
+        // Song-Ende wie " - Official Video" (Trenner ohne Klammer)
+        song = song.split(' - ').filter(function (t, i) { return i === 0 || !nurZusatz(t); }).join(' - ');
+        return { kuenstler: kuenstler || kanalKlar, songtitel: song || roh, jahr: info.jahr };
+    }
+
     return {
+        titelZerlegen: titelZerlegen,
+        kanalName: kanalName,
         MAX_OFFENE_WUENSCHE: MAX_OFFENE_WUENSCHE,
         MAX_WUNSCH_SEKUNDEN: MAX_WUNSCH_SEKUNDEN,
         RADIO_MAX_MIN: RADIO_MAX_MIN,
