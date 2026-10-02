@@ -82885,16 +82885,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Maria McKee",
-    "title": "Show Me Heaven",
+    "artist": "Die Toten Hosen",
+    "title": "Düsseldorf",
     "album": "",
-    "category": "Deutsch-Pop",
+    "category": "Deutsch Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Deutsch-Pop"
+      "Deutsch Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
@@ -82905,16 +82905,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "01099",
-    "title": "Durstlöscher",
+    "artist": "Knochenfabrik",
+    "title": "Grüne Haare",
     "album": "",
-    "category": "Deutsch Party",
+    "category": "Deutsch Karaoke",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Deutsch Karaoke",
+      "Party",
+      "Karaoke"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Brandy",
+    "title": "The Boy Is Mine",
+    "album": "",
+    "category": "90s Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Deutsch Party"
+      "90s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
