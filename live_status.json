@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T18:02:47Z",
+  "checked_at": "2026-10-02T18:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,13 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Live with Don Toliver. Sponsored by !Wendy's",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wochenende? Das wird wild! <3 !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
     },
     {
       "platform": "twitch",
@@ -24,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 FRIDAY NIGHT | !bier | !zug | !prep | !holy | #werbung",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Raving into my 24th Birthday  🔥🔥❤️ @ditz1604 @bayexx_official @Osterkev @charlou2404 @yvonne_1604  -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wochenende? Das wird wild! <3 !release @just_jenny_official @two_crazy_girls",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 FRIDAY NIGHT | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -59,13 +66,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Raving into my 24th Birthday  🔥🔥❤️ @ditz1604 @bayexx_official @Osterkev @charlou2404 @yvonne_1604  -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Back to the 90s - Charts, Euro Dance, Rock, RnB, HipHop & more | !tip ✨",
@@ -77,6 +77,13 @@
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #696 (OCT ID SHOW) with Mark Sherry",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "LASERKRAFT 3D | SUNSHINE LIVE x BOOTSHAUS",
+      "game": "DJs"
     }
   ]
 }
