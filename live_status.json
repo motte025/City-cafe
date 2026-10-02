@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T19:02:45Z",
+  "checked_at": "2026-10-02T19:17:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,23 @@
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wochenende? Das wird wild! <3 !release @just_jenny_official @two_crazy_girls",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "SPACE INVADERS",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wochenende? Das wird wild! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -70,13 +77,6 @@
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #696 (OCT ID SHOW) with Mark Sherry",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "SPACE INVADERS",
-      "game": "DJs"
     }
   ]
 }
