@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T18:52:47Z",
+  "checked_at": "2026-10-02T19:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -59,13 +59,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "LASERKRAFT 3D | SUNSHINE LIVE x BOOTSHAUS",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Back to the 90s - Charts, Euro Dance, Rock, RnB, HipHop & more | !tip ✨",
@@ -77,6 +70,13 @@
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #696 (OCT ID SHOW) with Mark Sherry",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "SPACE INVADERS",
+      "game": "DJs"
     }
   ]
 }
