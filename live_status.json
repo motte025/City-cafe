@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T17:52:45Z",
+  "checked_at": "2026-10-02T18:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,13 +10,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "ICH BIN DAS CHAOS | !holy !logitech #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
@@ -24,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wochenende? Das wird wild! <3 !release @just_jenny_official @two_crazy_girls",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "ICH BIN DAS CHAOS | !holy !logitech #werbung",
       "game": "DJs"
     },
     {
@@ -34,6 +27,13 @@
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 FRIDAY NIGHT | !bier | !zug | !prep | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wochenende? Das wird wild! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -59,6 +59,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Raving into my 24th Birthday  🔥🔥❤️ @ditz1604 @bayexx_official @Osterkev @charlou2404 @yvonne_1604  -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Back to the 90s - Charts, Euro Dance, Rock, RnB, HipHop & more | !tip ✨",
@@ -66,17 +73,10 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "MIX MISSION TV | KLING & KLANG",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Raving into my 24th Birthday  🔥🔥❤️ @ditz1604 @bayexx_official @Osterkev @charlou2404 @yvonne_1604  -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #696 (OCT ID SHOW) with Mark Sherry",
+      "game": "Music"
     }
   ]
 }
