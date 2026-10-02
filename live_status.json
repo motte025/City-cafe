@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-02T20:52:46Z",
+  "checked_at": "2026-10-02T21:07:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music Live with Don Toliver. Sponsored by !Wendy's",
-      "game": "Music"
-    },
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
@@ -21,6 +14,13 @@
       "name": "DJMissShelton",
       "title": "SPACE INVADERS",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live with Don Toliver. Sponsored by !Wendy's",
+      "game": "Music"
     },
     {
       "platform": "twitch",
@@ -48,13 +48,6 @@
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     }
   ]
