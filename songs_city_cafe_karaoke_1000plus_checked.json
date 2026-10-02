@@ -82925,16 +82925,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Francine Jordi",
-    "title": "Gegen dich (alle Wunder dieser Welt)",
+    "artist": "Jonas Brothers",
+    "title": "Sucker",
     "album": "",
-    "category": "Schlager",
+    "category": "Rock Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Rock",
+      "Pop",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Sugababes",
+    "title": "Denial",
+    "album": "",
+    "category": "Deutsch-Pop",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Schlager"
+      "Deutsch-Pop"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
