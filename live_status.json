@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T17:02:45Z",
+  "checked_at": "2026-10-02T17:17:49Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,6 +45,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 FRIDAY NIGHT | !bier | !zug | !prep | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Back to the 90s - Charts, Euro Dance, Rock, RnB, HipHop & more | !tip ✨",
@@ -55,13 +62,6 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "MIX MISSION TV | KLING & KLANG",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 FRIDAY NIGHT | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     }
   ]
