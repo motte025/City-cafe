@@ -83203,16 +83203,35 @@
     "auto_discovered": true
   },
   {
-    "artist": "The Underdog Project",
-    "title": "Summer Jam - Radio Edit",
+    "artist": "The Moon and the Nightspirit",
+    "title": "Beloved Enchantress",
     "album": "",
-    "category": "Party-Schlager",
+    "category": "Party-Hit",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Folk-Pop",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Udo Lindenberg",
+    "title": "Rudi Ratlos",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Schlager",
       "Party",
-      "Karaoke",
-      "Party-Schlager"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
