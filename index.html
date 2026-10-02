@@ -8604,6 +8604,35 @@
             if (ytmWarAktiv) ytmAnzeigen();
         }
 
+        // --- Tasten der Bluetooth-Fernbedienung am TV (Abschnitt 8) ---------------
+        // Die TV-Fernbedienung gilt als Chef. OK (Enter/Space) behaelt seine
+        // Bedeutung ("Stream starten"). Die letzten Tasten stehen in
+        // window.ytmTastenLog - so laesst sich pruefen, was die Fernbedienung sendet.
+        window.ytmTastenLog = [];
+        window.addEventListener('keydown', ev => {
+            window.ytmTastenLog.push({ key: ev.key, code: ev.code, keyCode: ev.keyCode, t: new Date().toTimeString().slice(0, 8) });
+            if (window.ytmTastenLog.length > 20) window.ytmTastenLog.shift();
+            if (!ytmBereit || ev.ctrlKey || ev.altKey || ev.metaKey) return;
+            const k = ev.key;
+            const musikAn = ytmAktiv();
+            let erledigt = true;
+            if (/^[1-9]$/.test(k)) {
+                const pl = ytmPlaylists.find(p => Number(p.nr) === Number(k));
+                if (pl) ytmPlaylistNutzen(pl, 'start'); else erledigt = false;
+            } else if (k === '0') {
+                ytmStimmungStarten();
+            } else if (k === 'MediaPlayPause' && musikAn) {
+                ytmBefehl({ was: 'pauseUm', id: 'taste-' + Date.now() });
+            } else if ((k === 'MediaTrackNext' || k === 'ArrowRight') && musikAn) {
+                ytmWeiter();
+            } else if ((k === 'ArrowUp' || k === 'ArrowDown') && musikAn) {
+                ytmBefehl({ was: k === 'ArrowUp' ? 'vollbild' : 'normal', id: 'taste-' + Date.now() });
+            } else {
+                erledigt = false;
+            }
+            if (erledigt) ev.preventDefault();
+        });
+
         // --- Start: Firebase verbinden, Stand wiederherstellen ------------------------
         function ytmStarten() {
             try {
