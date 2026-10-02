@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-02T04:02:45Z",
+  "checked_at": "2026-10-02T04:17:47Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live with Don Toliver. Sponsored by !Wendy's",
+      "game": "Music"
+    },
     {
       "platform": "twitch",
       "channel": "chazz",
@@ -14,13 +21,6 @@
       "name": "BeatportOfficial",
       "title": "Elderbook + Eli & Fur | Beatport Live | Los Angeles",
       "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music Live with Don Toliver. Sponsored by !Wendy's",
-      "game": "Music"
     }
   ]
 }
