@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T10:27:45Z",
+  "checked_at": "2026-10-02T10:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "✨❤️‍🔥🦄 3 YEAR TWITCH PARTNER 17K CELEBRATION STREAM ❤️‍🔥🦄✨ REQUESTS OPEN !request !tip !merch !patreon !youtube",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥LET´S GO TO HEAVEN🔥PP 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
