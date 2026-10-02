@@ -137,6 +137,8 @@
     .chips button b { color: #00e5ff; margin-right: 8px; }
     .mehr-laden { width: 100%; margin-top: 14px; background: #1d2647; color: #cdd7f5; }
     .suche { display: flex; gap: 10px; }
+    details.klein { margin-top: 10px; padding: 8px 12px; background: transparent; border-color: #222b50; }
+    details.klein summary { font-size: 21px; font-weight: 600; color: #8ea0c8; padding: 2px 0; }
     .suche button { flex-shrink: 0; }
 
     /* --- Meldungen ------------------------------------------------------ */
@@ -184,7 +186,6 @@
 
 <div class="kopf"><h1>🎵 Musik</h1><span class="chef-abzeichen">👑 Chef</span></div>
 <div class="raum" id="raum">City Cafe</div>
-<div class="zeiten" id="boxen"></div>
 
 <!-- ============================ JETZT ============================ -->
 <section class="reiter-inhalt aktiv" id="reiter-jetzt">
@@ -628,7 +629,7 @@
             + (istChef ? '<button type="button" data-a="naechstes">⏭ Als Nächstes</button><button type="button" class="still" data-a="ende">➕ Ans Ende</button>'
                        : '<button type="button" data-a="wunsch">🙋 Wünschen</button>')
             + '</div>'
-            + (istChef ? '<details style="margin-top:10px"><summary style="font-size:inherit">📺 Zur Dauerliste (Rotation)</summary>'
+            + (istChef ? '<details class="klein"><summary>📺 Zur Dauerliste (Rotation)</summary>'
                 + '<div class="zeiten" data-art></div><input type="text" data-ort placeholder="Ort, z. B. Ibiza" style="margin-top:10px">'
                 + '<input type="text" data-land placeholder="Land, z. B. Spanien" style="margin-top:10px">'
                 + '<button type="button" class="still breit" data-a="liste">➕ Hinzufügen</button></details>' : '');
@@ -905,7 +906,7 @@
             var eigene = boxen.filter(function (b) { return b.raum === RAUM; })[0];
             if (eigene) boxName = eigene.name;
             raumAnzeigen(passend && passend.length ? 'im selben Netz' : '');
-            ['boxen', 'boxen2'].forEach(function (id) {
+            ['boxen2'].forEach(function (id) {
                 var box = el(id);
                 box.innerHTML = '';
                 if (boxen.length < 2) return;
