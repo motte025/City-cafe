@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T19:42:45Z",
+  "checked_at": "2026-10-02T19:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,6 +45,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 ROCKWAY  ☆ !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
@@ -70,13 +77,6 @@
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #696 (OCT ID SHOW) with Mark Sherry",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 ROCKWAY  ☆ !naturtreu 🔴🔴",
-      "game": "DJs"
     }
   ]
 }
