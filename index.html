@@ -7955,7 +7955,7 @@
                 musik: true
             };
             window.nlWunschFormat = { hoehe: ytmQualitaet.hoehe, fps: ytmQualitaet.fps };
-            window.nlVorladen = null;
+            window.nlMusikVorladen = null;
             window.nlMusik = true;
             nlFernStatusMelden();
             cancelSequenceTimers();
@@ -7989,7 +7989,7 @@
             ytm = YTW.stopp(ytm);
             ytmPausiert = false;
             ytmSpielPause = false;
-            window.nlVorladen = null;
+            window.nlMusikVorladen = null;
             window.nlMusik = false;
             ytmMelden();
             ytmAnzeigen();
@@ -8191,9 +8191,9 @@
                 // 60 s vor Schluss den naechsten Song vorladen (5.2).
                 const st = ytmStand();
                 if (st.dauer && st.dauer - st.pos < YT_VORLADEN_SEKUNDEN && naechste[0] && naechste[0].videoId) {
-                    const v = window.nlVorladen;
+                    const v = window.nlMusikVorladen;
                     if (!v || v.videoId !== naechste[0].videoId) {
-                        window.nlVorladen = { videoId: naechste[0].videoId, hoehe: ytmQualitaet.hoehe, fps: ytmQualitaet.fps };
+                        window.nlMusikVorladen = { videoId: naechste[0].videoId, hoehe: ytmQualitaet.hoehe, fps: ytmQualitaet.fps };
                     }
                 }
                 // Dart-Abend und Anheizer haben das Bild - dann endet die Musik

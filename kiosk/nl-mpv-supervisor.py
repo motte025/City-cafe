@@ -223,7 +223,7 @@ STATE_EXPR = """JSON.stringify({
   // Qualitaetswahl, Start immer von vorn.
   musik: !!window.nlMusik,
   // Naechster Song zum Vorladen: { videoId, hoehe, fps } (5.2)
-  vorladen: window.nlVorladen || null,
+  vorladen: window.nlMusikVorladen || null,
   // Radio-Mix zum Song: { id, videoId } -> window.nlMixErgebnis
   mix: window.nlMixAuftrag || null,
   // Playlist lesen: { id, quelle } -> window.nlPlaylistErgebnis
@@ -617,6 +617,13 @@ def vorschlaege():
     return gemischt[:VORSCHLAG_ANZAHL]
 
 
+# Mix mit oder ohne die Konto-Cookies lesen? Mit Cookies passt YouTube den Mix an
+# den Verlauf des Premium-Kontos an (am 02.10.2026 gesehen: Lobpreis-Lieder in
+# jedem Mix, auch zu Justin Bieber); ohne Cookies passt er zum Song. Zum
+# Abspielen werden die Cookies immer genutzt. CITYCAFE_MIX_COOKIES=0 = ohne.
+MIX_MIT_COOKIES = os.environ.get("CITYCAFE_MIX_COOKIES", "1") != "0"
+
+
 def mix(video_id, anzahl=MIX_ANZAHL):
     """YouTube-Radio-Mix zum Video (list=RD<id>) -> Liste von Treffern, ohne das
     Video selbst. Ein einziger yt-dlp-Lauf, 1-2 s. Am 02.10.2026 auf dem W1 mit
@@ -628,7 +635,8 @@ def mix(video_id, anzahl=MIX_ANZAHL):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                [programm, "--js-runtimes", "node",
+                 *(["--cookies-from-browser", COOKIES_FROM] if MIX_MIT_COOKIES else []),
                  "--flat-playlist", "--playlist-end", str(anzahl + 1), "--print",
                  "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s",
                  f"https://www.youtube.com/watch?v={video_id}&list=RD{video_id}"],
