@@ -516,7 +516,7 @@
     function ziehbar(griff, zeile, eintrag) {
         griff.addEventListener('pointerdown', function (ev) {
             ev.preventDefault();
-            griff.setPointerCapture(ev.pointerId);
+            try { griff.setPointerCapture(ev.pointerId); } catch (e) {}
             var box = el('schlange');
             var start = ev.clientY, hoehe = zeile.getBoundingClientRect().height + 10;
             var platz = document.createElement('div');
@@ -533,9 +533,9 @@
                 if (ziel) box.insertBefore(platz, ziel); else box.appendChild(platz);
             }
             function loslassen() {
-                griff.removeEventListener('pointermove', bewegen);
-                griff.removeEventListener('pointerup', loslassen);
-                griff.removeEventListener('pointercancel', loslassen);
+                window.removeEventListener('pointermove', bewegen);
+                window.removeEventListener('pointerup', loslassen);
+                window.removeEventListener('pointercancel', loslassen);
                 var reihe = [].slice.call(box.children).filter(function (c) { return c.classList.contains('eintrag') && !c.classList.contains('zieht'); });
                 var index = reihe.indexOf(platz);
                 zeile.classList.remove('zieht');
@@ -551,9 +551,10 @@
                     schlangeZeigen();
                 }
             }
-            griff.addEventListener('pointermove', bewegen);
-            griff.addEventListener('pointerup', loslassen);
-            griff.addEventListener('pointercancel', loslassen);
+            // Am ganzen Fenster verfolgen - der Finger verlaesst den Griff beim Ziehen.
+            window.addEventListener('pointermove', bewegen);
+            window.addEventListener('pointerup', loslassen);
+            window.addEventListener('pointercancel', loslassen);
         });
     }
 
