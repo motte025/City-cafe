@@ -82885,8 +82885,28 @@
     "auto_discovered": true
   },
   {
-    "artist": "Die Toten Hosen",
-    "title": "Düsseldorf",
+    "artist": "Maria McKee",
+    "title": "Show Me Heaven",
+    "album": "",
+    "category": "Deutsch-Pop",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Deutsch-Pop"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "01099",
+    "title": "Durstlöscher",
     "album": "",
     "category": "Deutsch Party",
     "chart": "",
@@ -82895,46 +82915,6 @@
       "Party",
       "Karaoke",
       "Deutsch Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Knochenfabrik",
-    "title": "Grüne Haare",
-    "album": "",
-    "category": "Deutsch Karaoke",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Deutsch Karaoke",
-      "Party",
-      "Karaoke"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Elton John",
-    "title": "Tiny Dancer",
-    "album": "",
-    "category": "Karaoke",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "Karaoke",
-      "Party",
-      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
