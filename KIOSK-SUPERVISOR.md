@@ -100,25 +100,25 @@ waren für die 2 GB des ODROID nötig; der W1 nimmt 512 MiB.
 
 ## YouTube-Musik (YOUTUBE-MUSIK-SETUP.md)
 
-Meldet das Dashboard , wählt der Aufpasser die Qualität mit
-: 1080p60, sonst die nächstbeste Stufe (Auflösung vor
+Meldet das Dashboard `window.nlMusik`, wählt der Aufpasser die Qualität mit
+`musik_format()`: 1080p60, sonst die nächstbeste Stufe (Auflösung vor
 Bildrate), kein hartes H.264 – die gewählte Qualität steht als
- im Protokoll. Weitere Schnittstellen zum Dashboard:
+`Qualitaet <id>: …` im Protokoll. Weitere Schnittstellen zum Dashboard:
 
 | window.… | Richtung | Zweck |
 |---|---|---|
-|  {videoId, hoehe, fps} | Dashboard → Aufpasser | nächsten Song 60 s vorher auflösen (Lücke < 3 s) |
-|  →  | hin und zurück | YouTube-Mix (list=RD…), Rückfall Titelsuche |
-|  →  | hin und zurück | Playlist lesen (24 h Cache in ~/.cache/citycafe) |
-|  →  | hin und zurück | Titel ohne videoId finden (Platzhalter, Last.fm) |
-|  | Dashboard → Aufpasser | Pause/Weiter (der Wächter hält Pause nicht für Hänger) |
-|  | Dashboard → Aufpasser |  oder : mpv wird nur umgelegt, kein Neustart |
-|  | Dashboard → Aufpasser | QR-Kärtchen als PNG; per mpv  in die Ecke (braucht ) |
-|  {videoId, pos, dauer, pause} | Aufpasser → Dashboard | Zeitanzeige, Fortschritt, Vorladen |
+| `nlMusikVorladen` {videoId, hoehe, fps} | Dashboard → Aufpasser | nächsten Song 60 s vorher auflösen (Lücke < 3 s) |
+| `nlMixAuftrag` → `nlMixErgebnis` | hin und zurück | YouTube-Mix (list=RD…), Rückfall Titelsuche |
+| `nlPlaylistAuftrag` → `nlPlaylistErgebnis` | hin und zurück | Playlist lesen (24 h Cache in ~/.cache/citycafe) |
+| `nlFindeAuftrag` → `nlFindeErgebnis` | hin und zurück | Titel ohne videoId finden (Platzhalter, Last.fm) |
+| `nlPauseWunsch` | Dashboard → Aufpasser | Pause/Weiter (der Wächter hält Pause nicht für Hänger) |
+| `nlMpvFlaeche` | Dashboard → Aufpasser | `nl-player-frame` oder `yt-vollbild-video`: mpv wird nur umgelegt, kein Neustart |
+| `nlQrKarte` | Dashboard → Aufpasser | QR-Kärtchen als PNG; per mpv `overlay-add` in die Ecke (braucht `python-pillow`) |
+| `nlMpvStand` {videoId, pos, dauer, pause} | Aufpasser → Dashboard | Zeitanzeige, Fortschritt, Vorladen |
 
 Suche, Vorladen, Mix, Playlist und Finden teilen sich **einen** Neben-Thread:
 höchstens ein yt-dlp-Prozess zusätzlich (OOM vom 21.09.2026).
- setzt erst die Größe, dann die Lage – sway skaliert schwebende
+`place_mpv()` setzt erst die Größe, dann die Lage – sway skaliert schwebende
 Fenster um die Mitte.
 
 ## Arbeitsspeicher (ODROID, Vorgeschichte)
