@@ -7161,6 +7161,13 @@
         }
 
         function nlQuelleFehler() {
+            // Musikbetrieb mit mpv: viele offizielle Musikvideos verbieten das
+            // Einbetten (Fehler 101/150) - mpv spielt sie trotzdem. Dann nicht
+            // weiterschalten; spielt auch mpv nicht, ueberspringt ytmTakt() den Song.
+            if (typeof ytmAktiv === 'function' && ytmAktiv() && nlSupervisorDa()) {
+                ytmEmbedFehlerTs = Date.now();
+                return;
+            }
             const schluessel = nlGeladen && nlGeladen.schluessel;
             if (schluessel) nlDefekt[schluessel] = true;
             nlGeladen = null;
@@ -7643,6 +7650,7 @@
         let ytmGenreCache = {};           // "kuenstler|titel" -> { genre, jahr }
         let ytmBereit = false;            // Firebase da, Stand gelesen
         let ytmLetzterStart = 0;          // wann ytmSpielen zuletzt lief (Wiederholung)
+        var ytmEmbedFehlerTs = 0;         // Embed meldete Fehler (var: nlQuelleFehler steht weiter oben)
 
         function ytmAktiv() { return !!ytm && ytm.modus !== 'aus' && !!ytm.jetzt; }
         window.ytmAktiv = ytmAktiv;
@@ -8002,6 +8010,10 @@
                 try { dartAbend = dartAbendAktiv() || dartAnheizerAktiv(); } catch (e) {}
                 if (dartAbend || (!nlAktiv && mediaStateIndex !== NL_SLOT_INDEX && !nlFern)) {
                     ytmBeenden();
+                } else if (nlAktiv && ytmEmbedFehlerTs > ytmLetzterStart && Date.now() - ytmLetzterStart > 30000
+                           && !(window.nlMpvStand && ytm.jetzt && window.nlMpvStand.videoId === ytm.jetzt.videoId)) {
+                    // Embed darf nicht, und mpv spielt nach 30 s auch nicht: Song ueberspringen.
+                    ytmWeiter();
                 } else if (!nlAktiv && Date.now() - ytmLetzterStart > 8000) {
                     // Slot nicht zu sehen, obwohl Musik laufen soll (z. B. YouTube-
                     // Player beim Seitenstart noch nicht bereit): nochmal.
