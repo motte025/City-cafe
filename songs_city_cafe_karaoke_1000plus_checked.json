@@ -82506,16 +82506,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Joint Venture",
-    "title": "Henri Zimmermann",
+    "artist": "DJ Jazzy Jeff & The Fresh Prince",
+    "title": "Summertime",
     "album": "",
-    "category": "Schlager",
+    "category": "Hip Hop / Party",
     "chart": "",
     "release_date": "",
     "tags": [
+      "Hip Hop",
       "Party",
-      "Karaoke",
-      "Schlager"
+      "90s"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
@@ -82526,35 +82526,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Tory Lanez",
-    "title": "Lavender Sunflower",
+    "artist": "makko",
+    "title": "lichter aus",
     "album": "",
-    "category": "2000s Party",
+    "category": "Schlager & Karaoke",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "2000s Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Daze",
-    "title": "Sea Of Love",
-    "album": "",
-    "category": "90s Party",
-    "chart": "",
-    "release_date": "",
-    "tags": [
-      "90s",
-      "Eurodance"
+      "Schlager & Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
