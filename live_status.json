@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T17:32:45Z",
+  "checked_at": "2026-10-02T17:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 FRIDAY NIGHT | !bier | !zug | !prep | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -62,13 +69,6 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "MIX MISSION TV | KLING & KLANG",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
