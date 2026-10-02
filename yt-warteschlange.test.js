@@ -159,6 +159,12 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     check('hoechstens 2 vom selben Kuenstler in Folge', maxFolge <= 2, JSON.stringify(f));
     var folge = [{ videoId: 'g1_________', kuenstler: 'Helene', ts: T0 - 1000 }, { videoId: 'g2_________', kuenstler: 'Helene', ts: T0 - 500 }];
     eq('Folge zaehlt ab den zuletzt gespielten', W.radioFiltern(gleich, folge, null, T0)[0].kuenstler, 'Andrea');
+    // Anderer Upload desselben Songs (am W1 gesehen: "Me at the zoo" im eigenen Mix)
+    var uploads = [eintrag(400, 'radio', null, { songtitel: 'Me at the zoo' }), eintrag(401, 'radio', null, { songtitel: 'Anderes Lied' })];
+    eq('gleicher Songtitel wie der laufende faellt raus',
+       W.radioFiltern(uploads, [], vid(399), T0, 'Me at the zoo (Remastered)').map(function (t) { return t.videoId; }), [vid(401)]);
+    eq('gleicher Songtitel wie kuerzlich gespielt faellt raus',
+       W.radioFiltern(uploads, [{ videoId: vid(399), songtitel: 'ME AT THE ZOO', ts: T0 - 60000 }], null, T0).length, 1);
 })();
 
 (function () {
@@ -174,6 +180,8 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     eq('weniger als 5 Radio-Titel -> nachladen', W.radioSeedNoetig(r), vid(120));
     r.radio.titel = [1, 2, 3, 4, 5].map(function (n) { return eintrag(130 + n, 'radio'); });
     eq('5 und mehr -> nicht nachladen', W.radioSeedNoetig(r), null);
+    r.seedVonWunsch = true;   // vorher lief ein Wunsch - Seed bleibt trotzdem der Wunsch
+    eq('Radio-Titel nach einem Wunsch wird nicht neuer Seed', W.radioSeedNoetig(r), null);
 })();
 
 // --- Umsortieren -----------------------------------------------------------------

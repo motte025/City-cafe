@@ -168,12 +168,27 @@
      * hoechstens MAX_JE_KUENSTLER_IN_FOLGE gleiche Kuenstler hintereinander
      * (gezaehlt ab den zuletzt gespielten Songs).
      */
-    function radioFiltern(titel, gespielt, laufendId, jetztMs) {
+    function titelNorm(t) {
+        return String((t && (t.songtitel || t.titel)) || '').toLowerCase()
+            .replace(/\(.*?\)|\[.*?\]/g, '').replace(/[^a-z0-9äöüß]+/g, '');
+    }
+
+    function radioFiltern(titel, gespielt, laufendId, jetztMs, laufendTitel) {
         var gesperrt = {};
+        var titelGesperrt = {};
         (gespielt || []).forEach(function (g) {
-            if (jetztMs - (g.ts || 0) < RADIO_SPERRE_MS) gesperrt[g.videoId] = true;
+            if (jetztMs - (g.ts || 0) < RADIO_SPERRE_MS) {
+                gesperrt[g.videoId] = true;
+                if (g.songtitel) titelGesperrt[titelNorm(g)] = true;
+            }
         });
         if (laufendId) gesperrt[laufendId] = true;
+        if (laufendTitel) titelGesperrt[titelNorm({ songtitel: laufendTitel })] = true;
+        // Anderer Upload desselben Songs (gleicher Titel) zaehlt als schon gespielt.
+        titel = (titel || []).filter(function (t) {
+            var n = titelNorm(t);
+            return !(n && titelGesperrt[n]);
+        });
         var folge = (gespielt || []).slice(-MAX_JE_KUENSTLER_IN_FOLGE).map(kuenstlerVon);
         var ergebnis = [];
         var zurueck = [];
@@ -204,7 +219,8 @@
         var s = sortiert(liste(state));
         var radioAn = state && state.modus !== 'aus' && state.modus !== 'playlist';
         var radio = radioAn && state.radio
-            ? radioFiltern(state.radio.titel, state.gespielt, state.jetzt && state.jetzt.videoId, jetztMs || 0)
+            ? radioFiltern(state.radio.titel, state.gespielt, state.jetzt && state.jetzt.videoId, jetztMs || 0,
+                           state.jetzt && state.jetzt.songtitel)
                 .filter(function (t) { return !istDoppelt(state, t.videoId); })
                 .map(function (t) { return Object.assign({ quelle: 'radio' }, t); })
             : [];
@@ -227,7 +243,8 @@
         var st = Object.assign({ eintraege: [], gespielt: [], modus: 'aus' }, state);
         var gespielt = st.gespielt.slice();
         if (st.jetzt) {
-            gespielt.push({ videoId: st.jetzt.videoId, kuenstler: st.jetzt.kuenstler || st.jetzt.kanal || '', ts: jetztMs });
+            gespielt.push({ videoId: st.jetzt.videoId, kuenstler: st.jetzt.kuenstler || st.jetzt.kanal || '',
+                            songtitel: st.jetzt.songtitel || '', ts: jetztMs });
             gespielt = gespielt.filter(function (g) { return jetztMs - g.ts < RADIO_SPERRE_MS; }).slice(-100);
         }
         var seedVonWunsch = !!(st.jetzt && (st.jetzt.quelle === 'wunsch' || st.jetzt.quelle === 'chef'));
@@ -278,7 +295,8 @@
         if (!state || !state.jetzt) return null;
         var seed = state.radio && state.radio.seed;
         var rest = (state.radio && state.radio.titel ? state.radio.titel.length : 0);
-        if (state.seedVonWunsch && seed !== state.jetzt.videoId) return state.jetzt.videoId;
+        // Seed ist der laufende Wunsch - NICHT der Radio-Titel danach (sonst
+        // wechselte der Mix nach jedem Wunsch gleich zweimal).
         var istWunsch = state.jetzt.quelle === 'wunsch' || state.jetzt.quelle === 'chef';
         if (istWunsch && seed !== state.jetzt.videoId) return state.jetzt.videoId;
         if (rest < RADIO_NACHLADEN_UNTER && seed !== state.jetzt.videoId) return state.jetzt.videoId;
