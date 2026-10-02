@@ -82167,36 +82167,16 @@
     "auto_discovered": true
   },
   {
-    "artist": "Xatar",
-    "title": "Original",
+    "artist": "Fats Domino",
+    "title": "I'm Ready",
     "album": "",
-    "category": "Deutsch Party",
+    "category": "Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
-      "Karaoke",
-      "Deutsch Party"
-    ],
-    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
-    "cover_url": "",
-    "karaoke": true,
-    "karaoke_version": "",
-    "karaoke_provider": "",
-    "karaoke_language": "",
-    "auto_discovered": true
-  },
-  {
-    "artist": "Sweetbox",
-    "title": "Everything's Gonna Be Alright",
-    "album": "",
-    "category": "Deutsch-Pop",
-    "chart": "",
-    "release_date": "",
-    "tags": [
       "Party",
-      "Karaoke",
-      "Deutsch-Pop"
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
