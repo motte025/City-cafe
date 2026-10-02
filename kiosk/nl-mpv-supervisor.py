@@ -193,7 +193,10 @@ def cdp_eval(page_id, expression):
 def dashboard_page_id():
     with urllib.request.urlopen(f"http://{CDP_HOST}:{CDP_PORT}/json", timeout=5) as r:
         for t in json.load(r):
-            if t["type"] == "page" and "motte025.github.io" in t.get("url", ""):
+            # GitHub Pages oder eine Test-Adresse (CITYCAFE_URL) - die Kiosk-Adresse
+            # traegt immer kiosk=1.
+            url = t.get("url", "")
+            if t["type"] == "page" and ("motte025.github.io" in url or "kiosk=1" in url):
                 return t["id"]
     return None
 
@@ -225,6 +228,10 @@ STATE_EXPR = """JSON.stringify({
   mix: window.nlMixAuftrag || null,
   // Playlist lesen: { id, quelle } -> window.nlPlaylistErgebnis
   playlist: window.nlPlaylistAuftrag || null,
+  // Titel ohne videoId finden ("Kuenstler Titel"): { id, text } -> window.nlFindeErgebnis
+  finde: window.nlFindeAuftrag || null,
+  // Pause im Musikbetrieb: { id, pause: true/false }
+  pause: window.nlPauseWunsch || null,
   // Vor-/Zuruecksprung vom Handy: { id, sek }
   spulen: (typeof window.nlSpulAuftrag !== 'undefined' && window.nlSpulAuftrag) ? window.nlSpulAuftrag : null,
   // Ton des Videos: { id, vol (0-100), lautheit (Ausgleich an/aus) }
@@ -853,6 +860,10 @@ def main():
     bt_arbeiter = None    # laufender Bluetooth-Thread (connect dauert Sekunden)
     bt_id = None          # zuletzt bearbeiteter Bluetooth-Auftrag (None: noch keiner gesehen)
     spul_id = ""          # zuletzt ausgefuehrter Vor-/Zuruecksprung
+    pause_id = ""         # zuletzt ausgefuehrter Pause-Wunsch
+    finde_id = ""         # zuletzt bearbeiteter Finde-Auftrag
+    pausiert = False
+    mpv_dauer = {}        # "yt:<id>" -> Laenge laut mpv (einmal je Song abgefragt)
     ton_id = ""           # zuletzt uebernommene Ton-Einstellung
     ton_vol = 100         # Lautstaerke des Videos in Prozent
     ton_lautheit = False  # Lautheitsausgleich an?
@@ -958,6 +969,17 @@ def main():
                     last_pos, last_progress = None, time.time()
                     started = time.time()
 
+        # Pause/Weiter im Musikbetrieb (Chef am Handy, Taste an der Fernbedienung).
+        p_wunsch = state.get("pause") or {}
+        if p_wunsch.get("id") and p_wunsch["id"] != pause_id:
+            pause_id = p_wunsch["id"]
+            pausiert = bool(p_wunsch.get("pause"))
+            if mpv is not None:
+                mpv_befehl("set_property", "pause", pausiert)
+                # Pause ist kein Stillstand: der Waechter soll nicht eingreifen.
+                last_progress = time.time()
+            log("Pause" if pausiert else "Weiter")
+
         # Bluetooth-Auftrag der Handy-Fernbedienung, ebenfalls im eigenen Thread.
         bt_auftrag = state.get("bt") or {}
         if bt_id is None:
@@ -1039,13 +1061,29 @@ def main():
                         log(f"Naechster Song vorgeladen: {key}")
                     else:
                         failed[vid] = time.time()
+            elif (state.get("finde") or {}).get("id") and state["finde"]["id"] != finde_id:
+                finde = state["finde"]
+                finde_id = finde["id"]
+
+                def aufgabe(fid=finde_id, text=str(finde.get("text") or "")[:120], seite=page_id):
+                    # Ein Treffer reicht: "Kuenstler Titel official video" (Spec 5.3/7.3)
+                    gefunden = suchen(text + " official video", 1) if text else []
+                    log(f"Gefunden {text!r}: {gefunden[0]['videoId'] if gefunden else '-'}")
+                    zustellen(seite, "window.nlFindeErgebnis = "
+                              + json.dumps({"id": fid, "text": text,
+                                            "treffer": gefunden[0] if gefunden else None}) + "; 1", "Fund")
             elif mix_auftrag.get("id") and mix_auftrag["id"] != mix_id:
                 mix_id = mix_auftrag["id"]
 
                 def aufgabe(mid=mix_id, vid=str(mix_auftrag.get("videoId") or ""), seite=page_id,
-                            anzahl=max(5, min(MIX_ANZAHL, int(mix_auftrag.get("anzahl") or MIX_ANZAHL)))):
-                    liste = mix(vid, anzahl)
-                    log(f"Mix zu {vid}: {len(liste)} Titel")
+                            anzahl=max(5, min(MIX_ANZAHL, int(mix_auftrag.get("anzahl") or MIX_ANZAHL))),
+                            titelsuche=str(mix_auftrag.get("titelsuche") or "")[:120]):
+                    # Rueckfall 2 der Spec (5.3): Titelsuche wie aehnliche()
+                    if titelsuche:
+                        liste = [t for t in suchen(titelsuche, anzahl + 2) if t["videoId"] != vid][:anzahl]
+                    else:
+                        liste = mix(vid, anzahl)
+                    log(f"Mix zu {vid}{' (Titelsuche)' if titelsuche else ''}: {len(liste)} Titel")
                     zustellen(seite, "window.nlMixErgebnis = "
                               + json.dumps({"id": mid, "videoId": vid, "liste": liste}) + "; 1", "Mix")
             elif pl_auftrag.get("id") and pl_auftrag["id"] != playlist_id:
@@ -1160,6 +1198,8 @@ def main():
                 erste_frist = TWITCH_FIRST_FRAME_TIMEOUT if art == "twitch" else FIRST_FRAME_TIMEOUT
                 if last_pos is None and now - started > erste_frist:
                     problem = f"mpv ohne erstes Bild nach {erste_frist}s"
+                elif pausiert and art == "yt":
+                    last_progress = now          # gewollte Pause, kein Haenger
                 elif last_pos is not None and now - last_progress > (CAM_STALL_TIMEOUT if art == "cam" else STALL_TIMEOUT):
                     problem = f"mpv steht bei {last_pos:.1f}s"
             if problem:
@@ -1178,12 +1218,24 @@ def main():
         nl_ok = youtube and cache_key in cache and not blocked("yt:" + schluessel)
         dj_ok = streamlink_da and not (dj_kanal and blocked("twitch:" + dj_kanal))
         dj_laeuft = bool(shown and shown.startswith("twitch:") and embed_paused)
+        # Wiedergabestand fuers Dashboard (Musik: "2:08 / 3:40", "in 1:32",
+        # Vorladen 60 s vor Schluss, Fortschritt am Handy).
+        mpv_stand = "null"
+        if shown and shown.startswith("yt:") and mpv is not None and last_pos is not None:
+            if mpv_dauer.get(shown) is None:
+                d = mpv_eigenschaft("duration")
+                if isinstance(d, (int, float)) and d > 0:
+                    mpv_dauer.clear()
+                    mpv_dauer[shown] = float(d)
+            mpv_stand = json.dumps({"videoId": shown[3:], "pos": round(last_pos, 1),
+                                    "dauer": mpv_dauer.get(shown), "pause": pausiert})
         if page_id:
             try:
                 cdp_eval(page_id,
                          f"window.nlExternBis = {'Date.now() + 3000' if nl_ok else '0'}; "
                          f"window.djExternBis = {'Date.now() + 3000' if dj_ok else '0'}; "
-                         f"window.djExternLaeuft = {'true' if dj_laeuft else 'false'}; 1")
+                         f"window.djExternLaeuft = {'true' if dj_laeuft else 'false'}; "
+                         f"window.nlMpvStand = {mpv_stand}; 1")
             except (OSError, ValueError, ConnectionError):
                 pass
 
@@ -1251,6 +1303,7 @@ def main():
                 shown = want
                 started, last_pos, last_progress, embed_paused = time.time(), None, None, False
                 next_place_check, window_seen = 0, False
+                pausiert = False
 
 
 def mpv_dies_with_us():
