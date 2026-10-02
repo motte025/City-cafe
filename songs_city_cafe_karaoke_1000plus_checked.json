@@ -81847,16 +81847,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Zara Larsson",
-    "title": "The Ambition",
+    "artist": "Mickie Krause",
+    "title": "Orange trägt nur die Müllabfuhr (Go West)",
     "album": "",
-    "category": "Modern",
+    "category": "Ballermann & Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Modern"
+      "Ballermann & Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Michael Calfan",
+    "title": "Resurrection - Axwell's Recut Radio Version",
+    "album": "",
+    "category": "Internationale Party-Hits",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Internationale Party-Hits"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
