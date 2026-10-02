@@ -232,6 +232,11 @@ STATE_EXPR = """JSON.stringify({
   finde: window.nlFindeAuftrag || null,
   // Pause im Musikbetrieb: { id, pause: true/false }
   pause: window.nlPauseWunsch || null,
+  // Welche Flaeche traegt das Video (Musik: Normal oder Vollbild, 6.8)
+  flaeche: window.nlMpvFlaeche || null,
+  // QR-Kaertchen "Song wuenschen" (ohne die Bilddaten - die holt qr_karte_holen einmal)
+  qr: window.nlQrKarte ? { id: window.nlQrKarte.id, breite: window.nlQrKarte.breite, hoehe: window.nlQrKarte.hoehe,
+       rand: window.nlQrKarte.rand, randVoll: window.nlQrKarte.randVoll, faktorVoll: window.nlQrKarte.faktorVoll } : null,
   // Vor-/Zuruecksprung vom Handy: { id, sek }
   spulen: (typeof window.nlSpulAuftrag !== 'undefined' && window.nlSpulAuftrag) ? window.nlSpulAuftrag : null,
   // Ton des Videos: { id, vol (0-100), lautheit (Ausgleich an/aus) }
@@ -279,6 +284,8 @@ RECT_EXPR = """JSON.stringify((() => {
   return {x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.width), h: Math.round(b.height)};
 })())"""
 FLAECHE = {"yt": ("media-view-nightlife", "nl-player-frame"),
+           # YouTube-Musik im Vollbild (window.nlMpvFlaeche = 'yt-vollbild-video')
+           "yt_voll": ("ytm-vollbild", "yt-vollbild-video"),
            "twitch": ("media-view-djlive", "dj-live-player"),
            "cam": ("media-view-dart-cam", "dart-cam-frame")}
 # Die Dartcam ist ein Live-Strom im Lokal-Netz: faellt sie aus, nach kurzer
@@ -791,6 +798,56 @@ def place_mpv(target):
     return True
 
 
+# --- QR-Kaertchen "Song wuenschen" im Video (YOUTUBE-MUSIK-SETUP.md 6.5) -----
+# Das Dashboard zeichnet das Kaertchen in ein Canvas (window.nlQrKarte, PNG als
+# Daten-URL, Groesse in CSS-Pixeln bei 1920er Breite). Hier wird es auf die
+# echte Fenstergroesse skaliert, in rohes BGRA (vormultipliziert) gewandelt und
+# mit mpvs overlay-add in die rechte untere Ecke gelegt. Braucht Pillow
+# (python-pillow). Ohne Pillow gibt es einfach keinen QR im Video.
+QR_DATEI = "/tmp/ytm-qr.bgra"
+QR_OVERLAY_ID = 7
+QR_CSS_BREITE = {"yt": 1200, "yt_voll": 1280}   # Videobreite in CSS-Pixeln je Flaeche
+
+
+def qr_karte_holen(page_id):
+    """-> PIL.Image (RGBA) oder None."""
+    try:
+        from PIL import Image
+        import io
+    except ImportError:
+        return None
+    try:
+        daten = cdp_eval(page_id, "window.nlQrKarte ? window.nlQrKarte.png : ''") or ""
+        if not daten.startswith("data:image/png;base64,"):
+            return None
+        return Image.open(io.BytesIO(base64.b64decode(daten.split(",", 1)[1]))).convert("RGBA")
+    except Exception as e:
+        log(f"QR-Kaertchen nicht lesbar: {type(e).__name__}")
+        return None
+
+
+def qr_overlay_setzen(karte, info, target, rect_art):
+    """Kaertchen fuer die aktuelle Fenstergroesse setzen. -> Schluessel der Lage."""
+    from PIL import Image
+    css_breite = QR_CSS_BREITE.get(rect_art, 1200)
+    massstab = target["w"] / float(css_breite)
+    faktor = float(info.get("faktorVoll") or 1) if rect_art == "yt_voll" else 1.0
+    rand = float(info.get("randVoll") or 20) if rect_art == "yt_voll" else float(info.get("rand") or 18)
+    w = max(1, round(float(info.get("breite") or 174) * faktor * massstab))
+    h = max(1, round(float(info.get("hoehe") or 192) * faktor * massstab))
+    x = round(target["w"] - rand * massstab - w)
+    y = round(target["h"] - rand * massstab - h)
+    bild = karte.resize((w, h), Image.LANCZOS)
+    # mpv erwartet vormultiplizierte Alphawerte: Farbe * Alpha.
+    schwarz = Image.new("RGB", (w, h), (0, 0, 0))
+    farbe = Image.composite(bild.convert("RGB"), schwarz, bild.getchannel("A"))
+    farbe.putalpha(bild.getchannel("A"))
+    with open(QR_DATEI, "wb") as f:
+        f.write(farbe.tobytes("raw", "BGRA"))
+    mpv_befehl("overlay-add", QR_OVERLAY_ID, x, y, QR_DATEI, 0, "bgra", w, h, w * 4)
+    return (x, y, w, h)
+
+
 def kiosk_neu_starten():
     """Haengenden Kiosk-Browser beenden und neu starten. -> True, wenn versucht."""
     treffer = subprocess.run(["pgrep", "-f", "chromium --ozone-platform=wayland"],
@@ -864,6 +921,10 @@ def main():
     finde_id = ""         # zuletzt bearbeiteter Finde-Auftrag
     pausiert = False
     mpv_dauer = {}        # "yt:<id>" -> Laenge laut mpv (einmal je Song abgefragt)
+    flaeche_jetzt = None  # "yt" / "yt_voll" / "twitch" / "cam" - wo mpv gerade liegt
+    qr_karte = None       # PIL-Bild des QR-Kaertchens
+    qr_karte_id = ""
+    qr_lage = None        # (x, y, w, h, flaeche), fuer die das Overlay gesetzt ist
     ton_id = ""           # zuletzt uebernommene Ton-Einstellung
     ton_vol = 100         # Lautstaerke des Videos in Prozent
     ton_lautheit = False  # Lautheitsausgleich an?
@@ -1164,14 +1225,41 @@ def main():
             if mpv.poll() is not None:
                 problem = f"mpv beendet (Code {mpv.returncode})"
             else:
+                # Musik: Normal oder Vollbild? Wechselt die Flaeche, nur Fenster
+                # und QR neu setzen - mpv laeuft weiter (Ton ohne Aussetzer, 6.8).
+                rect_art = "yt_voll" if (art == "yt" and musik
+                                         and state.get("flaeche") == "yt-vollbild-video") else art
+                if rect_art != flaeche_jetzt:
+                    if flaeche_jetzt is not None:
+                        log(f"Flaeche: {flaeche_jetzt} -> {rect_art}")
+                    flaeche_jetzt = rect_art
+                    next_place_check = 0
                 # Lage pruefen: bis das Fenster sitzt jede Runde, danach alle 5 s.
                 if now >= next_place_check:
-                    target = measured_rect(page_id, target, art)
+                    target = measured_rect(page_id, target, rect_art)
                     if place_mpv(target):
                         if not window_seen:
                             window_seen = True
                             log(f"mpv-Fenster da nach {now - started:.1f}s")
                         next_place_check = now + 5
+                        # QR-Kaertchen: nur bei Musik, nicht bei Nightlife/DJ/Dartcam.
+                        qr_info = state.get("qr") or {}
+                        if musik and art == "yt" and qr_info.get("id"):
+                            if qr_info["id"] != qr_karte_id:
+                                qr_karte = qr_karte_holen(page_id)
+                                qr_karte_id = qr_info["id"]
+                                qr_lage = None
+                            lage = (target["x"], target["y"], target["w"], target["h"], rect_art)
+                            if qr_karte is not None and lage != qr_lage:
+                                try:
+                                    qr_overlay_setzen(qr_karte, qr_info, target, rect_art)
+                                    qr_lage = lage
+                                except Exception as e:
+                                    log(f"QR-Overlay: {type(e).__name__}: {e}")
+                                    qr_lage = lage
+                        elif qr_lage is not None:
+                            mpv_befehl("overlay-remove", QR_OVERLAY_ID)
+                            qr_lage = None
                 pos = mpv_time_pos()
                 if pos is not None and (last_pos is None or pos > last_pos + 0.05):
                     if last_pos is not None and window_seen and art == "yt" and not embed_paused:
@@ -1304,6 +1392,7 @@ def main():
                 started, last_pos, last_progress, embed_paused = time.time(), None, None, False
                 next_place_check, window_seen = 0, False
                 pausiert = False
+                flaeche_jetzt, qr_lage = None, None   # neues mpv: Lage und QR neu setzen
 
 
 def mpv_dies_with_us():
