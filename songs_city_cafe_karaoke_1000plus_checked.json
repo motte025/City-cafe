@@ -82506,16 +82506,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "DJ Jazzy Jeff & The Fresh Prince",
-    "title": "Summertime",
+    "artist": "Joint Venture",
+    "title": "Henri Zimmermann",
     "album": "",
-    "category": "Hip Hop / Party",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Hip Hop",
       "Party",
-      "90s"
+      "Karaoke",
+      "Schlager"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Tory Lanez",
+    "title": "Lavender Sunflower",
+    "album": "",
+    "category": "2000s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "2000s Party"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
