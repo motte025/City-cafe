@@ -2378,7 +2378,7 @@
         /* Obere Leiste: "Als Naechstes" mit zwei grossen Titeln */
         body.ytm-an .ytm-leiste {
             display: flex; position: absolute; inset: 0; z-index: 10; align-items: stretch;
-            background: linear-gradient(135deg, rgba(14, 18, 40, 0.97) 0%, rgba(22, 12, 38, 0.97) 100%);
+            background: linear-gradient(135deg, #0e1228 0%, #160c26 100%);   /* deckend: die Liga-Leiste darunter laeuft weiter */
         }
         .ytm-pille {
             flex-shrink: 0; display: flex; align-items: center; justify-content: center; text-align: center;
@@ -2461,8 +2461,8 @@
         .ytv-gleich-zeile small { font-size: 17px; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-danach-kopf { margin: 22px 0 12px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; letter-spacing: 1px; }
         .ytv-danach-kopf small { font-size: 16px; color: #f9a8e8; margin-left: 8px; }
-        .ytv-liste { display: flex; flex-direction: column; gap: 9px; overflow: hidden; }
-        .ytv-zeile { display: flex; align-items: center; gap: 16px; height: 68px; padding: 0 20px; border-radius: 12px;
+        .ytv-liste { display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+        .ytv-zeile { display: flex; align-items: center; gap: 16px; height: 63px; padding: 0 20px; border-radius: 12px;
             background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); flex-shrink: 0; }
         .ytv-zeile > b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; width: 22px; flex-shrink: 0; }
         .ytv-zeile > div { flex: 1; min-width: 0; display: flex; flex-direction: column; }

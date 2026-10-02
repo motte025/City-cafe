@@ -263,7 +263,9 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     ['Ben Zucker - Was für eine geile Zeit (Live in Berlin / 2019)', 'ICH FIND SCHLAGER TOLL', 'Ben Zucker', 'Was für eine geile Zeit (Live in Berlin / 2019)'],
     ['Queen - Bohemian Rhapsody (Official Video Remastered)', 'Queen Official', 'Queen', 'Bohemian Rhapsody'],
     ['Pharrell Williams - Happy (Lyrics)', 'Lyrics Channel', 'Pharrell Williams', 'Happy'],
-    ['Andreas Gabalier - Hulapalu - Official Video', 'Andreas Gabalier', 'Andreas Gabalier', 'Hulapalu']
+    ['Andreas Gabalier - Hulapalu - Official Video', 'Andreas Gabalier', 'Andreas Gabalier', 'Hulapalu'],
+    ['Way Maker (Official Live Video) [feat. Priscilla Alcantara] – Holy Ground | Jeremy Riddle', 'Jeremy Riddle',
+        'Jeremy Riddle', 'Way Maker (Official Live Video) [feat. Priscilla Alcantara]']   // "Live" bleibt (Spec 6.4)
 ].forEach(function (f) {
     var z = W.titelZerlegen(f[0], f[1]);
     eq('titelZerlegen: ' + f[0], [z.kuenstler, z.songtitel], [f[2], f[3]]);

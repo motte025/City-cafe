@@ -791,9 +791,12 @@ def place_mpv(target):
     if cur is None:
         return False
     if any(abs(cur[k] - target[k]) > 2 for k in ("x", "y", "w", "h")):
-        sway('[app_id="mpv"]', "move", "absolute", "position", str(target["x"]), str(target["y"]))
+        # Erst resize, dann move: sway aendert die Groesse schwebender Fenster um
+        # ihre Mitte. Umgekehrt landete das Fenster beim Wechsel ins Vollbild
+        # (1200x675 -> 1280x720) 40/22 px daneben (gesehen am 02.10.2026).
         sway('[app_id="mpv"]', "resize", "set", "width", f"{target['w']} px",
              "height", f"{target['h']} px")
+        sway('[app_id="mpv"]', "move", "absolute", "position", str(target["x"]), str(target["y"]))
         log(f"mpv platziert: {cur} -> {target}")
     return True
 

@@ -422,6 +422,14 @@
         var kanalKlar = kanalName(kanal);
         var kanalNorm = normal(kanalKlar);
         var roh = String(titel || '').replace(/\s+/g, ' ').trim();
+        // "Song – Album | Kuenstler": steht der Kanal hinter dem letzten " | ",
+        // ist er der Kuenstler, und vorn steht der Song (Rest = Album).
+        var strich = roh.split(/\s+\|\s+/);
+        if (strich.length >= 2 && kanalNorm && normal(strich[strich.length - 1]) === kanalNorm) {
+            var vorn = strich.slice(0, -1).join(' | ').split(/\s+[-–—]\s+/)[0];
+            var songVorn = klammernAufraeumen(vorn, kanalNorm, info);
+            return { kuenstler: kanalKlar, songtitel: songVorn || vorn, jahr: info.jahr };
+        }
         var teile = roh.split(/\s+[-–—]\s+/);
         if (teile.length < 2) {
             var rohr = roh.split(/\s+\|\s+/);
