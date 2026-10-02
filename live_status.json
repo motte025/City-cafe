@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-02T02:17:45Z",
+  "checked_at": "2026-10-02T02:22:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "✨❤️‍🔥🦄 3 YEAR TWITCH PARTNER 17K CELEBRATION STREAM ❤️‍🔥🦄✨ REQUESTS OPEN !request !tip !merch !patreon !youtube",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ UNIVERSAL MUSIC LIVE IS BACK AND FROM THE NEW STUDIO RAIDING THERE AFTER SOME SICK TUNES!!! AHHHHH 🔥 !mods !mercy",
       "game": "DJs"
     }
   ]
