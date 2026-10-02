@@ -82446,16 +82446,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Nico Haak",
-    "title": "Als Ze Me Missen",
+    "artist": "Antilopen Gang",
+    "title": "Trümmermänner",
     "album": "",
-    "category": "Après-Ski & Ballermann",
+    "category": "Deutsch Party",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Après-Ski & Ballermann"
+      "Deutsch Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Kanye West",
+    "title": "Good Life (feat. T-Pain)",
+    "album": "",
+    "category": "90s",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "90s",
+      "Party",
+      "Karaoke"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
