@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-02T18:07:46Z",
+  "checked_at": "2026-10-02T18:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,13 +20,6 @@
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "ICH BIN DAS CHAOS | !holy !logitech #werbung",
       "game": "DJs"
     },
     {
@@ -73,17 +66,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "Above & Beyond Group Therapy #696 (OCT ID SHOW) with Mark Sherry",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "LASERKRAFT 3D | SUNSHINE LIVE x BOOTSHAUS",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #696 (OCT ID SHOW) with Mark Sherry",
+      "game": "Music"
     }
   ]
 }
