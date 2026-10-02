@@ -7894,7 +7894,9 @@
         let ytmZuletztGemeldet = 0;
         function ytmMelden() {
             window.nlMusik = ytmAktiv();
-            if (!nlFernVerb || !window.YT_REMOTE_NET) return;
+            // Vor dem Wiederherstellen nichts schreiben - sonst ueberschreibt der
+            // leere Startzustand den gespeicherten Stand (gesehen beim Neustart).
+            if (!nlFernVerb || !window.YT_REMOTE_NET || !ytmBereit) return;
             ytmZuletztGemeldet = Date.now();
             const st = ytmStand();
             const j = ytm.jetzt;
@@ -7920,7 +7922,7 @@
         }
 
         function ytmRadioMelden() {
-            if (!nlFernVerb || !window.YT_REMOTE_NET) return;
+            if (!nlFernVerb || !window.YT_REMOTE_NET || !ytmBereit) return;
             YT_REMOTE_NET.radioMelden(nlFernVerb, NL_FERN_RAUM, {
                 seed: ytm.radio.seed || '',
                 titel: (ytm.radio.titel || []).slice(0, 25)
@@ -8244,7 +8246,7 @@
 
         // Laeuft gerade keine Musik, startet der erste Eintrag sofort (5.1.2).
         function ytmStartWennFrei() {
-            if (ytmAktiv() || !ytm.eintraege.length) return;
+            if (!ytmBereit || ytmAktiv() || !ytm.eintraege.length) return;
             if (window.ktSpielLaeuft && window.ktSpielLaeuft()) { ytmStartNachSpiel = true; return; }
             ytm.modus = 'warteschlange';
             ytmWeiter();
@@ -8267,6 +8269,9 @@
 
         // --- Befehle vom Chef (yt/befehl, aktion 'musik') ----------------------------
         function ytmBefehl(b) {
+            // Beim Seitenstart liefert Firebase den letzten Befehl nochmal - bis der
+            // gespeicherte Stand gelesen ist, keine Musik-Befehle ausfuehren.
+            if (!ytmBereit) return;
             const was = String(b.was || '');
             if (was === 'skip') { if (ytmAktiv()) ytmWeiter(); return; }
             if (was === 'zurueck') { if (ytmAktiv()) ytmSpielen(ytm.jetzt); return; }   // Song von vorn
@@ -8565,8 +8570,11 @@
                     ytmBereit = true;
                     if (jetzt && jetzt.modus && jetzt.modus !== 'aus') {
                         ytm.modus = jetzt.modus;
-                        ytm.jetzt = { videoId: jetzt.videoId, kuenstler: jetzt.kuenstler, quelle: jetzt.quelle };
+                        ytm.jetzt = { videoId: jetzt.videoId, kuenstler: jetzt.kuenstler,
+                                      songtitel: jetzt.songtitel, quelle: jetzt.quelle };
                         ytmWeiter();
+                    } else {
+                        ytmStartWennFrei();      // Wuensche kamen, waehrend der TV aus war
                     }
                 }, 4000);
             }).catch(() => {});
