@@ -44,6 +44,17 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
 })();
 
 (function () {
+    // Erster Wunsch laeuft sofort an: zaehlt trotzdem als offen.
+    var s = leer();
+    s.jetzt = eintrag(20, 'wunsch', 'handyA');
+    s = W.einreihen(s, eintrag(21, 'wunsch', 'handyA'), 'wunsch');
+    eq('laufender Wunsch zaehlt mit', W.offeneWuensche(s, 'handyA'), 2);
+    eq('dritter abgelehnt, obwohl einer schon laeuft', W.wunschPruefen(s, eintrag(22, 'wunsch', 'handyA')).ok, false);
+    s.jetzt = eintrag(23, 'radio', null);
+    eq('Radio-Titel zaehlt nicht', W.offeneWuensche(s, 'handyA'), 1);
+})();
+
+(function () {
     var s = W.einreihen(leer(), eintrag(7, 'wunsch', 'handyA'), 'wunsch');
     var doppelt = W.wunschPruefen(s, eintrag(7, 'wunsch', 'handyB'));
     eq('dasselbe Video nicht doppelt', doppelt.ok, false);

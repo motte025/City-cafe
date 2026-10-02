@@ -7642,6 +7642,7 @@
         let ytmQualitaet = { hoehe: 0, fps: 0 };   // Obergrenze vom Handy ("Mehr")
         let ytmGenreCache = {};           // "kuenstler|titel" -> { genre, jahr }
         let ytmBereit = false;            // Firebase da, Stand gelesen
+        let ytmLetzterStart = 0;          // wann ytmSpielen zuletzt lief (Wiederholung)
 
         function ytmAktiv() { return !!ytm && ytm.modus !== 'aus' && !!ytm.jetzt; }
         window.ytmAktiv = ytmAktiv;
@@ -7741,6 +7742,7 @@
                 return;
             }
             ytmPausiert = false;
+            ytmLetzterStart = Date.now();
             if (!ytm.jetzt || ytm.jetzt.videoId !== eintrag.videoId) ytm = Object.assign({}, ytm, { jetzt: eintrag });
             if (ytm.modus === 'aus') ytm.modus = eintrag.quelle === 'radio' ? 'radio' : 'warteschlange';
             window.nlPauseWunsch = { id: 'start-' + ytmId(), pause: false };
@@ -7994,8 +7996,17 @@
                         window.nlVorladen = { videoId: naechste[0].videoId, hoehe: ytmQualitaet.hoehe, fps: ytmQualitaet.fps };
                     }
                 }
-                // Steht der Slot gar nicht mehr auf Musik (z. B. Dart-Abend), Musik beenden.
-                if (!nlAktiv && mediaStateIndex !== NL_SLOT_INDEX && !nlFern) ytmBeenden();
+                // Dart-Abend und Anheizer haben das Bild - dann endet die Musik
+                // sauber, statt alle paar Sekunden dagegen anzulaufen.
+                let dartAbend = false;
+                try { dartAbend = dartAbendAktiv() || dartAnheizerAktiv(); } catch (e) {}
+                if (dartAbend || (!nlAktiv && mediaStateIndex !== NL_SLOT_INDEX && !nlFern)) {
+                    ytmBeenden();
+                } else if (!nlAktiv && Date.now() - ytmLetzterStart > 8000) {
+                    // Slot nicht zu sehen, obwohl Musik laufen soll (z. B. YouTube-
+                    // Player beim Seitenstart noch nicht bereit): nochmal.
+                    ytmSpielen(ytm.jetzt);
+                }
             }
             if (ytmAktiv() && Date.now() - ytmZuletztGemeldet > 3000) ytmMelden();
         }

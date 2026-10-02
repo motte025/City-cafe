@@ -57,8 +57,12 @@
         return teile.reduce(function (s, t) { return s * 60 + t; }, 0);
     }
 
+    // Offen = noch in der Schlange ODER gerade laufend: sonst koennte ein Handy,
+    // dessen erster Wunsch sofort anlaeuft, gleich drei Songs hintereinander
+    // stellen (Abnahme: "dritter Wunsch eines Handys wird abgelehnt").
     function offeneWuensche(state, von) {
-        return liste(state).filter(function (e) {
+        var laufend = state && state.jetzt && state.jetzt.quelle === 'wunsch' && state.jetzt.von === von ? 1 : 0;
+        return laufend + liste(state).filter(function (e) {
             return e.quelle === 'wunsch' && e.von === von;
         }).length;
     }
