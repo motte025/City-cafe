@@ -81508,16 +81508,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Judith & Mel",
-    "title": "Wenn Dein Herz Mein Herz Verführt",
+    "artist": "Selena Gomez & the Scene",
+    "title": "Hit the Lights",
     "album": "",
-    "category": "Schlager & Party",
+    "category": "Rock Party",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Schlager",
-      "Charts",
-      "German"
+      "Rock",
+      "Pop",
+      "Party"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Costa Cordalis",
+    "title": "Anna Karina",
+    "album": "",
+    "category": "Schlager",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Karaoke",
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
