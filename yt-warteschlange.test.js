@@ -65,6 +65,9 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     eq('genau 10 Minuten erlaubt', W.wunschPruefen(s, eintrag(9, 'wunsch', 'h', { dauerSek: 600 })).ok, true);
     eq('Laenge aus "12:05" erkannt', W.wunschPruefen(s, eintrag(10, 'wunsch', 'h', { dauerSek: undefined, dauer: '12:05' })).ok, false);
     eq('ungueltige videoId', W.wunschPruefen(s, { videoId: 'abc', von: 'h' }).ok, false);
+    eq('ohne videoId, aber mit Suchtext erlaubt', W.wunschPruefen(s, { videoId: '', suche: 'Roland Kaiser Joana', von: 'h' }).ok, true);
+    var mitSuche = W.einreihen(s, { id: 'x1', videoId: '', suche: 'Roland Kaiser Joana', quelle: 'wunsch', von: 'h2', ts: 1 }, 'wunsch');
+    eq('gleicher Suchtext doppelt abgelehnt', W.wunschPruefen(mitSuche, { videoId: '', suche: 'Roland Kaiser Joana', von: 'h3' }).ok, false);
 })();
 
 // --- Reihenfolge Chef / Gast / Playlist --------------------------------------

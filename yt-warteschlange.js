@@ -77,10 +77,13 @@
      */
     function wunschPruefen(state, wunsch, opt) {
         opt = opt || {};
-        if (!wunsch || !/^[A-Za-z0-9_-]{11}$/.test(String(wunsch.videoId || ''))) {
+        // Ohne videoId geht es nur mit Suchtext (Titel aus einer Platzhalter-Playlist).
+        var hatId = wunsch && /^[A-Za-z0-9_-]{11}$/.test(String(wunsch.videoId || ''));
+        if (!wunsch || (!hatId && !String(wunsch.suche || '').trim())) {
             return { ok: false, grund: 'Ungültiges Video' };
         }
-        if (istDoppelt(state, wunsch.videoId)) {
+        if (hatId ? istDoppelt(state, wunsch.videoId)
+                  : liste(state).some(function (e) { return e.suche && e.suche === wunsch.suche; })) {
             return { ok: false, grund: 'Steht schon in der Warteschlange' };
         }
         if (!opt.istChef) {

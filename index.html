@@ -8030,8 +8030,15 @@
         }
 
         let ytmPlaylistWartet = null;   // { id, pl, art }
+        let ytmListenInhalt = {};       // nr -> Titel (fuer Handy und Start)
+        let ytmListenWarteschlange = []; // Playlists, deren Inhalt noch gelesen wird
+        let ytmListeLaeuft = null;      // { id, nr }
         function ytmPlaylistNutzen(pl, art) {
             if (!pl) return;
+            if (ytmListenInhalt[pl.nr] && ytmListenInhalt[pl.nr].length) {
+                ytmPlaylistEinreihen(ytmListenInhalt[pl.nr], art);
+                return;
+            }
             if (pl.quelle) {
                 const id = ytmId();
                 ytmPlaylistWartet = { id, pl, art };
@@ -8039,6 +8046,40 @@
                 return;
             }
             ytmPlaylistEinreihen(ytmPlatzhalterTitel(pl), art);
+        }
+
+        // Inhalte aller Playlists fuers Handy ("Listen", aufklappbar) nach
+        // yt/listen/<nr> - echte Links liest der Supervisor (24 h Cache),
+        // Platzhalter einmal je Seitenstart aus der Songs-Datenbank.
+        function ytmListenLaden() {
+            if (!nlFernVerb || !ytmPlaylists.length) return;
+            if (!(masterMusicPool || []).length) { setTimeout(ytmListenLaden, 10000); return; }
+            ytmPlaylists.forEach(pl => {
+                if (pl.quelle) ytmListenWarteschlange.push(pl);
+                else ytmListeMelden(pl, ytmPlatzhalterTitel(pl));
+            });
+            ytmNaechsteListe();
+        }
+        function ytmNaechsteListe() {
+            if (ytmListeLaeuft || ytmPlaylistWartet) return;
+            const pl = ytmListenWarteschlange.shift();
+            if (!pl) return;
+            const id = 'liste-' + ytmId();
+            ytmListeLaeuft = { id, pl };
+            window.nlPlaylistAuftrag = { id, quelle: pl.quelle };
+        }
+        function ytmListeMelden(pl, titel) {
+            ytmListenInhalt[pl.nr] = titel.map(t => ytmAufbereiten(t));
+            if (!nlFernVerb) return;
+            nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/yt/listen/' + pl.nr).set({
+                nr: pl.nr, name: pl.name || '', platzhalter: !pl.quelle,
+                titel: ytmListenInhalt[pl.nr].slice(0, 200).map(t => ({
+                    videoId: t.videoId || '', suche: t.suche || '', titel: t.titel || '',
+                    kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', dauer: t.dauer || '',
+                    dauerSek: t.dauerSek || 0
+                })),
+                ts: firebase.database.ServerValue.TIMESTAMP
+            }).catch(() => {});
         }
 
         function ytmPlaylistEinreihen(titel, art) {
@@ -8134,7 +8175,16 @@
             if (ytmPlaylistWartet && p && p.id === ytmPlaylistWartet.id) {
                 const w = ytmPlaylistWartet;
                 ytmPlaylistWartet = null;
-                ytmPlaylistEinreihen(p.liste && p.liste.length ? p.liste : ytmPlatzhalterTitel(w.pl), w.art);
+                const titel = p.liste && p.liste.length ? p.liste : ytmPlatzhalterTitel(w.pl);
+                ytmListeMelden(w.pl, titel);
+                ytmPlaylistEinreihen(ytmListenInhalt[w.pl.nr], w.art);
+                ytmNaechsteListe();
+            }
+            if (ytmListeLaeuft && p && p.id === ytmListeLaeuft.id) {
+                const w = ytmListeLaeuft;
+                ytmListeLaeuft = null;
+                ytmListeMelden(w.pl, p.liste && p.liste.length ? p.liste : ytmPlatzhalterTitel(w.pl));
+                ytmNaechsteListe();
             }
             // Titel gefunden?
             const f = window.nlFindeErgebnis;
@@ -8228,6 +8278,7 @@
                 kanal: String(w.kanal || ''), dauer: String(w.dauer || ''), dauerSek: Number(w.dauerSek) || 0,
                 quelle: 'wunsch', von: String(w.von || ''), ts: Date.now()
             });
+            if (!eintrag.videoId && w.suche) eintrag.suche = String(w.suche).slice(0, 120);   // Platzhalter-Titel
             const pruefung = YTW.wunschPruefen(ytm, eintrag, { istChef: false });
             if (!pruefung.ok) {
                 YT_REMOTE_NET.wunschAblehnen(nlFernVerb, NL_FERN_RAUM, wunschId, pruefung.grund).catch(() => {});
@@ -8273,6 +8324,17 @@
             // gespeicherte Stand gelesen ist, keine Musik-Befehle ausfuehren.
             if (!ytmBereit) return;
             const was = String(b.was || '');
+            if (was === 'zurueckziehen') {
+                // Gast zieht seinen eigenen Wunsch zurueck: nur wenn er von diesem
+                // Geraet kommt (von = uid; die Firebase-Regeln pruefen von beim Schreiben).
+                const e = ytm.eintraege.find(x => x.id === String(b.eintrag || ''));
+                if (e && e.quelle === 'wunsch' && b.von && e.von === b.von && nlFernVerb) {
+                    ytm = YTW.entfernen(ytm, e.id);
+                    YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, e.id).catch(() => {});
+                    ytmAnzeigen();
+                }
+                return;
+            }
             if (was === 'skip') { if (ytmAktiv()) ytmWeiter(); return; }
             if (was === 'zurueck') { if (ytmAktiv()) ytmSpielen(ytm.jetzt); return; }   // Song von vorn
             if (was === 'stopp') { ytmBeenden(); return; }
@@ -8568,6 +8630,7 @@
                 // Neustart mitten in der Musik: mit dem naechsten Titel weiter.
                 setTimeout(() => {
                     ytmBereit = true;
+                    ytmListenLaden();
                     if (jetzt && jetzt.modus && jetzt.modus !== 'aus') {
                         ytm.modus = jetzt.modus;
                         ytm.jetzt = { videoId: jetzt.videoId, kuenstler: jetzt.kuenstler,

@@ -71,6 +71,9 @@
         // --- Handy ----------------------------------------------------------
         befehlSenden: function (verb, raum, befehl) {
             var daten = Object.assign({}, befehl);
+            // Wer schickt? Die Firebase-Regeln pruefen von === auth.uid (YouTube-
+            // Musik: Chef-Befehle nur von Chef-Geraeten, Zurueckziehen nur eigene).
+            if (verb && verb.uid) daten.von = verb.uid;
             // Eigene id je Befehl: daran erkennt der Screen einen NEUEN Auftrag.
             daten.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
             return schreiben(verb, raum, 'befehl', daten).then(function () { return daten.id; });
@@ -164,10 +167,14 @@
         neueId: function (verb, raum) {
             return verb.db.ref(pfad(raum) + '/warteschlange').push().key;
         },
+        aufListenHoeren: function (verb, raum, rueckruf) {
+            return hoeren(verb, raum, 'listen', rueckruf);
+        },
         wunschSenden: function (verb, raum, wunsch) {
             var ref = verb.db.ref(pfad(raum) + '/wuensche').push();
             var inhalt = {
                 videoId: String(wunsch.videoId || ''),
+                suche: String(wunsch.suche || '').slice(0, 120),
                 titel: String(wunsch.titel || '').slice(0, 160),
                 kanal: String(wunsch.kanal || '').slice(0, 80),
                 dauer: String(wunsch.dauer || ''),
