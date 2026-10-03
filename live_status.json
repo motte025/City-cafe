@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-03T19:02:46Z",
+  "checked_at": "2026-10-03T19:22:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,13 @@
       "name": "AmazonMusic",
       "title": "Amazon Music presents: Shakira Live From Madrid. Sponsored by Epson",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "AGE OF WONDER",
+      "game": "DJs"
     },
     {
       "platform": "twitch",
@@ -27,13 +34,6 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴Hardstyle🔴 TAG DER HARTENTÖNE  ☆ !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "AGE OF WONDER",
       "game": "DJs"
     },
     {
