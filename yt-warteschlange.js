@@ -35,6 +35,9 @@
     var RADIO_NACHLADEN_UNTER = 5;      // weniger Titel uebrig -> neuen Mix holen
     var MAX_JE_KUENSTLER_IN_FOLGE = 2;
     var POS_SCHRITT = 1000;
+    // "Passt dazu" folgt jedem neuen Titel (Wunsch des Betreibers): zu jedem Song
+    // ein frischer Mix. false = Seed bleibt beim Wunsch, nachgeladen erst unter 5.
+    var MIX_JE_TITEL = true;
     // Gaeste-Wuensche kommen fruehestens auf diesen Platz der Schlange (Wunsch
     // des Betreibers: "ab fuenf"), hinter schon wartende Wuensche und Chef-
     // "Als Naechstes". Ist die Schlange kuerzer, hinten an. 1 = ganz vorn.
@@ -300,6 +303,7 @@
         var rest = (state.radio && state.radio.titel ? state.radio.titel.length : 0);
         // Seed ist der laufende Wunsch - NICHT der Radio-Titel danach (sonst
         // wechselte der Mix nach jedem Wunsch gleich zweimal).
+        if (MIX_JE_TITEL && seed !== state.jetzt.videoId) return state.jetzt.videoId;
         var istWunsch = state.jetzt.quelle === 'wunsch' || state.jetzt.quelle === 'chef';
         if (istWunsch && seed !== state.jetzt.videoId) return state.jetzt.videoId;
         if (rest < RADIO_NACHLADEN_UNTER && seed !== state.jetzt.videoId) return state.jetzt.videoId;
@@ -466,6 +470,7 @@
         RADIO_MAX_MIN: RADIO_MAX_MIN,
         RADIO_NACHLADEN_UNTER: RADIO_NACHLADEN_UNTER,
         WUNSCH_AB_PLATZ: WUNSCH_AB_PLATZ,
+        MIX_JE_TITEL: MIX_JE_TITEL,
         sekunden: sekunden,
         sortiert: sortiert,
         offeneWuensche: offeneWuensche,

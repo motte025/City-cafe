@@ -186,9 +186,9 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     r.radio = { seed: vid(1), titel: [eintrag(121, 'radio'), eintrag(122, 'radio')] };
     eq('weniger als 5 Radio-Titel -> nachladen', W.radioSeedNoetig(r), vid(120));
     r.radio.titel = [1, 2, 3, 4, 5].map(function (n) { return eintrag(130 + n, 'radio'); });
-    eq('5 und mehr -> nicht nachladen', W.radioSeedNoetig(r), null);
-    r.seedVonWunsch = true;   // vorher lief ein Wunsch - Seed bleibt trotzdem der Wunsch
-    eq('Radio-Titel nach einem Wunsch wird nicht neuer Seed', W.radioSeedNoetig(r), null);
+    eq('5 und mehr: trotzdem neuer Mix zum neuen Titel (MIX_JE_TITEL)', W.radioSeedNoetig(r), W.MIX_JE_TITEL ? vid(120) : null);
+    r.radio.seed = vid(120);
+    eq('gleicher Titel -> kein zweiter Mix', W.radioSeedNoetig(r), null);
 })();
 
 // --- Umsortieren -----------------------------------------------------------------
