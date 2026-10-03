@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-03T21:57:45Z",
+  "checked_at": "2026-10-03T22:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Schranz is Back mit Felix Kröcher",
       "game": "DJs"
     }
   ]
