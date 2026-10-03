@@ -2373,7 +2373,7 @@
         }
         .ytm-qr-html img { width: 120px; height: 120px; display: block; }
         .ytm-qr-html span { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 12px; color: #0b1220; letter-spacing: 1px; }
-        body.ytm-an.ytm-browser .nl-player .ytm-qr-html { display: flex; }
+        body.ytm-an.ytm-browser.ytm-qr-an .nl-player .ytm-qr-html { display: flex; }
 
         /* Obere Leiste: "Als Naechstes" mit zwei grossen Titeln */
         body.ytm-an .ytm-leiste {
@@ -7824,6 +7824,7 @@
         // Vorgaben - der Betreiber kann sie hier aendern:
         const YT_RADIO_MAX_MIN = 60;          // Radio ohne neuen Wunsch, dann Rotation
         const YT_VOLLBILD_STANDARD = false;   // Ansicht beim Start der Musik
+        const YT_QR_AN = false;               // QR "Song wuenschen" im Video (vorerst aus, Wunsch Betreiber)
         const YT_VORLADEN_SEKUNDEN = 60;      // so lange vor Songende den naechsten aufloesen
         const YT_CHEF_PIN = (new URLSearchParams(location.search).get('chefpin') || '').trim();
 
@@ -8496,6 +8497,7 @@
             body.classList.toggle('ytm-an', an);
             body.classList.toggle('ytm-vollbild', an && ytmVollbild);
             body.classList.toggle('ytm-browser', an && !nlExtern());
+            body.classList.toggle('ytm-qr-an', an && YT_QR_AN);
             // Supervisor: welche Flaeche gerade das Video traegt (6.8).
             window.nlMpvFlaeche = an && ytmVollbild ? 'yt-vollbild-video' : 'nl-player-frame';
             const vb = document.getElementById('ytm-vollbild');
@@ -8506,7 +8508,7 @@
                 if (label) label.textContent = an ? '▶ JETZT LÄUFT' : '☕ CITY CAFE';
                 window.ytmTickerText = null;
                 if (!an) { ytmEinblendungen = []; ytmEinblendungJetzt = null; ytmTorStand = null; }
-                if (an) ytmQrKarteBauen();
+                if (an && YT_QR_AN) ytmQrKarteBauen();
             }
             if (!an) { generateDynamicPartyTickerWennNoetig(); return; }
 
@@ -8685,7 +8687,7 @@
         // Ebenen abbauen, wenn keine Musik laeuft (auch aus runMasterSequence).
         function ytmEbenenAbbauen() {
             if (ytmAktiv() && !ytmSpielPause) return;
-            document.body.classList.remove('ytm-an', 'ytm-vollbild', 'ytm-browser');
+            document.body.classList.remove('ytm-an', 'ytm-vollbild', 'ytm-browser', 'ytm-qr-an');
             const vb = document.getElementById('ytm-vollbild');
             if (vb) vb.classList.remove('active');
             window.nlMpvFlaeche = 'nl-player-frame';

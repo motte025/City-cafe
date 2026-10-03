@@ -342,6 +342,8 @@ Video) [4K]“. Eine Funktion `titelZerlegen(titel, kanal)`:
 
 ### 6.5 QR-Code unten rechts im Video
 
+> Vorerst ausgeschaltet (`YT_QR_AN = false` in `index.html`). Auf `true` setzen, um ihn wieder zu zeigen.
+
 Der QR-Code zum Wünschen sitzt **unten rechts in der Videofläche**: weißes
 Kärtchen mit abgerundeten Ecken, QR ca. 120×120 px (bei 1920er Auflösung),
 darunter „SONG WÜNSCHEN“ in dunkler Orbitron-Schrift, 3 px Abstand zum
