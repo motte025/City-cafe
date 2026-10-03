@@ -9591,6 +9591,8 @@
             if (!djFernVerb || !window.DJ_REMOTE_NET) return;
             const lage = djSpielerLage();
             DJ_REMOTE_NET.statusMelden(djFernVerb, {
+                // Chef-TV (PIN in der Kiosk-Adresse) - siehe aufStatusHoeren
+                chefTv:  !!(new URLSearchParams(location.search).get('chefpin') || '').trim(),
                 laeuft:  djFernAktiv(),
                 kanal:   djFern ? djFern.kanal : '',
                 name:    djFern ? (djFern.name || djFern.kanal) : '',

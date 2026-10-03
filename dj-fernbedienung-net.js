@@ -119,10 +119,17 @@
                 .catch(function () { return null; });
         },
 
+        // Zwei Screens im selben Raum (alter ODROID + Chef-TV) ueberschreiben sich
+        // den Status gegenseitig - die Handy-Seite sprang dann hin und her.
+        // Hat sich in den letzten 2 Minuten ein Chef-TV gemeldet, zaehlt nur er.
         aufStatusHoeren: function (verb, rueckruf) {
             var ref = verb.db.ref(raumPfad() + '/status');
+            var chefZuletzt = 0;
             ref.on('value', function (schnappschuss) {
-                rueckruf(schnappschuss.val());
+                var s = schnappschuss.val();
+                if (s && s.chefTv) chefZuletzt = Date.now();
+                else if (s && Date.now() - chefZuletzt < 120000) return;
+                rueckruf(s);
             });
             return function () { ref.off(); };
         }
