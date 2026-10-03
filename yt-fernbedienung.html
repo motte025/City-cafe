@@ -135,7 +135,11 @@
     .chips { display: flex; flex-wrap: wrap; gap: 10px; }
     .chips button { background: #1d2647; color: #f2f5ff; font-size: 27px; }
     .chips button b { color: #00e5ff; margin-right: 8px; }
+    #such-art { display: flex; }
+    #such-art button { flex: 1; padding: 16px 8px; font-weight: 800; }
     #such-art button.an { background: #2f6bff; }
+    .pl-leiste { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 10px; }
+    .pl-leiste button { flex: 1 1 auto; }
     .mehr-laden { width: 100%; margin-top: 14px; background: #1d2647; color: #cdd7f5; }
     .suche { display: flex; gap: 10px; }
     details.klein { margin-top: 10px; padding: 8px 12px; background: transparent; border-color: #222b50; }
@@ -233,7 +237,7 @@
 
 <!-- ============================ SUCHE ============================ -->
 <section class="reiter-inhalt" id="reiter-suche">
-    <div class="chips nur-chef" id="such-art" style="margin-bottom:12px">
+    <div class="chips" id="such-art" style="margin-bottom:12px">
         <button type="button" data-art="" class="an">🎵 Songs</button>
         <button type="button" data-art="playlist">📃 Playlists</button>
     </div>
@@ -350,7 +354,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-playlists';
+    var FASSUNG = '2026-10-03-oeffnen';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -745,18 +749,59 @@
         d.className = 'video';
         d.innerHTML = '<div class="oben">' + (p.bildVon ? '<img loading="lazy" alt="" src="https://i.ytimg.com/vi/' + esc(p.bildVon) + '/mqdefault.jpg">' : '')
             + '<div><div class="t">📃 ' + esc(p.titel) + '</div><div class="k">' + esc(p.kanal || '') + '</div></div></div>'
-            + '<div class="knoepfe"><button type="button" data-a="start">▶ Starten</button><button type="button" class="still" data-a="anhaengen">➕ Anhängen</button></div>';
+            + '<div class="knoepfe"><button type="button" data-a="oeffnen">📂 Öffnen</button>'
+            + (istChef ? '<button type="button" class="still" data-a="start">▶ Starten</button><button type="button" class="still" data-a="anhaengen">➕ Anhängen</button>' : '')
+            + '</div>';
         [].forEach.call(d.querySelectorAll('[data-a]'), function (b) {
             b.addEventListener('click', function () {
-                musik('playlistLink', { listId: p.playlistId, name: p.titel, art: b.dataset.a });
-                melden(b.dataset.a === 'start' ? '▶ Playlist startet …' : '➕ Playlist wird angehängt …', '');
+                if (b.dataset.a === 'oeffnen') { playlistOeffnen(p); return; }
+                playlistSenden(p, b.dataset.a);
             });
         });
         return d;
     }
+    function playlistSenden(p, art) {
+        musik('playlistLink', { listId: p.playlistId, name: p.titel, art: art });
+        melden(art === 'start' ? '▶ Playlist startet …' : '➕ Playlist wird angehängt …', '');
+    }
+
+    // Playlist in der Suche oeffnen: der Screen liest ihre Songs, die dann wie
+    // normale Treffer erscheinen (wuenschen / als Naechstes / ...).
+    var offenePlaylist = null, playlistTreffer = [];
+    function playlistOeffnen(p) {
+        offenePlaylist = p;
+        suchId = '';
+        el('treffer').innerHTML = '';
+        el('mehr-laden').hidden = true;
+        el('treffer-kopf').textContent = '📃 ' + p.titel;
+        el('such-status').textContent = 'Playlist wird geöffnet …';
+        window.scrollTo(0, 0);
+        senden({ aktion: 'suche', text: String(p.titel || '').slice(0, 100) || 'playlist', art: 'playlistInhalt', listId: p.playlistId })
+            .then(function (id) { suchId = id || ''; });
+    }
+    function playlistLeiste() {
+        var l = document.createElement('div');
+        l.className = 'pl-leiste';
+        l.innerHTML = '<button type="button" class="still" data-a="zurueck">← Playlists</button>'
+            + (istChef ? '<button type="button" data-a="start">▶ Ganze Playlist starten</button><button type="button" class="still" data-a="anhaengen">➕ Alle anhängen</button>' : '');
+        [].forEach.call(l.querySelectorAll('[data-a]'), function (b) {
+            b.addEventListener('click', function () {
+                if (b.dataset.a === 'zurueck') {
+                    offenePlaylist = null;
+                    el('treffer-kopf').textContent = 'Playlists';
+                    zeigeTreffer(playlistTreffer);
+                    return;
+                }
+                playlistSenden(offenePlaylist, b.dataset.a);
+            });
+        });
+        return l;
+    }
 
     function zeigeTreffer(liste) {
+        if ((liste || []).length && liste[0].playlistId) playlistTreffer = liste;
         listeRendern(el('treffer'), liste || [], function (t, i) { return t.playlistId ? playlistKarte(t) : trefferKarte(t, i); });
+        if (offenePlaylist && !(liste[0] || {}).playlistId) el('treffer').insertBefore(playlistLeiste(), el('treffer').firstChild);
         el('mehr-laden').hidden = !(suchText && suchArt !== 'playlist' && (liste || []).length >= suchAnzahl && suchAnzahl < 75);
     }
 
@@ -764,6 +809,7 @@
     [].forEach.call(document.querySelectorAll('#such-art button'), function (b) {
         b.addEventListener('click', function () {
             suchArt = b.dataset.art;
+            offenePlaylist = null;
             [].forEach.call(document.querySelectorAll('#such-art button'), function (x) { x.classList.toggle('an', x === b); });
             el('suchtext').placeholder = suchArt === 'playlist' ? 'Playlist suchen, z. B. Après Ski' : 'Song, Künstler oder YouTube-Link';
             el('treffer').innerHTML = '';
@@ -781,7 +827,8 @@
         if (!anzahl) el('treffer').innerHTML = '';
         ersteTrefferGesehen = true;
         var befehl = { aktion: 'suche', text: text, vorschlaege: !!istVorschlag, anzahl: suchAnzahl };
-        if (suchArt === 'playlist' && !istVorschlag && istChef) befehl.art = 'playlist';
+        if (suchArt === 'playlist' && !istVorschlag) befehl.art = 'playlist';
+        offenePlaylist = null;
         return senden(befehl).then(function (id) {
             suchId = id || '';
             clearTimeout(keineAntwort);

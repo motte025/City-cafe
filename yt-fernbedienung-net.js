@@ -61,7 +61,7 @@
         },
         trefferMelden: function (verb, raum, id, liste) {
             return schreiben(verb, raum, 'treffer', {
-                id: id, liste: (liste || []).slice(0, 75)   // "Mehr laden" bis 75
+                id: id, liste: (liste || []).slice(0, 200)  // "Mehr laden" bis 75, geoeffnete Playlist bis 200
             });
         },
         statusMelden: function (verb, raum, status) {

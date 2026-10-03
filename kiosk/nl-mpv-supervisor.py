@@ -1145,10 +1145,15 @@ def main():
                             gemischt=bool(auftrag.get("vorschlaege")),
                             aehnlich=str(auftrag.get("aehnlichZu") or "")[:20],
                             nur_playlists=auftrag.get("art") == "playlist",
+                            liste_id=(str(auftrag.get("listId") or "")[:64]
+                                      if auftrag.get("art") == "playlistInhalt" else ""),
                             anzahl=max(SUCH_TREFFER, min(SUCH_TREFFER_MAX, int(auftrag.get("anzahl") or 0)))):
                     # Automatische Vorschlaege beim Oeffnen der Fernbedienung:
                     # mehrere Begriffe gemischt statt vieler Treffer zu einem Thema.
-                    if nur_playlists:
+                    if liste_id:
+                        # Playlist in der Suche oeffnen: ihre Songs (24-h-Cache)
+                        treffer = playlist_lesen(f"https://www.youtube.com/playlist?list={liste_id}")[:200]
+                    elif nur_playlists:
                         treffer = playlists_suchen(text)
                     elif aehnlich:
                         treffer = aehnliche(aehnlich, text)

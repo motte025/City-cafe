@@ -7651,7 +7651,8 @@
                 // aehnlichZu: dann sucht der Screen Videos, die zum gerade
                 // gestarteten passen (wie die Vorschlaege bei YouTube).
                 window.nlSucheAuftrag = { id: befehl.id, text: text,
-                                          art: befehl.art === 'playlist' ? 'playlist' : '',
+                                          art: ['playlist', 'playlistInhalt'].includes(befehl.art) ? befehl.art : '',
+                                          listId: String(befehl.listId || '').slice(0, 64),
                                           vorschlaege: !!befehl.vorschlaege,
                                           aehnlichZu: String(befehl.aehnlichZu || '').slice(0, 20) };
                 nlFernStatusMelden();
