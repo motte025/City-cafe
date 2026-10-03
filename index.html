@@ -8370,6 +8370,27 @@
                 ytmPlaylistNutzen(pl, b.art === 'anhaengen' ? 'anhaengen' : 'start');
                 return;
             }
+            if (was === 'sofort') {         // Chef: Song sofort spielen (Rest der Schlange bleibt)
+                if (!nlFernVerb) return;
+                let id = String(b.eintrag || '');
+                if (!ytm.eintraege.some(e => e.id === id)) {
+                    const vid = String(b.videoId || '');
+                    if (!/^[A-Za-z0-9_-]{11}$/.test(vid)) return;
+                    const neu = ytmAufbereiten({
+                        id: ytmId(), videoId: vid, titel: String(b.titel || '').slice(0, 160), kanal: String(b.kanal || '').slice(0, 80),
+                        dauer: String(b.dauer || ''), dauerSek: Number(b.dauerSek) || 0, quelle: 'chef', von: 'tv', ts: Date.now()
+                    });
+                    ytm = YTW.einreihen(ytm, neu, 'naechstes');
+                    id = neu.id;
+                }
+                ytm = YTW.verschieben(ytm, id, 0);
+                const gesetzt = ytm.eintraege.find(e => e.id === id);
+                YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, gesetzt.id, gesetzt).catch(() => {});
+                ytm.letzterWunschTs = Date.now();
+                ytm.modus = 'warteschlange';
+                ytmWeiter();
+                return;
+            }
             if (was === 'radio') {          // Chef: "Radio-Mix starten" ab diesem Song
                 const vid = String(b.videoId || '');
                 if (!/^[A-Za-z0-9_-]{11}$/.test(vid) || !nlFernVerb) return;
