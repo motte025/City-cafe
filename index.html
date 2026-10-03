@@ -9098,7 +9098,8 @@
 
         // So lange steht der grosse QR ueber dem Stream, danach blendet er aus.
         // Zum Scannen reicht das locker; laenger wuerde er nur das Bild verdecken.
-        const DJ_FERN_QR_SEKUNDEN = 20;
+        // 0 = der QR ueber dem Twitch-Stream bleibt ganz weg (Wunsch Betreiber).
+        const DJ_FERN_QR_SEKUNDEN = 0;
 
         const DART_SLOT_INDEX = -2;       // Naechstes Spiel
         const DART_FOTO_INDEX = -1.9;     // Mannschaftsfoto
@@ -9563,6 +9564,7 @@
         function djFernQrZeigen() {
             const kasten = document.getElementById('dj-fern-qr');
             const bild = document.getElementById('dj-fern-qr-img');
+            if (!DJ_FERN_QR_SEKUNDEN) return;
             if (!kasten || !bild || !bild.getAttribute('src')) return;
             if (djFernQrTimer) { clearTimeout(djFernQrTimer); djFernQrTimer = null; }
             kasten.classList.remove('is-weg');
