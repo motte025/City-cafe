@@ -83520,16 +83520,36 @@
     "auto_discovered": true
   },
   {
-    "artist": "Bergfeuer",
-    "title": "Der Himmel brennt im Grödnertal",
+    "artist": "Roy Orbison",
+    "title": "Only the Lonely",
     "album": "",
-    "category": "Schlager & Karaoke",
+    "category": "Party & Rock",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Party",
+      "Rock",
+      "Anthem"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "Reinhard Mey",
+    "title": "Spring Auf Den Blanken Stein",
+    "album": "",
+    "category": "Schlager",
     "chart": "",
     "release_date": "",
     "tags": [
       "Party",
       "Karaoke",
-      "Schlager & Karaoke"
+      "Schlager"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
