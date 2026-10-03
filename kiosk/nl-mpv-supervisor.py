@@ -923,7 +923,15 @@ def ambi_farben(target):
         # Schwarze Balken (4:3-Video im 16:9-Rahmen) wuerden den Rand dunkel
         # lassen - dann lieber die Farbe des ganzen Bilds.
         farben[seite] = f if sum(f) > 45 else gesamt
-    return {k: ",".join(str(int(x)) for x in v) for k, v in farben.items()}
+    def kraeftig(rgb):
+        # Wie ein echtes Ambilight: Farbe satter und heller als der Bildschnitt,
+        # sonst verschwindet der Schein bei dunklen Videos im Hintergrund.
+        import colorsys
+        h, s, v = colorsys.rgb_to_hsv(*(x / 255 for x in rgb))
+        r, g, b = colorsys.hsv_to_rgb(h, min(1.0, s * 1.6), min(1.0, max(v * 1.5, 0.35)))
+        return (r * 255, g * 255, b * 255)
+
+    return {k: ",".join(str(int(x)) for x in kraeftig(v)) for k, v in farben.items()}
 
 
 def kiosk_neu_starten():
