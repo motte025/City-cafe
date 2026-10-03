@@ -217,6 +217,7 @@
         <div class="zeile2 nur-chef">
             <button type="button" class="still" id="k-ansicht">⛶ Vollbild</button>
             <button type="button" class="still" id="k-start">▶ Musik starten</button>
+            <button type="button" class="still" id="k-radio">📻 Radio-Mix</button>
         </div>
     </div>
     <div class="hinweis" id="jetzt-hinweis"></div>
@@ -341,7 +342,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-sofort';
+    var FASSUNG = '2026-10-03-radio';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -650,6 +651,12 @@
     el('k-zurueck').addEventListener('click', function () { musik('zurueck'); });
     el('k-ton').addEventListener('click', function () { reiterZeigen('mehr'); el('ton-box').open = true; el('ton-box').scrollIntoView(); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
+    // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
+    el('k-radio').addEventListener('click', function () {
+        if (!jetzt || !jetzt.videoId || jetzt.modus === 'aus') { melden('Gerade läuft keine Musik.', 'nein'); return; }
+        musik('radioJetzt');
+        melden('📻 Radio-Mix zu „' + (jetzt.songtitel || jetzt.titel || '') + '" kommt …', '');
+    });
     el('k-start').addEventListener('click', function () { musik('start'); melden('▶ Musik startet …', ''); });
 
     // ------------------------------------------------------------------ Passt dazu

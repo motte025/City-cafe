@@ -8370,6 +8370,22 @@
                 ytmPlaylistNutzen(pl, b.art === 'anhaengen' ? 'anhaengen' : 'start');
                 return;
             }
+            if (was === 'radioJetzt') {     // Chef: Radio-Mix zum laufenden Song, ohne ihn zu unterbrechen
+                if (!ytmAktiv() || !ytm.jetzt || !ytm.jetzt.videoId || !nlFernVerb) return;
+                // Playlist-Titel raus (sonst kaeme der Mix erst nach ihnen), Wuensche bleiben.
+                ytm.eintraege.filter(e => e.quelle === 'playlist').forEach(e =>
+                    YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, e.id).catch(() => {}));
+                ytm = Object.assign({}, ytm, { eintraege: ytm.eintraege.filter(e => e.quelle !== 'playlist') });
+                ytm.radio = { seed: '', titel: [] };   // radioSeedNoetig -> Mix zum laufenden Song
+                ytmMixLaeuft = null;
+                ytm.letzterWunschTs = Date.now();
+                ytm.modus = 'warteschlange';
+                ytmRadioMelden();
+                ytmRadioPruefen();
+                ytmAnzeigen();
+                ytmMelden();
+                return;
+            }
             if (was === 'sofort') {         // Chef: Song sofort spielen (Rest der Schlange bleibt)
                 if (!nlFernVerb) return;
                 let id = String(b.eintrag || '');
