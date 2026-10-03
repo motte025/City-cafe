@@ -7651,6 +7651,7 @@
                 // aehnlichZu: dann sucht der Screen Videos, die zum gerade
                 // gestarteten passen (wie die Vorschlaege bei YouTube).
                 window.nlSucheAuftrag = { id: befehl.id, text: text,
+                                          art: befehl.art === 'playlist' ? 'playlist' : '',
                                           vorschlaege: !!befehl.vorschlaege,
                                           aehnlichZu: String(befehl.aehnlichZu || '').slice(0, 20) };
                 nlFernStatusMelden();
@@ -8222,8 +8223,11 @@
                 const w = ytmPlaylistWartet;
                 ytmPlaylistWartet = null;
                 const titel = p.liste && p.liste.length ? p.liste : ytmPlatzhalterTitel(w.pl);
-                ytmListeMelden(w.pl, titel);
-                ytmPlaylistEinreihen(ytmListenInhalt[w.pl.nr], w.art);
+                if (w.pl.suche) ytmPlaylistEinreihen(titel.map(t => ytmAufbereiten(t)), w.art);   // nicht in "Listen"
+                else {
+                    ytmListeMelden(w.pl, titel);
+                    ytmPlaylistEinreihen(ytmListenInhalt[w.pl.nr], w.art);
+                }
                 ytmNaechsteListe();
             }
             if (ytmListeLaeuft && p && p.id === ytmListeLaeuft.id) {
@@ -8410,6 +8414,14 @@
             if (was === 'start') {           // "Musik starten" ohne Song
                 if (ytm.eintraege.length) { ytm.modus = 'warteschlange'; ytmWeiter(); }
                 else ytmStimmungStarten();
+                return;
+            }
+            if (was === 'playlistLink') {   // Chef: Playlist aus der Playlist-Suche
+                const lid = String(b.listId || '');
+                if (!/^[A-Za-z0-9_-]{13,64}$/.test(lid)) return;
+                ytmPlaylistNutzen({ nr: 'suche', suche: true, name: String(b.name || '').slice(0, 80),
+                                    quelle: 'https://www.youtube.com/playlist?list=' + lid },
+                                  b.art === 'anhaengen' ? 'anhaengen' : 'start');
                 return;
             }
             if (was === 'playlist') {

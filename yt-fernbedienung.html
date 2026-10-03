@@ -135,6 +135,7 @@
     .chips { display: flex; flex-wrap: wrap; gap: 10px; }
     .chips button { background: #1d2647; color: #f2f5ff; font-size: 27px; }
     .chips button b { color: #00e5ff; margin-right: 8px; }
+    #such-art button.an { background: #2f6bff; }
     .mehr-laden { width: 100%; margin-top: 14px; background: #1d2647; color: #cdd7f5; }
     .suche { display: flex; gap: 10px; }
     details.klein { margin-top: 10px; padding: 8px 12px; background: transparent; border-color: #222b50; }
@@ -232,6 +233,10 @@
 
 <!-- ============================ SUCHE ============================ -->
 <section class="reiter-inhalt" id="reiter-suche">
+    <div class="chips nur-chef" id="such-art" style="margin-bottom:12px">
+        <button type="button" data-art="" class="an">🎵 Songs</button>
+        <button type="button" data-art="playlist">📃 Playlists</button>
+    </div>
     <form class="suche" id="suchform">
         <input type="search" id="suchtext" placeholder="Song, Künstler oder YouTube-Link" enterkeyhint="search">
         <button type="submit" id="suchknopf">Suchen</button>
@@ -345,7 +350,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-griff';
+    var FASSUNG = '2026-10-03-playlists';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -734,19 +739,50 @@
         return d;
     }
 
-    function zeigeTreffer(liste) {
-        listeRendern(el('treffer'), liste || [], trefferKarte);
-        el('mehr-laden').hidden = !(suchText && (liste || []).length >= suchAnzahl && suchAnzahl < 75);
+    // Playlist-Treffer (nur Chef): ganze YouTube-Playlist starten oder anhaengen.
+    function playlistKarte(p) {
+        var d = document.createElement('div');
+        d.className = 'video';
+        d.innerHTML = '<div class="oben">' + (p.bildVon ? '<img loading="lazy" alt="" src="https://i.ytimg.com/vi/' + esc(p.bildVon) + '/mqdefault.jpg">' : '')
+            + '<div><div class="t">📃 ' + esc(p.titel) + '</div><div class="k">' + esc(p.kanal || '') + '</div></div></div>'
+            + '<div class="knoepfe"><button type="button" data-a="start">▶ Starten</button><button type="button" class="still" data-a="anhaengen">➕ Anhängen</button></div>';
+        [].forEach.call(d.querySelectorAll('[data-a]'), function (b) {
+            b.addEventListener('click', function () {
+                musik('playlistLink', { listId: p.playlistId, name: p.titel, art: b.dataset.a });
+                melden(b.dataset.a === 'start' ? '▶ Playlist startet …' : '➕ Playlist wird angehängt …', '');
+            });
+        });
+        return d;
     }
+
+    function zeigeTreffer(liste) {
+        listeRendern(el('treffer'), liste || [], function (t, i) { return t.playlistId ? playlistKarte(t) : trefferKarte(t, i); });
+        el('mehr-laden').hidden = !(suchText && suchArt !== 'playlist' && (liste || []).length >= suchAnzahl && suchAnzahl < 75);
+    }
+
+    var suchArt = '';
+    [].forEach.call(document.querySelectorAll('#such-art button'), function (b) {
+        b.addEventListener('click', function () {
+            suchArt = b.dataset.art;
+            [].forEach.call(document.querySelectorAll('#such-art button'), function (x) { x.classList.toggle('an', x === b); });
+            el('suchtext').placeholder = suchArt === 'playlist' ? 'Playlist suchen, z. B. Après Ski' : 'Song, Künstler oder YouTube-Link';
+            el('treffer').innerHTML = '';
+            el('such-status').textContent = '';
+            el('mehr-laden').hidden = true;
+            if (el('suchtext').value.trim()) sucheStarten(el('suchtext').value.trim(), false);
+        });
+    });
 
     function sucheStarten(text, istVorschlag, anzahl) {
         suchText = istVorschlag ? '' : text;
         suchAnzahl = anzahl || 25;
         el('such-status').textContent = istVorschlag ? 'Vorschläge werden geholt …' : 'Suche läuft …';
-        el('treffer-kopf').textContent = istVorschlag ? 'Vorschläge' : 'Treffer';
+        el('treffer-kopf').textContent = istVorschlag ? 'Vorschläge' : (suchArt === 'playlist' ? 'Playlists' : 'Treffer');
         if (!anzahl) el('treffer').innerHTML = '';
         ersteTrefferGesehen = true;
-        return senden({ aktion: 'suche', text: text, vorschlaege: !!istVorschlag, anzahl: suchAnzahl }).then(function (id) {
+        var befehl = { aktion: 'suche', text: text, vorschlaege: !!istVorschlag, anzahl: suchAnzahl };
+        if (suchArt === 'playlist' && !istVorschlag && istChef) befehl.art = 'playlist';
+        return senden(befehl).then(function (id) {
             suchId = id || '';
             clearTimeout(keineAntwort);
             keineAntwort = setTimeout(function () {
@@ -763,7 +799,7 @@
         var text = el('suchtext').value.trim();
         if (!text) return;
         el('suchtext').blur();
-        var id = videoIdAus(text);
+        var id = suchArt === 'playlist' ? null : videoIdAus(text);
         if (id) {                       // Link oder Video-Kennung eingefuegt
             suchText = '';
             zeigeTreffer([{ videoId: id, titel: 'Eingefügter Link', kanal: '', dauer: '' }]);

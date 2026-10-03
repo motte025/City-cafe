@@ -24,6 +24,7 @@ import struct
 import subprocess
 import threading
 import time
+import urllib.parse
 import urllib.request
 
 CDP_HOST, CDP_PORT = "127.0.0.1", 9222
@@ -549,6 +550,36 @@ def suchen(text, anzahl=None):
     treffer = treffer_lesen(out.stdout)
     if not treffer:
         log(f"Suche ohne Treffer: {text!r} {out.stderr.strip()[-120:]}")
+    return treffer
+
+
+def playlists_suchen(text, anzahl=20):
+    """Nur Playlists suchen (YouTube-Filter "Playlist") -> Liste von Treffern
+    { playlistId, titel, kanal, bildVon } fuer die Handy-Fernbedienung."""
+    url = ("https://www.youtube.com/results?search_query=" + urllib.parse.quote_plus(text)
+           + "&sp=EgIQAw%253D%253D")
+    out = None
+    for programm in ytdlp_programme():
+        try:
+            out = subprocess.run(
+                [programm, "--js-runtimes", "node", "--flat-playlist", "--playlist-end", str(anzahl),
+                 "--print", "%(id)s\t%(title)s\t%(channel)s\t%(thumbnails.0.url)s", url],
+                capture_output=True, text=True, timeout=60)
+        except (subprocess.TimeoutExpired, OSError) as fehler:
+            log(f"Playlist-Suche mit {os.path.basename(programm)}: {type(fehler).__name__} ({text!r})")
+            out = None
+            continue
+        if out.stdout.strip():
+            break
+    treffer = []
+    for zeile in (out.stdout if out else "").splitlines():
+        teile = zeile.split("\t")
+        if len(teile) < 2 or not re.fullmatch(r"[A-Za-z0-9_-]{13,64}", teile[0]):
+            continue
+        bild = re.search(r"/vi/([A-Za-z0-9_-]{11})/", teile[3] if len(teile) > 3 else "")
+        treffer.append({"playlistId": teile[0], "titel": teile[1],
+                        "kanal": teile[2] if len(teile) > 2 and teile[2] != "NA" else "",
+                        "bildVon": bild.group(1) if bild else ""})
     return treffer
 
 
@@ -1113,10 +1144,13 @@ def main():
                 def aufgabe(sid=such_id, text=str(auftrag.get("text", ""))[:100], seite=page_id,
                             gemischt=bool(auftrag.get("vorschlaege")),
                             aehnlich=str(auftrag.get("aehnlichZu") or "")[:20],
+                            nur_playlists=auftrag.get("art") == "playlist",
                             anzahl=max(SUCH_TREFFER, min(SUCH_TREFFER_MAX, int(auftrag.get("anzahl") or 0)))):
                     # Automatische Vorschlaege beim Oeffnen der Fernbedienung:
                     # mehrere Begriffe gemischt statt vieler Treffer zu einem Thema.
-                    if aehnlich:
+                    if nur_playlists:
+                        treffer = playlists_suchen(text)
+                    elif aehnlich:
                         treffer = aehnliche(aehnlich, text)
                     elif gemischt:
                         treffer = vorschlaege()
