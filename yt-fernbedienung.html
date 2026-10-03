@@ -103,6 +103,9 @@
     .steuerung button.haupt { background: #2f6bff; }
     .zeile2 { display: flex; gap: 10px; margin-top: 10px; }
     .zeile2 button { flex: 1; }
+    .laut-zeile { align-items: center; }
+    .laut-zeile button { font-size: 30px; padding: 16px 0; background: #1d2647; }
+    .laut-zeile span { min-width: 110px; text-align: center; font-size: 26px; font-weight: 800; color: #00e5ff; font-variant-numeric: tabular-nums; }
     .eintrag {
         display: flex; align-items: center; gap: 12px; background: #131a33; border: 1px solid #27325c;
         border-radius: 18px; padding: 12px 14px; margin-top: 10px; position: relative;
@@ -220,6 +223,11 @@
             <button type="button" class="haupt" id="k-pause" title="Pause / weiter">⏸</button>
             <button type="button" id="k-skip" title="Überspringen">⏭</button>
             <button type="button" id="k-ton" title="Ton">🔊</button>
+        </div>
+        <div class="zeile2 nur-chef laut-zeile">
+            <button type="button" id="k-leiser" aria-label="Leiser">🔉 −</button>
+            <span id="laut-jetzt">100 %</span>
+            <button type="button" id="k-lauter" aria-label="Lauter">🔊 +</button>
         </div>
         <div class="nur-chef">
         <div class="zeile2">
@@ -356,7 +364,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-balken';
+    var FASSUNG = '2026-10-03-laut';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -1033,7 +1041,21 @@
           fps, function (w) { fps = w; qualitaetSenden(); });
     reihe('lautheit', [{ wert: false, text: 'Ausgleich aus' }, { wert: true, text: 'Ausgleich an' }], false,
           function (w) { senden({ aktion: 'ton', lautheit: w }); });
-    el('laut').addEventListener('input', function () { el('lautwert').textContent = el('laut').value + ' %'; });
+    el('laut').addEventListener('input', function () { el('lautwert').textContent = el('laut').value + ' %'; el('laut-jetzt').textContent = el('laut').value + ' %'; });
+    // Lauter/Leiser in 10er-Schritten direkt in der Jetzt-Karte (die Handy-
+    // Lautstaerketasten erreicht eine Webseite nicht). Mehrfach tippen sammelt
+    // sich und geht nach kurzer Pause als ein Befehl raus.
+    var lautUhr = null;
+    function lautSchritt(d) {
+        var v = Math.max(0, Math.min(100, Math.round((Number(el('laut').value) + d) / 10) * 10));
+        el('laut').value = v;
+        el('lautwert').textContent = v + ' %';
+        el('laut-jetzt').textContent = v + ' %';
+        clearTimeout(lautUhr);
+        lautUhr = setTimeout(function () { lautUhr = null; senden({ aktion: 'ton', lautstaerke: v }); }, 400);
+    }
+    el('k-leiser').addEventListener('click', function () { lautSchritt(-10); });
+    el('k-lauter').addEventListener('click', function () { lautSchritt(10); });
     ['change', 'touchend', 'mouseup'].forEach(function (ev) {
         el('laut').addEventListener(ev, function () { senden({ aktion: 'ton', lautstaerke: Number(el('laut').value) }); });
     });
@@ -1148,9 +1170,10 @@
             status = s;
             if (!s) return;
             if (s.laengen && typeof s.laengen === 'object') { laengen = s.laengen; }
-            if (typeof s.lautstaerke === 'number' && document.activeElement !== el('laut')) {
+            if (typeof s.lautstaerke === 'number' && document.activeElement !== el('laut') && !lautUhr) {
                 el('laut').value = s.lautstaerke;
                 el('lautwert').textContent = s.lautstaerke + ' %';
+                el('laut-jetzt').textContent = s.lautstaerke + ' %';
             }
             if (s.bluetooth && typeof s.bluetooth === 'object') {
                 el('btstatus').textContent = s.bluetooth.text || (s.bluetooth.verbunden ? 'verbunden' : 'nicht verbunden');
