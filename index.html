@@ -7931,9 +7931,12 @@
 
         function ytmRadioMelden() {
             if (!nlFernVerb || !window.YT_REMOTE_NET || !ytmBereit) return;
+            // In der echten Reihenfolge (wie oben am TV), nicht roh aus dem Mix.
+            const vor = ytmAktiv() ? YTW.vorschau(ytm, 25 + ytm.eintraege.length, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN })
+                .filter(e => e.quelle === 'radio').map(e => { const k = Object.assign({}, e); delete k.id; delete k.quelle; return k; }) : [];
             YT_REMOTE_NET.radioMelden(nlFernVerb, NL_FERN_RAUM, {
                 seed: ytm.radio.seed || '',
-                titel: (ytm.radio.titel || []).slice(0, 25)
+                titel: (vor.length ? vor : (ytm.radio.titel || [])).slice(0, 25)
             }).catch(() => {});
         }
 
@@ -8154,7 +8157,13 @@
                 const liste = (m.liste || []).map(ytmAufbereiten);
                 if (liste.length) {
                     ytmMixLaeuft = null;
-                    ytm = Object.assign({}, ytm, { radio: { seed: auftrag.seed, titel: liste } });
+                    // Der Radio-Titel, der oben schon als Naechstes angekuendigt war,
+                    // bleibt vorn - sonst stuende dort ploetzlich ein anderer Song.
+                    const vorn = YTW.vorschau(ytm, 1, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN })[0];
+                    const halten = vorn && vorn.quelle === 'radio'
+                        ? (ytm.radio.titel || []).filter(t => t.videoId === vorn.videoId).slice(0, 1) : [];
+                    const titel = halten.concat(liste.filter(t => !halten.some(h => h.videoId === t.videoId)));
+                    ytm = Object.assign({}, ytm, { radio: { seed: auftrag.seed, titel } });
                     ytmRadioMelden();
                     ytmAnzeigen();
                 } else if (auftrag.schritt === 'mix') {
@@ -8242,7 +8251,7 @@
             }
 
             if (ytmAktiv() && !ytmSpielPause) {
-                const naechste = YTW.vorschau(ytm, 2, Date.now());
+                const naechste = YTW.vorschau(ytm, 2, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
                 // Naechste zwei ohne videoId? Jetzt schon finden.
                 const ohne = naechste.find(t => !t.videoId);
                 if (ohne) ytmFinden(ohne, false);
@@ -8524,7 +8533,7 @@
             if (vt) vt.textContent = j.songtitel || j.titel || '';
             const vu = document.getElementById('ytv-unter');
             if (vu) vu.textContent = unter;
-            const vor = YTW.vorschau(ytm, 8, Date.now());
+            const vor = YTW.vorschau(ytm, 8, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
             const gt = document.getElementById('ytv-gleich-titel'), gk = document.getElementById('ytv-gleich-kuenstler');
             if (gt) gt.textContent = vor[0] ? (vor[0].songtitel || vor[0].titel) : '—';
             if (gk) gk.textContent = vor[0] ? (vor[0].kuenstler || '') : '';
@@ -8558,10 +8567,9 @@
                 leiste.innerHTML = e.html;
                 return;
             }
-            const vor = YTW.vorschau(ytm, 2, Date.now());
-            const radio = !ytm.eintraege.length;
+            const vor = YTW.vorschau(ytm, 2, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
             const st = ytmStand();
-            leiste.innerHTML = `<div class="ytm-pille${radio ? ' radio' : ''}">${radio ? '📻<br>RADIO' : 'ALS<br>NÄCHSTES'}</div>`
+            leiste.innerHTML = '<div class="ytm-pille">ALS<br>NÄCHSTES</div>'
                 + '<div class="ytm-felder">' + vor.map((t, i) => {
                     let zusatz = '';
                     if (i === 0) zusatz = ` · <span class="in" id="ytm-in">in ${ytmZeit(Math.max(0, st.dauer - st.pos))}</span>`;

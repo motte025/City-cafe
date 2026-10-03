@@ -213,10 +213,27 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     var s = leer();
     s.modus = 'warteschlange';
     s = W.einreihen(s, eintrag(300, 'wunsch', 'g'), 'wunsch');
+    s.letzterWunschTs = T0;
     s.radio = { seed: vid(300), titel: [eintrag(301, 'radio'), eintrag(300, 'radio'), eintrag(302, 'radio')] };
     var v = W.vorschau(s, 5, T0).map(function (t) { return t.videoId; });
     eq('Vorschau: Schlange, dann Radio ohne Doppelte', v, [vid(300), vid(301), vid(302)]);
     eq('Vorschau begrenzt', W.vorschau(s, 2, T0).length, 2);
+    // Vorschau == wirkliche Reihenfolge, auch mit der Kuenstler-Regel (max. 2 in Folge)
+    var k = leer();
+    k.modus = 'radio';
+    k.letzterWunschTs = T0;
+    k.jetzt = Object.assign(eintrag(400, 'radio'), { kuenstler: 'Madness', songtitel: 'Our House' });
+    k.gespielt = [{ videoId: vid(399), kuenstler: 'Madness', songtitel: 'Baggy Trousers', ts: T0 }];
+    k.radio = { seed: vid(400), titel: [
+        Object.assign(eintrag(401, 'radio'), { kuenstler: 'Madness', songtitel: 'House of Fun' }),
+        Object.assign(eintrag(402, 'radio'), { kuenstler: 'Pulp', songtitel: 'Common People' }),
+        Object.assign(eintrag(403, 'radio'), { kuenstler: 'Madness', songtitel: 'Our House' }),
+        Object.assign(eintrag(404, 'radio'), { kuenstler: 'Blur', songtitel: 'Parklife' })] };
+    var vor = W.vorschau(k, 3, T0 + 1000).map(function (t) { return t.videoId; });
+    var echt = [], z = k;
+    for (var i = 0; i < 3; i++) { var r = W.weiter(z, T0 + 1000); echt.push(r.eintrag.videoId); z = r.state; }
+    eq('Vorschau = echte Reihenfolge', vor, echt);
+    eq('gleicher Songtitel (anderer Upload) nicht in der Vorschau', vor.indexOf(vid(403)), -1);
 })();
 
 // --- Stimmungs-Playlists nach Uhrzeit ------------------------------------------------

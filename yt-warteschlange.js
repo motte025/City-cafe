@@ -221,16 +221,19 @@
     }
 
     /** Die naechsten n Titel in Spielreihenfolge: erst die Schlange, dann Radio. */
-    function vorschau(state, n, jetztMs) {
-        var s = sortiert(liste(state));
-        var radioAn = state && state.modus !== 'aus' && state.modus !== 'playlist';
-        var radio = radioAn && state.radio
-            ? radioFiltern(state.radio.titel, state.gespielt, state.jetzt && state.jetzt.videoId, jetztMs || 0,
-                           state.jetzt && state.jetzt.songtitel)
-                .filter(function (t) { return !istDoppelt(state, t.videoId); })
-                .map(function (t) { return Object.assign({ quelle: 'radio' }, t); })
-            : [];
-        return s.concat(radio).slice(0, n);
+    // Die Vorschau spielt weiter() n-mal im Kopf durch: so zeigt der TV genau die
+    // Reihenfolge, in der die Songs wirklich kommen (vorher eigene Regeln -> die
+    // Anzeige wich ab, z. B. bei "hoechstens 2 vom selben Kuenstler").
+    function vorschau(state, n, jetztMs, opt) {
+        if (!state || state.modus === 'aus' || !state.modus) return sortiert(liste(state)).slice(0, n);
+        var aus = [], st = state;
+        for (var i = 0; i < n; i++) {
+            var r = weiter(st, jetztMs || 0, opt);
+            if (r.aktion !== 'spielen') break;
+            aus.push(r.eintrag);
+            st = r.state;
+        }
+        return aus;
     }
 
     function radioAbgelaufen(state, jetztMs, maxMin) {
@@ -274,7 +277,7 @@
             && !radioAbgelaufen(st, jetztMs, opt.radioMaxMin);
         if (radioErlaubt) {
             var titel = radioFiltern(st.radio && st.radio.titel, gespielt,
-                                     st.jetzt && st.jetzt.videoId, jetztMs);
+                                     st.jetzt && st.jetzt.videoId, jetztMs, st.jetzt && st.jetzt.songtitel);
             if (titel.length) {
                 var t = Object.assign({ quelle: 'radio', id: 'radio-' + titel[0].videoId }, titel[0]);
                 return {
