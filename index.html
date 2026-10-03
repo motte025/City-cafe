@@ -7868,16 +7868,21 @@
             const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9äöüß]+/g, '');
             const k = norm(eintrag.kuenstler), t = norm(eintrag.songtitel);
             const song = (masterMusicPool || []).find(s => norm(s.title) === t && (!k || norm(s.artist) === k || norm(s.artist).includes(k) || k.includes(norm(s.artist))));
+            // Cover aus der Datenbank nur, wenn es ein echtes ist (viele sind leer oder
+            // Unsplash-Stockfotos) - sonst holt iTunes das Albumcover nach.
+            const echt = u => u && !/unsplash.com/.test(u) ? u : '';
             if (song) {
                 const jahr = parseInt(String(song.release_date || '').slice(0, 4), 10);
-                ytmGenreCache[schl] = { genre: song.category || '', jahr: jahr || eintrag.jahr || null, cover: song.cover_url || '' };
-                return ytmGenreCache[schl];
+                ytmGenreCache[schl] = { genre: song.category || '', jahr: jahr || eintrag.jahr || null, cover: echt(song.cover_url) };
+                if (ytmGenreCache[schl].cover) return ytmGenreCache[schl];
+            } else {
+                ytmGenreCache[schl] = { genre: '', jahr: eintrag.jahr || null, cover: '' };
             }
-            ytmGenreCache[schl] = { genre: '', jahr: eintrag.jahr || null };
             if (typeof fetchITunesTrackInfo === 'function' && eintrag.kuenstler && eintrag.songtitel) {
                 fetchITunesTrackInfo(eintrag.kuenstler, eintrag.songtitel).then(info => {
                     if (!info) return;
-                    ytmGenreCache[schl] = { genre: info.genre || '', jahr: info.year || eintrag.jahr || null,
+                    const alt = ytmGenreCache[schl];
+                    ytmGenreCache[schl] = { genre: alt.genre || info.genre || '', jahr: alt.jahr || info.year || null,
                                              cover: info.cover ? info.cover.replace('600x600bb', '200x200bb') : '' };
                     ytmAnzeigen();
                 }).catch(() => {});
