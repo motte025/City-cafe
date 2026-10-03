@@ -8017,6 +8017,7 @@
 
         // Musik vorbei: zurueck in die Rotation, alles wie vorher.
         function ytmBeenden() {
+            ytmDartErlaubt = false;
             ytm = YTW.stopp(ytm);
             ytmPausiert = false;
             ytmSpielPause = false;
@@ -8287,7 +8288,7 @@
                 // sauber, statt alle paar Sekunden dagegen anzulaufen.
                 let dartAbend = false;
                 try { dartAbend = dartAbendAktiv() || dartAnheizerAktiv(); } catch (e) {}
-                if (dartAbend || (!nlAktiv && mediaStateIndex !== NL_SLOT_INDEX && !nlFern)) {
+                if ((dartAbend && !ytmDartErlaubt) || (!nlAktiv && mediaStateIndex !== NL_SLOT_INDEX && !nlFern)) {
                     ytmBeenden();
                 } else if (nlAktiv && ytmEmbedFehlerTs > ytmLetzterStart && Date.now() - ytmLetzterStart > 30000
                            && !(window.nlMpvStand && ytm.jetzt && window.nlMpvStand.videoId === ytm.jetzt.videoId)) {
@@ -8356,11 +8357,17 @@
         }
 
         // --- Befehle vom Chef (yt/befehl, aktion 'musik') ----------------------------
+        // Dart-Abend beendet die Musik - ausser der Chef startet sie waehrenddessen
+        // ausdruecklich (dann laeuft sie bis Stopp).
+        let ytmDartErlaubt = false;
         function ytmBefehl(b) {
             // Beim Seitenstart liefert Firebase den letzten Befehl nochmal - bis der
             // gespeicherte Stand gelesen ist, keine Musik-Befehle ausfuehren.
             if (!ytmBereit) return;
             const was = String(b.was || '');
+            if (['start', 'sofort', 'radio', 'playlist'].includes(was)) {
+                try { if (dartAbendAktiv() || dartAnheizerAktiv()) ytmDartErlaubt = true; } catch (e) {}
+            }
             if (was === 'zurueckziehen') {
                 // Gast zieht seinen eigenen Wunsch zurueck: nur wenn er von diesem
                 // Geraet kommt (von = uid; die Firebase-Regeln pruefen von beim Schreiben).
@@ -13134,6 +13141,13 @@
              * Bild blieb im Spiel stehen - genau so am Screen gesehen.
              */
             if (phase !== 'reveal') ktResolving = false;
+            // YouTube-Musik laeuft: keine neue Hos'n-Obe-Runde (Wunsch Betreiber).
+            // Eine schon laufende Runde (ktActive) spielt zu Ende.
+            if (!ktActive && ['hostSelect', 'countSelect', 'lobby', 'botRound', 'starter'].includes(phase)
+                && typeof ytmAktiv === 'function' && ytmAktiv()) {
+                ktResetSession('Musik läuft – Hos’n Obe ist gesperrt, bis die Musik gestoppt wird');
+                return;
+            }
             ktClearTimers();
             // Zahl immer zuruecksetzen: wird die Lobby vorzeitig geschlossen (alle
             // Plaetze belegt), laeuft der Countdown nie ab und die letzte Zahl blieb
