@@ -83738,5 +83738,25 @@
     "karaoke_provider": "",
     "karaoke_language": "",
     "auto_discovered": true
+  },
+  {
+    "artist": "George Michael",
+    "title": "Flawless (Go To The City) (Remastered 2006)",
+    "album": "",
+    "category": "80s Pop / Dance",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Pop",
+      "Dance",
+      "Klassiker"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
   }
 ]
