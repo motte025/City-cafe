@@ -50,34 +50,37 @@ COOKIES_FROM = "chromium:/home/citycafe/.config/chromium-kiosk"
 # nur 1080p30 (137).
 # 1080p. Mit height<=720 braucht mpv rund 40 % weniger CPU (gemessen 95 %
 # statt 161 % eines Kerns) - Ausweichweg, falls es eng wird.
-FORMAT = ("bestvideo[vcodec^=avc1][height<=1080]+bestaudio[ext=m4a]"
-          "/best[vcodec^=avc1][height<=1080]")
+# Seit dem W1 (Radeon 780M, VA-API fuer VP9/AV1) kein H.264-Zwang mehr:
+# yt-dlp nimmt bei gleicher Aufloesung den besseren Codec (AV1/VP9).
+FORMAT = "bestvideo[height<=1080]+bestaudio/best[height<=1080]"
 
 
 def format_waehlen(hoehe=0, fps=0):
     """Formatauswahl fuer yt-dlp nach Wunsch der Handy-Fernbedienung.
-    hoehe: 0/480/720/1080, fps: 0 (egal) / 30 / 60. Immer H.264 (avc1), weil
-    VP9 und AV1 auf dieser Box zu viel CPU brauchen. Der Wunsch ist eine
-    Vorgabe, keine Bedingung: gibt es ihn nicht, greift der naechste Eintrag."""
+    hoehe: 0/480/720/1080, fps: 0 (egal) / 30 / 60. Jeder Codec (der W1
+    dekodiert VP9/AV1 per VA-API), CITYCAFE_NUR_H264=1 erzwingt wieder H.264.
+    Der Wunsch ist eine Vorgabe, keine Bedingung: gibt es ihn nicht, greift
+    der naechste Eintrag."""
     h = hoehe if hoehe in (480, 720, 1080) else 1080
-    grund = f"[vcodec^=avc1][height<={h}]"
+    grund = ("[vcodec^=avc1]" if MUSIK_NUR_H264 else "") + f"[height<={h}]"
     takt = "[fps>50]" if fps == 60 else ("[fps<=31]" if fps == 30 else "")
     stufen = []
     if takt:
         stufen.append(f"bestvideo{grund}{takt}+bestaudio[ext=m4a]")
     stufen.append(f"bestvideo{grund}+bestaudio[ext=m4a]")
+    stufen.append(f"bestvideo{grund}+bestaudio")
     stufen.append(f"best{grund}")
     return "/".join(stufen)
 
 
 # Musik (Warteschlange, Radio-Mix, Playlists - YOUTUBE-MUSIK-SETUP.md 5.6):
 # 1080p60, sonst die naechstbeste Stufe - Aufloesung vor Bildrate (1080p30 ist
-# auf dem TV schaerfer als 720p60), dann H.264 bevorzugt. Kein hartes
+# auf dem TV schaerfer als 720p60), dann der beste Codec (AV1/VP9). Kein hartes
 # H.264-Filter: der W1 (Radeon 780M) dekodiert VP9 und AV1 per VA-API, am
 # 02.10.2026 gemessen 17-19 % eines Kerns fuer 1080p60 in allen drei Codecs.
 # "res" zaehlt die kleinere Kantenlaenge, Breitbild 1920x804 gilt als 1080p.
 # CITYCAFE_NUR_H264=1 erzwingt wieder H.264 (fuer schwaechere Geraete).
-# Nightlife und DJ bleiben bei format_waehlen() bzw. TWITCH_QUALITAET.
+# Nightlife nutzt format_waehlen(), DJ bleibt bei TWITCH_QUALITAET.
 MUSIK_NUR_H264 = os.environ.get("CITYCAFE_NUR_H264", "") == "1"
 
 
@@ -91,7 +94,8 @@ def musik_format(hoehe=0, fps=0):
     codec = "[vcodec^=avc1]" if MUSIK_NUR_H264 else ""
     stufen = [f"bv*{codec}{takt}+ba[ext=m4a]", f"bv*{codec}{takt}+ba"] if takt else []
     stufen += [f"bv*{codec}+ba[ext=m4a]", f"bv*{codec}+ba", f"b{codec}", "b"]
-    return "/".join(stufen), f"res:{h},fps:{f},vcodec:avc1,acodec:m4a"
+    sortierung = f"res:{h},fps:{f}" + (",vcodec:avc1" if MUSIK_NUR_H264 else "") + ",acodec:m4a"
+    return "/".join(stufen), sortierung
 RETRY_FAILED_AFTER = 600   # Sekunden, bis ein fehlgeschlagenes Video neu versucht wird
 POLL_SECONDS = 0.5
 LOG = "/home/citycafe/nl-mpv-supervisor.log"

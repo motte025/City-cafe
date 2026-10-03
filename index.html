@@ -8018,6 +8018,7 @@
         // Musik vorbei: zurueck in die Rotation, alles wie vorher.
         function ytmBeenden() {
             ytmDartErlaubt = false;
+            ytmMixInSchlange = null;
             ytm = YTW.stopp(ytm);
             ytmPausiert = false;
             ytmSpielPause = false;
@@ -8185,6 +8186,13 @@
                         ? (ytm.radio.titel || []).filter(t => t.videoId === vorn.videoId).slice(0, 1) : [];
                     const titel = halten.concat(liste.filter(t => !halten.some(h => h.videoId === t.videoId)));
                     ytm = Object.assign({}, ytm, { radio: { seed: auftrag.seed, titel } });
+                    if (ytmMixInSchlange && ytmMixInSchlange === auftrag.seed) {
+                        ytmMixInSchlange = null;
+                        const j = ytm.jetzt || {};
+                        const neu = YTW.radioFiltern(liste, ytm.gespielt, j.videoId, Date.now(), j.songtitel)
+                            .filter(t => !ytm.eintraege.some(e => e.videoId === t.videoId)).slice(0, 25);
+                        ytmPlaylistEinreihen(neu, 'anhaengen');   // als Playlist-Titel: Wuensche ab Platz 5
+                    }
                     ytmRadioMelden();
                     ytmAnzeigen();
                 } else if (auftrag.schritt === 'mix') {
@@ -8360,6 +8368,9 @@
         // Dart-Abend beendet die Musik - ausser der Chef startet sie waehrenddessen
         // ausdruecklich (dann laeuft sie bis Stopp).
         let ytmDartErlaubt = false;
+        // Chef hat "Radio-Mix starten" gedrueckt: der Mix zu diesem Song kommt in die
+        // Warteschlange (dort verschieb- und loeschbar), nicht nur in die Vorschau.
+        let ytmMixInSchlange = null;
         function ytmBefehl(b) {
             // Beim Seitenstart liefert Firebase den letzten Befehl nochmal - bis der
             // gespeicherte Stand gelesen ist, keine Musik-Befehle ausfuehren.
@@ -8414,6 +8425,7 @@
                 ytm = Object.assign({}, ytm, { eintraege: ytm.eintraege.filter(e => e.quelle !== 'playlist') });
                 ytm.radio = { seed: '', titel: [] };   // radioSeedNoetig -> Mix zum laufenden Song
                 ytmMixLaeuft = null;
+                ytmMixInSchlange = ytm.jetzt.videoId;
                 ytm.letzterWunschTs = Date.now();
                 ytm.modus = 'warteschlange';
                 ytmRadioMelden();
@@ -8458,6 +8470,8 @@
                 const gesetzt = ytm.eintraege.find(e => e.id === neu.id);
                 YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, gesetzt.id, gesetzt).catch(() => {});
                 ytm.radio = { seed: '', titel: [] };   // alter Mix weg, der neue kommt zum Song (radioSeedNoetig)
+                ytmMixLaeuft = null;
+                ytmMixInSchlange = vid;
                 ytmRadioMelden();
                 ytm.letzterWunschTs = Date.now();
                 ytm.modus = 'warteschlange';

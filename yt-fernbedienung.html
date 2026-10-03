@@ -105,7 +105,7 @@
         display: flex; align-items: center; gap: 12px; background: #131a33; border: 1px solid #27325c;
         border-radius: 18px; padding: 12px 14px; margin-top: 10px; position: relative;
     }
-    .eintrag .griff { font-size: 30px; color: #6b7aa8; padding: 6px 8px; touch-action: none; user-select: none; cursor: grab; }
+    .eintrag .griff { font-size: 32px; color: #8fa0d0; padding: 6px 4px 6px 12px; touch-action: none; user-select: none; cursor: grab; }
     .eintrag .text { flex: 1; min-width: 0; }
     .eintrag .t { font-size: 29px; font-weight: 800; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .eintrag .k { font-size: 22px; color: #9fb0d8; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -345,7 +345,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-ende';
+    var FASSUNG = '2026-10-03-griff';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -564,10 +564,12 @@
             var zusatz = '';
             if (i === 0 && jetzt && jetzt.modus !== 'aus') zusatz += ' · <span class="in"></span>';
             if (e.quelle === 'wunsch') zusatz += ' <span class="wunsch">📱 Wunsch</span>';
-            d.innerHTML = (istChef ? '<span class="griff" aria-label="Ziehen zum Umsortieren">⋮⋮</span>' : '<span class="nr">' + (i + 1) + '</span>')
+            // Griff zum Umsortieren rechts aussen (Daumen), Nummer links.
+            d.innerHTML = '<span class="nr">' + (i + 1) + '</span>'
                 + '<div class="text"><div class="t">' + esc(e.songtitel || e.titel) + '</div>'
                 + '<div class="k">' + esc(e.kuenstler || '') + zusatz + '</div></div>'
-                + ((istChef || (meins && e.quelle === 'wunsch')) ? '<button type="button" class="weg" aria-label="Entfernen">✕</button>' : '');
+                + ((istChef || (meins && e.quelle === 'wunsch')) ? '<button type="button" class="weg" aria-label="Entfernen">✕</button>' : '')
+                + (istChef ? '<span class="griff" aria-label="Ziehen zum Umsortieren">☰</span>' : '');
             var weg = d.querySelector('.weg');
             if (istChef) d.insertBefore(mehrKnopf(e, e), weg);
             if (weg) weg.addEventListener('click', function () {
