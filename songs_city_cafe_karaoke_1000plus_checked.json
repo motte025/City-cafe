@@ -83899,16 +83899,35 @@
     "auto_discovered": true
   },
   {
-    "artist": "Sabrina Carpenter",
-    "title": "Bad Reviews",
+    "artist": "Banda Beijo",
+    "title": "Bate Lata",
     "album": "",
-    "category": "Rock Party",
+    "category": "Après-Ski & Ballermann",
     "chart": "",
     "release_date": "",
     "tags": [
-      "Rock",
-      "Pop",
-      "Party"
+      "Party",
+      "Karaoke",
+      "Après-Ski & Ballermann"
+    ],
+    "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
+    "cover_url": "",
+    "karaoke": true,
+    "karaoke_version": "",
+    "karaoke_provider": "",
+    "karaoke_language": "",
+    "auto_discovered": true
+  },
+  {
+    "artist": "ABBA",
+    "title": "Gimme! Gimme! Gimme! (A Man After Midnight)",
+    "album": "",
+    "category": "70s Party",
+    "chart": "",
+    "release_date": "",
+    "tags": [
+      "Disco",
+      "Kult"
     ],
     "bio": "Automatisch über ähnliche Songs entdeckt – noch nicht geprüft.",
     "cover_url": "",
