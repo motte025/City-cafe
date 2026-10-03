@@ -214,3 +214,15 @@ Protokoll: `/home/citycafe/nl-mpv-supervisor.log`, Fehler:
   busy".
 * **Windows-Zeilenenden**: Die Arbeitskopie auf dem Beelink hat CRLF. Vor dem
   Übertragen mit `tr -d '\r'` bereinigen, sonst bricht `sh` ab.
+
+## Überblendung und Ambilight (Musik, seit 03.10.2026)
+
+- **Überblendung:** `XF_SEK` (6 s) vor Songende startet ein zweiter mpv mit dem
+  vorgeladenen nächsten Song (`/tmp/mpv-nl-xf.sock`, Titel `xf-ein` = unsichtbar,
+  app_id wechselt zwischen `mpv` und `mpvxf`). Der Faden `ueberblenden` ruft
+  `nlVideoFertig()` und blendet Ton (mpv-Lautstärke) und Bild (sway-Opacity) über.
+  Danach wird der zweite zum Haupt-Player (Socket auf `/tmp/mpv-nl.sock`
+  umbenannt). Überspringen/Stopp währenddessen bricht sauber ab.
+- **Ambilight:** `window.nlAmbiAn` (Dashboard) schaltet den Faden `ambi_schleife`
+  ein: viermal pro Sekunde `grim` auf das Videorechteck (5 %), Randfarben
+  (gesättigt, max. 75 % hell) direkt als CSS-Variablen `--ambi-l/r/t/b` setzen.
