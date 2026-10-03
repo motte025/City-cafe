@@ -2427,6 +2427,14 @@
         .ytm-kachel-text { min-width: 0; display: flex; flex-direction: column; }
         .ytm-kachel-text b { font-size: 21px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytm-kachel-text small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Rechte Karte als Fotoschau (Google-Drive-Galerie), per Handy umschaltbar */
+        body.ytm-an .ytm-seite.fotos { padding: 0; overflow: hidden; }
+        .ytm-fotos { position: absolute; inset: 0; border-radius: 24px; overflow: hidden; background: #000; }
+        .ytm-fotos img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease; }
+        .ytm-fotos img.an { opacity: 1; }
+        .ytm-foto-text { position: absolute; left: 0; right: 0; bottom: 0; padding: 70px 26px 24px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); color: #ffffff; font-size: 28px; font-weight: 800; }
+        .ytm-foto-text small { display: block; margin-top: 4px; font-size: 18px; font-weight: 700; color: #00f2fe; }
         .ytm-seite-fuss { margin-top: 12px; font-size: 16px; font-weight: 600; color: #94a3b8; }
 
         /* Vollbild-Ansicht */
@@ -7849,6 +7857,31 @@
                     gespielt: [], letzterWunschTs: 0, seedVonWunsch: false };
         let ytmPausiert = false;
         let ytmVollbild = YT_VOLLBILD_STANDARD;
+        // Rechte Karte im Widget: Aehnliche Songs (false) oder Fotos aus der Drive-Galerie (true)
+        let ytmSeiteFotos = false;
+        let ytmFotoListe = [], ytmFotoIdx = 0, ytmFotoNaechste = 0;
+        function ytmFotoWeiter() {
+            const box = document.querySelector('#ytm-seite .ytm-fotos');
+            if (!box) return;
+            if (!ytmFotoListe.length) {
+                // neueste 80 Fotos, gemischt (visitorGalleryData kommt neueste-zuerst)
+                ytmFotoListe = shuffleArray((typeof visitorGalleryData !== 'undefined' && visitorGalleryData || []).slice(0, 80));
+                ytmFotoIdx = 0;
+            }
+            if (!ytmFotoListe.length) return;
+            const d = ytmFotoListe[ytmFotoIdx++];
+            if (ytmFotoIdx >= ytmFotoListe.length) ytmFotoListe = [];
+            const bilder = box.querySelectorAll('img');
+            const neu = bilder[0].classList.contains('an') ? bilder[1] : bilder[0];
+            const alt = neu === bilder[0] ? bilder[1] : bilder[0];
+            neu.onload = () => {
+                neu.classList.add('an');
+                alt.classList.remove('an');
+                const text = box.querySelector('.ytm-foto-text');
+                if (text) text.innerHTML = ytmEsc(zufaelligerSpruch(!!d.isKaraoke)) + (d.date ? `<small>${ytmEsc(d.date)}</small>` : '');
+            };
+            neu.src = d.src;
+        }
         let ytmSpielPause = false;        // Hos'n Obe hat die Musik unterbrochen
         let ytmStartNachSpiel = false;    // Wunsch kam waehrend Hos'n Obe
         let ytmBekannteIds = null;        // Eintraege beim letzten Blick (neue = Start)
@@ -7940,6 +7973,7 @@
                 posSek: Math.round(st.pos),
                 pausiert: ytmPausiert,
                 vollbild: ytmVollbild,
+                seite: ytmSeiteFotos ? 'fotos' : 'songs',
                 letzterWunschTs: ytm.letzterWunschTs || 0,
                 gespielt: (ytm.gespielt || []).slice(-40),
                 spielPause: ytmSpielPause
@@ -8273,6 +8307,10 @@
         // --- Takt: Vorladen, Platzhalter aufloesen, Hos'n Obe, Radio-Grenze -------
         function ytmTakt() {
             ytmErgebnissePruefen();
+            if (ytmSeiteFotos && ytmAktiv() && !ytmVollbild && Date.now() >= ytmFotoNaechste) {
+                ytmFotoNaechste = Date.now() + 8000;   // alle 8 s ein neues Foto
+                ytmFotoWeiter();
+            }
             const spiel = !!(window.ktSpielLaeuft && window.ktSpielLaeuft());
 
             // Hos'n Obe hat Vorrang: Musik unterbrechen, danach weiter.
@@ -8408,6 +8446,13 @@
                 ytmPausiert = was === 'pauseUm' ? !ytmPausiert : was === 'pause';
                 window.nlPauseWunsch = { id: b.id, pause: ytmPausiert };
                 try { ytmPausiert ? nlPlayer.pauseVideo() : (!nlExtern() && nlPlayer.playVideo()); } catch (e) {}
+                ytmMelden();
+                return;
+            }
+            if (was === 'fotos' || was === 'songs') {
+                ytmSeiteFotos = was === 'fotos';
+                ytmFotoNaechste = 0;
+                ytmAnzeigen();
                 ytmMelden();
                 return;
             }
@@ -8609,9 +8654,18 @@
             // 6.6 Seitenleiste
             const seite = document.getElementById('ytm-seite');
             if (seite) {
-                seite.innerHTML = '<div class="ytm-seite-kopf">🎶 ÄHNLICHE SONGS</div><div class="ytm-seite-liste">'
-                    + ytmRadioListe(6).map(ytmKachelzeile).join('')
-                    + '</div><div class="ytm-seite-fuss">Läuft automatisch, wenn die Warteschlange leer ist</div>';
+                seite.classList.toggle('fotos', ytmSeiteFotos);
+                if (ytmSeiteFotos) {
+                    // Fotoschau nur einmal aufbauen - die Bilder wechselt ytmTakt()
+                    if (!seite.querySelector('.ytm-fotos')) {
+                        seite.innerHTML = '<div class="ytm-fotos"><img alt=""><img alt=""><div class="ytm-foto-text"></div></div>';
+                        ytmFotoNaechste = 0;
+                    }
+                } else {
+                    seite.innerHTML = '<div class="ytm-seite-kopf">🎶 ÄHNLICHE SONGS</div><div class="ytm-seite-liste">'
+                        + ytmRadioListe(6).map(ytmKachelzeile).join('')
+                        + '</div><div class="ytm-seite-fuss">Läuft automatisch, wenn die Warteschlange leer ist</div>';
+                }
             }
             // 6.8 Vollbild
             const vt = document.getElementById('ytv-titel');
@@ -8826,6 +8880,7 @@
                 YT_REMOTE_NET.aufNeueWuenscheHoeren(verb, NL_FERN_RAUM, ytmWunschBearbeiten);
                 if (jetzt) {
                     ytmVollbild = !!jetzt.vollbild;
+                    ytmSeiteFotos = jetzt.seite === 'fotos';
                     ytm.gespielt = Array.isArray(jetzt.gespielt) ? jetzt.gespielt : [];
                     ytm.letzterWunschTs = Number(jetzt.letzterWunschTs) || 0;
                 }
