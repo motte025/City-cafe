@@ -2429,6 +2429,8 @@
         .ytm-kachel-text small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         /* Ambilight (Musik, Widget): farbiger Schein um das Video. Die Farben misst
            der Supervisor am mpv-Bild (window.nlAmbiFarben), hier nur Darstellung. */
+        /* Ueberschrift und Zeile darueber liegen ueber dem Schein, sonst wirken sie blass */
+        html body.ytm-an.ytm-ambi:not(.ytm-vollbild) .nl-header { position: relative; z-index: 3; }
         /* !important + html davor: schlaegt die Spar-Regel "box-shadow: none" (Odroid-Zeit) */
         html body.ytm-an.ytm-ambi:not(.ytm-vollbild) .nl-player {
             overflow: visible;
