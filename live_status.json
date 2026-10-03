@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-03T10:57:45Z",
+  "checked_at": "2026-10-03T11:07:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Classics mit @ericssl",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
