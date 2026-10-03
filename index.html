@@ -2411,8 +2411,13 @@
             background: linear-gradient(170deg, #1c0b2c 0%, #0d0a20 60%, #0a1430 100%);
             border: 1px solid rgba(243, 85, 218, 0.25);
         }
-        .ytm-seite-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 25px; color: #f355da; letter-spacing: 1px; margin-bottom: 16px; }
-        .ytm-seite-liste { display: flex; flex-direction: column; gap: 11px; }
+        .ytm-seite-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 27px; color: #f355da; letter-spacing: 1px; margin-bottom: 16px; }
+        /* Liste fuellt die ganze Karte: Zeilen teilen sich die Hoehe */
+        .ytm-seite-liste { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+        .ytm-seite-liste .ytm-kachelzeile { flex: 1 1 0; min-height: 0; padding: 8px 14px; gap: 16px; }
+        .ytm-seite-liste .ytm-kachel { width: 74px; height: 74px; font-size: 34px; }
+        .ytm-seite-liste .ytm-kachel-text b { font-size: 26px; }
+        .ytm-seite-liste .ytm-kachel-text small { font-size: 19px; margin-top: 2px; }
         .ytm-kachelzeile {
             display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 14px;
             background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07);
@@ -2422,7 +2427,7 @@
         .ytm-kachel-text { min-width: 0; display: flex; flex-direction: column; }
         .ytm-kachel-text b { font-size: 21px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytm-kachel-text small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ytm-seite-fuss { margin-top: 14px; font-size: 15px; font-weight: 600; color: #94a3b8; }
+        .ytm-seite-fuss { margin-top: 12px; font-size: 16px; font-weight: 600; color: #94a3b8; }
 
         /* Vollbild-Ansicht */
         #ytm-vollbild { display: none; }
@@ -2458,24 +2463,26 @@
         .ytv-gleich-zeile { display: flex; align-items: center; gap: 24px; margin-top: 4px; min-width: 0; }
         .ytv-gleich-zeile b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 58px; color: #ffffff; font-variant-numeric: tabular-nums; flex-shrink: 0; }
         .ytv-gleich-zeile div { min-width: 0; display: flex; flex-direction: column; }
-        .ytv-gleich-zeile strong { font-size: 27px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ytv-gleich-zeile small { font-size: 17px; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-gleich-zeile strong { font-size: 31px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-gleich-zeile small { font-size: 20px; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-danach-kopf { margin: 22px 0 12px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; letter-spacing: 1px; }
         .ytv-danach-kopf small { font-size: 16px; color: #f9a8e8; margin-left: 8px; }
-        .ytv-liste { display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
-        .ytv-zeile { display: flex; align-items: center; gap: 16px; height: 63px; padding: 0 20px; border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); flex-shrink: 0; }
-        .ytv-zeile > b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; width: 22px; flex-shrink: 0; }
-        .ytv-zeile > img { width: 80px; height: 45px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #000; }
+        .ytv-liste { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+        .ytv-zeile { display: flex; align-items: center; gap: 16px; flex: 1 1 0; min-height: 0; padding: 0 20px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); }
+        .ytv-zeile > b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px; color: #00f2fe; width: 26px; flex-shrink: 0; }
+        .ytv-zeile > img { width: 112px; height: 63px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #000; }
         .ytv-zeile > div { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-        .ytv-zeile strong { font-size: 22px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ytv-zeile small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-zeile strong { font-size: 27px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-zeile small { font-size: 19px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-zeile small .wunsch { color: #f355da; }
-        .ytv-zeile > span { font-size: 16px; font-weight: 700; color: #94a3b8; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-        .ytv-radio-kopf { position: absolute; left: 40px; top: 895px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #f355da; letter-spacing: 1px; }
-        .ytv-radio { position: absolute; left: 40px; right: 40px; top: 935px; height: 108px; display: flex; gap: 18px; }
+        .ytv-zeile > span { font-size: 19px; font-weight: 700; color: #94a3b8; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+        .ytv-radio-kopf { position: absolute; left: 40px; top: 893px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px; color: #f355da; letter-spacing: 1px; }
+        .ytv-radio { position: absolute; left: 40px; right: 40px; top: 935px; bottom: 26px; display: flex; gap: 18px; }
         .ytv-radio .ytm-kachelzeile { flex: 1 1 0; min-width: 0; padding: 12px; }
-        .ytv-radio .ytm-kachel { width: 84px; height: 84px; font-size: 34px; }
+        .ytv-radio .ytm-kachel { width: 92px; height: 92px; font-size: 36px; }
+        .ytv-radio .ytm-kachel-text b { font-size: 24px; }
+        .ytv-radio .ytm-kachel-text small { font-size: 18px; }
         .nl-player {
             width: 1200px; height: 675px; box-sizing: border-box; position: relative;
             border-radius: 16px; overflow: hidden;
@@ -3235,7 +3242,7 @@
                 <div class="ytv-danach-kopf" id="ytv-danach-kopf">DANACH</div>
                 <div class="ytv-liste" id="ytv-liste"></div>
             </div>
-            <div class="ytv-radio-kopf">📻 RADIO-MIX · PASST ZU DIESEM SONG</div>
+            <div class="ytv-radio-kopf">🎶 ÄHNLICHE SONGS</div>
             <div class="ytv-radio" id="ytv-radio"></div>
         </div>
 
@@ -8463,12 +8470,32 @@
             const h = Math.floor(sek / 3600), m = Math.floor((sek % 3600) / 60), s = sek % 60;
             return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0');
         }
+        // Hauptueberschrift "Interpret – Titel", darunter Genre und Jahr.
+        function ytmKopfzeile(e) {
+            if (!e) return '';
+            const titel = e.songtitel || e.titel || '';
+            return e.kuenstler && e.songtitel ? e.kuenstler + ' – ' + titel : titel;
+        }
         function ytmUnterzeile(e) {
             if (!e) return '';
             const gj = ytmGenreJahr(e) || {};
-            return [e.kuenstler, gj.genre, gj.jahr].filter(Boolean).join(' · ');
+            return [gj.genre, gj.jahr].filter(Boolean).join(' · ') || (e.kuenstler && !e.songtitel ? e.kuenstler : '');
+        }
+        // Schrift so gross wie moeglich, aber ohne "..." (lange Namen werden kleiner).
+        function ytmEinpassen(el, gross, klein) {
+            if (!el || !el.offsetWidth) return;   // unsichtbar (andere Ansicht): beim Umschalten neu
+            let g = gross;
+            el.style.fontSize = g + 'px';
+            while (g > klein && el.scrollWidth > el.clientWidth + 1) { g -= 2; el.style.fontSize = g + 'px'; }
         }
         function ytmRadioListe(n) {
+            // Gleiche Reihenfolge wie oben "Als Naechstes" (vorschau = echte Folge).
+            const vor = YTW.vorschau(ytm, n + ytm.eintraege.length, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN })
+                .filter(t => t.quelle === 'radio');
+            if (vor.length) return vor.slice(0, n);
+            return ytmRadioListeRoh(n);
+        }
+        function ytmRadioListeRoh(n) {
             return YTW.radioFiltern((ytm.radio && ytm.radio.titel) || [], ytm.gespielt, ytm.jetzt && ytm.jetzt.videoId,
                                     Date.now(), ytm.jetzt && ytm.jetzt.songtitel)
                 .filter(t => !ytm.eintraege.some(e => e.videoId === t.videoId)).slice(0, n);
@@ -8510,13 +8537,18 @@
                 if (!an) { ytmEinblendungen = []; ytmEinblendungJetzt = null; ytmTorStand = null; }
                 if (an && YT_QR_AN) ytmQrKarteBauen();
             }
-            if (!an) { generateDynamicPartyTickerWennNoetig(); return; }
+            if (!an) {
+                const h = document.getElementById('nl-stadt');
+                if (h) h.style.fontSize = '';
+                generateDynamicPartyTickerWennNoetig();
+                return;
+            }
 
             const j = ytm.jetzt;
             const unter = ytmUnterzeile(j);
             // 6.1 Kopfzeile im Nightlife-Widget
             const stadt = document.getElementById('nl-stadt');
-            if (stadt) stadt.textContent = j.songtitel || j.titel || '';
+            if (stadt) { if (stadt.textContent !== ytmKopfzeile(j)) stadt.textContent = ytmKopfzeile(j); ytmEinpassen(stadt, 36, 20); }
             const ut = document.getElementById('nl-untertitel');
             if (ut) ut.textContent = unter;
             // 6.7 Ticker
@@ -8526,20 +8558,20 @@
             // 6.6 Seitenleiste
             const seite = document.getElementById('ytm-seite');
             if (seite) {
-                seite.innerHTML = '<div class="ytm-seite-kopf">📻 PASST DAZU</div><div class="ytm-seite-liste">'
+                seite.innerHTML = '<div class="ytm-seite-kopf">🎶 ÄHNLICHE SONGS</div><div class="ytm-seite-liste">'
                     + ytmRadioListe(6).map(ytmKachelzeile).join('')
                     + '</div><div class="ytm-seite-fuss">Läuft automatisch, wenn die Warteschlange leer ist</div>';
             }
             // 6.8 Vollbild
             const vt = document.getElementById('ytv-titel');
-            if (vt) vt.textContent = j.songtitel || j.titel || '';
+            if (vt) { if (vt.textContent !== ytmKopfzeile(j)) vt.textContent = ytmKopfzeile(j); ytmEinpassen(vt, 48, 26); }
             const vu = document.getElementById('ytv-unter');
             if (vu) vu.textContent = unter;
             const vor = YTW.vorschau(ytm, 8, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
             const gt = document.getElementById('ytv-gleich-titel'), gk = document.getElementById('ytv-gleich-kuenstler');
             if (gt) gt.textContent = vor[0] ? (vor[0].songtitel || vor[0].titel) : '—';
             if (gk) gk.textContent = vor[0] ? (vor[0].kuenstler || '') : '';
-            const danach = vor.slice(1, 8);
+            const danach = vor.slice(1, 7);   // 6 Zeilen fuellen die Spalte
             const wuensche = ytm.eintraege.filter(e => e.quelle === 'wunsch').length;
             const dk = document.getElementById('ytv-danach-kopf');
             if (dk) dk.innerHTML = 'DANACH' + (wuensche ? ` <small>· 📱 ${wuensche} ${wuensche === 1 ? 'WUNSCH' : 'WÜNSCHE'}</small>` : '');
