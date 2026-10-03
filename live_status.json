@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-03T00:42:45Z",
+  "checked_at": "2026-10-03T00:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -21,6 +21,13 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Live with Don Toliver. Sponsored by !Wendy's",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "👻BOOmer Night👻 60s 70s & 80s all night loooong🎃HALLOWEEN DECOR IS UP",
+      "game": "DJs"
     }
   ]
 }
