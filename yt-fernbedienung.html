@@ -364,7 +364,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-laut';
+    var FASSUNG = '2026-10-03-ruhig';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -590,8 +590,15 @@
     }
     setInterval(uhrTakt, 1000);
 
+    var schlangeSig = '';
     function schlangeZeigen() {
         var s = W.sortiert(schlange);
+        // Nur neu zeichnen, wenn sich wirklich etwas geaendert hat - sonst
+        // flackert die Liste bei jeder Statusmeldung (Bilder laden neu).
+        var sig = JSON.stringify([istChef, verb && verb.uid, jetzt && jetzt.modus !== 'aus',
+            s.map(function (e) { return [e.id, e.pos, e.titel, e.quelle, e.von]; })]);
+        if (sig === schlangeSig && el('schlange').children.length) { uhrTakt(); return; }
+        schlangeSig = sig;
         el('schlange-kopf').textContent = 'Warteschlange · ' + s.length;
         var box = el('schlange');
         if (!s.length) { box.innerHTML = '<div class="hinweis">Leer – danach läuft der Radio-Mix.</div>'; return; }
@@ -638,6 +645,7 @@
             platz.className = 'eintrag platzhalter';
             platz.style.height = zeile.getBoundingClientRect().height + 'px';
             gezogen = { eintrag: eintrag };
+            schlangeSig = '';
             zeile.classList.add('zieht');
             zeile.after(platz);
             function bewegen(e2) {
@@ -680,8 +688,12 @@
         return r.filter(function (t) { return t && !inSchlange[t.videoId] && (!jetzt || t.videoId !== jetzt.videoId); }).slice(0, n);
     }
 
+    var radioSig = '';
     function radioVorschau() {
         var box = el('radio-vorschau');
+        var sig = JSON.stringify([istChef, jetzt && jetzt.songtitel, radioTitel(20).map(function (t) { return t.videoId; })]);
+        if (sig === radioSig) return;
+        radioSig = sig;
         box.innerHTML = radioTitel(5).map(function (t) {
             return '<div class="eintrag"><span class="nr">♪</span><div class="text"><div class="t">' + esc(t.songtitel || t.titel)
                 + '</div><div class="k">' + esc(t.kuenstler || t.kanal || '') + '</div></div></div>';

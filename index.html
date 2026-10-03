@@ -7587,7 +7587,11 @@
                 // Laufende Hos'n-Obe-Runde: dieselbe Kennung wie im QR-Code am
                 // Screen. Damit kann die Sammel-Fernbedienung das Kartenspiel
                 // oeffnen, ohne dass jemand den Code abfotografiert.
-                spiel: window.ktSessionAktuell || ''
+                spiel: window.ktSessionAktuell || '',
+                // Dieser Screen ist der Chef-TV (PIN in der Kiosk-Adresse). Ein
+                // zweiter, alter Screen im selben Raum meldet das nicht - die
+                // Handys hoeren dann nur auf diesen (sonst "zuckt" die Fernbedienung).
+                chefTv: !!(new URLSearchParams(location.search).get('chefpin') || '').trim()
             }).catch(() => {});
         }
 

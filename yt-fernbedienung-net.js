@@ -137,8 +137,16 @@
         listeSchreiben: function (verb, raum, eintraege) {
             return schreiben(verb, raum, 'liste', { eintraege: (eintraege || []).slice(0, 100) });
         },
+        // Zwei Screens im selben Raum (alter ODROID + Chef-TV) ueberschreiben sich
+        // den Status gegenseitig - die Handy-Seiten sprangen dann hin und her.
+        // Hat sich in den letzten 2 Minuten ein Chef-TV gemeldet, zaehlt nur er.
         aufStatusHoeren: function (verb, raum, rueckruf) {
-            return hoeren(verb, raum, 'status', rueckruf);
+            var chefZuletzt = 0;
+            return hoeren(verb, raum, 'status', function (s) {
+                if (s && s.chefTv) chefZuletzt = Date.now();
+                else if (s && Date.now() - chefZuletzt < 120000) return;
+                rueckruf(s);
+            });
         },
 
         // --- YouTube-Musik (YOUTUBE-MUSIK-SETUP.md, Abschnitt 4) -----------
