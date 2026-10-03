@@ -671,6 +671,36 @@ def vorschlaege():
 MIX_MIT_COOKIES = os.environ.get("CITYCAFE_MIX_COOKIES", "1") != "0"
 
 
+# Musikvideos bevorzugen (Wunsch 03.10.2026): offizielle Videos nach vorn,
+# Lyric-/Audio-/Topic-/Visualizer-Uploads (Standbild am TV) moeglichst raus.
+MV_GUT = re.compile(r"official\s+(music\s+)?video|offizielles\s+(musik)?video|musikvideo|music\s+video|\(video\)|\[video\]", re.I)
+MV_SCHLECHT = re.compile(r"lyric|lyrics|songtext|\baudio\b|visuali[sz]er|karaoke|sped\s*up|slowed|nightcore|"
+                         r"\b1\s*hour\b|\bloop\b|instrumental|cover\b|reaction", re.I)
+
+
+def musikvideo_wertung(t):
+    """Grobe Note, wie sehr ein Treffer ein echtes Musikvideo ist (hoeher = besser)."""
+    titel, kanal = str(t.get("titel") or ""), str(t.get("kanal") or "")
+    note = 0
+    if MV_GUT.search(titel):
+        note += 3
+    if "vevo" in kanal.lower():
+        note += 1
+    if MV_SCHLECHT.search(titel):
+        note -= 3
+    if kanal.endswith(" - Topic"):
+        note -= 3          # automatisch erzeugter Audio-Upload (nur Standbild)
+    if re.search(r"\blive\b", titel, re.I):
+        note -= 1
+    return note
+
+
+def musikvideos_bevorzugen(treffer, mindestens):
+    """Schlechte (Lyric/Audio/Topic ...) rauswerfen, solange genug uebrig bleiben."""
+    gut = [t for t in treffer if musikvideo_wertung(t) > -3]
+    return gut if len(gut) >= mindestens else treffer
+
+
 def mix(video_id, anzahl=MIX_ANZAHL):
     """YouTube-Radio-Mix zum Video (list=RD<id>) -> Liste von Treffern, ohne das
     Video selbst. Ein einziger yt-dlp-Lauf, 1-2 s. Am 02.10.2026 auf dem W1 mit
@@ -684,7 +714,7 @@ def mix(video_id, anzahl=MIX_ANZAHL):
             out = subprocess.run(
                 [programm, "--js-runtimes", "node",
                  *(["--cookies-from-browser", COOKIES_FROM] if MIX_MIT_COOKIES else []),
-                 "--flat-playlist", "--playlist-end", str(anzahl + 1), "--print",
+                 "--flat-playlist", "--playlist-end", str(anzahl + 11), "--print",
                  "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s",
                  f"https://www.youtube.com/watch?v={video_id}&list=RD{video_id}"],
                 capture_output=True, text=True, timeout=60)
@@ -695,6 +725,7 @@ def mix(video_id, anzahl=MIX_ANZAHL):
         if out.stdout.strip():
             break
     treffer = [t for t in treffer_lesen(out.stdout if out else "") if t["videoId"] != video_id]
+    treffer = musikvideos_bevorzugen(treffer, min(12, anzahl))[:anzahl]
     if not treffer:
         log(f"Mix zu {video_id} leer: {(out.stderr if out else '').strip()[-120:]}")
     return treffer[:anzahl]
@@ -1308,8 +1339,11 @@ def main():
                 finde_id = finde["id"]
 
                 def aufgabe(fid=finde_id, text=str(finde.get("text") or "")[:120], seite=page_id):
-                    # Ein Treffer reicht: "Kuenstler Titel official video" (Spec 5.3/7.3)
-                    gefunden = suchen(text + " official video", 1) if text else []
+                    # "Kuenstler Titel official video" (Spec 5.3/7.3): unter den ersten
+                    # fuenf das beste echte Musikvideo (nicht laenger als 10 Minuten)
+                    gefunden = suchen(text + " official video", 5) if text else []
+                    gefunden = sorted([t for t in gefunden if (t.get("dauerSek") or 0) <= 600] or gefunden,
+                                      key=lambda t: -musikvideo_wertung(t))[:1]
                     log(f"Gefunden {text!r}: {gefunden[0]['videoId'] if gefunden else '-'}")
                     zustellen(seite, "window.nlFindeErgebnis = "
                               + json.dumps({"id": fid, "text": text,
@@ -1447,6 +1481,7 @@ def main():
                     if place_mpv(target):
                         if not window_seen:
                             window_seen = True
+                            sway(f'[app_id="{MPV_APP["id"]}"]', "opacity", "1")   # sitzt: jetzt zeigen
                             log(f"mpv-Fenster da nach {now - started:.1f}s")
                         next_place_check = now + 5
                         # QR-Kaertchen: nur bei Musik, nicht bei Nightlife/DJ/Dartcam.
@@ -1608,6 +1643,10 @@ def main():
                         and laenge > NL_SLOT_SEKUNDEN + 30):
                     start = random.randint(0, laenge - NL_SLOT_SEKUNDEN - 30)
                 args.append(f"--start={start}")
+                # Unsichtbar starten (sway-Regel fuer Titel "xf-ein"), sichtbar erst,
+                # wenn das Fenster sitzt - im Vollbild tauchte es sonst ~1 s an der
+                # Widget-Stelle (83/248) auf, bevor place_mpv es verschob.
+                args.append("--title=xf-ein")
                 if audio_url:
                     args.append(f"--audio-file={audio_url}")
                 args.append(video_url)
