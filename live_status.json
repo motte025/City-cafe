@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-03T17:32:45Z",
+  "checked_at": "2026-10-03T17:47:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "HEEEEEYYAAAAAWWWWWW !bewbs !morestreams !schedule",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 GLITTER SATURDAY | !bier | !zug | !prep | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 GLITTER SATURDAY | !bier | !zug | !prep | !holy | #werbung",
+      "channel": "roice",
+      "name": "roice",
+      "title": "HEEEEEYYAAAAAWWWWWW !bewbs !morestreams !schedule",
       "game": "DJs"
     }
   ]
