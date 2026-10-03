@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-03T18:32:45Z",
+  "checked_at": "2026-10-03T18:47:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music presents: Shakira Live From Madrid. Sponsored by Epson",
+      "game": "Music"
+    },
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
@@ -24,24 +31,10 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "HEEEEEYYAAAAAWWWWWW !bewbs !morestreams !schedule",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music presents: Shakira Live From Madrid. Sponsored by Epson",
-      "game": "Music"
     }
   ]
 }
