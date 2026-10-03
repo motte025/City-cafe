@@ -94,6 +94,8 @@
     .jetzt-titel { font-size: 38px; font-weight: 800; line-height: 1.2; margin-top: 6px; }
     .jetzt-kuenstler { font-size: 26px; color: #cbd5f5; margin-top: 4px; }
     .balken { height: 10px; border-radius: 6px; background: #252e55; margin-top: 18px; overflow: hidden; }
+    /* Chef: Balken antippen = an diese Stelle springen (grosse Trefferflaeche) */
+    body.ist-chef .balken { height: 16px; cursor: pointer; box-shadow: 0 0 0 12px transparent; touch-action: manipulation; }
     .balken i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #00f2fe, #f355da); border-radius: inherit; }
     .zeitzeile { display: flex; justify-content: space-between; font-size: 22px; color: #cbd5f5; margin-top: 8px; font-variant-numeric: tabular-nums; }
     .steuerung { display: grid; grid-template-columns: 1fr 1.4fr 1fr 1fr; gap: 10px; margin-top: 16px; }
@@ -354,7 +356,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-art';
+    var FASSUNG = '2026-10-03-balken';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -539,6 +541,26 @@
         if (!gezogen) schlangeZeigen();
         radioVorschau();
     }
+
+    function aktuellePos() {
+        var pos = Number(jetzt && jetzt.posSek) || 0;
+        if (jetzt && !jetzt.pausiert && jetzt.ts) pos += Math.max(0, (serverJetzt() - Number(jetzt.ts)) / 1000);
+        var dauer = Number(jetzt && jetzt.dauerSek) || 0;
+        return dauer ? Math.min(pos, dauer) : pos;
+    }
+
+    // Fortschrittsbalken antippen: an diese Stelle im Song springen (nur Chef).
+    el('jetzt-balken').parentNode.addEventListener('click', function (ev) {
+        if (!istChef || !jetzt || !jetzt.videoId || jetzt.modus === 'aus') return;
+        var dauer = Number(jetzt.dauerSek) || 0;
+        if (!dauer) return;
+        var r = this.getBoundingClientRect();
+        var ziel = Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)) * dauer;
+        var sek = Math.round(ziel - aktuellePos());
+        if (Math.abs(sek) < 2) return;
+        senden({ aktion: 'spulen', sek: sek });
+        melden((sek > 0 ? '⏩ ' : '⏪ ') + zeit(ziel), '');
+    });
 
     function uhrTakt() {
         if (!jetzt || !jetzt.videoId || jetzt.modus === 'aus') {

@@ -7684,7 +7684,8 @@
             }
 
             if (befehl.aktion === 'spulen') {
-                const sek = Math.max(-600, Math.min(600, Number(befehl.sek) || 0));
+                // bis 2 h: der Fortschrittsbalken am Handy springt auch in langen Mixen
+                const sek = Math.max(-7200, Math.min(7200, Number(befehl.sek) || 0));
                 if (!sek) return;
                 if (nlExtern()) {
                     // mpv spielt: der Supervisor springt (window.nlSpulAuftrag).

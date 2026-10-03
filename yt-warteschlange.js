@@ -361,7 +361,7 @@
     // Woerter, die nur Verpackung sind. Eine Klammer, die nur daraus (und aus
     // Jahreszahlen) besteht, faellt weg; "Live" gehoert NICHT dazu.
     var ZUSATZ = ['official', 'officiel', 'oficial', 'offizielles', 'offizieller', 'offizielle',
-        'music', 'musik', 'video', 'musikvideo', 'videoclip', 'clip', 'audio', 'lyrics', 'lyric',
+        'music', 'musik', 'video', 'musikvideo', 'musicvideo', 'musikvid', 'offical', 'videoclip', 'clip', 'audio', 'lyrics', 'lyric',
         'hd', 'hq', 'uhd', '4k', '8k', '1080p', '720p', 'remaster', 'remastered', 'visualizer',
         'visualiser', 'explicit', 'mv', 'the', 'full', 'new', 'with', 'version'];
     var ZUSATZ_SET = {};

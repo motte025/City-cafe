@@ -288,6 +288,7 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     ['Queen - Bohemian Rhapsody (Official Video Remastered)', 'Queen Official', 'Queen', 'Bohemian Rhapsody'],
     ['Pharrell Williams - Happy (Lyrics)', 'Lyrics Channel', 'Pharrell Williams', 'Happy'],
     ['Andreas Gabalier - Hulapalu - Official Video', 'Andreas Gabalier', 'Andreas Gabalier', 'Hulapalu'],
+    ['TABI (Official Musicvideo)', 'Discofieber', 'Discofieber', 'TABI'],
     ['Way Maker (Official Live Video) [feat. Priscilla Alcantara] – Holy Ground | Jeremy Riddle', 'Jeremy Riddle',
         'Jeremy Riddle', 'Way Maker (Official Live Video) [feat. Priscilla Alcantara]']   // "Live" bleibt (Spec 6.4)
 ].forEach(function (f) {
