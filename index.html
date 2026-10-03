@@ -7870,14 +7870,15 @@
             const song = (masterMusicPool || []).find(s => norm(s.title) === t && (!k || norm(s.artist) === k || norm(s.artist).includes(k) || k.includes(norm(s.artist))));
             if (song) {
                 const jahr = parseInt(String(song.release_date || '').slice(0, 4), 10);
-                ytmGenreCache[schl] = { genre: song.category || '', jahr: jahr || eintrag.jahr || null };
+                ytmGenreCache[schl] = { genre: song.category || '', jahr: jahr || eintrag.jahr || null, cover: song.cover_url || '' };
                 return ytmGenreCache[schl];
             }
             ytmGenreCache[schl] = { genre: '', jahr: eintrag.jahr || null };
             if (typeof fetchITunesTrackInfo === 'function' && eintrag.kuenstler && eintrag.songtitel) {
                 fetchITunesTrackInfo(eintrag.kuenstler, eintrag.songtitel).then(info => {
                     if (!info) return;
-                    ytmGenreCache[schl] = { genre: info.genre || '', jahr: info.year || eintrag.jahr || null };
+                    ytmGenreCache[schl] = { genre: info.genre || '', jahr: info.year || eintrag.jahr || null,
+                                             cover: info.cover ? info.cover.replace('600x600bb', '200x200bb') : '' };
                     ytmAnzeigen();
                 }).catch(() => {});
             }
@@ -8420,10 +8421,20 @@
                                     Date.now(), ytm.jetzt && ytm.jetzt.songtitel)
                 .filter(t => !ytm.eintraege.some(e => e.videoId === t.videoId)).slice(0, n);
         }
+        // Kleines Cover: YouTube-Vorschaubild, sonst das Cover aus der Songs-Datenbank
+        // oder von iTunes (Platzhalter-Titel haben noch keine videoId).
+        function ytmCoverUrl(t) {
+            if (/^[A-Za-z0-9_-]{11}$/.test(t.videoId || '')) return `https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg`;
+            const gj = ytmGenreJahr(t);
+            return (gj && gj.cover) || '';
+        }
+        function ytmCoverImg(t) {
+            const url = ytmCoverUrl(t);
+            return url ? `<img alt="" src="${ytmEsc(url)}" onerror="this.remove()">` : '';
+        }
         function ytmKachelzeile(t, i) {
             return `<div class="ytm-kachelzeile"><div class="ytm-kachel" style="background:${YTM_KACHELFARBEN[i % YTM_KACHELFARBEN.length]}">`
-                + (/^[A-Za-z0-9_-]{11}$/.test(t.videoId || '')   // kleines Cover; ohne videoId bleibt die Note
-                    ? `<img alt="" src="https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg" onerror="this.remove()">` : '♪') + '</div>'
+                + (ytmCoverImg(t) || '♪') + '</div>'
                 + `<div class="ytm-kachel-text"><b>${ytmEsc(t.songtitel || t.titel)}</b><small>${ytmEsc(t.kuenstler || t.kanal || '')}</small></div></div>`;
         }
 
@@ -8481,7 +8492,7 @@
             if (dk) dk.innerHTML = 'DANACH' + (wuensche ? ` <small>· 📱 ${wuensche} ${wuensche === 1 ? 'WUNSCH' : 'WÜNSCHE'}</small>` : '');
             const vl = document.getElementById('ytv-liste');
             if (vl) vl.innerHTML = danach.map((t, i) => `<div class="ytv-zeile"><b>${i + 2}</b>`
-                + (/^[A-Za-z0-9_-]{11}$/.test(t.videoId || '') ? `<img alt="" src="https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg" onerror="this.remove()">` : '')
+                + ytmCoverImg(t)
                 + `<div><strong>${ytmEsc(t.songtitel || t.titel)}</strong>`
                 + `<small>${ytmEsc(t.kuenstler || '')}${t.quelle === 'wunsch' ? ' · <span class="wunsch">📱 Handy-Wunsch</span>' : ''}</small></div>`
                 + `<span>${YTW.sekunden(t) ? ytmZeit(YTW.sekunden(t)) : ''}</span></div>`).join('');
