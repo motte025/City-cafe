@@ -54,7 +54,7 @@ führt das mit `bluetoothctl` aus und stellt die Tonausgabe mit `pactl` auf den
 Empfänger um. „Verbunden" meldet er nur, wenn der Tonkanal steht
 (PipeWire-Ausgang `bluez_output…`). Verbunden wird nur per Knopf: „Trennen"
 blockiert den Empfänger zusätzlich, „Verbinden" hebt das auf. `citycafe-bt`
-verbindet nie selbst, es setzt nur einen neuen Bluetooth-Ausgang mit 90 %.
+verbindet nie selbst, es setzt nur einen neuen Bluetooth-Ausgang mit CITYCAFE_VOLUME (jetzt 100 %).
 
 Koppeln (einmal je Empfänger, also zuhause und im Café):
 

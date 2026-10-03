@@ -31,7 +31,7 @@ sway). Ohne Variablen gelten die alten ODROID-Werte.
 | `CITYCAFE_BT_NAME` | Teil des Namens des Bluetooth-Empfängers | `B03` | `B03` |
 | `CITYCAFE_OUTPUT` | Ausgang für `wlr-randr` | `HDMI-A-1` | `HDMI-A-1` |
 | `CITYCAFE_CHROMIUM_EXTRA` | zusätzliche Chromium-Schalter | leer | VA-API-Features |
-| `CITYCAFE_VOLUME` | Lautstärke für `citycafe-bt` | 0.9 | 0.9 |
+| `CITYCAFE_VOLUME` | Lautstärke für `citycafe-bt` | 0.9 | 1.0 (W1, seit 03.10.2026) |
 | `CITYCAFE_NUR_H264` | Musik nur in H.264 (schwache Geräte) | aus | aus (W1 dekodiert VP9/AV1) |
 | `CITYCAFE_MIX_COOKIES` | YouTube-Mix mit Konto-Cookies lesen (0 = ohne) | 1 | 1 |
 | `CITYCAFE_URL` / `CITYCAFE_URL_EXTRA` | andere Dashboard-Adresse (Test) / Zusatz wie `&chefpin=…` (in Anführungszeichen!) | GitHub Pages / leer | – |
@@ -93,7 +93,7 @@ waren für die 2 GB des ODROID nötig; der W1 nimmt 512 MiB.
   connect scheitert dann mit „busy"), probiert dann der Reihe nach und wartet
   bis 20 s auf den Tonkanal; „Trennen" trennt und sperrt alle.
   Verbunden wird nur per Knopf; `/usr/local/bin/citycafe-bt` (nur auf dem W1)
-  setzt lediglich einen neuen Bluetooth-Ausgang als Standard mit 90 %.
+  setzt lediglich einen neuen Bluetooth-Ausgang als Standard mit CITYCAFE_VOLUME (W1: 100 %).
 * **Aufräumen**: `/tmp` liegt im Arbeitsspeicher. Alle 30 Minuten entfernt er
   liegengebliebene Auspackordner von `yt-dlp`; ein volles `/tmp` hat schon
   einmal dazu geführt, dass der Kernel Chromium abgeschossen hat.

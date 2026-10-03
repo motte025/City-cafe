@@ -57,7 +57,7 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
 - **Einstellungen je Gerät** in `/home/citycafe/.config/citycafe.env`:
   `CITYCAFE_RAUM=city-cafe` (Café, kein Roulette-Spiel, nur die Werbung),
   `CITYCAFE_HWDEC=vaapi`, mpv-Puffer 512/64 MiB, `CITYCAFE_CAM_CACHE_SECS=8`
-  (Dartcam), `CITYCAFE_VOLUME=0.9`, Chromium mit VA-API-Schaltern. Ohne
+  (Dartcam), `CITYCAFE_VOLUME=1.0`, Chromium mit VA-API-Schaltern. Ohne
   Variablen verhalten sich Starter und Supervisor wie früher (Raum
   `zuhause`).
 - **Supervisor** `/opt/citycafe/nl-mpv-supervisor.py`: liest über die
@@ -81,7 +81,7 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   „Verbunden" heißt: der PipeWire-Ausgang `bluez_output…` existiert, der Ton
   geht zur Anlage. `/usr/local/bin/citycafe-bt` (nur auf dem W1) verbindet
   nie selbst, es setzt nur einen neu aufgetauchten Bluetooth-Ausgang als
-  Standard mit 90 %.
+  Standard mit 100 % (CITYCAFE_VOLUME).
 - **Nächtliche Aktualisierung** (`citycafe-update.timer`, täglich 8:30):
   `pacman -Syu`, dann Supervisor und Chromium-Starter aus GitHub `main`
   (nur nach Syntaxprüfung; abschaltbar in `/etc/citycafe-update.conf`),
