@@ -16,6 +16,7 @@ import base64
 import glob
 import io
 import json
+import math
 import os
 import random
 import re
@@ -1032,8 +1033,12 @@ def ueberblenden(xf, target, page_id, vol):
         if xf.get("abbruch"):
             return
         p = min(1.0, (time.time() - beginn) / dauer)
-        mpv_befehl("set_property", "volume", round(vol * (1 - p), 1))
-        mpv_befehl("set_property", "volume", round(vol * p, 1), sock=MPV_SOCK_XF)
+        # Gleiche Gesamtlautstaerke (equal power): Amplituden cos/sin. mpv rechnet
+        # die Lautstaerke kubisch (Amplitude = (v/100)^3), daher die dritte Wurzel.
+        # Linear (v*(1-p) / v*p) brach die Lautstaerke in der Mitte um ~12 dB ein.
+        alt_a, neu_a = math.cos(p * math.pi / 2), math.sin(p * math.pi / 2)
+        mpv_befehl("set_property", "volume", round(vol * max(0.0, alt_a) ** (1 / 3), 1))
+        mpv_befehl("set_property", "volume", round(vol * max(0.0, neu_a) ** (1 / 3), 1), sock=MPV_SOCK_XF)
         sway(f'[app_id="{xf["app"]}"]', "opacity", f"{p:.2f}")
         if p >= 1.0:
             break
