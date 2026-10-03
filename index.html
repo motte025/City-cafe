@@ -8089,6 +8089,7 @@
         // Musik vorbei: zurueck in die Rotation, alles wie vorher.
         function ytmBeenden() {
             ytmDartErlaubt = false;
+            if (ytmFindeLaeuft) ytmFindeLaeuft.gleichSpielen = false;   // Suche darf nicht neu starten
             ytmMixInSchlange = null;
             ytm = YTW.stopp(ytm);
             ytmPausiert = false;
@@ -8315,8 +8316,10 @@
                     const ersetzt = Object.assign({}, w.eintrag, { videoId: f.treffer.videoId,
                         dauer: f.treffer.dauer, dauerSek: f.treffer.dauerSek });
                     ersetze(ersetzt);
-                    if (w.gleichSpielen) ytmSpielen(ersetzt);
-                } else if (w.gleichSpielen) {
+                    // Nur spielen, wenn die Musik noch laeuft - kam das Ergebnis erst
+                    // nach "Stopp", startete die Musik sonst von selbst wieder.
+                    if (w.gleichSpielen && ytmAktiv()) ytmSpielen(ersetzt);
+                } else if (w.gleichSpielen && ytmAktiv()) {
                     ytmWeiter();             // nicht gefunden: einfach der naechste
                 }
             }

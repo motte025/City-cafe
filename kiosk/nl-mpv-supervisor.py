@@ -102,6 +102,14 @@ RETRY_FAILED_AFTER = 600   # Sekunden, bis ein fehlgeschlagenes Video neu versuc
 POLL_SECONDS = 0.5
 LOG = "/home/citycafe/nl-mpv-supervisor.log"
 MPV_SOCK = "/tmp/mpv-nl.sock"
+# Ueberblendung zwischen Musiktiteln (DJ-Art): der naechste Song startet in
+# einem zweiten mpv (eigener Socket, eigene app_id, unsichtbar), dann wird
+# XF_SEK lang der alte leiser und der neue lauter und sichtbar. Danach ist der
+# zweite der Haupt-Player: sein Socket wird auf MPV_SOCK umbenannt, und die
+# app_id wechselt zwischen "mpv" und "mpvxf" (MPV_APP["id"] = aktueller).
+MPV_SOCK_XF = "/tmp/mpv-nl-xf.sock"
+XF_SEK = 6
+MPV_APP = {"id": "mpv"}
 # Watchdog: so lange darf mpv bis zum ersten Bild bzw. ohne Fortschritt
 # brauchen, bevor es abgeschossen wird und das YouTube-Embed weiterlaeuft.
 FIRST_FRAME_TIMEOUT = 20
@@ -482,7 +490,7 @@ def sway(*args):
     return subprocess.run(["swaymsg", *args], env=env, capture_output=True, text=True)
 
 
-def mpv_window_rect():
+def mpv_window_rect(app_id=None):
     """Aktuelle Lage des mpv-Fensters laut sway, None solange es nicht da ist."""
     try:
         tree = json.loads(sway("-t", "get_tree").stdout or "{}")
@@ -491,7 +499,7 @@ def mpv_window_rect():
     todo = [tree]
     while todo:
         node = todo.pop()
-        if node.get("app_id") == "mpv":
+        if node.get("app_id") == (app_id or MPV_APP["id"]):
             r = node["rect"]
             return {"x": r["x"], "y": r["y"], "w": r["width"], "h": r["height"]}
         todo += node.get("nodes", []) + node.get("floating_nodes", [])
@@ -780,12 +788,12 @@ def stop(proc):
         proc.wait()
 
 
-def mpv_befehl(*teile):
+def mpv_befehl(*teile, sock=None):
     """Einen Befehl an mpv schicken (IPC), z. B. seek. True, wenn zugestellt."""
     try:
         with socket.socket(socket.AF_UNIX) as s:
             s.settimeout(1.0)
-            s.connect(MPV_SOCK)
+            s.connect(sock or MPV_SOCK)
             s.sendall((json.dumps({"command": list(teile), "request_id": 9}) + "\n").encode())
             return True
     except (OSError, ValueError):
@@ -797,12 +805,12 @@ def mpv_time_pos():
     return mpv_eigenschaft("time-pos")
 
 
-def mpv_eigenschaft(name):
+def mpv_eigenschaft(name, sock=None):
     """Eine mpv-Eigenschaft ueber IPC lesen (z. B. time-pos, duration); None, wenn nicht da."""
     try:
         with socket.socket(socket.AF_UNIX) as s:
             s.settimeout(1.0)
-            s.connect(MPV_SOCK)
+            s.connect(sock or MPV_SOCK)
             s.sendall((json.dumps({"command": ["get_property", name], "request_id": 1}) + "\n").encode())
             buf = b""
             while True:
@@ -830,20 +838,21 @@ def measured_rect(page_id, fallback, art="yt"):
     return rect or fallback
 
 
-def place_mpv(target):
+def place_mpv(target, app_id=None):
     """mpv-Fenster auf die Zielflaeche setzen. -> True, wenn das Fenster da ist.
     Die sway-Regel allein setzt die Position nicht zuverlaessig (gesehen: mpv
     landete bei 443/450), deshalb wird bei jeder Abweichung nachgezogen."""
-    cur = mpv_window_rect()
+    app_id = app_id or MPV_APP["id"]
+    cur = mpv_window_rect(app_id)
     if cur is None:
         return False
     if any(abs(cur[k] - target[k]) > 2 for k in ("x", "y", "w", "h")):
         # Erst resize, dann move: sway aendert die Groesse schwebender Fenster um
         # ihre Mitte. Umgekehrt landete das Fenster beim Wechsel ins Vollbild
         # (1200x675 -> 1280x720) 40/22 px daneben (gesehen am 02.10.2026).
-        sway('[app_id="mpv"]', "resize", "set", "width", f"{target['w']} px",
+        sway(f'[app_id="{app_id}"]', "resize", "set", "width", f"{target['w']} px",
              "height", f"{target['h']} px")
-        sway('[app_id="mpv"]', "move", "absolute", "position", str(target["x"]), str(target["y"]))
+        sway(f'[app_id="{app_id}"]', "move", "absolute", "position", str(target["x"]), str(target["y"]))
         log(f"mpv platziert: {cur} -> {target}")
     return True
 
@@ -928,7 +937,8 @@ def ambi_farben(target):
         # sonst verschwindet der Schein bei dunklen Videos im Hintergrund.
         import colorsys
         h, s, v = colorsys.rgb_to_hsv(*(x / 255 for x in rgb))
-        r, g, b = colorsys.hsv_to_rgb(h, min(1.0, s * 1.6), min(1.0, max(v * 1.5, 0.35)))
+        # hoechstens 75 % Helligkeit: bei weissem Bild wuerde der Schein die Schrift ueberstrahlen
+        r, g, b = colorsys.hsv_to_rgb(h, min(1.0, s * 1.6), min(0.75, max(v * 1.5, 0.35)))
         return (r * 255, g * 255, b * 255)
 
     return {k: ",".join(str(int(x)) for x in kraeftig(v)) for k, v in farben.items()}
@@ -956,6 +966,48 @@ def ambi_schleife():
             time.sleep(AMBI_TAKT)
         else:
             time.sleep(0.5)
+
+
+def ueberblenden(xf, target, page_id, vol):
+    """Faden fuer die Ueberblendung: wartet, bis der neue mpv spielt, legt sein
+    (noch unsichtbares) Fenster ueber das alte, sagt dem Dashboard "naechster
+    Song" und blendet dann Ton und Bild ueber. xf["fertig"] = True am Ende,
+    xf["fehler"] = True, wenn der neue nicht in Gang kommt."""
+    frist = time.time() + 6
+    while time.time() < frist:
+        if xf["proc"].poll() is not None:
+            break
+        if mpv_eigenschaft("time-pos", sock=MPV_SOCK_XF) is not None and place_mpv(target, xf["app"]):
+            break
+        time.sleep(0.1)
+    else:
+        xf["fehler"] = True
+        return
+    if xf["proc"].poll() is not None:
+        xf["fehler"] = True
+        return
+    place_mpv(target, xf["app"])
+    if xf.get("abbruch"):
+        return
+    try:
+        cdp_eval(page_id, "(() => { try { return !!nlVideoFertig(); } catch (e) { return false; } })()")
+    except (OSError, ValueError, ConnectionError):
+        pass
+    dauer = max(2.0, xf["dauer"] - (time.time() - xf["t0"]))
+    beginn = time.time()
+    while True:
+        # Abgebrochen (Ueberspringen, Stopp, ...): sofort aufhoeren - sonst
+        # drehte der Faden den inzwischen neu gestarteten Player leise.
+        if xf.get("abbruch"):
+            return
+        p = min(1.0, (time.time() - beginn) / dauer)
+        mpv_befehl("set_property", "volume", round(vol * (1 - p), 1))
+        mpv_befehl("set_property", "volume", round(vol * p, 1), sock=MPV_SOCK_XF)
+        sway(f'[app_id="{xf["app"]}"]', "opacity", f"{p:.2f}")
+        if p >= 1.0:
+            break
+        time.sleep(0.1)
+    xf["fertig"] = True
 
 
 def kiosk_neu_starten():
@@ -1010,6 +1062,12 @@ def main():
     mpv_bad = {}          # Schluessel -> Zeitpunkt, an dem mpv damit scheiterte
     started = last_pos = last_progress = None
     embed_paused = False  # YouTube-Embed erst anhalten, wenn mpv wirklich laeuft
+    xf = None             # laufende Ueberblendung (siehe ueberblenden)
+    MPV_APP["id"] = "mpv"
+    # Der hereinkommende Player startet unsichtbar (Titel "xf-ein"); die app_id
+    # "mpvxf" schwebt wie "mpv" (die Regel fuer "mpv" steht in der sway-Config).
+    sway('for_window [title="^xf-ein$"] opacity 0')
+    sway('for_window [app_id="mpvxf"] floating enable, border none, sticky enable')
     # Videoflaeche bei aktiver Ansicht (einmal live gemessen); wird bei jeder
     # erfolgreichen Messung aktualisiert. Nightlife und DJ liegen gleich.
     target = {"x": 83, "y": 248, "w": 1200, "h": 675}
@@ -1307,7 +1365,33 @@ def main():
             resolver = threading.Thread(target=work, daemon=True)
             resolver.start()
 
-        if mpv is not None and want != shown:
+        # Ueberblendung abschliessen oder abbrechen
+        if xf is not None:
+            neu_lebt = xf["proc"].poll() is None
+            if xf.get("fehler") or not neu_lebt or (want != shown and want != "yt:" + xf["vid"]):
+                log(f"Ueberblendung abgebrochen ({xf['vid']})")
+                xf["abbruch"] = True
+                stop(xf["proc"])
+                if mpv is not None and mpv.poll() is None:
+                    mpv_befehl("set_property", "volume", ton_vol)
+                xf = None
+            elif (xf.get("fertig") or mpv is None or mpv.poll() is not None) and want == "yt:" + xf["vid"]:
+                stop(mpv)
+                try:
+                    os.replace(MPV_SOCK_XF, MPV_SOCK)
+                except OSError:
+                    pass
+                MPV_APP["id"] = xf["app"]
+                sway(f'[app_id="{xf["app"]}"]', "opacity", "1")
+                mpv_befehl("set_property", "volume", ton_vol)
+                mpv, shown = xf["proc"], want
+                started, last_pos, last_progress, embed_paused = time.time(), None, None, False
+                next_place_check, window_seen, pausiert = 0, True, False
+                mpv_dauer.clear()
+                log(f"Ueberblendung fertig: {xf['vid']}")
+                xf = None
+
+        if mpv is not None and want != shown and not (xf is not None and want == "yt:" + xf["vid"]):
             log(f"Slot vorbei ({shown})")
             stop_all()
             shown, embed_paused = None, False
@@ -1323,7 +1407,7 @@ def main():
                 mpv_bad[shown] = now
                 shown, embed_paused = None, False
                 continue
-            if mpv.poll() is not None and mpv.returncode == 0 and last_pos is not None:
+            if mpv.poll() is not None and mpv.returncode == 0 and last_pos is not None and xf is None:
                 # Sauberes Ende, nachdem wirklich etwas gelaufen ist: das Video
                 # ist aus bzw. der Streamer hat beendet. Bei einer Wahl vom
                 # Handy soll die Rotation dann SOFORT weitergehen - sonst liefe
@@ -1428,6 +1512,41 @@ def main():
                 mpv_bad[shown] = now
                 shown, embed_paused = None, False
 
+        # Ueberblendung starten: XF_SEK vor Songende, wenn der naechste Song schon
+        # vorgeladen ist (Dashboard: nlMusikVorladen, 60 s vor Schluss).
+        vor_x = state.get("vorladen") or {}
+        n_vid = str(vor_x.get("videoId") or "")
+        if (xf is None and musik and n_vid and shown and shown.startswith("yt:") and shown[3:] != n_vid
+                and mpv is not None and mpv.poll() is None and last_pos is not None and not pausiert
+                and mpv_dauer.get(shown) and not state.get("spiel")):
+            rest = mpv_dauer[shown] - last_pos
+            n_key = schluessel_fuer(n_vid, int(vor_x.get("hoehe") or 0), int(vor_x.get("fps") or 0), True)
+            if 2.0 < rest <= XF_SEK and n_key in cache:
+                video_url, audio_url, _laenge = cache[n_key]
+                neu_app = "mpvxf" if MPV_APP["id"] == "mpv" else "mpv"
+                xf_args = ["mpv", f"--hwdec={MPV_HWDEC}", "--vo=gpu", f"--profile={MPV_PROFILE}", "--sid=no",
+                           f"--demuxer-max-bytes={MPV_DEMUXER_MIB}MiB",
+                           f"--demuxer-max-back-bytes={MPV_DEMUXER_BACK_MIB}MiB",
+                           "--no-osc", "--osd-level=0", "--no-input-default-bindings",
+                           "--really-quiet", f"--input-ipc-server={MPV_SOCK_XF}",
+                           "--log-file=/home/citycafe/mpv-xf.log", "--volume=0",
+                           "--title=xf-ein", f"--wayland-app-id={neu_app}", "--start=0"]
+                if ton_lautheit:
+                    xf_args.append(f"--af={LAUTHEIT_FILTER}")
+                if audio_url:
+                    xf_args.append(f"--audio-file={audio_url}")
+                xf_args.append(video_url)
+                try:
+                    os.remove(MPV_SOCK_XF)
+                except OSError:
+                    pass
+                proc = subprocess.Popen(xf_args, env={**os.environ, **session_env()},
+                                        preexec_fn=mpv_dies_with_us)
+                xf = {"proc": proc, "vid": n_vid, "app": neu_app, "t0": time.time(), "dauer": rest - 0.3}
+                threading.Thread(target=ueberblenden, args=(xf, dict(target), page_id, ton_vol),
+                                 daemon=True).start()
+                log(f"Ueberblendung: {shown[3:]} -> {n_vid} ({rest:.1f}s)")
+
         # Lebenszeichen ans Dashboard (siehe nlExtern()/djExtern() in index.html):
         # nur wenn mpv spielen kann, startet der Slot seinen Browser-Player nicht.
         # Gilt 3 s - stirbt der Supervisor, spielt das Dashboard wieder allein.
@@ -1466,6 +1585,9 @@ def main():
             # und haelt 50 MiB Rueckblick - auf der Box mit 2 GB RAM, neben
             # Chromium, zu viel. 48 MiB sind bei 1080p immer noch rund eine
             # Minute Vorlauf; zurueckgespult wird im Slot nur per Fernbedienung.
+            # Frisch gestartet: wieder app_id "mpv" (Regel in der sway-Config) - nach
+            # einer Ueberblendung hiess der Haupt-Player evtl. "mpvxf".
+            MPV_APP["id"] = "mpv"
             args = ["mpv", f"--hwdec={MPV_HWDEC}", "--vo=gpu", f"--profile={MPV_PROFILE}", "--sid=no",
                     f"--demuxer-max-bytes={MPV_DEMUXER_MIB}MiB",
                     f"--demuxer-max-back-bytes={MPV_DEMUXER_BACK_MIB}MiB",
