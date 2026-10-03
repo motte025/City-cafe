@@ -354,7 +354,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-oeffnen';
+    var FASSUNG = '2026-10-03-art';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -767,7 +767,7 @@
 
     // Playlist in der Suche oeffnen: der Screen liest ihre Songs, die dann wie
     // normale Treffer erscheinen (wuenschen / als Naechstes / ...).
-    var offenePlaylist = null, playlistTreffer = [];
+    var offenePlaylist = null, playlistTreffer = [], erwarteteArt = '';
     function playlistOeffnen(p) {
         offenePlaylist = p;
         suchId = '';
@@ -776,6 +776,7 @@
         el('treffer-kopf').textContent = '📃 ' + p.titel;
         el('such-status').textContent = 'Playlist wird geöffnet …';
         window.scrollTo(0, 0);
+        erwarteteArt = 'playlistInhalt';
         senden({ aktion: 'suche', text: String(p.titel || '').slice(0, 100) || 'playlist', art: 'playlistInhalt', listId: p.playlistId })
             .then(function (id) { suchId = id || ''; });
     }
@@ -828,6 +829,7 @@
         ersteTrefferGesehen = true;
         var befehl = { aktion: 'suche', text: text, vorschlaege: !!istVorschlag, anzahl: suchAnzahl };
         if (suchArt === 'playlist' && !istVorschlag) befehl.art = 'playlist';
+        erwarteteArt = befehl.art || '';
         offenePlaylist = null;
         return senden(befehl).then(function (id) {
             suchId = id || '';
@@ -1139,6 +1141,9 @@
         });
         YT_REMOTE_NET.aufTrefferHoeren(v, RAUM, function (t) {
             if (!t || !t.liste) return;
+            // Playlist-Suche/-Inhalt: nur Treffer annehmen, die diese Suchart
+            // bestaetigen (ein alter Screen im selben Raum liefert sonst Songs).
+            if (erwarteteArt && t.id === suchId && t.art !== erwarteteArt) return;
             // Der erste Wert beim Verbinden ist der Stand von vorhin - nicht zeigen.
             if (!ersteTrefferGesehen) { ersteTrefferGesehen = true; return; }
             if (suchId && t.id !== suchId && t.id !== letzteFremdId) { letzteFremdId = t.id; return; }

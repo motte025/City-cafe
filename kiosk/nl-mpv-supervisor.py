@@ -1163,8 +1163,12 @@ def main():
                         treffer = suchen(text, anzahl)
                     if not gemischt:
                         log(f"Suche {text!r}: {len(treffer)} Treffer")
+                    # art bestaetigt, welche Suche wirklich lief: ein alter Supervisor
+                    # im selben Raum kennt Playlists nicht - das Handy verwirft dann
+                    # seine Song-Treffer, statt die richtigen zu ueberschreiben.
+                    art = "playlistInhalt" if liste_id else ("playlist" if nur_playlists else "")
                     zustellen(seite, "window.nlSucheTreffer = "
-                              + json.dumps({"id": sid, "liste": treffer}) + "; 1", "Treffer")
+                              + json.dumps({"id": sid, "liste": treffer, "art": art}) + "; 1", "Treffer")
             elif (vor_key and vor_key not in cache
                     and time.time() - failed.get(vor_vid, 0) >= RETRY_FAILED_AFTER):
                 def aufgabe(key=vor_key, vid=vor_vid, h=int(vor.get("hoehe") or 0),

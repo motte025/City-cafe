@@ -59,9 +59,10 @@
         aufBefehlHoeren: function (verb, raum, rueckruf) {
             return hoeren(verb, raum, 'befehl', rueckruf);
         },
-        trefferMelden: function (verb, raum, id, liste) {
+        trefferMelden: function (verb, raum, id, liste, art) {
             return schreiben(verb, raum, 'treffer', {
-                id: id, liste: (liste || []).slice(0, 200)  // "Mehr laden" bis 75, geoeffnete Playlist bis 200
+                id: id, liste: (liste || []).slice(0, 200), // "Mehr laden" bis 75, geoeffnete Playlist bis 200
+                art: art || ''                               // welche Suche der Supervisor wirklich ausgefuehrt hat
             });
         },
         statusMelden: function (verb, raum, status) {

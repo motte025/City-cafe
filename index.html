@@ -7764,7 +7764,7 @@
             const t = window.nlSucheTreffer;
             if (!t || !t.id || t.id === nlTrefferLetzteId || !nlFernVerb) return;
             nlTrefferLetzteId = t.id;
-            YT_REMOTE_NET.trefferMelden(nlFernVerb, NL_FERN_RAUM, t.id, t.liste || [])
+            YT_REMOTE_NET.trefferMelden(nlFernVerb, NL_FERN_RAUM, t.id, t.liste || [], t.art || '')
                 .catch(() => {});
             nlFernStatusMelden();
         }
