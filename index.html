@@ -2487,10 +2487,10 @@
         .ytv-rechts { position: absolute; left: 1350px; right: 40px; top: 127px; height: 720px; display: flex; flex-direction: column; }
         .ytv-gleich { border-radius: 16px; padding: 18px 22px; background: rgba(192, 38, 211, 0.16); border: 1px solid rgba(243, 85, 218, 0.55); }
         .ytv-gleich-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; letter-spacing: 1.5px; color: #f9a8e8; }
-        .ytv-gleich-zeile { display: flex; align-items: center; gap: 24px; margin-top: 4px; min-width: 0; }
+        .ytv-gleich-zeile { display: flex; align-items: center; gap: 36px; margin-top: 4px; min-width: 0; }
         /* feste Breite: Orbitron hat keine gleich breiten Ziffern - sonst zuckt der Titel daneben jede Sekunde */
         .ytv-gleich-zeile b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 58px; color: #ffffff; font-variant-numeric: tabular-nums; flex-shrink: 0; width: 205px; }
-        .ytv-gleich-zeile div { min-width: 0; display: flex; flex-direction: column; }
+        .ytv-gleich-zeile div { flex: 1; min-width: 0; display: flex; flex-direction: column; }   /* Titel nutzt die ganze Breite bis zum Rand */
         .ytv-gleich-zeile strong { font-size: 31px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-gleich-zeile small { font-size: 20px; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-danach-kopf { margin: 22px 0 12px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; letter-spacing: 1px; }
@@ -7869,7 +7869,7 @@
         const YT_RADIO_MAX_MIN = Infinity;
         const YT_VOLLBILD_STANDARD = false;   // Ansicht beim Start der Musik
         const YT_QR_AN = false;               // QR "Song wuenschen" im Video (vorerst aus, Wunsch Betreiber)
-        const YT_VORLADEN_SEKUNDEN = 60;      // so lange vor Songende den naechsten aufloesen
+        const YT_VORLADEN_SEKUNDEN = 40;      // so lange vor Songende den naechsten aufloesen (reicht fuer 9 s Ueberblendung, yt-dlp braucht <= 25 s)
         const YT_CHEF_PIN = (new URLSearchParams(location.search).get('chefpin') || '').trim();
 
         const YTW = window.YtWarteschlange;

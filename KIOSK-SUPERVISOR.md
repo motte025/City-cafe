@@ -217,7 +217,7 @@ Protokoll: `/home/citycafe/nl-mpv-supervisor.log`, Fehler:
 
 ## Überblendung und Ambilight (Musik, seit 03.10.2026)
 
-- **Überblendung:** `XF_SEK` (6 s) vor Songende startet ein zweiter mpv mit dem
+- **Überblendung:** `XF_SEK` (9 s) vor Songende startet ein zweiter mpv mit dem
   vorgeladenen nächsten Song (`/tmp/mpv-nl-xf.sock`, Titel `xf-ein` = unsichtbar,
   app_id wechselt zwischen `mpv` und `mpvxf`). Der Faden `ueberblenden` ruft
   `nlVideoFertig()` und blendet Ton (mpv-Lautstärke) und Bild (sway-Opacity) über.

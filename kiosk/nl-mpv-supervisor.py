@@ -108,7 +108,7 @@ MPV_SOCK = "/tmp/mpv-nl.sock"
 # zweite der Haupt-Player: sein Socket wird auf MPV_SOCK umbenannt, und die
 # app_id wechselt zwischen "mpv" und "mpvxf" (MPV_APP["id"] = aktueller).
 MPV_SOCK_XF = "/tmp/mpv-nl-xf.sock"
-XF_SEK = 6
+XF_SEK = 9
 MPV_APP = {"id": "mpv"}
 # Watchdog: so lange darf mpv bis zum ersten Bild bzw. ohne Fortschritt
 # brauchen, bevor es abgeschossen wird und das YouTube-Embed weiterlaeuft.
