@@ -76,17 +76,21 @@ function leer() { return { eintraege: [], gespielt: [], modus: 'aus', radio: { s
     s = W.einreihen(s, eintrag(1, 'playlist', 'chef1'), 'ende');
     s = W.einreihen(s, eintrag(2, 'playlist', 'chef1'), 'ende');
     s = W.einreihen(s, eintrag(3, 'wunsch', 'gast'), 'wunsch');
-    eq('Gaeste-Wunsch vor Playlist-Titeln', ids(s), [vid(3), vid(1), vid(2)]);
-    s = W.einreihen(s, eintrag(4, 'wunsch', 'gast2'), 'wunsch');
-    eq('zweiter Wunsch hinter dem ersten', ids(s), [vid(3), vid(4), vid(1), vid(2)]);
-    s = W.einreihen(s, eintrag(5, 'chef', 'chef1'), 'naechstes');
-    eq('Chef "Als Naechstes" ganz vorn', ids(s)[0], vid(5));
-    s = W.einreihen(s, eintrag(6, 'chef', 'chef1'), 'naechstes');
-    eq('zweites "Als Naechstes" hinter dem ersten', ids(s).slice(0, 2), [vid(5), vid(6)]);
-    s = W.einreihen(s, eintrag(7, 'wunsch', 'gast3'), 'wunsch');
-    eq('Wunsch hinter Chef-Naechstes und Wuenschen', ids(s), [vid(5), vid(6), vid(3), vid(4), vid(7), vid(1), vid(2)]);
-    s = W.einreihen(s, eintrag(8, 'chef', 'chef1'), 'ende');
-    eq('Chef "Ans Ende" ganz hinten', ids(s)[ids(s).length - 1], vid(8));
+    eq('kurze Schlange: Wunsch hinten an', ids(s), [vid(1), vid(2), vid(3)]);
+    var p = leer();
+    for (var i = 10; i < 18; i++) p = W.einreihen(p, eintrag(i, 'playlist', 'chef1'), 'ende');
+    p = W.einreihen(p, eintrag(30, 'wunsch', 'gast'), 'wunsch');
+    eq('Wunsch auf Platz 5', ids(p).indexOf(vid(30)), 4);
+    p = W.einreihen(p, eintrag(31, 'wunsch', 'gast2'), 'wunsch');
+    eq('zweiter Wunsch dahinter (Platz 6)', ids(p).indexOf(vid(31)), 5);
+    p = W.einreihen(p, eintrag(5, 'chef', 'chef1'), 'naechstes');
+    eq('Chef "Als Naechstes" ganz vorn', ids(p)[0], vid(5));
+    p = W.einreihen(p, eintrag(6, 'chef', 'chef1'), 'naechstes');
+    eq('zweites "Als Naechstes" hinter dem ersten', ids(p).slice(0, 2), [vid(5), vid(6)]);
+    p = W.einreihen(p, eintrag(8, 'chef', 'chef1'), 'ende');
+    eq('Chef "Ans Ende" ganz hinten', ids(p)[ids(p).length - 1], vid(8));
+    p = W.einreihen(p, eintrag(32, 'wunsch', 'gast3'), 'wunsch');
+    eq('Wunsch hinter den Wuenschen davor, nicht hinter "Ans Ende"', ids(p).indexOf(vid(32)), ids(p).indexOf(vid(31)) + 1);
 })();
 
 // --- Songende, Radio, Rotation ------------------------------------------------

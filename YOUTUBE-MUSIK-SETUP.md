@@ -5,7 +5,7 @@ Antwortsprache im Gespräch: Deutsch.
 
 Vorher lesen: `STAND.md`, `FERNBEDIENUNGEN.md`, `KIOSK-SUPERVISOR.md`.
 
-Vorschaubilder (vom Betreiber abgesegnet) liegen unter `docs/youtube-musik/`:
+Vorschaubilder (vom Betreiber abgesegnet) liegen unter `docs/musik/`:
 
 | Datei | Zeigt |
 |---|---|
@@ -185,7 +185,9 @@ Zustand rein, Zustand raus. So lässt sich das testen.
    Die Warteschlange bleibt erhalten und lässt sich später fortsetzen.
 5. **Überspringen** (Chef) beendet den aktuellen Song wie ein Songende.
 6. Wünsche von Gästen werden **vor** Radio-Titeln gespielt, aber hinter
-   Chef-Einträgen mit „Als Nächstes“.
+   Chef-Einträgen mit „Als Nächstes“. In einer längeren Schlange kommen sie
+   frühestens auf **Platz 5** (hinter schon wartende Wünsche); ist sie
+   kürzer, hinten an (`WUNSCH_AB_PLATZ` in `yt-warteschlange.js`).
 
 ### 5.2 Lücken zwischen den Songs vermeiden
 

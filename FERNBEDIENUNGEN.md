@@ -42,7 +42,7 @@ falschen Fernseher landet:
 * `yt/treffer` – Suchergebnisse vom Screen zurück ans Handy
 * `yt/status` – was der Screen gerade tut (inkl. laufender Hos'n-Obe-Runde)
 * `yt/liste` – selbst hinzugefügte Videos (Dauerliste)
-* `yt/wuensche`, `yt/warteschlange`, `yt/radio`, `yt/jetzt`, `yt/listen` – YouTube-Musik; `chef/geraete` – Chef-Anmeldung (Regeln: `docs/youtube-musik/FIREBASE-REGELN.md`)
+* `yt/wuensche`, `yt/warteschlange`, `yt/radio`, `yt/jetzt`, `yt/listen` – YouTube-Musik; `chef/geraete` – Chef-Anmeldung (Regeln: `docs/musik/FIREBASE-REGELN.md`)
 * `roulette/…` – die Roulette-Steuerung (von Codex)
 
 Gesucht wird **nicht** am Handy, sondern auf der Box mit `yt-dlp` – deshalb

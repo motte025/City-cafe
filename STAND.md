@@ -132,7 +132,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   83/248, 1200×675 (mit sway nachgemessen). Gemessen: < 3 s Stille zwischen
   zwei Songs mit Vorladen, Neustart macht mit dem nächsten Titel weiter,
   Hos'n Obe hat Vorrang. **Noch offen:** Firebase-Regeln und Chef-PIN
-  (`docs/youtube-musik/FIREBASE-REGELN.md`), Merge nach `main`, Test mit
+  (`docs/musik/FIREBASE-REGELN.md`), Merge nach `main`, Test mit
   echtem Handy, echter Bluetooth-Fernbedienung und QR aus 3 m. Die
   YouTube-Mixe sind mit Konto-Cookies auf den Verlauf des Premium-Kontos
   zugeschnitten (Lobpreis-Lieder in jedem Mix); `CITYCAFE_MIX_COOKIES=0`

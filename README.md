@@ -8,10 +8,10 @@ City
 | `STAND.md` | **Zuerst lesen:** wo das Projekt gerade steht - Geraete, Zustand der Bauteile, Verworfenes, feste Regeln |
 | `index.html` | Das Dashboard am Fernseher: Rotation aller Widgets, Nightlife, DJ-Slot, Hos'n Obe, Roulette-Slot |
 | `FERNBEDIENUNGEN.md` | Die Handy-Fernbedienungen (eine Adresse, vier Reiter) und wie sie den richtigen Screen finden |
-| `YOUTUBE-MUSIK-SETUP.md` | YouTube-Musik: Warteschlange, Radio-Mix, Gast/Chef, TV-Ansichten Normal/Vollbild (Spec, Zielbilder in `docs/youtube-musik/`) |
+| `YOUTUBE-MUSIK-SETUP.md` | YouTube-Musik: Warteschlange, Radio-Mix, Gast/Chef, TV-Ansichten Normal/Vollbild (Spec, Zielbilder in `docs/musik/`) |
 | `yt-warteschlange.js` | Logik der Warteschlange und `titelZerlegen()`, geteilt von TV und Handy; Tests: `node yt-warteschlange.test.js` |
 | `yt_playlists.json` | Playlists der Musik (Nummer, Name, Link, Uhrzeit); ohne Link Platzhalter aus der Songs-Datenbank |
-| `docs/youtube-musik/FIREBASE-REGELN.md` | Firebase-Regeln für Chef und Gäste, Reihenfolge beim Anlegen der PIN |
+| `docs/musik/FIREBASE-REGELN.md` | Firebase-Regeln für Chef und Gäste, Reihenfolge beim Anlegen der PIN |
 | `KIOSK-SUPERVISOR.md` | Der mpv-Aufpasser auf der Box: Video und Twitch ausserhalb des Browsers, Waechter, Neustart |
 | `kiosk/` | Die Dateien, die auf der Box liegen (Aufpasser, sway-Konfiguration, Chromium-Starter) |
 | `HOSN-OBE-SETUP.md` | Das Kartenspiel: Regeln, Firebase-Pfade, Handy-Seite |

@@ -35,10 +35,10 @@
     var RADIO_NACHLADEN_UNTER = 5;      // weniger Titel uebrig -> neuen Mix holen
     var MAX_JE_KUENSTLER_IN_FOLGE = 2;
     var POS_SCHRITT = 1000;
-    // Gaeste-Wuensche kommen hinter andere Wuensche und Chef-Eintraege, aber VOR
-    // die Titel einer laufenden Playlist (sonst wartet ein Gast 80 Songs).
-    // false = strikt "hinten an" wie in Spec 5.1.
-    var WUNSCH_VOR_PLAYLIST = true;
+    // Gaeste-Wuensche kommen fruehestens auf diesen Platz der Schlange (Wunsch
+    // des Betreibers: "ab fuenf"), hinter schon wartende Wuensche und Chef-
+    // "Als Naechstes". Ist die Schlange kuerzer, hinten an. 1 = ganz vorn.
+    var WUNSCH_AB_PLATZ = 5;
 
     function liste(state) { return (state && state.eintraege) || []; }
 
@@ -108,7 +108,7 @@
     /**
      * Wo kommt ein neuer Eintrag hin? art:
      *   'naechstes' - Chef "Als Naechstes": ganz vorn (hinter frueheren "Als Naechstes")
-     *   'wunsch'    - Gast: hinter Wuensche und Chef-Eintraege, vor Playlist-Titel
+     *   'wunsch'    - Gast: fruehestens Platz 5, hinter Wuensche und "Als Naechstes"
      *   'ende'      - Chef "Ans Ende", Playlist anhaengen: ganz hinten
      */
     function posFuer(state, art) {
@@ -121,12 +121,12 @@
             var idx = s.indexOf(letzter);
             return posZwischen(letzter.pos, s[idx + 1] ? s[idx + 1].pos : null);
         }
-        if (art === 'wunsch' && WUNSCH_VOR_PLAYLIST) {
-            for (var i = 0; i < s.length; i++) {
-                if (s[i].quelle === 'playlist' || s[i].quelle === 'radio') {
-                    return posZwischen(i ? s[i - 1].pos : null, s[i].pos);
-                }
-            }
+        if (art === 'wunsch') {
+            var nach = WUNSCH_AB_PLATZ - 1;   // so viele Eintraege bleiben davor
+            s.forEach(function (e, j) {
+                if (e.quelle === 'wunsch' || e.naechstes) nach = Math.max(nach, j + 1);
+            });
+            if (nach < s.length) return posZwischen(nach ? s[nach - 1].pos : null, s[nach].pos);
         }
         return s[s.length - 1].pos + POS_SCHRITT;
     }
@@ -465,7 +465,7 @@
         MAX_WUNSCH_SEKUNDEN: MAX_WUNSCH_SEKUNDEN,
         RADIO_MAX_MIN: RADIO_MAX_MIN,
         RADIO_NACHLADEN_UNTER: RADIO_NACHLADEN_UNTER,
-        WUNSCH_VOR_PLAYLIST: WUNSCH_VOR_PLAYLIST,
+        WUNSCH_AB_PLATZ: WUNSCH_AB_PLATZ,
         sekunden: sekunden,
         sortiert: sortiert,
         offeneWuensche: offeneWuensche,
