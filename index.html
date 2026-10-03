@@ -2466,6 +2466,7 @@
         .ytv-zeile { display: flex; align-items: center; gap: 16px; height: 63px; padding: 0 20px; border-radius: 12px;
             background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); flex-shrink: 0; }
         .ytv-zeile > b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; width: 22px; flex-shrink: 0; }
+        .ytv-zeile > img { width: 80px; height: 45px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #000; }
         .ytv-zeile > div { flex: 1; min-width: 0; display: flex; flex-direction: column; }
         .ytv-zeile strong { font-size: 22px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-zeile small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -8479,7 +8480,9 @@
             const dk = document.getElementById('ytv-danach-kopf');
             if (dk) dk.innerHTML = 'DANACH' + (wuensche ? ` <small>· 📱 ${wuensche} ${wuensche === 1 ? 'WUNSCH' : 'WÜNSCHE'}</small>` : '');
             const vl = document.getElementById('ytv-liste');
-            if (vl) vl.innerHTML = danach.map((t, i) => `<div class="ytv-zeile"><b>${i + 2}</b><div><strong>${ytmEsc(t.songtitel || t.titel)}</strong>`
+            if (vl) vl.innerHTML = danach.map((t, i) => `<div class="ytv-zeile"><b>${i + 2}</b>`
+                + (/^[A-Za-z0-9_-]{11}$/.test(t.videoId || '') ? `<img alt="" src="https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg" onerror="this.remove()">` : '')
+                + `<div><strong>${ytmEsc(t.songtitel || t.titel)}</strong>`
                 + `<small>${ytmEsc(t.kuenstler || '')}${t.quelle === 'wunsch' ? ' · <span class="wunsch">📱 Handy-Wunsch</span>' : ''}</small></div>`
                 + `<span>${YTW.sekunden(t) ? ytmZeit(YTW.sekunden(t)) : ''}</span></div>`).join('');
             const vr = document.getElementById('ytv-radio');
