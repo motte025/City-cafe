@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-03T01:52:45Z",
+  "checked_at": "2026-10-03T02:07:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "👻BOOmer Night👻 60s 70s & 80s all night loooong🎃HALLOWEEN DECOR IS UP",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎵 MUSIC BATTLE XXL 🎵 Aktion: !Battle !Punkte 🎵 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
