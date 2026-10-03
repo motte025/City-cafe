@@ -1,0 +1,77 @@
+{
+  "rules": {
+    "games": {
+      "$sessionId": {
+        "public": {
+          ".read": true,
+          ".write": "auth != null"
+        },
+        "private": {
+          "$seatIndex": {
+            ".read": "auth != null && root.child('games/' + $sessionId + '/public/seats/' + $seatIndex + '/uid').val() === auth.uid",
+            ".write": "auth != null && (root.child('games/' + $sessionId + '/public/seats/' + $seatIndex + '/uid').val() === auth.uid || root.child('games/' + $sessionId + '/public/dealerUid').val() === auth.uid)"
+          }
+        }
+      }
+    },
+    "djremote": {
+      "boxen": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      },
+      "$raum": {
+        "chef": {
+          "pin": {
+            ".read": false,
+            ".write": false
+          },
+          "geraete": {
+            "$uid": {
+              ".read": "auth != null && auth.uid === $uid",
+              ".write": "auth != null && auth.uid === $uid && (!newData.exists() || newData.child('pin').val() === root.child('djremote/' + $raum + '/chef/pin').val())"
+            }
+          }
+        },
+        "yt": {
+          ".read": "auth != null",
+          "befehl": {
+            ".write": "auth != null && newData.child('von').val() === auth.uid && (newData.child('aktion').val() === 'suche' || (newData.child('aktion').val() === 'musik' && newData.child('was').val() === 'zurueckziehen') || root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists())"
+          },
+          "wuensche": {
+            "$id": {
+              ".write": "auth != null && ((!data.exists() && newData.child('von').val() === auth.uid) || root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists())"
+            }
+          },
+          "warteschlange": {
+            ".write": "auth != null && root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists()"
+          },
+          "radio": {
+            ".write": "auth != null && root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists()"
+          },
+          "jetzt": {
+            ".write": "auth != null && root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists()"
+          },
+          "listen": {
+            ".write": "auth != null && root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists()"
+          },
+          "liste": {
+            ".write": "auth != null && root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists()"
+          },
+          "treffer": {
+            ".write": "auth != null"
+          },
+          "status": {
+            ".write": "auth != null"
+          },
+          "diagnose": {
+            ".write": "auth != null"
+          }
+        },
+        "$sonst": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      }
+    }
+  }
+}
