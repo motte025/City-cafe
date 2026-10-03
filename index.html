@@ -2427,6 +2427,14 @@
         .ytm-kachel-text { min-width: 0; display: flex; flex-direction: column; }
         .ytm-kachel-text b { font-size: 21px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytm-kachel-text small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Ambilight (Musik, Widget): farbiger Schein um das Video. Die Farben misst
+           der Supervisor am mpv-Bild (window.nlAmbiFarben), hier nur Darstellung. */
+        body.ytm-an.ytm-ambi:not(.ytm-vollbild) .nl-player {
+            overflow: visible;
+            box-shadow: -70px 0 120px 10px rgba(var(--ambi-l), 0.85), 70px 0 120px 10px rgba(var(--ambi-r), 0.85),
+                        0 -50px 110px 6px rgba(var(--ambi-t), 0.8), 0 50px 110px 6px rgba(var(--ambi-b), 0.8);
+            transition: box-shadow 0.9s ease;
+        }
         /* Rechte Karte als Fotoschau (Google-Drive-Galerie), per Handy umschaltbar */
         body.ytm-an .ytm-seite.fotos { padding: 0; overflow: hidden; }
         .ytm-fotos { position: absolute; inset: 0; border-radius: 24px; overflow: hidden; background: #000; }
@@ -7859,6 +7867,13 @@
         let ytmVollbild = YT_VOLLBILD_STANDARD;
         // Rechte Karte im Widget: Aehnliche Songs (false) oder Fotos aus der Drive-Galerie (true)
         let ytmSeiteFotos = false;
+        let ytmAmbi = false;          // Ambilight im Widget an?
+        function ytmAmbiTakt() {
+            const f = window.nlAmbiFarben;
+            if (!ytmAmbi || !f) return;
+            const s = document.body.style;
+            ['l', 'r', 't', 'b'].forEach(k => { if (f[k]) s.setProperty('--ambi-' + k, f[k]); });
+        }
         let ytmFotoListe = [], ytmFotoIdx = 0, ytmFotoNaechste = 0;
         function ytmFotoWeiter() {
             const box = document.querySelector('#ytm-seite .ytm-fotos');
@@ -7974,6 +7989,7 @@
                 pausiert: ytmPausiert,
                 vollbild: ytmVollbild,
                 seite: ytmSeiteFotos ? 'fotos' : 'songs',
+                ambi: ytmAmbi,
                 letzterWunschTs: ytm.letzterWunschTs || 0,
                 gespielt: (ytm.gespielt || []).slice(-40),
                 spielPause: ytmSpielPause
@@ -8307,6 +8323,7 @@
         // --- Takt: Vorladen, Platzhalter aufloesen, Hos'n Obe, Radio-Grenze -------
         function ytmTakt() {
             ytmErgebnissePruefen();
+            ytmAmbiTakt();
             if (ytmSeiteFotos && ytmAktiv() && !ytmVollbild && Date.now() >= ytmFotoNaechste) {
                 ytmFotoNaechste = Date.now() + 8000;   // alle 8 s ein neues Foto
                 ytmFotoWeiter();
@@ -8456,6 +8473,12 @@
                 weg.forEach(e => YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, e.id).catch(() => {}));
                 ytm = Object.assign({}, ytm, { eintraege: ytm.eintraege.filter(e => !weg.includes(e)) });
                 ytmMixInSchlange = null;
+                ytmAnzeigen();
+                ytmMelden();
+                return;
+            }
+            if (was === 'ambi') {
+                ytmAmbi = !!b.an;
                 ytmAnzeigen();
                 ytmMelden();
                 return;
@@ -8632,6 +8655,8 @@
             body.classList.toggle('ytm-vollbild', an && ytmVollbild);
             body.classList.toggle('ytm-browser', an && !nlExtern());
             body.classList.toggle('ytm-qr-an', an && YT_QR_AN);
+            body.classList.toggle('ytm-ambi', an && ytmAmbi);
+            window.nlAmbiAn = an && ytmAmbi && !ytmVollbild;   // Supervisor misst nur dann
             // Supervisor: welche Flaeche gerade das Video traegt (6.8).
             window.nlMpvFlaeche = an && ytmVollbild ? 'yt-vollbild-video' : 'nl-player-frame';
             const vb = document.getElementById('ytm-vollbild');
@@ -8835,7 +8860,8 @@
         // Ebenen abbauen, wenn keine Musik laeuft (auch aus runMasterSequence).
         function ytmEbenenAbbauen() {
             if (ytmAktiv() && !ytmSpielPause) return;
-            document.body.classList.remove('ytm-an', 'ytm-vollbild', 'ytm-browser', 'ytm-qr-an');
+            document.body.classList.remove('ytm-an', 'ytm-vollbild', 'ytm-browser', 'ytm-qr-an', 'ytm-ambi');
+            window.nlAmbiAn = false;
             const vb = document.getElementById('ytm-vollbild');
             if (vb) vb.classList.remove('active');
             window.nlMpvFlaeche = 'nl-player-frame';
@@ -8892,6 +8918,7 @@
                 if (jetzt) {
                     ytmVollbild = !!jetzt.vollbild;
                     ytmSeiteFotos = jetzt.seite === 'fotos';
+                    ytmAmbi = !!jetzt.ambi;
                     ytm.gespielt = Array.isArray(jetzt.gespielt) ? jetzt.gespielt : [];
                     ytm.letzterWunschTs = Number(jetzt.letzterWunschTs) || 0;
                 }

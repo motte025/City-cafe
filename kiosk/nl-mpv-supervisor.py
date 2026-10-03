@@ -14,6 +14,7 @@ der DJ-Buehne; das Dashboard baut dann keinen Twitch-Player.
 """
 import base64
 import glob
+import io
 import json
 import os
 import random
@@ -239,6 +240,8 @@ STATE_EXPR = """JSON.stringify({
   pause: window.nlPauseWunsch || null,
   // Welche Flaeche traegt das Video (Musik: Normal oder Vollbild, 6.8)
   flaeche: window.nlMpvFlaeche || null,
+  // Ambilight im Musik-Widget an? Dann misst der Supervisor die Randfarben (ambi_farben)
+  ambi: !!window.nlAmbiAn,
   // QR-Kaertchen "Song wuenschen" (ohne die Bilddaten - die holt qr_karte_holen einmal)
   qr: window.nlQrKarte ? { id: window.nlQrKarte.id, breite: window.nlQrKarte.breite, hoehe: window.nlQrKarte.hoehe,
        rand: window.nlQrKarte.rand, randVoll: window.nlQrKarte.randVoll, faktorVoll: window.nlQrKarte.faktorVoll } : null,
@@ -895,6 +898,34 @@ def qr_overlay_setzen(karte, info, target, rect_art):
     return (x, y, w, h)
 
 
+def ambi_farben(target):
+    """Ambilight: Randfarben des mpv-Bilds -> {"l","r","t","b","m"} als "r,g,b".
+    grim nimmt nur das Videorechteck und verkleinert es gleich auf 5 % - das
+    kostet ein paar Millisekunden, nicht die Wiedergabe."""
+    from PIL import Image
+    try:
+        aus = subprocess.run(["grim", "-g", f"{target['x']},{target['y']} {target['w']}x{target['h']}",
+                              "-s", "0.05", "-t", "ppm", "-"],
+                             capture_output=True, timeout=2, env={**os.environ, **session_env()})
+        if aus.returncode != 0 or not aus.stdout:
+            return None
+        bild = Image.open(io.BytesIO(aus.stdout)).convert("RGB").resize((16, 9), Image.BOX)
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return None
+
+    def mittel(kasten):
+        return bild.crop(kasten).resize((1, 1), Image.BOX).getpixel((0, 0))
+
+    gesamt = mittel((0, 0, 16, 9))
+    farben = {"m": gesamt}
+    for seite, kasten in (("l", (0, 0, 4, 9)), ("r", (12, 0, 16, 9)), ("t", (0, 0, 16, 3)), ("b", (0, 6, 16, 9))):
+        f = mittel(kasten)
+        # Schwarze Balken (4:3-Video im 16:9-Rahmen) wuerden den Rand dunkel
+        # lassen - dann lieber die Farbe des ganzen Bilds.
+        farben[seite] = f if sum(f) > 45 else gesamt
+    return {k: ",".join(str(int(x)) for x in v) for k, v in farben.items()}
+
+
 def kiosk_neu_starten():
     """Haengenden Kiosk-Browser beenden und neu starten. -> True, wenn versucht."""
     treffer = subprocess.run(["pgrep", "-f", "chromium --ozone-platform=wayland"],
@@ -969,6 +1000,7 @@ def main():
     pausiert = False
     mpv_dauer = {}        # "yt:<id>" -> Laenge laut mpv (einmal je Song abgefragt)
     flaeche_jetzt = None  # "yt" / "yt_voll" / "twitch" / "cam" - wo mpv gerade liegt
+    ambi_naechste = 0.0   # wann die Randfarben fuers Ambilight wieder gemessen werden
     qr_karte = None       # PIL-Bild des QR-Kaertchens
     qr_karte_id = ""
     qr_lage = None        # (x, y, w, h, flaeche), fuer die das Overlay gesetzt ist
@@ -1319,6 +1351,16 @@ def main():
                         elif qr_lage is not None:
                             mpv_befehl("overlay-remove", QR_OVERLAY_ID)
                             qr_lage = None
+                # Ambilight (Musik, normale Ansicht): zweimal pro Sekunde Randfarben messen.
+                if (state.get("ambi") and musik and art == "yt" and rect_art == "yt"
+                        and window_seen and now >= ambi_naechste):
+                    ambi_naechste = now + 0.5
+                    farben = ambi_farben(target)
+                    if farben:
+                        try:
+                            cdp_eval(page_id, "window.nlAmbiFarben = " + json.dumps(farben) + "; 1")
+                        except (OSError, ValueError, ConnectionError):
+                            pass
                 pos = mpv_time_pos()
                 if pos is not None and (last_pos is None or pos > last_pos + 0.05):
                     if last_pos is not None and window_seen and art == "yt" and not embed_paused:
