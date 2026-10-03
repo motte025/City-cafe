@@ -258,8 +258,9 @@ STATE_EXPR = """JSON.stringify({
 })"""
 
 # Lautheitsausgleich: dynaudnorm gleicht leise und laute Stellen an und ist
-# guenstig genug fuer diese Box (loudnorm waere deutlich teurer).
-LAUTHEIT_FILTER = "dynaudnorm=g=5:f=250:r=0.9:p=0.5"
+# guenstig genug fuer diese Box (loudnorm waere deutlich teurer). p=0.95: Spitzen
+# bis knapp Vollaussteuerung - mit p=0.5 war Musik rund 6 dB zu leise (03.10.2026).
+LAUTHEIT_FILTER = "dynaudnorm=g=5:f=250:r=0.9:p=0.95"
 
 SUCH_TREFFER = 25         # so viele Treffer bekommt das Handy zu sehen
 SUCH_TREFFER_MAX = 75     # "Mehr laden" am Handy: in Schritten von 25 bis hierhin
