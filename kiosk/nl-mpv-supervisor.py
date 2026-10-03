@@ -934,6 +934,30 @@ def ambi_farben(target):
     return {k: ",".join(str(int(x)) for x in kraeftig(v)) for k, v in farben.items()}
 
 
+# Ambilight laeuft in einem eigenen Faden: die Hauptschleife dreht nur alle
+# 0,5 s und waere sonst durch grim (~0,16 s) jedes Mal aufgehalten. Die
+# Hauptschleife traegt hier ein, ob und wo gemessen werden soll (ts = zuletzt
+# bestaetigt; ohne Bestaetigung in 2 s hoert der Faden von selbst auf).
+AMBI_TAKT = 0.25
+ambi_lage = {"ts": 0.0, "target": None, "page": None}
+
+
+def ambi_schleife():
+    while True:
+        if time.time() - ambi_lage["ts"] < 2 and ambi_lage["target"] and ambi_lage["page"]:
+            farben = ambi_farben(ambi_lage["target"])
+            if farben:
+                js = "".join(f"document.body.style.setProperty('--ambi-{k}','{v}');"
+                             for k, v in farben.items() if k in "lrtb")
+                try:
+                    cdp_eval(ambi_lage["page"], js + "1")
+                except (OSError, ValueError, ConnectionError):
+                    pass
+            time.sleep(AMBI_TAKT)
+        else:
+            time.sleep(0.5)
+
+
 def kiosk_neu_starten():
     """Haengenden Kiosk-Browser beenden und neu starten. -> True, wenn versucht."""
     treffer = subprocess.run(["pgrep", "-f", "chromium --ozone-platform=wayland"],
@@ -1008,7 +1032,7 @@ def main():
     pausiert = False
     mpv_dauer = {}        # "yt:<id>" -> Laenge laut mpv (einmal je Song abgefragt)
     flaeche_jetzt = None  # "yt" / "yt_voll" / "twitch" / "cam" - wo mpv gerade liegt
-    ambi_naechste = 0.0   # wann die Randfarben fuers Ambilight wieder gemessen werden
+    threading.Thread(target=ambi_schleife, daemon=True).start()
     qr_karte = None       # PIL-Bild des QR-Kaertchens
     qr_karte_id = ""
     qr_lage = None        # (x, y, w, h, flaeche), fuer die das Overlay gesetzt ist
@@ -1359,16 +1383,11 @@ def main():
                         elif qr_lage is not None:
                             mpv_befehl("overlay-remove", QR_OVERLAY_ID)
                             qr_lage = None
-                # Ambilight (Musik, normal und Vollbild): zweimal pro Sekunde Randfarben messen.
+                # Ambilight (Musik, normal und Vollbild): der Faden ambi_schleife
+                # misst viermal pro Sekunde - hier nur bestaetigen, wo.
                 if (state.get("ambi") and musik and art == "yt" and rect_art in ("yt", "yt_voll")
-                        and window_seen and now >= ambi_naechste):
-                    ambi_naechste = now + 0.5
-                    farben = ambi_farben(target)
-                    if farben:
-                        try:
-                            cdp_eval(page_id, "window.nlAmbiFarben = " + json.dumps(farben) + "; 1")
-                        except (OSError, ValueError, ConnectionError):
-                            pass
+                        and window_seen):
+                    ambi_lage.update(ts=now, target=dict(target), page=page_id)
                 pos = mpv_time_pos()
                 if pos is not None and (last_pos is None or pos > last_pos + 0.05):
                     if last_pos is not None and window_seen and art == "yt" and not embed_paused:

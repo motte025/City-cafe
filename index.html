@@ -2437,14 +2437,14 @@
             overflow: visible;
             box-shadow: -80px 0 140px 14px rgba(var(--ambi-l), 0.95), 80px 0 140px 14px rgba(var(--ambi-r), 0.95),
                         0 -50px 120px 8px rgba(var(--ambi-t), 0.9), 0 60px 130px 8px rgba(var(--ambi-b), 0.9) !important;
-            transition: box-shadow 0.9s ease;
+            transition: box-shadow 0.35s linear;
         }
         /* !important + html davor: schlaegt die Spar-Regel "box-shadow: none" (Odroid-Zeit) */
         html body.ytm-an.ytm-ambi:not(.ytm-vollbild) .nl-player {
             overflow: visible;
             box-shadow: -70px 0 120px 10px rgba(var(--ambi-l), 0.95), 70px 0 120px 10px rgba(var(--ambi-r), 0.95),
                         0 -50px 110px 6px rgba(var(--ambi-t), 0.9), 0 50px 110px 6px rgba(var(--ambi-b), 0.9) !important;
-            transition: box-shadow 0.9s ease;
+            transition: box-shadow 0.35s linear;
         }
         /* Rechte Karte als Fotoschau (Google-Drive-Galerie), per Handy umschaltbar */
         body.ytm-an .ytm-seite.fotos { padding: 0; overflow: hidden; }
@@ -7879,6 +7879,8 @@
         // Rechte Karte im Widget: Aehnliche Songs (false) oder Fotos aus der Drive-Galerie (true)
         let ytmSeiteFotos = false;
         let ytmAmbi = false;          // Ambilight im Widget an?
+        // (frueher: Farben aus window.nlAmbiFarben - jetzt setzt der Supervisor die
+        // CSS-Variablen direkt, viermal pro Sekunde, siehe ambi_schleife)
         function ytmAmbiTakt() {
             const f = window.nlAmbiFarben;
             if (!ytmAmbi || !f) return;
@@ -8334,7 +8336,6 @@
         // --- Takt: Vorladen, Platzhalter aufloesen, Hos'n Obe, Radio-Grenze -------
         function ytmTakt() {
             ytmErgebnissePruefen();
-            ytmAmbiTakt();
             if (ytmSeiteFotos && ytmAktiv() && !ytmVollbild && Date.now() >= ytmFotoNaechste) {
                 ytmFotoNaechste = Date.now() + 8000;   // alle 8 s ein neues Foto
                 ytmFotoWeiter();
