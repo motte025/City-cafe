@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-03T06:42:46Z",
+  "checked_at": "2026-10-03T07:02:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "👻BOOmer Night👻 60s 70s & 80s all night loooong🎃HALLOWEEN DECOR IS UP",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     }
   ]
