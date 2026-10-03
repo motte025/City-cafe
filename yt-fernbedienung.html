@@ -179,7 +179,20 @@
         .chips button { font-size: 17px; }
         .radio-hinweis { font-size: 18px; }
         .meldung { font-size: 16px; max-width: 940px; margin: 0 auto; }
+        .mehrknopf, .plus-zeile button.mehrknopf { font-size: 24px; }
+        .menue { max-width: 700px; margin: 0 auto; }
+        .menue .t { font-size: 18px; }
+        .menue button { font-size: 18px; padding: 12px; }
     }
+    /* Chef-Menue je Song: Als Naechstes, Radio-Mix starten */
+    .mehrknopf, .plus-zeile button.mehrknopf { background: transparent; color: #9fb0d8; font-size: 36px; padding: 4px 10px; line-height: 1; }
+    .menue-hg { position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, 0.55); display: none; align-items: flex-end; }
+    .menue-hg.an { display: flex; }
+    .menue { width: 100%; background: #131a33; border-top: 1px solid #27325c; border-radius: 22px 22px 0 0;
+             padding: 18px 16px calc(18px + env(safe-area-inset-bottom, 0px)); }
+    .menue .t { font-size: 26px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
+    .menue button { width: 100%; margin-top: 10px; font-size: 26px; padding: 18px; }
+    .menue button.still { background: #1d2647; }
 </style>
 </head>
 <body>
@@ -235,7 +248,7 @@
 <section class="reiter-inhalt" id="reiter-passt">
     <div class="feldname" id="passt-kopf">Passt dazu</div>
     <div class="hinweis nur-gast">＋ wünscht den Song.</div>
-    <div class="hinweis nur-chef">＋ hängt ans Ende · lange drücken: als Nächstes.</div>
+    <div class="hinweis nur-chef">＋ hängt ans Ende · lange drücken: als Nächstes · ⋯ Radio-Mix starten.</div>
     <div id="passt-liste"></div>
 </section>
 
@@ -315,6 +328,7 @@
     <button type="button" data-reiter="mehr"><span>⚙️</span>Mehr</button>
 </nav>
 <div class="meldung" id="meldung"></div>
+<div class="menue-hg" id="menue-hg"><div class="menue"><div class="t" id="menue-titel"></div><div id="menue-knoepfe"></div></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
@@ -327,7 +341,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-musik';
+    var FASSUNG = '2026-10-03-menue';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -442,6 +456,52 @@
         });
     }
 
+    // Chef: Eintrag der Schlange ganz nach vorn (nur seine pos aendert sich).
+    function alsNaechstes(e) {
+        var s = W.sortiert(schlange).filter(function (x) { return x.id !== e.id; });
+        var neu = Object.assign({}, e, { pos: W.posZwischen(null, s.length ? s[0].pos : null), naechstes: true });
+        YT_REMOTE_NET.warteschlangeSetzen(verb, RAUM, e.id, neu).then(function () { melden('⏭ Kommt als Nächstes', 'ok'); })
+            .catch(function (err) { melden(err.message, 'nein'); });
+    }
+
+    // Chef: Song spielt sofort, danach der Radio-Mix zu diesem Song
+    // (Playlist-Titel fliegen raus, Gaeste-Wuensche bleiben).
+    function radioStarten(t) {
+        musik('radio', { videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
+                         dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0 });
+        melden('📻 Radio-Mix startet …', '');
+    }
+
+    // Chef-Menue zu einem Song. eintrag = schon in der Schlange (dann nur nach vorn holen).
+    function menueZeigen(t, eintrag) {
+        var hg = el('menue-hg'), box = el('menue-knoepfe');
+        el('menue-titel').textContent = [t.songtitel || t.titel, t.kuenstler || t.kanal].filter(Boolean).join(' · ');
+        box.innerHTML = '';
+        function knopf(text, still, tun) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = text;
+            if (still) b.className = 'still';
+            b.addEventListener('click', function () { hg.classList.remove('an'); tun(); });
+            box.appendChild(b);
+        }
+        knopf('⏭ Als Nächstes abspielen', false, function () { if (eintrag) alsNaechstes(eintrag); else einreihen(t, 'naechstes'); });
+        if (t.videoId) knopf('📻 Radio-Mix starten', false, function () { radioStarten(t); });
+        if (!eintrag) knopf('➕ Ans Ende', true, function () { einreihen(t, 'ende'); });
+        knopf('Abbrechen', true, function () {});
+        hg.classList.add('an');
+    }
+    el('menue-hg').addEventListener('click', function (ev) { if (ev.target === el('menue-hg')) el('menue-hg').classList.remove('an'); });
+    function mehrKnopf(t, eintrag) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'mehrknopf';
+        b.setAttribute('aria-label', 'Mehr');
+        b.textContent = '⋯';
+        b.addEventListener('click', function (ev) { ev.stopPropagation(); menueZeigen(t, eintrag); });
+        return b;
+    }
+
     // ------------------------------------------------------------------ Jetzt
     var gezogen = null;
     function jetztZeigen() {
@@ -496,6 +556,7 @@
                 + '<div class="k">' + esc(e.kuenstler || '') + zusatz + '</div></div>'
                 + ((istChef || (meins && e.quelle === 'wunsch')) ? '<button type="button" class="weg" aria-label="Entfernen">✕</button>' : '');
             var weg = d.querySelector('.weg');
+            if (istChef) d.insertBefore(mehrKnopf(e, e), weg);
             if (weg) weg.addEventListener('click', function () {
                 if (istChef) {
                     YT_REMOTE_NET.warteschlangeEntfernen(verb, RAUM, e.id).catch(function (err) { melden(err.message, 'nein'); });
@@ -571,6 +632,7 @@
             return '<div class="eintrag"><span class="nr">♪</span><div class="text"><div class="t">' + esc(t.songtitel || t.titel)
                 + '</div><div class="k">' + esc(t.kuenstler || t.kanal || '') + '</div></div></div>';
         }).join('');
+        if (istChef) radioTitel(5).forEach(function (t, i) { box.children[i].appendChild(mehrKnopf(t, null)); });
         passtZeigen();
     }
 
@@ -587,8 +649,9 @@
         var d = document.createElement('div');
         d.className = 'plus-zeile';
         d.innerHTML = '<div class="text"><div class="t">' + esc(t.songtitel || t.titel) + '</div><div class="k">'
-            + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div></div><button type="button" aria-label="Hinzufügen">＋</button>';
-        var knopf = d.querySelector('button'), lang = null, langGedrueckt = false;
+            + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div></div><button type="button" class="plus" aria-label="Hinzufügen">＋</button>';
+        var knopf = d.querySelector('.plus'), lang = null, langGedrueckt = false;
+        if (istChef) d.insertBefore(mehrKnopf(t, null), knopf);
         knopf.addEventListener('pointerdown', function () {
             langGedrueckt = false;
             if (istChef) lang = setTimeout(function () { langGedrueckt = true; einreihen(t, 'naechstes'); }, 550);
@@ -627,7 +690,7 @@
             + '<div><div class="t">' + esc(t.songtitel || t.titel) + '</div><div class="k">'
             + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div></div></div>'
             + '<div class="knoepfe">'
-            + (istChef ? '<button type="button" data-a="naechstes">⏭ Als Nächstes</button><button type="button" class="still" data-a="ende">➕ Ans Ende</button>'
+            + (istChef ? '<button type="button" data-a="naechstes">⏭ Als Nächstes</button><button type="button" class="still" data-a="radio">📻 Radio</button><button type="button" class="still" data-a="ende">➕ Ende</button>'
                        : '<button type="button" data-a="wunsch">🙋 Wünschen</button>')
             + '</div>'
             + (istChef ? '<details class="klein"><summary>📺 Zur Dauerliste (Rotation)</summary>'
@@ -639,6 +702,7 @@
                 var a = b.dataset.a;
                 if (a === 'wunsch') wuenschen(t);
                 else if (a === 'naechstes' || a === 'ende') einreihen(t, a);
+                else if (a === 'radio') radioStarten(t);
                 else if (a === 'liste') zurDauerliste(t, d);
             });
         });

@@ -2417,7 +2417,8 @@
             display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 14px;
             background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07);
         }
-        .ytm-kachel { width: 52px; height: 52px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #ffffff; }
+        .ytm-kachel { width: 52px; height: 52px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #ffffff; overflow: hidden; }
+        .ytm-kachel img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .ytm-kachel-text { min-width: 0; display: flex; flex-direction: column; }
         .ytm-kachel-text b { font-size: 21px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytm-kachel-text small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -8362,6 +8363,27 @@
                 ytmPlaylistNutzen(pl, b.art === 'anhaengen' ? 'anhaengen' : 'start');
                 return;
             }
+            if (was === 'radio') {          // Chef: "Radio-Mix starten" ab diesem Song
+                const vid = String(b.videoId || '');
+                if (!/^[A-Za-z0-9_-]{11}$/.test(vid) || !nlFernVerb) return;
+                // Wie eine Playlist mit "start": Playlist-Titel raus, Wuensche bleiben.
+                ytm.eintraege.filter(e => e.quelle === 'playlist' || e.videoId === vid).forEach(e =>
+                    YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, e.id).catch(() => {}));
+                ytm = Object.assign({}, ytm, { eintraege: ytm.eintraege.filter(e => e.quelle !== 'playlist' && e.videoId !== vid) });
+                const neu = ytmAufbereiten({
+                    id: ytmId(), videoId: vid, titel: String(b.titel || '').slice(0, 160), kanal: String(b.kanal || '').slice(0, 80),
+                    dauer: String(b.dauer || ''), dauerSek: Number(b.dauerSek) || 0, quelle: 'chef', von: 'tv', ts: Date.now()
+                });
+                ytm = YTW.verschieben(YTW.einreihen(ytm, neu, 'naechstes'), neu.id, 0);
+                const gesetzt = ytm.eintraege.find(e => e.id === neu.id);
+                YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, gesetzt.id, gesetzt).catch(() => {});
+                ytm.radio = { seed: '', titel: [] };   // alter Mix weg, der neue kommt zum Song (radioSeedNoetig)
+                ytmRadioMelden();
+                ytm.letzterWunschTs = Date.now();
+                ytm.modus = 'warteschlange';
+                ytmWeiter();
+                return;
+            }
             if (was === 'qualitaet') {
                 ytmQualitaet = {
                     hoehe: [0, 480, 720, 1080].includes(Number(b.hoehe)) ? Number(b.hoehe) : 0,
@@ -8398,7 +8420,9 @@
                 .filter(t => !ytm.eintraege.some(e => e.videoId === t.videoId)).slice(0, n);
         }
         function ytmKachelzeile(t, i) {
-            return `<div class="ytm-kachelzeile"><div class="ytm-kachel" style="background:${YTM_KACHELFARBEN[i % YTM_KACHELFARBEN.length]}">♪</div>`
+            return `<div class="ytm-kachelzeile"><div class="ytm-kachel" style="background:${YTM_KACHELFARBEN[i % YTM_KACHELFARBEN.length]}">`
+                + (/^[A-Za-z0-9_-]{11}$/.test(t.videoId || '')   // kleines Cover; ohne videoId bleibt die Note
+                    ? `<img alt="" src="https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg" onerror="this.remove()">` : '♪') + '</div>'
                 + `<div class="ytm-kachel-text"><b>${ytmEsc(t.songtitel || t.titel)}</b><small>${ytmEsc(t.kuenstler || t.kanal || '')}</small></div></div>`;
         }
 
