@@ -8449,6 +8449,17 @@
                 ytmMelden();
                 return;
             }
+            if (was === 'leeren') {         // Chef: Warteschlange bereinigen
+                if (!nlFernVerb) return;
+                const nurListen = b.art !== 'alles';   // Standard: Wuensche bleiben
+                const weg = ytm.eintraege.filter(e => !nurListen || e.quelle === 'playlist' || e.quelle === 'radio');
+                weg.forEach(e => YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, e.id).catch(() => {}));
+                ytm = Object.assign({}, ytm, { eintraege: ytm.eintraege.filter(e => !weg.includes(e)) });
+                ytmMixInSchlange = null;
+                ytmAnzeigen();
+                ytmMelden();
+                return;
+            }
             if (was === 'fotos' || was === 'songs') {
                 ytmSeiteFotos = was === 'fotos';
                 ytmFotoNaechste = 0;

@@ -65,6 +65,8 @@
     body:not(.ist-chef) .nur-chef { display: none !important; }
     body.ist-chef .nur-gast { display: none !important; }
     .feldname { font-size: 22px; color: #8ea0c8; margin: 22px 2px 10px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 800; }
+    .schlange-kopfzeile { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .schlange-kopfzeile button { font-size: 22px; padding: 10px 16px; margin-top: 12px; background: #1d2647; }
     input[type=search], input[type=text], input[type=password], input[inputmode=numeric] {
         width: 100%; min-width: 0; padding: 16px 16px; font-size: 30px; border-radius: 14px;
         border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
@@ -242,7 +244,8 @@
         </div>
     </div>
     <div class="hinweis" id="jetzt-hinweis"></div>
-    <div class="feldname" id="schlange-kopf">Warteschlange</div>
+    <div class="schlange-kopfzeile"><div class="feldname" id="schlange-kopf">Warteschlange</div>
+        <button type="button" class="still nur-chef" id="k-leeren">🧹 Bereinigen</button></div>
     <div id="schlange"></div>
     <div class="radio-hinweis">📻 Danach: Radio-Mix</div>
     <div id="radio-vorschau"></div>
@@ -367,7 +370,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-fotos';
+    var FASSUNG = '2026-10-03-leeren';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -526,6 +529,25 @@
         knopf('Abbrechen', true, function () {});
         hg.classList.add('an');
     }
+    // Warteschlange bereinigen (Chef): Auswahl im selben Unten-Menue wie bei den Songs.
+    el('k-leeren').addEventListener('click', function () {
+        var hg = el('menue-hg'), box = el('menue-knoepfe');
+        var wuensche = schlange.filter(function (e) { return e.quelle === 'wunsch' || e.quelle === 'chef'; }).length;
+        el('menue-titel').textContent = 'Warteschlange bereinigen · ' + schlange.length + ' Songs';
+        box.innerHTML = '';
+        [['🧹 Playlist- und Mix-Titel entfernen' + (wuensche ? ' (' + wuensche + ' Wünsche bleiben)' : ''), false, function () {
+            musik('leeren', { art: 'listen' }); melden('🧹 Playlist- und Mix-Titel entfernt', 'ok'); }],
+         ['🗑️ Alles leeren', false, function () { musik('leeren', { art: 'alles' }); melden('🗑️ Warteschlange geleert', 'ok'); }],
+         ['Abbrechen', true, function () {}]].forEach(function (k) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = k[0];
+            if (k[1]) b.className = 'still';
+            b.addEventListener('click', function () { hg.classList.remove('an'); k[2](); });
+            box.appendChild(b);
+        });
+        hg.classList.add('an');
+    });
     el('menue-hg').addEventListener('click', function (ev) { if (ev.target === el('menue-hg')) el('menue-hg').classList.remove('an'); });
     function mehrKnopf(t, eintrag) {
         var b = document.createElement('button');
