@@ -24,6 +24,11 @@ CACHEBUST="$(date +%s)"
 # Auf dem ODROID leer lassen. CITYCAFE_OUTPUT: Name des Bildschirmausgangs
 # (Standard HDMI-A-1; auf dem W1 mit `swaymsg -t get_outputs` nachsehen).
 OUTPUT="${CITYCAFE_OUTPUT:-HDMI-A-1}"
+# CITYCAFE_URL: andere Dashboard-Adresse (Test auf der Box, z. B.
+#   http://127.0.0.1:8090/index.html), Standard GitHub Pages.
+# CITYCAFE_URL_EXTRA: weitere Parameter fuer die Adresse, mit "&" davor - hier
+#   steht z. B. "&chefpin=1234" (YouTube-Musik: der TV ist Chef). Nur in
+#   ~/.config/citycafe.env, nie im Repo.
 # CITYCAFE_RAUM / CITYCAFE_BOXNAME: welcher Screen das ist. Standard ist der
 # Fernseher zuhause; im Cafe CITYCAFE_RAUM=city-cafe (dort kein Roulette-Spiel,
 # nur die Werbung). Boxname leer = das Dashboard nimmt "City Cafe".
@@ -41,7 +46,7 @@ exec chromium \
   ${CITYCAFE_CHROMIUM_EXTRA:-} \
   --ozone-platform=wayland \
   ${EXT:+--load-extension=$EXT} \
-  --app="https://motte025.github.io/City-cafe/?kiosk=1&raum=${RAUM}${BOXNAME:+&boxname=$BOXNAME}&_t=${CACHEBUST}" \
+  --app="${CITYCAFE_URL:-https://motte025.github.io/City-cafe/}?kiosk=1&raum=${RAUM}${BOXNAME:+&boxname=$BOXNAME}${CITYCAFE_URL_EXTRA:-}&_t=${CACHEBUST}" \
   --disable-features=Translate,MediaRouter,OptimizationHints,AutofillServerCommunication,BackForwardCache \
   --disable-background-networking \
   --disable-sync \

@@ -61,7 +61,7 @@
         },
         trefferMelden: function (verb, raum, id, liste) {
             return schreiben(verb, raum, 'treffer', {
-                id: id, liste: (liste || []).slice(0, 25)
+                id: id, liste: (liste || []).slice(0, 75)   // "Mehr laden" bis 75
             });
         },
         statusMelden: function (verb, raum, status) {
@@ -71,6 +71,9 @@
         // --- Handy ----------------------------------------------------------
         befehlSenden: function (verb, raum, befehl) {
             var daten = Object.assign({}, befehl);
+            // Wer schickt? Die Firebase-Regeln pruefen von === auth.uid (YouTube-
+            // Musik: Chef-Befehle nur von Chef-Geraeten, Zurueckziehen nur eigene).
+            if (verb && verb.uid) daten.von = verb.uid;
             // Eigene id je Befehl: daran erkennt der Screen einen NEUEN Auftrag.
             daten.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
             return schreiben(verb, raum, 'befehl', daten).then(function () { return daten.id; });
@@ -135,6 +138,97 @@
         },
         aufStatusHoeren: function (verb, raum, rueckruf) {
             return hoeren(verb, raum, 'status', rueckruf);
+        },
+
+        // --- YouTube-Musik (YOUTUBE-MUSIK-SETUP.md, Abschnitt 4) -----------
+        //   yt/warteschlange/<id> : TV und Chef schreiben
+        //   yt/wuensche/<id>      : Gaeste schreiben NUR hierhin (mit von = uid)
+        //   yt/radio, yt/jetzt    : nur der TV schreibt
+        //   chef/geraete/<uid>    : Geraet meldet sich mit der PIN als Chef an
+        aufWarteschlangeHoeren: function (verb, raum, rueckruf) {
+            return hoeren(verb, raum, 'warteschlange', function (w) {
+                rueckruf(Object.keys(w || {}).map(function (id) {
+                    return Object.assign({}, w[id], { id: id });
+                }));
+            });
+        },
+        warteschlangeSetzen: function (verb, raum, id, eintrag) {
+            var inhalt = Object.assign({}, eintrag);
+            delete inhalt.id;
+            inhalt.ts = inhalt.ts || global.firebase.database.ServerValue.TIMESTAMP;
+            return verb.db.ref(pfad(raum) + '/warteschlange/' + id).set(inhalt);
+        },
+        warteschlangeEntfernen: function (verb, raum, id) {
+            return verb.db.ref(pfad(raum) + '/warteschlange/' + id).remove();
+        },
+        posSetzen: function (verb, raum, id, pos) {
+            return verb.db.ref(pfad(raum) + '/warteschlange/' + id + '/pos').set(pos);
+        },
+        neueId: function (verb, raum) {
+            return verb.db.ref(pfad(raum) + '/warteschlange').push().key;
+        },
+        aufListenHoeren: function (verb, raum, rueckruf) {
+            return hoeren(verb, raum, 'listen', rueckruf);
+        },
+        wunschSenden: function (verb, raum, wunsch) {
+            var ref = verb.db.ref(pfad(raum) + '/wuensche').push();
+            var inhalt = {
+                videoId: String(wunsch.videoId || ''),
+                suche: String(wunsch.suche || '').slice(0, 120),
+                titel: String(wunsch.titel || '').slice(0, 160),
+                kanal: String(wunsch.kanal || '').slice(0, 80),
+                dauer: String(wunsch.dauer || ''),
+                dauerSek: Number(wunsch.dauerSek) || 0,
+                von: verb.uid,
+                ts: global.firebase.database.ServerValue.TIMESTAMP
+            };
+            return ref.set(inhalt).then(function () { return ref.key; });
+        },
+        aufWunschHoeren: function (verb, raum, wunschId, rueckruf) {
+            var ref = verb.db.ref(pfad(raum) + '/wuensche/' + wunschId);
+            ref.on('value', function (s) { rueckruf(s.val()); });
+            return function () { ref.off(); };
+        },
+        aufNeueWuenscheHoeren: function (verb, raum, rueckruf) {
+            var ref = verb.db.ref(pfad(raum) + '/wuensche');
+            ref.on('child_added', function (s) { rueckruf(s.key, s.val()); });
+            return function () { ref.off(); };
+        },
+        wunschErledigen: function (verb, raum, wunschId) {
+            return verb.db.ref(pfad(raum) + '/wuensche/' + wunschId).remove();
+        },
+        wunschAblehnen: function (verb, raum, wunschId, grund) {
+            return verb.db.ref(pfad(raum) + '/wuensche/' + wunschId + '/abgelehnt').set(String(grund || 'abgelehnt'));
+        },
+        radioMelden: function (verb, raum, radio) {
+            return schreiben(verb, raum, 'radio', radio);
+        },
+        aufRadioHoeren: function (verb, raum, rueckruf) {
+            return hoeren(verb, raum, 'radio', rueckruf);
+        },
+        jetztMelden: function (verb, raum, jetzt) {
+            return schreiben(verb, raum, 'jetzt', jetzt);
+        },
+        jetztLesen: function (verb, raum) {
+            return verb.db.ref(pfad(raum) + '/jetzt').once('value').then(function (s) { return s.val(); })
+                .catch(function () { return null; });
+        },
+        aufJetztHoeren: function (verb, raum, rueckruf) {
+            return hoeren(verb, raum, 'jetzt', rueckruf);
+        },
+        chefAnmelden: function (verb, raum, pin, name) {
+            return verb.db.ref('djremote/' + (raum || cfg.raum || 'city-cafe') + '/chef/geraete/' + verb.uid).set({
+                pin: String(pin || ''),
+                name: String(name || '').slice(0, 40),
+                ts: global.firebase.database.ServerValue.TIMESTAMP
+            });
+        },
+        chefAbmelden: function (verb, raum) {
+            return verb.db.ref('djremote/' + (raum || cfg.raum || 'city-cafe') + '/chef/geraete/' + verb.uid).remove();
+        },
+        istChef: function (verb, raum) {
+            return verb.db.ref('djremote/' + (raum || cfg.raum || 'city-cafe') + '/chef/geraete/' + verb.uid)
+                .once('value').then(function (s) { return s.exists(); }).catch(function () { return false; });
         }
     };
 })(window);

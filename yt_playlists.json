@@ -1,0 +1,29 @@
+[
+  {
+    "nr": 1,
+    "name": "Party Hits",
+    "zeit": "21:00-08:00",
+    "quelle": "",
+    "platzhalter": ["Party-Hit", "Internationale Party-Hits", "Party & Rock", "2000s Party", "90s Party", "80s Party", "Modern Party", "Deutsch Party"]
+  },
+  {
+    "nr": 2,
+    "name": "Schlager",
+    "zeit": "17:00-21:00",
+    "quelle": "",
+    "platzhalter": ["Schlager", "Party-Schlager", "Schlager-Party", "Schlager & Party", "Modern Schlager"]
+  },
+  {
+    "nr": 3,
+    "name": "Après-Ski",
+    "quelle": "",
+    "platzhalter": ["Après-Ski & Ballermann", "Ballermann & Party", "Ballermann"]
+  },
+  {
+    "nr": 4,
+    "name": "Chill",
+    "zeit": "08:00-17:00",
+    "quelle": "",
+    "platzhalter": ["Deutsch-Pop", "Charts & Pop", "Pop", "Pop / Soul", "Indie & Alternative"]
+  }
+]

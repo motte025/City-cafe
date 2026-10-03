@@ -2336,6 +2336,144 @@
             background: rgba(0, 242, 254, 0.14); border: 1px solid rgba(0, 242, 254, 0.45); color: #00f2fe;
             font-size: 15px; font-weight: 900; padding: 8px 16px; border-radius: 11px; white-space: nowrap;
         }
+
+        /* ================= YouTube-Musik (YOUTUBE-MUSIK-SETUP.md 6) =================
+           Alles nur sichtbar, solange Musik laeuft (body.ytm-an). Ueber dem Video
+           (nl-player) liegt KEIN HTML - mpv ist ein eigenes Fenster darueber. */
+        .ytm-zeit, .ytm-citycafe, .ytm-fortschritt, .ytm-leiste, .ytm-seite, .ytm-qr-html { display: none; }
+        body.ytm-an .nl-badge { display: none; }
+        body.ytm-an .ytm-zeit {
+            display: block; background: rgba(0, 242, 254, 0.14); border: 1px solid rgba(0, 242, 254, 0.45);
+            color: #00f2fe; font-size: 17px; font-weight: 900; padding: 8px 16px; border-radius: 11px;
+            white-space: nowrap; font-variant-numeric: tabular-nums;
+        }
+        .ytm-citycafe {
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 44px; line-height: 1;
+            letter-spacing: 1px; color: #ffffff; white-space: nowrap;
+        }
+        .ytm-citycafe span { color: #f355da; }
+        body.ytm-an .ytm-citycafe { display: block; }
+        /* Fortschritt: 5 px, 6 px unter dem Video, volle Videobreite - passt in die
+           16 px Luft unter dem Player, das Video wird nicht kleiner. */
+        body.ytm-an .ytm-fortschritt {
+            display: block; width: 1200px; height: 5px; margin-top: 6px; border-radius: 3px;
+            background: rgba(255, 255, 255, 0.12); overflow: hidden; flex-shrink: 0;
+        }
+        .ytm-fortschritt i, .ytv-fortschritt i {
+            display: block; height: 100%; width: 0%; border-radius: inherit;
+            background: linear-gradient(90deg, #00f2fe 0%, #f355da 100%);
+        }
+
+        /* QR "Song wuenschen" als HTML - nur, wenn das Video im Browser laeuft
+           (sonst zeichnet mpv dasselbe Kaertchen, body.ytm-browser setzt das JS). */
+        .ytm-qr-html {
+            position: absolute; right: 18px; bottom: 18px; z-index: 4;
+            background: #ffffff; border-radius: 14px; padding: 10px 10px 6px;
+            flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+        }
+        .ytm-qr-html img { width: 150px; height: 150px; display: block; }
+        .ytm-qr-html span { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 14px; color: #0b1220; letter-spacing: 1px; }
+        body.ytm-an.ytm-browser .nl-player .ytm-qr-html { display: flex; }
+
+        /* Obere Leiste: "Als Naechstes" mit zwei grossen Titeln */
+        body.ytm-an .ytm-leiste {
+            display: flex; position: absolute; inset: 0; z-index: 10; align-items: stretch;
+            background: linear-gradient(135deg, #0e1228 0%, #160c26 100%);   /* deckend: die Liga-Leiste darunter laeuft weiter */
+        }
+        .ytm-pille {
+            flex-shrink: 0; display: flex; align-items: center; justify-content: center; text-align: center;
+            padding: 0 22px; background: #c026d3; color: #ffffff;
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px; line-height: 1.1;
+            letter-spacing: 1px; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+        }
+        .ytm-pille.radio { background: #0e7490; }
+        .ytm-pille.tor { background: #e30613; }
+        .ytm-felder { flex: 1; display: flex; min-width: 0; }
+        .ytm-feld {
+            flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 18px; padding: 0 26px;
+        }
+        .ytm-feld + .ytm-feld { border-left: 1px solid rgba(255, 255, 255, 0.14); }
+        .ytm-feld-nr { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 40px; color: #00f2fe; flex-shrink: 0; }
+        .ytm-feld-text { min-width: 0; display: flex; flex-direction: column; }
+        .ytm-feld-titel { font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytm-feld-kuenstler { font-size: 19px; font-weight: 700; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytm-feld-kuenstler .in { color: #00f2fe; }
+        .ytm-feld-kuenstler .wunsch { color: #f355da; }
+        .ytm-einblendung { flex: 1; display: flex; align-items: center; padding: 0 30px; min-width: 0;
+            font-size: 34px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytm-einblendung b { color: #f355da; margin-right: 14px; }
+        .ytm-leiste .bl-top-match { flex: 1; }
+
+        /* Seitenleiste: "Passt dazu" ueber dem Rotator */
+        body.ytm-an .ytm-seite {
+            display: flex; flex-direction: column; position: absolute; inset: 0; z-index: 30;
+            border-radius: 24px; padding: 26px 28px 22px;
+            background: linear-gradient(170deg, #1c0b2c 0%, #0d0a20 60%, #0a1430 100%);
+            border: 1px solid rgba(243, 85, 218, 0.25);
+        }
+        .ytm-seite-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 25px; color: #f355da; letter-spacing: 1px; margin-bottom: 16px; }
+        .ytm-seite-liste { display: flex; flex-direction: column; gap: 11px; }
+        .ytm-kachelzeile {
+            display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .ytm-kachel { width: 52px; height: 52px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #ffffff; }
+        .ytm-kachel-text { min-width: 0; display: flex; flex-direction: column; }
+        .ytm-kachel-text b { font-size: 21px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytm-kachel-text small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytm-seite-fuss { margin-top: 14px; font-size: 15px; font-weight: 600; color: #94a3b8; }
+
+        /* Vollbild-Ansicht */
+        #ytm-vollbild { display: none; }
+        body.ytm-an.ytm-vollbild #ytm-vollbild {
+            display: block; position: absolute; inset: 0; z-index: 520; overflow: hidden;
+            background: linear-gradient(160deg, #2a0a2e 0%, #120b26 50%, #0a1430 100%);
+        }
+        .ytv-kopf { position: absolute; left: 40px; right: 40px; top: 28px; height: 80px; display: flex; align-items: flex-start; gap: 24px; }
+        .ytv-titelblock { min-width: 0; flex: 1 1 auto; }
+        .ytv-titelblock h2 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 44px; font-weight: 900; color: #ffffff;
+            text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-titelblock p { margin: 6px 0 0; font-size: 20px; font-weight: 700; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-banner { display: none; flex-shrink: 0; align-self: center; padding: 10px 18px; border-radius: 12px;
+            font-size: 22px; font-weight: 800; color: #ffffff; background: rgba(192, 38, 211, 0.9); white-space: nowrap; max-width: 560px; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-banner.an { display: block; }
+        .ytv-banner.tor { background: rgba(227, 6, 19, 0.92); }
+        .ytv-marke { flex-shrink: 0; display: flex; align-items: center; gap: 22px; margin-left: auto; padding-top: 4px; }
+        .ytv-marke .ytm-citycafe { display: block; font-size: 52px; }
+        .ytv-marke i { width: 1px; height: 46px; background: rgba(255, 255, 255, 0.25); }
+        .ytv-marke b { font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900; color: #ffffff; font-variant-numeric: tabular-nums; }
+        .ytv-video { position: absolute; left: 40px; top: 127px; width: 1280px; height: 720px; border-radius: 16px; overflow: hidden;
+            background: #000; border: 1px solid rgba(255, 255, 255, 0.12); }
+        .ytv-qr { right: 20px; bottom: 20px; }
+        .ytv-qr img { width: 160px; height: 160px; }
+        body.ytm-an.ytm-vollbild.ytm-browser .ytv-qr { display: flex; }
+        .ytv-fortschritt { position: absolute; left: 40px; top: 858px; width: 1280px; display: flex; align-items: center; gap: 16px;
+            font-size: 18px; font-weight: 800; color: #cbd5e1; font-variant-numeric: tabular-nums; }
+        .ytv-fortschritt div { flex: 1; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+        .ytv-rechts { position: absolute; left: 1350px; right: 40px; top: 127px; height: 720px; display: flex; flex-direction: column; }
+        .ytv-gleich { border-radius: 16px; padding: 18px 22px; background: rgba(192, 38, 211, 0.16); border: 1px solid rgba(243, 85, 218, 0.55); }
+        .ytv-gleich-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; letter-spacing: 1.5px; color: #f9a8e8; }
+        .ytv-gleich-zeile { display: flex; align-items: center; gap: 24px; margin-top: 4px; min-width: 0; }
+        .ytv-gleich-zeile b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 58px; color: #ffffff; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+        .ytv-gleich-zeile div { min-width: 0; display: flex; flex-direction: column; }
+        .ytv-gleich-zeile strong { font-size: 27px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-gleich-zeile small { font-size: 17px; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-danach-kopf { margin: 22px 0 12px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; letter-spacing: 1px; }
+        .ytv-danach-kopf small { font-size: 16px; color: #f9a8e8; margin-left: 8px; }
+        .ytv-liste { display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+        .ytv-zeile { display: flex; align-items: center; gap: 16px; height: 63px; padding: 0 20px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); flex-shrink: 0; }
+        .ytv-zeile > b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; width: 22px; flex-shrink: 0; }
+        .ytv-zeile > div { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .ytv-zeile strong { font-size: 22px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-zeile small { font-size: 15px; font-weight: 600; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-zeile small .wunsch { color: #f355da; }
+        .ytv-zeile > span { font-size: 16px; font-weight: 700; color: #94a3b8; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+        .ytv-radio-kopf { position: absolute; left: 40px; top: 895px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #f355da; letter-spacing: 1px; }
+        .ytv-radio { position: absolute; left: 40px; right: 40px; top: 935px; height: 108px; display: flex; gap: 18px; }
+        .ytv-radio .ytm-kachelzeile { flex: 1 1 0; min-width: 0; padding: 12px; }
+        .ytv-radio .ytm-kachel { width: 84px; height: 84px; font-size: 34px; }
         .nl-player {
             width: 1200px; height: 675px; box-sizing: border-box; position: relative;
             border-radius: 16px; overflow: hidden;
@@ -2446,6 +2584,9 @@
                     <div class="bl-top-ticker-move" id="bl-top-ticker"></div>
                 </div>
                 <div class="bl-top-datum" id="bl-top-datum"></div>
+                <!-- YouTube-Musik: "Als Naechstes" ueber der Bundesliga-Leiste
+                     (nur solange Musik laeuft, body.ytm-an). -->
+                <div class="ytm-leiste" id="ytm-leiste"></div>
             </div>
 
             <div class="card media-zone" id="card-media">
@@ -2845,7 +2986,9 @@
                             </div>
                             <div class="nl-header-right">
                                 <div class="nl-counter" id="nl-counter" style="display: none;">1/3</div>
+                                <div class="ytm-zeit" id="ytm-zeit">0:00 / 0:00</div>
                                 <div class="nl-badge">Nightlife</div>
+                                <div class="ytm-citycafe">CITY <span>CAFE</span></div>
                             </div>
                         </div>
                         <!-- Der Player wird einmal beim Seitenstart gebaut und bleibt
@@ -2859,7 +3002,12 @@
                                 <div class="nl-hint-text" id="nl-hint-text">Video wird geladen …</div>
                             </div>
                             <div id="nl-diag"></div>
+                            <!-- QR "Song wuenschen": zeichnet normalerweise mpv selbst
+                               (overlay-add). Nur wenn das Video im Browser laeuft,
+                               steht es hier als HTML. -->
+                            <div class="ytm-qr-html" id="ytm-qr-html"><img alt=""><span>SONG WÜNSCHEN</span></div>
                         </div>
+                        <div class="ytm-fortschritt"><i id="ytm-fortschritt"></i></div>
                     </div>
                 </div>
 
@@ -3037,6 +3185,8 @@
                     <img id="dj-fern-qr-img" src="" alt="QR-Code DJ-Fernbedienung">
                     <span>Stream steuern</span>
                 </div>
+                <!-- YouTube-Musik: "Passt dazu" ueber dem Rotator -->
+                <div class="ytm-seite" id="ytm-seite"></div>
                 <button class="dj-ton-knopf" id="dj-ton-knopf" type="button">
                     <span class="dj-ton-zeichen" id="dj-ton-zeichen">▶</span>
                     <span class="dj-ton-text"><span id="dj-ton-haupt">Stream starten</span>
@@ -3047,7 +3197,7 @@
         </div>
 
         <div class="card ticker-zone" id="card-ticker">
-            <div class="ticker-label-left">☕ CITY CAFE</div>
+            <div class="ticker-label-left" id="ticker-label-left">☕ CITY CAFE</div>
             <div class="ticker-wrap">
                 <div class="ticker-move" id="ticker-dynamic-content">
                     <!-- Befüllung erfolgt aus dynamicPartyMessages -->
@@ -3058,6 +3208,34 @@
         <div id="build-tag" style="position: absolute; bottom: 1px; right: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: rgba(255, 255, 255, 0.3); z-index: 50; pointer-events: none;">Build 2026-08-24 · v6.1</div>
 
         <div id="roulette-werbung-fullscreen"></div>
+
+        <!-- YouTube-Musik im Vollbild (umschaltbar, YOUTUBE-MUSIK-SETUP.md 6.8).
+             Wie die CL-Tabelle direkt unter #dashboard-scaler; das Video legt der
+             Supervisor (mpv) passgenau ueber #yt-vollbild-video. -->
+        <div id="ytm-vollbild">
+            <div class="ytv-kopf">
+                <div class="ytv-titelblock">
+                    <h2 id="ytv-titel">—</h2>
+                    <p id="ytv-unter"></p>
+                </div>
+                <div class="ytv-banner" id="ytv-banner"></div>
+                <div class="ytv-marke"><span class="ytm-citycafe">CITY <span>CAFE</span></span><i></i><b id="ytv-uhr">--:--</b></div>
+            </div>
+            <div class="ytv-video" id="yt-vollbild-video">
+                <div class="ytm-qr-html ytv-qr" id="ytv-qr-html"><img alt=""><span>SONG WÜNSCHEN</span></div>
+            </div>
+            <div class="ytv-fortschritt"><span id="ytv-pos">0:00</span><div><i id="ytv-balken"></i></div><span id="ytv-dauer">0:00</span></div>
+            <div class="ytv-rechts">
+                <div class="ytv-gleich">
+                    <div class="ytv-gleich-kopf">GLEICH DRAN</div>
+                    <div class="ytv-gleich-zeile"><b id="ytv-countdown">0:00</b><div><strong id="ytv-gleich-titel">—</strong><small id="ytv-gleich-kuenstler"></small></div></div>
+                </div>
+                <div class="ytv-danach-kopf" id="ytv-danach-kopf">DANACH</div>
+                <div class="ytv-liste" id="ytv-liste"></div>
+            </div>
+            <div class="ytv-radio-kopf">📻 RADIO-MIX · PASST ZU DIESEM SONG</div>
+            <div class="ytv-radio" id="ytv-radio"></div>
+        </div>
 
         <div id="mittagsteller-fullscreen">
             <img src="mittagsteller-querformat.jpg" alt="Gasthaus Reiterklause Mittagsteller">
@@ -3146,6 +3324,7 @@
         })();
     </script>
     <script src="hosn-obe-engine.js"></script>
+    <script src="yt-warteschlange.js"></script>
     <script src="hosn-obe-sound.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
@@ -3429,10 +3608,22 @@
             auswahl.forEach((item, i) => {
                 const cssClass = (i % 2 === 0) ? "ticker-highlight-yellow" : "ticker-highlight-pink";
                 htmlString += `<span class="ticker-item ${cssClass}">${item}</span><span class="ticker-separator">•</span>`;
+                // YouTube-Musik: der laufende Song im Wechsel mit den Meldungen (6.7).
+                if (window.ytmTickerText && i % 2 === 0) {
+                    const t = String(window.ytmTickerText).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+                    htmlString += `<span class="ticker-item ticker-highlight-pink">▶ ${t}</span><span class="ticker-separator">•</span>`;
+                }
             });
+            tickerHatteMusik = !!window.ytmTickerText;
 
             container.innerHTML = htmlString;
             applyTickerSpeed(container);
+        }
+
+        // Musik an/aus bzw. neuer Song: Ticker neu fuellen (sonst erst am Schleifenende).
+        let tickerHatteMusik = false;
+        function generateDynamicPartyTickerWennNoetig(erzwingen) {
+            if (erzwingen || tickerHatteMusik !== !!window.ytmTickerText) generateDynamicPartyTicker();
         }
 
         function applyTickerSpeed(container) {
@@ -3760,7 +3951,8 @@
                     const r = json.results[0];
                     return {
                         cover: r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb', '600x600bb') : null,
-                        year: r.releaseDate ? r.releaseDate.slice(0, 4) : null
+                        year: r.releaseDate ? r.releaseDate.slice(0, 4) : null,
+                        genre: r.primaryGenreName || ''     // fuer die YouTube-Musik-Kopfzeile
                     };
                 }
             } catch (e) {
@@ -7159,6 +7351,13 @@
         }
 
         function nlQuelleFehler() {
+            // Musikbetrieb mit mpv: viele offizielle Musikvideos verbieten das
+            // Einbetten (Fehler 101/150) - mpv spielt sie trotzdem. Dann nicht
+            // weiterschalten; spielt auch mpv nicht, ueberspringt ytmTakt() den Song.
+            if (typeof ytmAktiv === 'function' && ytmAktiv() && nlSupervisorDa()) {
+                ytmEmbedFehlerTs = Date.now();
+                return;
+            }
             const schluessel = nlGeladen && nlGeladen.schluessel;
             if (schluessel) nlDefekt[schluessel] = true;
             nlGeladen = null;
@@ -7402,6 +7601,8 @@
          */
         function nlVideoFertig() {
             if (!nlAktiv || !nlFernAktiv()) return false;
+            // Musikbetrieb: nicht zurueck zur Rotation, sondern der naechste Song.
+            if (ytmAktiv()) { ytmWeiter(); return true; }
             nlFern = null;
             window.nlWunschFormat = null;
             nlFernStatusMelden();
@@ -7484,7 +7685,16 @@
                 return;
             }
 
+            if (befehl.aktion === 'musik') {
+                // YouTube-Musik: Steuerung vom Chef-Handy bzw. der TV-Fernbedienung.
+                ytmBefehl(befehl);
+                return;
+            }
+
             if (befehl.aktion === 'stop') {
+                // Stopp beendet auch den Musikbetrieb; die Warteschlange bleibt.
+                if (ytmAktiv()) ytm = Object.assign(YtWarteschlange.stopp(ytm), { gestopptTs: Date.now() });
+                ytmMelden();
                 nlFern = null;
                 window.nlWunschFormat = null;
                 nlFernStatusMelden();
@@ -7505,6 +7715,9 @@
                 return;
             }
             const dauer = Number(befehl.dauerSek);
+            // Altes "Video starten" (fruehere Fernbedienung) beendet den
+            // Musikbetrieb - das Video laeuft dann wie bisher als Einzelwunsch.
+            if (ytmAktiv()) { ytm = YtWarteschlange.stopp(ytm); ytmMelden(); }
             nlFern = {
                 videoId: String(befehl.videoId).trim().slice(0, 20),
                 titel: String(befehl.titel || '').slice(0, 120),
@@ -7594,6 +7807,872 @@
             }).catch(() => {});
         }
         nlFernStarten();
+
+        // ==================================================================
+        //  YouTube-Musik: Warteschlange, Radio-Mix, Playlists
+        //  (YOUTUBE-MUSIK-SETUP.md; Logik in yt-warteschlange.js)
+        // ==================================================================
+        // Der TV ist die einzige Quelle der Wahrheit fuer die Reihenfolge.
+        // Gaeste schreiben Wuensche nach yt/wuensche, der Chef schreibt direkt in
+        // yt/warteschlange; der TV prueft, reiht ein, spielt und meldet in
+        // yt/jetzt und yt/radio zurueck. Gespielt wird ueber denselben Weg wie
+        // ein Wunschvideo (nlFern mit "Bis Stopp"), nur dass beim Songende der
+        // naechste Titel kommt statt der Rotation.
+        //
+        // Vorgaben - der Betreiber kann sie hier aendern:
+        const YT_RADIO_MAX_MIN = 60;          // Radio ohne neuen Wunsch, dann Rotation
+        const YT_VOLLBILD_STANDARD = false;   // Ansicht beim Start der Musik
+        const YT_VORLADEN_SEKUNDEN = 60;      // so lange vor Songende den naechsten aufloesen
+        const YT_CHEF_PIN = (new URLSearchParams(location.search).get('chefpin') || '').trim();
+
+        const YTW = window.YtWarteschlange;
+        let ytm = { eintraege: [], radio: { seed: null, titel: [] }, jetzt: null, modus: 'aus',
+                    gespielt: [], letzterWunschTs: 0, seedVonWunsch: false };
+        let ytmPausiert = false;
+        let ytmVollbild = YT_VOLLBILD_STANDARD;
+        let ytmSpielPause = false;        // Hos'n Obe hat die Musik unterbrochen
+        let ytmStartNachSpiel = false;    // Wunsch kam waehrend Hos'n Obe
+        let ytmBekannteIds = null;        // Eintraege beim letzten Blick (neue = Start)
+        let ytmPlaylists = [];
+        let ytmMixLaeuft = null;          // { id, seed, schritt } - laufender Mix-Auftrag
+        let ytmFindeLaeuft = null;        // { id, eintragId }
+        let ytmQualitaet = { hoehe: 0, fps: 0 };   // Obergrenze vom Handy ("Mehr")
+        let ytmGenreCache = {};           // "kuenstler|titel" -> { genre, jahr }
+        let ytmBereit = false;            // Firebase da, Stand gelesen
+        let ytmLetzterStart = 0;          // wann ytmSpielen zuletzt lief (Wiederholung)
+        var ytmEmbedFehlerTs = 0;         // Embed meldete Fehler (var: nlQuelleFehler steht weiter oben)
+
+        function ytmAktiv() { return !!ytm && ytm.modus !== 'aus' && !!ytm.jetzt; }
+        window.ytmAktiv = ytmAktiv;
+        window.ytmZustand = () => ytm;    // fuer die Fehlersuche per Debug-Schnittstelle
+
+        function ytmId() { return 'q' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+        // Titel aufbereiten (Kuenstler/Songtitel) - einmal, beim Einreihen.
+        function ytmAufbereiten(t) {
+            const z = YTW.titelZerlegen(t.titel || '', t.kanal || '');
+            return Object.assign({}, t, {
+                kuenstler: t.kuenstler || z.kuenstler,
+                songtitel: t.songtitel || z.songtitel,
+                jahr: t.jahr || z.jahr || null
+            });
+        }
+
+        // Genre und Jahr: erst die Songs-Datenbank, sonst iTunes (wie das Musik-Widget).
+        function ytmGenreJahr(eintrag) {
+            if (!eintrag) return null;
+            const schl = (eintrag.kuenstler || '').toLowerCase() + '|' + (eintrag.songtitel || '').toLowerCase();
+            if (ytmGenreCache[schl] !== undefined) return ytmGenreCache[schl];
+            const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9äöüß]+/g, '');
+            const k = norm(eintrag.kuenstler), t = norm(eintrag.songtitel);
+            const song = (masterMusicPool || []).find(s => norm(s.title) === t && (!k || norm(s.artist) === k || norm(s.artist).includes(k) || k.includes(norm(s.artist))));
+            if (song) {
+                const jahr = parseInt(String(song.release_date || '').slice(0, 4), 10);
+                ytmGenreCache[schl] = { genre: song.category || '', jahr: jahr || eintrag.jahr || null };
+                return ytmGenreCache[schl];
+            }
+            ytmGenreCache[schl] = { genre: '', jahr: eintrag.jahr || null };
+            if (typeof fetchITunesTrackInfo === 'function' && eintrag.kuenstler && eintrag.songtitel) {
+                fetchITunesTrackInfo(eintrag.kuenstler, eintrag.songtitel).then(info => {
+                    if (!info) return;
+                    ytmGenreCache[schl] = { genre: info.genre || '', jahr: info.year || eintrag.jahr || null };
+                    ytmAnzeigen();
+                }).catch(() => {});
+            }
+            return ytmGenreCache[schl];
+        }
+
+        // --- Rueckmeldung an Firebase (yt/jetzt, yt/radio) und an den Supervisor ---
+        function ytmStand() {
+            const s = window.nlMpvStand;
+            if (s && ytm.jetzt && s.videoId === ytm.jetzt.videoId) {
+                return { pos: Number(s.pos) || 0, dauer: Number(s.dauer) || YTW.sekunden(ytm.jetzt) || 0 };
+            }
+            return { pos: 0, dauer: ytm.jetzt ? YTW.sekunden(ytm.jetzt) : 0 };
+        }
+
+        let ytmZuletztGemeldet = 0;
+        function ytmMelden() {
+            window.nlMusik = ytmAktiv();
+            // Vor dem Wiederherstellen nichts schreiben - sonst ueberschreibt der
+            // leere Startzustand den gespeicherten Stand (gesehen beim Neustart).
+            if (!nlFernVerb || !window.YT_REMOTE_NET || !ytmBereit) return;
+            ytmZuletztGemeldet = Date.now();
+            const st = ytmStand();
+            const j = ytm.jetzt;
+            const gj = j ? ytmGenreJahr(j) : null;
+            YT_REMOTE_NET.jetztMelden(nlFernVerb, NL_FERN_RAUM, {
+                modus: ytmAktiv() ? ytm.modus : 'aus',
+                videoId: j ? j.videoId : '',
+                titel: j ? (j.titel || '') : '',
+                kuenstler: j ? (j.kuenstler || '') : '',
+                songtitel: j ? (j.songtitel || '') : '',
+                genre: gj ? gj.genre : '',
+                jahr: gj ? gj.jahr : null,
+                quelle: j ? (j.quelle || '') : '',
+                von: j ? (j.von || '') : '',
+                dauerSek: Math.round(st.dauer),
+                posSek: Math.round(st.pos),
+                pausiert: ytmPausiert,
+                vollbild: ytmVollbild,
+                letzterWunschTs: ytm.letzterWunschTs || 0,
+                gespielt: (ytm.gespielt || []).slice(-40),
+                spielPause: ytmSpielPause
+            }).catch(() => {});
+        }
+
+        function ytmRadioMelden() {
+            if (!nlFernVerb || !window.YT_REMOTE_NET || !ytmBereit) return;
+            YT_REMOTE_NET.radioMelden(nlFernVerb, NL_FERN_RAUM, {
+                seed: ytm.radio.seed || '',
+                titel: (ytm.radio.titel || []).slice(0, 25)
+            }).catch(() => {});
+        }
+
+        // --- Abspielen -------------------------------------------------------
+        function ytmSpielen(eintrag) {
+            if (!eintrag) return;
+            if (!eintrag.videoId) {          // Platzhalter (Playlist aus der Datenbank): erst finden
+                ytmFinden(eintrag, true);
+                return;
+            }
+            if (window.ktSpielLaeuft && window.ktSpielLaeuft()) {
+                ytmSpielPause = true;        // startet, sobald die Runde vorbei ist
+                ytmMelden();
+                return;
+            }
+            ytmPausiert = false;
+            ytmLetzterStart = Date.now();
+            if (!ytm.jetzt || ytm.jetzt.videoId !== eintrag.videoId) ytm = Object.assign({}, ytm, { jetzt: eintrag });
+            if (ytm.modus === 'aus') ytm.modus = eintrag.quelle === 'radio' ? 'radio' : 'warteschlange';
+            window.nlPauseWunsch = { id: 'start-' + ytmId(), pause: false };
+            nlFern = {
+                videoId: eintrag.videoId,
+                titel: eintrag.songtitel || eintrag.titel || '',
+                bisWann: -1,
+                hoehe: ytmQualitaet.hoehe,
+                fps: ytmQualitaet.fps,
+                musik: true
+            };
+            window.nlWunschFormat = { hoehe: ytmQualitaet.hoehe, fps: ytmQualitaet.fps };
+            window.nlMusikVorladen = null;
+            window.nlMusik = true;
+            nlFernStatusMelden();
+            cancelSequenceTimers();
+            nlFernWidgetAbraeumen();
+            nlGeladen = null;
+            mediaStateIndex = NL_SLOT_INDEX;
+            runMasterSequence();
+            ytmRadioPruefen();
+            ytmMelden();
+            ytmAnzeigen();
+        }
+
+        // Songende, Ueberspringen, Musikstart: was kommt jetzt?
+        function ytmWeiter() {
+            const r = YTW.weiter(ytm, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
+            ytm = r.state;
+            if (r.aktion === 'spielen') {
+                // Aus der Schlange genommen -> auch in Firebase entfernen.
+                if (r.eintrag.quelle !== 'radio' && nlFernVerb) {
+                    YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, r.eintrag.id).catch(() => {});
+                }
+                ytmRadioMelden();
+                ytmSpielen(r.eintrag);
+                return;
+            }
+            ytmBeenden();
+        }
+
+        // Musik vorbei: zurueck in die Rotation, alles wie vorher.
+        function ytmBeenden() {
+            ytm = YTW.stopp(ytm);
+            ytmPausiert = false;
+            ytmSpielPause = false;
+            window.nlMusikVorladen = null;
+            window.nlMusik = false;
+            ytmMelden();
+            ytmAnzeigen();
+            if (nlFern && nlFern.musik) {
+                nlFern = null;
+                window.nlWunschFormat = null;
+                nlFernStatusMelden();
+                cancelSequenceTimers();
+                nlFernWidgetAbraeumen();
+                mediaStateIndex = KT.testFirstInCycle ? -1 : 0;
+                runMasterSequence();
+            }
+        }
+
+        // Musik ohne konkreten Song: Stimmungs-Playlist nach Uhrzeit (5.5).
+        function ytmStimmungStarten() {
+            const pl = YTW.stimmungsPlaylist(ytmPlaylists, YTW.wienerMinute(new Date()));
+            if (pl) ytmPlaylistNutzen(pl, 'start');
+        }
+
+        // --- Playlists (yt_playlists.json) --------------------------------------
+        function ytmPlaylistsLaden() {
+            return fetch('yt_playlists.json?v=' + Date.now(), { cache: 'no-store' })
+                .then(r => r.json())
+                .then(l => { ytmPlaylists = Array.isArray(l) ? l : []; })
+                .catch(() => { ytmPlaylists = []; });
+        }
+
+        // Platzhalter, bis echte Links eingetragen sind: Titel aus der Songs-
+        // Datenbank (Kategorien laut yt_playlists.json), videoId erst beim Abspielen.
+        function ytmPlatzhalterTitel(pl) {
+            const kat = (pl.platzhalter || []).map(k => k.toLowerCase());
+            const pool = (masterMusicPool || []).filter(s => kat.includes(String(s.category || '').toLowerCase()));
+            return shuffleArray(pool.slice()).slice(0, 60).map(s => ({
+                videoId: '', suche: (s.artist + ' ' + s.title).trim(), titel: s.artist + ' - ' + s.title,
+                kuenstler: s.artist, songtitel: s.title, kanal: s.artist
+            }));
+        }
+
+        let ytmPlaylistWartet = null;   // { id, pl, art }
+        let ytmListenInhalt = {};       // nr -> Titel (fuer Handy und Start)
+        let ytmListenWarteschlange = []; // Playlists, deren Inhalt noch gelesen wird
+        let ytmListeLaeuft = null;      // { id, nr }
+        function ytmPlaylistNutzen(pl, art) {
+            if (!pl) return;
+            if (ytmListenInhalt[pl.nr] && ytmListenInhalt[pl.nr].length) {
+                ytmPlaylistEinreihen(ytmListenInhalt[pl.nr], art);
+                return;
+            }
+            if (pl.quelle) {
+                const id = ytmId();
+                ytmPlaylistWartet = { id, pl, art };
+                window.nlPlaylistAuftrag = { id, quelle: pl.quelle };
+                return;
+            }
+            ytmPlaylistEinreihen(ytmPlatzhalterTitel(pl), art);
+        }
+
+        // Inhalte aller Playlists fuers Handy ("Listen", aufklappbar) nach
+        // yt/listen/<nr> - echte Links liest der Supervisor (24 h Cache),
+        // Platzhalter einmal je Seitenstart aus der Songs-Datenbank.
+        function ytmListenLaden() {
+            if (!nlFernVerb || !ytmPlaylists.length) return;
+            if (!(masterMusicPool || []).length) { setTimeout(ytmListenLaden, 10000); return; }
+            ytmPlaylists.forEach(pl => {
+                if (pl.quelle) ytmListenWarteschlange.push(pl);
+                else ytmListeMelden(pl, ytmPlatzhalterTitel(pl));
+            });
+            ytmNaechsteListe();
+        }
+        function ytmNaechsteListe() {
+            if (ytmListeLaeuft || ytmPlaylistWartet) return;
+            const pl = ytmListenWarteschlange.shift();
+            if (!pl) return;
+            const id = 'liste-' + ytmId();
+            ytmListeLaeuft = { id, pl };
+            window.nlPlaylistAuftrag = { id, quelle: pl.quelle };
+        }
+        function ytmListeMelden(pl, titel) {
+            ytmListenInhalt[pl.nr] = titel.map(t => ytmAufbereiten(t));
+            if (!nlFernVerb) return;
+            nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/yt/listen/' + pl.nr).set({
+                nr: pl.nr, name: pl.name || '', platzhalter: !pl.quelle,
+                titel: ytmListenInhalt[pl.nr].slice(0, 200).map(t => ({
+                    videoId: t.videoId || '', suche: t.suche || '', titel: t.titel || '',
+                    kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', dauer: t.dauer || '',
+                    dauerSek: t.dauerSek || 0
+                })),
+                ts: firebase.database.ServerValue.TIMESTAMP
+            }).catch(() => {});
+        }
+
+        function ytmPlaylistEinreihen(titel, art) {
+            if (!titel.length || !nlFernVerb) return;
+            const neu = titel.map(t => ytmAufbereiten(Object.assign({}, t, {
+                id: ytmId(), quelle: 'playlist', von: 'tv', ts: Date.now()
+            })));
+            // "start": Playlist ersetzt die Playlist-Titel in der Schlange und
+            // beginnt sofort (Wuensche bleiben vorn), "anhaengen": ans Ende.
+            if (art === 'start') {
+                ytm.eintraege.filter(e => e.quelle === 'playlist').forEach(e =>
+                    YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, e.id).catch(() => {}));
+                ytm = Object.assign({}, ytm, { eintraege: ytm.eintraege.filter(e => e.quelle !== 'playlist') });
+            }
+            neu.forEach(e => {
+                ytm = YTW.einreihen(ytm, e, 'ende');
+                const gesetzt = ytm.eintraege[ytm.eintraege.length - 1];
+                YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, gesetzt.id, gesetzt).catch(() => {});
+            });
+            ytm.letzterWunschTs = Date.now();
+            if (art === 'start' || !ytmAktiv()) {
+                ytm.modus = 'playlist';
+                ytmWeiter();
+            }
+        }
+
+        // --- Titel ohne videoId finden (Platzhalter, Last.fm-Rueckfall) -----------
+        function ytmFinden(eintrag, gleichSpielen) {
+            if (!eintrag || ytmFindeLaeuft) return;
+            const id = ytmId();
+            ytmFindeLaeuft = { id, eintrag, gleichSpielen };
+            window.nlFindeAuftrag = { id, text: eintrag.suche || ((eintrag.kuenstler || '') + ' ' + (eintrag.songtitel || '')) };
+        }
+
+        // --- Radio-Mix (5.3) ----------------------------------------------------
+        function ytmRadioPruefen() {
+            if (ytmMixLaeuft) return;
+            const seed = YTW.radioSeedNoetig(ytm);
+            if (!seed) return;
+            const id = ytmId();
+            ytmMixLaeuft = { id, seed, schritt: 'mix' };
+            window.nlMixAuftrag = { id, videoId: seed, anzahl: 25 };
+        }
+
+        async function ytmRadioRueckfallLastFm(seedEintrag) {
+            // Rueckfall 1: Last.fm track.getSimilar -> Titel ohne videoId,
+            // gefunden werden sie erst, wenn sie dran sind (hoechstens 5).
+            try {
+                const url = `https://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=${encodeURIComponent(seedEintrag.kuenstler || '')}&track=${encodeURIComponent(seedEintrag.songtitel || '')}&api_key=${LASTFM_API_KEY}&format=json&autocorrect=1&limit=10`;
+                const d = await fetch(url).then(r => r.json());
+                const l = (d && d.similartracks && d.similartracks.track) || [];
+                return (Array.isArray(l) ? l : [l]).slice(0, 5).map(t => {
+                    const k = (t.artist && (t.artist.name || t.artist['#text'])) || '';
+                    return { videoId: '', suche: k + ' ' + t.name, titel: k + ' - ' + t.name, kuenstler: k, songtitel: t.name, kanal: k };
+                });
+            } catch (e) { return []; }
+        }
+
+        function ytmErgebnissePruefen() {
+            // Mix fertig?
+            const m = window.nlMixErgebnis;
+            if (ytmMixLaeuft && m && m.id === ytmMixLaeuft.id) {
+                const auftrag = ytmMixLaeuft;
+                const liste = (m.liste || []).map(ytmAufbereiten);
+                if (liste.length) {
+                    ytmMixLaeuft = null;
+                    ytm = Object.assign({}, ytm, { radio: { seed: auftrag.seed, titel: liste } });
+                    ytmRadioMelden();
+                    ytmAnzeigen();
+                } else if (auftrag.schritt === 'mix') {
+                    auftrag.schritt = 'lastfm';
+                    const seedEintrag = (ytm.jetzt && ytm.jetzt.videoId === auftrag.seed) ? ytm.jetzt : { kuenstler: '', songtitel: '' };
+                    ytmRadioRueckfallLastFm(seedEintrag).then(l => {
+                        if (l.length) {
+                            ytmMixLaeuft = null;
+                            ytm = Object.assign({}, ytm, { radio: { seed: auftrag.seed, titel: l } });
+                            ytmRadioMelden();
+                            ytmAnzeigen();
+                        } else {
+                            // Rueckfall 2: Titelsuche wie aehnliche() im Supervisor
+                            const id = ytmId();
+                            ytmMixLaeuft = { id, seed: auftrag.seed, schritt: 'titel' };
+                            window.nlMixAuftrag = { id, videoId: auftrag.seed, anzahl: 20,
+                                titelsuche: ((seedEintrag.kuenstler || '') + ' ' + (seedEintrag.songtitel || '')).trim() || (ytm.jetzt && ytm.jetzt.titel) || '' };
+                        }
+                    });
+                } else {
+                    ytmMixLaeuft = null;     // nichts gefunden - Radio bleibt, wie es ist
+                }
+            }
+            // Playlist gelesen?
+            const p = window.nlPlaylistErgebnis;
+            if (ytmPlaylistWartet && p && p.id === ytmPlaylistWartet.id) {
+                const w = ytmPlaylistWartet;
+                ytmPlaylistWartet = null;
+                const titel = p.liste && p.liste.length ? p.liste : ytmPlatzhalterTitel(w.pl);
+                ytmListeMelden(w.pl, titel);
+                ytmPlaylistEinreihen(ytmListenInhalt[w.pl.nr], w.art);
+                ytmNaechsteListe();
+            }
+            if (ytmListeLaeuft && p && p.id === ytmListeLaeuft.id) {
+                const w = ytmListeLaeuft;
+                ytmListeLaeuft = null;
+                ytmListeMelden(w.pl, p.liste && p.liste.length ? p.liste : ytmPlatzhalterTitel(w.pl));
+                ytmNaechsteListe();
+            }
+            // Titel gefunden?
+            const f = window.nlFindeErgebnis;
+            if (ytmFindeLaeuft && f && f.id === ytmFindeLaeuft.id) {
+                const w = ytmFindeLaeuft;
+                ytmFindeLaeuft = null;
+                if (f.treffer) {
+                    const ersetzt = Object.assign({}, w.eintrag, { videoId: f.treffer.videoId,
+                        dauer: f.treffer.dauer, dauerSek: f.treffer.dauerSek });
+                    ersetze(ersetzt);
+                    if (w.gleichSpielen) ytmSpielen(ersetzt);
+                } else if (w.gleichSpielen) {
+                    ytmWeiter();             // nicht gefunden: einfach der naechste
+                }
+            }
+        }
+
+        // Gefundene videoId in Schlange bzw. Radio eintragen.
+        function ersetze(e) {
+            if (ytm.eintraege.some(x => x.id === e.id)) {
+                ytm = Object.assign({}, ytm, { eintraege: ytm.eintraege.map(x => x.id === e.id ? e : x) });
+                if (nlFernVerb) YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, e.id, e).catch(() => {});
+            } else if (ytm.radio && ytm.radio.titel) {
+                ytm.radio.titel = ytm.radio.titel.map(x => (x.suche && x.suche === e.suche) ? e : x);
+                ytmRadioMelden();
+            }
+            ytmAnzeigen();
+        }
+
+        // --- Takt: Vorladen, Platzhalter aufloesen, Hos'n Obe, Radio-Grenze -------
+        function ytmTakt() {
+            ytmErgebnissePruefen();
+            const spiel = !!(window.ktSpielLaeuft && window.ktSpielLaeuft());
+
+            // Hos'n Obe hat Vorrang: Musik unterbrechen, danach weiter.
+            if (ytmAktiv() && spiel && !ytmSpielPause) {
+                ytmSpielPause = true;
+                ytmMelden();
+            }
+            if (!spiel && ytmSpielPause) {
+                ytmSpielPause = false;
+                if (ytmAktiv()) ytmSpielen(ytm.jetzt);
+            }
+            if (!spiel && ytmStartNachSpiel && !ytmAktiv()) {
+                ytmStartNachSpiel = false;
+                ytmWeiter();
+            }
+
+            if (ytmAktiv() && !ytmSpielPause) {
+                const naechste = YTW.vorschau(ytm, 2, Date.now());
+                // Naechste zwei ohne videoId? Jetzt schon finden.
+                const ohne = naechste.find(t => !t.videoId);
+                if (ohne) ytmFinden(ohne, false);
+                // 60 s vor Schluss den naechsten Song vorladen (5.2).
+                const st = ytmStand();
+                if (st.dauer && st.dauer - st.pos < YT_VORLADEN_SEKUNDEN && naechste[0] && naechste[0].videoId) {
+                    const v = window.nlMusikVorladen;
+                    if (!v || v.videoId !== naechste[0].videoId) {
+                        window.nlMusikVorladen = { videoId: naechste[0].videoId, hoehe: ytmQualitaet.hoehe, fps: ytmQualitaet.fps };
+                    }
+                }
+                // Dart-Abend und Anheizer haben das Bild - dann endet die Musik
+                // sauber, statt alle paar Sekunden dagegen anzulaufen.
+                let dartAbend = false;
+                try { dartAbend = dartAbendAktiv() || dartAnheizerAktiv(); } catch (e) {}
+                if (dartAbend || (!nlAktiv && mediaStateIndex !== NL_SLOT_INDEX && !nlFern)) {
+                    ytmBeenden();
+                } else if (nlAktiv && ytmEmbedFehlerTs > ytmLetzterStart && Date.now() - ytmLetzterStart > 30000
+                           && !(window.nlMpvStand && ytm.jetzt && window.nlMpvStand.videoId === ytm.jetzt.videoId)) {
+                    // Embed darf nicht, und mpv spielt nach 30 s auch nicht: Song ueberspringen.
+                    ytmWeiter();
+                } else if (!nlAktiv && Date.now() - ytmLetzterStart > 8000) {
+                    // Slot nicht zu sehen, obwohl Musik laufen soll (z. B. YouTube-
+                    // Player beim Seitenstart noch nicht bereit): nochmal.
+                    ytmSpielen(ytm.jetzt);
+                }
+            }
+            if (ytmAktiv() && Date.now() - ytmZuletztGemeldet > 3000) ytmMelden();
+            // Anzeige: Ebenen an/aus (z. B. Hos'n Obe), Zeiten, Tore.
+            const sollAn = ytmAktiv() && !ytmSpielPause;
+            if (sollAn !== document.body.classList.contains('ytm-an')) ytmAnzeigen();
+            ytmZeitAnzeigen();
+            ytmTorPruefen();
+        }
+
+        // --- Wuensche (Gaeste) ----------------------------------------------------
+        function ytmWunschBearbeiten(wunschId, w) {
+            if (!w || w.abgelehnt || !nlFernVerb) return;
+            const eintrag = ytmAufbereiten({
+                id: ytmId(), videoId: String(w.videoId || ''), titel: String(w.titel || ''),
+                kanal: String(w.kanal || ''), dauer: String(w.dauer || ''), dauerSek: Number(w.dauerSek) || 0,
+                quelle: 'wunsch', von: String(w.von || ''), ts: Date.now()
+            });
+            if (!eintrag.videoId && w.suche) eintrag.suche = String(w.suche).slice(0, 120);   // Platzhalter-Titel
+            const pruefung = YTW.wunschPruefen(ytm, eintrag, { istChef: false });
+            if (!pruefung.ok) {
+                YT_REMOTE_NET.wunschAblehnen(nlFernVerb, NL_FERN_RAUM, wunschId, pruefung.grund).catch(() => {});
+                setTimeout(() => YT_REMOTE_NET.wunschErledigen(nlFernVerb, NL_FERN_RAUM, wunschId).catch(() => {}), 60000);
+                return;
+            }
+            ytm = YTW.einreihen(ytm, eintrag, 'wunsch');
+            const gesetzt = ytm.eintraege.find(e => e.id === eintrag.id);
+            YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, gesetzt.id, gesetzt)
+                .then(() => YT_REMOTE_NET.wunschErledigen(nlFernVerb, NL_FERN_RAUM, wunschId))
+                .catch(() => {});
+            ytmWunschEinblenden(gesetzt);
+            ytmAnzeigen();
+            ytmStartWennFrei();
+        }
+
+        // Laeuft gerade keine Musik, startet der erste Eintrag sofort (5.1.2).
+        function ytmStartWennFrei() {
+            if (!ytmBereit || ytmAktiv() || !ytm.eintraege.length) return;
+            if (window.ktSpielLaeuft && window.ktSpielLaeuft()) { ytmStartNachSpiel = true; return; }
+            ytm.modus = 'warteschlange';
+            ytmWeiter();
+        }
+
+        // Aenderungen des Chefs (Umsortieren, Loeschen, Einreihen) kommen ueber Firebase.
+        function ytmWarteschlangeUebernehmen(liste) {
+            const vorher = ytmBekannteIds;
+            ytm = Object.assign({}, ytm, { eintraege: liste.filter(e => e && e.videoId !== undefined) });
+            ytmBekannteIds = new Set(liste.map(e => e.id));
+            ytmAnzeigen();
+            if (!ytmBereit || !vorher) return;
+            const neu = liste.filter(e => !vorher.has(e.id));
+            if (neu.some(e => e.quelle === 'chef')) {
+                ytm.letzterWunschTs = Date.now();
+                neu.filter(e => e.quelle === 'chef').forEach(ytmWunschEinblenden);
+            }
+            if (neu.length) ytmStartWennFrei();
+        }
+
+        // --- Befehle vom Chef (yt/befehl, aktion 'musik') ----------------------------
+        function ytmBefehl(b) {
+            // Beim Seitenstart liefert Firebase den letzten Befehl nochmal - bis der
+            // gespeicherte Stand gelesen ist, keine Musik-Befehle ausfuehren.
+            if (!ytmBereit) return;
+            const was = String(b.was || '');
+            if (was === 'zurueckziehen') {
+                // Gast zieht seinen eigenen Wunsch zurueck: nur wenn er von diesem
+                // Geraet kommt (von = uid; die Firebase-Regeln pruefen von beim Schreiben).
+                const e = ytm.eintraege.find(x => x.id === String(b.eintrag || ''));
+                if (e && e.quelle === 'wunsch' && b.von && e.von === b.von && nlFernVerb) {
+                    ytm = YTW.entfernen(ytm, e.id);
+                    YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, e.id).catch(() => {});
+                    ytmAnzeigen();
+                }
+                return;
+            }
+            if (was === 'skip') { if (ytmAktiv()) ytmWeiter(); return; }
+            if (was === 'zurueck') { if (ytmAktiv()) ytmSpielen(ytm.jetzt); return; }   // Song von vorn
+            if (was === 'stopp') { ytmBeenden(); return; }
+            if (was === 'pause' || was === 'weiter' || was === 'pauseUm') {
+                if (!ytmAktiv()) return;
+                ytmPausiert = was === 'pauseUm' ? !ytmPausiert : was === 'pause';
+                window.nlPauseWunsch = { id: b.id, pause: ytmPausiert };
+                try { ytmPausiert ? nlPlayer.pauseVideo() : (!nlExtern() && nlPlayer.playVideo()); } catch (e) {}
+                ytmMelden();
+                return;
+            }
+            if (was === 'vollbild' || was === 'normal') {
+                ytmVollbild = was === 'vollbild';
+                ytmAnzeigen();
+                ytmMelden();
+                return;
+            }
+            if (was === 'start') {           // "Musik starten" ohne Song
+                if (ytm.eintraege.length) { ytm.modus = 'warteschlange'; ytmWeiter(); }
+                else ytmStimmungStarten();
+                return;
+            }
+            if (was === 'playlist') {
+                const pl = ytmPlaylists.find(p => Number(p.nr) === Number(b.nr));
+                ytmPlaylistNutzen(pl, b.art === 'anhaengen' ? 'anhaengen' : 'start');
+                return;
+            }
+            if (was === 'qualitaet') {
+                ytmQualitaet = {
+                    hoehe: [0, 480, 720, 1080].includes(Number(b.hoehe)) ? Number(b.hoehe) : 0,
+                    fps: [0, 30, 60].includes(Number(b.fps)) ? Number(b.fps) : 0
+                };
+                try { localStorage.setItem('cityCafeYtmQualitaet', JSON.stringify(ytmQualitaet)); } catch (e) {}
+                return;
+            }
+        }
+
+        // --- TV-Darstellung (6.1-6.8) ------------------------------------------
+        const YTM_KACHELFARBEN = ['#7e22ce', '#0e7490', '#9f1239', '#1d4ed8', '#6d28d9', '#0f766e'];
+        const YTM_WUNSCH_SEK = 5, YTM_TOR_SEK = 15;
+        let ytmWarAktiv = false;
+        let ytmEinblendungen = [];        // [{ art: 'wunsch'|'tor', html, text, sek }]
+        let ytmEinblendungJetzt = null;   // { ..., bis }
+        let ytmTorStand = null;           // Spiel -> "1:0" (null = noch nicht gelesen)
+        let ytmTorPruefung = 0;
+
+        const ytmEsc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        function ytmZeit(sek) {
+            sek = Math.max(0, Math.floor(Number(sek) || 0));
+            const h = Math.floor(sek / 3600), m = Math.floor((sek % 3600) / 60), s = sek % 60;
+            return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0');
+        }
+        function ytmUnterzeile(e) {
+            if (!e) return '';
+            const gj = ytmGenreJahr(e) || {};
+            return [e.kuenstler, gj.genre, gj.jahr].filter(Boolean).join(' · ');
+        }
+        function ytmRadioListe(n) {
+            return YTW.radioFiltern((ytm.radio && ytm.radio.titel) || [], ytm.gespielt, ytm.jetzt && ytm.jetzt.videoId,
+                                    Date.now(), ytm.jetzt && ytm.jetzt.songtitel)
+                .filter(t => !ytm.eintraege.some(e => e.videoId === t.videoId)).slice(0, n);
+        }
+        function ytmKachelzeile(t, i) {
+            return `<div class="ytm-kachelzeile"><div class="ytm-kachel" style="background:${YTM_KACHELFARBEN[i % YTM_KACHELFARBEN.length]}">♪</div>`
+                + `<div class="ytm-kachel-text"><b>${ytmEsc(t.songtitel || t.titel)}</b><small>${ytmEsc(t.kuenstler || t.kanal || '')}</small></div></div>`;
+        }
+
+        // Alles, was sich nicht sekuendlich aendert. Die Zeiten macht ytmZeitAnzeigen().
+        function ytmAnzeigen() {
+            const an = ytmAktiv() && !ytmSpielPause;
+            const body = document.body;
+            body.classList.toggle('ytm-an', an);
+            body.classList.toggle('ytm-vollbild', an && ytmVollbild);
+            body.classList.toggle('ytm-browser', an && !nlExtern());
+            // Supervisor: welche Flaeche gerade das Video traegt (6.8).
+            window.nlMpvFlaeche = an && ytmVollbild ? 'yt-vollbild-video' : 'nl-player-frame';
+            const vb = document.getElementById('ytm-vollbild');
+            if (vb) vb.classList.toggle('active', an && ytmVollbild);
+            if (an !== ytmWarAktiv) {
+                ytmWarAktiv = an;
+                const label = document.getElementById('ticker-label-left');
+                if (label) label.textContent = an ? '▶ JETZT LÄUFT' : '☕ CITY CAFE';
+                window.ytmTickerText = null;
+                if (!an) { ytmEinblendungen = []; ytmEinblendungJetzt = null; ytmTorStand = null; }
+                if (an) ytmQrKarteBauen();
+            }
+            if (!an) { generateDynamicPartyTickerWennNoetig(); return; }
+
+            const j = ytm.jetzt;
+            const unter = ytmUnterzeile(j);
+            // 6.1 Kopfzeile im Nightlife-Widget
+            const stadt = document.getElementById('nl-stadt');
+            if (stadt) stadt.textContent = j.songtitel || j.titel || '';
+            const ut = document.getElementById('nl-untertitel');
+            if (ut) ut.textContent = unter;
+            // 6.7 Ticker
+            const gj = ytmGenreJahr(j) || {};
+            const tickerText = [j.songtitel || j.titel, j.kuenstler, gj.jahr].filter(Boolean).join(' · ');
+            if (tickerText !== window.ytmTickerText) { window.ytmTickerText = tickerText; generateDynamicPartyTickerWennNoetig(true); }
+            // 6.6 Seitenleiste
+            const seite = document.getElementById('ytm-seite');
+            if (seite) {
+                seite.innerHTML = '<div class="ytm-seite-kopf">📻 PASST DAZU</div><div class="ytm-seite-liste">'
+                    + ytmRadioListe(6).map(ytmKachelzeile).join('')
+                    + '</div><div class="ytm-seite-fuss">Läuft automatisch, wenn die Warteschlange leer ist</div>';
+            }
+            // 6.8 Vollbild
+            const vt = document.getElementById('ytv-titel');
+            if (vt) vt.textContent = j.songtitel || j.titel || '';
+            const vu = document.getElementById('ytv-unter');
+            if (vu) vu.textContent = unter;
+            const vor = YTW.vorschau(ytm, 8, Date.now());
+            const gt = document.getElementById('ytv-gleich-titel'), gk = document.getElementById('ytv-gleich-kuenstler');
+            if (gt) gt.textContent = vor[0] ? (vor[0].songtitel || vor[0].titel) : '—';
+            if (gk) gk.textContent = vor[0] ? (vor[0].kuenstler || '') : '';
+            const danach = vor.slice(1, 8);
+            const wuensche = ytm.eintraege.filter(e => e.quelle === 'wunsch').length;
+            const dk = document.getElementById('ytv-danach-kopf');
+            if (dk) dk.innerHTML = 'DANACH' + (wuensche ? ` <small>· 📱 ${wuensche} ${wuensche === 1 ? 'WUNSCH' : 'WÜNSCHE'}</small>` : '');
+            const vl = document.getElementById('ytv-liste');
+            if (vl) vl.innerHTML = danach.map((t, i) => `<div class="ytv-zeile"><b>${i + 2}</b><div><strong>${ytmEsc(t.songtitel || t.titel)}</strong>`
+                + `<small>${ytmEsc(t.kuenstler || '')}${t.quelle === 'wunsch' ? ' · <span class="wunsch">📱 Handy-Wunsch</span>' : ''}</small></div>`
+                + `<span>${YTW.sekunden(t) ? ytmZeit(YTW.sekunden(t)) : ''}</span></div>`).join('');
+            const vr = document.getElementById('ytv-radio');
+            if (vr) vr.innerHTML = ytmRadioListe(5).map(ytmKachelzeile).join('');
+            ytmLeisteZeichnen();
+            ytmZeitAnzeigen();
+        }
+
+        // 6.2/6.3 Obere Leiste: Einblendung (Tor 15 s, Wunsch 5 s) oder "Als Naechstes".
+        function ytmLeisteZeichnen() {
+            const leiste = document.getElementById('ytm-leiste');
+            if (!leiste || !document.body.classList.contains('ytm-an')) return;
+            const banner = document.getElementById('ytv-banner');
+            const e = ytmEinblendungJetzt;
+            if (banner) {
+                banner.className = 'ytv-banner' + (e ? ' an ' + e.art : '');
+                banner.textContent = e ? e.text : '';
+            }
+            if (e) {
+                leiste.innerHTML = e.html;
+                return;
+            }
+            const vor = YTW.vorschau(ytm, 2, Date.now());
+            const radio = !ytm.eintraege.length;
+            const st = ytmStand();
+            leiste.innerHTML = `<div class="ytm-pille${radio ? ' radio' : ''}">${radio ? '📻<br>RADIO' : 'ALS<br>NÄCHSTES'}</div>`
+                + '<div class="ytm-felder">' + vor.map((t, i) => {
+                    let zusatz = '';
+                    if (i === 0) zusatz = ` · <span class="in" id="ytm-in">in ${ytmZeit(Math.max(0, st.dauer - st.pos))}</span>`;
+                    if (t.quelle === 'wunsch') zusatz += ' · <span class="wunsch">📱 Wunsch</span>';
+                    return `<div class="ytm-feld"><div class="ytm-feld-nr">${i + 1}</div><div class="ytm-feld-text">`
+                        + `<div class="ytm-feld-titel">${ytmEsc(t.songtitel || t.titel)}</div>`
+                        + `<div class="ytm-feld-kuenstler">${ytmEsc(t.kuenstler || '')}${zusatz}</div></div></div>`;
+                }).join('') + '</div>';
+        }
+
+        // Sekuendlich: Zeit, Fortschritt, "in 1:32", Countdown, Uhr, Einblendungen.
+        function ytmZeitAnzeigen() {
+            if (!document.body.classList.contains('ytm-an')) return;
+            const st = ytmStand();
+            const pos = st.pos, dauer = st.dauer;
+            const anteil = dauer ? Math.min(100, pos / dauer * 100) : 0;
+            const zeit = document.getElementById('ytm-zeit');
+            if (zeit) zeit.textContent = ytmZeit(pos) + ' / ' + ytmZeit(dauer);
+            const balken = document.getElementById('ytm-fortschritt');
+            if (balken) balken.style.width = anteil + '%';
+            const vb = document.getElementById('ytv-balken');
+            if (vb) vb.style.width = anteil + '%';
+            const vp = document.getElementById('ytv-pos'), vd = document.getElementById('ytv-dauer');
+            if (vp) vp.textContent = ytmZeit(pos);
+            if (vd) vd.textContent = ytmZeit(dauer);
+            const rest = ytmZeit(Math.max(0, dauer - pos));
+            const inEl = document.getElementById('ytm-in');
+            if (inEl) inEl.textContent = 'in ' + rest;
+            const cd = document.getElementById('ytv-countdown');
+            if (cd) cd.textContent = rest;
+            const uhr = document.getElementById('ytv-uhr');
+            if (uhr) uhr.textContent = new Date().toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Vienna' });
+            // Einblendungen nacheinander, Tor zuerst.
+            const jetztMs = Date.now();
+            if (ytmEinblendungJetzt && jetztMs >= ytmEinblendungJetzt.bis) { ytmEinblendungJetzt = null; ytmLeisteZeichnen(); }
+            if (!ytmEinblendungJetzt && ytmEinblendungen.length) {
+                const n = ytmEinblendungen.shift();
+                ytmEinblendungJetzt = Object.assign({ bis: jetztMs + n.sek * 1000 }, n);
+                ytmLeisteZeichnen();
+            }
+            document.body.classList.toggle('ytm-browser', !nlExtern());
+        }
+
+        function ytmWunschEinblenden(eintrag) {
+            if (!eintrag) return;
+            const text = `📱 Neuer Wunsch: ${eintrag.songtitel || eintrag.titel} · ${eintrag.kuenstler || ''}`;
+            ytmEinblendungen.push({
+                art: 'wunsch', sek: YTM_WUNSCH_SEK, text,
+                html: `<div class="ytm-pille">📱<br>WUNSCH</div><div class="ytm-einblendung"><b>Neuer Wunsch:</b>`
+                    + `${ytmEsc(eintrag.songtitel || eintrag.titel)}&nbsp;·&nbsp;${ytmEsc(eintrag.kuenstler || '')}</div>`
+            });
+        }
+
+        // 6.3 Tor waehrend der Musik: Spielstand eines laufenden Spiels aendert sich.
+        function ytmTorPruefen() {
+            if (!document.body.classList.contains('ytm-an') || Date.now() < ytmTorPruefung) return;
+            ytmTorPruefung = Date.now() + 5000;
+            let spiele = [];
+            try { spiele = blTopOrderedMatches().filter(m => blIsLive(m, Date.now())); } catch (e) { return; }
+            const neu = {};
+            spiele.forEach(m => {
+                const t1 = blField(m, 'team1') || {}, t2 = blField(m, 'team2') || {};
+                const key = (blField(t1, 'teamName') || '') + '|' + (blField(t2, 'teamName') || '');
+                const s = blReadScore(m);
+                neu[key] = s.t1 + ':' + s.t2;
+                if (ytmTorStand && ytmTorStand[key] !== undefined && ytmTorStand[key] !== neu[key]) {
+                    const text = `⚽ TOR! ${blField(t1, 'shortName') || ''} ${neu[key]} ${blField(t2, 'shortName') || ''}`;
+                    // Tor hat Vorrang: vorn einreihen, laufende Wunsch-Einblendung beenden.
+                    ytmEinblendungen.unshift({ art: 'tor', sek: YTM_TOR_SEK, text,
+                        html: `<div class="ytm-pille tor">⚽<br>TOR!</div>` + blTopRenderMatch(m) });
+                    if (ytmEinblendungJetzt && ytmEinblendungJetzt.art !== 'tor') ytmEinblendungJetzt.bis = 0;
+                }
+            });
+            ytmTorStand = neu;
+        }
+
+        // 6.5 QR "Song wuenschen": Kaertchen einmal ins Canvas zeichnen; der
+        // Supervisor legt es per mpv overlay-add in die Ecke des Videos.
+        let ytmQrGebaut = false;
+        async function ytmQrKarteBauen() {
+            const ziel = 'https://motte025.github.io/City-cafe/fernbedienung.html?raum=' + encodeURIComponent(NL_FERN_RAUM);
+            const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=0&data=' + encodeURIComponent(ziel);
+            document.querySelectorAll('.ytm-qr-html img').forEach(img => { if (img.src !== qrUrl) img.src = qrUrl; });
+            if (ytmQrGebaut) return;
+            try {
+                const QR = 150, PAD = 12, TEXT = 30, F = 2;   // CSS-Pixel bei 1920er Breite, F = Aufloesung
+                const breite = QR + 2 * PAD, hoehe = PAD + QR + TEXT;
+                const bild = await createImageBitmap(await (await fetch(qrUrl, { mode: 'cors' })).blob());
+                try { await document.fonts.load('900 28px Orbitron'); } catch (e) {}
+                const c = document.createElement('canvas');
+                c.width = breite * F; c.height = hoehe * F;
+                const g = c.getContext('2d');
+                g.scale(F, F);
+                g.fillStyle = '#ffffff';
+                g.beginPath();
+                if (g.roundRect) g.roundRect(0, 0, breite, hoehe, 14); else g.rect(0, 0, breite, hoehe);
+                g.fill();
+                g.imageSmoothingEnabled = false;
+                g.drawImage(bild, PAD, PAD, QR, QR);
+                g.fillStyle = '#0b1220';
+                g.font = "900 14px Orbitron, sans-serif";
+                g.textAlign = 'center';
+                g.textBaseline = 'middle';
+                g.fillText('SONG WÜNSCHEN', breite / 2, PAD + QR + TEXT / 2);
+                window.nlQrKarte = { id: 'qr-' + Date.now(), png: c.toDataURL('image/png'), breite, hoehe,
+                                     rand: 18, randVoll: 20, faktorVoll: 160 / 150 };
+                ytmQrGebaut = true;
+            } catch (e) {
+                console.log('QR-Kaertchen nicht gebaut', e);
+            }
+        }
+
+        // Ebenen abbauen, wenn keine Musik laeuft (auch aus runMasterSequence).
+        function ytmEbenenAbbauen() {
+            if (ytmAktiv() && !ytmSpielPause) return;
+            document.body.classList.remove('ytm-an', 'ytm-vollbild', 'ytm-browser');
+            const vb = document.getElementById('ytm-vollbild');
+            if (vb) vb.classList.remove('active');
+            window.nlMpvFlaeche = 'nl-player-frame';
+            if (ytmWarAktiv) ytmAnzeigen();
+        }
+
+        // --- Tasten der Bluetooth-Fernbedienung am TV (Abschnitt 8) ---------------
+        // Die TV-Fernbedienung gilt als Chef. OK (Enter/Space) behaelt seine
+        // Bedeutung ("Stream starten"). Die letzten Tasten stehen in
+        // window.ytmTastenLog - so laesst sich pruefen, was die Fernbedienung sendet.
+        window.ytmTastenLog = [];
+        window.addEventListener('keydown', ev => {
+            window.ytmTastenLog.push({ key: ev.key, code: ev.code, keyCode: ev.keyCode, t: new Date().toTimeString().slice(0, 8) });
+            if (window.ytmTastenLog.length > 20) window.ytmTastenLog.shift();
+            if (!ytmBereit || ev.ctrlKey || ev.altKey || ev.metaKey) return;
+            const k = ev.key;
+            const musikAn = ytmAktiv();
+            let erledigt = true;
+            if (/^[1-9]$/.test(k)) {
+                const pl = ytmPlaylists.find(p => Number(p.nr) === Number(k));
+                if (pl) ytmPlaylistNutzen(pl, 'start'); else erledigt = false;
+            } else if (k === '0') {
+                ytmStimmungStarten();
+            } else if (k === 'MediaPlayPause' && musikAn) {
+                ytmBefehl({ was: 'pauseUm', id: 'taste-' + Date.now() });
+            } else if ((k === 'MediaTrackNext' || k === 'ArrowRight') && musikAn) {
+                ytmWeiter();
+            } else if ((k === 'ArrowUp' || k === 'ArrowDown') && musikAn) {
+                ytmBefehl({ was: k === 'ArrowUp' ? 'vollbild' : 'normal', id: 'taste-' + Date.now() });
+            } else {
+                erledigt = false;
+            }
+            if (erledigt) ev.preventDefault();
+        });
+
+        // --- Start: Firebase verbinden, Stand wiederherstellen ------------------------
+        function ytmStarten() {
+            try {
+                const q = JSON.parse(localStorage.getItem('cityCafeYtmQualitaet') || 'null');
+                if (q && typeof q === 'object') ytmQualitaet = { hoehe: Number(q.hoehe) || 0, fps: Number(q.fps) || 0 };
+            } catch (e) {}
+            ytmPlaylistsLaden();
+            if (!window.YT_REMOTE_NET || !YT_REMOTE_NET.istEingerichtet()) return;
+            YT_REMOTE_NET.bereit().then(async verb => {
+                if (!verb) return;
+                // Der TV ist selbst ein Chef-Geraet (PIN nur in der Kiosk-Adresse).
+                if (YT_CHEF_PIN) YT_REMOTE_NET.chefAnmelden(verb, NL_FERN_RAUM, YT_CHEF_PIN, 'TV ' + NL_FERN_RAUM).catch(() => {});
+                const jetzt = await YT_REMOTE_NET.jetztLesen(verb, NL_FERN_RAUM);
+                YT_REMOTE_NET.aufRadioHoeren(verb, NL_FERN_RAUM, r => {
+                    if (r && Array.isArray(r.titel) && !ytm.radio.titel.length) ytm.radio = { seed: r.seed || null, titel: r.titel };
+                });
+                YT_REMOTE_NET.aufWarteschlangeHoeren(verb, NL_FERN_RAUM, ytmWarteschlangeUebernehmen);
+                YT_REMOTE_NET.aufNeueWuenscheHoeren(verb, NL_FERN_RAUM, ytmWunschBearbeiten);
+                if (jetzt) {
+                    ytmVollbild = !!jetzt.vollbild;
+                    ytm.gespielt = Array.isArray(jetzt.gespielt) ? jetzt.gespielt : [];
+                    ytm.letzterWunschTs = Number(jetzt.letzterWunschTs) || 0;
+                }
+                // Neustart mitten in der Musik: mit dem naechsten Titel weiter.
+                setTimeout(() => {
+                    ytmBereit = true;
+                    ytmListenLaden();
+                    if (jetzt && jetzt.modus && jetzt.modus !== 'aus') {
+                        ytm.modus = jetzt.modus;
+                        ytm.jetzt = { videoId: jetzt.videoId, kuenstler: jetzt.kuenstler,
+                                      songtitel: jetzt.songtitel, quelle: jetzt.quelle };
+                        ytmWeiter();
+                    } else {
+                        ytmStartWennFrei();      // Wuensche kamen, waehrend der TV aus war
+                    }
+                }, 4000);
+            }).catch(() => {});
+            setInterval(ytmTakt, 1000);
+        }
+        ytmStarten();
 
         function runNightlifeState(nextStateIndex) {
             // Widget abgeschaltet - weiter wie bei "kein Video eingerichtet".
@@ -12838,6 +13917,9 @@
             // loescht ein Wunsch vom Handy (cancelSequenceTimers), und die
             // Tabelle blieb ueber dem Nightlife-Slot und dem mpv-Fenster stehen.
             document.getElementById('ucl-fullscreen-table').classList.remove('active');
+            // YouTube-Musik: Leiste, Seitenleiste, Ticker und Vollbild-Ebene nur,
+            // solange Musik laeuft - sonst alles wie vorher (YOUTUBE-MUSIK-SETUP.md 2.4).
+            if (typeof ytmEbenenAbbauen === 'function') ytmEbenenAbbauen();
             werbungAus();
 
             document.querySelectorAll('.media-inner-view').forEach(el => el.classList.remove('active'));

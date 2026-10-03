@@ -32,6 +32,9 @@ sway). Ohne Variablen gelten die alten ODROID-Werte.
 | `CITYCAFE_OUTPUT` | Ausgang für `wlr-randr` | `HDMI-A-1` | `HDMI-A-1` |
 | `CITYCAFE_CHROMIUM_EXTRA` | zusätzliche Chromium-Schalter | leer | VA-API-Features |
 | `CITYCAFE_VOLUME` | Lautstärke für `citycafe-bt` | 0.9 | 0.9 |
+| `CITYCAFE_NUR_H264` | Musik nur in H.264 (schwache Geräte) | aus | aus (W1 dekodiert VP9/AV1) |
+| `CITYCAFE_MIX_COOKIES` | YouTube-Mix mit Konto-Cookies lesen (0 = ohne) | 1 | 1 |
+| `CITYCAFE_URL` / `CITYCAFE_URL_EXTRA` | andere Dashboard-Adresse (Test) / Zusatz wie `&chefpin=…` (in Anführungszeichen!) | GitHub Pages / leer | – |
 
 ## Warum überhaupt mpv
 
@@ -94,6 +97,29 @@ waren für die 2 GB des ODROID nötig; der W1 nimmt 512 MiB.
 * **Aufräumen**: `/tmp` liegt im Arbeitsspeicher. Alle 30 Minuten entfernt er
   liegengebliebene Auspackordner von `yt-dlp`; ein volles `/tmp` hat schon
   einmal dazu geführt, dass der Kernel Chromium abgeschossen hat.
+
+## YouTube-Musik (YOUTUBE-MUSIK-SETUP.md)
+
+Meldet das Dashboard `window.nlMusik`, wählt der Aufpasser die Qualität mit
+`musik_format()`: 1080p60, sonst die nächstbeste Stufe (Auflösung vor
+Bildrate), kein hartes H.264 – die gewählte Qualität steht als
+`Qualitaet <id>: …` im Protokoll. Weitere Schnittstellen zum Dashboard:
+
+| window.… | Richtung | Zweck |
+|---|---|---|
+| `nlMusikVorladen` {videoId, hoehe, fps} | Dashboard → Aufpasser | nächsten Song 60 s vorher auflösen (Lücke < 3 s) |
+| `nlMixAuftrag` → `nlMixErgebnis` | hin und zurück | YouTube-Mix (list=RD…), Rückfall Titelsuche |
+| `nlPlaylistAuftrag` → `nlPlaylistErgebnis` | hin und zurück | Playlist lesen (24 h Cache in ~/.cache/citycafe) |
+| `nlFindeAuftrag` → `nlFindeErgebnis` | hin und zurück | Titel ohne videoId finden (Platzhalter, Last.fm) |
+| `nlPauseWunsch` | Dashboard → Aufpasser | Pause/Weiter (der Wächter hält Pause nicht für Hänger) |
+| `nlMpvFlaeche` | Dashboard → Aufpasser | `nl-player-frame` oder `yt-vollbild-video`: mpv wird nur umgelegt, kein Neustart |
+| `nlQrKarte` | Dashboard → Aufpasser | QR-Kärtchen als PNG; per mpv `overlay-add` in die Ecke (braucht `python-pillow`) |
+| `nlMpvStand` {videoId, pos, dauer, pause} | Aufpasser → Dashboard | Zeitanzeige, Fortschritt, Vorladen |
+
+Suche, Vorladen, Mix, Playlist und Finden teilen sich **einen** Neben-Thread:
+höchstens ein yt-dlp-Prozess zusätzlich (OOM vom 21.09.2026).
+`place_mpv()` setzt erst die Größe, dann die Lage – sway skaliert schwebende
+Fenster um die Mitte.
 
 ## Arbeitsspeicher (ODROID, Vorgeschichte)
 
