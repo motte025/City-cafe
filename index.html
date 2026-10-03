@@ -2488,7 +2488,8 @@
         .ytv-gleich { border-radius: 16px; padding: 18px 22px; background: rgba(192, 38, 211, 0.16); border: 1px solid rgba(243, 85, 218, 0.55); }
         .ytv-gleich-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; letter-spacing: 1.5px; color: #f9a8e8; }
         .ytv-gleich-zeile { display: flex; align-items: center; gap: 24px; margin-top: 4px; min-width: 0; }
-        .ytv-gleich-zeile b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 58px; color: #ffffff; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+        /* feste Breite: Orbitron hat keine gleich breiten Ziffern - sonst zuckt der Titel daneben jede Sekunde */
+        .ytv-gleich-zeile b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 58px; color: #ffffff; font-variant-numeric: tabular-nums; flex-shrink: 0; width: 205px; }
         .ytv-gleich-zeile div { min-width: 0; display: flex; flex-direction: column; }
         .ytv-gleich-zeile strong { font-size: 31px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-gleich-zeile small { font-size: 20px; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
