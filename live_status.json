@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-03T17:07:45Z",
+  "checked_at": "2026-10-03T17:22:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "HEEEEEYYAAAAAWWWWWW !bewbs !morestreams !schedule",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Ab auf die Wiesn! Heute feiern wir Oktoberfest! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Ab auf die Wiesn! Heute feiern wir Oktoberfest! <3 !release @just_jenny_official @two_crazy_girls",
+      "channel": "roice",
+      "name": "roice",
+      "title": "HEEEEEYYAAAAAWWWWWW !bewbs !morestreams !schedule",
       "game": "DJs"
     }
   ]
