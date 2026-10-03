@@ -1359,8 +1359,8 @@ def main():
                         elif qr_lage is not None:
                             mpv_befehl("overlay-remove", QR_OVERLAY_ID)
                             qr_lage = None
-                # Ambilight (Musik, normale Ansicht): zweimal pro Sekunde Randfarben messen.
-                if (state.get("ambi") and musik and art == "yt" and rect_art == "yt"
+                # Ambilight (Musik, normal und Vollbild): zweimal pro Sekunde Randfarben messen.
+                if (state.get("ambi") and musik and art == "yt" and rect_art in ("yt", "yt_voll")
                         and window_seen and now >= ambi_naechste):
                     ambi_naechste = now + 0.5
                     farben = ambi_farben(target)

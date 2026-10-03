@@ -2431,6 +2431,14 @@
            der Supervisor am mpv-Bild (window.nlAmbiFarben), hier nur Darstellung. */
         /* Ueberschrift und Zeile darueber liegen ueber dem Schein, sonst wirken sie blass */
         html body.ytm-an.ytm-ambi:not(.ytm-vollbild) .nl-header { position: relative; z-index: 3; }
+        /* Vollbild: derselbe Schein um das grosse Video, Kopfzeile bleibt darueber */
+        html body.ytm-an.ytm-ambi.ytm-vollbild .ytv-kopf { z-index: 3; }
+        html body.ytm-an.ytm-ambi.ytm-vollbild .ytv-video {
+            overflow: visible;
+            box-shadow: -80px 0 140px 14px rgba(var(--ambi-l), 0.95), 80px 0 140px 14px rgba(var(--ambi-r), 0.95),
+                        0 -50px 120px 8px rgba(var(--ambi-t), 0.9), 0 60px 130px 8px rgba(var(--ambi-b), 0.9) !important;
+            transition: box-shadow 0.9s ease;
+        }
         /* !important + html davor: schlaegt die Spar-Regel "box-shadow: none" (Odroid-Zeit) */
         html body.ytm-an.ytm-ambi:not(.ytm-vollbild) .nl-player {
             overflow: visible;
@@ -8659,7 +8667,7 @@
             body.classList.toggle('ytm-browser', an && !nlExtern());
             body.classList.toggle('ytm-qr-an', an && YT_QR_AN);
             body.classList.toggle('ytm-ambi', an && ytmAmbi);
-            window.nlAmbiAn = an && ytmAmbi && !ytmVollbild;   // Supervisor misst nur dann
+            window.nlAmbiAn = an && ytmAmbi;   // Supervisor misst nur dann (normal und Vollbild)
             // Supervisor: welche Flaeche gerade das Video traegt (6.8).
             window.nlMpvFlaeche = an && ytmVollbild ? 'yt-vollbild-video' : 'nl-player-frame';
             const vb = document.getElementById('ytm-vollbild');
