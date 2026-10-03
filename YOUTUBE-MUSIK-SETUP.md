@@ -343,8 +343,8 @@ Video) [4K]“. Eine Funktion `titelZerlegen(titel, kanal)`:
 ### 6.5 QR-Code unten rechts im Video
 
 Der QR-Code zum Wünschen sitzt **unten rechts in der Videofläche**: weißes
-Kärtchen mit abgerundeten Ecken, QR ca. 150×150 px (bei 1920er Auflösung),
-darunter „SONG WÜNSCHEN“ in dunkler Orbitron-Schrift, 18 px Abstand zum
+Kärtchen mit abgerundeten Ecken, QR ca. 120×120 px (bei 1920er Auflösung),
+darunter „SONG WÜNSCHEN“ in dunkler Orbitron-Schrift, 3 px Abstand zum
 Rand. Ziel: `https://motte025.github.io/City-cafe/fernbedienung.html?raum=<raum>`.
 
 Weil mpv über dem Browser liegt, **zeichnet mpv das Kärtchen selbst**:
@@ -400,7 +400,7 @@ mit Wetter, Ticker, oberer Leiste und Seitenleiste.
   `#f355da`), feine Trennlinie, Uhrzeit.
 - **Video** 1280×720 links, darunter Fortschrittsbalken mit Zeiten.
 - **QR-Code unten rechts im Video**, gleiches Kärtchen wie in 6.5, hier
-  160 px, 20 px Abstand zum Videorand. Auch hier zeichnet mpv ihn (6.5).
+  128 px, 3 px Abstand zum Videorand. Auch hier zeichnet mpv ihn (6.5).
 - **Rechts:** Kärtchen „Gleich dran“ mit großem Countdown (Restlaufzeit) und
   dem nächsten Titel. Darunter „Danach · 📱 n Wünsche“ mit den folgenden
   Titeln der Warteschlange (so viele wie passen, bis 7), Wünsche markiert.

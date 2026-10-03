@@ -2367,12 +2367,12 @@
         /* QR "Song wuenschen" als HTML - nur, wenn das Video im Browser laeuft
            (sonst zeichnet mpv dasselbe Kaertchen, body.ytm-browser setzt das JS). */
         .ytm-qr-html {
-            position: absolute; right: 18px; bottom: 18px; z-index: 4;
-            background: #ffffff; border-radius: 14px; padding: 10px 10px 6px;
+            position: absolute; right: 3px; bottom: 3px; z-index: 4;
+            background: #ffffff; border-radius: 14px; padding: 8px 8px 5px;
             flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 6px 20px rgba(0,0,0,0.45);
         }
-        .ytm-qr-html img { width: 150px; height: 150px; display: block; }
-        .ytm-qr-html span { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 14px; color: #0b1220; letter-spacing: 1px; }
+        .ytm-qr-html img { width: 120px; height: 120px; display: block; }
+        .ytm-qr-html span { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 12px; color: #0b1220; letter-spacing: 1px; }
         body.ytm-an.ytm-browser .nl-player .ytm-qr-html { display: flex; }
 
         /* Obere Leiste: "Als Naechstes" mit zwei grossen Titeln */
@@ -8567,7 +8567,7 @@
             document.querySelectorAll('.ytm-qr-html img').forEach(img => { if (img.src !== qrUrl) img.src = qrUrl; });
             if (ytmQrGebaut) return;
             try {
-                const QR = 150, PAD = 12, TEXT = 30, F = 2;   // CSS-Pixel bei 1920er Breite, F = Aufloesung
+                const QR = 120, PAD = 10, TEXT = 26, F = 2;   // CSS-Pixel bei 1920er Breite, F = Aufloesung
                 const breite = QR + 2 * PAD, hoehe = PAD + QR + TEXT;
                 const bild = await createImageBitmap(await (await fetch(qrUrl, { mode: 'cors' })).blob());
                 try { await document.fonts.load('900 28px Orbitron'); } catch (e) {}
@@ -8582,12 +8582,12 @@
                 g.imageSmoothingEnabled = false;
                 g.drawImage(bild, PAD, PAD, QR, QR);
                 g.fillStyle = '#0b1220';
-                g.font = "900 14px Orbitron, sans-serif";
+                g.font = "900 12px Orbitron, sans-serif";
                 g.textAlign = 'center';
                 g.textBaseline = 'middle';
                 g.fillText('SONG WÜNSCHEN', breite / 2, PAD + QR + TEXT / 2);
                 window.nlQrKarte = { id: 'qr-' + Date.now(), png: c.toDataURL('image/png'), breite, hoehe,
-                                     rand: 18, randVoll: 20, faktorVoll: 160 / 150 };
+                                     rand: 3, randVoll: 3, faktorVoll: 160 / 150 };
                 ytmQrGebaut = true;
             } catch (e) {
                 console.log('QR-Kaertchen nicht gebaut', e);
