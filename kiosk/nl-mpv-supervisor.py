@@ -870,7 +870,7 @@ def measured_rect(page_id, fallback, art="yt"):
     return rect or fallback
 
 
-def place_mpv(target, app_id=None):
+def place_mpv(target, app_id=None, sichtbar=True):
     """mpv-Fenster auf die Zielflaeche setzen. -> True, wenn das Fenster da ist.
     Die sway-Regel allein setzt die Position nicht zuverlaessig (gesehen: mpv
     landete bei 443/450), deshalb wird bei jeder Abweichung nachgezogen."""
@@ -882,9 +882,18 @@ def place_mpv(target, app_id=None):
         # Erst resize, dann move: sway aendert die Groesse schwebender Fenster um
         # ihre Mitte. Umgekehrt landete das Fenster beim Wechsel ins Vollbild
         # (1200x675 -> 1280x720) 40/22 px daneben (gesehen am 02.10.2026).
+        # Groessenwechsel (Normal <-> Vollbild): waehrend des Umbaus ausblenden -
+        # sonst sah man kurz das alte Bild verzerrt mit schwarzen Balken unten,
+        # bis mpv die neue Groesse uebernommen hatte (gemeldet 03.10.2026).
+        groesse_neu = abs(cur["w"] - target["w"]) > 2 or abs(cur["h"] - target["h"]) > 2
+        if groesse_neu and sichtbar:
+            sway(f'[app_id="{app_id}"]', "opacity", "0")
         sway(f'[app_id="{app_id}"]', "resize", "set", "width", f"{target['w']} px",
              "height", f"{target['h']} px")
         sway(f'[app_id="{app_id}"]', "move", "absolute", "position", str(target["x"]), str(target["y"]))
+        if groesse_neu and sichtbar:
+            time.sleep(0.25)
+            sway(f'[app_id="{app_id}"]', "opacity", "1")
         log(f"mpv platziert: {cur} -> {target}")
     return True
 
@@ -1009,7 +1018,7 @@ def ueberblenden(xf, target, page_id, vol):
     while time.time() < frist:
         if xf["proc"].poll() is not None:
             break
-        if mpv_eigenschaft("time-pos", sock=MPV_SOCK_XF) is not None and place_mpv(target, xf["app"]):
+        if mpv_eigenschaft("time-pos", sock=MPV_SOCK_XF) is not None and place_mpv(target, xf["app"], sichtbar=False):
             break
         time.sleep(0.1)
     else:
@@ -1018,7 +1027,7 @@ def ueberblenden(xf, target, page_id, vol):
     if xf["proc"].poll() is not None:
         xf["fehler"] = True
         return
-    place_mpv(target, xf["app"])
+    place_mpv(target, xf["app"], sichtbar=False)
     if xf.get("abbruch"):
         return
     try:
