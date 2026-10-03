@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-03T00:07:46Z",
+  "checked_at": "2026-10-03T00:12:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "SPACE INVADERS",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
@@ -17,17 +10,17 @@
     },
     {
       "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "SPACE INVADERS",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "amazonmusic",
       "name": "AmazonMusic",
       "title": "Amazon Music Live with Don Toliver. Sponsored by !Wendy's",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Late-Night-Quickie  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
     }
   ]
 }
