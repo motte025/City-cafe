@@ -27,7 +27,7 @@ sway). Ohne Variablen gelten die alten ODROID-Werte.
 | `CITYCAFE_HWDEC` | mpv `--hwdec` | `no` | `vaapi` |
 | `CITYCAFE_DEMUXER_MIB` / `_BACK_MIB` | mpv-Puffer | 48 / 8 | 512 / 64 |
 | `CITYCAFE_MPV_PROFILE` | mpv `--profile` | `fast` | `fast` |
-| `CITYCAFE_CAM_CACHE_SECS` | Dartcam-Puffer | 3 | 8 |
+| `CITYCAFE_CAM_CACHE_SECS` | Dartcam-Puffer | 3 | 3 |
 | `CITYCAFE_BT_NAME` | Teil des Namens des Bluetooth-Empfängers | `B03` | `B03` |
 | `CITYCAFE_OUTPUT` | Ausgang für `wlr-randr` | `HDMI-A-1` | `HDMI-A-1` |
 | `CITYCAFE_CHROMIUM_EXTRA` | zusätzliche Chromium-Schalter | leer | VA-API-Features |

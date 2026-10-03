@@ -56,7 +56,7 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   `citycafe-chromium`, den Supervisor und `citycafe-bt`.
 - **Einstellungen je Gerät** in `/home/citycafe/.config/citycafe.env`:
   `CITYCAFE_RAUM=city-cafe` (Café, kein Roulette-Spiel, nur die Werbung),
-  `CITYCAFE_HWDEC=vaapi`, mpv-Puffer 512/64 MiB, `CITYCAFE_CAM_CACHE_SECS=8`
+  `CITYCAFE_HWDEC=vaapi`, mpv-Puffer 512/64 MiB, `CITYCAFE_CAM_CACHE_SECS=3`
   (Dartcam), `CITYCAFE_VOLUME=1.0`, Chromium mit VA-API-Schaltern. Ohne
   Variablen verhalten sich Starter und Supervisor wie früher (Raum
   `zuhause`).
