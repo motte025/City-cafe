@@ -7829,7 +7829,9 @@
         // naechste Titel kommt statt der Rotation.
         //
         // Vorgaben - der Betreiber kann sie hier aendern:
-        const YT_RADIO_MAX_MIN = 60;          // Radio ohne neuen Wunsch, dann Rotation
+        // Musik laeuft, bis der Chef stoppt (Wunsch Betreiber) - keine Zeitgrenze
+        // mehr fuers Radio. Eine Zahl (Minuten) stellt die alte Grenze wieder her.
+        const YT_RADIO_MAX_MIN = Infinity;
         const YT_VOLLBILD_STANDARD = false;   // Ansicht beim Start der Musik
         const YT_QR_AN = false;               // QR "Song wuenschen" im Video (vorerst aus, Wunsch Betreiber)
         const YT_VORLADEN_SEKUNDEN = 60;      // so lange vor Songende den naechsten aufloesen
@@ -8000,8 +8002,18 @@
                 ytmSpielen(r.eintrag);
                 return;
             }
+            // Nichts mehr da (Mix noch nicht geladen oder leer): nicht in die
+            // Rotation, sondern mit der Playlist zur Uhrzeit weitermachen.
+            if (ytm.modus !== 'aus' && !ytmWeiterRettung) {
+                ytmWeiterRettung = true;
+                setTimeout(() => { ytmWeiterRettung = false; }, 30000);
+                ytm.modus = 'playlist';
+                ytmStimmungStarten();
+                if (ytm.eintraege.length) return;
+            }
             ytmBeenden();
         }
+        let ytmWeiterRettung = false;
 
         // Musik vorbei: zurueck in die Rotation, alles wie vorher.
         function ytmBeenden() {

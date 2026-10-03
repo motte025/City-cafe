@@ -214,10 +214,13 @@
             <button type="button" id="k-skip" title="Überspringen">⏭</button>
             <button type="button" id="k-ton" title="Ton">🔊</button>
         </div>
-        <div class="zeile2 nur-chef">
+        <div class="nur-chef">
+        <div class="zeile2">
             <button type="button" class="still" id="k-ansicht">⛶ Vollbild</button>
             <button type="button" class="still" id="k-start">▶ Musik starten</button>
             <button type="button" class="still" id="k-radio">📻 Radio-Mix</button>
+        </div>
+        <button type="button" class="rot breit" id="k-ende" style="margin-top:10px">■ Musik beenden</button>
         </div>
     </div>
     <div class="hinweis" id="jetzt-hinweis"></div>
@@ -342,7 +345,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-radio';
+    var FASSUNG = '2026-10-03-ende';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -657,6 +660,7 @@
         musik('radioJetzt');
         melden('📻 Radio-Mix zu „' + (jetzt.songtitel || jetzt.titel || '') + '" kommt …', '');
     });
+    el('k-ende').addEventListener('click', function () { musik('stopp'); melden('■ Musik aus – zurück zur Rotation', ''); });
     el('k-start').addEventListener('click', function () { musik('start'); melden('▶ Musik startet …', ''); });
 
     // ------------------------------------------------------------------ Passt dazu
