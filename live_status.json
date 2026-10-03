@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-03T07:07:46Z",
+  "checked_at": "2026-10-03T07:22:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Classics mit @ericssl",
       "game": "DJs"
     }
   ]
