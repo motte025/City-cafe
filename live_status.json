@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-04T15:02:45Z",
+  "checked_at": "2026-10-04T15:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -14,13 +14,6 @@
       "name": "AmazonMusic",
       "title": "Amazon Music presents: Shakira Live From Madrid. Sponsored by Epson",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
     },
     {
       "platform": "twitch",
