@@ -95,6 +95,8 @@
     .jetzt-kopf { font-size: 21px; font-weight: 800; letter-spacing: 1.5px; color: #00e5ff; }
     .jetzt-titel { font-size: 38px; font-weight: 800; line-height: 1.2; margin-top: 6px; }
     .jetzt-kuenstler { font-size: 26px; color: #cbd5f5; margin-top: 4px; }
+    .jetzt-liste { font-size: 22px; font-weight: 700; color: #f9a8e8; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .jetzt-liste:empty { display: none; }
     .balken { height: 10px; border-radius: 6px; background: #252e55; margin-top: 18px; overflow: hidden; }
     /* Chef: Balken antippen = an diese Stelle springen (grosse Trefferflaeche) */
     body.ist-chef .balken { height: 16px; cursor: pointer; box-shadow: 0 0 0 12px transparent; touch-action: manipulation; }
@@ -139,7 +141,7 @@
     .plus-zeile .t { font-size: 28px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .plus-zeile .k { font-size: 22px; color: #9fb0d8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .plus-zeile button { background: transparent; color: #6ea8ff; font-size: 46px; padding: 0 10px; line-height: 1; }
-    .plus-zeile button.pl-weg { color: #ff7b8a; font-size: 32px; }
+    .plus-zeile button.pl-weg { color: #ff7b8a; font-size: 32px; padding: 0 12px 0 0; }
     .plus-zeile .pl-griff { font-size: 32px; color: #8fa0d0; padding: 6px 4px 6px 12px; touch-action: none; user-select: none; cursor: grab; }
     .plus-zeile.zieht { opacity: 0.95; border-color: #2f6bff; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); position: relative; z-index: 5; }
     .plus-zeile.platzhalter { border-style: dashed; border-color: #2f6bff; background: transparent; }
@@ -183,6 +185,7 @@
         .jetzt-kopf { font-size: 14px; }
         .jetzt-titel { font-size: 26px; }
         .jetzt-kuenstler { font-size: 17px; }
+        .jetzt-liste { font-size: 15px; }
         .zeitzeile { font-size: 14px; }
         .steuerung button { font-size: 22px; padding: 12px 0; }
         .eintrag .t, .plus-zeile .t, .video .t { font-size: 18px; }
@@ -222,6 +225,7 @@
         <div class="jetzt-kopf">JETZT LÄUFT · CITY CAFE</div>
         <div class="jetzt-titel" id="jetzt-titel">—</div>
         <div class="jetzt-kuenstler" id="jetzt-kuenstler"></div>
+        <div class="jetzt-liste" id="jetzt-liste"></div>
         <div class="balken"><i id="jetzt-balken"></i></div>
         <div class="zeitzeile"><span id="jetzt-pos">0:00</span><span id="jetzt-dauer">0:00</span></div>
         <div class="steuerung nur-chef">
@@ -375,7 +379,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-04-abhier';
+    var FASSUNG = '2026-10-04-liste-links';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -572,6 +576,10 @@
         var an = jetzt && jetzt.modus && jetzt.modus !== 'aus' && jetzt.videoId;
         el('jetzt-titel').textContent = an ? (jetzt.songtitel || jetzt.titel || '') : 'Gerade läuft keine Musik';
         el('jetzt-kuenstler').textContent = an ? (jetzt.kuenstler || '') : (istChef ? 'Mit „▶ Musik starten" geht es los.' : 'Wünsch dir einen Song unter „Suche".');
+        // Welche Playlist laeuft (Radio-Mix, Gaeste-Wunsch, Chef-Song)
+        var lq = !an ? '' : jetzt.liste ? (jetzt.liste === 'Radio-Mix' ? '📻 Radio-Mix' : '📃 Playlist: ' + jetzt.liste)
+            : jetzt.quelle === 'wunsch' ? '🙋 Gäste-Wunsch' : jetzt.quelle === 'chef' ? '⭐ Vom Chef ausgewählt' : '';
+        el('jetzt-liste').textContent = lq;
         el('k-pause').textContent = jetzt && jetzt.pausiert ? '▶' : '⏸';
         el('k-ansicht').textContent = jetzt && jetzt.vollbild ? '▭ Normal' : '⛶ Vollbild';
         // Rechte Karte im Widget: Fotos aus der Drive-Galerie <-> Aehnliche Songs
@@ -646,16 +654,17 @@
             if (i === 0 && jetzt && jetzt.modus !== 'aus') zusatz += ' · <span class="in"></span>';
             if (e.quelle === 'wunsch') zusatz += ' <span class="wunsch">📱 Wunsch</span>';
             // Griff zum Umsortieren rechts aussen (Daumen), Nummer links.
-            d.innerHTML = '<span class="nr">' + (i + 1) + '</span>'
+            // ✕ links aussen, Griff zum Umsortieren rechts aussen.
+            d.innerHTML = ((istChef || (meins && e.quelle === 'wunsch')) ? '<button type="button" class="weg" aria-label="Entfernen">✕</button>' : '')
+                + '<span class="nr">' + (i + 1) + '</span>'
                 + '<div class="text"><div class="t">' + esc(e.songtitel || e.titel) + '</div>'
                 + '<div class="k">' + esc(e.kuenstler || '') + zusatz + '</div></div>'
-                + ((istChef || (meins && e.quelle === 'wunsch')) ? '<button type="button" class="weg" aria-label="Entfernen">✕</button>' : '')
                 + (istChef ? '<span class="griff" aria-label="Ziehen zum Umsortieren">☰</span>' : '');
             var weg = d.querySelector('.weg');
             if (istChef) d.insertBefore(mehrKnopf(e, e, i > 0 ? function () {
                 musik('abHier', { eintrag: e.id });
                 melden('⤵ Ab „' + (e.songtitel || e.titel || '') + '" – die Songs davor fallen weg', 'ok');
-            } : null), weg);
+            } : null), d.querySelector('.griff'));
             if (weg) weg.addEventListener('click', function () {
                 if (istChef) {
                     YT_REMOTE_NET.warteschlangeEntfernen(verb, RAUM, e.id).catch(function (err) { melden(err.message, 'nein'); });
@@ -1038,7 +1047,7 @@
         griff.className = 'griff pl-griff';
         griff.setAttribute('aria-label', 'Ziehen zum Verschieben');
         griff.textContent = '☰';
-        d.appendChild(weg);
+        d.insertBefore(weg, d.firstChild);   // ✕ links, ☰ rechts
         d.appendChild(griff);
         griff.addEventListener('pointerdown', function (ev) {
             ev.preventDefault();

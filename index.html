@@ -8024,6 +8024,7 @@
                 jahr: gj ? gj.jahr : null,
                 quelle: j ? (j.quelle || '') : '',
                 von: j ? (j.von || '') : '',
+                liste: j ? (j.liste || (j.quelle === 'radio' ? 'Radio-Mix' : '')) : '',
                 dauerSek: Math.round(st.dauer),
                 posSek: Math.round(st.pos),
                 pausiert: ytmPausiert,
@@ -8169,11 +8170,11 @@
         function ytmPlaylistNutzen(pl, art, ab) {
             if (!pl) return;
             if (ytmListenInhalt[pl.nr] && ytmListenInhalt[pl.nr].length) {
-                ytmPlaylistEinreihen(ytmListenInhalt[pl.nr], art, ab);
+                ytmPlaylistEinreihen(ytmListenInhalt[pl.nr], art, ab, pl.name);
                 return;
             }
             if (Array.isArray(pl.titel) && pl.titel.length) {   // feste Titelliste in yt_playlists.json
-                ytmPlaylistEinreihen(pl.titel.map(x => ytmAufbereiten(Object.assign({}, x))), art, ab);
+                ytmPlaylistEinreihen(pl.titel.map(x => ytmAufbereiten(Object.assign({}, x))), art, ab, pl.name);
                 return;
             }
             if (pl.quelle) {
@@ -8182,7 +8183,7 @@
                 window.nlPlaylistAuftrag = { id, quelle: pl.quelle };
                 return;
             }
-            ytmPlaylistEinreihen(ytmPlatzhalterTitel(pl), art);
+            ytmPlaylistEinreihen(ytmPlatzhalterTitel(pl), art, null, pl.name);
         }
 
         // Inhalte aller Playlists fuers Handy ("Listen", aufklappbar) nach
@@ -8244,7 +8245,8 @@
             const vid = String(b.abVideo || '');
             return { nr: Math.max(0, Number(b.ab) || 0), videoId: /^[A-Za-z0-9_-]{11}$/.test(vid) ? vid : '' };
         }
-        function ytmPlaylistEinreihen(titel, art, ab) {
+        // name: Playlist-Name, steht am Eintrag ("liste") und im Handy-Player.
+        function ytmPlaylistEinreihen(titel, art, ab, name) {
             if (ab) {
                 let i = Number(ab.nr) || 0;
                 if (ab.videoId && (titel[i] || {}).videoId !== ab.videoId) {
@@ -8257,7 +8259,7 @@
             if (!titel.length || !nlFernVerb) return;
             const neu = titel.map(t => ytmAufbereiten(Object.assign({}, t, {
                 id: ytmId(), quelle: 'playlist', von: 'tv', ts: Date.now()
-            })));
+            }, name ? { liste: String(name).slice(0, 80) } : {})));
             // "start": Playlist ersetzt die Playlist-Titel in der Schlange und
             // beginnt sofort (Wuensche bleiben vorn), "anhaengen": ans Ende.
             if (art === 'start') {
@@ -8364,7 +8366,7 @@
                         const j = ytm.jetzt || {};
                         const neu = YTW.radioFiltern(liste, ytm.gespielt, j.videoId, Date.now(), j.songtitel)
                             .filter(t => !ytm.eintraege.some(e => e.videoId === t.videoId)).slice(0, 25);
-                        ytmPlaylistEinreihen(neu, 'anhaengen');   // als Playlist-Titel: Wuensche ab Platz 5
+                        ytmPlaylistEinreihen(neu, 'anhaengen', null, 'Radio-Mix');   // als Playlist-Titel: Wuensche ab Platz 5
                     }
                     ytmRadioMelden();
                     ytmAnzeigen();
@@ -8395,10 +8397,10 @@
                 const w = ytmPlaylistWartet;
                 ytmPlaylistWartet = null;
                 const titel = p.liste && p.liste.length ? p.liste : ytmPlatzhalterTitel(w.pl);
-                if (w.pl.suche) ytmPlaylistEinreihen(titel.map(t => ytmAufbereiten(t)), w.art, w.ab);   // nicht in "Listen"
+                if (w.pl.suche) ytmPlaylistEinreihen(titel.map(t => ytmAufbereiten(t)), w.art, w.ab, w.pl.name);   // nicht in "Listen"
                 else {
                     ytmListeMelden(w.pl, titel);
-                    ytmPlaylistEinreihen(ytmListenInhalt[w.pl.nr], w.art, w.ab);
+                    ytmPlaylistEinreihen(ytmListenInhalt[w.pl.nr], w.art, w.ab, w.pl.name);
                 }
                 ytmNaechsteListe();
             }
@@ -9084,7 +9086,7 @@
                     if (jetzt && jetzt.modus && jetzt.modus !== 'aus') {
                         ytm.modus = jetzt.modus;
                         ytm.jetzt = { videoId: jetzt.videoId, kuenstler: jetzt.kuenstler,
-                                      songtitel: jetzt.songtitel, quelle: jetzt.quelle };
+                                      songtitel: jetzt.songtitel, quelle: jetzt.quelle, liste: jetzt.liste || '' };
                         ytmWeiter();
                     } else {
                         ytmStartWennFrei();      // Wuensche kamen, waehrend der TV aus war
