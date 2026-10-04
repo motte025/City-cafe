@@ -1130,6 +1130,57 @@ def aufloesung_text(breite, hoehe):
     return f"{hoehe}p"
 
 
+# Stille am Songanfang und -ende (DJ-Art, Wunsch 04.10.2026): sobald ein Song
+# aufgeloest ist, misst ffmpeg (silencedetect, ~0,4 s) die ersten 30 s und die
+# letzten 45 s der Tonspur. Der Song startet beim ersten Ton, die Ueberblendung
+# endet dort, wo am Schluss die Stille beginnt. STILLE[videoId] = {anfang, ende}.
+STILLE = {}
+STILLE_PEGEL = "-45dB"
+
+
+def stille_messen(vid, audio_url, laenge):
+    if vid in STILLE or not audio_url:
+        return
+    STILLE[vid] = {"anfang": 0.0, "ende": None}
+    muster = re.compile(r"silence_(start|end): (-?[0-9.]+)")
+
+    def lauf(argumente):
+        try:
+            aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", *argumente],
+                                 capture_output=True, text=True, timeout=40)
+            return [(a, float(b)) for a, b in muster.findall(aus.stderr)]
+        except (OSError, subprocess.TimeoutExpired, ValueError):
+            return []
+
+    anfang = 0.0
+    kopf = lauf(["-t", "30", "-i", audio_url, "-af", f"silencedetect=n={STILLE_PEGEL}:d=0.4", "-f", "null", "-"])
+    if len(kopf) >= 2 and kopf[0][0] == "start" and kopf[0][1] <= 0.3 and kopf[1][0] == "end" and kopf[1][1] <= 25:
+        anfang = max(0.0, kopf[1][1] - 0.15)        # kurz vor dem ersten Ton einsteigen
+    ende = None
+    if laenge and laenge > 60:
+        ab = max(0.0, float(laenge) - 45)
+        schluss = lauf(["-ss", f"{ab:.1f}", "-i", audio_url, "-af",
+                        f"silencedetect=n={STILLE_PEGEL}:d=1", "-f", "null", "-"])
+        # letzte Stille, die bis zum Dateiende reicht (kein "end" mehr danach,
+        # oder das "end" liegt am Schluss)
+        if schluss and schluss[-1][0] == "start":
+            ende = ab + schluss[-1][1]
+        elif len(schluss) >= 2 and schluss[-2][0] == "start" and ab + schluss[-1][1] >= float(laenge) - 1.5:
+            ende = ab + schluss[-2][1]
+        if ende is not None and (ende < float(laenge) - 40 or ende > float(laenge) - 0.8):
+            ende = None                             # nur echte Stille am Schluss zaehlt
+        if ende is not None:
+            ende += 0.3
+    STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None}
+    log(f"Stille {vid}: Anfang {anfang:.1f}s, Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge})")
+
+
+def stille_ende(vid, dauer):
+    """Wirksames Songende: Beginn der Schlussstille, sonst die Laenge."""
+    e = (STILLE.get(vid) or {}).get("ende")
+    return min(dauer, e) if (e and dauer) else dauer
+
+
 def kiosk_neu_starten():
     """Haengenden Kiosk-Browser beenden und neu starten. -> True, wenn versucht."""
     treffer = subprocess.run(["pgrep", "-f", "chromium --ozone-platform=wayland"],
@@ -1183,6 +1234,7 @@ def main():
     started = last_pos = last_progress = None
     embed_paused = False  # YouTube-Embed erst anhalten, wenn mpv wirklich laeuft
     xf = None             # laufende Ueberblendung (siehe ueberblenden)
+    stille_beendet = None # Song, der an seiner Schlussstille schon beendet wurde
     MPV_APP["id"] = "mpv"
     # Der hereinkommende Player startet unsichtbar (Titel "xf-ein"); die app_id
     # "mpvxf" schwebt wie "mpv" (die Regel fuer "mpv" steht in der sway-Config).
@@ -1365,6 +1417,9 @@ def main():
 
         def in_cache(key, urls):
             cache[key] = urls
+            if key.endswith("|m"):                  # Musik: Stille am Anfang/Ende messen
+                threading.Thread(target=stille_messen, daemon=True,
+                                 args=(key.split("|", 1)[0], urls[1] or urls[0], urls[2])).start()
             for old in list(cache)[:-4]:   # nur die letzten paar behalten
                 cache.pop(old, None)
 
@@ -1645,6 +1700,16 @@ def main():
                 mpv_bad[shown] = now
                 shown, embed_paused = None, False
 
+        # Ohne Ueberblendung (nichts vorgeladen): an der Schlussstille sofort beenden -
+        # das saubere Ende (Code 0) fuehrt wie gewohnt zum naechsten Song.
+        if (xf is None and musik and shown and shown.startswith("yt:") and mpv is not None
+                and mpv.poll() is None and last_pos is not None and not pausiert and mpv_dauer.get(shown)
+                and stille_ende(shown[3:], mpv_dauer[shown]) < mpv_dauer[shown]
+                and last_pos >= stille_ende(shown[3:], mpv_dauer[shown]) and stille_beendet != shown):
+            stille_beendet = shown
+            log(f"Schlussstille erreicht ({shown}) - naechster Song")
+            mpv_befehl("quit")
+
         # Ueberblendung starten: XF_SEK vor Songende, wenn der naechste Song schon
         # vorgeladen ist (Dashboard: nlMusikVorladen, 60 s vor Schluss).
         vor_x = state.get("vorladen") or {}
@@ -1652,7 +1717,7 @@ def main():
         if (xf is None and musik and n_vid and shown and shown.startswith("yt:") and shown[3:] != n_vid
                 and mpv is not None and mpv.poll() is None and last_pos is not None and not pausiert
                 and mpv_dauer.get(shown) and not state.get("spiel")):
-            rest = mpv_dauer[shown] - last_pos
+            rest = stille_ende(shown[3:], mpv_dauer[shown]) - last_pos   # bis zur Schlussstille
             n_key = schluessel_fuer(n_vid, int(vor_x.get("hoehe") or 0), int(vor_x.get("fps") or 0), True)
             if 2.0 < rest <= XF_SEK and n_key in cache:
                 video_url, audio_url, _laenge = cache[n_key]
@@ -1666,7 +1731,8 @@ def main():
                            "--keepaspect-window=no", "--auto-window-resize=no",
                            "--really-quiet", f"--input-ipc-server={MPV_SOCK_XF}",
                            "--log-file=/home/citycafe/mpv-xf.log", "--volume=0",
-                           "--title=xf-ein", f"--wayland-app-id={neu_app}", "--start=0"]
+                           "--title=xf-ein", f"--wayland-app-id={neu_app}",
+                           f"--start={(STILLE.get(n_vid) or {}).get('anfang') or 0}"]
                 if ton_lautheit:
                     xf_args.append(f"--af={LAUTHEIT_FILTER}")
                 if audio_url:
@@ -1709,7 +1775,7 @@ def main():
             mpv_stand = json.dumps({"videoId": shown[3:], "pos": round(last_pos, 1),
                                     "aufl": mpv_bild.get("aufl") if mpv_bild.get("key") == shown else None,
                                     "fps": mpv_bild.get("fps") if mpv_bild.get("key") == shown else None,
-                                    "dauer": mpv_dauer.get(shown), "pause": pausiert})
+                                    "dauer": stille_ende(shown[3:], mpv_dauer.get(shown)), "pause": pausiert})
         if page_id:
             try:
                 cdp_eval(page_id,
@@ -1749,6 +1815,8 @@ def main():
             if want.startswith("yt:") and nl_ok:
                 video_url, audio_url, laenge = cache[cache_key]
                 start = state.get("start") or 0
+                if musik and not start:             # Stille am Songanfang ueberspringen
+                    start = (STILLE.get(schluessel) or {}).get("anfang") or 0
                 # Beim ersten Auftritt kennt das Dashboard die Laenge noch nicht
                 # und gibt 0 vor; yt-dlp kennt sie schon. Dann hier zufaellig
                 # einsteigen - nie so spaet, dass der Slot ins Videoende laeuft.
