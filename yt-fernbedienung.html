@@ -139,6 +139,10 @@
     .plus-zeile .t { font-size: 28px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .plus-zeile .k { font-size: 22px; color: #9fb0d8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .plus-zeile button { background: transparent; color: #6ea8ff; font-size: 46px; padding: 0 10px; line-height: 1; }
+    .plus-zeile button.pl-weg { color: #ff7b8a; font-size: 32px; }
+    .plus-zeile .pl-griff { font-size: 32px; color: #8fa0d0; padding: 6px 4px 6px 12px; touch-action: none; user-select: none; cursor: grab; }
+    .plus-zeile.zieht { opacity: 0.95; border-color: #2f6bff; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); position: relative; z-index: 5; }
+    .plus-zeile.platzhalter { border-style: dashed; border-color: #2f6bff; background: transparent; }
     .chips { display: flex; flex-wrap: wrap; gap: 10px; }
     .chips button { background: #1d2647; color: #f2f5ff; font-size: 27px; }
     .chips button b { color: #00e5ff; margin-right: 8px; }
@@ -371,7 +375,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-03-ambi';
+    var FASSUNG = '2026-10-04-listen';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -962,19 +966,104 @@
             var titel = Array.isArray(inhalt.titel) ? inhalt.titel : [];
             var d = document.createElement('details');
             d.innerHTML = '<summary><b style="color:#00e5ff">' + esc(p.nr) + '</b> ' + esc(p.name) + ' · ' + (titel.length || '…')
-                + (inhalt.platzhalter ? ' <small style="color:#8ea0c8">(Platzhalter)</small>' : '') + '</summary>'
+                + (inhalt.platzhalter ? ' <small style="color:#8ea0c8">(Platzhalter)</small>' : '')
+                + (inhalt.bearbeitet ? ' <small style="color:#f9a8e8">(bearbeitet)</small>' : '') + '</summary>'
                 + '<div class="nur-chef"><div class="zeiten" style="margin-top:12px">'
                 + '<button type="button" data-a="start">▶ Ganze Playlist starten</button>'
-                + '<button type="button" class="still" data-a="anhaengen">➕ Ganze Playlist anhängen</button></div></div>'
+                + '<button type="button" class="still" data-a="anhaengen">➕ Ganze Playlist anhängen</button>'
+                + (inhalt.bearbeitet ? '<button type="button" class="still" data-a="original">↺ Original wiederherstellen</button>' : '')
+                + '</div><div class="hinweis">✕ löscht einen Song aus der Playlist, ☰ ziehen verschiebt ihn.</div></div>'
                 + '<div class="liste"></div>';
             d.querySelector('[data-a=start]').addEventListener('click', function () { musik('playlist', { nr: p.nr, art: 'start' }); melden('▶ ' + p.name + ' startet', ''); });
             d.querySelector('[data-a=anhaengen]').addEventListener('click', function () { musik('playlist', { nr: p.nr, art: 'anhaengen' }); melden('➕ ' + p.name + ' angehängt', ''); });
+            var orig = d.querySelector('[data-a=original]');
+            if (orig) orig.addEventListener('click', function () { musik('listeOriginal', { nr: p.nr }); melden('↺ ' + p.name + ': Original kommt zurück', ''); });
+            var liste = d.querySelector('.liste');
             var gerendert = false;
+            function zeigen() {
+                listeRendern(liste, titel, function (t, i) { return playlistZeile(t, i, p, titel, liste); });
+            }
             d.addEventListener('toggle', function () {
-                if (d.open && !gerendert) { gerendert = true; listeRendern(d.querySelector('.liste'), titel, plusZeile); }
+                offeneListen[p.nr] = d.open;
+                if (d.open && !gerendert) { gerendert = true; zeigen(); }
             });
+            if (offeneListen[p.nr]) { d.open = true; gerendert = true; zeigen(); }   // nach dem Speichern offen lassen
             box.appendChild(d);
         });
+    }
+
+    // --- Playlist am Handy bearbeiten (Chef): Song loeschen, per ☰ verschieben.
+    // Gespeichert wird die ganze Liste in yt/listen/<nr> mit "bearbeitet: true";
+    // der TV nimmt sie dann statt der Fassung aus dem Repo.
+    var offeneListen = {};
+    function listeSpeichern(p, neu) {
+        if (!verb) return;
+        verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).set({
+            nr: p.nr, name: p.name || '', platzhalter: false, bearbeitet: true, titel: neu,
+            ts: firebase.database.ServerValue.TIMESTAMP
+        }).catch(function (err) {
+            melden(/permission/i.test(err.message) ? 'Nur mit Chef-Anmeldung möglich.' : err.message, 'nein');
+        });
+    }
+    function playlistZeile(t, i, p, titel, liste) {
+        var d = plusZeile(t);
+        d.classList.add('pl-zeile');
+        if (!istChef) return d;
+        var weg = document.createElement('button');
+        weg.type = 'button';
+        weg.className = 'pl-weg';
+        weg.setAttribute('aria-label', 'Aus der Playlist löschen');
+        weg.textContent = '✕';
+        weg.addEventListener('click', function (ev) {
+            ev.stopPropagation();
+            var neu = titel.filter(function (x, j) { return j !== i; });
+            listeSpeichern(p, neu);
+            melden('✕ „' + (t.songtitel || t.titel || '') + '" gelöscht', 'ok');
+        });
+        var griff = document.createElement('span');
+        griff.className = 'griff pl-griff';
+        griff.setAttribute('aria-label', 'Ziehen zum Verschieben');
+        griff.textContent = '☰';
+        d.appendChild(weg);
+        d.appendChild(griff);
+        griff.addEventListener('pointerdown', function (ev) {
+            ev.preventDefault();
+            try { griff.setPointerCapture(ev.pointerId); } catch (e) {}
+            var start = ev.clientY;
+            var platz = document.createElement('div');
+            platz.className = 'plus-zeile platzhalter';
+            platz.style.height = d.getBoundingClientRect().height + 'px';
+            d.classList.add('zieht');
+            d.after(platz);
+            function bewegen(e2) {
+                d.style.transform = 'translateY(' + (e2.clientY - start) + 'px)';
+                var zeilen = [].slice.call(liste.querySelectorAll('.pl-zeile:not(.zieht)'));
+                var ziel = zeilen.find(function (z) { var r = z.getBoundingClientRect(); return e2.clientY < r.top + r.height / 2; });
+                if (ziel) liste.insertBefore(platz, ziel); else if (zeilen.length) zeilen[zeilen.length - 1].after(platz);
+            }
+            function loslassen() {
+                window.removeEventListener('pointermove', bewegen);
+                window.removeEventListener('pointerup', loslassen);
+                window.removeEventListener('pointercancel', loslassen);
+                var reihe = [].slice.call(liste.children).filter(function (c) {
+                    return (c.classList.contains('pl-zeile') && !c.classList.contains('zieht')) || c === platz;
+                });
+                var nach = reihe.indexOf(platz);
+                d.classList.remove('zieht');
+                d.style.transform = '';
+                platz.remove();
+                if (nach < 0 || nach === i) return;
+                var neu = titel.slice();
+                var stueck = neu.splice(i, 1)[0];
+                neu.splice(nach, 0, stueck);
+                listeSpeichern(p, neu);
+                melden('☰ verschoben auf Platz ' + (nach + 1), 'ok');
+            }
+            window.addEventListener('pointermove', bewegen);
+            window.addEventListener('pointerup', loslassen);
+            window.addEventListener('pointercancel', loslassen);
+        });
+        return d;
     }
 
     fetch('yt_playlists.json?v=' + Date.now(), { cache: 'no-store' })

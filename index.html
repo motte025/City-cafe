@@ -8186,15 +8186,34 @@
         // Inhalte aller Playlists fuers Handy ("Listen", aufklappbar) nach
         // yt/listen/<nr> - echte Links liest der Supervisor (24 h Cache),
         // Platzhalter einmal je Seitenstart aus der Songs-Datenbank.
-        function ytmListenLaden() {
+        // Am Handy bearbeitete Playlists (geloescht/verschoben) liegen mit
+        // "bearbeitet: true" in yt/listen/<nr> und gehen der Fassung aus dem Repo
+        // vor - bis der Chef "Original wiederherstellen" drueckt.
+        async function ytmListenLaden() {
             if (!nlFernVerb || !ytmPlaylists.length) return;
             if (!(masterMusicPool || []).length) { setTimeout(ytmListenLaden, 10000); return; }
+            let gespeichert = {};
+            try {
+                gespeichert = (await nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/yt/listen').once('value')).val() || {};
+            } catch (e) {}
             ytmPlaylists.forEach(pl => {
-                if (Array.isArray(pl.titel)) ytmListeMelden(pl, pl.titel);
-                else if (pl.quelle) ytmListenWarteschlange.push(pl);
-                else ytmListeMelden(pl, ytmPlatzhalterTitel(pl));
+                const g = gespeichert[pl.nr];
+                if (g && g.bearbeitet && Array.isArray(g.titel)) ytmListenInhalt[pl.nr] = g.titel.map(t => ytmAufbereiten(t));
+                else ytmListeNeuMelden(pl);
             });
             ytmNaechsteListe();
+            // Aenderungen vom Handy sofort uebernehmen
+            YT_REMOTE_NET.aufListenHoeren(nlFernVerb, NL_FERN_RAUM, alle => {
+                Object.keys(alle || {}).forEach(nr => {
+                    const g = alle[nr];
+                    if (g && g.bearbeitet && Array.isArray(g.titel)) ytmListenInhalt[nr] = g.titel.map(t => ytmAufbereiten(t));
+                });
+            });
+        }
+        function ytmListeNeuMelden(pl) {
+            if (Array.isArray(pl.titel)) ytmListeMelden(pl, pl.titel);
+            else if (pl.quelle) ytmListenWarteschlange.push(pl);
+            else ytmListeMelden(pl, ytmPlatzhalterTitel(pl));
         }
         function ytmNaechsteListe() {
             if (ytmListeLaeuft || ytmPlaylistWartet) return;
@@ -8583,6 +8602,14 @@
             if (was === 'start') {           // "Musik starten" ohne Song
                 if (ytm.eintraege.length) { ytm.modus = 'warteschlange'; ytmWeiter(); }
                 else ytmStimmungStarten();
+                return;
+            }
+            if (was === 'listeOriginal') {  // Chef: bearbeitete Playlist zuruecksetzen
+                const pl = ytmPlaylists.find(p => Number(p.nr) === Number(b.nr));
+                if (!pl) return;
+                delete ytmListenInhalt[pl.nr];
+                ytmListeNeuMelden(pl);
+                ytmNaechsteListe();
                 return;
             }
             if (was === 'playlistLink') {   // Chef: Playlist aus der Playlist-Suche
