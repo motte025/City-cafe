@@ -379,7 +379,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-04-laut3';
+    var FASSUNG = '2026-10-04-pl-hinzu';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -537,9 +537,50 @@
         knopf('⏭ Als Nächstes abspielen', false, function () { if (eintrag) alsNaechstes(eintrag); else einreihen(t, 'naechstes'); });
         if (t.videoId) knopf('📻 Radio-Mix starten', false, function () { radioStarten(t); });
         if (!eintrag) knopf('➕ Ans Ende', true, function () { einreihen(t, 'ende'); });
+        if (t.videoId && playlists.length) knopf('📃 Zu Playlist hinzufügen', true, function () {
+            setTimeout(function () { zuPlaylistMenue(t); }, 0);
+        });
         knopf('Abbrechen', true, function () {});
         hg.classList.add('an');
     }
+    // Song ans Ende einer Playlist haengen (Chef): Auswahl der Playlist im selben Menue.
+    // Gespeichert wie beim Loeschen/Verschieben (yt/listen/<nr>, "bearbeitet").
+    function zuPlaylistMenue(t) {
+        var hg = el('menue-hg'), box = el('menue-knoepfe');
+        el('menue-titel').textContent = '📃 „' + (t.songtitel || t.titel || '') + '" hinzufügen zu …';
+        box.innerHTML = '';
+        playlists.forEach(function (p) {
+            var inhalt = listen[p.nr] || {};
+            var titel = Array.isArray(inhalt.titel) ? inhalt.titel : [];
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'still';
+            b.textContent = p.nr + ' · ' + p.name + ' (' + titel.length + ')';
+            b.addEventListener('click', function () {
+                hg.classList.remove('an');
+                if (titel.some(function (x) { return x.videoId === t.videoId; })) {
+                    melden('Schon in „' + p.name + '"', 'nein');
+                    return;
+                }
+                var neu = titel.concat([{
+                    videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
+                    dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0,
+                    kuenstler: t.kuenstler || '', songtitel: t.songtitel || ''
+                }]);
+                listeSpeichern(p, neu);
+                melden('📃 „' + (t.songtitel || t.titel || '') + '" → ' + p.name, 'ok');
+            });
+            box.appendChild(b);
+        });
+        var ab = document.createElement('button');
+        ab.type = 'button';
+        ab.className = 'still';
+        ab.textContent = 'Abbrechen';
+        ab.addEventListener('click', function () { hg.classList.remove('an'); });
+        box.appendChild(ab);
+        hg.classList.add('an');
+    }
+
     // Warteschlange bereinigen (Chef): Auswahl im selben Unten-Menue wie bei den Songs.
     el('k-leeren').addEventListener('click', function () {
         var hg = el('menue-hg'), box = el('menue-knoepfe');
@@ -822,7 +863,7 @@
             + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div></div></div>'
             + '<div class="knoepfe">'
             + (abPl ? '<button type="button" data-a="abhier">⤵ Ab hier</button>' : '')
-            + (istChef ? '<button type="button" data-a="sofort">▶ Sofort</button><button type="button" class="still" data-a="naechstes">⏭ Nächstes</button><button type="button" class="still" data-a="radio">📻 Radio</button><button type="button" class="still" data-a="ende">➕ Ende</button>'
+            + (istChef ? '<button type="button" data-a="sofort">▶ Sofort</button><button type="button" class="still" data-a="naechstes">⏭ Nächstes</button><button type="button" class="still" data-a="radio">📻 Radio</button><button type="button" class="still" data-a="ende">➕ Ende</button><button type="button" class="still" data-a="pl">📃 Playlist</button>'
                        : '<button type="button" data-a="wunsch">🙋 Wünschen</button>')
             + '</div>'
             + (istChef ? '<details class="klein"><summary>📺 Zur Dauerliste (Rotation)</summary>'
@@ -836,6 +877,7 @@
                 else if (a === 'naechstes' || a === 'ende') einreihen(t, a);
                 else if (a === 'radio') radioStarten(t);
                 else if (a === 'sofort') sofortSpielen(t, null);
+                else if (a === 'pl') zuPlaylistMenue(t);
                 else if (a === 'abhier') {
                     musik('playlistLink', { listId: abPl.playlistId, name: abPl.titel, art: 'start', ab: i, abVideo: t.videoId || '' });
                     melden('⤵ Playlist ab „' + (t.songtitel || t.titel || '') + '" …', '');

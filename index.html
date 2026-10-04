@@ -8309,7 +8309,8 @@
         function ytmPlaylistTitelPruefen() {
             if (!ytmAktiv() || ytmFindeLaeuft || !nlFernVerb) return;
             const vorn = YTW.vorschau(ytm, 1, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN })[0];
-            if (!vorn || vorn.quelle !== 'playlist' || vorn.mvGeprueft || !vorn.videoId) return;
+            // Alle Songs der Warteschlange (Playlist, Radio-Mix, Wunsch, Suche) - nicht nur Playlists
+            if (!vorn || vorn.mvGeprueft || !vorn.videoId) return;
             const e = ytm.eintraege.find(x => x.id === vorn.id);
             if (!e) return;
             e.mvGeprueft = true;
@@ -8421,7 +8422,8 @@
                 ytmFindeLaeuft = null;
                 if (f.treffer) {
                     const ersetzt = Object.assign({}, w.eintrag, { videoId: f.treffer.videoId,
-                        dauer: f.treffer.dauer, dauerSek: f.treffer.dauerSek });
+                        dauer: f.treffer.dauer, dauerSek: f.treffer.dauerSek,
+                        titel: f.treffer.titel || w.eintrag.titel, kanal: f.treffer.kanal || w.eintrag.kanal });
                     ersetze(ersetzt);
                     // Nur spielen, wenn die Musik noch laeuft - kam das Ergebnis erst
                     // nach "Stopp", startete die Musik sonst von selbst wieder.

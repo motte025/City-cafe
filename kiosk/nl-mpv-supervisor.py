@@ -1840,6 +1840,8 @@ def main():
                         treffer = vorschlaege()
                     else:
                         treffer = suchen(text, anzahl)
+                        # Live-/Fan-/Lyric-/Audio-Uploads ans Ende, Reihenfolge sonst wie YouTube
+                        treffer = sorted(treffer, key=lambda t: musikvideo_wertung(t, text) < 0)
                     if not gemischt:
                         log(f"Suche {text!r}: {len(treffer)} Treffer")
                     # art bestaetigt, welche Suche wirklich lief: ein alter Supervisor
