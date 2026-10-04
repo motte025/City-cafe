@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-10-04T15:52:49Z",
+  "checked_at": "2026-10-04T16:12:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "GEBURTSTAGSSTREAM | GIVEAWAYS | BASS AUF DIE OHREN | !holy",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "amazonmusic",
       "name": "AmazonMusic",
       "title": "Amazon Music presents: Shakira Live From Madrid. Sponsored by Epson",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "GEBURTSTAGSSTREAM | GIVEAWAYS | BASS AUF DIE OHREN | !holy",
+      "game": "DJs"
     },
     {
       "platform": "twitch",
