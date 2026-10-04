@@ -2141,10 +2141,10 @@ def main():
                            "--really-quiet", f"--input-ipc-server={MPV_SOCK_XF}",
                            "--log-file=/home/citycafe/mpv-xf.log", "--volume=0",
                            "--title=xf-ein", f"--wayland-app-id={neu_app}",
-                           # So frueh starten, dass der Musikbeginn des neuen Songs ans Ende
-                           # der Ueberblendung faellt (Intro laeuft leise unter dem alten Song) -
-                           # sonst war der Saenger schon mitten im Gesang, wenn der alte weg war.
-                           f"--start={max(0.0, ((STILLE.get(n_vid) or {}).get('anfang') or 0) - (rest - 1.5)):.2f}"]
+                           # So frueh starten, dass der Musikbeginn des neuen Songs in die Mitte
+                           # der Ueberblendung faellt: kein Loch (vorher am Ende: bis -10 dB, wenn
+                           # davor eine leise Filmszene lief), Saenger nicht schon mitten im Gesang.
+                           f"--start={max(0.0, ((STILLE.get(n_vid) or {}).get('anfang') or 0) - rest / 2):.2f}"]
                 xf_args.append(f"--volume-gain={gain_von(n_vid)}")   # leise Songs anheben
                 if ton_lautheit:
                     xf_args.append(f"--af={LAUTHEIT_FILTER}")
