@@ -1391,6 +1391,22 @@ def stille_messen(vid, audio_url, laenge):
                 break
         if ende is not None and not (1.0 <= laenge - ende <= 55):
             ende = None
+        # Pause (>= 2 s fast still) und danach nur noch ein kurzer Nachspann (<= 15 s):
+        # Song endet vor der Pause. Michelle "So oder so" (05.10.2026): Song bis 210 s,
+        # 5 s Stille, 10 s Nachspann - sonst kam die Ueberblendung erst nach der Stille.
+        if ende is not None:
+            still = normal - 30
+            j_ende = int((ende - ab) / 0.5)
+            j = j_ende - 1
+            while j >= 4:
+                if all(w < still for w in schluss[j - 3:j + 1]):
+                    k = j - 3
+                    while k > 0 and schluss[k - 1] < still:
+                        k -= 1
+                    if ende - (ab + (j + 1) * 0.5) <= 15 and k > 0:
+                        ende = ab + k * 0.5
+                    break
+                j -= 1
     if abgl and abgl.get("ende") and abgl["ende"] < laenge - 1:
         ende = min(ende or laenge, abgl["ende"])        # Abspann/Filmszene nach dem Song
     gain = anhebung(audio_url, normal)
