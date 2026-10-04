@@ -1950,6 +1950,15 @@ def main():
                                     "aufl": mpv_bild.get("aufl") if mpv_bild.get("key") == shown else None,
                                     "fps": mpv_bild.get("fps") if mpv_bild.get("key") == shown else None,
                                     "dauer": stille_ende(shown[3:], mpv_dauer.get(shown)), "pause": pausiert})
+        # Waehrend der Ueberblendung ist fuers Dashboard schon der neue Song "jetzt":
+        # dessen Stand melden - sonst stand der Fortschrittsbalken 9 s auf 0 und sprang.
+        if xf is not None and musik:
+            xp = mpv_eigenschaft("time-pos", sock=MPV_SOCK_XF)
+            xd = mpv_eigenschaft("duration", sock=MPV_SOCK_XF)
+            if isinstance(xp, (int, float)):
+                mpv_stand = json.dumps({"videoId": xf["vid"], "pos": round(xp, 1), "aufl": None, "fps": None,
+                                        "dauer": stille_ende(xf["vid"], xd) if isinstance(xd, (int, float)) else None,
+                                        "pause": pausiert})
         if page_id:
             try:
                 cdp_eval(page_id,

@@ -2486,10 +2486,14 @@
             font-size: 22px; font-weight: 800; color: #ffffff; background: rgba(192, 38, 211, 0.9); white-space: nowrap; max-width: 560px; overflow: hidden; text-overflow: ellipsis; }
         .ytv-banner.an { display: block; }
         .ytv-banner.tor { background: rgba(227, 6, 19, 0.92); }
-        .ytv-marke { flex-shrink: 0; display: flex; align-items: center; gap: 22px; margin-left: auto; padding-top: 4px; }
+        /* City Cafe + Uhr fest oben rechts: nicht mehr im Fluss, sonst rueckte das
+           Logo je nach Uhrzeit (Ziffernbreite) und Titellaenge hin und her */
+        .ytv-marke { position: absolute; right: 0; top: 4px; display: flex; align-items: center; gap: 22px; }
+        .ytv-titelblock { margin-right: 560px; }
         .ytv-marke .ytm-citycafe { display: block; font-size: 52px; }
         .ytv-marke i { width: 1px; height: 46px; background: rgba(255, 255, 255, 0.25); }
-        .ytv-marke b { font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900; color: #ffffff; font-variant-numeric: tabular-nums; }
+        .ytv-marke b { font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900; color: #ffffff; font-variant-numeric: tabular-nums;
+            width: 140px; text-align: right; }   /* feste Breite: Ziffern sind verschieden breit */
         .ytv-video { position: absolute; left: 40px; top: 127px; width: 1280px; height: 720px; border-radius: 16px; overflow: hidden;
             background: #000; border: 1px solid rgba(255, 255, 255, 0.12); }
         .ytv-qr { right: 20px; bottom: 20px; }
@@ -2527,7 +2531,7 @@
         .ytv-radio .ytm-kachelzeile { flex: 1 1 0; min-width: 0; padding: 12px; }
         .ytv-radio .ytm-kachel { width: 92px; height: 92px; font-size: 36px; }
         .ytv-radio .ytm-kachel-text b { font-size: 24px; }
-        .ytv-radio .ytm-kachel-text small { font-size: 18px; }
+        .ytv-radio .ytm-kachel-text small { font-size: 22px; font-weight: 700; color: #cbd5e1; }   /* Interpret groesser */
         .nl-player {
             width: 1200px; height: 675px; box-sizing: border-box; position: relative;
             border-radius: 16px; overflow: hidden;
