@@ -4,26 +4,2159 @@
     "name": "Party Hits",
     "zeit": "21:00-08:00",
     "quelle": "",
-    "platzhalter": ["Party-Hit", "Internationale Party-Hits", "Party & Rock", "2000s Party", "90s Party", "80s Party", "Modern Party", "Deutsch Party"]
+    "platzhalter": [
+      "Party-Hit",
+      "Internationale Party-Hits",
+      "Party & Rock",
+      "2000s Party",
+      "90s Party",
+      "80s Party",
+      "Modern Party",
+      "Deutsch Party"
+    ]
   },
   {
     "nr": 2,
     "name": "Schlager",
     "zeit": "17:00-21:00",
     "quelle": "",
-    "platzhalter": ["Schlager", "Party-Schlager", "Schlager-Party", "Schlager & Party", "Modern Schlager"]
+    "platzhalter": [
+      "Schlager",
+      "Party-Schlager",
+      "Schlager-Party",
+      "Schlager & Party",
+      "Modern Schlager"
+    ]
   },
   {
     "nr": 3,
     "name": "Après-Ski",
     "quelle": "",
-    "platzhalter": ["Après-Ski & Ballermann", "Ballermann & Party", "Ballermann"]
+    "platzhalter": [
+      "Après-Ski & Ballermann",
+      "Ballermann & Party",
+      "Ballermann"
+    ]
   },
   {
     "nr": 4,
     "name": "Chill",
     "zeit": "08:00-17:00",
     "quelle": "",
-    "platzhalter": ["Deutsch-Pop", "Charts & Pop", "Pop", "Pop / Soul", "Indie & Alternative"]
+    "platzhalter": [
+      "Deutsch-Pop",
+      "Charts & Pop",
+      "Pop",
+      "Pop / Soul",
+      "Indie & Alternative"
+    ]
+  },
+  {
+    "nr": 5,
+    "name": "Mix 04.10.2026",
+    "beschreibung": "210 Songs: je 70 moderne Schlager, internationale und deutsche Party-Hits (ohne Mallorca), immer 2-2-2 im Wechsel",
+    "quelle": "",
+    "titel": [
+      {
+        "videoId": "wCON7JlxuEI",
+        "titel": "Andrea Berg - Du hast mich tausendmal belogen (Videoclip)",
+        "kanal": "Andrea Berg",
+        "dauer": "3:58",
+        "dauerSek": 238,
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Du hast mich tausendmal belogen",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "SniCL4xbRqw",
+        "titel": "Helene Fischer - Heute Nacht (Offizielles Musikvideo)",
+        "kanal": "Helene Fischer (Official)",
+        "dauer": "2:40",
+        "dauerSek": 160,
+        "kuenstler": "Helene Fischer",
+        "songtitel": "Heute Nacht",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "OPf0YbXqDm0",
+        "titel": "Mark Ronson - Uptown Funk (Official Video) ft. Bruno Mars",
+        "kanal": "Mark Ronson",
+        "dauer": "4:31",
+        "dauerSek": 271,
+        "kuenstler": "Mark Ronson feat. Bruno Mars",
+        "songtitel": "Uptown Funk",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "ZbZSe6N_BXs",
+        "titel": "Pharrell Williams - Happy (Official Video)",
+        "kanal": "Pharrell Williams",
+        "dauer": "4:01",
+        "dauerSek": 241,
+        "kuenstler": "Pharrell Williams",
+        "songtitel": "Happy",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "qdtLCfEcPL4",
+        "titel": "Peter Fox - Alles neu (offizielles Video)",
+        "kanal": "Peter Fox",
+        "dauer": "4:32",
+        "dauerSek": 272,
+        "kuenstler": "Peter Fox",
+        "songtitel": "Alles neu",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "cIfx8QiNXfs",
+        "titel": "Peter Fox - Haus am See [Official Music Video]",
+        "kanal": "Bad Boy Edd",
+        "dauer": "3:38",
+        "dauerSek": 218,
+        "kuenstler": "Peter Fox",
+        "songtitel": "Haus am See",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "utHT9ztnbPA",
+        "titel": "Maite Kelly - Ein Kuss in Paris",
+        "kanal": "aV1tamin",
+        "dauer": "4:49",
+        "dauerSek": 289,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Ein Kuss in Paris",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "DcmBwXQcY5k",
+        "titel": "Beatrice Egli - Alibi (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "2:53",
+        "dauerSek": 173,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Alibi",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "ru0K8uYEZWw",
+        "titel": "Justin Timberlake - CAN'T STOP THE FEELING! (from DreamWorks Animation's \"TROLLS\") (Official Video)",
+        "kanal": "Justin Timberlake",
+        "dauer": "4:46",
+        "dauerSek": 286,
+        "kuenstler": "Justin Timberlake",
+        "songtitel": "Can't Stop the Feeling!",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "TUVcZfQe-Kw",
+        "titel": "Dua Lipa - Levitating Featuring DaBaby (Official Music Video)",
+        "kanal": "Dua Lipa",
+        "dauer": "3:51",
+        "dauerSek": 231,
+        "kuenstler": "Dua Lipa",
+        "songtitel": "Levitating",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "JyNSLuDQtVQ",
+        "titel": "Peter Fox - Zukunft Pink (feat. Inéz) [Official Music Video]",
+        "kanal": "Bad Boy Edd",
+        "dauer": "3:56",
+        "dauerSek": 236,
+        "kuenstler": "Peter Fox feat. Inéz",
+        "songtitel": "Zukunft Pink",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "_yWU0lFghxU",
+        "titel": "Seeed - Ding (official Video)",
+        "kanal": "Seeed",
+        "dauer": "3:31",
+        "dauerSek": 211,
+        "kuenstler": "Seeed",
+        "songtitel": "Ding",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "izHB2EdMngg",
+        "titel": "Vanessa Mai - Ich sterb für dich",
+        "kanal": "Vanessa Mai",
+        "dauer": "3:10",
+        "dauerSek": 190,
+        "kuenstler": "Vanessa Mai",
+        "songtitel": "Ich sterb für dich",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "wOh4ZgX50yQ",
+        "titel": "Kerstin Ott - Rosalinde (Official Visualizer)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "2:08",
+        "dauerSek": 128,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "Rosalinde",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "oygrmJFKYZY",
+        "titel": "Dua Lipa - Don't Start Now (Official Music Video)",
+        "kanal": "Dua Lipa",
+        "dauer": "3:02",
+        "dauerSek": 182,
+        "kuenstler": "Dua Lipa",
+        "songtitel": "Don't Start Now",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "4NRXx6U8ABQ",
+        "titel": "The Weeknd - Blinding Lights (Official Video)",
+        "kanal": "The Weeknd",
+        "dauer": "4:23",
+        "dauerSek": 263,
+        "kuenstler": "The Weeknd",
+        "songtitel": "Blinding Lights",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "qttGJ3il62Y",
+        "titel": "Seeed - Augenbling (official Video)",
+        "kanal": "Seeed",
+        "dauer": "3:46",
+        "dauerSek": 226,
+        "kuenstler": "Seeed",
+        "songtitel": "Augenbling",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "MXTyw6KFElM",
+        "titel": "Deichkind - Remmidemmi (Yippie Yippie Yeah)",
+        "kanal": "deichkindTV",
+        "dauer": "4:00",
+        "dauerSek": 240,
+        "kuenstler": "Deichkind",
+        "songtitel": "Remmidemmi (Yippie Yippie Yeah)",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "0niGz8r9GHc",
+        "titel": "Michelle - Flutlicht (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "4:09",
+        "dauerSek": 249,
+        "kuenstler": "Michelle",
+        "songtitel": "Flutlicht",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "LaGK6VL8lrU",
+        "titel": "Matthias Reim - Ich hab' mich so auf Dich gefreut 1991",
+        "kanal": "Hanss1234",
+        "dauer": "3:17",
+        "dauerSek": 197,
+        "kuenstler": "Matthias Reim",
+        "songtitel": "Ich hab' mich so auf dich gefreut",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "H5v3kku4y6Q",
+        "titel": "Harry Styles - As It Was (Official Video)",
+        "kanal": "Harry Styles",
+        "dauer": "2:46",
+        "dauerSek": 166,
+        "kuenstler": "Harry Styles",
+        "songtitel": "As It Was",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "JGwWNGJdvx8",
+        "titel": "Ed Sheeran - Shape of You (Official Music Video)",
+        "kanal": "Ed Sheeran",
+        "dauer": "4:24",
+        "dauerSek": 264,
+        "kuenstler": "Ed Sheeran",
+        "songtitel": "Shape of You",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "ZPJlyRv_IGI",
+        "titel": "DEICHKIND - Leider Geil (OFFICIAL VIDEO)",
+        "kanal": "deichkindTV",
+        "dauer": "3:09",
+        "dauerSek": 189,
+        "kuenstler": "Deichkind",
+        "songtitel": "Leider geil",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "OntgdM84SDQ",
+        "titel": "Deichkind - Bon Voyage (feat. Nina MC) (Official Video)",
+        "kanal": "Showdown Records",
+        "dauer": "3:33",
+        "dauerSek": 213,
+        "kuenstler": "Deichkind",
+        "songtitel": "Bon Voyage",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "a3I-Xz24Y2o",
+        "titel": "Du und ich",
+        "kanal": "NikPMusic",
+        "dauer": "3:08",
+        "dauerSek": 188,
+        "kuenstler": "Nik P.",
+        "songtitel": "Du und Ich",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "b3PI9lXFB9c",
+        "titel": "Sonia Liebing - Schon längst verliebt (Immer wieder Sonntags 12.07.2026)",
+        "kanal": "86KoelleV2",
+        "dauer": "2:57",
+        "dauerSek": 177,
+        "kuenstler": "Sonia Liebing",
+        "songtitel": "Schon längst verliebt",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "IcrbM1l_BoI",
+        "titel": "Avicii - Wake Me Up (Official Video)",
+        "kanal": "Avicii",
+        "dauer": "4:33",
+        "dauerSek": 273,
+        "kuenstler": "Avicii",
+        "songtitel": "Wake Me Up",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "KJ_kKmRnuSw",
+        "titel": "Avicii Levels (Official Music Video) 2012",
+        "kanal": "FERNANDO KHALIFA",
+        "dauer": "3:48",
+        "dauerSek": 228,
+        "kuenstler": "Avicii",
+        "songtitel": "Levels",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "X6Iv_ZXifKw",
+        "titel": "CRO - Easy (Official Video)",
+        "kanal": "ChimperatorVEVO",
+        "dauer": "3:15",
+        "dauerSek": 195,
+        "kuenstler": "Cro",
+        "songtitel": "Easy",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "8WQMBv2deYQ",
+        "titel": "CRO - Traum (Official Version)",
+        "kanal": "Chimperator Channel",
+        "dauer": "3:39",
+        "dauerSek": 219,
+        "kuenstler": "Cro",
+        "songtitel": "Traum",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "h_0lmDkPeDw",
+        "titel": "Anna-Carina Woitschack - Dieses Gefühl",
+        "kanal": "aV1tamin",
+        "dauer": "4:16",
+        "dauerSek": 256,
+        "kuenstler": "Anna-Carina Woitschack",
+        "songtitel": "Dieses Gefühl",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "gbFVs7pxlfI",
+        "titel": "Anna-Maria Zimmermann - Himmelblaue Augen (offizielles Video)",
+        "kanal": "Schlager für Alle",
+        "dauer": "3:24",
+        "dauerSek": 204,
+        "kuenstler": "Anna-Maria Zimmermann",
+        "songtitel": "Himmelblaue Augen",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "JRfuAukYTKg",
+        "titel": "David Guetta - Titanium ft. Sia (Official Video)",
+        "kanal": "David Guetta",
+        "dauer": "4:06",
+        "dauerSek": 246,
+        "kuenstler": "David Guetta feat. Sia",
+        "songtitel": "Titanium",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "kOkQ4T5WO9E",
+        "titel": "Calvin Harris, Rihanna - This Is What You Came For (Official Video)",
+        "kanal": "Calvin Harris",
+        "dauer": "4:00",
+        "dauerSek": 240,
+        "kuenstler": "Calvin Harris feat. Rihanna",
+        "songtitel": "This Is What You Came For",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "6Mwvi40VSDU",
+        "titel": "MARK FORSTER - CHÖRE (OFFICIAL VIDEO)",
+        "kanal": "MarkForster VEVO",
+        "dauer": "3:29",
+        "dauerSek": 209,
+        "kuenstler": "Mark Forster",
+        "songtitel": "Chöre",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "MtDPKJSsBgc",
+        "titel": "Mark Forster - Au Revoir (Videoclip) ft. Sido",
+        "kanal": "Mark Forster",
+        "dauer": "3:47",
+        "dauerSek": 227,
+        "kuenstler": "Mark Forster feat. Sido",
+        "songtitel": "Au Revoir",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "2Nk0_H6cF9s",
+        "titel": "Amigos - Sommer '65 (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:11",
+        "dauerSek": 191,
+        "kuenstler": "Die Amigos",
+        "songtitel": "Sommer 65",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "lEz7LLEZdVI",
+        "titel": "Fantasy - Eine Nacht im Paradies (Offizielles Video) (2023)",
+        "kanal": "Schlager für Alle",
+        "dauer": "3:52",
+        "dauerSek": 232,
+        "kuenstler": "Fantasy",
+        "songtitel": "Eine Nacht im Paradies",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "tg00YEETFzg",
+        "titel": "Rihanna - We Found Love ft. Calvin Harris",
+        "kanal": "Rihanna",
+        "dauer": "4:36",
+        "dauerSek": 276,
+        "kuenstler": "Rihanna feat. Calvin Harris",
+        "songtitel": "We Found Love",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "XD96scj1kd8",
+        "titel": "LMFAO   Party Rock Anthem Orginal 720p HQ HD ! OFFICIAL VIDEO",
+        "kanal": "Musikmix Germany",
+        "dauer": "4:03",
+        "dauerSek": 243,
+        "kuenstler": "LMFAO",
+        "songtitel": "Party Rock Anthem",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "k9EYjn5f_nE",
+        "titel": "Andreas Bourani - Auf uns (Official Video)",
+        "kanal": "Digster Pop Music",
+        "dauer": "4:04",
+        "dauerSek": 244,
+        "kuenstler": "Andreas Bourani",
+        "songtitel": "Auf uns",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "u96Gr-NWnN4",
+        "titel": "Andreas Bourani - Nur in meinem Kopf (Official Video)",
+        "kanal": "Andreas Bourani",
+        "dauer": "3:51",
+        "dauerSek": 231,
+        "kuenstler": "Andreas Bourani",
+        "songtitel": "Nur in meinem Kopf",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "tAbflMzj5MM",
+        "titel": "Frank Lukas - \"Schach Matt\" (Offizielles Video)",
+        "kanal": "Meiselmusic | Meisel Musikverlage and ZETT RECORDS",
+        "dauer": "3:24",
+        "dauerSek": 204,
+        "kuenstler": "Frank Lukas",
+        "songtitel": "Schach Matt",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "lAHgi-V2dIU",
+        "titel": "CHRISS MARTIN - HIMMEL & HÖLLE",
+        "kanal": "Chriss Martin",
+        "dauer": "3:34",
+        "dauerSek": 214,
+        "kuenstler": "Chriss Martin",
+        "songtitel": "Himmel & Hölle",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "uSD4vsh1zDA",
+        "titel": "The Black Eyed Peas - I Gotta Feeling (Official Music Video)",
+        "kanal": "Black Eyed Peas",
+        "dauer": "4:52",
+        "dauerSek": 292,
+        "kuenstler": "Black Eyed Peas",
+        "songtitel": "I Gotta Feeling",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "EPo5wWmKEaI",
+        "titel": "Pitbull - Give Me Everything ft. Ne-Yo, Afrojack, Nayer",
+        "kanal": "Pitbull",
+        "dauer": "4:27",
+        "dauerSek": 267,
+        "kuenstler": "Pitbull feat. Ne-Yo",
+        "songtitel": "Give Me Everything",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "hlVXwfcmd78",
+        "titel": "Culcha Candela Hamma Official Video",
+        "kanal": "Fisch938",
+        "dauer": "3:36",
+        "dauerSek": 216,
+        "kuenstler": "Culcha Candela",
+        "songtitel": "Hamma!",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "VNWO5N8Vxsc",
+        "titel": "Culcha Candela - Monsta (Official Video)",
+        "kanal": "Culcha TV",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "Culcha Candela",
+        "songtitel": "Monsta",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "Ptv68FZtjy8",
+        "titel": "Michael Fischer - Du bist meine Playlist (Official Video)",
+        "kanal": "Hitmix Music",
+        "dauer": "3:55",
+        "dauerSek": 235,
+        "kuenstler": "Michael Fischer",
+        "songtitel": "Du bist meine Playlist",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "1oSd5Dgfam4",
+        "titel": "Joey Heindle & F.R.David - Schwer zu erklären/Words - | Die \"Giovanni Zarrella Show\" Sommerparty",
+        "kanal": "Standing Ovations II",
+        "dauer": "5:52",
+        "dauerSek": 352,
+        "kuenstler": "Joey Heindle",
+        "songtitel": "Schwer zu erklären (Words)",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "hHUbLv4ThOo",
+        "titel": "Pitbull, Ke$ha - Timber (featuring Ke$ha - Official Video)",
+        "kanal": "Pitbull",
+        "dauer": "3:35",
+        "dauerSek": 215,
+        "kuenstler": "Pitbull feat. Kesha",
+        "songtitel": "Timber",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "3OnnDqH6Wj8",
+        "titel": "Flo Rida - Good Feeling [Official Video]",
+        "kanal": "Flo Rida",
+        "dauer": "4:31",
+        "dauerSek": 271,
+        "kuenstler": "Flo Rida",
+        "songtitel": "Good Feeling",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "pD56S7uPQyY",
+        "titel": "Die Fantastischen Vier - Mfg",
+        "kanal": "lg1292",
+        "dauer": "3:37",
+        "dauerSek": 217,
+        "kuenstler": "Die Fantastischen Vier",
+        "songtitel": "MfG",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "VUosAGDM8Sg",
+        "titel": "Die Fantastischen Vier - Die Da!?! (Offizielles Musikvideo)",
+        "kanal": "Die Fantastischen Vier",
+        "dauer": "3:40",
+        "dauerSek": 220,
+        "kuenstler": "Die Fantastischen Vier",
+        "songtitel": "Die da!?",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "9IeOoXFtAd0",
+        "titel": "Vincent Gross & Esteriore Brothers - Amore mit Mio",
+        "kanal": "Vincent Gross and 2 more",
+        "dauer": "2:49",
+        "dauerSek": 169,
+        "kuenstler": "Vincent Gross & Esteriore Brothers",
+        "songtitel": "Amore mit Mio",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "e-LKnxivGxI",
+        "titel": "Beatrice Egli - Mein Herz",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:20",
+        "dauerSek": 200,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Mein Herz",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "SgM3r8xKfGE",
+        "titel": "Flo Rida - Club Can't Handle Me (feat David Guetta) [Official Video]",
+        "kanal": "Flo Rida",
+        "dauer": "4:06",
+        "dauerSek": 246,
+        "kuenstler": "Flo Rida",
+        "songtitel": "Club Can't Handle Me",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "C-dvTjK_07c",
+        "titel": "Usher - DJ Got Us Fallin' In Love (Official Video) ft. Pitbull",
+        "kanal": "Usher",
+        "dauer": "4:07",
+        "dauerSek": 247,
+        "kuenstler": "Usher feat. Pitbull",
+        "songtitel": "DJ Got Us Fallin' in Love",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "tcV7VN3l3bY",
+        "titel": "Fettes Brot - Jein (Official)",
+        "kanal": "Fettes Brot",
+        "dauer": "5:22",
+        "dauerSek": 322,
+        "kuenstler": "Fettes Brot",
+        "songtitel": "Jein",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "rigxc8puTts",
+        "titel": "Fettes Brot - Emanuela (Official)",
+        "kanal": "Fettes Brot",
+        "dauer": "3:29",
+        "dauerSek": 209,
+        "kuenstler": "Fettes Brot",
+        "songtitel": "Emanuela",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "3_uwjJFw3uw",
+        "titel": "Mitch Keller - Das sind keine Tränen",
+        "kanal": "aV1tamin",
+        "dauer": "3:50",
+        "dauerSek": 230,
+        "kuenstler": "Mitch Keller",
+        "songtitel": "Das sind keine Tränen",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "ctPoLfjnUP4",
+        "titel": "Wolkenfrei, Vanessa Mai - Wolke 7 (Videoclip)",
+        "kanal": "Wolkenfrei",
+        "dauer": "3:53",
+        "dauerSek": 233,
+        "kuenstler": "Vanessa Mai",
+        "songtitel": "Wolke 7",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "VUjdiDeJ0xg",
+        "titel": "Taio Cruz - Dynamite (Official Video)",
+        "kanal": "Taio Cruz",
+        "dauer": "4:10",
+        "dauerSek": 250,
+        "kuenstler": "Taio Cruz",
+        "songtitel": "Dynamite",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "YqeW9_5kURI",
+        "titel": "Major Lazer & DJ Snake - Lean On (feat. MØ) [Official 4K Music Video]",
+        "kanal": "Major Lazer Official",
+        "dauer": "2:59",
+        "dauerSek": 179,
+        "kuenstler": "Major Lazer & DJ Snake",
+        "songtitel": "Lean On",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "iK-1oGphELM",
+        "titel": "die ärzte - Junge (Offizielles Video - Refurbished 2025)",
+        "kanal": "bademeisterTV",
+        "dauer": "3:37",
+        "dauerSek": 217,
+        "kuenstler": "Die Ärzte",
+        "songtitel": "Junge",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "X648-JAusbg",
+        "titel": "Die Ärzte - Zu Spät (08.04.1985)",
+        "kanal": "Liamaniac",
+        "dauer": "2:35",
+        "dauerSek": 155,
+        "kuenstler": "Die Ärzte",
+        "songtitel": "Zu spät",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "gS9RgRXl4NE",
+        "titel": "Christin Stark - Alemania (Offizielles Musikvideo)",
+        "kanal": "Schlagerverliebt and CHRISTIN STARK",
+        "dauer": "3:30",
+        "dauerSek": 210,
+        "kuenstler": "Christin Stark",
+        "songtitel": "Alemania",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "86IKHNyqiiI",
+        "titel": "Zwischen deinen Zeilen",
+        "kanal": "Allessa - Topic",
+        "dauer": "3:14",
+        "dauerSek": 194,
+        "kuenstler": "Allessa",
+        "songtitel": "Zwischen deinen Zeilen",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "PwV1m3A1LjI",
+        "titel": "Major Lazer - Cold Water (feat. Justin Bieber & MØ) (Music Video)",
+        "kanal": "Luis Portillo",
+        "dauer": "3:04",
+        "dauerSek": 184,
+        "kuenstler": "Major Lazer feat. Justin Bieber & MØ",
+        "songtitel": "Cold Water",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "DWir_XczIE8",
+        "titel": "Luis Fonsi, Despacito ft,Daddy Yankee (Official Video)",
+        "kanal": "DJ DY",
+        "dauer": "4:42",
+        "dauerSek": 282,
+        "kuenstler": "Luis Fonsi feat. Daddy Yankee",
+        "songtitel": "Despacito",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "j09hpp3AxIE",
+        "titel": "Die Toten Hosen // „Tage wie diese\" [Offizielles Musikvideo]",
+        "kanal": "DIE TOTEN HOSEN",
+        "dauer": "4:32",
+        "dauerSek": 272,
+        "kuenstler": "Die Toten Hosen",
+        "songtitel": "Tage wie diese",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "6z8o7qAIlIU",
+        "titel": "Die Toten Hosen // „Hier kommt Alex“ [Offizielles Musikvideo]",
+        "kanal": "DIE TOTEN HOSEN",
+        "dauer": "3:56",
+        "dauerSek": 236,
+        "kuenstler": "Die Toten Hosen",
+        "songtitel": "Hier kommt Alex",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "g-BXzGigPt4",
+        "titel": "Marie Reim - Auf allen Sprachen (Te Quiero) (17-7-2026 - Fernsehgarten 26-7-2026)",
+        "kanal": "TMC Hub (The Music Clips Hub)",
+        "dauer": "3:09",
+        "dauerSek": 189,
+        "kuenstler": "Marie Reim",
+        "songtitel": "Auf allen Sprachen (Te Quiero)",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "DIz6ix4N3DA",
+        "titel": "Rosanna Rocci -Solo con te (ZDF FERNSEHGARTEN)",
+        "kanal": "Jürgen Rolf & Friends     ",
+        "dauer": "3:42",
+        "dauerSek": 222,
+        "kuenstler": "Rosanna Rocci",
+        "songtitel": "Balla con me",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "qt7-eaq-4C0",
+        "titel": "Daddy Yankee - Gasolina (Official Music Video)",
+        "kanal": "Scratcher030",
+        "dauer": "5:07",
+        "dauerSek": 307,
+        "kuenstler": "Daddy Yankee",
+        "songtitel": "Gasolina",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "Ntn1-SocNiY",
+        "titel": "Shakira - Waka Waka (This Time For Africa) (Official HD Video) ft. Freshlyground",
+        "kanal": "Shakira",
+        "dauer": "3:20",
+        "dauerSek": 200,
+        "kuenstler": "Shakira",
+        "songtitel": "Waka Waka (This Time for Africa)",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "C4uXGzFZjqw",
+        "titel": "Sportfreunde Stiller - Ein Kompliment",
+        "kanal": "Sportfreunde Stiller",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "Sportfreunde Stiller",
+        "songtitel": "Ein Kompliment",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "gosJRIPbw7k",
+        "titel": "Sportfreunde Stiller and the german Team: 54 74 90 2010",
+        "kanal": "emamuc",
+        "dauer": "3:12",
+        "dauerSek": 192,
+        "kuenstler": "Sportfreunde Stiller",
+        "songtitel": "'54, '74, '90, 2010",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "jaeeiWuXUoo",
+        "titel": "Kerstin Ott - Regenbogenfarben (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "4:02",
+        "dauerSek": 242,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "Regenbogenfarben",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "DRDHdWzzCpE",
+        "titel": "Micha - Timeout (weil ich ein bisschen Zeit brauch) - Offizielles Musikvideo",
+        "kanal": "Micha",
+        "dauer": "3:08",
+        "dauerSek": 188,
+        "kuenstler": "Micha",
+        "songtitel": "Timeout (weil ich ein bisschen Zeit brauch)",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "DUT5rEU6pqM",
+        "titel": "Shakira - Hips Don't Lie (featuring Wyclef Jean) (Official 4K Video) ft. Wyclef Jean",
+        "kanal": "Shakira",
+        "dauer": "3:39",
+        "dauerSek": 219,
+        "kuenstler": "Shakira",
+        "songtitel": "Hips Don't Lie",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "dW2MmuA1nI4",
+        "titel": "Sean Paul - Temperature (Official Video)",
+        "kanal": "VP Records",
+        "dauer": "3:37",
+        "dauerSek": 217,
+        "kuenstler": "Sean Paul",
+        "songtitel": "Temperature",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "ad8ukI7Z-b8",
+        "titel": "Juli - Perfekte Welle (Official Video)",
+        "kanal": "Juli",
+        "dauer": "3:16",
+        "dauerSek": 196,
+        "kuenstler": "Juli",
+        "songtitel": "Perfekte Welle",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "LyYAQHDMqfA",
+        "titel": "SILBERMOND - Das Beste (Offizielles Musikvideo)",
+        "kanal": "Silbermond",
+        "dauer": "4:31",
+        "dauerSek": 271,
+        "kuenstler": "Silbermond",
+        "songtitel": "Das Beste",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "19RE_GTO3n0",
+        "titel": "Helene Fischer - Herzbeben (Die Helene Fischer Show 2019)",
+        "kanal": "Helene Fischer (Official)",
+        "dauer": "3:34",
+        "dauerSek": 214,
+        "kuenstler": "Helene Fischer",
+        "songtitel": "Herzbeben",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "kAsAoyaqh1Y",
+        "titel": "Ben Zucker - Na und?! (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:42",
+        "dauerSek": 222,
+        "kuenstler": "Ben Zucker",
+        "songtitel": "Na und?!",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "31crA53Dgu0",
+        "titel": "Sia - Cheap Thrills (Performance Edit)",
+        "kanal": "Sia",
+        "dauer": "3:38",
+        "dauerSek": 218,
+        "kuenstler": "Sia",
+        "songtitel": "Cheap Thrills",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "QGJuMBdaqIw",
+        "titel": "Katy Perry - Firework (Official Music Video)",
+        "kanal": "Katy Perry",
+        "dauer": "3:54",
+        "dauerSek": 234,
+        "kuenstler": "Katy Perry",
+        "songtitel": "Firework",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "Vf0MC3CFihY",
+        "titel": "Revolverheld - Ich lass für Dich das Licht an (Offizielles Musikvideo)",
+        "kanal": "Revolverheld",
+        "dauer": "5:54",
+        "dauerSek": 354,
+        "kuenstler": "Revolverheld",
+        "songtitel": "Ich lass für dich das Licht an",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "B3VeqAfVDRc",
+        "titel": "Glasperlenspiel - Geiles Leben (Livevideo)",
+        "kanal": "Digster Pop Music",
+        "dauer": "3:31",
+        "dauerSek": 211,
+        "kuenstler": "Glasperlenspiel",
+        "songtitel": "Geiles Leben",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "6saQLL8Fjbg",
+        "titel": "Damiano Maiolini - Schönste Nacht mit Dir (L'Amore) (Lyrics Video)",
+        "kanal": "FiestaRecordsMusic",
+        "dauer": "3:12",
+        "dauerSek": 192,
+        "kuenstler": "Damiano Maiolini",
+        "songtitel": "Schönste Nacht mit Dir (L'amore)",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "uIwTEmLtP6A",
+        "titel": "Jordan Hanson - Hör nie auf zu leuchten (Offizielles Video)",
+        "kanal": "Schlager für Alle",
+        "dauer": "3:38",
+        "dauerSek": 218,
+        "kuenstler": "Jordan Hanson",
+        "songtitel": "Hör nie auf zu leuchten",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "CevxZvSJLk8",
+        "titel": "Katy Perry - Roar",
+        "kanal": "Katy Perry",
+        "dauer": "4:30",
+        "dauerSek": 270,
+        "kuenstler": "Katy Perry",
+        "songtitel": "Roar",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "bESGLojNYSo",
+        "titel": "Lady Gaga - Poker Face (Official Music Video)",
+        "kanal": "Lady Gaga",
+        "dauer": "3:34",
+        "dauerSek": 214,
+        "kuenstler": "Lady Gaga",
+        "songtitel": "Poker Face",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "1apku0pVDeE",
+        "titel": "Wincent Weiss - Feuerwerk (Official Video)",
+        "kanal": "Digster Pop Music",
+        "dauer": "3:33",
+        "dauerSek": 213,
+        "kuenstler": "Wincent Weiss",
+        "songtitel": "Feuerwerk",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "Hliyr7RJIuM",
+        "titel": "Wincent Weiss - Musik Sein (Official Video)",
+        "kanal": "Digster Pop Music",
+        "dauer": "3:14",
+        "dauerSek": 194,
+        "kuenstler": "Wincent Weiss",
+        "songtitel": "Musik sein",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "v3sVUrnKUcE",
+        "titel": "PHÄNOMEN - Ich versprech dir nichts und geb dir alles (Offizielles Musikvideo)",
+        "kanal": "PHÄNOMEN das Schlagertrio",
+        "dauer": "3:54",
+        "dauerSek": 234,
+        "kuenstler": "PHÄNOMEN",
+        "songtitel": "Ich versprech dir nichts und geb dir alles",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "_n_xdIbp1h0",
+        "titel": "Küss mich",
+        "kanal": "Ramon Roselly",
+        "dauer": "3:08",
+        "dauerSek": 188,
+        "kuenstler": "Ramon Roselly",
+        "songtitel": "Küss mich",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "qrO4YZeyl0I",
+        "titel": "Lady Gaga - Bad Romance (Official Music Video)",
+        "kanal": "Lady Gaga",
+        "dauer": "5:09",
+        "dauerSek": 309,
+        "kuenstler": "Lady Gaga",
+        "songtitel": "Bad Romance",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "UqyT8IEBkvY",
+        "titel": "Bruno Mars - 24K Magic (Official Music Video)",
+        "kanal": "Bruno Mars",
+        "dauer": "3:47",
+        "dauerSek": 227,
+        "kuenstler": "Bruno Mars",
+        "songtitel": "24K Magic",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "uC08L4xxjNM",
+        "titel": "Max Giesinger - 80 Millionen (Offizielles Video)",
+        "kanal": "Max Giesinger",
+        "dauer": "4:17",
+        "dauerSek": 257,
+        "kuenstler": "Max Giesinger",
+        "songtitel": "80 Millionen",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "4BAKb2p450Q",
+        "titel": "Tim Bendzko - Nur Noch Kurz Die Welt Retten (Offizielles Video)",
+        "kanal": "Tim Bendzko",
+        "dauer": "3:11",
+        "dauerSek": 191,
+        "kuenstler": "Tim Bendzko",
+        "songtitel": "Nur noch kurz die Welt retten",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "Q9eAMMeiLC0",
+        "titel": "Peter Maffay & Johannes Oerding – Ein Leben lang ist nicht lang (Offizielles Musikvideo)",
+        "kanal": "Johannes Oerding and Peter Maffay Offiziell",
+        "dauer": "3:14",
+        "dauerSek": 194,
+        "kuenstler": "Peter Maffay & Johannes Oerding",
+        "songtitel": "Ein Leben lang ist nicht lang",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "PtgxDLR1CUw",
+        "titel": "JOELINA DREWS - Durch und Durch",
+        "kanal": "JOELINA DREWS",
+        "dauer": "2:44",
+        "dauerSek": 164,
+        "kuenstler": "Joelina Drews",
+        "songtitel": "Durch und Durch",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "nPvuNsRccVw",
+        "titel": "Bruno Mars - Treasure (Official Music Video)",
+        "kanal": "Bruno Mars",
+        "dauer": "3:12",
+        "dauerSek": 192,
+        "kuenstler": "Bruno Mars",
+        "songtitel": "Treasure",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "iEPTlhBmwRg",
+        "titel": "Maroon 5 - Moves Like Jagger ft. Christina Aguilera (Official Music Video) ft. Christina Aguilera",
+        "kanal": "Maroon 5",
+        "dauer": "4:39",
+        "dauerSek": 279,
+        "kuenstler": "Maroon 5",
+        "songtitel": "Moves Like Jagger",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "UJpyFMXtZb4",
+        "titel": "CLUESO - Gewinner (Official Video)",
+        "kanal": "Clueso",
+        "dauer": "4:21",
+        "dauerSek": 261,
+        "kuenstler": "Clueso",
+        "songtitel": "Gewinner",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "CrYYg_atdtk",
+        "titel": "Marteria, Yasha, Miss Platnum - Lila Wolken (Offizielles Musikvideo)",
+        "kanal": "MARTERIA",
+        "dauer": "3:51",
+        "dauerSek": 231,
+        "kuenstler": "Marteria",
+        "songtitel": "Lila Wolken",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "n8NYD5qHdBw",
+        "titel": "Ben Zucker - Was für eine geile Zeit (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:38",
+        "dauerSek": 218,
+        "kuenstler": "Ben Zucker",
+        "songtitel": "Was für eine geile Zeit",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "711mn4t5ww8",
+        "titel": "Andreas Gabalier - I sing a Liad für di (Offizielles Video)",
+        "kanal": "Andreas Gabalier",
+        "dauer": "3:10",
+        "dauerSek": 190,
+        "kuenstler": "Andreas Gabalier",
+        "songtitel": "I sing a Liad für di",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "RbtPXFlZlHg",
+        "titel": "Jason Derulo - Talk Dirty feat. 2 Chainz [Official HD Music Video]",
+        "kanal": "Jason Derulo",
+        "dauer": "3:08",
+        "dauerSek": 188,
+        "kuenstler": "Jason Derulo",
+        "songtitel": "Talk Dirty",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "rClUOdS5Zyw",
+        "titel": "Jason Derulo - \"Want To Want Me\" (Official Video)",
+        "kanal": "Jason Derulo",
+        "dauer": "3:48",
+        "dauerSek": 228,
+        "kuenstler": "Jason Derulo",
+        "songtitel": "Want to Want Me",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "fkMg_X9lHMc",
+        "titel": "Marteria - Kids (2 Finger an den Kopf) (Offizielles Musikvideo)",
+        "kanal": "MARTERIA",
+        "dauer": "3:50",
+        "dauerSek": 230,
+        "kuenstler": "Marteria",
+        "songtitel": "Kids (2 Finger an den Kopf)",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "RveIJFR7LV4",
+        "titel": "SIDO - BILDER IM KOPF (OFFICIAL HD VERSION AGGROTV)",
+        "kanal": "AGGRO.TV",
+        "dauer": "4:19",
+        "dauerSek": 259,
+        "kuenstler": "Sido",
+        "songtitel": "Bilder im Kopf",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "8-Mv16dbHFo",
+        "titel": "Thomas Anders & Florian Silbereisen - Sie sagte doch sie liebt mich (Official Video)",
+        "kanal": "Thomas Anders TV",
+        "dauer": "3:50",
+        "dauerSek": 230,
+        "kuenstler": "Thomas Anders & Florian Silbereisen",
+        "songtitel": "Sie sagte doch sie liebt mich",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "a3EgWAriu28",
+        "titel": "Maite Kelly & Roland Kaiser | Warum hast du nicht nein gesagt | Schlagerboom 2017",
+        "kanal": "Maite Kelly",
+        "dauer": "5:27",
+        "dauerSek": 327,
+        "kuenstler": "Roland Kaiser",
+        "songtitel": "Warum hast du nicht nein gesagt",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "jGflUbPQfW8",
+        "titel": "OMI - Cheerleader (Felix Jaehn Remix) (Official Video) [Ultra Records]",
+        "kanal": "Ultra Records",
+        "dauer": "3:10",
+        "dauerSek": 190,
+        "kuenstler": "OMI",
+        "songtitel": "Cheerleader (Felix Jaehn Remix)",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "1y6smkh6c-0",
+        "titel": "Swedish House Mafia ft. John Martin - Don't You Worry Child (Official Video)",
+        "kanal": "Swedish House Mafia",
+        "dauer": "5:35",
+        "dauerSek": 335,
+        "kuenstler": "Swedish House Mafia",
+        "songtitel": "Don't You Worry Child",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "AMT9IOyXmBM",
+        "titel": "Sido feat. Mark Forster - Einer dieser Steine [Official Video]",
+        "kanal": "Sido",
+        "dauer": "4:18",
+        "dauerSek": 258,
+        "kuenstler": "Sido feat. Mark Forster",
+        "songtitel": "Einer dieser Steine",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "Fo3DAhiNKQo",
+        "titel": "Apache 207 - ROLLER prod. by Lucry & Suena (Official Video)",
+        "kanal": "Apache 207",
+        "dauer": "2:57",
+        "dauerSek": 177,
+        "kuenstler": "Apache 207",
+        "songtitel": "Roller",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "hPUiN4ZxI-A",
+        "titel": "Andreas Gabalier   Hulapalu Official Video",
+        "kanal": "S00plish Offiziell",
+        "dauer": "3:42",
+        "dauerSek": 222,
+        "kuenstler": "Andreas Gabalier",
+        "songtitel": "Hulapalu",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "nBnJZLVPT4M",
+        "titel": "D.J. Ötzi - Sieben Sünden 2009",
+        "kanal": "fritz5119",
+        "dauer": "3:55",
+        "dauerSek": 235,
+        "kuenstler": "DJ Ötzi",
+        "songtitel": "7 Sünden",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "rsj2b3CaIvc",
+        "titel": "Animals Martin Garrix (Official Video)",
+        "kanal": "VEVO Production Video",
+        "dauer": "3:08",
+        "dauerSek": 188,
+        "kuenstler": "Martin Garrix",
+        "songtitel": "Animals",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "u3VTKvdAuIY",
+        "titel": "Kygo, Selena Gomez - It Ain't Me (Official Video)",
+        "kanal": "Kygo and Selena Gomez",
+        "dauer": "4:02",
+        "dauerSek": 242,
+        "kuenstler": "Kygo & Selena Gomez",
+        "songtitel": "It Ain't Me",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "0nYDnTTJgFI",
+        "titel": "Udo Lindenberg x Apache 207 – Komet (Offizielles Musikvideo)",
+        "kanal": "Udo Lindenberg - UTube",
+        "dauer": "4:07",
+        "dauerSek": 247,
+        "kuenstler": "Apache 207 & Udo Lindenberg",
+        "songtitel": "Komet",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "qVSALcVpwkc",
+        "titel": "Nina Chuba - Wildberry Lillet Remix feat. Juju (Official Music Video)",
+        "kanal": "Nina Chuba and jujuvierundvierzig",
+        "dauer": "2:26",
+        "dauerSek": 146,
+        "kuenstler": "Nina Chuba",
+        "songtitel": "Wildberry Lillet",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "4Q8iEL-M5Ck",
+        "titel": "Andrea Berg - Ja ich will (Offizielles Musikvideo)",
+        "kanal": "Andrea Berg",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Ja ich will",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "KJ4MjolpQAg",
+        "titel": "DJ Ötzi, Nik P. - Ein Stern (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "4:19",
+        "dauerSek": 259,
+        "kuenstler": "DJ Ötzi & Nik P.",
+        "songtitel": "Ein Stern",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "VjHMDlAPMUw",
+        "titel": "Lost Frequencies - Are You With Me (Official Music Video)",
+        "kanal": "Armada Music TV",
+        "dauer": "2:24",
+        "dauerSek": 144,
+        "kuenstler": "Lost Frequencies",
+        "songtitel": "Are You With Me",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "bvC_0foemLY",
+        "titel": "Robin Schulz - Sugar (feat. Francesco Yates) (OFFICIAL MUSIC VIDEO)",
+        "kanal": "Robin Schulz and Francesco Yates",
+        "dauer": "3:45",
+        "dauerSek": 225,
+        "kuenstler": "Robin Schulz feat. Francesco Yates",
+        "songtitel": "Sugar",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "PS-VoMqOCc8",
+        "titel": "Ski Aggu – Party Sahne (prod. Endzone & Ericson)",
+        "kanal": "aggu31",
+        "dauer": "2:24",
+        "dauerSek": 144,
+        "kuenstler": "Ski Aggu",
+        "songtitel": "Party Sahne",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "Fpu5a0Bl8eY",
+        "titel": "NENA | 99 Luftballons [1983] [Offizielles HD Musikvideo]",
+        "kanal": "NENA",
+        "dauer": "3:55",
+        "dauerSek": 235,
+        "kuenstler": "Nena",
+        "songtitel": "99 Luftballons",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "wt4hP7rjc7k",
+        "titel": "Maite Kelly - Frei (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL and Maite Kelly",
+        "dauer": "3:32",
+        "dauerSek": 212,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Frei",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "HdNfa8CQZpM",
+        "titel": "Beatrice Egli - Balance (Offizielles Video)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "2:20",
+        "dauerSek": 140,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Balance",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "5j1RCys4R0g",
+        "titel": "felix jaehn - Ain't Nobody (Loves Me Better) (Official Video) ft. Jasmine Thompson",
+        "kanal": "felix jaehn",
+        "dauer": "3:09",
+        "dauerSek": 189,
+        "kuenstler": "Felix Jaehn",
+        "songtitel": "Ain't Nobody (Loves Me Better)",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "60ItHLz5WEA",
+        "titel": "Alan Walker - Faded",
+        "kanal": "Alan Walker",
+        "dauer": "3:33",
+        "dauerSek": 213,
+        "kuenstler": "Alan Walker",
+        "songtitel": "Faded",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "oMHLkcc9I9c",
+        "titel": "NENA | Irgendwie · Irgendwo · Irgendwann [1984] [Offizielles HD Musikvideo]",
+        "kanal": "NENA",
+        "dauer": "4:17",
+        "dauerSek": 257,
+        "kuenstler": "Nena",
+        "songtitel": "Irgendwie, irgendwo, irgendwann",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "y-H895vrIU8",
+        "titel": "Falco - Rock Me Amadeus (Official 4k Music Video)",
+        "kanal": "FALCO",
+        "dauer": "3:21",
+        "dauerSek": 201,
+        "kuenstler": "Falco",
+        "songtitel": "Rock Me Amadeus",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "XSBSZ2Xc1iQ",
+        "titel": "Vanessa Mai - Venedig (Love Is In The Air) (Official Video)",
+        "kanal": "Vanessa Mai",
+        "dauer": "2:38",
+        "dauerSek": 158,
+        "kuenstler": "Vanessa Mai",
+        "songtitel": "Venedig",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "_jhHK2D83yY",
+        "titel": "Kerstin Ott - 1000x No (Official Music Video)",
+        "kanal": "ICH FIND SCHLAGER TOLL and Kerstin Ott",
+        "dauer": "2:40",
+        "dauerSek": 160,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "1000 x Nein",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "m-M1AtrxztU",
+        "titel": "Clean Bandit - Rather Be ft. Jess Glynne [Official Video]",
+        "kanal": "Clean Bandit",
+        "dauer": "4:29",
+        "dauerSek": 269,
+        "kuenstler": "Clean Bandit feat. Jess Glynne",
+        "songtitel": "Rather Be",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "tD4HCZe-tew",
+        "titel": "Zara Larsson - Lush Life (Official Video)",
+        "kanal": "Zara Larsson",
+        "dauer": "3:22",
+        "dauerSek": 202,
+        "kuenstler": "Zara Larsson",
+        "songtitel": "Lush Life",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "vOJs4ALTyq8",
+        "titel": "Rainhard Fendrich - Macho Macho (Musikvideo)",
+        "kanal": "AustrianChrisW",
+        "dauer": "4:41",
+        "dauerSek": 281,
+        "kuenstler": "Rainhard Fendrich",
+        "songtitel": "Macho Macho",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "yI1BGrNk-1w",
+        "titel": "EAV (Erste Allgemeine Verunsicherung) - Ba-Ba Banküberfall (Musikvideo)",
+        "kanal": "nosignalavailable",
+        "dauer": "2:57",
+        "dauerSek": 177,
+        "kuenstler": "EAV",
+        "songtitel": "Ba-Ba-Banküberfall",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "WBST-AqmWRI",
+        "titel": "Michelle - Paris",
+        "kanal": "MichelleMusikVEVO",
+        "dauer": "3:27",
+        "dauerSek": 207,
+        "kuenstler": "Michelle",
+        "songtitel": "Paris",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "tDCHHEN4G3A",
+        "titel": "Matthias Reim - Nächsten Sommer (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "4:02",
+        "dauerSek": 242,
+        "kuenstler": "Matthias Reim",
+        "songtitel": "Nächsten Sommer",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "WXBHCQYxwr0",
+        "titel": "Ava Max - Sweet but Psycho [Official Music Video]",
+        "kanal": "Ava Max",
+        "dauer": "3:28",
+        "dauerSek": 208,
+        "kuenstler": "Ava Max",
+        "songtitel": "Sweet but Psycho",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "90RLzVUuXe4",
+        "titel": "David Guetta & Bebe Rexha - I'm Good (Blue) [Official Music Video]",
+        "kanal": "David Guetta",
+        "dauer": "2:58",
+        "dauerSek": 178,
+        "kuenstler": "David Guetta & Bebe Rexha",
+        "songtitel": "I'm Good (Blue)",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "xREl_68O-mw",
+        "titel": "Wanda - \"Bologna\" (official)",
+        "kanal": "ProblembaerRecords",
+        "dauer": "3:36",
+        "dauerSek": 216,
+        "kuenstler": "Wanda",
+        "songtitel": "Bologna",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "GWgisTPKCdk",
+        "titel": "Seiler und Speer - Ham kummst",
+        "kanal": "jokebrothersproductions",
+        "dauer": "4:25",
+        "dauerSek": 265,
+        "kuenstler": "Seiler und Speer",
+        "songtitel": "Ham kummst",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "UVqbR4MOQ3U",
+        "titel": "Nik P. - Gloria 2016",
+        "kanal": "fritz51242",
+        "dauer": "3:43",
+        "dauerSek": 223,
+        "kuenstler": "Nik P.",
+        "songtitel": "Gloria",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "P-DwkoN91cw",
+        "titel": "DJ Herzbeat, Sonia Liebing - Immer wieder wenn die Sonne scheint (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:03",
+        "dauerSek": 183,
+        "kuenstler": "Sonia Liebing",
+        "songtitel": "Immer wieder wenn die Sonne scheint",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "G7KNmW9a75Y",
+        "titel": "Miley Cyrus - Flowers (Official Video)",
+        "kanal": "MILEY",
+        "dauer": "3:22",
+        "dauerSek": 202,
+        "kuenstler": "Miley Cyrus",
+        "songtitel": "Flowers",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "pok8H_KF1FA",
+        "titel": "Doja Cat - Say So (Official Video)",
+        "kanal": "Doja Cat",
+        "dauer": "3:56",
+        "dauerSek": 236,
+        "kuenstler": "Doja Cat",
+        "songtitel": "Say So",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "KQRaj1vcnrs",
+        "titel": "Peter Schilling - Major Tom (Völlig losgelöst...) | 1st German Video Version 1982",
+        "kanal": "Peter Schilling",
+        "dauer": "4:51",
+        "dauerSek": 291,
+        "kuenstler": "Peter Schilling",
+        "songtitel": "Major Tom (völlig losgelöst)",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "oESfa8jt0p8",
+        "titel": "Spider Murphy Gang - Skandal Im Sperrbezirk • TopPop",
+        "kanal": "TopPop",
+        "dauer": "3:01",
+        "dauerSek": 181,
+        "kuenstler": "Spider Murphy Gang",
+        "songtitel": "Skandal im Sperrbezirk",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "KpOni23ltfM",
+        "titel": "Anna-Carina Woitschack – \"Unzensiert\" | ZDF-Fernsehgarten #music #zdf #fernsehgarten",
+        "kanal": "ZDF",
+        "dauer": "3:07",
+        "dauerSek": 187,
+        "kuenstler": "Anna-Carina Woitschack",
+        "songtitel": "Unzensiert",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "OVbqFlajmGE",
+        "titel": "Anna-Maria Zimmermann - 1000 Träume weit (Torneró) - Version 2020 (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:38",
+        "dauerSek": 218,
+        "kuenstler": "Anna-Maria Zimmermann",
+        "songtitel": "1000 Träume weit",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "IXXxciRUMzE",
+        "titel": "Lizzo - About Damn Time [Official Video]",
+        "kanal": "Lizzo Music",
+        "dauer": "4:06",
+        "dauerSek": 246,
+        "kuenstler": "Lizzo",
+        "songtitel": "About Damn Time",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "2zNSgSzhBfM",
+        "titel": "MACKLEMORE & RYAN LEWIS - CAN'T HOLD US FEAT. RAY DALTON (OFFICIAL MUSIC VIDEO)",
+        "kanal": "Macklemore",
+        "dauer": "7:04",
+        "dauerSek": 424,
+        "kuenstler": "Macklemore & Ryan Lewis",
+        "songtitel": "Can't Hold Us",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "nMWgXn3G2BA",
+        "titel": "Markus - Ich will Spass '95 (Official Video) (EPK)",
+        "kanal": "MarkusVEVO",
+        "dauer": "3:51",
+        "dauerSek": 231,
+        "kuenstler": "Markus",
+        "songtitel": "Ich will Spaß",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "bOLmGydaS0w",
+        "titel": "Trio - Da Da Da (Ich Lieb Dich Nicht Du Liebst Mich Nicht) (1982) Official Music Video",
+        "kanal": "DJ. Zsori. (Free) Italo-Disco.",
+        "dauer": "3:20",
+        "dauerSek": 200,
+        "kuenstler": "Trio",
+        "songtitel": "Da Da Da",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "WMsczXis4y8",
+        "titel": "Die Amigos - Der helle Wahnsinn",
+        "kanal": "Schlagermusikgirl26",
+        "dauer": "3:09",
+        "dauerSek": 189,
+        "kuenstler": "Die Amigos",
+        "songtitel": "Der helle Wahnsinn",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "nUCzMtiAieg",
+        "titel": "Fantasy - Gespenster der Nacht (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:31",
+        "dauerSek": 211,
+        "kuenstler": "Fantasy",
+        "songtitel": "Gespenster der Nacht",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "7wtfhZwyrcc",
+        "titel": "Imagine Dragons - Believer (Official Music Video)",
+        "kanal": "ImagineDragons",
+        "dauer": "3:37",
+        "dauerSek": 217,
+        "kuenstler": "Imagine Dragons",
+        "songtitel": "Believer",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "VPRjCeoBqrI",
+        "titel": "Coldplay - A Sky Full Of Stars (Official Video)",
+        "kanal": "Coldplay",
+        "dauer": "4:14",
+        "dauerSek": 254,
+        "kuenstler": "Coldplay",
+        "songtitel": "A Sky Full of Stars",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "Krr2nWif65Q",
+        "titel": "Hubert Kah - Sternenhimmel (1982)",
+        "kanal": "Hubert Kah Official",
+        "dauer": "2:52",
+        "dauerSek": 172,
+        "kuenstler": "Hubert Kah",
+        "songtitel": "Sternenhimmel",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "b-NSfmhiTBg",
+        "titel": "Udo Lindenberg - Sonderzug nach Pankow 1983",
+        "kanal": "fritz5122",
+        "dauer": "3:14",
+        "dauerSek": 194,
+        "kuenstler": "Udo Lindenberg",
+        "songtitel": "Sonderzug nach Pankow",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "ipbb2wPiHMI",
+        "titel": "Andrea Berg - Simsalabim",
+        "kanal": "aV1tamin",
+        "dauer": "3:48",
+        "dauerSek": 228,
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Simsalabim",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "4Snl5lw-ku4",
+        "titel": "Helene Fischer - Blitz (Offizielles Musikvideo)",
+        "kanal": "Helene Fischer (Official)",
+        "dauer": "2:36",
+        "dauerSek": 156,
+        "kuenstler": "Helene Fischer",
+        "songtitel": "Blitz",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "CCHdMIEGaaM",
+        "titel": "Daft Punk - Get Lucky (Official Video) feat. Pharrell Williams and Nile Rodgers",
+        "kanal": "convar HUN",
+        "dauer": "4:08",
+        "dauerSek": 248,
+        "kuenstler": "Daft Punk feat. Pharrell Williams",
+        "songtitel": "Get Lucky",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "DkeiKbqa02g",
+        "titel": "Calvin Harris, Dua Lipa - One Kiss (Official Video)",
+        "kanal": "Calvin Harris",
+        "dauer": "3:44",
+        "dauerSek": 224,
+        "kuenstler": "Calvin Harris & Dua Lipa",
+        "songtitel": "One Kiss",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "9GI6w6kChsI",
+        "titel": "Westernhagen - Sexy (Offizielles Musikvideo)",
+        "kanal": "Marius Müller-Westernhagen",
+        "dauer": "5:32",
+        "dauerSek": 332,
+        "kuenstler": "Marius Müller-Westernhagen",
+        "songtitel": "Sexy",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "UEJNMkEr1Ls",
+        "titel": "Herbert Grönemeyer Männer",
+        "kanal": "Sailor Pete",
+        "dauer": "3:59",
+        "dauerSek": 239,
+        "kuenstler": "Herbert Grönemeyer",
+        "songtitel": "Männer",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "vDoGydAODDU",
+        "titel": "Maite Kelly - Einfach Hello (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:54",
+        "dauerSek": 234,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Einfach Hello",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "kd0PVwUCRlk",
+        "titel": "Beatrice Egli - Was geht ab (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:43",
+        "dauerSek": 223,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Was geht ab",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "ebXbLfLACGM",
+        "titel": "Calvin Harris - Summer (Official Video)",
+        "kanal": "Calvin Harris",
+        "dauer": "3:54",
+        "dauerSek": 234,
+        "kuenstler": "Calvin Harris",
+        "songtitel": "Summer",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "nCg3ufihKyU",
+        "titel": "Tiësto - The Business (Official Music Video)",
+        "kanal": "Tiësto",
+        "dauer": "3:12",
+        "dauerSek": 192,
+        "kuenstler": "Tiësto",
+        "songtitel": "The Business",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "C5mnE1Cs2sg",
+        "titel": "Rosenstolz - Liebe ist alles (Official Video)",
+        "kanal": "Rosenstolz Official",
+        "dauer": "3:30",
+        "dauerSek": 210,
+        "kuenstler": "Rosenstolz",
+        "songtitel": "Liebe ist alles",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "4VPpzhb0zMQ",
+        "titel": "Ich + Ich - So soll es bleiben (Official Video)",
+        "kanal": "Supreme Sounds",
+        "dauer": "3:46",
+        "dauerSek": 226,
+        "kuenstler": "Ich + Ich",
+        "songtitel": "So soll es bleiben",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "iQyn5Uwefmw",
+        "titel": "Vanessa Mai - Mein Herz schlägt Schlager",
+        "kanal": "Jürgen Rolf & Friends     ",
+        "dauer": "3:23",
+        "dauerSek": 203,
+        "kuenstler": "Vanessa Mai",
+        "songtitel": "Schlager",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "wzDBEZvLVnc",
+        "titel": "Andrea Berg - Diese Nacht ist jede Sünde wert (Offizielles Musikvideo)",
+        "kanal": "Andrea Berg",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Diese Nacht ist jede Sünde wert",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "UbYQErtM9Zk",
+        "titel": "Purple Disco Machine, Sophie and the Giants - Hypnotized (Official Video)",
+        "kanal": "Purple Disco Machine",
+        "dauer": "3:16",
+        "dauerSek": 196,
+        "kuenstler": "Purple Disco Machine",
+        "songtitel": "Hypnotized",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "jIoEaTN7GGo",
+        "titel": "Topic, A7S - Breaking Me",
+        "kanal": "Topic",
+        "dauer": "2:47",
+        "dauerSek": 167,
+        "kuenstler": "Topic & A7S",
+        "songtitel": "Breaking Me",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "Nb_1VwzYwjY",
+        "titel": "adel tawil lieder official music video",
+        "kanal": "Artan Prenaj",
+        "dauer": "3:47",
+        "dauerSek": 227,
+        "kuenstler": "Adel Tawil",
+        "songtitel": "Lieder",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "DraA3PUuoQc",
+        "titel": "Pocahontas - AnnenMayKantereit",
+        "kanal": "AnnenMayKantereit",
+        "dauer": "3:12",
+        "dauerSek": 192,
+        "kuenstler": "AnnenMayKantereit",
+        "songtitel": "Pocahontas",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "itBv21K-DjA",
+        "titel": "Michelle, Matthias Reim - Nicht verdient (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:25",
+        "dauerSek": 205,
+        "kuenstler": "Michelle",
+        "songtitel": "Nicht verdient",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "2HRtW278Lco",
+        "titel": "Matthias Reim - Tattoo (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:02",
+        "dauerSek": 182,
+        "kuenstler": "Matthias Reim",
+        "songtitel": "Tattoo",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "GqIWKUEjO_4",
+        "titel": "Alvaro Soler - Sofia Official Music Video",
+        "kanal": "FUN RADIO 95.3 - Världens största hits",
+        "dauer": "3:36",
+        "dauerSek": 216,
+        "kuenstler": "Alvaro Soler",
+        "songtitel": "Sofia",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "wnJ6LuUFpMo",
+        "titel": "J Balvin, Willy William - Mi Gente (Official Video)",
+        "kanal": "J Balvin and Willy William",
+        "dauer": "3:06",
+        "dauerSek": 186,
+        "kuenstler": "J Balvin & Willy William",
+        "songtitel": "Mi Gente",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "QAcQpjTLs3I",
+        "titel": "SDP feat. Sido - Ne Leiche (Official Video) HD",
+        "kanal": "Chart Musik",
+        "dauer": "5:04",
+        "dauerSek": 304,
+        "kuenstler": "SDP",
+        "songtitel": "Ne Leiche",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "Ahwc-ouFeTQ",
+        "titel": "ALLIGATOAH - Willst Du (OFFICIAL VIDEO) 'Triebwerke' Album (HITBOX)",
+        "kanal": "HITBOX",
+        "dauer": "3:44",
+        "dauerSek": 224,
+        "kuenstler": "Alligatoah",
+        "songtitel": "Willst du",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "haECT-SerHk",
+        "titel": "Helene Fischer - Atemlos durch die Nacht",
+        "kanal": "Helene Fischer (Official)",
+        "dauer": "3:39",
+        "dauerSek": 219,
+        "kuenstler": "Helene Fischer",
+        "songtitel": "Atemlos durch die Nacht",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "INAHBUdhucw",
+        "titel": "Helene Fischer - Null auf 100 (Offizielles Musikvideo)",
+        "kanal": "Helene Fischer (Official)",
+        "dauer": "3:56",
+        "dauerSek": 236,
+        "kuenstler": "Helene Fischer",
+        "songtitel": "Null auf 100",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "hY0EIX_E918",
+        "titel": "Sabrina Carpenter - Espresso (Official Music Video)",
+        "kanal": "BeatStream",
+        "dauer": "4:31",
+        "dauerSek": 271,
+        "kuenstler": "Sabrina Carpenter",
+        "songtitel": "Espresso",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "CGyEd0aKWZE",
+        "titel": "Ellie Goulding - Burn (Official Video)",
+        "kanal": "Ellie Goulding",
+        "dauer": "3:59",
+        "dauerSek": 239,
+        "kuenstler": "Ellie Goulding",
+        "songtitel": "Burn",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "0zm68cRptYo",
+        "titel": "KRAFTKLUB - Songs für Liam (official video)",
+        "kanal": "KRAFTKLUB",
+        "dauer": "3:15",
+        "dauerSek": 195,
+        "kuenstler": "Kraftklub",
+        "songtitel": "Songs für Liam",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "8Rhrs03u8yg",
+        "titel": "Provinz - Was uns high macht (Official Video)",
+        "kanal": "Provinz",
+        "dauer": "3:29",
+        "dauerSek": 209,
+        "kuenstler": "Provinz",
+        "songtitel": "Was uns high macht",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "qBobBt2FA84",
+        "titel": "Maite Kelly - Heute Nacht für immer (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:55",
+        "dauerSek": 235,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Heute Nacht für immer",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "UClJ6Sbh04g",
+        "titel": "Beatrice Egli - Volles Risiko (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:26",
+        "dauerSek": 206,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Volles Risiko",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "xTzNgRbLQB0",
+        "titel": "[4K] Rihanna - Don't Stop The Music Video (Music Video)",
+        "kanal": "MVIDEO4K",
+        "dauer": "3:54",
+        "dauerSek": 234,
+        "kuenstler": "Rihanna",
+        "songtitel": "Don't Stop the Music",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "ViwtNLUqkMY",
+        "titel": "Beyoncé - Crazy In Love ft. JAY Z",
+        "kanal": "Beyoncé",
+        "dauer": "3:57",
+        "dauerSek": 237,
+        "kuenstler": "Beyoncé",
+        "songtitel": "Crazy in Love",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "rnzIN9H_G10",
+        "titel": "LEA - Leiser (Pseudo Video)",
+        "kanal": "LEA",
+        "dauer": "3:29",
+        "dauerSek": 209,
+        "kuenstler": "LEA",
+        "songtitel": "Leiser",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "3ryohiCVq3M",
+        "titel": "Namika -  Lieblingsmensch (Official Video)",
+        "kanal": "Namika",
+        "dauer": "3:11",
+        "dauerSek": 191,
+        "kuenstler": "Namika",
+        "songtitel": "Lieblingsmensch",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "fuu-akHvZAU",
+        "titel": "Vanessa Mai - Regenbogen (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:54",
+        "dauerSek": 234,
+        "kuenstler": "Vanessa Mai",
+        "songtitel": "Regenbogen",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "8ikdldanQZc",
+        "titel": "Liebeskummer lohnt sich doch",
+        "kanal": "Kerstin Ott",
+        "dauer": "3:16",
+        "dauerSek": 196,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "Liebeskummer lohnt sich doch",
+        "gruppe": "Schlager"
+      },
+      {
+        "videoId": "iP6XpLQM2Cs",
+        "titel": "Ke$ha - TiK ToK (Official HD Video)",
+        "kanal": "kesha",
+        "dauer": "3:36",
+        "dauerSek": 216,
+        "kuenstler": "Kesha",
+        "songtitel": "TiK ToK",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "ZaI2IlHwmgQ",
+        "titel": "The Black Eyed Peas - Pump It (Official Music Video)",
+        "kanal": "Black Eyed Peas",
+        "dauer": "3:46",
+        "dauerSek": 226,
+        "kuenstler": "Black Eyed Peas",
+        "songtitel": "Pump It",
+        "gruppe": "International"
+      },
+      {
+        "videoId": "oas9SCVAfgI",
+        "titel": "Johannes Oerding - Kreise (Musikvideo)",
+        "kanal": "Johannes Oerding",
+        "dauer": "3:42",
+        "dauerSek": 222,
+        "kuenstler": "Johannes Oerding",
+        "songtitel": "Kreise",
+        "gruppe": "Deutsch"
+      },
+      {
+        "videoId": "ohHJjPSsW8c",
+        "titel": "SILBERMOND - Leichtes Gepäck (Offizielles Musikvideo)",
+        "kanal": "Silbermond",
+        "dauer": "3:53",
+        "dauerSek": 233,
+        "kuenstler": "Silbermond",
+        "songtitel": "Leichtes Gepäck",
+        "gruppe": "Deutsch"
+      }
+    ]
   }
 ]

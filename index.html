@@ -8170,6 +8170,10 @@
                 ytmPlaylistEinreihen(ytmListenInhalt[pl.nr], art);
                 return;
             }
+            if (Array.isArray(pl.titel) && pl.titel.length) {   // feste Titelliste in yt_playlists.json
+                ytmPlaylistEinreihen(pl.titel.map(x => ytmAufbereiten(Object.assign({}, x))), art);
+                return;
+            }
             if (pl.quelle) {
                 const id = ytmId();
                 ytmPlaylistWartet = { id, pl, art };
@@ -8186,7 +8190,8 @@
             if (!nlFernVerb || !ytmPlaylists.length) return;
             if (!(masterMusicPool || []).length) { setTimeout(ytmListenLaden, 10000); return; }
             ytmPlaylists.forEach(pl => {
-                if (pl.quelle) ytmListenWarteschlange.push(pl);
+                if (Array.isArray(pl.titel)) ytmListeMelden(pl, pl.titel);
+                else if (pl.quelle) ytmListenWarteschlange.push(pl);
                 else ytmListeMelden(pl, ytmPlatzhalterTitel(pl));
             });
             ytmNaechsteListe();
@@ -8203,8 +8208,8 @@
             ytmListenInhalt[pl.nr] = titel.map(t => ytmAufbereiten(t));
             if (!nlFernVerb) return;
             nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/yt/listen/' + pl.nr).set({
-                nr: pl.nr, name: pl.name || '', platzhalter: !pl.quelle,
-                titel: ytmListenInhalt[pl.nr].slice(0, 200).map(t => ({
+                nr: pl.nr, name: pl.name || '', platzhalter: !pl.quelle && !Array.isArray(pl.titel),
+                titel: ytmListenInhalt[pl.nr].slice(0, 250).map(t => ({
                     videoId: t.videoId || '', suche: t.suche || '', titel: t.titel || '',
                     kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', dauer: t.dauer || '',
                     dauerSek: t.dauerSek || 0
