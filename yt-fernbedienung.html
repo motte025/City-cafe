@@ -138,6 +138,10 @@
     .video .knoepfe button.still { background: #1d2647; }
     .plus-zeile { display: flex; align-items: center; gap: 12px; background: #131a33; border: 1px solid #27325c; border-radius: 18px; padding: 14px 16px; margin-top: 10px; }
     .plus-zeile .text { flex: 1; min-width: 0; }
+    .plus-zeile img.mini { width: 150px; height: 84px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #0b1024; }
+    .plus-zeile .q { font-size: 19px; color: #7f8fb8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .plus-zeile .q b { font-weight: 700; color: #c7d2f0; }
+    .plus-zeile .q b.schlecht { color: #ffb36b; }
     .plus-zeile .t { font-size: 28px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .plus-zeile .k { font-size: 22px; color: #9fb0d8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .plus-zeile button { background: transparent; color: #6ea8ff; font-size: 46px; padding: 0 10px; line-height: 1; }
@@ -190,6 +194,8 @@
         .steuerung button { font-size: 22px; padding: 12px 0; }
         .eintrag .t, .plus-zeile .t, .video .t { font-size: 18px; }
         .eintrag .k, .plus-zeile .k, .video .k { font-size: 14px; }
+        .plus-zeile img.mini { width: 96px; height: 54px; border-radius: 6px; }
+        .plus-zeile .q { font-size: 12px; }
         .eintrag .griff, .eintrag .weg { font-size: 22px; }
         .eintrag .nr { font-size: 17px; }
         .video img { width: 120px; }
@@ -379,7 +385,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-04-platz5';
+    var FASSUNG = '2026-10-05-cover';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -850,11 +856,26 @@
 
     // ------------------------------------------------------------------ Passt dazu
     // Zeile mit ＋: Gast wuenscht, Chef: Tippen = ans Ende, lange druecken = als Naechstes.
+    // Art des Videos (damit man die Version erkennt): Musikvideo, nur Audio, Lyric, Live ...
+    function videoArt(t) {
+        var ti = String(t.titel || ''), ka = String(t.kanal || '');
+        if (/ - Topic$/.test(ka) || /\baudio\b/i.test(ti)) return ['🎵 Audio', true];
+        if (/lyric|songtext|letra/i.test(ti)) return ['📝 Lyric', true];
+        if (/visuali[sz]er/i.test(ti)) return ['🖼️ Visualizer', true];
+        if (/\blive\b|en vivo|fernsehgarten|hitparade|\bzdf\b|\bard\b|\borf\b|\bsrf\b|show/i.test(ti)) return ['🎤 Live/TV', true];
+        if (/remix|rmx/i.test(ti)) return ['🎛️ Remix', false];
+        return ['🎬 Video', false];
+    }
     function plusZeile(t, i, abHier) {
         var d = document.createElement('div');
         d.className = 'plus-zeile';
-        d.innerHTML = '<div class="text"><div class="t">' + esc(t.songtitel || t.titel) + '</div><div class="k">'
-            + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div></div><button type="button" class="plus" aria-label="Hinzufügen">＋</button>';
+        var art = videoArt(t);
+        d.innerHTML = (t.videoId ? '<img class="mini" loading="lazy" alt="" src="https://i.ytimg.com/vi/' + esc(t.videoId) + '/mqdefault.jpg">' : '')
+            + '<div class="text"><div class="t">' + esc(t.songtitel || t.titel) + '</div><div class="k">'
+            + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div>'
+            + '<div class="q"><b' + (art[1] ? ' class="schlecht"' : '') + '>' + art[0] + '</b>'
+            + (t.kanal ? ' · ' + esc(String(t.kanal).replace(/ - Topic$/, '')) : '') + '</div>'
+            + '</div><button type="button" class="plus" aria-label="Hinzufügen">＋</button>';
         var knopf = d.querySelector('.plus'), lang = null, langGedrueckt = false;
         if (istChef) d.insertBefore(mehrKnopf(t, null, abHier), knopf);
         knopf.addEventListener('pointerdown', function () {
