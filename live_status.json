@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-04T11:17:45Z",
+  "checked_at": "2026-10-04T11:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "l4uchm3ld3r",
-      "name": "L4uchm3ld3r",
-      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -31,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
+      "channel": "l4uchm3ld3r",
+      "name": "L4uchm3ld3r",
+      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
       "game": "DJs"
     }
   ]
