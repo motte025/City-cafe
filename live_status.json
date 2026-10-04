@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-04T21:02:45Z",
+  "checked_at": "2026-10-04T21:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,13 +20,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "DANCE Classics Sunday  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
