@@ -1280,7 +1280,7 @@ def stille_messen(vid, audio_url, laenge):
 # ueber mpv volume-gain - die Lautstaerke (Handy, 100 %) bleibt, kein Pumpen wie
 # beim dynaudnorm-Ausgleich. Nie ueber die Spitzen hinaus (keine Uebersteuerung).
 GAIN_ZIEL_DB = -11.0       # typische "normale" Lautstaerke (Messung 04.10.2026: -6 bis -22)
-GAIN_AB_DB = 4.0           # erst ab so viel leiser
+GAIN_AB_DB = 2.0           # erst ab so viel leiser (vorher 4 dB)
 GAIN_MAX_DB = 8.0
 GAIN_RESERVE_DB = 1.0      # Abstand der lautesten Spitze zu 0 dBFS
 
