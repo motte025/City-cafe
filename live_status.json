@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-04T17:12:45Z",
+  "checked_at": "2026-10-04T17:22:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music presents: Shakira Live From Madrid. Sponsored by Epson",
-      "game": "Music"
-    },
     {
       "platform": "twitch",
       "channel": "tschessy",
