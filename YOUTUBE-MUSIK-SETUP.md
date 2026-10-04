@@ -1,6 +1,8 @@
 # YouTube-Musik mit Warteschlange, Radio-Mix und neuer Fernbedienung
 
-Handoff-Spec für Claude Code. Stand: 2. Oktober 2026.
+Handoff-Spec für Claude Code. Plan vom 2. Oktober 2026, **umgesetzt und seit
+3. Oktober auf `main`**. Was danach auf Wunsch des Betreibers anders gebaut
+wurde, steht in **Abschnitt 0** – er hat Vorrang vor dem ursprünglichen Text.
 Antwortsprache im Gespräch: Deutsch.
 
 Vorher lesen: `STAND.md`, `FERNBEDIENUNGEN.md`, `KIOSK-SUPERVISOR.md`.
@@ -11,8 +13,37 @@ Vorschaubilder (vom Betreiber abgesegnet) liegen unter `docs/musik/`:
 |---|---|
 | `youtube-variante-1e.png` | **Zielbild TV, normale Ansicht**: 2 große Titel in der oberen Leiste, QR-Code unten rechts im Video, „Passt dazu“ in der Seitenleiste |
 | `youtube-vollbild.png` | **Zielbild TV, Vollbild-Ansicht** (umschaltbar, siehe 6.8) |
-| `youtube-variante-1b.png` | Kopfzeile mit großem „CITY CAFE“, Fortschrittsbalken unter dem Video |
 | `fernbedienung-vorschau.png` | **Zielbild Handy**: Reiter „Jetzt“ und „Suche“ |
+
+---
+
+## 0. Stand 4. Oktober 2026: Änderungen gegenüber dem Plan
+
+Alles aus Abschnitt 1–11 ist umgesetzt, außer den Bluetooth-Tasten (8, der
+Betreiber nutzt nur die Handy-Fernbedienung). Danach hat der Betreiber am
+laufenden System viel nachgeschärft. Diese Punkte gelten statt des
+ursprünglichen Texts:
+
+| Abschnitt | Heute |
+|---|---|
+| 2.2 / 6.5 QR-Code | **vorerst aus** (`YT_QR_AN = false` in `index.html`). Stattdessen zeichnet mpv einen **Kontrastrahmen** (2 px schwarz + 30 px weicher Verlauf, `RAHMEN_*` im Supervisor). |
+| 5.1 Gästewünsche | frühestens **Platz 5** der Schlange, hinter schon wartende Wünsche (`WUNSCH_AB_PLATZ`). |
+| 5.2 Lücken | Statt „< 3 s Stille“ eine **echte Überblendung, 9 s** (`XF_SEK`): zweiter mpv, gleichbleibende Gesamtlautstärke (equal power), Bild per sway-Opacity. Vorladen **40 s** vor Ende (`YT_VORLADEN_SEKUNDEN`). **Intro und Ausklang** werden nach Lautstärke abgeschnitten (ffmpeg-Pegel je 0,5 s): Start, wenn der Song 3 s fast normal laut ist (Intro ≤ 35 s), Ende, sobald er 10 dB darunter fällt. Der neue Song startet so, dass sein Musikbeginn ans Blendenende fällt. |
+| 5.3 Radio-Mix | Mix **ohne Konto-Cookies** (`CITYCAFE_MIX_COOKIES=0`). Neuer Mix **zu jedem Titel** (`MIX_JE_TITEL`); ein schon angekündigter Titel bleibt vorn. **Musikvideos bevorzugt**: Lyric/Audio/„Topic“/Visualizer fliegen raus. „Radio-Mix starten“ legt die Titel **in die Warteschlange** (verschiebbar). |
+| 5.4 Zeitgrenze | **Keine.** Musik läuft bis Stopp (`YT_RADIO_MAX_MIN = Infinity`); ist nichts da, startet die Playlist zur Uhrzeit. **Hos'n Obe ist während der Musik gesperrt**; der Dart-Abend beendet sie, außer der Chef startet sie dabei. |
+| 5.6 Qualität | Kein H.264-Zwang mehr: bei gleicher Auflösung AV1/VP9 (VA-API, ~4 % eines Kerns). |
+| 6.1 Kopfzeile | Überschrift „**Interpret – Titel**“, darunter Genre · Jahr. Widget fest 36 px, Vollbild 48 px, **gekürzt statt verkleinert**. Keine Laufzeit-Anzeige im Widget; Schild „1080p · 25 fps“ aus dem laufenden Player. |
+| 6.2 Obere Leiste | immer „ALS NÄCHSTES“; die Vorschau rechnet wie `weiter()` (= echte Reihenfolge). |
+| 6.6 Seitenleiste | heißt „**Ähnliche Songs**“, füllt die Karte, mit Covern (YouTube-Bild, sonst Songs-Datenbank/iTunes); per Handy umschaltbar auf **Drive-Fotos**. |
+| 6.8 Vollbild | „Gleich dran“: Countdown oben rechts, Titel groß, Interpret türkis (je eine Zeile); Liste „Danach“ füllt die Spalte; City Cafe + Uhr fest oben rechts; Auflösungsschild über der Videoecke. Umschalten über den Umschalt-Wächter (Video erst ausblenden, dann umbauen); `--keepaspect-window=no`. |
+| neu: Bild | **Ambilight** (4×/s per `grim`, normal und Vollbild, per Handy an/aus). **Seitenbalken** (4:3, Hochformat, auch eingebrannte per cropdetect) mit unscharfem eigenem Video gefüllt (~42 % eines Kerns, nur bei diesen Videos). Neuer mpv startet unsichtbar, sichtbar erst wenn er sitzt. |
+| 7 Handy | Suche **Songs/Playlists** (Playlist öffnen, einzelne Titel nehmen), ⋯-Menü je Song (Sofort, Als Nächstes, Radio-Mix starten, Ende), Ziehgriff rechts, „Warteschlange bereinigen“, Fortschrittsbalken antippen = springen, Lauter/Leiser 5er-Schritte (max. 100 %), Knöpfe Vollbild/Fotos/Ambilight/Radio-Mix/„Musik beenden“. Status nur vom Chef-TV (`chefTv`), Listen nur bei Änderung neu gezeichnet (kein Zucken). |
+| 7.3 Playlists | Es gibt keine eigenen Links; die vier Platzhalter bleiben. Playlist-Titel werden vor dem Vorladen gegen das offizielle Musikvideo getauscht, Mixe > 10 min übersprungen. |
+| 8 Bluetooth-Tasten | eingebaut, aber ungenutzt (nur Handy). |
+| 11 Festlegungen | Chef-PIN angelegt (nur Firebase + `citycafe.env`), Bluetooth 100 %. |
+
+Technik-Details: `KIOSK-SUPERVISOR.md` (Überblendung, Intro/Ausklang,
+Seitenbalken, Ambilight), Gesamtstand: `STAND.md`.
 
 ---
 
@@ -216,7 +247,7 @@ nach jedem Song eine Pause. Deshalb:
 - Der Mix wird neu geholt, wenn ein **Wunsch** gespielt wurde (dann ist der
   Wunsch der neue `seed`), sonst erst, wenn weniger als 5 Titel übrig sind.
 
-### 5.4 Wie lange läuft Musik ohne Wünsche?
+### 5.4 Wie lange läuft Musik ohne Wünsche? (heute: bis Stopp, siehe 0)
 
 - Radio läuft höchstens **60 Minuten ohne neuen Wunsch** (`YT_RADIO_MAX_MIN`
   oben in `index.html`), dann zurück zur Rotation. Das ist ein Vorgabewert,
@@ -236,7 +267,7 @@ Vorschlag für die Standardwerte, vom Betreiber anzupassen:
 | 17:00 bis 21:00 | Schlager |
 | ab 21:00 | Party Hits |
 
-### 5.6 Bildqualität: 1080p mit 60 fps
+### 5.6 Bildqualität: 1080p mit 60 fps (heute ohne H.264-Zwang, siehe 0)
 
 Alle Songs der Warteschlange, des Radio-Mixes und der Playlists laufen
 **standardmäßig in 1080p mit 60 fps**. Gibt es das nicht, nimmt yt-dlp die
@@ -368,7 +399,7 @@ Weil mpv über dem Browser liegt, **zeichnet mpv das Kärtchen selbst**:
 - Auf dem W1 mit Bildschirmfoto prüfen, dass der Code aus 3 m Entfernung mit
   einem Handy scannbar ist. Wenn nicht: Größe auf 180 px erhöhen.
 
-### 6.6 Seitenleiste (`#card-rotator`)
+### 6.6 Seitenleiste (`#card-rotator`) (heute „Ähnliche Songs“, siehe 0)
 
 Solange Musik läuft, liegt eine eigene Ebene über dem Rotator:
 
@@ -593,7 +624,7 @@ wie vorher, wenn keine Musik läuft.
 |---|---|
 | Chef-PIN | legt der Betreiber in Firebase an |
 | Wünsche pro Handy | 2 offene |
-| Radio ohne Wunsch | 60 Minuten, dann Rotation |
+| Radio ohne Wunsch | ~~60 Minuten, dann Rotation~~ → läuft bis Stopp (siehe 0) |
 | Uhrzeiten der Stimmungs-Playlists | siehe 5.5 |
 | Playlist-Links | Platzhalter aus der Songs-Datenbank, bis echte Links da sind |
 | Ansicht beim Start der Musik | Normal (`YT_VOLLBILD_STANDARD = false`) |
