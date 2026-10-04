@@ -1408,6 +1408,12 @@ def main():
                 mpv_befehl("set_property", "pause", pausiert)
                 # Pause ist kein Stillstand: der Waechter soll nicht eingreifen.
                 last_progress = time.time()
+            if xf is not None and pausiert:
+                # Pause mitten in der Ueberblendung: Uebergabe sofort abschliessen,
+                # der neue Song (laut Dashboard schon "jetzt") wird angehalten.
+                mpv_befehl("set_property", "pause", True, sock=MPV_SOCK_XF)
+                xf["abbruch"] = True        # Faden hoert auf, Lautstaerken zu aendern
+                xf["fertig"] = True
             log("Pause" if pausiert else "Weiter")
 
         # Bluetooth-Auftrag der Handy-Fernbedienung, ebenfalls im eigenen Thread.
@@ -1591,8 +1597,11 @@ def main():
                 sway(f'[app_id="{xf["app"]}"]', "opacity", "1")
                 mpv_befehl("set_property", "volume", ton_vol)
                 mpv, shown = xf["proc"], want
+                intro_gesprungen = shown        # Start war schon passend gewaehlt
                 started, last_pos, last_progress, embed_paused = time.time(), None, None, False
-                next_place_check, window_seen, pausiert = 0, True, False
+                next_place_check, window_seen = 0, True
+                if pausiert:
+                    mpv_befehl("set_property", "pause", True)
                 mpv_dauer.clear()
                 log(f"Ueberblendung fertig: {xf['vid']}")
                 xf = None
@@ -1769,7 +1778,10 @@ def main():
                            "--really-quiet", f"--input-ipc-server={MPV_SOCK_XF}",
                            "--log-file=/home/citycafe/mpv-xf.log", "--volume=0",
                            "--title=xf-ein", f"--wayland-app-id={neu_app}",
-                           f"--start={(STILLE.get(n_vid) or {}).get('anfang') or 0}"]
+                           # So frueh starten, dass der Musikbeginn des neuen Songs ans Ende
+                           # der Ueberblendung faellt (Intro laeuft leise unter dem alten Song) -
+                           # sonst war der Saenger schon mitten im Gesang, wenn der alte weg war.
+                           f"--start={max(0.0, ((STILLE.get(n_vid) or {}).get('anfang') or 0) - (rest - 1.5)):.2f}"]
                 if ton_lautheit:
                     xf_args.append(f"--af={LAUTHEIT_FILTER}")
                 if audio_url:
