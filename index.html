@@ -2354,7 +2354,8 @@
             font-size: 18px; font-weight: 800; letter-spacing: 0.5px; color: #00f2fe;
             background: rgba(0, 242, 254, 0.12); border: 1px solid rgba(0, 242, 254, 0.4);
         }
-        .ytv-marke .ytm-aufl { font-size: 20px; }
+        body.ytm-an .ytv-aufl:not(:empty) { position: absolute; right: 600px; top: 84px; z-index: 4;
+            font-size: 18px; padding: 5px 12px; }
         /* Song-Laufzeit im Widget weg (Wunsch Betreiber) - der Fortschrittsbalken
            unter dem Video bleibt. Platz geht an die Ueberschrift. */
         body.ytm-an .ytm-zeit { display: none; }
@@ -3273,8 +3274,11 @@
                     <p id="ytv-unter"></p>
                 </div>
                 <div class="ytv-banner" id="ytv-banner"></div>
-                <div class="ytv-marke"><span class="ytm-aufl" id="ytv-aufl"></span><span class="ytm-citycafe">CITY <span>CAFE</span></span><i></i><b id="ytv-uhr">--:--</b></div>
+                <div class="ytv-marke"><span class="ytm-citycafe">CITY <span>CAFE</span></span><i></i><b id="ytv-uhr">--:--</b></div>
             </div>
+            <!-- Aufloesung: ueber der rechten oberen Ecke des Videos (nicht im Kopf -
+                 dort kuerzte sie die Ueberschrift; aufs Video darf kein HTML) -->
+            <span class="ytm-aufl ytv-aufl" id="ytv-aufl"></span>
             <div class="ytv-video" id="yt-vollbild-video">
                 <div class="ytm-qr-html ytv-qr" id="ytv-qr-html"><img alt=""><span>SONG WÜNSCHEN</span></div>
             </div>
