@@ -8241,6 +8241,36 @@
             window.nlFindeAuftrag = { id, text: eintrag.suche || ((eintrag.kuenstler || '') + ' ' + (eintrag.songtitel || '')) };
         }
 
+        // --- Playlists: echte Musikvideos statt Audio-/Lyric-Uploads ---------------
+        // Sobald ein Playlist-Titel als Naechstes dran ist (also Minuten vor dem
+        // Vorladen 40 s vor Songende), wird er geprueft: "Topic"-Audio (Standbild),
+        // Lyric-Videos, Visualizer & Co. werden gegen das offizielle Musikvideo
+        // getauscht (Suche wie ytmFinden), Mixe ueber 10 Minuten uebersprungen.
+        // So steht das richtige Video fest, bevor vorgeladen und ueberblendet wird.
+        const YTM_MV_SCHLECHT = /lyric|lyrics|songtext|\baudio\b|visuali[sz]er|karaoke|sped\s*up|slowed|nightcore|instrumental|\b1\s*hour\b|\bloop\b/i;
+        function ytmKeinMusikvideo(e) {
+            return / - Topic$/.test(e.kanal || '') || YTM_MV_SCHLECHT.test(e.titel || '');
+        }
+        function ytmPlaylistTitelPruefen() {
+            if (!ytmAktiv() || ytmFindeLaeuft || !nlFernVerb) return;
+            const vorn = YTW.vorschau(ytm, 1, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN })[0];
+            if (!vorn || vorn.quelle !== 'playlist' || vorn.mvGeprueft || !vorn.videoId) return;
+            const e = ytm.eintraege.find(x => x.id === vorn.id);
+            if (!e) return;
+            e.mvGeprueft = true;
+            if (YTW.sekunden(e) > 600) {              // stundenlange Mixe: raus
+                ytm = YTW.entfernen(ytm, e.id);
+                YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, e.id).catch(() => {});
+                console.log('[Musik] Mix uebersprungen:', e.titel);
+                ytmAnzeigen();
+                return;
+            }
+            if (ytmKeinMusikvideo(e)) {
+                console.log('[Musik] suche Musikvideo fuer:', e.titel);
+                ytmFinden(Object.assign({}, e, { suche: '' }), false);
+            }
+        }
+
         // --- Radio-Mix (5.3) ----------------------------------------------------
         function ytmRadioPruefen() {
             if (ytmMixLaeuft) return;
@@ -8362,6 +8392,7 @@
         // --- Takt: Vorladen, Platzhalter aufloesen, Hos'n Obe, Radio-Grenze -------
         function ytmTakt() {
             ytmErgebnissePruefen();
+            ytmPlaylistTitelPruefen();
             if (ytmSeiteFotos && ytmAktiv() && !ytmVollbild && Date.now() >= ytmFotoNaechste) {
                 ytmFotoNaechste = Date.now() + 8000;   // alle 8 s ein neues Foto
                 ytmFotoWeiter();
