@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-04T13:07:45Z",
+  "checked_at": "2026-10-04T13:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
     }
   ]
