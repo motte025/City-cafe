@@ -1119,6 +1119,16 @@ def umschalt_waechter():
         umschalt_lage["sperre"] = 0.0
 
 
+def aufloesung_text(breite, hoehe):
+    """Breite/Hoehe -> "1080p" wie bei YouTube (nach der Breite, damit 1920x804
+    Kinoformat als 1080p zaehlt)."""
+    for mind, name in ((3800, "4K"), (2500, "1440p"), (1900, "1080p"), (1260, "720p"),
+                       (840, "480p"), (630, "360p")):
+        if breite >= mind:
+            return name
+    return f"{hoehe}p"
+
+
 def kiosk_neu_starten():
     """Haengenden Kiosk-Browser beenden und neu starten. -> True, wenn versucht."""
     treffer = subprocess.run(["pgrep", "-f", "chromium --ozone-platform=wayland"],
@@ -1198,6 +1208,7 @@ def main():
     finde_id = ""         # zuletzt bearbeiteter Finde-Auftrag
     pausiert = False
     mpv_dauer = {}        # "yt:<id>" -> Laenge laut mpv (einmal je Song abgefragt)
+    mpv_bild = {}         # {key, aufl, fps} - laufende Aufloesung (einmal je Song)
     eilig_bis = 0.0       # bis wann nach einem Flaechenwechsel haeufig nachplatziert wird
     flaeche_jetzt = None  # "yt" / "yt_voll" / "twitch" / "cam" - wo mpv gerade liegt
     threading.Thread(target=ambi_schleife, daemon=True).start()
@@ -1686,7 +1697,17 @@ def main():
                 if isinstance(d, (int, float)) and d > 0:
                     mpv_dauer.clear()
                     mpv_dauer[shown] = float(d)
+            # Laufende Aufloesung/Bildrate fuers Dashboard (einmal je Song, wenn bekannt)
+            if mpv_bild.get("key") != shown:
+                b, h = mpv_eigenschaft("video-params/w"), mpv_eigenschaft("video-params/h")
+                fps = mpv_eigenschaft("container-fps") or mpv_eigenschaft("estimated-vf-fps")
+                if isinstance(b, int) and isinstance(h, int) and b > 0:
+                    mpv_bild.clear()
+                    mpv_bild.update(key=shown, aufl=aufloesung_text(b, h),
+                                    fps=round(fps) if isinstance(fps, (int, float)) else None)
             mpv_stand = json.dumps({"videoId": shown[3:], "pos": round(last_pos, 1),
+                                    "aufl": mpv_bild.get("aufl") if mpv_bild.get("key") == shown else None,
+                                    "fps": mpv_bild.get("fps") if mpv_bild.get("key") == shown else None,
                                     "dauer": mpv_dauer.get(shown), "pause": pausiert})
         if page_id:
             try:

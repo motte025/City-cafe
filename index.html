@@ -2347,11 +2347,19 @@
            (nl-player) liegt KEIN HTML - mpv ist ein eigenes Fenster darueber. */
         .ytm-zeit, .ytm-citycafe, .ytm-fortschritt, .ytm-leiste, .ytm-seite, .ytm-qr-html { display: none; }
         body.ytm-an .nl-badge { display: none; }
+        /* Laufende Aufloesung/Bildrate (vom Supervisor, nlMpvStand.aufl/fps) */
+        .ytm-aufl { display: none; }
+        body.ytm-an .ytm-aufl:not(:empty) {
+            display: block; padding: 7px 14px; border-radius: 10px; white-space: nowrap;
+            font-size: 18px; font-weight: 800; letter-spacing: 0.5px; color: #00f2fe;
+            background: rgba(0, 242, 254, 0.12); border: 1px solid rgba(0, 242, 254, 0.4);
+        }
+        .ytv-marke .ytm-aufl { font-size: 20px; }
         /* Song-Laufzeit im Widget weg (Wunsch Betreiber) - der Fortschrittsbalken
            unter dem Video bleibt. Platz geht an die Ueberschrift. */
         body.ytm-an .ytm-zeit { display: none; }
         /* Ueberschrift "Interpret – Titel" immer gleich gross, nicht verkleinert */
-        body.ytm-an .nl-header h2 { font-size: 36px; max-width: 840px; }
+        body.ytm-an .nl-header h2 { font-size: 36px; max-width: 700px; }   /* Platz fuer Aufloesung + City Cafe */
         .ytm-citycafe {
             font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 44px; line-height: 1;
             letter-spacing: 1px; color: #ffffff; white-space: nowrap;
@@ -3032,6 +3040,7 @@
                             <div class="nl-header-right">
                                 <div class="nl-counter" id="nl-counter" style="display: none;">1/3</div>
                                 <div class="ytm-zeit" id="ytm-zeit">0:00 / 0:00</div>
+                                <div class="ytm-aufl" id="ytm-aufl"></div>
                                 <div class="nl-badge">Nightlife</div>
                                 <div class="ytm-citycafe">CITY <span>CAFE</span></div>
                             </div>
@@ -3264,7 +3273,7 @@
                     <p id="ytv-unter"></p>
                 </div>
                 <div class="ytv-banner" id="ytv-banner"></div>
-                <div class="ytv-marke"><span class="ytm-citycafe">CITY <span>CAFE</span></span><i></i><b id="ytv-uhr">--:--</b></div>
+                <div class="ytv-marke"><span class="ytm-aufl" id="ytv-aufl"></span><span class="ytm-citycafe">CITY <span>CAFE</span></span><i></i><b id="ytv-uhr">--:--</b></div>
             </div>
             <div class="ytv-video" id="yt-vollbild-video">
                 <div class="ytm-qr-html ytv-qr" id="ytv-qr-html"><img alt=""><span>SONG WÜNSCHEN</span></div>
@@ -8790,6 +8799,14 @@
         // Sekuendlich: Zeit, Fortschritt, "in 1:32", Countdown, Uhr, Einblendungen.
         function ytmZeitAnzeigen() {
             if (!document.body.classList.contains('ytm-an')) return;
+            // Aufloesung des laufenden Songs (nur wenn mpv sie fuer diesen Song kennt)
+            const ms = window.nlMpvStand;
+            const auflText = (ms && ytm.jetzt && ms.videoId === ytm.jetzt.videoId && ms.aufl)
+                ? ms.aufl + (ms.fps ? ' · ' + ms.fps + ' fps' : '') : '';
+            ['ytm-aufl', 'ytv-aufl'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.textContent !== auflText) el.textContent = auflText;
+            });
             const st = ytmStand();
             const pos = st.pos, dauer = st.dauer;
             const anteil = dauer ? Math.min(100, pos / dauer * 100) : 0;
