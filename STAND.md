@@ -90,6 +90,13 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   10 s nach /home/citycafe/bt-waechter.csv; reißt eine Verbindung von selbst ab,
   verbindet er neu (jeder zweite Versuch mit Adapter aus/an) und warnt am Handy.
   Ohne vorherigen Abbruch und nach „Trennen" bleibt es beim Knopf.
+  **Notfall-Handgriff, wenn der B03 hängt** (lehnt jede Verbindung ab, knackt,
+  Kernel meldet „ACL packet for unknown connection handle"): Stromtrennen allein
+  reichte am 05.10. nicht. Den Schalter am B03 einmal auf TX und zurück auf **RX**
+  stellen, dann ging es. Danach war ein Neukoppeln nötig, weil die alte
+  Kopplung gelöscht war (bluetoothctl mit Agent NoInputNoOutput: pair,
+  trust, connect). Der LG-TV taucht selbst als Bluetooth-Gerät auf; der B03
+  gehört nicht in seine Geräteliste.
 - **Bluetooth zur Anlage**: 1Mii B03 Pro (Empfänger, RX) gekoppelt; der
   Betreiber nimmt genau diesen ins Café mit, dort ist also kein Koppeln
   nötig. Ein weiterer Empfänger müsste einmal gekoppelt werden
