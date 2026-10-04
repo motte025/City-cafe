@@ -302,6 +302,11 @@
         /* .video-extern: der Nightlife-Slot laeuft im Kiosk ueber mpv (eigener
            Prozess, siehe nlExtern()) - Chromium dekodiert dann nichts, die
            Laufschrift darf weiterlaufen. */
+        /* ... und das angehaltene YouTube-Embed darunter bleibt unsichtbar: beim
+           Umschalten oder Songwechsel ist mpv kurz ausgeblendet, sonst sah man in
+           der Luecke das Standbild vom Videoanfang ("falsches Cover"). Die Flaeche
+           bleibt gleich gross (visibility), mpv misst sie weiter. */
+        body.video-extern iframe#nl-player-frame { visibility: hidden; }
 
         /* ==================================================================
            Dauerhaft sparsam gerendert
