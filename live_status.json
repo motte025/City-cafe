@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-04T10:57:46Z",
+  "checked_at": "2026-10-04T11:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Sunday <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
