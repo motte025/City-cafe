@@ -331,7 +331,7 @@
     <details class="nur-chef" id="ton-box">
         <summary>🔊 Ton</summary>
         <div class="feldname">Lautstärke <span id="lautwert">100 %</span></div>
-        <input type="range" id="laut" min="0" max="100" step="5" value="100">
+        <input type="range" id="laut" min="0" max="100" step="1" value="100">
         <div class="hinweis">Leise Songs hebt der Screen automatisch an (ohne Übersteuern).</div>
     </details>
     <details class="nur-chef">
@@ -379,7 +379,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-04-ohne-ausgleich';
+    var FASSUNG = '2026-10-04-laut3';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -1202,13 +1202,24 @@
           hoehe, function (w) { hoehe = w; qualitaetSenden(); });
     reihe('bildraten', [{ wert: 0, text: 'Egal' }, { wert: 60, text: '60 fps' }, { wert: 30, text: '30 fps' }],
           fps, function (w) { fps = w; qualitaetSenden(); });
-    el('laut').addEventListener('input', function () { el('lautwert').textContent = el('laut').value + ' %'; el('laut-jetzt').textContent = el('laut').value + ' %'; });
-    // Lauter/Leiser in 5er-Schritten direkt in der Jetzt-Karte (die Handy-
+    // Lautstaerke-Stufen: bis 70 % in 5er-, darueber in 3er-Schritten (70, 73 ... 97, 100).
+    var LAUT_STUFEN = [];
+    for (var ls = 0; ls < 70; ls += 5) LAUT_STUFEN.push(ls);
+    for (ls = 70; ls <= 100; ls += 3) LAUT_STUFEN.push(ls);
+    function lautNaechsteStufe(v) {
+        return LAUT_STUFEN.reduce(function (a, b) { return Math.abs(b - v) < Math.abs(a - v) ? b : a; });
+    }
+    el('laut').addEventListener('input', function () {
+        el('laut').value = lautNaechsteStufe(Number(el('laut').value));
+        el('lautwert').textContent = el('laut').value + ' %'; el('laut-jetzt').textContent = el('laut').value + ' %';
+    });
+    // Lauter/Leiser stufenweise direkt in der Jetzt-Karte (die Handy-
     // Lautstaerketasten erreicht eine Webseite nicht). Mehrfach tippen sammelt
     // sich und geht nach kurzer Pause als ein Befehl raus.
     var lautUhr = null;
     function lautSchritt(d) {
-        var v = Math.max(0, Math.min(100, Math.round((Number(el('laut').value) + d) / 5) * 5));
+        var i = LAUT_STUFEN.indexOf(lautNaechsteStufe(Number(el('laut').value)));
+        var v = LAUT_STUFEN[Math.max(0, Math.min(LAUT_STUFEN.length - 1, i + (d > 0 ? 1 : -1)))];
         el('laut').value = v;
         el('lautwert').textContent = v + ' %';
         el('laut-jetzt').textContent = v + ' %';
