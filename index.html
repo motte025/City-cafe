@@ -8584,6 +8584,16 @@
                 return;
             }
             if (was === 'skip') { if (ytmAktiv()) ytmWeiter(); return; }
+            if (was === 'blenden') {        // Chef: jetzt zum naechsten Song ueberblenden (Supervisor)
+                if (!ytmAktiv()) return;
+                const n = YTW.vorschau(ytm, 1, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN })[0];
+                if (!nlExtern() || !n || !n.videoId) { ytmWeiter(); return; }   // Browser-Player: normal weiter
+                window.nlMusikVorladen = { videoId: n.videoId, hoehe: ytmQualitaet.hoehe, fps: ytmQualitaet.fps };
+                window.nlJetztBlenden = { id: ytmId() };
+                const meins = window.nlJetztBlenden;
+                setTimeout(() => { if (window.nlJetztBlenden === meins) window.nlJetztBlenden = null; }, 45000);
+                return;
+            }
             if (was === 'zurueck') { if (ytmAktiv()) ytmSpielen(ytm.jetzt); return; }   // Song von vorn
             if (was === 'stopp') { ytmBeenden(); return; }
             if (was === 'pause' || was === 'weiter' || was === 'pauseUm') {

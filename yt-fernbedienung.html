@@ -238,7 +238,7 @@
             <button type="button" id="k-zurueck" title="Song von vorn">⏮</button>
             <button type="button" class="haupt" id="k-pause" title="Pause / weiter">⏸</button>
             <button type="button" id="k-skip" title="Überspringen">⏭</button>
-            <button type="button" id="k-ton" title="Ton">🔊</button>
+            <button type="button" id="k-blend" title="Jetzt zum nächsten Song überblenden">⤨</button>
         </div>
         <div class="zeile2 nur-chef laut-zeile">
             <button type="button" id="k-leiser" aria-label="Leiser">🔉 −</button>
@@ -385,7 +385,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-cover';
+    var FASSUNG = '2026-10-05-blende';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -833,7 +833,7 @@
     el('k-pause').addEventListener('click', function () { musik('pauseUm'); });
     el('k-skip').addEventListener('click', function () { musik('skip'); melden('⏭ Übersprungen', ''); });
     el('k-zurueck').addEventListener('click', function () { musik('zurueck'); });
-    el('k-ton').addEventListener('click', function () { reiterZeigen('mehr'); el('ton-box').open = true; el('ton-box').scrollIntoView(); });
+    el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⤨ Blende zum nächsten Song …', ''); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
     // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
     el('k-radio').addEventListener('click', function () {

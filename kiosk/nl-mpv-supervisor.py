@@ -239,6 +239,8 @@ STATE_EXPR = """JSON.stringify({
   musik: !!window.nlMusik,
   // Naechster Song zum Vorladen: { videoId, hoehe, fps } (5.2)
   vorladen: window.nlMusikVorladen || null,
+  // Chef: jetzt sofort zum naechsten Song ueberblenden (mitten im Song): { id }
+  blenden: window.nlJetztBlenden || null,
   // Die naechsten Songs der Warteschlange (videoIds) zum Vorab-Messen
   analyse: window.nlMusikAnalyse || null,
   // Radio-Mix zum Song: { id, videoId } -> window.nlMixErgebnis
@@ -1667,6 +1669,7 @@ def main():
     # Handy), Vorladen (Song endet bald), Mix, Playlist.
     neben = None
     analyse_arbeiter = None   # misst Intro/Ausklang/Anhebung der naechsten Songs im Voraus
+    blend_erledigt = None     # id des zuletzt ausgefuehrten "Jetzt ueberblenden"
     such_id = ""          # zuletzt bearbeiteter Suchauftrag
     mix_id = ""           # zuletzt bearbeiteter Mix-Auftrag
     playlist_id = ""      # zuletzt bearbeiteter Playlist-Auftrag
@@ -2206,6 +2209,14 @@ def main():
                 and mpv_dauer.get(shown) and not state.get("spiel")):
             rest = stille_ende(shown[3:], mpv_dauer[shown]) - last_pos   # bis zur Schlussstille
             n_key = schluessel_fuer(n_vid, int(vor_x.get("hoehe") or 0), int(vor_x.get("fps") or 0), True)
+            # Chef am Handy: "Ueberblenden" mitten im Song - sobald der naechste Song
+            # aufgeloest ist, mit der normalen Blende (XF_SEK) hinueber.
+            blend = state.get("blenden") or {}
+            blend_jetzt = bool(blend.get("id")) and blend.get("id") != blend_erledigt and rest > XF_SEK
+            if blend_jetzt and n_key in cache:
+                blend_erledigt = blend.get("id")
+                rest = XF_SEK
+                log(f"Ueberblenden auf Wunsch ({shown[3:]} bei {last_pos:.0f}s)")
             if 2.0 < rest <= XF_SEK and n_key in cache:
                 video_url, audio_url, _laenge = cache[n_key]
                 neu_app = "mpvxf" if MPV_APP["id"] == "mpv" else "mpv"
