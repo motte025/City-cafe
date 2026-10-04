@@ -1134,6 +1134,7 @@ def main():
     finde_id = ""         # zuletzt bearbeiteter Finde-Auftrag
     pausiert = False
     mpv_dauer = {}        # "yt:<id>" -> Laenge laut mpv (einmal je Song abgefragt)
+    eilig_bis = 0.0       # bis wann nach einem Flaechenwechsel haeufig nachplatziert wird
     flaeche_jetzt = None  # "yt" / "yt_voll" / "twitch" / "cam" - wo mpv gerade liegt
     threading.Thread(target=ambi_schleife, daemon=True).start()
     qr_karte = None       # PIL-Bild des QR-Kaertchens
@@ -1489,6 +1490,7 @@ def main():
                         log(f"Flaeche: {flaeche_jetzt} -> {rect_art}")
                     flaeche_jetzt = rect_art
                     next_place_check = 0
+                    eilig_bis = now + 3
                 # Lage pruefen: bis das Fenster sitzt jede Runde, danach alle 5 s.
                 if now >= next_place_check:
                     target = measured_rect(page_id, target, rect_art)
@@ -1497,7 +1499,9 @@ def main():
                             window_seen = True
                             sway(f'[app_id="{MPV_APP["id"]}"]', "opacity", "1")   # sitzt: jetzt zeigen
                             log(f"mpv-Fenster da nach {now - started:.1f}s")
-                        next_place_check = now + 5
+                        # nach einem Flaechenwechsel 3 s lang oft nachpruefen (die Seite
+                        # kann noch umbauen), sonst alle 5 s
+                        next_place_check = now + (0.3 if now < eilig_bis else 5)
                         # QR-Kaertchen: nur bei Musik, nicht bei Nightlife/DJ/Dartcam.
                         qr_info = state.get("qr") or {}
                         if musik and art == "yt" and qr_info.get("id"):
