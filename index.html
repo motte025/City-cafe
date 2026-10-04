@@ -8298,9 +8298,13 @@
         // Lyric-Videos, Visualizer & Co. werden gegen das offizielle Musikvideo
         // getauscht (Suche wie ytmFinden), Mixe ueber 10 Minuten uebersprungen.
         // So steht das richtige Video fest, bevor vorgeladen und ueberblendet wird.
-        const YTM_MV_SCHLECHT = /lyric|lyrics|songtext|\baudio\b|visuali[sz]er|karaoke|sped\s*up|slowed|nightcore|instrumental|\b1\s*hour\b|\bloop\b/i;
+        const YTM_MV_SCHLECHT = /lyric|lyrics|songtext|\baudio\b|visuali[sz]er|karaoke|sped\s*up|slowed|nightcore|instrumental|\b1\s*hour\b|\bloop\b|making of|behind the scenes|hinter den kulissen|reportage|teaser|trailer/i;
+        // Live-Mitschnitte, TV-Auftritte und Fan-Uploads gelten auch als "kein Musikvideo"
+        // (Shakira "La Tortura" kam von "TheShakiraFan97", 04.10.2026).
+        const YTM_MV_LIVE = /\blive\b|en vivo|ao vivo|concierto|\btour\b|festival|fernsehgarten|hitparade|\bzdf\b|\bsrf\b|\borf\b/i;
         function ytmKeinMusikvideo(e) {
-            return / - Topic$/.test(e.kanal || '') || YTM_MV_SCHLECHT.test(e.titel || '');
+            return / - Topic$/.test(e.kanal || '') || YTM_MV_SCHLECHT.test(e.titel || '')
+                || YTM_MV_LIVE.test(e.titel || '') || /fan|lyric|karaoke/i.test(e.kanal || '');
         }
         function ytmPlaylistTitelPruefen() {
             if (!ytmAktiv() || ytmFindeLaeuft || !nlFernVerb) return;

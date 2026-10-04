@@ -685,13 +685,25 @@ MIX_MIT_COOKIES = os.environ.get("CITYCAFE_MIX_COOKIES", "1") != "0"
 # Lyric-/Audio-/Topic-/Visualizer-Uploads (Standbild am TV) moeglichst raus.
 MV_GUT = re.compile(r"official\s+(music\s+)?video|offizielles\s+(musik)?video|musikvideo|music\s+video|\(video\)|\[video\]", re.I)
 MV_SCHLECHT = re.compile(r"lyric|lyrics|songtext|\baudio\b|visuali[sz]er|karaoke|sped\s*up|slowed|nightcore|"
-                         r"\b1\s*hour\b|\bloop\b|instrumental|cover\b|reaction", re.I)
+                         r"\b1\s*hour\b|\bloop\b|instrumental|cover\b|reaction|making of|behind the scenes|"
+                         r"hinter den kulissen|footnotes|teaser|trailer|reportage|im tonstudio", re.I)
 
 
-def musikvideo_wertung(t):
-    """Grobe Note, wie sehr ein Treffer ein echtes Musikvideo ist (hoeher = besser)."""
+MV_LIVE = re.compile(r"\blive\b|en vivo|ao vivo|concierto|\btour\b|festival|fernsehgarten|hitparade|"
+                     r"giovanni zarrella|silvesterstadl|\bzdf\b|\bard\b|\bsrf\b|\borf\b", re.I)
+
+
+def musikvideo_wertung(t, suchtext=""):
+    """Grobe Note, wie sehr ein Treffer ein echtes Musikvideo ist (hoeher = besser).
+    suchtext ("Kuenstler Titel"): Kanal des Kuenstlers zaehlt extra (offizielles Video
+    statt Fan-Upload - Shakira "La Tortura" kam am 04.10.2026 von "TheShakiraFan97")."""
     titel, kanal = str(t.get("titel") or ""), str(t.get("kanal") or "")
     note = 0
+    kn = re.sub(r"[^a-z0-9]", "", kanal.lower()).replace("official", "").replace("vevo", "")
+    if re.search(r"fan|lyric|karaoke", kanal, re.I):
+        note -= 3          # Fan-/Lyric-Kanal
+    elif suchtext and len(kn) >= 3 and kn in re.sub(r"[^a-z0-9]", "", suchtext.lower()):
+        note += 2          # Kanal des Kuenstlers
     if MV_GUT.search(titel):
         note += 3
     if "vevo" in kanal.lower():
@@ -700,8 +712,8 @@ def musikvideo_wertung(t):
         note -= 3
     if kanal.endswith(" - Topic"):
         note -= 3          # automatisch erzeugter Audio-Upload (nur Standbild)
-    if re.search(r"\blive\b", titel, re.I):
-        note -= 1
+    if MV_LIVE.search(titel):
+        note -= 4          # Live-Mitschnitt, TV-Auftritt
     return note
 
 
@@ -1854,9 +1866,9 @@ def main():
                 def aufgabe(fid=finde_id, text=str(finde.get("text") or "")[:120], seite=page_id):
                     # "Kuenstler Titel official video" (Spec 5.3/7.3): unter den ersten
                     # fuenf das beste echte Musikvideo (nicht laenger als 10 Minuten)
-                    gefunden = suchen(text + " official video", 5) if text else []
+                    gefunden = suchen(text + " official video", 8) if text else []
                     gefunden = sorted([t for t in gefunden if (t.get("dauerSek") or 0) <= 600] or gefunden,
-                                      key=lambda t: -musikvideo_wertung(t))[:1]
+                                      key=lambda t: -musikvideo_wertung(t, text))[:1]
                     log(f"Gefunden {text!r}: {gefunden[0]['videoId'] if gefunden else '-'}")
                     zustellen(seite, "window.nlFindeErgebnis = "
                               + json.dumps({"id": fid, "text": text,
