@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-04T17:52:45Z",
+  "checked_at": "2026-10-04T18:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,20 @@
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "DANCE Classics Sunday  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
