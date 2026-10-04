@@ -226,8 +226,8 @@ Protokoll: `/home/citycafe/nl-mpv-supervisor.log`, Fehler:
 - **Ambilight:** `window.nlAmbiAn` (Dashboard) schaltet den Faden `ambi_schleife`
   ein: viermal pro Sekunde `grim` auf das Videorechteck (5 %), Randfarben
   (gesättigt, max. 75 % hell) direkt als CSS-Variablen `--ambi-l/r/t/b` setzen.
-- **Stille am Anfang/Ende:** Sobald ein Musiktitel aufgelöst ist (`in_cache`, Schlüssel `…|m`),
-  misst `stille_messen` mit ffmpeg `silencedetect` (−45 dB) die ersten 30 s und die letzten
-  45 s der Tonspur (~0,4 s). Der Song startet beim ersten Ton (`--start`), die Überblendung
-  endet am Beginn der Schlussstille (`stille_ende`), ohne Überblendung wird dort beendet.
+- **Intro/Ausklang abschneiden:** Sobald ein Musiktitel aufgelöst ist (`in_cache`, Schlüssel `…|m`),
+  misst `stille_messen` mit ffmpeg den Pegel (RMS je 0,5 s) in den ersten 45 s, 20 s Mitte (Maßstab)
+  und den letzten 60 s. Start erst bei 3 s fast normaler Lautstärke (−8 dB; Intro ≤ 35 s), Ende
+  sobald der Song 10 dB unter normal fällt (Ausklang, Outro). Überblendung endet dort.
   Das Dashboard bekommt die verkürzte Länge (`nlMpvStand.dauer`).

@@ -1130,49 +1130,73 @@ def aufloesung_text(breite, hoehe):
     return f"{hoehe}p"
 
 
-# Stille am Songanfang und -ende (DJ-Art, Wunsch 04.10.2026): sobald ein Song
-# aufgeloest ist, misst ffmpeg (silencedetect, ~0,4 s) die ersten 30 s und die
-# letzten 45 s der Tonspur. Der Song startet beim ersten Ton, die Ueberblendung
-# endet dort, wo am Schluss die Stille beginnt. STILLE[videoId] = {anfang, ende}.
+# Intro und Ausklang abschneiden (DJ-Art, Wunsch 04.10.2026): sobald ein Song
+# aufgeloest ist, misst ffmpeg den Pegel (RMS je 0,5 s) am Anfang (45 s), in der
+# Mitte (20 s, als Massstab) und am Ende (60 s). Der Song startet erst, wenn er
+# 3 s lang fast seine normale Lautstaerke hat (gesprochene Intros, leise
+# Einleitungen, Stille fallen weg), und gilt als vorbei, sobald er deutlich
+# unter seine normale Lautstaerke faellt (Ausklang, gesprochene Outros, Stille).
+# STILLE[videoId] = {anfang, ende} - die Ueberblendung endet bei "ende".
 STILLE = {}
-STILLE_PEGEL = "-45dB"
+INTRO_ABSTAND_DB = 8       # so nah an der normalen Lautstaerke = "Musik laeuft"
+AUSKLANG_ABSTAND_DB = 10   # so weit darunter = "Song ist vorbei"
+INTRO_MAX_SEK = 35
+
+
+def pegel_messen(argumente):
+    """ffmpeg -> Liste RMS-Pegel (dB) je 0,5 s (Stille = -90)."""
+    try:
+        aus = subprocess.run(
+            ["ffmpeg", "-hide_banner", "-nostats", *argumente, "-af",
+             "aresample=8000,asetnsamples=n=4000,astats=metadata=1:reset=1,"
+             "ametadata=print:key=lavfi.astats.Overall.RMS_level:file=-", "-f", "null", "-"],
+            capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+    werte = []
+    for zeile in aus.stdout.splitlines():
+        if zeile.startswith("lavfi.astats.Overall.RMS_level="):
+            try:
+                w = float(zeile.split("=", 1)[1])
+            except ValueError:
+                w = -90.0
+            werte.append(max(-90.0, w) if w == w else -90.0)
+    return werte
 
 
 def stille_messen(vid, audio_url, laenge):
     if vid in STILLE or not audio_url:
         return
     STILLE[vid] = {"anfang": 0.0, "ende": None}
-    muster = re.compile(r"silence_(start|end): (-?[0-9.]+)")
-
-    def lauf(argumente):
-        try:
-            aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", *argumente],
-                                 capture_output=True, text=True, timeout=40)
-            return [(a, float(b)) for a, b in muster.findall(aus.stderr)]
-        except (OSError, subprocess.TimeoutExpired, ValueError):
-            return []
-
+    laenge = float(laenge or 0)
+    kopf = pegel_messen(["-t", "45", "-i", audio_url])
+    mitte = pegel_messen(["-ss", f"{max(0.0, laenge / 2 - 10):.1f}", "-t", "20", "-i", audio_url]) if laenge > 60 else []
+    ab = max(0.0, laenge - 60)
+    schluss = pegel_messen(["-ss", f"{ab:.1f}", "-i", audio_url]) if laenge > 60 else []
+    alle = sorted(kopf + mitte + schluss, reverse=True)
+    if len(alle) < 10:
+        return
+    normal = alle[len(alle) // 5]                       # "normale" Lautstaerke (80. Perzentil)
     anfang = 0.0
-    kopf = lauf(["-t", "30", "-i", audio_url, "-af", f"silencedetect=n={STILLE_PEGEL}:d=0.4", "-f", "null", "-"])
-    if len(kopf) >= 2 and kopf[0][0] == "start" and kopf[0][1] <= 0.3 and kopf[1][0] == "end" and kopf[1][1] <= 25:
-        anfang = max(0.0, kopf[1][1] - 0.15)        # kurz vor dem ersten Ton einsteigen
+    grenze = normal - INTRO_ABSTAND_DB
+    for i in range(len(kopf) - 5):
+        if all(w >= grenze for w in kopf[i:i + 6]):     # 3 s am Stueck fast normal laut
+            anfang = max(0.0, i * 0.5 - 0.25)
+            break
+    if anfang < 0.4 or anfang > INTRO_MAX_SEK:
+        anfang = 0.0
     ende = None
-    if laenge and laenge > 60:
-        ab = max(0.0, float(laenge) - 45)
-        schluss = lauf(["-ss", f"{ab:.1f}", "-i", audio_url, "-af",
-                        f"silencedetect=n={STILLE_PEGEL}:d=1", "-f", "null", "-"])
-        # letzte Stille, die bis zum Dateiende reicht (kein "end" mehr danach,
-        # oder das "end" liegt am Schluss)
-        if schluss and schluss[-1][0] == "start":
-            ende = ab + schluss[-1][1]
-        elif len(schluss) >= 2 and schluss[-2][0] == "start" and ab + schluss[-1][1] >= float(laenge) - 1.5:
-            ende = ab + schluss[-2][1]
-        if ende is not None and (ende < float(laenge) - 40 or ende > float(laenge) - 0.8):
-            ende = None                             # nur echte Stille am Schluss zaehlt
-        if ende is not None:
-            ende += 0.3
+    if schluss:
+        grenze = normal - AUSKLANG_ABSTAND_DB
+        for j in range(len(schluss) - 1, 3, -1):        # letzte Stelle, die noch "Song" ist
+            if schluss[j] >= grenze and sum(w >= grenze for w in schluss[j - 4:j]) >= 3:
+                ende = ab + (j + 1) * 0.5
+                break
+        if ende is not None and not (1.0 <= laenge - ende <= 55):
+            ende = None
     STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None}
-    log(f"Stille {vid}: Anfang {anfang:.1f}s, Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge})")
+    log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s, "
+        f"Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge:.0f}s)")
 
 
 def stille_ende(vid, dauer):
