@@ -1344,10 +1344,43 @@ def studio_abgleich(vid, audio_url, laenge, song):
             continue
         if bestes is None or g > bestes["guete"]:
             bestes = {"anfang": max(0.0, anfang), "guete": g,
-                      "ende": anfang + ref[2] if (voll and ref[2] and g >= 0.9) else None}
+                      "ende": studio_ende(vid, audio_url, laenge, ref, kand["titel"])}
         if g >= 0.95:
             break
     return bestes
+
+
+def studio_ende(vid, audio_url, laenge, ref, ref_titel):
+    """Wo endet die Studiofassung im Video? Ihre letzten 25 hoerbaren Sekunden in den
+    letzten 120 s des Videos suchen (voller Ton und Bass, beste Guete >= 0,85). Alles
+    danach (Nachspann, Szene, Abspann, Stille) gehoert nicht mehr zum Song - so wie der
+    Anfang ueber den Studio-Abgleich, allgemein fuer jedes Video (Wunsch 05.10.2026)."""
+    if not (ref and ref[2] and laenge):
+        return None
+    rl = float(ref[2])
+    ref_ab = max(0.0, rl - 45)
+    vid_ab = max(0.0, float(laenge) - 120)
+    bestes = None
+    for filt in ("", ABGLEICH_BASS):
+        r = pegel_messen(["-ss", f"{ref_ab:.1f}", "-i", ref[0]], ABGLEICH_HOP, filt)
+        hoerbar = [i for i, x in enumerate(r) if x > -45]
+        if not hoerbar:
+            return None
+        r_ende = hoerbar[-1] + 1                     # Stille am Schluss der Studiofassung weglassen
+        seg = r[max(0, r_ende - int(25 / ABGLEICH_HOP)):r_ende]
+        v = pegel_messen(["-ss", f"{vid_ab:.1f}", "-i", audio_url], ABGLEICH_HOP, filt)
+        if len(seg) < 200 or len(v) <= len(seg):
+            continue
+        g, lag = _ncc(v, seg)
+        if bestes is None or g > bestes[0]:
+            bestes = (g, vid_ab + (lag + len(seg)) * ABGLEICH_HOP)
+    if not bestes:
+        return None
+    g, ende = bestes
+    log(f"Studio-Ende {vid}: '{ref_titel[:40]}' endet im Video bei {ende:.1f}s (Laenge {laenge}s), Guete {g:.2f}")
+    if g < ABGLEICH_GUETE or not (laenge * 0.5 < ende <= laenge + 1):
+        return None
+    return ende
 
 
 def stille_messen(vid, audio_url, laenge):
@@ -1407,8 +1440,23 @@ def stille_messen(vid, audio_url, laenge):
                         ende = ab + k * 0.5
                     break
                 j -= 1
-    if abgl and abgl.get("ende") and abgl["ende"] < laenge - 1:
-        ende = min(ende or laenge, abgl["ende"])        # Abspann/Filmszene nach dem Song
+    # Ende der Studiofassung im Video (Test mit 100 Songs, 05.10.2026):
+    # - frueher als die Pegel-Regel: nur, wenn danach ein Bruch kommt (>= 1 s weit unter
+    #   normal) - Nachspann/Szene wie bei Michelle. Ohne Bruch ist das Video eine laengere
+    #   Fassung des Songs (Martin Solveig "Intoxicated": Studio 173 s, Song bis 188 s).
+    # - deutlich spaeter als die Pegel-Regel: der leise Schlussteil gehoert zum Song
+    #   (Pocahontas: Pegel 160 s, Studio 185 s) - hoechstens 10 s vor dem Studio-Ende,
+    #   die blendet die Ueberblendung ohnehin aus.
+    s_ende = abgl.get("ende") if abgl else None
+    if s_ende and s_ende < laenge - 1 and schluss:
+        bis = ende or laenge
+        if s_ende < bis:
+            j0, j1 = int((s_ende - ab) / 0.5), int((bis - ab) / 0.5)
+            stueck = schluss[max(0, j0):max(0, j1) + 1]
+            if any(all(w < normal - 20 for w in stueck[i:i + 2]) for i in range(len(stueck) - 1)):
+                ende = s_ende
+        elif s_ende - 10 > bis:
+            ende = s_ende - 10
     gain = anhebung(audio_url, normal)
     STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None, "gain": gain}
     log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s "
