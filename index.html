@@ -3293,7 +3293,7 @@
                     <div class="ytv-gleich-titel" id="ytv-gleich-titel">—</div>
                     <div class="ytv-gleich-kuenstler" id="ytv-gleich-kuenstler"></div>
                 </div>
-                <div class="ytv-danach-kopf" id="ytv-danach-kopf">DANACH</div>
+                <div class="ytv-danach-kopf" id="ytv-danach-kopf">WARTESCHLANGE</div>
                 <div class="ytv-liste" id="ytv-liste"></div>
             </div>
             <div class="ytv-radio-kopf">🎶 ÄHNLICHE SONGS</div>
@@ -8872,7 +8872,7 @@
             const danach = vor.slice(1, 7);   // 6 Zeilen fuellen die Spalte
             const wuensche = ytm.eintraege.filter(e => e.quelle === 'wunsch').length;
             const dk = document.getElementById('ytv-danach-kopf');
-            if (dk) dk.innerHTML = 'DANACH' + (wuensche ? ` <small>· 📱 ${wuensche} ${wuensche === 1 ? 'WUNSCH' : 'WÜNSCHE'}</small>` : '');
+            if (dk) dk.innerHTML = 'WARTESCHLANGE' + (wuensche ? ` <small>· 📱 ${wuensche} ${wuensche === 1 ? 'WUNSCH' : 'WÜNSCHE'}</small>` : '');
             const vl = document.getElementById('ytv-liste');
             if (vl) vl.innerHTML = danach.map((t, i) => `<div class="ytv-zeile"><b>${i + 2}</b>`
                 + ytmCoverImg(t)
