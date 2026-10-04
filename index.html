@@ -2487,7 +2487,7 @@
         .ytv-rechts { position: absolute; left: 1350px; right: 40px; top: 127px; height: 720px; display: flex; flex-direction: column; }
         .ytv-gleich { border-radius: 16px; padding: 18px 22px; background: rgba(192, 38, 211, 0.16); border: 1px solid rgba(243, 85, 218, 0.55); }
         /* "Gleich dran" (Vollbild): oben Kennzeile mit Countdown rechts, darunter
-           Interpret und Titel ueber die volle Kartenbreite - gross und gut lesbar. */
+           Interpret und Titel ueber die volle Kartenbreite - gross, je eine Zeile. */
         .ytv-gleich-kopf { display: flex; align-items: center; justify-content: space-between;
             font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 1.5px; color: #f9a8e8; }
         /* Countdown rechtsbuendig in eigener Zeile: wechselnde Ziffernbreite schiebt nichts mehr */
@@ -2495,7 +2495,7 @@
         .ytv-gleich-kuenstler { margin-top: 10px; font-size: 30px; font-weight: 800; color: #00f2fe; line-height: 1.15;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-gleich-titel { margin-top: 4px; font-size: 36px; font-weight: 900; color: #ffffff; line-height: 1.12;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }   /* einzeilig, lange Titel mit ... */
         .ytv-danach-kopf { margin: 22px 0 12px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; letter-spacing: 1px; }
         .ytv-danach-kopf small { font-size: 16px; color: #f9a8e8; margin-left: 8px; }
         .ytv-liste { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
