@@ -1211,12 +1211,12 @@ def songlaenge(vid, laenge_video=0):
     return None
 
 
-def pegel_messen(argumente, fenster=0.5):
-    """ffmpeg -> Liste RMS-Pegel (dB) je fenster Sekunden (Stille = -90)."""
+def pegel_messen(argumente, fenster=0.5, filt=""):
+    """ffmpeg -> Liste RMS-Pegel (dB) je fenster Sekunden (Stille = -90); filt z. B. Tiefpass."""
     try:
         aus = subprocess.run(
             ["ffmpeg", "-hide_banner", "-nostats", *argumente, "-af",
-             f"aresample=8000,asetnsamples=n={int(8000 * fenster)},astats=metadata=1:reset=1,"
+             f"{filt}aresample=8000,asetnsamples=n={int(8000 * fenster)},astats=metadata=1:reset=1,"
              "ametadata=print:key=lavfi.astats.Overall.RMS_level:file=-", "-f", "null", "-"],
             capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.TimeoutExpired):
@@ -1233,13 +1233,16 @@ def pegel_messen(argumente, fenster=0.5):
 
 
 # Songbeginn wie ein DJ finden (Wunsch 04.10.2026, "Be Mine haette vorgespult gehoert"):
-# die Studiofassung (Audio-Upload, gleiche Laenge wie bei iTunes) suchen, ihre ersten
-# 20 s als Lautstaerke-Huelle (50 ms) im Ton der ersten 100 s des Videos wiederfinden
-# (normierte Kreuzkorrelation). Getestet: Be Mine 14,2 s, Grace Kelly 18,1 s, Blame
-# 41,2 s, Danza Kuduro 37,1 s (Guete 0,94-1,00); andere Abmischung (O-Zone 0,32) -> Pegel-Regel.
+# die Studiofassung (Audio-Upload, Laenge wie bei iTunes) suchen und ihren Anfang im Ton
+# der ersten 120 s des Videos wiederfinden (normierte Kreuzkorrelation der Lautstaerke-
+# Huelle, 50 ms). Am sichersten: nur der Bass (Tiefpass 150 Hz, Szenengeraeusche stoeren
+# kaum) mit 40 s Referenz. Videos mit gekuerzter Radio-Fassung passen nur ueber 20 s -
+# dann muessen voller Ton und Bass uebereinstimmen. Getestet 04.10.2026: Be Mine 14,2 s,
+# Grace Kelly 18,1 s, Blame 41,2 s, O-Zone 37,7 s (Bass 40 s), Maneater 87,3 s (20 s).
 ABGLEICH_HOP = 0.05
-ABGLEICH_REF_SEK = 20
-ABGLEICH_GUETE = 0.8
+ABGLEICH_GUETE = 0.85      # 40 s Referenz
+ABGLEICH_GUETE_KURZ = 0.88  # 20 s Referenz, voller Ton und Bass muessen beide passen
+ABGLEICH_BASS = "lowpass=f=150,"
 ABGLEICH_SCHLECHT = re.compile(r"(?i)live|cover|8d|extended|making|remix|rmx|karaoke|instrumental|sped|slowed|"
                                r"reverb|nightcore|acoustic|official video|music video|videoclip")
 
@@ -1247,6 +1250,8 @@ ABGLEICH_SCHLECHT = re.compile(r"(?i)live|cover|8d|extended|making|remix|rmx|kar
 def _ncc(v, r):
     """Beste Stelle von r in v (normierte Kreuzkorrelation) -> (guete, index)."""
     m = len(r)
+    if not m or len(v) < m:
+        return -1.0, 0
     rm = sum(r) / m
     rz = [x - rm for x in r]
     rn = math.sqrt(sum(x * x for x in rz)) or 1.0
@@ -1285,29 +1290,50 @@ def studio_abgleich(vid, audio_url, laenge, song):
         kandidaten = [t for t in suchen(frage, 10)
                       if t["videoId"] != vid and norm(track)[:12] in norm(t["titel"])
                       and not ABGLEICH_SCHLECHT.search(t["titel"])
-                      and (not song or abs((t.get("dauerSek") or 0) - song) <= 5)]
+                      and (not song or abs((t.get("dauerSek") or 0) - song) <= 10)]
         if kandidaten:
             break
     if not kandidaten:
         log(f"Studio-Abgleich {vid}: keine Studiofassung gefunden")
         return None
-    kandidaten.sort(key=lambda t: (norm(t["titel"]) != norm(track), "audio" not in t["titel"].lower()))
-    ref = resolve(kandidaten[0]["videoId"], "bestaudio")
-    if not ref:
-        return None
-    r_alle = pegel_messen(["-t", str(ABGLEICH_REF_SEK + 10), "-i", ref[0]], ABGLEICH_HOP)
-    st = next((i for i, x in enumerate(r_alle) if x > -45), 0)      # Stille vorn ueberspringen
-    r = r_alle[st:st + int(ABGLEICH_REF_SEK / ABGLEICH_HOP)]
-    v = pegel_messen(["-t", "100", "-i", audio_url], ABGLEICH_HOP)
-    if len(r) < 100 or len(v) <= len(r):
-        return None
-    guete, lag = _ncc(v, r)
-    anfang = (lag - st) * ABGLEICH_HOP
-    log(f"Studio-Abgleich {vid}: '{kandidaten[0]['titel'][:50]}' -> Song ab {anfang:.1f}s, Guete {guete:.2f}")
-    if guete < ABGLEICH_GUETE or not (-1.0 <= anfang <= min(90.0, (laenge or 300) * 0.4)):
-        return None
-    ende = anfang + ref[2] if ref[2] and guete >= 0.9 else None
-    return {"anfang": max(0.0, anfang), "ende": ende, "guete": guete}
+    kandidaten.sort(key=lambda t: (norm(t["titel"]) != norm(track), "audio" not in t["titel"].lower(),
+                                   abs((t.get("dauerSek") or 0) - (song or 0))))
+    vf = pegel_messen(["-t", "120", "-i", audio_url], ABGLEICH_HOP)
+    vb = pegel_messen(["-t", "120", "-i", audio_url], ABGLEICH_HOP, ABGLEICH_BASS)
+    lang, kurz = int(40 / ABGLEICH_HOP), int(20 / ABGLEICH_HOP)
+    bestes = None
+    for kand in kandidaten[:2]:
+        ref = resolve(kand["videoId"], "bestaudio")
+        if not ref:
+            continue
+        rf = pegel_messen(["-t", "50", "-i", ref[0]], ABGLEICH_HOP)
+        rb = pegel_messen(["-t", "50", "-i", ref[0]], ABGLEICH_HOP, ABGLEICH_BASS)
+        st = next((i for i, x in enumerate(rf) if x > -45), 0)      # Stille vorn ueberspringen
+        if len(rf) - st < kurz + 20:
+            continue
+        b40, f40 = _ncc(vb, rb[st:st + lang]), _ncc(vf, rf[st:st + lang])
+        f20, b20 = _ncc(vf, rf[st:st + kurz]), _ncc(vb, rb[st:st + kurz])
+        if b40[0] >= ABGLEICH_GUETE:
+            g, lag, voll = b40[0], b40[1], True
+        elif f40[0] >= ABGLEICH_GUETE:
+            g, lag, voll = f40[0], f40[1], True
+        elif min(f20[0], b20[0]) >= ABGLEICH_GUETE_KURZ and abs(f20[1] - b20[1]) <= 10:
+            g, lag, voll = min(f20[0], b20[0]), f20[1], False
+        else:
+            log(f"Studio-Abgleich {vid}: '{kand['titel'][:40]}' passt nicht (Bass40 {b40[0]:.2f}, "
+                f"Voll40 {f40[0]:.2f}, Voll20 {f20[0]:.2f}, Bass20 {b20[0]:.2f})")
+            continue
+        anfang = (lag - st) * ABGLEICH_HOP
+        log(f"Studio-Abgleich {vid}: '{kand['titel'][:40]}' -> Song ab {anfang:.1f}s, Guete {g:.2f}"
+            + ("" if voll else " (gekuerzte Fassung, 20 s)"))
+        if not (-1.0 <= anfang <= min(100.0, (laenge or 300) * 0.4)):
+            continue
+        if bestes is None or g > bestes["guete"]:
+            bestes = {"anfang": max(0.0, anfang), "guete": g,
+                      "ende": anfang + ref[2] if (voll and ref[2] and g >= 0.9) else None}
+        if g >= 0.95:
+            break
+    return bestes
 
 
 def stille_messen(vid, audio_url, laenge):
