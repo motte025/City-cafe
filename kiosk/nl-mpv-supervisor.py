@@ -536,6 +536,9 @@ def resolve(video_id, fmt=FORMAT, sortierung=None):
             if sortierung:
                 quali = next((l[6:] for l in zeilen if l.startswith("QUALI ")), "?")
                 log(f"Qualitaet {video_id}: {quali}")
+                m = re.search(r"\|(\d+)x(\d+)\|", quali)
+                if m:
+                    FORMATE[video_id] = (int(m.group(1)), int(m.group(2)))
             return urls[0], (urls[1] if len(urls) > 1 else None), laenge
         log(f"{os.path.basename(programm)} ohne URL fuer {video_id}: {out.stderr.strip()[-200:]}")
     return None
@@ -1205,6 +1208,57 @@ def stille_ende(vid, dauer):
     return min(dauer, e) if (e and dauer) else dauer
 
 
+# Seitliche Balken (4:3, Hochformat) mit dem eigenen Video fuellen - gross,
+# unscharf, abgedunkelt, wie im Fernsehen (Wunsch 04.10.2026, nur seitlich).
+# Gemessen auf dem W1: 4:3-Video 1080p 22 % -> 45 % eines Kerns (von 16),
+# deshalb nur bei Videos schmaler als 16:9. Dafuer dekodiert die GPU mit
+# Rueckkopie (vaapi-copy), der Filter laeuft auf 1280x720.
+FORMATE = {}               # videoId -> (breite, hoehe) laut yt-dlp
+KANTEN = {}                # videoId -> "crop=w:h:x:y" bei eingebrannten Seitenbalken
+SEITEN_BLUR = ("lavfi=[{crop}split[a][b];[a]scale=256:144:force_original_aspect_ratio=increase,crop=256:144,"
+               "boxblur=8:2,eq=brightness=-0.12:saturation=1.2,scale=1280:720[bg];"
+               "[b]scale=-2:720:flags=bicubic[fg];[bg][fg]overlay=(W-w)/2:0]")
+
+
+def balken_messen(vid, video_url, laenge):
+    """Eingebrannte schwarze Seitenbalken finden (viele 4:3-Videos liefert YouTube
+    als 1920x1080 mit Balken aus): ffmpeg cropdetect auf 3 s, ~0,5 s Rechenzeit."""
+    if vid in KANTEN or not video_url:
+        return
+    KANTEN[vid] = None
+    ab = min(60.0, max(5.0, float(laenge or 0) * 0.3))
+    try:
+        aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-ss", f"{ab:.0f}", "-t", "3",
+                              "-i", video_url, "-vf", "cropdetect=limit=24:round=2:reset=0",
+                              "-an", "-f", "null", "-"], capture_output=True, text=True, timeout=40)
+    except (OSError, subprocess.TimeoutExpired):
+        return
+    m = re.findall(r"crop=(\d+):(\d+):(\d+):(\d+)", aus.stderr)
+    b, h = FORMATE.get(vid, (0, 0))
+    if not m or not b:
+        return
+    cw, ch, cx, cy = (int(x) for x in m[-1])
+    if cw <= b * 0.88 and ch >= h * 0.9:       # nur seitliche Balken (oben/unten bleibt)
+        KANTEN[vid] = f"crop={cw}:{h}:{cx}:0,"
+        log(f"Seitenbalken {vid}: Bild {cw}x{h} in {b}x{h}")
+
+
+def seiten_blur_graph(vid):
+    """lavfi-Graph fuer den unscharfen Seitenhintergrund, None bei Breitbild."""
+    b, h = FORMATE.get(vid, (0, 0))
+    if KANTEN.get(vid):
+        return SEITEN_BLUR.replace("{crop}", KANTEN[vid])
+    if b and h and b / h < 1.7:
+        return SEITEN_BLUR.replace("{crop}", "")
+    return None
+
+
+def seiten_blur_args(vid):
+    """mpv-Argumente fuer den unscharfen Seitenhintergrund, [] bei Breitbild."""
+    g = seiten_blur_graph(vid)
+    return ["--hwdec=vaapi-copy", "--vf=" + g] if g else []
+
+
 def kiosk_neu_starten():
     """Haengenden Kiosk-Browser beenden und neu starten. -> True, wenn versucht."""
     treffer = subprocess.run(["pgrep", "-f", "chromium --ozone-platform=wayland"],
@@ -1260,6 +1314,7 @@ def main():
     xf = None             # laufende Ueberblendung (siehe ueberblenden)
     stille_beendet = None # Song, der an seiner Schlussstille schon beendet wurde
     intro_gesprungen = None  # Song, bei dem das Intro schon uebersprungen ist
+    blur_an = None           # Song, bei dem der unscharfe Seitenhintergrund laeuft
     MPV_APP["id"] = "mpv"
     # Der hereinkommende Player startet unsichtbar (Titel "xf-ein"); die app_id
     # "mpvxf" schwebt wie "mpv" (die Regel fuer "mpv" steht in der sway-Config).
@@ -1448,9 +1503,11 @@ def main():
 
         def in_cache(key, urls):
             cache[key] = urls
-            if key.endswith("|m"):                  # Musik: Stille am Anfang/Ende messen
+            if key.endswith("|m"):                  # Musik: Intro/Ausklang und Seitenbalken messen
                 threading.Thread(target=stille_messen, daemon=True,
                                  args=(key.split("|", 1)[0], urls[1] or urls[0], urls[2])).start()
+                threading.Thread(target=balken_messen, daemon=True,
+                                 args=(key.split("|", 1)[0], urls[0], urls[2])).start()
             for old in list(cache)[:-4]:   # nur die letzten paar behalten
                 cache.pop(old, None)
 
@@ -1598,6 +1655,8 @@ def main():
                 mpv_befehl("set_property", "volume", ton_vol)
                 mpv, shown = xf["proc"], want
                 intro_gesprungen = shown        # Start war schon passend gewaehlt
+                if xf.get("blur"):
+                    blur_an = shown
                 started, last_pos, last_progress, embed_paused = time.time(), None, None, False
                 next_place_check, window_seen = 0, True
                 if pausiert:
@@ -1734,6 +1793,15 @@ def main():
                 mpv_bad[shown] = now
                 shown, embed_paused = None, False
 
+        # Seitenhintergrund nachtraeglich zuschalten, wenn die Balken-Messung erst
+        # nach dem Start fertig wurde (laeuft ohne Neustart von mpv).
+        if (musik and shown and shown.startswith("yt:") and mpv is not None and last_pos is not None
+                and blur_an != shown and seiten_blur_graph(shown[3:])):
+            blur_an = shown
+            mpv_befehl("set_property", "hwdec", "vaapi-copy")
+            mpv_befehl("vf", "set", seiten_blur_graph(shown[3:]))
+            log(f"Seitenhintergrund an ({shown})")
+
         # Song lief schon, bevor seine Messung fertig war (frischer Wunsch, Neustart):
         # in den ersten 15 s noch zum Musikbeginn springen.
         if (musik and shown and shown.startswith("yt:") and mpv is not None and last_pos is not None
@@ -1784,6 +1852,8 @@ def main():
                            f"--start={max(0.0, ((STILLE.get(n_vid) or {}).get('anfang') or 0) - (rest - 1.5)):.2f}"]
                 if ton_lautheit:
                     xf_args.append(f"--af={LAUTHEIT_FILTER}")
+                xf_args += seiten_blur_args(n_vid)
+                xf_blur = bool(seiten_blur_args(n_vid))
                 if audio_url:
                     xf_args.append(f"--audio-file={audio_url}")
                 xf_args.append(video_url)
@@ -1793,7 +1863,8 @@ def main():
                     pass
                 proc = subprocess.Popen(xf_args, env={**os.environ, **session_env()},
                                         preexec_fn=mpv_dies_with_us)
-                xf = {"proc": proc, "vid": n_vid, "app": neu_app, "t0": time.time(), "dauer": rest - 0.3}
+                xf = {"proc": proc, "vid": n_vid, "app": neu_app, "t0": time.time(), "dauer": rest - 0.3,
+                      "blur": xf_blur}
                 threading.Thread(target=ueberblenden, args=(xf, dict(target), page_id, ton_vol),
                                  daemon=True).start()
                 log(f"Ueberblendung: {shown[3:]} -> {n_vid} ({rest:.1f}s)")
@@ -1878,6 +1949,9 @@ def main():
                 # wenn das Fenster sitzt - im Vollbild tauchte es sonst ~1 s an der
                 # Widget-Stelle (83/248) auf, bevor place_mpv es verschob.
                 args.append("--title=xf-ein")
+                if musik and seiten_blur_args(schluessel):
+                    args += seiten_blur_args(schluessel)   # 4:3/Hochformat: Seiten fuellen
+                    blur_an = "yt:" + schluessel
                 if audio_url:
                     args.append(f"--audio-file={audio_url}")
                 args.append(video_url)

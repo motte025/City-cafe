@@ -231,3 +231,8 @@ Protokoll: `/home/citycafe/nl-mpv-supervisor.log`, Fehler:
   und den letzten 60 s. Start erst bei 3 s fast normaler Lautstärke (−8 dB; Intro ≤ 35 s), Ende
   sobald der Song 10 dB unter normal fällt (Ausklang, Outro). Überblendung endet dort.
   Das Dashboard bekommt die verkürzte Länge (`nlMpvStand.dauer`).
+- **Seitenbalken füllen:** Bei Videos schmaler als 16:9 (`FORMATE`, laut yt-dlp) oder mit
+  eingebrannten Seitenbalken (`balken_messen`, ffmpeg cropdetect, ~0,5 s) füllt ein
+  lavfi-Graph die Seiten mit dem eigenen Video, unscharf und abgedunkelt (`SEITEN_BLUR`,
+  `hwdec=vaapi-copy`). Gemessen auf dem W1: ~42 % eines Kerns statt 3 % – nur bei diesen
+  Videos. Kommt die Messung erst nach dem Start, wird per IPC (`vf set`) zugeschaltet.
