@@ -1269,9 +1269,39 @@ def stille_messen(vid, audio_url, laenge):
                 break
         if ende is not None and not (1.0 <= laenge - ende <= 55):
             ende = None
-    STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None}
+    gain = anhebung(audio_url, normal)
+    STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None, "gain": gain}
     log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s (erlaubt {erlaubt:.0f}s), "
-        f"Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge:.0f}s)")
+        f"Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge:.0f}s)"
+        + (f", angehoben um {gain:.1f} dB" if gain else ""))
+
+
+# Deutlich leisere Songs anheben (Wunsch 04.10.2026): feste Anhebung je Song
+# ueber mpv volume-gain - die Lautstaerke (Handy, 100 %) bleibt, kein Pumpen wie
+# beim dynaudnorm-Ausgleich. Nie ueber die Spitzen hinaus (keine Uebersteuerung).
+GAIN_ZIEL_DB = -11.0       # typische "normale" Lautstaerke (Messung 04.10.2026: -6 bis -22)
+GAIN_AB_DB = 4.0           # erst ab so viel leiser
+GAIN_MAX_DB = 8.0
+GAIN_RESERVE_DB = 1.0      # Abstand der lautesten Spitze zu 0 dBFS
+
+
+def anhebung(audio_url, normal):
+    """dB, um die der Song angehoben wird (0 = gar nicht)."""
+    if normal >= GAIN_ZIEL_DB - GAIN_AB_DB:
+        return 0.0
+    try:
+        aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", audio_url, "-vn",
+                              "-af", "volumedetect", "-f", "null", "-"],
+                             capture_output=True, text=True, timeout=90)
+        spitze = float(re.search(r"max_volume:\s*(-?[\d.]+) dB", aus.stderr).group(1))
+    except (OSError, subprocess.TimeoutExpired, AttributeError, ValueError):
+        return 0.0
+    gain = min(GAIN_ZIEL_DB - normal, GAIN_MAX_DB, -GAIN_RESERVE_DB - spitze)
+    return round(gain, 1) if gain >= 1.0 else 0.0
+
+
+def gain_von(vid):
+    return (STILLE.get(vid) or {}).get("gain") or 0.0
 
 
 def stille_ende(vid, dauer):
@@ -1428,6 +1458,7 @@ def main():
     xf = None             # laufende Ueberblendung (siehe ueberblenden)
     stille_beendet = None # Song, der an seiner Schlussstille schon beendet wurde
     intro_gesprungen = None  # Song, bei dem das Intro schon uebersprungen ist
+    gain_gesetzt = None      # (Song, dB): Anhebung leiser Songs ist eingestellt
     blur_an = None           # Song, bei dem der unscharfe Seitenhintergrund laeuft
     rahmen_lage = None       # (pid, w, h), fuer die der Kontrastrahmen gesetzt ist
     MPV_APP["id"] = "mpv"
@@ -1770,6 +1801,7 @@ def main():
                 mpv_befehl("set_property", "volume", ton_vol)
                 mpv, shown = xf["proc"], want
                 intro_gesprungen = shown        # Start war schon passend gewaehlt
+                gain_gesetzt = (shown, gain_von(xf["vid"]))   # stand schon beim Start
                 if xf.get("blur"):
                     blur_an = shown
                 started, last_pos, last_progress, embed_paused = time.time(), None, None, False
@@ -1937,6 +1969,14 @@ def main():
             elif anf and last_pos >= anf - 1:
                 intro_gesprungen = shown
 
+        # Messung kam erst nach dem Start (frischer Wunsch): Anhebung nachtraeglich setzen.
+        if musik and shown and shown.startswith("yt:") and mpv is not None and shown[3:] in STILLE:
+            g = gain_von(shown[3:])
+            if gain_gesetzt != (shown, g) and mpv_befehl("set_property", "volume-gain", g):
+                gain_gesetzt = (shown, g)
+                if g:
+                    log(f"Leiser Song angehoben ({shown}): +{g:.1f} dB")
+
         # Ohne Ueberblendung (nichts vorgeladen): an der Schlussstille sofort beenden -
         # das saubere Ende (Code 0) fuehrt wie gewohnt zum naechsten Song.
         if (xf is None and musik and shown and shown.startswith("yt:") and mpv is not None
@@ -1973,6 +2013,7 @@ def main():
                            # der Ueberblendung faellt (Intro laeuft leise unter dem alten Song) -
                            # sonst war der Saenger schon mitten im Gesang, wenn der alte weg war.
                            f"--start={max(0.0, ((STILLE.get(n_vid) or {}).get('anfang') or 0) - (rest - 1.5)):.2f}"]
+                xf_args.append(f"--volume-gain={gain_von(n_vid)}")   # leise Songs anheben
                 if ton_lautheit:
                     xf_args.append(f"--af={LAUTHEIT_FILTER}")
                 xf_args += seiten_blur_args(n_vid)
@@ -2081,6 +2122,8 @@ def main():
                 # wenn das Fenster sitzt - im Vollbild tauchte es sonst ~1 s an der
                 # Widget-Stelle (83/248) auf, bevor place_mpv es verschob.
                 args.append("--title=xf-ein")
+                if musik:
+                    args.append(f"--volume-gain={gain_von(schluessel)}")   # leise Songs anheben
                 if musik and seiten_blur_args(schluessel):
                     args += seiten_blur_args(schluessel)   # 4:3/Hochformat: Seiten fuellen
                     blur_an = "yt:" + schluessel
