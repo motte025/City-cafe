@@ -1267,13 +1267,13 @@ def seiten_blur_args(vid):
 # (overlay-add, wie frueher den QR) - auf das Video darf kein HTML. Je Groesse
 # einmal gebaut (Pillow), kostet beim Abspielen praktisch nichts.
 RAHMEN_ID = 8
-RAHMEN_STREIFEN = 4        # px voll schwarz
-RAHMEN_VERLAUF = 46        # px weicher Uebergang nach innen
-RAHMEN_ALPHA = 0.9
+RAHMEN_STREIFEN = 3        # px voll schwarz
+RAHMEN_VERLAUF = 30        # px weicher Uebergang nach innen
+RAHMEN_ALPHA = 0.7
 
 
 def rahmen_datei(w, h):
-    datei = f"/tmp/ytm-rahmen-{w}x{h}.bgra"
+    datei = f"/tmp/ytm-rahmen-{w}x{h}-{RAHMEN_STREIFEN}-{RAHMEN_VERLAUF}-{RAHMEN_ALPHA}.bgra"
     if os.path.exists(datei):
         return datei
     from PIL import Image, ImageDraw
