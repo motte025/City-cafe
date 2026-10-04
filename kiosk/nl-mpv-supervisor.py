@@ -1060,7 +1060,7 @@ def ueberblenden(xf, target, page_id, vol):
 # spaeter um. Dieser Faden fragt alle 80 ms nach: Video sofort ausblenden,
 # warten bis die Seite umgebaut ist, neu platzieren, wieder zeigen. Die
 # Hauptschleife (alle 0,5 s) war dafuer zu langsam - das Video lag kurz falsch.
-umschalt_lage = {"ts": 0.0, "page": None}
+umschalt_lage = {"ts": 0.0, "page": None, "sperre": 0.0}
 
 
 def umschalt_waechter():
@@ -1083,6 +1083,9 @@ def umschalt_waechter():
             continue
         zuletzt = wert[0]
         app = MPV_APP["id"]
+        # Hauptschleife solange nicht platzieren lassen - sie mass sonst mitten im
+        # Umbau Zwischengroessen (gesehen: 1200x837) und schob das Fenster herum.
+        umschalt_lage["sperre"] = time.time() + 2.5
         sway(f'[app_id="{app}"]', "opacity", "0")
         alte_flaeche = wert[1]
         frist = time.time() + 1.0
@@ -1095,16 +1098,25 @@ def umschalt_waechter():
                 pass
             if flaeche != alte_flaeche:
                 break
-        time.sleep(0.12)                    # ein, zwei Bilder fuer den Umbau
+        # Warten, bis die Flaeche zweimal hintereinander gleich gemessen wird
         art = "yt_voll" if flaeche == "yt-vollbild-video" else "yt"
-        try:
-            ziel = measured_rect(page, None, art)
-        except (OSError, ValueError, ConnectionError):
-            ziel = None
+        ziel, vorher, frist = None, None, time.time() + 1.2
+        while time.time() < frist:
+            time.sleep(0.08)
+            try:
+                jetzt_r = measured_rect(page, None, art)
+            except (OSError, ValueError, ConnectionError):
+                jetzt_r = None
+            if jetzt_r and jetzt_r == vorher:
+                ziel = jetzt_r
+                break
+            vorher = jetzt_r
+        ziel = ziel or vorher
         if ziel:
             place_mpv(ziel, app, sichtbar=False)
             time.sleep(0.15)                # mpv rechnet das Bild auf die neue Groesse
         sway(f'[app_id="{app}"]', "opacity", "1")
+        umschalt_lage["sperre"] = 0.0
 
 
 def kiosk_neu_starten():
@@ -1545,7 +1557,7 @@ def main():
                     next_place_check = 0
                     eilig_bis = now + 3
                 # Lage pruefen: bis das Fenster sitzt jede Runde, danach alle 5 s.
-                if now >= next_place_check:
+                if now >= next_place_check and now >= umschalt_lage["sperre"]:
                     target = measured_rect(page_id, target, rect_art)
                     if place_mpv(target):
                         if not window_seen:
@@ -1637,6 +1649,9 @@ def main():
                            f"--demuxer-max-bytes={MPV_DEMUXER_MIB}MiB",
                            f"--demuxer-max-back-bytes={MPV_DEMUXER_BACK_MIB}MiB",
                            "--no-osc", "--osd-level=0", "--no-input-default-bindings",
+                           # Fenstergroesse bestimmt allein der Supervisor - sonst passte mpv sie ~1 s
+                           # nach dem Platzieren selbst ans Video-Seitenverhaeltnis an (1200x837 statt 675).
+                           "--keepaspect-window=no", "--auto-window-resize=no",
                            "--really-quiet", f"--input-ipc-server={MPV_SOCK_XF}",
                            "--log-file=/home/citycafe/mpv-xf.log", "--volume=0",
                            "--title=xf-ein", f"--wayland-app-id={neu_app}", "--start=0"]
@@ -1701,6 +1716,9 @@ def main():
                     f"--demuxer-max-bytes={MPV_DEMUXER_MIB}MiB",
                     f"--demuxer-max-back-bytes={MPV_DEMUXER_BACK_MIB}MiB",
                     "--no-osc", "--osd-level=0", "--no-input-default-bindings",
+                    # Fenstergroesse bestimmt allein der Supervisor - sonst passte mpv sie ~1 s
+                    # nach dem Platzieren selbst ans Video-Seitenverhaeltnis an (1200x837 statt 675).
+                    "--keepaspect-window=no", "--auto-window-resize=no",
                     "--really-quiet", "--input-ipc-server=/tmp/mpv-nl.sock",
                     "--log-file=/home/citycafe/mpv-nl.log", f"--volume={ton_vol}"]
             if ton_lautheit:
