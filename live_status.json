@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-04T06:57:45Z",
+  "checked_at": "2026-10-04T07:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "l4uchm3ld3r",
       "name": "L4uchm3ld3r",
       "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     }
   ]
