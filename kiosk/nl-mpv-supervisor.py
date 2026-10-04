@@ -531,14 +531,63 @@ def bt_melden(seite_holen, ok, text):
             pass
 
 
+def usb_senke():
+    """B03 Pro per USB-Kabel am W1 (USB-Soundkarte) -> PipeWire-Ausgang oder None.
+    Seit 05.10.2026 haengt der Empfaenger am USB des W1 statt am TV-USB: Ton geht
+    per Kabel, ganz ohne Bluetooth (der TV schaltete per 4-h-Automatik seinen USB ab)."""
+    try:
+        env = {**os.environ, **session_env()}
+        senken = subprocess.run(["pactl", "list", "short", "sinks"], capture_output=True,
+                                text=True, timeout=10, env=env).stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    for zeile in senken.splitlines():
+        felder = zeile.split("\t")
+        if len(felder) > 1 and felder[1].startswith("alsa_output.usb-") and BT_NAME.lower() in felder[1].lower():
+            return felder[1]
+    return None
+
+
+def usb_standard(senke):
+    """USB-Ausgang zum Standard machen (100 %), falls er es nicht ist."""
+    try:
+        env = {**os.environ, **session_env()}
+        standard = subprocess.run(["pactl", "get-default-sink"], capture_output=True, text=True,
+                                  timeout=10, env=env).stdout.strip()
+        if standard != senke:
+            subprocess.run(["pactl", "set-default-sink", senke], timeout=10, env=env)
+            subprocess.run(["pactl", "set-sink-volume", senke, "100%"], timeout=10, env=env)
+            subprocess.run(["pactl", "set-sink-mute", senke, "0"], timeout=10, env=env)
+            for z in subprocess.run(["pactl", "list", "short", "sink-inputs"], capture_output=True,
+                                    text=True, timeout=10, env=env).stdout.splitlines():
+                subprocess.run(["pactl", "move-sink-input", z.split("\t")[0], senke], timeout=10, env=env)
+            log(f"Ton per USB-Kabel: {senke} ist Standard (100 %)")
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+
+
 def bt_waechter(seite_holen):
     war_ok = False
+    heilen = False            # nur nach einem Abbruch selbst verbinden (sonst nur per Knopf)
     letzter_versuch = 0.0
     versuche = 0
     wlan_alt = wlan_bytes()
     while True:
         time.sleep(BT_TAKT)
         try:
+            usb = usb_senke()
+            if usb:
+                usb_standard(usb)
+                if not war_ok:
+                    log("Bluetooth-Waechter: Ton geht per USB-Kabel zur Anlage")
+                war_ok, versuche = True, 0
+                try:
+                    with open(BT_LOG, "a") as f:
+                        f.write(f"{time.strftime('%F %T')};usb;1;;;0\n")
+                except OSError:
+                    pass
+                bt_melden(seite_holen, True, "Ton geht per USB-Kabel zur Anlage")
+                continue
             geraete = bt_geraete()
             adresse = next((a for a, _ in geraete if bt_verbunden(a)), geraete[0][0] if geraete else "")
             verbunden = bool(adresse) and bt_verbunden(adresse)
@@ -556,17 +605,20 @@ def bt_waechter(seite_holen):
             if senke:
                 if not war_ok and versuche:
                     log(f"Bluetooth-Waechter: wieder verbunden nach {versuche} Versuch(en)")
-                war_ok, versuche = True, 0
+                war_ok, versuche, heilen = True, 0, False
                 bt_melden(seite_holen, True, "Ton geht zur Anlage")
                 continue
             if gewollt_aus or not geraete:
-                war_ok, versuche = False, 0
+                war_ok, versuche, heilen = False, 0, False
                 bt_melden(seite_holen, True, "Bluetooth am Handy getrennt" if gewollt_aus else "")
                 continue
             # Ton sollte zur Anlage gehen, tut es aber nicht.
             if war_ok:
                 log(f"Bluetooth-Waechter: Verbindung weg (verbunden={verbunden}, Tonkanal fehlt)")
-                war_ok = False
+                war_ok, heilen = False, True
+            if not heilen:
+                bt_melden(seite_holen, True, "Bluetooth nicht verbunden")
+                continue
             bt_melden(seite_holen, False, "Bluetooth zur Anlage getrennt - Ton kommt nur am Fernseher")
             if time.time() - letzter_versuch < (20 if versuche < 2 else 60):
                 continue

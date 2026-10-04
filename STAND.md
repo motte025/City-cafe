@@ -80,6 +80,18 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   räumt `/tmp` auf und startet den Browser neu, wenn er hängt. Beim ersten
   Auftritt eines Zyklus-Videos wählt er selbst einen zufälligen Startpunkt
   (Länge von yt-dlp); Wünsche vom Handy beginnen von vorn.
+- **Ton zur Anlage per USB-Kabel (seit 05.10.2026):** Der B03 Pro hängt am
+  USB des **W1** (nicht mehr am TV-USB) und meldet sich dort als
+  USB-Soundkarte (`alsa_output.usb-0a12_B03_Pro-00.analog-stereo`). Der Ton
+  geht per Kabel, ohne Bluetooth. Anlass: Der LG-TV schaltete sich per
+  4-Stunden-Automatik ab, dabei fiel der Strom am TV-USB weg, der Empfänger
+  hing danach und lehnte jede Bluetooth-Verbindung ab (Ton lief still zum
+  TV). Am LG die Abschaltautomatik ausschalten. Der Bluetooth-Wächter im
+  Supervisor (alle 10 s, Protokoll `/home/citycafe/bt-waechter.csv`) macht
+  den USB-Ausgang zum Standard (100 %); fehlt er, gilt wieder Bluetooth.
+  Reißt eine Bluetooth-Verbindung von selbst ab, verbindet er neu (jeder
+  zweite Versuch mit Adapter aus/an) und warnt am Handy; ohne vorherigen
+  Abbruch und nach „Trennen" bleibt es beim Knopf.
 - **Bluetooth zur Anlage**: 1Mii B03 Pro (Empfänger, RX) gekoppelt; der
   Betreiber nimmt genau diesen ins Café mit, dort ist also kein Koppeln
   nötig. Ein weiterer Empfänger müsste einmal gekoppelt werden
