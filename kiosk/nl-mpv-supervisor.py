@@ -1031,6 +1031,7 @@ def ueberblenden(xf, target, page_id, vol):
         xf["fehler"] = True
         return
     place_mpv(target, xf["app"], sichtbar=False)
+    rahmen_setzen(target, sock=MPV_SOCK_XF)
     if xf.get("abbruch"):
         return
     try:
@@ -1117,6 +1118,8 @@ def umschalt_waechter():
         ziel = ziel or vorher
         if ziel:
             place_mpv(ziel, app, sichtbar=False)
+            if umschalt_lage.get("musik"):
+                rahmen_setzen(ziel)
             time.sleep(0.15)                # mpv rechnet das Bild auf die neue Groesse
         sway(f'[app_id="{app}"]', "opacity", "1")
         umschalt_lage["sperre"] = 0.0
@@ -1259,6 +1262,48 @@ def seiten_blur_args(vid):
     return ["--hwdec=vaapi-copy", "--vf=" + g] if g else []
 
 
+# Kontrastrahmen ums Musikvideo (Wunsch 04.10.2026): aussen ein schmaler
+# schwarzer Streifen, der weich nach innen auslaeuft. mpv zeichnet ihn selbst
+# (overlay-add, wie frueher den QR) - auf das Video darf kein HTML. Je Groesse
+# einmal gebaut (Pillow), kostet beim Abspielen praktisch nichts.
+RAHMEN_ID = 8
+RAHMEN_STREIFEN = 4        # px voll schwarz
+RAHMEN_VERLAUF = 46        # px weicher Uebergang nach innen
+RAHMEN_ALPHA = 0.9
+
+
+def rahmen_datei(w, h):
+    datei = f"/tmp/ytm-rahmen-{w}x{h}.bgra"
+    if os.path.exists(datei):
+        return datei
+    from PIL import Image, ImageDraw
+    maske = Image.new("L", (w, h), 0)
+    zeichne = ImageDraw.Draw(maske)
+    gesamt = RAHMEN_STREIFEN + RAHMEN_VERLAUF
+    for i in range(gesamt - 1, -1, -1):          # von innen nach aussen, aussen deckt zuletzt
+        if i < RAHMEN_STREIFEN:
+            a = 1.0
+        else:
+            a = (1 - (i - RAHMEN_STREIFEN) / RAHMEN_VERLAUF) ** 2.2
+        zeichne.rectangle([i, i, w - 1 - i, h - 1 - i], outline=int(255 * RAHMEN_ALPHA * a))
+    bild = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    bild.putalpha(maske)                          # schwarz: vormultipliziert = (0,0,0,a)
+    with open(datei, "wb") as f:
+        f.write(bild.tobytes("raw", "BGRA"))
+    return datei
+
+
+def rahmen_setzen(ziel, sock=None):
+    """Rahmen fuer die Fenstergroesse ziel in den mpv (sock) legen."""
+    try:
+        w, h = int(ziel["w"]), int(ziel["h"])
+        mpv_befehl("overlay-add", RAHMEN_ID, 0, 0, rahmen_datei(w, h), 0, "bgra", w, h, w * 4, sock=sock)
+        return (w, h)
+    except Exception as e:                        # ohne Pillow o. ae.: einfach kein Rahmen
+        log(f"Rahmen: {type(e).__name__}: {e}")
+        return None
+
+
 def kiosk_neu_starten():
     """Haengenden Kiosk-Browser beenden und neu starten. -> True, wenn versucht."""
     treffer = subprocess.run(["pgrep", "-f", "chromium --ozone-platform=wayland"],
@@ -1315,6 +1360,7 @@ def main():
     stille_beendet = None # Song, der an seiner Schlussstille schon beendet wurde
     intro_gesprungen = None  # Song, bei dem das Intro schon uebersprungen ist
     blur_an = None           # Song, bei dem der unscharfe Seitenhintergrund laeuft
+    rahmen_lage = None       # (pid, w, h), fuer die der Kontrastrahmen gesetzt ist
     MPV_APP["id"] = "mpv"
     # Der hereinkommende Player startet unsichtbar (Titel "xf-ein"); die app_id
     # "mpvxf" schwebt wie "mpv" (die Regel fuer "mpv" steht in der sway-Config).
@@ -1745,9 +1791,17 @@ def main():
                         elif qr_lage is not None:
                             mpv_befehl("overlay-remove", QR_OVERLAY_ID)
                             qr_lage = None
+                        # Kontrastrahmen nur bei Musik, je Player und Groesse einmal
+                        r_key = (mpv.pid, target["w"], target["h"]) if (musik and art == "yt") else None
+                        if r_key != rahmen_lage:
+                            if r_key:
+                                rahmen_setzen(target)
+                            elif rahmen_lage:
+                                mpv_befehl("overlay-remove", RAHMEN_ID)
+                            rahmen_lage = r_key
                 # Umschalt-Waechter (Musik): bestaetigen, dass er nachfragen soll
                 if musik and art == "yt" and window_seen and xf is None:
-                    umschalt_lage.update(ts=now, page=page_id)
+                    umschalt_lage.update(ts=now, page=page_id, musik=True)
                 # Ambilight (Musik, normal und Vollbild): der Faden ambi_schleife
                 # misst viermal pro Sekunde - hier nur bestaetigen, wo.
                 if (state.get("ambi") and musik and art == "yt" and rect_art in ("yt", "yt_voll")
