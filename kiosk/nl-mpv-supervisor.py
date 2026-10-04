@@ -1120,11 +1120,12 @@ def umschalt_waechter():
 
 
 def aufloesung_text(breite, hoehe):
-    """Breite/Hoehe -> "1080p" wie bei YouTube (nach der Breite, damit 1920x804
-    Kinoformat als 1080p zaehlt)."""
-    for mind, name in ((3800, "4K"), (2500, "1440p"), (1900, "1080p"), (1260, "720p"),
-                       (840, "480p"), (630, "360p")):
-        if breite >= mind:
+    """Breite/Hoehe -> "1080p" wie bei YouTube: die hoehere Stufe aus Breite und
+    Hoehe - so zaehlen 1920x804 (Kino) und 1440x1080 (4:3) beide als 1080p."""
+    stufen = (("4K", 3800, 2100), ("1440p", 2500, 1400), ("1080p", 1900, 1000), ("720p", 1260, 680),
+              ("480p", 840, 460), ("360p", 630, 340))
+    for name, mind_b, mind_h in stufen:
+        if breite >= mind_b or hoehe >= mind_h:
             return name
     return f"{hoehe}p"
 
