@@ -240,6 +240,10 @@
             <button type="button" id="k-skip" title="Überspringen">⏭</button>
             <button type="button" id="k-blend" title="Jetzt zum nächsten Song überblenden">⤨</button>
         </div>
+        <div class="zeile2 nur-chef">
+            <button type="button" class="still" id="k-handy">📱 Handy an die Anlage</button>
+            <button type="button" class="still" id="k-screen">🖥️ Screen an die Anlage</button>
+        </div>
         <div class="zeile2 nur-chef laut-zeile">
             <button type="button" id="k-leiser" aria-label="Leiser">🔉 −</button>
             <span id="laut-jetzt">100 %</span>
@@ -385,7 +389,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-btwarn';
+    var FASSUNG = '2026-10-05-handy';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -672,7 +676,7 @@
         if (istChef && jetzt && jetzt.bt && jetzt.bt.ok === false) {
             var min = Math.max(0, Math.round((serverJetzt() - (jetzt.bt.seit || serverJetzt())) / 60000));
             hinweis = '⚠️ ' + (jetzt.bt.text || 'Bluetooth zur Anlage getrennt') + (min ? ' (seit ' + min + ' Min)' : '')
-                + ' – der Screen versucht es selbst. Hilft nichts: Empfänger kurz vom Strom nehmen.';
+                + '. Hängt der Empfänger: Schalter am B03 einmal auf TX und zurück auf RX.';
         }
         el('jetzt-hinweis').textContent = hinweis;
         uhrTakt();
@@ -1343,6 +1347,16 @@
             b.addEventListener('click', function () { senden({ aktion: 'spulen', sek: r[1] * s }); });
             el(r[0]).appendChild(b);
         });
+    });
+    // Wechsel Screen <-> Handy am B03 (Bluetooth): Handy = W1 gibt frei und haelt still
+    // ("trennen"), Screen = W1 holt ihn zurueck ("verbinden").
+    el('k-handy').addEventListener('click', function () {
+        senden({ aktion: 'bluetooth', was: 'trennen' });
+        melden('📱 Screen gibt die Anlage frei – jetzt das Handy mit „B03 Pro" verbinden', 'ok');
+    });
+    el('k-screen').addEventListener('click', function () {
+        senden({ aktion: 'bluetooth', was: 'verbinden' });
+        melden('🖥️ Screen holt sich die Anlage … (Handy vorher trennen)', '');
     });
     [['🔗 Verbinden', 'verbinden'], ['✂️ Trennen', 'trennen'], ['🔄 Prüfen', 'status']].forEach(function (k) {
         var b = document.createElement('button');

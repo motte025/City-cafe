@@ -613,7 +613,7 @@ def bt_waechter(seite_holen):
                 continue
             if gewollt_aus or not geraete:
                 war_ok, versuche, heilen = False, 0, False
-                bt_melden(seite_holen, True, "Bluetooth am Handy getrennt" if gewollt_aus else "")
+                bt_melden(seite_holen, True, "Anlage fuers Handy freigegeben" if gewollt_aus else "")
                 continue
             # Ton sollte zur Anlage gehen, tut es aber nicht.
             if war_ok:
@@ -622,19 +622,18 @@ def bt_waechter(seite_holen):
             if not heilen:
                 bt_melden(seite_holen, True, "Bluetooth nicht verbunden")
                 continue
-            bt_melden(seite_holen, False, "Bluetooth zur Anlage getrennt - Ton kommt nur am Fernseher")
-            if time.time() - letzter_versuch < (20 if versuche < 2 else 60):
+            # Im Cafe spielt auch das Handy auf den B03 (Wunsch 05.10.2026): hoechstens
+            # 3 Versuche in ~2 Minuten, ohne Adapter-Neustart - dann Ruhe und Hinweis.
+            # Hat das Handy den Empfaenger, holt ihn "Screen an die Anlage" zurueck.
+            if versuche >= 3:
+                bt_melden(seite_holen, False, "Bluetooth zur Anlage getrennt - Handy an der Anlage? "
+                          "Zurueck: 'Screen an die Anlage'")
+                continue
+            bt_melden(seite_holen, False, "Bluetooth zur Anlage getrennt - verbinde neu")
+            if time.time() - letzter_versuch < 40:
                 continue
             letzter_versuch = time.time()
             versuche += 1
-            if versuche % 2 == 0:
-                # Jeder zweite Versuch mit Adapter aus/an (haengender Chip, 05.10.2026:
-                # "ACL packet for unknown connection handle").
-                log("Bluetooth-Waechter: Adapter aus/an")
-                bt_cmd("power", "off")
-                time.sleep(3)
-                bt_cmd("power", "on")
-                time.sleep(3)
             ergebnis = bluetooth("verbinden")
             log(f"Bluetooth-Waechter: Versuch {versuche}: {ergebnis.get('text')}")
             if ergebnis.get("verbunden"):
