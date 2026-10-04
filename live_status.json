@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-04T00:42:46Z",
+  "checked_at": "2026-10-04T00:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,13 +10,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "AGE OF WONDER",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "nyybeats",
       "name": "NyyBeats",
       "title": "🔥♡ SUNSET SATURDAY TUNES WITH THE MATTRESS THAT SAVED MY SHOULDER....... !helix #HelixPartner #ad🔥 !mods !mercy",
@@ -24,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Schlager & Party - Das legendäre Original  - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🕺🪩💿 EDM BOOMERS NIGHT 💿🪩🕺 50’s 60’s 70’s (and some sneaky 80’s) Remixes ✨ REQUESTS OPEN!!! !request !tip !merch !youtube !patreon !spawn",
       "game": "DJs"
     }
   ]
