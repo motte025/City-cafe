@@ -1055,6 +1055,58 @@ def ueberblenden(xf, target, page_id, vol):
     xf["fertig"] = True
 
 
+# Umschalten Normal <-> Vollbild ohne Ruckler: das Dashboard setzt
+# window.nlMpvAusblenden (Zeitstempel) und schaltet die Ansicht erst 250 ms
+# spaeter um. Dieser Faden fragt alle 80 ms nach: Video sofort ausblenden,
+# warten bis die Seite umgebaut ist, neu platzieren, wieder zeigen. Die
+# Hauptschleife (alle 0,5 s) war dafuer zu langsam - das Video lag kurz falsch.
+umschalt_lage = {"ts": 0.0, "page": None}
+
+
+def umschalt_waechter():
+    zuletzt = None
+    while True:
+        time.sleep(0.08)
+        if time.time() - umschalt_lage["ts"] > 2 or not umschalt_lage["page"]:
+            continue
+        page = umschalt_lage["page"]
+        try:
+            wert = json.loads(cdp_eval(page, "JSON.stringify([window.nlMpvAusblenden || 0, window.nlMpvFlaeche || ''])") or "null")
+        except (OSError, ValueError, ConnectionError):
+            continue
+        if not wert:
+            continue
+        if zuletzt is None:
+            zuletzt = wert[0]
+            continue
+        if wert[0] == zuletzt:
+            continue
+        zuletzt = wert[0]
+        app = MPV_APP["id"]
+        sway(f'[app_id="{app}"]', "opacity", "0")
+        alte_flaeche = wert[1]
+        frist = time.time() + 1.0
+        flaeche = alte_flaeche
+        while time.time() < frist:         # warten, bis die Seite umgeschaltet hat
+            time.sleep(0.05)
+            try:
+                flaeche = json.loads(cdp_eval(page, "JSON.stringify(window.nlMpvFlaeche || '')") or '""')
+            except (OSError, ValueError, ConnectionError):
+                pass
+            if flaeche != alte_flaeche:
+                break
+        time.sleep(0.12)                    # ein, zwei Bilder fuer den Umbau
+        art = "yt_voll" if flaeche == "yt-vollbild-video" else "yt"
+        try:
+            ziel = measured_rect(page, None, art)
+        except (OSError, ValueError, ConnectionError):
+            ziel = None
+        if ziel:
+            place_mpv(ziel, app, sichtbar=False)
+            time.sleep(0.15)                # mpv rechnet das Bild auf die neue Groesse
+        sway(f'[app_id="{app}"]', "opacity", "1")
+
+
 def kiosk_neu_starten():
     """Haengenden Kiosk-Browser beenden und neu starten. -> True, wenn versucht."""
     treffer = subprocess.run(["pgrep", "-f", "chromium --ozone-platform=wayland"],
@@ -1137,6 +1189,7 @@ def main():
     eilig_bis = 0.0       # bis wann nach einem Flaechenwechsel haeufig nachplatziert wird
     flaeche_jetzt = None  # "yt" / "yt_voll" / "twitch" / "cam" - wo mpv gerade liegt
     threading.Thread(target=ambi_schleife, daemon=True).start()
+    threading.Thread(target=umschalt_waechter, daemon=True).start()
     qr_karte = None       # PIL-Bild des QR-Kaertchens
     qr_karte_id = ""
     qr_lage = None        # (x, y, w, h, flaeche), fuer die das Overlay gesetzt ist
@@ -1520,6 +1573,9 @@ def main():
                         elif qr_lage is not None:
                             mpv_befehl("overlay-remove", QR_OVERLAY_ID)
                             qr_lage = None
+                # Umschalt-Waechter (Musik): bestaetigen, dass er nachfragen soll
+                if musik and art == "yt" and window_seen and xf is None:
+                    umschalt_lage.update(ts=now, page=page_id)
                 # Ambilight (Musik, normal und Vollbild): der Faden ambi_schleife
                 # misst viermal pro Sekunde - hier nur bestaetigen, wo.
                 if (state.get("ambi") and musik and art == "yt" and rect_art in ("yt", "yt_voll")

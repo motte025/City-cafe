@@ -8511,9 +8511,15 @@
                 return;
             }
             if (was === 'vollbild' || was === 'normal') {
-                ytmVollbild = was === 'vollbild';
-                ytmAnzeigen();
-                ytmMelden();
+                // Erst dem Supervisor "Video ausblenden" sagen, 250 ms spaeter umbauen -
+                // so liegt das mpv-Fenster nie sichtbar an der alten Stelle.
+                if (ytmVollbild === (was === 'vollbild')) return;
+                window.nlMpvAusblenden = Date.now();
+                setTimeout(() => {
+                    ytmVollbild = was === 'vollbild';
+                    ytmAnzeigen();
+                    ytmMelden();
+                }, nlExtern() ? 250 : 0);
                 return;
             }
             if (was === 'start') {           // "Musik starten" ohne Song
