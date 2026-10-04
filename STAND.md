@@ -88,8 +88,10 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   Masseschleife zur Anlage); der Betreiber will Bluetooth. (USB-Ton nur mit
   CITYCAFE_TON_USB=1.) Der Bluetooth-Wächter im Supervisor protokolliert alle
   10 s nach /home/citycafe/bt-waechter.csv; reißt eine Verbindung von selbst ab,
-  verbindet er neu (jeder zweite Versuch mit Adapter aus/an) und warnt am Handy.
-  Ohne vorherigen Abbruch und nach „Trennen" bleibt es beim Knopf.
+  versucht er höchstens 3-mal in ~2 Minuten neu (kein Adapter-Neustart) und warnt
+  am Handy. **Wechsel Screen ↔ Handy** (im Café spielt auch das Handy auf den B03):
+  Knöpfe im Jetzt-Reiter „📱 Handy an die Anlage" (W1 trennt und sperrt) und
+  „🖥️ Screen an die Anlage" (W1 holt ihn zurück); danach kämpft der Wächter nicht.
   **Notfall-Handgriff, wenn der B03 hängt** (lehnt jede Verbindung ab, knackt,
   Kernel meldet „ACL packet for unknown connection handle"): Stromtrennen allein
   reichte am 05.10. nicht. Den Schalter am B03 einmal auf TX und zurück auf **RX**
