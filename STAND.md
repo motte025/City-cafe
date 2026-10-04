@@ -5,7 +5,7 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 1. Oktober 2026 (ODROID durch ACEMAGIC W1 ersetzt).
+Letzte Durchsicht: 4. Oktober 2026 (YouTube-Musik auf `main`, DJ-Funktionen am W1).
 
 ## Was das Projekt ist
 
@@ -22,8 +22,12 @@ Antwortsprache im Gespräch: Deutsch.
 | Datei / Ordner | Wofür |
 | --- | --- |
 | `index.html` | Das Dashboard selbst: Rotation, alle Widgets, Verbindung zu den Fernbedienungen |
-| `fernbedienung.html` | Sammel-Fernbedienung mit vier Reitern (YouTube, DJ, Hos'n Obe, Roulette) |
-| `yt-fernbedienung.html` | YouTube-Wünsche, Suche und sechs automatische Vorschläge |
+| `fernbedienung.html` | Sammel-Fernbedienung mit vier Reitern (🎵 Musik, DJ, Hos'n Obe, Roulette) |
+| `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef |
+| `yt-fernbedienung-net.js` | Firebase-Pfade der Musik (`yt/…`, `chef/…`) |
+| `yt-warteschlange.js` | Reihenfolge-Logik der Musik (Warteschlange, Radio, Vorschau), Tests in `yt-warteschlange.test.js` |
+| `yt_playlists.json` | Stimmungs-Playlists nach Uhrzeit (Platzhalter, keine eigenen Links) |
+| `YOUTUBE-MUSIK-SETUP.md`, `docs/musik/` | Spec der Musik, Firebase-Regeln, Bilder |
 | `dj-fernbedienung.html` | Twitch-Kanäle, Anmeldung über ein eigenes Fenster |
 | `hosn-obe-engine.js` | Spiellogik des Kartenspiels, dazu `hosn-obe-engine.test.js` |
 | `roulette/` | Gebaute Roulette-Seite (stammt von Codex) |
@@ -41,8 +45,12 @@ sich auf den Push zu verlassen.
 
 ## Geräte
 
-**Den ODROID gibt es nicht mehr.** Seit 30.09.2026 läuft der Kiosk auf dem
-**ACEMAGIC W1** (Ryzen 7 H255, Radeon 780M, 15 GB RAM).
+Seit 30.09.2026 läuft der Kiosk auf dem **ACEMAGIC W1** (Ryzen 7 H255, Radeon
+780M, 15 GB RAM). **Der alte ODROID hängt noch im Café** (Raum `city-cafe`,
+alter Supervisor) – er ist Geschichte, auf ihn wird keine Rücksicht mehr
+genommen. Sobald der W1 im Café hängt, fallen die ODROID-Sonderregeln weg
+(v. a. die Sparregel „box-shadow/filter/animation: none" in `index.html`).
+Bis dahin filtern die Fernbedienungen seinen Status heraus (`chefTv`).
 
 **ACEMAGIC W1**, Zugang vom Beelink `ssh w1` (Benutzer `sabrina`, Schlüssel
 `~/.ssh/citycafe_w1_ed25519`, `sudo` ohne Passwort über
@@ -57,9 +65,12 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
 - **Einstellungen je Gerät** in `/home/citycafe/.config/citycafe.env`:
   `CITYCAFE_RAUM=city-cafe` (Café, kein Roulette-Spiel, nur die Werbung),
   `CITYCAFE_HWDEC=vaapi`, mpv-Puffer 512/64 MiB, `CITYCAFE_CAM_CACHE_SECS=3`
-  (Dartcam), `CITYCAFE_VOLUME=1.0`, Chromium mit VA-API-Schaltern. Ohne
-  Variablen verhalten sich Starter und Supervisor wie früher (Raum
-  `zuhause`).
+  (Dartcam), `CITYCAFE_VOLUME=1.0`, `CITYCAFE_MIX_COOKIES=0` (Mixe ohne
+  Konto, sonst Lobpreis-Lieder aus dem Verlauf), `CITYCAFE_URL=https://
+  motte025.github.io/City-cafe/` (ausdrücklich, weil exportierte Variablen in
+  der Login-Shell bleiben), `CITYCAFE_URL_EXTRA='&chefpin=…'` (Chef-PIN, **nur
+  dort, nie im Repo**), Chromium mit VA-API-Schaltern. Ohne Variablen verhalten
+  sich Starter und Supervisor wie früher (Raum `zuhause`).
 - **Supervisor** `/opt/citycafe/nl-mpv-supervisor.py`: liest über die
   Debug-Schnittstelle (Port 9222) den Zustand des Dashboards und legt Videos,
   Twitch und Dartcam mit mpv passgenau über das Browserfenster
@@ -87,9 +98,13 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   (nur nach Syntaxprüfung; abschaltbar in `/etc/citycafe-update.conf`),
   Neustart nur bei Änderungen. Protokoll `/var/log/citycafe-update.log`.
   **Was auf `main` liegt, landet also am nächsten Morgen auf dem W1.**
-- Logs: `/home/citycafe/nl-mpv-supervisor.log`, `mpv-nl.log`,
-  `citycafe-bt.log`. Bildschirmfoto: `grim` als `citycafe` mit
-  `XDG_RUNTIME_DIR=/run/user/1001` und `WAYLAND_DISPLAY` aus diesem Ordner.
+- Logs: `/home/citycafe/nl-mpv-supervisor.log`, `mpv-nl.log`, `mpv-xf.log`
+  (Überblend-Player), `citycafe-bt.log`. Bildschirmfoto: `/usr/local/bin/kiosk-foto`
+  (→ `/tmp/w1.png`). JavaScript in der Kiosk-Seite: `sudo -u citycafe kiosk-cdp
+  "ausdruck"` (nur auf dem W1), z. B. `ytmBefehl({was:"stopp"})`.
+- Auslastung (04.10., Musik im Vollbild): Prozessor ~7 %, RAM 2,3 von 15 GB,
+  GPU ~22 %, CPU 54 °C. mpv ~4 % eines Kerns (AV1 per VA-API), mit
+  Seitenhintergrund ~42 %.
 
 **Selbst-Aktualisierung des Dashboards**: Es prüft alle fünf Minuten, ob sich
 `index.html` auf GitHub Pages geändert hat, und lädt sich dann beim nächsten
@@ -114,29 +129,43 @@ auch das Roulette, im Café ist es nicht eingeblendet.
 - **Fernbedienungen**: Schriftgrößen für Handy, Tablet und PC getrennt. Der
   Reiter „🎵 Musik" (früher „Videos") ist die neue Musik-Fernbedienung, siehe
   unten.
-- **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, umgesetzt 02./03.10.2026
-  auf dem Branch `youtube-musik`, auf dem W1 im Raum `musiktest` getestet):
-  Warteschlange, die Gäste per Handy füllen und der Chef (mit PIN) sortiert;
-  ist sie leer, läuft der YouTube-Mix zum letzten Song (Rückfall Last.fm, dann
-  Titelsuche), höchstens 60 min ohne neuen Wunsch (`YT_RADIO_MAX_MIN`).
-  „Musik starten" ohne Song nimmt die Stimmungs-Playlist nach Uhrzeit
-  (`yt_playlists.json`; ohne Links Platzhalter aus der Songs-Datenbank, die
-  der Supervisor beim Abspielen sucht). Der TV ist die einzige Quelle der
-  Reihenfolge (`yt-warteschlange.js`, 103 Checks), meldet `yt/jetzt`,
-  `yt/radio`, `yt/listen`. TV: obere Leiste „Als Nächstes" (2 Titel), Kopf-
-  zeile mit Songtitel/Künstler·Genre·Jahr, Zeit, CITY CAFE, Fortschritt,
-  Seitenleiste „Passt dazu", Ticker „▶ JETZT LÄUFT", Wunsch- (5 s) und Tor-
-  Einblendung (15 s); umschaltbar Vollbild (eigene Ebene, mpv wird nur
-  umgelegt, kein Neustart). QR „Song wünschen" zeichnet mpv selbst
-  (overlay-add, braucht `python-pillow`). Videofenster normal unverändert
-  83/248, 1200×675 (mit sway nachgemessen). Gemessen: < 3 s Stille zwischen
-  zwei Songs mit Vorladen, Neustart macht mit dem nächsten Titel weiter,
-  Hos'n Obe hat Vorrang. **Noch offen:** Firebase-Regeln und Chef-PIN
-  (`docs/musik/FIREBASE-REGELN.md`), Merge nach `main`, Test mit
-  echtem Handy, echter Bluetooth-Fernbedienung und QR aus 3 m. Die
-  YouTube-Mixe sind mit Konto-Cookies auf den Verlauf des Premium-Kontos
-  zugeschnitten (Lobpreis-Lieder in jedem Mix); `CITYCAFE_MIX_COOKIES=0`
-  holt sie ohne Konto.
+- **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, seit 03.10.2026 auf `main`,
+  Firebase-Regeln und Chef-PIN eingetragen). Gäste wünschen per Handy, der
+  Chef (PIN) steuert; der TV ist die einzige Quelle der Reihenfolge
+  (`yt-warteschlange.js`, 107 Checks).
+  - **Ablauf:** Musik läuft bis Stopp (keine Zeitgrenze; ist nichts da, startet
+    die Playlist zur Uhrzeit). Gästewünsche frühestens auf Platz 5. Ist die
+    Schlange leer, läuft der Radio-Mix; „Ähnliche Songs" folgt jedem neuen
+    Titel. Die Vorschau („Als Nächstes", „Danach") rechnet wie `weiter()`
+    und zeigt damit die echte Reihenfolge. Hos'n Obe ist während der Musik
+    gesperrt; der Dart-Abend beendet sie, außer der Chef startet sie dabei.
+  - **DJ-Funktionen (Supervisor):** echte Überblendung 9 s (zweiter mpv,
+    gleichbleibende Gesamtlautstärke, Bild per sway-Opacity; Pause/Skip/Stopp
+    mittendrin sauber); Intro und Ausklang werden nach Lautstärke
+    abgeschnitten (ffmpeg, Start bei 3 s fast normaler Lautstärke, Ende 10 dB
+    darunter); der neue Song startet so, dass sein Musikbeginn ans
+    Blendenende fällt. Vorladen 40 s vor Ende. Musikvideos bevorzugt (Mix ohne
+    Lyric/Audio/Topic, Playlist-Titel werden vorab gegen das offizielle Video
+    getauscht, Mixe > 10 min fliegen raus). Kein H.264-Zwang mehr (AV1/VP9).
+  - **Bild:** Seitenbalken (4:3, Hochformat, auch eingebrannte) werden mit dem
+    unscharfen Video gefüllt; schwarzer Kontrastrahmen (2 px + 30 px Verlauf)
+    als mpv-Overlay; Ambilight (4×/s per `grim`) normal und Vollbild;
+    Auflösungsschild aus dem laufenden Player. mpv startet unsichtbar und
+    erscheint erst, wenn es sitzt; Normal/Vollbild über den Umschalt-Wächter
+    (erst ausblenden, dann umbauen); `--keepaspect-window=no`.
+  - **TV:** Überschrift „Interpret – Titel" (Widget fest 36 px, Vollbild
+    48 px, gekürzt statt verkleinert), Cover in allen Listen (YouTube-Bild,
+    sonst Datenbank/iTunes), rechte Karte per Handy „Ähnliche Songs" oder
+    Drive-Fotos, „Gleich dran" im Vollbild (Titel groß, Interpret türkis).
+    QR „Song wünschen" ist vorerst aus (`YT_QR_AN`).
+  - **Handy:** Suche nach Songs oder Playlists (Playlist öffnen, einzelne Titel
+    nehmen), ⋯-Menü je Song (Sofort, Als Nächstes, Radio-Mix starten, Ende),
+    Radio-Mix zum laufenden Song (kommt in die Schlange), Warteschlange
+    bereinigen, Fortschrittsbalken antippen, Lauter/Leiser in 5er-Schritten
+    (max. 100 %), Fotos/Ambilight/Vollbild umschalten, „Musik beenden".
+    Steuerung geht auch außerhalb des WLANs (`?raum=city-cafe`).
+- **YouTube-Musik, offen:** Test der Dart-Ausnahme an einem Dart-Abend;
+  echte Playlists des Betreibers (es gibt keine, Platzhalter bleiben).
 - **Nightlife/YouTube**: Zyklus-Videos steigen zufällig ein (4-Minuten-Slot).
   Wünsche vom Handy beginnen von vorn und laufen die gewählte Zeit; „Bis
   Stopp" läuft bis Stopp, neuem Wunsch oder Videoende (vorher brach es nach
@@ -257,7 +286,10 @@ wieder live gerechnet.
 - Verweigerte Berechtigungen nicht umgehen, sondern nachfragen.
 - Nichts an Partitionen, Bootloader oder Windows auf dem W1 ändern ohne
   ausdrückliche Freigabe.
-- Hochgeladen wird nur nach Freigabe des Betreibers.
+- Hochgeladen wird nur nach Freigabe des Betreibers (Änderungen, die er
+  ausdrücklich bestellt, gelten als freigegeben).
+- Die Chef-PIN kommt nicht ins Repo (steht nur in `citycafe.env` auf dem W1
+  und in Firebase `djremote/<raum>/chef/pin`).
 - Im Café läuft das Roulette-Spiel nicht, nur die Werbung.
 
 ## Arbeitsweisen, die sich bewährt haben
@@ -282,3 +314,9 @@ wieder live gerechnet.
   Der Zustand der Seite sagt nichts darüber, was tatsächlich im Bild landet.
 - Änderungen erst auf der Box nachprüfen — am besten mit einem Bildschirmfoto —
   und erst dann sagen, dass etwas fertig ist.
+- Nach einem Push lädt der Kiosk die Seite erst beim nächsten Slotwechsel neu;
+  zum Testen per `kiosk-cdp` neu laden (Musik springt dabei einen Song
+  weiter). GitHub-Pages-Dateien hängen bis zu 10 min im Browser-Cache –
+  `fetch(…, {cache:"reload"})` vor dem Neuladen.
+- Größere Dateiänderungen per kleinem Node-Skript (lesen, `replace`,
+  schreiben, CRLF beibehalten) statt sed über mehrere Zeilen.
