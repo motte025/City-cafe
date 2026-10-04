@@ -2486,13 +2486,16 @@
         .ytv-fortschritt div { flex: 1; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
         .ytv-rechts { position: absolute; left: 1350px; right: 40px; top: 127px; height: 720px; display: flex; flex-direction: column; }
         .ytv-gleich { border-radius: 16px; padding: 18px 22px; background: rgba(192, 38, 211, 0.16); border: 1px solid rgba(243, 85, 218, 0.55); }
-        .ytv-gleich-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; letter-spacing: 1.5px; color: #f9a8e8; }
-        .ytv-gleich-zeile { display: flex; align-items: center; gap: 36px; margin-top: 4px; min-width: 0; }
-        /* feste Breite: Orbitron hat keine gleich breiten Ziffern - sonst zuckt der Titel daneben jede Sekunde */
-        .ytv-gleich-zeile b { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 58px; color: #ffffff; font-variant-numeric: tabular-nums; flex-shrink: 0; width: 205px; }
-        .ytv-gleich-zeile div { flex: 1; min-width: 0; display: flex; flex-direction: column; }   /* Titel nutzt die ganze Breite bis zum Rand */
-        .ytv-gleich-zeile strong { font-size: 31px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ytv-gleich-zeile small { font-size: 20px; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* "Gleich dran" (Vollbild): oben Kennzeile mit Countdown rechts, darunter
+           Interpret und Titel ueber die volle Kartenbreite - gross und gut lesbar. */
+        .ytv-gleich-kopf { display: flex; align-items: center; justify-content: space-between;
+            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 1.5px; color: #f9a8e8; }
+        /* Countdown rechtsbuendig in eigener Zeile: wechselnde Ziffernbreite schiebt nichts mehr */
+        .ytv-gleich-kopf b { font-size: 40px; color: #ffffff; letter-spacing: 1px; text-align: right; }
+        .ytv-gleich-kuenstler { margin-top: 10px; font-size: 30px; font-weight: 800; color: #00f2fe; line-height: 1.15;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-gleich-titel { margin-top: 4px; font-size: 36px; font-weight: 900; color: #ffffff; line-height: 1.12;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .ytv-danach-kopf { margin: 22px 0 12px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; color: #00f2fe; letter-spacing: 1px; }
         .ytv-danach-kopf small { font-size: 16px; color: #f9a8e8; margin-left: 8px; }
         .ytv-liste { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
@@ -3264,8 +3267,9 @@
             <div class="ytv-fortschritt"><span id="ytv-pos">0:00</span><div><i id="ytv-balken"></i></div><span id="ytv-dauer">0:00</span></div>
             <div class="ytv-rechts">
                 <div class="ytv-gleich">
-                    <div class="ytv-gleich-kopf">GLEICH DRAN</div>
-                    <div class="ytv-gleich-zeile"><b id="ytv-countdown">0:00</b><div><strong id="ytv-gleich-titel">—</strong><small id="ytv-gleich-kuenstler"></small></div></div>
+                    <div class="ytv-gleich-kopf"><span>GLEICH DRAN</span><b id="ytv-countdown">0:00</b></div>
+                    <div class="ytv-gleich-kuenstler" id="ytv-gleich-kuenstler"></div>
+                    <div class="ytv-gleich-titel" id="ytv-gleich-titel">—</div>
                 </div>
                 <div class="ytv-danach-kopf" id="ytv-danach-kopf">DANACH</div>
                 <div class="ytv-liste" id="ytv-liste"></div>
