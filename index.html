@@ -2464,7 +2464,7 @@
         }
         .ytv-kopf { position: absolute; left: 40px; right: 40px; top: 28px; height: 80px; display: flex; align-items: flex-start; gap: 24px; }
         .ytv-titelblock { min-width: 0; flex: 1 1 auto; }
-        .ytv-titelblock h2 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 44px; font-weight: 900; color: #ffffff;
+        .ytv-titelblock h2 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 48px; font-weight: 900; color: #ffffff;
             text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-titelblock p { margin: 6px 0 0; font-size: 20px; font-weight: 700; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -8725,7 +8725,8 @@
             }
             // 6.8 Vollbild
             const vt = document.getElementById('ytv-titel');
-            if (vt) { if (vt.textContent !== ytmKopfzeile(j)) vt.textContent = ytmKopfzeile(j); ytmEinpassen(vt, 48, 26); }
+            // Vollbild-Ueberschrift fest gross, zu lange wird mit ... gekuerzt (nicht verkleinert)
+            if (vt && vt.textContent !== ytmKopfzeile(j)) vt.textContent = ytmKopfzeile(j);
             const vu = document.getElementById('ytv-unter');
             if (vu) vu.textContent = unter;
             const vor = YTW.vorschau(ytm, 8, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
