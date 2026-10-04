@@ -1267,7 +1267,7 @@ def seiten_blur_args(vid):
 # (overlay-add, wie frueher den QR) - auf das Video darf kein HTML. Je Groesse
 # einmal gebaut (Pillow), kostet beim Abspielen praktisch nichts.
 RAHMEN_ID = 8
-RAHMEN_STREIFEN = 3        # px voll schwarz
+RAHMEN_STREIFEN = 2        # px voll schwarz
 RAHMEN_VERLAUF = 30        # px weicher Uebergang nach innen
 RAHMEN_ALPHA = 0.7
 
