@@ -1211,12 +1211,12 @@ def songlaenge(vid, laenge_video=0):
     return None
 
 
-def pegel_messen(argumente):
-    """ffmpeg -> Liste RMS-Pegel (dB) je 0,5 s (Stille = -90)."""
+def pegel_messen(argumente, fenster=0.5):
+    """ffmpeg -> Liste RMS-Pegel (dB) je fenster Sekunden (Stille = -90)."""
     try:
         aus = subprocess.run(
             ["ffmpeg", "-hide_banner", "-nostats", *argumente, "-af",
-             "aresample=8000,asetnsamples=n=4000,astats=metadata=1:reset=1,"
+             f"aresample=8000,asetnsamples=n={int(8000 * fenster)},astats=metadata=1:reset=1,"
              "ametadata=print:key=lavfi.astats.Overall.RMS_level:file=-", "-f", "null", "-"],
             capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.TimeoutExpired):
@@ -1230,6 +1230,84 @@ def pegel_messen(argumente):
                 w = -90.0
             werte.append(max(-90.0, w) if w == w else -90.0)
     return werte
+
+
+# Songbeginn wie ein DJ finden (Wunsch 04.10.2026, "Be Mine haette vorgespult gehoert"):
+# die Studiofassung (Audio-Upload, gleiche Laenge wie bei iTunes) suchen, ihre ersten
+# 20 s als Lautstaerke-Huelle (50 ms) im Ton der ersten 100 s des Videos wiederfinden
+# (normierte Kreuzkorrelation). Getestet: Be Mine 14,2 s, Grace Kelly 18,1 s, Blame
+# 41,2 s, Danza Kuduro 37,1 s (Guete 0,94-1,00); andere Abmischung (O-Zone 0,32) -> Pegel-Regel.
+ABGLEICH_HOP = 0.05
+ABGLEICH_REF_SEK = 20
+ABGLEICH_GUETE = 0.8
+ABGLEICH_SCHLECHT = re.compile(r"(?i)live|cover|8d|extended|making|remix|rmx|karaoke|instrumental|sped|slowed|"
+                               r"reverb|nightcore|acoustic|official video|music video|videoclip")
+
+
+def _ncc(v, r):
+    """Beste Stelle von r in v (normierte Kreuzkorrelation) -> (guete, index)."""
+    m = len(r)
+    rm = sum(r) / m
+    rz = [x - rm for x in r]
+    rn = math.sqrt(sum(x * x for x in rz)) or 1.0
+    best, lag = -1.0, 0
+    for k in range(0, len(v) - m + 1):
+        w = v[k:k + m]
+        wm = sum(w) / m
+        num = den = 0.0
+        for a, b in zip(w, rz):
+            d = a - wm
+            num += d * b
+            den += d * d
+        c = num / ((math.sqrt(den) or 1.0) * rn)
+        if c > best:
+            best, lag = c, k
+    return best, lag
+
+
+def studio_abgleich(vid, audio_url, laenge, song):
+    """-> {"anfang", "ende", "guete"} oder None."""
+    def norm(x):
+        return re.sub(r"[^a-z0-9]", "", x.lower())
+    m = (META.get(vid) or []) + ["", "", "", ""]
+    kuenstler, track, titel = [("" if x in ("NA", "None") else x) for x in m[:3]]
+    if not (kuenstler and track):
+        teile = re.sub(r"[\(\[].*?[\)\]]", " ", titel).split(" - ", 1)
+        if len(teile) < 2:
+            return None
+        kuenstler, track = teile[0].strip(), teile[1].strip()
+    kuenstler = re.split(r",| feat\.| ft\.| & ", kuenstler)[0].strip()
+    track = re.sub(r"(?i)\b(official|offizielles|music|musik)?\s*(video|audio)\b|\|.*$", " ", track).strip()
+    if not kuenstler or len(norm(track)) < 2:
+        return None
+    kandidaten = []
+    for frage in (f"{kuenstler} {track}", f"{kuenstler} {track} audio"):
+        kandidaten = [t for t in suchen(frage, 10)
+                      if t["videoId"] != vid and norm(track)[:12] in norm(t["titel"])
+                      and not ABGLEICH_SCHLECHT.search(t["titel"])
+                      and (not song or abs((t.get("dauerSek") or 0) - song) <= 5)]
+        if kandidaten:
+            break
+    if not kandidaten:
+        log(f"Studio-Abgleich {vid}: keine Studiofassung gefunden")
+        return None
+    kandidaten.sort(key=lambda t: (norm(t["titel"]) != norm(track), "audio" not in t["titel"].lower()))
+    ref = resolve(kandidaten[0]["videoId"], "bestaudio")
+    if not ref:
+        return None
+    r_alle = pegel_messen(["-t", str(ABGLEICH_REF_SEK + 10), "-i", ref[0]], ABGLEICH_HOP)
+    st = next((i for i, x in enumerate(r_alle) if x > -45), 0)      # Stille vorn ueberspringen
+    r = r_alle[st:st + int(ABGLEICH_REF_SEK / ABGLEICH_HOP)]
+    v = pegel_messen(["-t", "100", "-i", audio_url], ABGLEICH_HOP)
+    if len(r) < 100 or len(v) <= len(r):
+        return None
+    guete, lag = _ncc(v, r)
+    anfang = (lag - st) * ABGLEICH_HOP
+    log(f"Studio-Abgleich {vid}: '{kandidaten[0]['titel'][:50]}' -> Song ab {anfang:.1f}s, Guete {guete:.2f}")
+    if guete < ABGLEICH_GUETE or not (-1.0 <= anfang <= min(90.0, (laenge or 300) * 0.4)):
+        return None
+    ende = anfang + ref[2] if ref[2] and guete >= 0.9 else None
+    return {"anfang": max(0.0, anfang), "ende": ende, "guete": guete}
 
 
 def stille_messen(vid, audio_url, laenge):
@@ -1260,6 +1338,10 @@ def stille_messen(vid, audio_url, laenge):
         erlaubt = INTRO_OHNE_LAENGE_SEK
     if anfang < 0.4 or anfang > min(erlaubt, laenge * 0.3):
         anfang = 0.0
+    # Genauer: Studiofassung im Video wiederfinden (geht vor der Pegel-Regel).
+    abgl = studio_abgleich(vid, audio_url, laenge, song)
+    if abgl:
+        anfang = abgl["anfang"] if abgl["anfang"] >= 0.4 else 0.0
     ende = None
     if schluss:
         grenze = normal - AUSKLANG_ABSTAND_DB
@@ -1269,9 +1351,12 @@ def stille_messen(vid, audio_url, laenge):
                 break
         if ende is not None and not (1.0 <= laenge - ende <= 55):
             ende = None
+    if abgl and abgl.get("ende") and abgl["ende"] < laenge - 1:
+        ende = min(ende or laenge, abgl["ende"])        # Abspann/Filmszene nach dem Song
     gain = anhebung(audio_url, normal)
     STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None, "gain": gain}
-    log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s (erlaubt {erlaubt:.0f}s), "
+    log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s "
+        + (f"(Studio-Abgleich, Guete {abgl['guete']:.2f}), " if abgl else f"(erlaubt {erlaubt:.0f}s), ") +
         f"Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge:.0f}s)"
         + (f", angehoben um {gain:.1f} dB" if gain else ""))
 
@@ -1958,9 +2043,9 @@ def main():
             log(f"Seitenhintergrund an ({shown})")
 
         # Song lief schon, bevor seine Messung fertig war (frischer Wunsch, Neustart):
-        # in den ersten 15 s noch zum Musikbeginn springen.
+        # in den ersten 30 s noch zum Musikbeginn springen (Studio-Abgleich braucht ~10 s).
         if (musik and shown and shown.startswith("yt:") and mpv is not None and last_pos is not None
-                and intro_gesprungen != shown and started and time.time() - started < 15):
+                and intro_gesprungen != shown and started and time.time() - started < 30):
             anf = (STILLE.get(shown[3:]) or {}).get("anfang") or 0
             if anf > 1 and last_pos < anf - 1:
                 intro_gesprungen = shown
