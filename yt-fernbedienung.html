@@ -332,7 +332,7 @@
         <summary>🔊 Ton</summary>
         <div class="feldname">Lautstärke <span id="lautwert">100 %</span></div>
         <input type="range" id="laut" min="0" max="100" step="5" value="100">
-        <div class="zeiten" id="lautheit"></div>
+        <div class="hinweis">Leise Songs hebt der Screen automatisch an (ohne Übersteuern).</div>
     </details>
     <details class="nur-chef">
         <summary>⏩ Vor- und zurückspulen</summary>
@@ -379,7 +379,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-04-liste-links';
+    var FASSUNG = '2026-10-04-ohne-ausgleich';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -1202,8 +1202,6 @@
           hoehe, function (w) { hoehe = w; qualitaetSenden(); });
     reihe('bildraten', [{ wert: 0, text: 'Egal' }, { wert: 60, text: '60 fps' }, { wert: 30, text: '30 fps' }],
           fps, function (w) { fps = w; qualitaetSenden(); });
-    reihe('lautheit', [{ wert: false, text: 'Ausgleich aus' }, { wert: true, text: 'Ausgleich an' }], false,
-          function (w) { senden({ aktion: 'ton', lautheit: w }); });
     el('laut').addEventListener('input', function () { el('lautwert').textContent = el('laut').value + ' %'; el('laut-jetzt').textContent = el('laut').value + ' %'; });
     // Lauter/Leiser in 5er-Schritten direkt in der Jetzt-Karte (die Handy-
     // Lautstaerketasten erreicht eine Webseite nicht). Mehrfach tippen sammelt

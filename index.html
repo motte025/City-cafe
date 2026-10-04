@@ -7594,7 +7594,7 @@
             const gespeichert = JSON.parse(localStorage.getItem('cityCafeNlTon') || 'null');
             if (gespeichert && typeof gespeichert === 'object') {
                 nlTon.vol = Math.max(0, Math.min(100, Number(gespeichert.vol) || 100));
-                nlTon.lautheit = !!gespeichert.lautheit;
+                nlTon.lautheit = false;   // Ausgleich abgeschafft: leise Songs hebt der Supervisor an
                 window.nlTonWunsch = { id: 'gespeichert', vol: nlTon.vol, lautheit: nlTon.lautheit };
             }
         } catch (e) {}
@@ -7733,7 +7733,7 @@
                 if (befehl.lautstaerke !== undefined) {
                     nlTon.vol = Math.max(0, Math.min(100, Number(befehl.lautstaerke) || 0));
                 }
-                if (befehl.lautheit !== undefined) nlTon.lautheit = !!befehl.lautheit;
+                nlTon.lautheit = false;   // Ausgleich abgeschafft (04.10.2026)
                 window.nlTonWunsch = { id: befehl.id, vol: nlTon.vol, lautheit: nlTon.lautheit };
                 try { nlPlayer.setVolume(nlTon.vol); } catch (e) {}   // Rueckfall im Browser
                 try { localStorage.setItem('cityCafeNlTon', JSON.stringify(nlTon)); } catch (e) {}
