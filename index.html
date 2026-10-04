@@ -8164,19 +8164,21 @@
         let ytmListenInhalt = {};       // nr -> Titel (fuer Handy und Start)
         let ytmListenWarteschlange = []; // Playlists, deren Inhalt noch gelesen wird
         let ytmListeLaeuft = null;      // { id, nr }
-        function ytmPlaylistNutzen(pl, art) {
+        // ab = { nr, videoId }: "Ab hier abspielen" - Playlist ab diesem Song,
+        // der sofort laeuft (Index, bei abweichender Liste ueber die videoId).
+        function ytmPlaylistNutzen(pl, art, ab) {
             if (!pl) return;
             if (ytmListenInhalt[pl.nr] && ytmListenInhalt[pl.nr].length) {
-                ytmPlaylistEinreihen(ytmListenInhalt[pl.nr], art);
+                ytmPlaylistEinreihen(ytmListenInhalt[pl.nr], art, ab);
                 return;
             }
             if (Array.isArray(pl.titel) && pl.titel.length) {   // feste Titelliste in yt_playlists.json
-                ytmPlaylistEinreihen(pl.titel.map(x => ytmAufbereiten(Object.assign({}, x))), art);
+                ytmPlaylistEinreihen(pl.titel.map(x => ytmAufbereiten(Object.assign({}, x))), art, ab);
                 return;
             }
             if (pl.quelle) {
                 const id = ytmId();
-                ytmPlaylistWartet = { id, pl, art };
+                ytmPlaylistWartet = { id, pl, art, ab };
                 window.nlPlaylistAuftrag = { id, quelle: pl.quelle };
                 return;
             }
@@ -8237,7 +8239,21 @@
             }).catch(() => {});
         }
 
-        function ytmPlaylistEinreihen(titel, art) {
+        function ytmAbHier(b) {
+            if (b.ab === undefined || b.ab === null) return null;
+            const vid = String(b.abVideo || '');
+            return { nr: Math.max(0, Number(b.ab) || 0), videoId: /^[A-Za-z0-9_-]{11}$/.test(vid) ? vid : '' };
+        }
+        function ytmPlaylistEinreihen(titel, art, ab) {
+            if (ab) {
+                let i = Number(ab.nr) || 0;
+                if (ab.videoId && (titel[i] || {}).videoId !== ab.videoId) {
+                    const j = titel.findIndex(t => t.videoId === ab.videoId);
+                    if (j >= 0) i = j;
+                }
+                titel = titel.slice(Math.max(0, i));
+                art = 'start';
+            }
             if (!titel.length || !nlFernVerb) return;
             const neu = titel.map(t => ytmAufbereiten(Object.assign({}, t, {
                 id: ytmId(), quelle: 'playlist', von: 'tv', ts: Date.now()
@@ -8254,6 +8270,11 @@
                 const gesetzt = ytm.eintraege[ytm.eintraege.length - 1];
                 YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, gesetzt.id, gesetzt).catch(() => {});
             });
+            if (ab) {   // erster Song sofort, auch vor Gaeste-Wuenschen
+                ytm = YTW.verschieben(ytm, neu[0].id, 0);
+                const vorn = ytm.eintraege.find(e => e.id === neu[0].id);
+                if (vorn) YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, vorn.id, vorn).catch(() => {});
+            }
             ytm.letzterWunschTs = Date.now();
             if (art === 'start' || !ytmAktiv()) {
                 ytm.modus = 'playlist';
@@ -8374,10 +8395,10 @@
                 const w = ytmPlaylistWartet;
                 ytmPlaylistWartet = null;
                 const titel = p.liste && p.liste.length ? p.liste : ytmPlatzhalterTitel(w.pl);
-                if (w.pl.suche) ytmPlaylistEinreihen(titel.map(t => ytmAufbereiten(t)), w.art);   // nicht in "Listen"
+                if (w.pl.suche) ytmPlaylistEinreihen(titel.map(t => ytmAufbereiten(t)), w.art, w.ab);   // nicht in "Listen"
                 else {
                     ytmListeMelden(w.pl, titel);
-                    ytmPlaylistEinreihen(ytmListenInhalt[w.pl.nr], w.art);
+                    ytmPlaylistEinreihen(ytmListenInhalt[w.pl.nr], w.art, w.ab);
                 }
                 ytmNaechsteListe();
             }
@@ -8617,12 +8638,26 @@
                 if (!/^[A-Za-z0-9_-]{13,64}$/.test(lid)) return;
                 ytmPlaylistNutzen({ nr: 'suche', suche: true, name: String(b.name || '').slice(0, 80),
                                     quelle: 'https://www.youtube.com/playlist?list=' + lid },
-                                  b.art === 'anhaengen' ? 'anhaengen' : 'start');
+                                  b.art === 'anhaengen' ? 'anhaengen' : 'start', ytmAbHier(b));
                 return;
             }
             if (was === 'playlist') {
                 const pl = ytmPlaylists.find(p => Number(p.nr) === Number(b.nr));
-                ytmPlaylistNutzen(pl, b.art === 'anhaengen' ? 'anhaengen' : 'start');
+                ytmPlaylistNutzen(pl, b.art === 'anhaengen' ? 'anhaengen' : 'start', ytmAbHier(b));
+                return;
+            }
+            if (was === 'abHier') {         // Chef: Warteschlange ab diesem Song (alles davor faellt weg)
+                if (!nlFernVerb) return;
+                const id = String(b.eintrag || '');
+                const s = YTW.sortiert(ytm.eintraege);
+                const i = s.findIndex(e => e.id === id);
+                if (i < 0) return;
+                const weg = new Set(s.slice(0, i).map(e => e.id));
+                weg.forEach(x => YT_REMOTE_NET.warteschlangeEntfernen(nlFernVerb, NL_FERN_RAUM, x).catch(() => {}));
+                ytm = Object.assign({}, ytm, { eintraege: ytm.eintraege.filter(e => !weg.has(e.id)) });
+                ytm.letzterWunschTs = Date.now();
+                ytm.modus = 'warteschlange';
+                ytmWeiter();
                 return;
             }
             if (was === 'radioJetzt') {     // Chef: Radio-Mix zum laufenden Song, ohne ihn zu unterbrechen
