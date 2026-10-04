@@ -575,7 +575,10 @@ def bt_waechter(seite_holen):
     while True:
         time.sleep(BT_TAKT)
         try:
-            usb = usb_senke()
+            # Ton per USB-Soundkarte nur auf ausdruecklichen Wunsch (CITYCAFE_TON_USB=1):
+            # am W1-USB-Verteiler knackte der B03 Pro (05.10.2026, USB-Fehler -71,
+            # Masseschleife zur Anlage). Betreiber will Bluetooth.
+            usb = usb_senke() if os.environ.get("CITYCAFE_TON_USB") == "1" else None
             if usb:
                 usb_standard(usb)
                 if not war_ok:
