@@ -5,7 +5,8 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 4. Oktober 2026 (YouTube-Musik auf `main`, DJ-Funktionen am W1).
+Letzte Durchsicht: 5. Oktober 2026 (DJ-Übergänge per Studio-Abgleich, offizielle
+Videos überall, Playlists bearbeiten am Handy, Playlists 5–8).
 
 ## Was das Projekt ist
 
@@ -141,12 +142,39 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     gesperrt; der Dart-Abend beendet sie, außer der Chef startet sie dabei.
   - **DJ-Funktionen (Supervisor):** echte Überblendung 9 s (zweiter mpv,
     gleichbleibende Gesamtlautstärke, Bild per sway-Opacity; Pause/Skip/Stopp
-    mittendrin sauber); Intro und Ausklang werden nach Lautstärke
-    abgeschnitten (ffmpeg, Start bei 3 s fast normaler Lautstärke, Ende 10 dB
-    darunter); der neue Song startet so, dass sein Musikbeginn ans
-    Blendenende fällt. Vorladen 40 s vor Ende. Musikvideos bevorzugt (Mix ohne
-    Lyric/Audio/Topic, Playlist-Titel werden vorab gegen das offizielle Video
-    getauscht, Mixe > 10 min fliegen raus). Kein H.264-Zwang mehr (AV1/VP9).
+    mittendrin sauber). Der Musikbeginn des neuen Songs fällt in die **Mitte**
+    der Blende (kein Lautstärkeloch, höchstens −3 dB). Chef kann am Handy mit
+    ⤨ mitten im Song überblenden. Vorladen 40 s vor Ende; die nächsten 3 Songs
+    der Schlange werden schon vorab gemessen (eigener Arbeiter), damit
+    Umstellen kurz vor Schluss trotzdem stimmt.
+  - **Songbeginn und -ende (Stand 05.10.2026, Test mit 100 Songs):**
+    - *Studio-Abgleich:* Die Studiofassung (Audio-Upload, Länge wie bei
+      iTunes) wird gesucht und ihr Anfang (40 s, Bass-Hüllkurve; gekürzte
+      Radio-Fassungen über 20 s mit voller Ton- und Bass-Übereinstimmung)
+      sowie ihr Schluss (letzte 25 s) per Kreuzkorrelation im Video
+      gefunden. Trifft bei rund der Hälfte der Songs (Be Mine 14,2 s,
+      Maneater 87,3 s, Grace Kelly 18,1 s, Blame 41,2 s).
+    - *Rückfall:* Pegel-Regel (Start bei 3 s fast normaler Lautstärke,
+      höchstens so viel wie das Video länger als der Song laut iTunes ist,
+      sonst 35 s); Ende 6 dB unter normal; Pause ≥ 2 s mit ≤ 15 s Nachspann
+      danach zählt nicht mehr zum Song (Michelle „So oder so").
+    - Studio-Ende früher als die Pegel-Regel gilt nur mit Bruch danach
+      (sonst ist das Video eine längere Fassung); deutlich später → leiser
+      Schlussteil bleibt, höchstens 10 s vor dem Studio-Ende.
+    - Grenze: Video mit anderer Abmischung als jede Studiofassung (Hallo
+      kleine Maus) → nur Pegel-Regel.
+  - **Lautstärke:** leise Songs werden automatisch angehoben (mpv
+    `volume-gain`, ab 2 dB unter −11 dB, bis +8 dB, nie über die Spitzen,
+    1 dB Reserve – Betreiber will **keine Übersteuerung**, keinen Limiter).
+    Abgesenkt wird nichts. Der alte Ton-Ausgleich (dynaudnorm) ist abgeschafft.
+    Bluetooth und W1 stehen auf 100 %, die Lautstärke stellt der Betreiber
+    selbst am Handy ein (ab 70 % in 3er-Schritten).
+  - **Richtige Videos:** offizielle Videos (Künstler-Kanal, VEVO, Label)
+    werden überall bevorzugt: Suche sortiert Live/Fan/Lyric/Audio ans Ende,
+    der TV prüft jeden Song der Warteschlange vor dem Abspielen und tauscht
+    Topic/Lyric/Live/TV-Auftritt/Fan-Upload gegen das offizielle Video
+    (`musikvideo_wertung` mit Suchtext, `ytmKeinMusikvideo`). Making-of,
+    Teaser, Reportagen fliegen raus. Kein H.264-Zwang mehr (AV1/VP9).
   - **Bild:** Seitenbalken (4:3, Hochformat, auch eingebrannte) werden mit dem
     unscharfen Video gefüllt; schwarzer Kontrastrahmen (2 px + 30 px Verlauf)
     als mpv-Overlay; Ambilight (4×/s per `grim`) normal und Vollbild;
@@ -156,16 +184,39 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   - **TV:** Überschrift „Interpret – Titel" (Widget fest 36 px, Vollbild
     48 px, gekürzt statt verkleinert), Cover in allen Listen (YouTube-Bild,
     sonst Datenbank/iTunes), rechte Karte per Handy „Ähnliche Songs" oder
-    Drive-Fotos, „Gleich dran" im Vollbild (Titel groß, Interpret türkis).
-    QR „Song wünschen" ist vorerst aus (`YT_QR_AN`).
+    Drive-Fotos. Vollbild: „NÄCHSTER TITEL" (früher „Gleich dran") und
+    „WARTESCHLANGE" (früher „Danach"). QR „Song wünschen" ist vorerst aus
+    (`YT_QR_AN`).
   - **Handy:** Suche nach Songs oder Playlists (Playlist öffnen, einzelne Titel
-    nehmen), ⋯-Menü je Song (Sofort, Als Nächstes, Radio-Mix starten, Ende),
-    Radio-Mix zum laufenden Song (kommt in die Schlange), Warteschlange
-    bereinigen, Fortschrittsbalken antippen, Lauter/Leiser in 5er-Schritten
-    (max. 100 %), Fotos/Ambilight/Vollbild umschalten, „Musik beenden".
-    Steuerung geht auch außerhalb des WLANs (`?raum=city-cafe`).
-- **YouTube-Musik, offen:** Test der Dart-Ausnahme an einem Dart-Abend;
-  echte Playlists des Betreibers (es gibt keine, Platzhalter bleiben).
+    nehmen), ⋯-Menü je Song (Ab hier abspielen, Sofort, Als Nächstes, An 5.
+    Stelle, Radio-Mix starten, Ende, Zu Playlist hinzufügen), Radio-Mix zum
+    laufenden Song, Warteschlange bereinigen (✕ links, ☰ rechts),
+    Fortschrittsbalken antippen, Überblenden ⤨, Lauter/Leiser (bis 70 % 5er-,
+    darüber 3er-Schritte, max. 100 %), Player zeigt die laufende Playlist,
+    Fotos/Ambilight/Vollbild, „Musik beenden". „Passt dazu" und Playlists mit
+    Vorschaubild, Kanal und Art (Video/Audio/Lyric/Live/Remix). Steuerung
+    geht auch außerhalb des WLANs (`?raum=city-cafe`). Bildschirme in der
+    Auswahl: City Cafe, Zuhause („musiktest" am 05.10. gelöscht).
+  - **Playlists am Handy bearbeiten (Chef):** Songs löschen, verschieben,
+    hinzufügen (Ende oder Platz 5), „↺ Original wiederherstellen". Gespeichert
+    in Firebase `yt/listen/<nr>` mit `bearbeitet: true`; diese Fassung geht
+    der aus `yt_playlists.json` vor. **Achtung:** Wer eine bearbeitete
+    Playlist im Repo ändert, muss die Änderung auch in `yt/listen/<nr>`
+    nachziehen (so geschehen bei Playlist 6 am 05.10.).
+  - **Playlists (`yt_playlists.json`, feste Titellisten mit videoId):**
+    1–4 Platzhalter (Party Hits, Schlager, Après-Ski, Chill); 5 „Mix
+    04.10.2026" (210, moderne Schlager / internationale / deutsche
+    Party-Hits 2-2-2); 6 „Mix 04.10.2026 (2)" (200, Stil der Betreiber-Liste
+    05.05.2024: Latin, Dance, 80er/90er, Pop, Deutsch/Austro; am Handy
+    bearbeitet); 7 „Klausi" (144, Nachbau der Apple-Music-Playlist „City
+    Café", gleiche Reihenfolge); 8 „Schlager 2024–2026" (128, offizielle
+    Videos ab 2024 mit iTunes-Jahresprüfung, nie zweimal derselbe Interpret
+    hintereinander, Mike Leon Grosch nur die bekanntesten + „Gentleman",
+    Stereoact-Remixe dazu). Am 05.10. wurden 12 Fan-/TV-Einträge durch
+    offizielle Videos ersetzt.
+- **YouTube-Musik, offen:** Test der Dart-Ausnahme an einem Dart-Abend.
+  Einige Songs haben nur TV-/Live-Fassungen (Rosanna Rocci „Solo con te",
+  Draufgänger „Marie", CCR „Proud Mary" – bleiben vorerst).
 - **Nightlife/YouTube**: Zyklus-Videos steigen zufällig ein (4-Minuten-Slot).
   Wünsche vom Handy beginnen von vorn und laufen die gewählte Zeit; „Bis
   Stopp" läuft bis Stopp, neuem Wunsch oder Videoende (vorher brach es nach
