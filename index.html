@@ -8465,9 +8465,11 @@
             }
 
             if (ytmAktiv() && !ytmSpielPause) {
-                const naechste = YTW.vorschau(ytm, 2, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
+                const naechste = YTW.vorschau(ytm, 3, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
+                // Die naechsten drei schon im Voraus messen lassen (Supervisor: Intro, Ende, Anhebung)
+                window.nlMusikAnalyse = naechste.map(t => t.videoId).filter(Boolean);
                 // Naechste zwei ohne videoId? Jetzt schon finden.
-                const ohne = naechste.find(t => !t.videoId);
+                const ohne = naechste.slice(0, 2).find(t => !t.videoId);
                 if (ohne) ytmFinden(ohne, false);
                 // 60 s vor Schluss den naechsten Song vorladen (5.2).
                 const st = ytmStand();

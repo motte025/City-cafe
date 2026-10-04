@@ -239,6 +239,8 @@ STATE_EXPR = """JSON.stringify({
   musik: !!window.nlMusik,
   // Naechster Song zum Vorladen: { videoId, hoehe, fps } (5.2)
   vorladen: window.nlMusikVorladen || null,
+  // Die naechsten Songs der Warteschlange (videoIds) zum Vorab-Messen
+  analyse: window.nlMusikAnalyse || null,
   // Radio-Mix zum Song: { id, videoId } -> window.nlMixErgebnis
   mix: window.nlMixAuftrag || null,
   // Playlist lesen: { id, quelle } -> window.nlPlaylistErgebnis
@@ -1588,6 +1590,7 @@ def main():
     # 21.09.2026). Reihenfolge, wenn mehreres ansteht: Suche (jemand wartet am
     # Handy), Vorladen (Song endet bald), Mix, Playlist.
     neben = None
+    analyse_arbeiter = None   # misst Intro/Ausklang/Anhebung der naechsten Songs im Voraus
     such_id = ""          # zuletzt bearbeiteter Suchauftrag
     mix_id = ""           # zuletzt bearbeiteter Mix-Auftrag
     playlist_id = ""      # zuletzt bearbeiteter Playlist-Auftrag
@@ -1773,6 +1776,24 @@ def main():
                 cdp_eval(seite, ausdruck)
             except (OSError, ValueError, ConnectionError) as e:
                 log(f"{was} nicht zustellbar: {e}")
+
+        # Vorab-Messung (Wunsch 04.10.2026): die naechsten Songs der Warteschlange
+        # schon lange vor dem Vorladen messen (Songbeginn, Ende, Anhebung, ~15 s je
+        # Song), eigener Arbeiter, damit die Suche nicht wartet. Wird der naechste
+        # Titel kurz vor Schluss umgestellt, liegen die Werte so meist schon vor.
+        if musik and not (analyse_arbeiter is not None and analyse_arbeiter.is_alive()):
+            offen = [str(v) for v in (state.get("analyse") or [])[:3]
+                     if re.fullmatch(r"[A-Za-z0-9_-]{11}", str(v)) and str(v) not in STILLE
+                     and time.time() - failed.get(str(v), 0) >= RETRY_FAILED_AFTER]
+            if offen:
+                def analyse_lauf(vid=offen[0]):
+                    urls = resolve(vid, "bestaudio", "abr")
+                    if urls:
+                        stille_messen(vid, urls[0], urls[2])
+                    else:
+                        failed[vid] = time.time()
+                analyse_arbeiter = threading.Thread(target=analyse_lauf, daemon=True)
+                analyse_arbeiter.start()
 
         # Neben-Arbeiter (siehe oben): immer nur eine Aufgabe zur Zeit.
         if not (neben is not None and neben.is_alive()):
