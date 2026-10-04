@@ -8033,7 +8033,9 @@
                 ambi: ytmAmbi,
                 letzterWunschTs: ytm.letzterWunschTs || 0,
                 gespielt: (ytm.gespielt || []).slice(-40),
-                spielPause: ytmSpielPause
+                spielPause: ytmSpielPause,
+                // Bluetooth-Waechter des Supervisors: { ok, text, seit } (Warnung am Handy)
+                bt: window.nlBtZustand || null
             }).catch(() => {});
         }
 

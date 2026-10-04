@@ -485,6 +485,109 @@ def bluetooth(was):
     return {"verbunden": bool(senke), "text": text}
 
 
+# Bluetooth-Waechter (05.10.2026: Empfaenger um 00:50 von selbst weg, danach
+# lehnte er jede Verbindung ab - Ton lief still zum Fernseher). Alle 10 s:
+# Verbindung, Tonkanal, Signal und WLAN-Verkehr nach BT_LOG (zum Auswerten).
+# Reisst die Verbindung von selbst ab (nicht per "Trennen" am Handy), heilt er:
+# erst neu verbinden, dann Adapter aus/an, danach jede Minute erneut. Der
+# Zustand geht als window.nlBtZustand ans Dashboard (Warnung am Handy).
+BT_LOG = "/home/citycafe/bt-waechter.csv"
+BT_TAKT = 10
+bt_zustand = {"ok": None, "text": "", "seit": time.time()}
+bt_seite = {"id": None}        # aktuelle Dashboard-Seite (setzt die Hauptschleife)
+
+
+def bt_signal(adresse):
+    """RSSI/TX-Leistung der Verbindung (btmgmt), sonst ''."""
+    try:
+        aus = subprocess.run(["btmgmt", "conn-info", "-t", "0", adresse], capture_output=True,
+                             text=True, timeout=5).stdout
+        m = re.search(r"RSSI (-?\d+)", aus)
+        return m.group(1) if m else ""
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+
+
+def wlan_bytes():
+    summe = 0
+    for d in glob.glob("/sys/class/net/wl*/statistics"):
+        for f in ("rx_bytes", "tx_bytes"):
+            try:
+                summe += int(open(os.path.join(d, f)).read())
+            except (OSError, ValueError):
+                pass
+    return summe
+
+
+def bt_melden(seite_holen, ok, text):
+    if bt_zustand["ok"] != ok or bt_zustand["text"] != text:
+        bt_zustand.update(ok=ok, text=text, seit=time.time())
+    seite = seite_holen()
+    if seite:
+        try:
+            cdp_eval(seite, "window.nlBtZustand = " + json.dumps(
+                {"ok": ok, "text": text, "seit": int(bt_zustand["seit"] * 1000)}) + "; 1")
+        except (OSError, ValueError, ConnectionError):
+            pass
+
+
+def bt_waechter(seite_holen):
+    war_ok = False
+    letzter_versuch = 0.0
+    versuche = 0
+    wlan_alt = wlan_bytes()
+    while True:
+        time.sleep(BT_TAKT)
+        try:
+            geraete = bt_geraete()
+            adresse = next((a for a, _ in geraete if bt_verbunden(a)), geraete[0][0] if geraete else "")
+            verbunden = bool(adresse) and bt_verbunden(adresse)
+            senke = bt_senke(adresse) if verbunden else None
+            gewollt_aus = os.path.exists(BT_AUS_DATEI)
+            wlan_neu = wlan_bytes()
+            wlan_kbs = max(0, wlan_neu - wlan_alt) / 1024 / BT_TAKT
+            wlan_alt = wlan_neu
+            try:
+                with open(BT_LOG, "a") as f:
+                    f.write(f"{time.strftime('%F %T')};{int(verbunden)};{int(bool(senke))};"
+                            f"{bt_signal(adresse) if verbunden else ''};{wlan_kbs:.0f};{int(gewollt_aus)}\n")
+            except OSError:
+                pass
+            if senke:
+                if not war_ok and versuche:
+                    log(f"Bluetooth-Waechter: wieder verbunden nach {versuche} Versuch(en)")
+                war_ok, versuche = True, 0
+                bt_melden(seite_holen, True, "Ton geht zur Anlage")
+                continue
+            if gewollt_aus or not geraete:
+                war_ok, versuche = False, 0
+                bt_melden(seite_holen, True, "Bluetooth am Handy getrennt" if gewollt_aus else "")
+                continue
+            # Ton sollte zur Anlage gehen, tut es aber nicht.
+            if war_ok:
+                log(f"Bluetooth-Waechter: Verbindung weg (verbunden={verbunden}, Tonkanal fehlt)")
+                war_ok = False
+            bt_melden(seite_holen, False, "Bluetooth zur Anlage getrennt - Ton kommt nur am Fernseher")
+            if time.time() - letzter_versuch < (20 if versuche < 2 else 60):
+                continue
+            letzter_versuch = time.time()
+            versuche += 1
+            if versuche % 2 == 0:
+                # Jeder zweite Versuch mit Adapter aus/an (haengender Chip, 05.10.2026:
+                # "ACL packet for unknown connection handle").
+                log("Bluetooth-Waechter: Adapter aus/an")
+                bt_cmd("power", "off")
+                time.sleep(3)
+                bt_cmd("power", "on")
+                time.sleep(3)
+            ergebnis = bluetooth("verbinden")
+            log(f"Bluetooth-Waechter: Versuch {versuche}: {ergebnis.get('text')}")
+            if ergebnis.get("verbunden"):
+                bt_melden(seite_holen, True, "Ton geht zur Anlage")
+        except Exception as e:      # der Waechter darf nie sterben
+            log(f"Bluetooth-Waechter: {type(e).__name__}: {e}")
+
+
 def sway(*args):
     env = {**os.environ, **session_env()}
     if "SWAYSOCK" not in env:
@@ -1685,6 +1788,7 @@ def main():
     flaeche_jetzt = None  # "yt" / "yt_voll" / "twitch" / "cam" - wo mpv gerade liegt
     threading.Thread(target=ambi_schleife, daemon=True).start()
     threading.Thread(target=umschalt_waechter, daemon=True).start()
+    threading.Thread(target=bt_waechter, args=(lambda: bt_seite["id"],), daemon=True).start()
     qr_karte = None       # PIL-Bild des QR-Kaertchens
     qr_karte_id = ""
     qr_lage = None        # (x, y, w, h, flaeche), fuer die das Overlay gesetzt ist
@@ -1723,6 +1827,7 @@ def main():
         time.sleep(POLL_SECONDS)
         try:
             page_id = dashboard_page_id()
+            bt_seite["id"] = page_id
             state = json.loads(cdp_eval(page_id, STATE_EXPR) or "{}") if page_id else {}
         except (OSError, ValueError, ConnectionError) as e:
             log(f"CDP nicht erreichbar: {e}")

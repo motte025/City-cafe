@@ -385,7 +385,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-blende';
+    var FASSUNG = '2026-10-05-btwarn';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -668,6 +668,12 @@
         el('k-ambi').textContent = jetzt && jetzt.ambi ? '🌈 Ambi aus' : '🌈 Ambilight';
         var hinweis = '';
         if (status && status.spielLaeuft) hinweis = '🃏 Hos’n Obe läuft gerade – Wünsche warten, bis die Runde vorbei ist.';
+        // Bluetooth zur Anlage weg: deutlich warnen (der W1 versucht selbst neu zu verbinden)
+        if (istChef && jetzt && jetzt.bt && jetzt.bt.ok === false) {
+            var min = Math.max(0, Math.round((serverJetzt() - (jetzt.bt.seit || serverJetzt())) / 60000));
+            hinweis = '⚠️ ' + (jetzt.bt.text || 'Bluetooth zur Anlage getrennt') + (min ? ' (seit ' + min + ' Min)' : '')
+                + ' – der Screen versucht es selbst. Hilft nichts: Empfänger kurz vom Strom nehmen.';
+        }
         el('jetzt-hinweis').textContent = hinweis;
         uhrTakt();
         if (!gezogen) schlangeZeigen();
