@@ -517,6 +517,7 @@ def resolve(video_id, fmt=FORMAT, sortierung=None):
                  "-f", fmt, *(["-S", sortierung] if sortierung else []),
                  "--print", "duration",
                  "--print", "QUALI %(format_id)s|%(resolution)s|%(fps)s|%(vcodec)s",
+                 "--print", "META %(artist)s\t%(track)s\t%(title)s\t%(channel)s",
                  "--print", "urls",
                  f"https://www.youtube.com/watch?v={video_id}"],
                 capture_output=True, text=True, timeout=30)
@@ -539,6 +540,9 @@ def resolve(video_id, fmt=FORMAT, sortierung=None):
                 m = re.search(r"\|(\d+)x(\d+)\|", quali)
                 if m:
                     FORMATE[video_id] = (int(m.group(1)), int(m.group(2)))
+                meta = next((l[5:] for l in zeilen if l.startswith("META ")), "")
+                if meta:
+                    META[video_id] = meta.split("\t")
             return urls[0], (urls[1] if len(urls) > 1 else None), laenge
         log(f"{os.path.basename(programm)} ohne URL fuer {video_id}: {out.stderr.strip()[-200:]}")
     return None
@@ -1137,7 +1141,7 @@ def aufloesung_text(breite, hoehe):
 
 
 # Intro und Ausklang abschneiden (DJ-Art, Wunsch 04.10.2026): sobald ein Song
-# aufgeloest ist, misst ffmpeg den Pegel (RMS je 0,5 s) am Anfang (45 s), in der
+# aufgeloest ist, misst ffmpeg den Pegel (RMS je 0,5 s) am Anfang (90 s), in der
 # Mitte (20 s, als Massstab) und am Ende (60 s). Der Song startet erst, wenn er
 # 3 s lang fast seine normale Lautstaerke hat (gesprochene Intros, leise
 # Einleitungen, Stille fallen weg), und gilt als vorbei, sobald er deutlich
@@ -1146,7 +1150,61 @@ def aufloesung_text(breite, hoehe):
 STILLE = {}
 INTRO_ABSTAND_DB = 8       # so nah an der normalen Lautstaerke = "Musik laeuft"
 AUSKLANG_ABSTAND_DB = 10   # so weit darunter = "Song ist vorbei"
-INTRO_MAX_SEK = 35
+INTRO_MAX_SEK = 75         # lange Filmszenen vor dem Song (O-Zone: 52 s), hoechstens 30 % des Videos
+INTRO_OHNE_LAENGE_SEK = 35 # wenn die echte Songlaenge unbekannt ist (alte Regel)
+META = {}                  # videoId -> [artist, track, title, channel] laut yt-dlp
+SONGLAENGE = {}            # videoId -> Laenge der Studiofassung (iTunes) oder None
+
+
+def songlaenge(vid, laenge_video=0):
+    """Laenge der Studiofassung laut iTunes (Sekunden) oder None.
+    Ein Musikvideo ist oft laenger als der Song (Filmszene vorn, Abspann hinten);
+    nur so viel darf als Intro wegfallen - leise gesungene Strophen bleiben.
+    Gemessen 04.10.2026: O-Zone Video 286 s / Song 216 s, Song beginnt bei 51 s;
+    Mika "Grace Kelly" Strophe 10 dB unter dem Refrain waere sonst weggefallen."""
+    if vid in SONGLAENGE:
+        return SONGLAENGE[vid]
+    SONGLAENGE[vid] = None
+    m = (META.get(vid) or []) + ["", "", "", ""]
+    kuenstler, track, titel, kanal = [("" if x in ("NA", "None") else x) for x in m[:4]]
+    if kuenstler and track:
+        frage = f"{kuenstler.split(',')[0]} {track}"
+    else:
+        frage = re.sub(r"[\(\[].*?[\)\]]", " ", titel)
+        frage = re.sub(r"(?i)official|music video|video|offizielles|musikvideo|videoclip|lyrics?|\bHD\b|\b4K\b|remaster(ed)?|ft\.|feat\.", " ", frage)
+    frage = re.sub(r"[|\"“”]", " ", frage).strip()
+    if len(frage) < 3:
+        return None
+    def norm(x):
+        return re.sub(r"[^a-z0-9]", "", x.lower())
+    vergleich = norm(" ".join([kuenstler, track, titel, kanal]))
+    try:
+        url = "https://itunes.apple.com/search?" + urllib.parse.urlencode(
+            {"term": frage[:100], "entity": "song", "limit": 8, "country": "at"})
+        with urllib.request.urlopen(url, timeout=10) as r:
+            daten = json.load(r).get("results", [])
+    except (OSError, ValueError) as e:
+        log(f"Songlaenge {vid}: iTunes nicht erreichbar ({type(e).__name__})")
+        SONGLAENGE.pop(vid, None)      # beim naechsten Mal noch einmal fragen
+        return None
+    # Remix-/Extended-/Live-Fassungen nur, wenn das Video selbst so heisst;
+    # Laenge muss zum Video passen (sonst Snippet, Single-Edit oder Langfassung).
+    sonder = re.compile(r"(?i)remix|rmx|extended|\bmix\b|\bedit\b|live|version|acoustic|instrumental|karaoke")
+    for d in daten:
+        k, s = norm(d.get("artistName", "")), norm(re.sub(r"\(.*?\)|\[.*?\]", "", d.get("trackName", "")))
+        sek = (d.get("trackTimeMillis") or 0) / 1000.0
+        kw = [norm(w) for w in re.split(r"[ ,&]+", d.get("artistName", "")) if len(norm(w)) >= 3]
+        if not (s and s in vergleich and (k in vergleich or any(w in vergleich for w in kw)) and sek > 60):
+            continue
+        if any(not re.search(re.escape(x), titel, re.I) for x in sonder.findall(d.get("trackName", ""))):
+            continue
+        if laenge_video and not (0.6 * laenge_video <= sek <= laenge_video + 15):
+            continue
+        SONGLAENGE[vid] = sek
+        log(f"Songlaenge {vid}: {sek:.0f}s ({d.get('artistName')} - {d.get('trackName')})")
+        return sek
+    log(f"Songlaenge {vid}: kein Treffer fuer '{frage}'")
+    return None
 
 
 def pegel_messen(argumente):
@@ -1175,7 +1233,7 @@ def stille_messen(vid, audio_url, laenge):
         return
     STILLE[vid] = {"anfang": 0.0, "ende": None}
     laenge = float(laenge or 0)
-    kopf = pegel_messen(["-t", "45", "-i", audio_url])
+    kopf = pegel_messen(["-t", "90", "-i", audio_url])
     mitte = pegel_messen(["-ss", f"{max(0.0, laenge / 2 - 10):.1f}", "-t", "20", "-i", audio_url]) if laenge > 60 else []
     ab = max(0.0, laenge - 60)
     schluss = pegel_messen(["-ss", f"{ab:.1f}", "-i", audio_url]) if laenge > 60 else []
@@ -1189,7 +1247,14 @@ def stille_messen(vid, audio_url, laenge):
         if all(w >= grenze for w in kopf[i:i + 6]):     # 3 s am Stueck fast normal laut
             anfang = max(0.0, i * 0.5 - 0.25)
             break
-    if anfang < 0.4 or anfang > INTRO_MAX_SEK:
+    # Hoechstens so viel weg, wie das Video laenger ist als der Song (+4 s Stille);
+    # ohne bekannte Songlaenge wie bisher hoechstens 35 s.
+    song = songlaenge(vid, laenge)
+    if song and laenge:
+        erlaubt = min(INTRO_MAX_SEK, max(0.0, laenge - song) + 4)
+    else:
+        erlaubt = INTRO_OHNE_LAENGE_SEK
+    if anfang < 0.4 or anfang > min(erlaubt, laenge * 0.3):
         anfang = 0.0
     ende = None
     if schluss:
@@ -1201,7 +1266,7 @@ def stille_messen(vid, audio_url, laenge):
         if ende is not None and not (1.0 <= laenge - ende <= 55):
             ende = None
     STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None}
-    log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s, "
+    log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s (erlaubt {erlaubt:.0f}s), "
         f"Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge:.0f}s)")
 
 
