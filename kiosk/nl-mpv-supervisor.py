@@ -1259,6 +1259,7 @@ def main():
     embed_paused = False  # YouTube-Embed erst anhalten, wenn mpv wirklich laeuft
     xf = None             # laufende Ueberblendung (siehe ueberblenden)
     stille_beendet = None # Song, der an seiner Schlussstille schon beendet wurde
+    intro_gesprungen = None  # Song, bei dem das Intro schon uebersprungen ist
     MPV_APP["id"] = "mpv"
     # Der hereinkommende Player startet unsichtbar (Titel "xf-ein"); die app_id
     # "mpvxf" schwebt wie "mpv" (die Regel fuer "mpv" steht in der sway-Config).
@@ -1723,6 +1724,18 @@ def main():
                 give_back(page_id, shown)
                 mpv_bad[shown] = now
                 shown, embed_paused = None, False
+
+        # Song lief schon, bevor seine Messung fertig war (frischer Wunsch, Neustart):
+        # in den ersten 15 s noch zum Musikbeginn springen.
+        if (musik and shown and shown.startswith("yt:") and mpv is not None and last_pos is not None
+                and intro_gesprungen != shown and started and time.time() - started < 15):
+            anf = (STILLE.get(shown[3:]) or {}).get("anfang") or 0
+            if anf > 1 and last_pos < anf - 1:
+                intro_gesprungen = shown
+                mpv_befehl("seek", anf, "absolute")
+                log(f"Intro uebersprungen ({shown}): -> {anf:.1f}s")
+            elif anf and last_pos >= anf - 1:
+                intro_gesprungen = shown
 
         # Ohne Ueberblendung (nichts vorgeladen): an der Schlussstille sofort beenden -
         # das saubere Ende (Code 0) fuehrt wie gewohnt zum naechsten Song.
