@@ -1149,7 +1149,11 @@ def aufloesung_text(breite, hoehe):
 # STILLE[videoId] = {anfang, ende} - die Ueberblendung endet bei "ende".
 STILLE = {}
 INTRO_ABSTAND_DB = 8       # so nah an der normalen Lautstaerke = "Musik laeuft"
-AUSKLANG_ABSTAND_DB = 10   # so weit darunter = "Song ist vorbei"
+# So weit darunter = "Song ist vorbei" (die Ueberblendung ist dort fertig). 6 statt 10 dB
+# (Wunsch 04.10.2026): wird der alte Song hoerbar leiser (Ausklang ohne Gesang), soll er
+# schon weg sein. Gemessen: Eye of the Tiger 232,5 -> 229,5 s, Wake Me Up 220 -> 217,5 s,
+# Songs mit hartem Schluss (Chantaje, Basket Case) aendern sich um hoechstens 1 s.
+AUSKLANG_ABSTAND_DB = 6
 INTRO_MAX_SEK = 75         # lange Filmszenen vor dem Song (O-Zone: 52 s), hoechstens 30 % des Videos
 INTRO_OHNE_LAENGE_SEK = 35 # wenn die echte Songlaenge unbekannt ist (alte Regel)
 META = {}                  # videoId -> [artist, track, title, channel] laut yt-dlp
