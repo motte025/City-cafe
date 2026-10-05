@@ -2356,11 +2356,16 @@
         }
         body.ytm-an .ytv-aufl:not(:empty) { position: absolute; right: 600px; top: 84px; z-index: 4;
             font-size: 18px; padding: 5px 12px; }
+        /* Widget: Schild nicht mehr zwischen Titel und Logo (nahm dem Titel Platz),
+           sondern kleiner eine Zeile tiefer links neben dem Logo (Wunsch 05.10.2026). */
+        body.ytm-an .nl-header-right { position: relative; }
+        body.ytm-an #ytm-aufl:not(:empty) { position: absolute; right: calc(100% + 12px); bottom: -2px;
+            font-size: 14px; padding: 3px 10px; border-radius: 8px; }
         /* Song-Laufzeit im Widget weg (Wunsch Betreiber) - der Fortschrittsbalken
            unter dem Video bleibt. Platz geht an die Ueberschrift. */
         body.ytm-an .ytm-zeit { display: none; }
         /* Ueberschrift "Interpret – Titel" immer gleich gross, nicht verkleinert */
-        body.ytm-an .nl-header h2 { font-size: 36px; max-width: 700px; }   /* Platz fuer Aufloesung + City Cafe */
+        body.ytm-an .nl-header h2 { font-size: 36px; max-width: 880px; }   /* bis kurz vor das Logo (Aufloesung sitzt eine Zeile tiefer) */
         .ytm-citycafe {
             font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 44px; line-height: 1;
             letter-spacing: 1px; color: #ffffff; white-space: nowrap;
