@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-05T14:02:45Z",
+  "checked_at": "2026-10-05T14:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "16-18 Uhr DJs after work - House Monday mit @dj_falk",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "16-18 Uhr DJs after work - House Monday mit @dj_falk",
       "game": "DJs"
     }
   ]
