@@ -9,22 +9,22 @@
  * - „Runden“: jeder Spieler bekommt so viele Würfe wie gewählt (Standard 10),
  *   die Zahlen werden addiert, am Ende gewinnt die höchste Summe
  *   (Gleichstand: mehrere Sieger).
- * - „201“/„301“/„501“: wer genau auf das Ziel kommt, hat ausgemacht. Die angefangene Runde wird
+ * - „101“/„151“/„201“/„301“/„501“: wer genau auf das Ziel kommt, hat ausgemacht. Die angefangene Runde wird
  *   immer fertig gespielt; machen darin mehrere aus, teilen sie sich den Sieg.
  *   Eine Zahl, die über das Ziel hinausführt, zählt nicht („überworfen“).
  *   Ab 36 fehlenden Punkten gibt es genau eine Zahl, die ausmacht.
  *   Optional mit Rundenlimit: trifft bis dahin niemand genau, gewinnt, wer
  *   am nächsten dran ist.
  */
-export type MatchMode='rounds'|'x201'|'x301'|'x501'|'ko'|'kol';
-export const MATCH_MODES:MatchMode[]=['rounds','x201','x301','x501','ko','kol'];
+export type MatchMode='rounds'|'x101'|'x151'|'x201'|'x301'|'x501'|'ko'|'kol';
+export const MATCH_MODES:MatchMode[]=['rounds','x101','x151','x201','x301','x501','ko','kol'];
 /** K.-o.-Modus: jede Runde wirft jeder Verbliebene einmal. ko = die niedrigste Zahl scheidet aus, der Letzte gewinnt;
  *  kol = die höchste Zahl ist in Sicherheit, der Letzte ist der Verlierer. Gleichstand am Ende → Stechen nur unter den Gleichen. */
 export const isKo=(m:MatchMode)=>m==='ko'||m==='kol';
 export const MIN_PLAYERS=2,MAX_PLAYERS=12,MATCH_ROUNDS=10,MIN_ROUNDS=1,MAX_ROUNDS=50;
 export const ROUND_PRESETS=[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30];
 export const modeLabel=(m:MatchMode)=>m==='rounds'?'Runden':isKo(m)?'K.o.':m.slice(1);
-export const modeTarget=(m:MatchMode)=>m==='x201'||m==='x301'||m==='x501'?Number(m.slice(1)):null;
+export const modeTarget=(m:MatchMode)=>/^x\d+$/.test(m)?Number(m.slice(1)):null;
 /** Spielername von der Fernbedienung: höchstens 16 Zeichen, keine Steuerzeichen; leer → „Spieler n“. */
 export function cleanName(v:unknown,i:number){const s=typeof v==='string'?v.replace(/[\u0000-\u001f\u007f<>]/g,'').replace(/\s+/g,' ').trim().slice(0,16):'';return s||`Spieler ${i+1}`;}
 export const isMatchMode=(v:unknown):v is MatchMode=>MATCH_MODES.includes(v as MatchMode);
