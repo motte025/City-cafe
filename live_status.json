@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-05T15:52:50Z",
+  "checked_at": "2026-10-05T16:07:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Neue Woche? Okay und Abfahrt! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
