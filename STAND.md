@@ -6,7 +6,8 @@ kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heu
 Stand beschreiben, nicht den von vorgestern.
 
 Letzte Durchsicht: 5. Oktober 2026 (DJ-Übergänge per Studio-Abgleich, offizielle
-Videos überall, Playlists bearbeiten am Handy, Playlists 5–8).
+Videos überall, Playlists bearbeiten/erstellen am Handy, Playlists 5–8, Aufrufe,
+Bluetooth-Wächter, Tailscale).
 
 ## Was das Projekt ist
 
@@ -200,6 +201,11 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Topic/Lyric/Live/TV-Auftritt/Fan-Upload gegen das offizielle Video
     (`musikvideo_wertung` mit Suchtext, `ytmKeinMusikvideo`). Making-of,
     Teaser, Reportagen fliegen raus. Kein H.264-Zwang mehr (AV1/VP9).
+    Interpret/Titel aus rohen YouTube-Titeln (`titelZerlegen` in
+    `yt-warteschlange.js`, 110 Checks): auch „--" als Trenner und Interpret
+    hinten („Doch du willst mich - Mike Leon Grosch", Kanal „Grosch Music"),
+    erkannt am gemeinsamen Wort mit dem Kanal (ohne Klammern). Die Datei wird
+    mit `?v=…` geladen, damit Handy und TV neue Fassungen sofort holen.
   - **Bild:** Seitenbalken (4:3, Hochformat, auch eingebrannte) werden mit dem
     unscharfen Video gefüllt; schwarzer Kontrastrahmen (2 px + 30 px Verlauf)
     als mpv-Overlay; Ambilight (4×/s per `grim`) normal und Vollbild;
@@ -210,20 +216,35 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     48 px, gekürzt statt verkleinert), Cover in allen Listen (YouTube-Bild,
     sonst Datenbank/iTunes), rechte Karte per Handy „Ähnliche Songs" oder
     Drive-Fotos. Vollbild: „NÄCHSTER TITEL" (früher „Gleich dran") und
-    „WARTESCHLANGE" (früher „Danach"). QR „Song wünschen" ist vorerst aus
-    (`YT_QR_AN`).
+    „WARTESCHLANGE" (früher „Danach"). Widget: Leiste „Als Nächstes" mit
+    Interpret 24 px; Überschrift bis 880 px, das Auflösungsschild sitzt klein
+    eine Zeile tiefer links neben dem Logo. Die Werbe-Abdeckung
+    (`nl-player-hint` mit Titel) ist aus, solange mpv spielt
+    (`body.video-extern`) – sie schien sonst mitten in der Überblendung durch.
+    QR „Song wünschen" ist vorerst aus (`YT_QR_AN`).
   - **Handy:** Suche nach Songs oder Playlists (Playlist öffnen, einzelne Titel
     nehmen), ⋯-Menü je Song (Ab hier abspielen, Sofort, Als Nächstes, An 5.
     Stelle, Radio-Mix starten, Ende, Zu Playlist hinzufügen), Radio-Mix zum
     laufenden Song, Warteschlange bereinigen (✕ links, ☰ rechts),
     Fortschrittsbalken antippen, Überblenden ⤨, Lauter/Leiser (bis 70 % 5er-,
     darüber 3er-Schritte, max. 100 %), Player zeigt die laufende Playlist,
-    Fotos/Ambilight/Vollbild, „Musik beenden". „Passt dazu" und Playlists mit
-    Vorschaubild, Kanal und Art (Video/Audio/Lyric/Live/Remix). Steuerung
+    Fotos/Ambilight/Vollbild, „Musik beenden". „Passt dazu", Suche und
+    Playlists mit Vorschaubild; darunter über die volle Breite Titel,
+    Interpret · Dauer und „Art · Aufrufe · Kanal" (Art: Video/Audio/Lyric/
+    Live/Remix). **Aufrufe** nur am Handy: Suche liefert sie, beim Radio-Mix
+    holt sie der Supervisor nach (`aufrufe_ergaenzen`, 4 parallel, gemerkt),
+    in `yt_playlists.json` stehen sie je Eintrag. Schriftgröße **A−/A+**
+    oben rechts (ganze Seite, je Gerät gemerkt, Tablet startet 120 %).
+    ⋯-Menü zweispaltig. Player oben rechts **📃＋**: laufenden Song zu einer
+    Playlist. Knöpfe „📱 Handy an die Anlage" / „🖥️ Screen an die Anlage". Steuerung
     geht auch außerhalb des WLANs (`?raum=city-cafe`). Bildschirme in der
     Auswahl: City Cafe, Zuhause („musiktest" am 05.10. gelöscht).
   - **Playlists am Handy bearbeiten (Chef):** Songs löschen, verschieben,
-    hinzufügen (Ende oder Platz 5), „↺ Original wiederherstellen". Gespeichert
+    hinzufügen (Ende oder Platz 5), „↺ Original wiederherstellen". **Eigene
+    Playlists** anlegen („➕ Neue Playlist", Nummern ab 101, `eigen: true`,
+    der TV nimmt sie in `ytmPlaylists` auf). **Jede Playlist löschbar**:
+    eigene ganz, feste werden nur ausgeblendet (`geloescht: true`, unten im
+    Listen-Reiter mit ↺ zurückholbar; der TV überschreibt die Markierung nicht). Gespeichert
     in Firebase `yt/listen/<nr>` mit `bearbeitet: true`; diese Fassung geht
     der aus `yt_playlists.json` vor. **Achtung:** Wer eine bearbeitete
     Playlist im Repo ändert, muss die Änderung auch in `yt/listen/<nr>`
@@ -372,6 +393,9 @@ wieder live gerechnet.
 - Die Chef-PIN kommt nicht ins Repo (steht nur in `citycafe.env` auf dem W1
   und in Firebase `djremote/<raum>/chef/pin`).
 - Im Café läuft das Roulette-Spiel nicht, nur die Werbung.
+- TV-Seite neu laden oder Supervisor neu starten nur nach Rückfrage – es
+  unterbricht die Musik. Sonst gilt eine neue Fassung ab dem nächsten Neustart
+  (tägliches Update 8:30). Eine Selbst-Aktualisierung ist bewusst nicht gebaut.
 
 ## Arbeitsweisen, die sich bewährt haben
 
