@@ -8030,6 +8030,7 @@
                 videoId: j ? j.videoId : '',
                 titel: j ? (j.titel || '') : '',
                 kanal: j ? (j.kanal || '') : '',
+                aufrufe: j ? (Number(j.aufrufe) || 0) : 0,
                 kuenstler: j ? (j.kuenstler || '') : '',
                 songtitel: j ? (j.songtitel || '') : '',
                 genre: gj ? gj.genre : '',
@@ -8273,7 +8274,7 @@
                 titel: ytmListenInhalt[pl.nr].slice(0, 250).map(t => ({
                     videoId: t.videoId || '', suche: t.suche || '', titel: t.titel || '',
                     kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', dauer: t.dauer || '',
-                    dauerSek: t.dauerSek || 0
+                    dauerSek: t.dauerSek || 0, kanal: t.kanal || '', aufrufe: Number(t.aufrufe) || 0
                 })),
                 ts: firebase.database.ServerValue.TIMESTAMP
             }).catch(() => {});

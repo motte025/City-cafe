@@ -717,7 +717,7 @@ def suchen(text, anzahl=None):
         try:
             out = subprocess.run(
                 [programm, "--js-runtimes", "node", "--flat-playlist", "--print",
-                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s",
+                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
                  f"ytsearch{anzahl}:{text}"],
                 capture_output=True, text=True, timeout=60)
         except (subprocess.TimeoutExpired, OSError) as fehler:
@@ -765,7 +765,8 @@ def playlists_suchen(text, anzahl=20):
 
 
 def treffer_lesen(ausgabe):
-    """yt-dlp-Zeilen "id<TAB>titel<TAB>kanal<TAB>dauer_text<TAB>dauer_sek" -> Treffer."""
+    """yt-dlp-Zeilen "id<TAB>titel<TAB>kanal<TAB>dauer_text<TAB>dauer_sek<TAB>aufrufe" -> Treffer.
+    Aufrufe liefert YouTube bei der Suche, beim Radio-Mix meist nicht ("NA")."""
     treffer = []
     for zeile in ausgabe.splitlines():
         teile = zeile.split("\t")
@@ -775,6 +776,10 @@ def treffer_lesen(ausgabe):
                  "dauer": teile[3] if len(teile) > 3 and teile[3] != "NA" else ""}
             try:
                 t["dauerSek"] = int(float(teile[4]))
+            except (IndexError, ValueError):
+                pass
+            try:
+                t["aufrufe"] = int(teile[5])
             except (IndexError, ValueError):
                 pass
             treffer.append(t)
@@ -896,7 +901,7 @@ def mix(video_id, anzahl=MIX_ANZAHL):
                 [programm, "--js-runtimes", "node",
                  *(["--cookies-from-browser", COOKIES_FROM] if MIX_MIT_COOKIES else []),
                  "--flat-playlist", "--playlist-end", str(anzahl + 11), "--print",
-                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s",
+                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
                  f"https://www.youtube.com/watch?v={video_id}&list=RD{video_id}"],
                 capture_output=True, text=True, timeout=60)
         except (subprocess.TimeoutExpired, OSError) as fehler:
@@ -909,7 +914,46 @@ def mix(video_id, anzahl=MIX_ANZAHL):
     treffer = musikvideos_bevorzugen(treffer, min(12, anzahl))[:anzahl]
     if not treffer:
         log(f"Mix zu {video_id} leer: {(out.stderr if out else '').strip()[-120:]}")
+    aufrufe_ergaenzen(treffer[:anzahl])
     return treffer[:anzahl]
+
+
+# Aufrufe fuer Treffer ohne Zahl (der Radio-Mix liefert keine, 05.10.2026: "ueberall
+# Aufrufe am Handy"). Vier yt-dlp-Laeufe parallel mit je bis zu 4 Videos (~5-8 s),
+# Ergebnis gemerkt - derselbe Song kostet beim naechsten Mix nichts mehr.
+AUFRUFE = {}
+
+
+def aufrufe_ergaenzen(treffer, hoechstens=16):
+    for t in treffer:
+        if not t.get("aufrufe") and t["videoId"] in AUFRUFE:
+            t["aufrufe"] = AUFRUFE[t["videoId"]]
+    offen = [t["videoId"] for t in treffer if not t.get("aufrufe")][:hoechstens]
+    if not offen:
+        return
+
+    def holen(ids):
+        try:
+            r = subprocess.run(["yt-dlp", "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                                "--skip-download", "--ignore-errors", "--print", "%(id)s\t%(view_count)s",
+                                *[f"https://www.youtube.com/watch?v={i}" for i in ids]],
+                               capture_output=True, text=True, timeout=40)
+        except (OSError, subprocess.TimeoutExpired):
+            return
+        for zeile in r.stdout.splitlines():
+            teile = zeile.split("\t")
+            if len(teile) == 2 and teile[1].isdigit():
+                AUFRUFE[teile[0]] = int(teile[1])
+
+    gruppen = [offen[i::4] for i in range(4) if offen[i::4]]
+    faeden = [threading.Thread(target=holen, args=(g,), daemon=True) for g in gruppen]
+    for f in faeden:
+        f.start()
+    for f in faeden:
+        f.join(45)
+    for t in treffer:
+        if not t.get("aufrufe") and t["videoId"] in AUFRUFE:
+            t["aufrufe"] = AUFRUFE[t["videoId"]]
 
 
 # Playlists (yt_playlists.json): 24 h zwischengespeichert. /tmp liegt im
@@ -937,7 +981,7 @@ def playlist_lesen(quelle):
             out = subprocess.run(
                 [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
                  "--flat-playlist", "--playlist-end", str(PLAYLIST_MAX), "--print",
-                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s",
+                 "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
                  f"https://www.youtube.com/playlist?list={m.group(1)}"],
                 capture_output=True, text=True, timeout=120)
         except (subprocess.TimeoutExpired, OSError) as fehler:

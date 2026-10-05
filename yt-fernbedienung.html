@@ -395,7 +395,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-eigene';
+    var FASSUNG = '2026-10-05-aufrufe2';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -508,6 +508,7 @@
         });
         if (t.kuenstler) e.kuenstler = t.kuenstler;
         if (t.songtitel) e.songtitel = t.songtitel;
+        if (t.aufrufe) e.aufrufe = Number(t.aufrufe) || 0;
         e.pos = art === 'platz5' ? posPlatz5(null) : W.posFuer({ eintraege: schlange }, art);
         if (art === 'naechstes') e.naechstes = true;
         YT_REMOTE_NET.warteschlangeSetzen(verb, RAUM, id, e).then(function () {
@@ -602,7 +603,7 @@
                 var song = {
                     videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
                     dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0,
-                    kuenstler: t.kuenstler || '', songtitel: t.songtitel || ''
+                    kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', aufrufe: Number(t.aufrufe) || 0
                 };
                 // zweiter Schritt: wohin in der Playlist
                 el('menue-titel').textContent = '📃 ' + p.name + ': wohin?';
@@ -652,7 +653,7 @@
         var nr = alleListen().reduce(function (m, p) { return Math.max(m, Number(p.nr) || 0); }, 100) + 1;
         var titel = (songs || []).filter(function (t) { return t && t.videoId; }).map(function (t) {
             return { videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
-                     dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0, kuenstler: t.kuenstler || '', songtitel: t.songtitel || '' };
+                     dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0, kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', aufrufe: Number(t.aufrufe) || 0 };
         });
         verb.db.ref('djremote/' + RAUM + '/yt/listen/' + nr).set({
             nr: nr, name: String(name).slice(0, 60), platzhalter: false, bearbeitet: true, eigen: true,
@@ -700,6 +701,7 @@
         // Welche Playlist laeuft (Radio-Mix, Gaeste-Wunsch, Chef-Song)
         var lq = !an ? '' : jetzt.liste ? (jetzt.liste === 'Radio-Mix' ? '📻 Radio-Mix' : '📃 Playlist: ' + jetzt.liste)
             : jetzt.quelle === 'wunsch' ? '🙋 Gäste-Wunsch' : jetzt.quelle === 'chef' ? '⭐ Vom Chef ausgewählt' : '';
+        if (an && jetzt.aufrufe) lq = (lq ? lq + ' · ' : '') + '👁 ' + aufrufeText(jetzt.aufrufe);
         el('jetzt-liste').textContent = lq;
         el('k-pause').textContent = jetzt && jetzt.pausiert ? '▶' : '⏸';
         el('k-ansicht').textContent = jetzt && jetzt.vollbild ? '▭ Normal' : '⛶ Vollbild';
@@ -785,7 +787,7 @@
             d.innerHTML = ((istChef || (meins && e.quelle === 'wunsch')) ? '<button type="button" class="weg" aria-label="Entfernen">✕</button>' : '')
                 + '<span class="nr">' + (i + 1) + '</span>'
                 + '<div class="text"><div class="t">' + esc(e.songtitel || e.titel) + '</div>'
-                + '<div class="k">' + esc(e.kuenstler || '') + zusatz + '</div></div>'
+                + '<div class="k">' + esc(e.kuenstler || '') + (e.aufrufe ? ' · ' + aufrufeText(e.aufrufe) : '') + zusatz + '</div></div>'
                 + (istChef ? '<span class="griff" aria-label="Ziehen zum Umsortieren">☰</span>' : '');
             var weg = d.querySelector('.weg');
             if (istChef) d.insertBefore(mehrKnopf(e, e, i > 0 ? function () {
@@ -882,7 +884,7 @@
     el('k-pl').addEventListener('click', function () {
         if (!jetzt || !jetzt.videoId) { melden('Gerade läuft kein Song', 'nein'); return; }
         zuPlaylistMenue({ videoId: jetzt.videoId, titel: jetzt.titel || '', kanal: jetzt.kanal || '',
-                          dauerSek: Number(jetzt.dauerSek) || 0, kuenstler: jetzt.kuenstler || '', songtitel: jetzt.songtitel || '' });
+                          dauerSek: Number(jetzt.dauerSek) || 0, kuenstler: jetzt.kuenstler || '', songtitel: jetzt.songtitel || '', aufrufe: Number(jetzt.aufrufe) || 0 });
     });
     el('neue-pl-knopf').addEventListener('click', function () {
         var name = (el('neue-pl-name').value || '').trim();
@@ -913,6 +915,16 @@
 
     // ------------------------------------------------------------------ Passt dazu
     // Zeile mit ＋: Gast wuenscht, Chef: Tippen = ans Ende, lange druecken = als Naechstes.
+    // Aufrufe kurz: 950 · 12 Tsd. · 3,4 Mio. · 1,2 Mrd.
+    function aufrufeText(n) {
+        n = Number(n) || 0;
+        if (!n) return '';
+        var k = function (x) { return (Math.round(x * 10) / 10).toString().replace('.', ','); };
+        if (n >= 1e9) return k(n / 1e9) + ' Mrd. Aufrufe';
+        if (n >= 1e6) return k(n / 1e6) + ' Mio. Aufrufe';
+        if (n >= 1e4) return Math.round(n / 1e3) + ' Tsd. Aufrufe';
+        return n.toLocaleString('de-DE') + ' Aufrufe';
+    }
     // Art des Videos (damit man die Version erkennt): Musikvideo, nur Audio, Lyric, Live ...
     function videoArt(t) {
         var ti = String(t.titel || ''), ka = String(t.kanal || '');
@@ -931,7 +943,8 @@
             + '<div class="text"><div class="t">' + esc(t.songtitel || t.titel) + '</div><div class="k">'
             + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div>'
             + '<div class="q"><b' + (art[1] ? ' class="schlecht"' : '') + '>' + art[0] + '</b>'
-            + (t.kanal ? ' · ' + esc(String(t.kanal).replace(/ - Topic$/, '')) : '') + '</div>'
+            + (t.kanal ? ' · ' + esc(String(t.kanal).replace(/ - Topic$/, '')) : '')
+            + (t.aufrufe ? ' · ' + aufrufeText(t.aufrufe) : '') + '</div>'
             + '</div><button type="button" class="plus" aria-label="Hinzufügen">＋</button>';
         var knopf = d.querySelector('.plus'), lang = null, langGedrueckt = false;
         if (istChef) d.insertBefore(mehrKnopf(t, null, abHier), knopf);
@@ -972,7 +985,9 @@
         d.className = 'video';
         d.innerHTML = '<div class="oben"><img loading="lazy" alt="" src="https://i.ytimg.com/vi/' + esc(t.videoId) + '/mqdefault.jpg">'
             + '<div><div class="t">' + esc(t.songtitel || t.titel) + '</div><div class="k">'
-            + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div></div></div>'
+            + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div>'
+            + (t.aufrufe || t.kanal ? '<div class="k" style="opacity:.8">' + esc([String(t.kanal || '').replace(/ - Topic$/, ''), aufrufeText(t.aufrufe)].filter(Boolean).join(' · ')) + '</div>' : '')
+            + '</div></div>'
             + '<div class="knoepfe">'
             + (abPl ? '<button type="button" data-a="abhier">⤵ Ab hier</button>' : '')
             + (istChef ? '<button type="button" data-a="sofort">▶ Sofort</button><button type="button" class="still" data-a="naechstes">⏭ Nächstes</button><button type="button" class="still" data-a="platz5">5️⃣ Platz 5</button><button type="button" class="still" data-a="radio">📻 Radio</button><button type="button" class="still" data-a="ende">➕ Ende</button><button type="button" class="still" data-a="pl">📃 Playlist</button>'
