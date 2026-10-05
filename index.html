@@ -307,6 +307,10 @@
            der Luecke das Standbild vom Videoanfang ("falsches Cover"). Die Flaeche
            bleibt gleich gross (visibility), mpv misst sie weiter. */
         body.video-extern iframe#nl-player-frame { visibility: hidden; }
+        /* Spielt mpv, braucht es die Werbe-Abdeckung nicht - sie lag sonst die ganze Zeit
+           unter dem Video und schien in der Mitte der Ueberblendung mit dem Titel durch
+           (05.10.2026). */
+        body.video-extern .nl-player-hint { display: none !important; }
 
         /* ==================================================================
            Dauerhaft sparsam gerendert
