@@ -5618,58 +5618,228 @@
   {
     "nr": 8,
     "name": "Schlager 2024–2026",
-    "beschreibung": "Moderne deutsche Schlager aus 2024, 2025 und 2026 (offizielle Videos) plus Stereoact-Remixe, nie zweimal derselbe Interpret hintereinander",
+    "beschreibung": "Schlager-Hits 2024–2026 nach den Schlager-Jahrescharts (DDP 2024/2025, Schlager-Jahres-Charts 2025, DDP Top 100 Okt. 2026), offizielle Videos, aufgefuellt mit den meistgesehenen; nie zweimal derselbe Interpret hintereinander",
     "quelle": "",
     "titel": [
       {
-        "videoId": "9gYOne8owbg",
-        "titel": "Alexander Eder & Florian Künstler - Lass dir Zeit mit erwachsen werden (Official Video)",
-        "kanal": "Alexander Eder",
-        "dauer": "2:23",
-        "dauerSek": 143,
-        "kuenstler": "Alexander Eder & Florian Künstler",
-        "songtitel": "Lass dir Zeit mit erwachsen werden",
-        "gruppe": "Schlager 2024"
+        "videoId": "6Hy7-SPjfFo",
+        "titel": "Sag wann",
+        "kanal": "CHRISTIN STARK",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "Christin Stark",
+        "songtitel": "Sag wann",
+        "gruppe": "Charts 2024"
       },
       {
-        "videoId": "aAaHV8y_w40",
-        "titel": "Natalie Holzner - Liebt sie dich wie ich (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:13",
-        "dauerSek": 193,
-        "kuenstler": "Natalie Holzner",
-        "songtitel": "Liebt sie dich wie ich",
-        "gruppe": "Schlager 2024"
+        "videoId": "Hs8gIOpOV4U",
+        "titel": "Julian Reim & Anna-Maria Zivkov - Was wirst du ihm sagen (Offizielles Musikvideo)",
+        "kanal": "Schlagerverliebt",
+        "dauer": "3:10",
+        "dauerSek": 190,
+        "kuenstler": "Julian Reim & Anna-Maria Zivkov",
+        "songtitel": "Was wirst du ihm sagen",
+        "gruppe": "Charts 2026"
       },
       {
-        "videoId": "5ZaosHG0VX0",
-        "titel": "Kerstin Ott - Nicht schon wieder die Melodie (Amazon Music Original) (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:24",
-        "dauerSek": 204,
-        "kuenstler": "Kerstin Ott",
-        "songtitel": "Nicht schon wieder die Melodie",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "HuL_yRtlT3Q",
-        "titel": "Michelle - So oder so (Offizielles Musikvideo)",
+        "videoId": "Jn8SdmWKIqI",
+        "titel": "Pia-Sophie - Wenn das zu viel ist (Offizielles Musikvideo)",
         "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:50",
-        "dauerSek": 230,
-        "kuenstler": "Michelle",
-        "songtitel": "So oder so",
-        "gruppe": "Schlager 2024"
+        "dauer": "3:21",
+        "dauerSek": 201,
+        "kuenstler": "Pia-Sophie",
+        "songtitel": "Wenn das zu viel ist",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "zhSmxQ__rs8",
+        "titel": "VINCENT GROSS - APEROL SPRITZ (OFFICIAL MUSIKVIDEO)",
+        "kanal": "Vincent Gross",
+        "dauer": "2:51",
+        "dauerSek": 171,
+        "kuenstler": "Vincent Gross",
+        "songtitel": "Aperol Spritz",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "8cyjbHvU_Hs",
+        "titel": "Vanessa Mai - 100% verliebt (Official Lyric Video)",
+        "kanal": "Vanessa Mai",
+        "dauer": "2:55",
+        "dauerSek": 175,
+        "kuenstler": "Vanessa Mai",
+        "songtitel": "100 % verliebt",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "5Yxph54pMDc",
+        "titel": "Madre Mia",
+        "kanal": "NikPMusic",
+        "dauer": "3:28",
+        "dauerSek": 208,
+        "kuenstler": "Nik P.",
+        "songtitel": "Madre Mia",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "IWRXyuwfsH4",
+        "titel": "Jörg Bausch - Versuch's doch mal mit mir (Offizielles Musikvideo)",
+        "kanal": "Jörg Bausch",
+        "dauer": "3:16",
+        "dauerSek": 196,
+        "kuenstler": "Jörg Bausch",
+        "songtitel": "Versuch's doch mal mit mir",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "r_NnEDQVRnE",
+        "titel": "Jedes Risiko (Sylaar DJ Mix)",
+        "kanal": "Connor Meister",
+        "dauer": "3:33",
+        "dauerSek": 213,
+        "kuenstler": "Connor Meister",
+        "songtitel": "Jedes Risiko",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "WD6VcLWSiA4",
+        "titel": "Beatrice Egli, Florian Silbereisen - Das wissen nur wir (Club Mix) (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:01",
+        "dauerSek": 181,
+        "kuenstler": "Beatrice Egli & Florian Silbereisen",
+        "songtitel": "Das wissen nur wir",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "_E4Guubbn3o",
+        "titel": "Tim Peters - Sterne Egal (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "2:47",
+        "dauerSek": 167,
+        "kuenstler": "Tim Peters",
+        "songtitel": "Sterne egal",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "nZDbbJOK2Mg",
+        "titel": "Ben Zucker - Remmidemmi (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:08",
+        "dauerSek": 188,
+        "kuenstler": "Ben Zucker",
+        "songtitel": "Remmidemmi",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "wt4hP7rjc7k",
+        "titel": "Maite Kelly - Frei (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:32",
+        "dauerSek": 212,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Frei",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "dmKwUHAX9Wo",
+        "titel": "Roland Kaiser - Mein Geheimnis (Offizieller Visualizer)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:15",
+        "dauerSek": 195,
+        "kuenstler": "Roland Kaiser",
+        "songtitel": "Mein Geheimnis",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "f_V6AjFayws",
+        "titel": "Du bist mein Glück (Remix)",
+        "kanal": "DJ Herzbeat",
+        "dauer": "2:13",
+        "dauerSek": 133,
+        "kuenstler": "DJ Herzbeat & Matthias Reim",
+        "songtitel": "Du bist mein Glück",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "f6QV5ubPepc",
+        "titel": "Semino Rossi - Ja, ja, ja, ja (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:10",
+        "dauerSek": 190,
+        "kuenstler": "Semino Rossi",
+        "songtitel": "Ja, ja, ja, ja",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "PtkrDorcSQQ",
+        "titel": "Vincent Gross und Tim Peters - Ich frage für nen Freund (Official Video)",
+        "kanal": "Vincent Gross and 2 more",
+        "dauer": "2:45",
+        "dauerSek": 165,
+        "kuenstler": "Vincent Gross & Tim Peters",
+        "songtitel": "Ich frage für nen Freund",
+        "gruppe": "Charts 2026"
       },
       {
         "videoId": "HXxA-fRGk6c",
-        "titel": "Mike Leon Grosch - Wer kann schon nein sagen (Offizielles Video)",
-        "kanal": "Grosch Music",
+        "titel": "Wer kann schon nein sagen (Offizielles Video)",
+        "kanal": "Grosch Music ",
         "dauer": "2:53",
         "dauerSek": 173,
         "kuenstler": "Mike Leon Grosch",
         "songtitel": "Wer kann schon nein sagen",
-        "gruppe": "Schlager 2024"
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "FlNBc0aPv-s",
+        "titel": "Roland Kaiser - Ich werde da sein (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:53",
+        "dauerSek": 233,
+        "kuenstler": "Roland Kaiser",
+        "songtitel": "Ich werde da sein",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "_auUMIxJuDM",
+        "titel": "Daniela Alfinito - Dann zieh ich meine Blue Jeans an (Offizielles Video)",
+        "kanal": "Schlager für Alle and Daniela Alfinito",
+        "dauer": "3:23",
+        "dauerSek": 203,
+        "kuenstler": "DJ Herzbeat & Daniela Alfinito",
+        "songtitel": "Dann zieh ich meine Blue Jeans an",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "Lz_le0zbbcg",
+        "titel": "Joey Heindle - Schwer zu erklären (Words) (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "2:35",
+        "dauerSek": 155,
+        "kuenstler": "Joey Heindle",
+        "songtitel": "Schwer zu erklären",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "X5MZ0tImPoY",
+        "titel": "Howard Carpendale - Ich fühl wie du (Lyric Video)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:21",
+        "dauerSek": 201,
+        "kuenstler": "Howard Carpendale",
+        "songtitel": "Ich fühl wie du",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "oThMfzRMy7I",
+        "titel": "Bernhard Brink x Sonia Liebing - Du kannst es immer noch (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:17",
+        "dauerSek": 197,
+        "kuenstler": "Sonia Liebing & Bernhard Brink",
+        "songtitel": "Du kannst es immer noch",
+        "gruppe": "Charts 2026"
       },
       {
         "videoId": "My8v8AgRzP0",
@@ -5682,164 +5852,74 @@
         "gruppe": "Schlager 2025"
       },
       {
-        "videoId": "Gz2jqM_z1-4",
-        "titel": "Melissa Naschenweng - Legenden (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:51",
-        "dauerSek": 231,
-        "kuenstler": "Melissa Naschenweng",
-        "songtitel": "Legenden",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "S8WKqbj5I2U",
-        "titel": "Stereoact, Michelle, Matthias Reim - Idiot (Remix)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:08",
-        "dauerSek": 188,
-        "kuenstler": "Stereoact, Michelle, Matthias Reim",
-        "songtitel": "Idiot",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "hEme4rKrk5M",
-        "titel": "Laura Wilde - Magic Moments (Offizielles Musikvideo)",
-        "kanal": "MORE Music and Media",
-        "dauer": "3:36",
-        "dauerSek": 216,
-        "kuenstler": "Laura Wilde",
-        "songtitel": "Magic Moments",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "O__3m2sR5gY",
-        "titel": "Ross Antony - Und Der Tag Wird gut (Offizielles Video)",
-        "kanal": "Schlager für Alle",
-        "dauer": "3:32",
-        "dauerSek": 212,
-        "kuenstler": "Ross Antony",
-        "songtitel": "Und Der Tag Wird gut",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "_lJv09v7kpI",
-        "titel": "GroßstadtEngel - Gute Laune (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:58",
-        "dauerSek": 178,
-        "kuenstler": "GroßstadtEngel",
-        "songtitel": "Gute Laune",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "r9Go5NOTfh4",
-        "titel": "Sarah Engels - Mit Dir (Offizielles Video)",
-        "kanal": "Sarah Engels",
-        "dauer": "3:05",
-        "dauerSek": 185,
-        "kuenstler": "Sarah Engels",
-        "songtitel": "Mit Dir",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "R3OKmFLAFas",
-        "titel": "Mike Leon Grosch - Sarah (Offizielles Video)",
-        "kanal": "Eventline Media",
-        "dauer": "3:28",
-        "dauerSek": 208,
-        "kuenstler": "Mike Leon Grosch",
-        "songtitel": "Sarah",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "ftctNDx8s0c",
-        "titel": "Daniela Alfinito - Walkman (Offizielles Video)",
-        "kanal": "Schlager fuer Alle",
-        "dauer": "3:31",
-        "dauerSek": 211,
-        "kuenstler": "Daniela Alfinito",
-        "songtitel": "Walkman",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "hPK3gTbBr4k",
-        "titel": "Maite Kelly - Es ist einfach passiert (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:46",
-        "dauerSek": 226,
-        "kuenstler": "Maite Kelly",
-        "songtitel": "Es ist einfach passiert",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "hhw1AMjZhHM",
-        "titel": "Nik P. - Mein Himmel bist du (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:33",
-        "dauerSek": 213,
-        "kuenstler": "Nik P.",
-        "songtitel": "Mein Himmel bist du",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "jZ6CPKDvU-s",
-        "titel": "Fantasy - Das bleibt unter uns Chérie (Offizielles Video)",
-        "kanal": "Schlager für Alle",
-        "dauer": "3:17",
-        "dauerSek": 197,
-        "kuenstler": "Fantasy",
-        "songtitel": "Das bleibt unter uns Chérie",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "YGlj1Ba8seI",
-        "titel": "Ben Zucker - Angelina (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:41",
-        "dauerSek": 161,
-        "kuenstler": "Ben Zucker",
-        "songtitel": "Angelina",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "dBbR091Z4RU",
-        "titel": "Patricia Larrass - Immer wieder (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:19",
-        "dauerSek": 199,
-        "kuenstler": "Patricia Larrass",
-        "songtitel": "Immer wieder",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "vtsc_YaIYWo",
-        "titel": "Pia-Sophie - Ein Kuss ohne Liebe (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "2:57",
-        "dauerSek": 177,
-        "kuenstler": "Pia-Sophie",
-        "songtitel": "Ein Kuss ohne Liebe",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "mg2Up03KQCY",
-        "titel": "Tim Peters - Tu doch nicht so (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:15",
-        "dauerSek": 195,
-        "kuenstler": "Tim Peters",
-        "songtitel": "Tu doch nicht so",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "Owb-T0RMbRM",
-        "titel": "Stereoact, Ibo - Spieglein, Spieglein an der Wand (Remix) (Lyric Video)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:48",
-        "dauerSek": 168,
-        "kuenstler": "Stereoact, Ibo",
+        "videoId": "G6i9jN0-67w",
+        "titel": "IBO - Spieglein, Spieglein an der Wand (Stereoact Extended Mix)",
+        "kanal": "Stereoact Official",
+        "dauer": "3:39",
+        "dauerSek": 219,
+        "kuenstler": "Stereoact & Ibo",
         "songtitel": "Spieglein, Spieglein an der Wand",
-        "gruppe": "Schlager 2024"
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "dI2v3ZbdVb0",
+        "titel": "Pia-Sophie - Gib mir noch eine Nacht (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:10",
+        "dauerSek": 190,
+        "kuenstler": "Pia-Sophie",
+        "songtitel": "Gib mir noch eine Nacht",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "StO_vA-Ew48",
+        "titel": "Und plötzlich schlägt dein Herz wie meins",
+        "kanal": "KRISS",
+        "dauer": "3:26",
+        "dauerSek": 206,
+        "kuenstler": "Kriss",
+        "songtitel": "Und plötzlich schlägt dein Herz wie meins",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "eAVRGvz1xyY",
+        "titel": "Christin Stark - Kleine Melodie (Offizielles Musikvideo)",
+        "kanal": "Schlagerverliebt",
+        "dauer": "2:53",
+        "dauerSek": 173,
+        "kuenstler": "Christin Stark",
+        "songtitel": "Kleine Melodie",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "SniCL4xbRqw",
+        "titel": "Helene Fischer - Heute Nacht (Offizielles Musikvideo)",
+        "kanal": "Helene Fischer (Official)",
+        "dauer": "2:40",
+        "dauerSek": 160,
+        "kuenstler": "Helene Fischer",
+        "songtitel": "Heute Nacht",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "TuQcZCzyegc",
+        "titel": "Andrea Berg - Das kann uns keiner nehmen (Offizielles Musikvideo)",
+        "kanal": "Andrea Berg",
+        "dauer": "3:20",
+        "dauerSek": 200,
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Das kann uns keiner nehmen",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "fdc5nJqGBSA",
+        "titel": "Norman Langen - Warum hast du nicht ja gesagt (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:00",
+        "dauerSek": 180,
+        "kuenstler": "Norman Langen",
+        "songtitel": "Warum hast du nicht ja gesagt",
+        "gruppe": "Charts 2024"
       },
       {
         "videoId": "z3uxTLBHozE",
@@ -5852,6 +5932,46 @@
         "gruppe": "Schlager 2024"
       },
       {
+        "videoId": "OnD53dxuyvw",
+        "titel": "Stereoact, Lena Marie Engel - Kompliment (Offizielles Lyric Video)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:30",
+        "dauerSek": 210,
+        "kuenstler": "Stereoact & Lena Marie Engel",
+        "songtitel": "Ein Kompliment",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "uKVCa0oqdIQ",
+        "titel": "Ramon Roselly - Alles was du suchst (Offizielles Video)",
+        "kanal": "Schlager fuer Alle",
+        "dauer": "2:06",
+        "dauerSek": 126,
+        "kuenstler": "Ramon Roselly",
+        "songtitel": "Alles was du suchst",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "KXh4W3HClXo",
+        "titel": "Andrea Berg - Nächstes Mal sag ich dann Nein (Live-Clip zur TV-Premiere beim Schlagerbooom Open Air)",
+        "kanal": "Andrea Berg",
+        "dauer": "3:14",
+        "dauerSek": 194,
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Nächstes Mal sag ich dann nein",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "6ez1aXLVZr0",
+        "titel": "Giovanni Zarrella - Danza (Official Music Video)",
+        "kanal": "Giovanni Zarrella",
+        "dauer": "2:53",
+        "dauerSek": 173,
+        "kuenstler": "Giovanni Zarrella",
+        "songtitel": "Danza",
+        "gruppe": "Schlager 2024"
+      },
+      {
         "videoId": "_EK57GSaYrw",
         "titel": "Sonia Liebing - Sag ihr nichts von mir (Offizielles Musikvideo)",
         "kanal": "ICH FIND SCHLAGER TOLL",
@@ -5859,27 +5979,57 @@
         "dauerSek": 190,
         "kuenstler": "Sonia Liebing",
         "songtitel": "Sag ihr nichts von mir",
-        "gruppe": "Schlager 2024"
+        "gruppe": "Charts 2024"
       },
       {
-        "videoId": "V7pz8xXH2Ho",
-        "titel": "Giovanni Zarrella - La Discoteca Italiana (Offizielles Musikvideo)",
-        "kanal": "Giovanni Zarrella",
-        "dauer": "2:41",
-        "dauerSek": 161,
-        "kuenstler": "Giovanni Zarrella",
-        "songtitel": "La Discoteca Italiana",
-        "gruppe": "Schlager 2025"
+        "videoId": "-CVhj3ZzoUw",
+        "titel": "Stereoact, Drafi Deutscher - Marmor, Stein und Eisen bricht (Lyric Video)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "2:40",
+        "dauerSek": 160,
+        "kuenstler": "Stereoact & Drafi Deutscher",
+        "songtitel": "Marmor, Stein und Eisen bricht",
+        "gruppe": "Charts 2024"
       },
       {
-        "videoId": "kty3ew4VYTE",
-        "titel": "Marie Reim - Kopfkino (Offizielles Musikvideo)",
+        "videoId": "-AbvWwIZp5I",
+        "titel": "Roland Kaiser - Achtung und Respekt (Offizielles Video)",
         "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:03",
-        "dauerSek": 183,
-        "kuenstler": "Marie Reim",
-        "songtitel": "Kopfkino",
-        "gruppe": "Schlager 2026"
+        "dauer": "3:28",
+        "dauerSek": 208,
+        "kuenstler": "Roland Kaiser",
+        "songtitel": "Achtung und Respekt",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "S8WKqbj5I2U",
+        "titel": "Stereoact, Michelle, Matthias Reim - Idiot (Remix)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:07",
+        "dauerSek": 187,
+        "kuenstler": "Michelle & Matthias Reim",
+        "songtitel": "Idiot",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "AE-WpO3Y35Y",
+        "titel": "Kerstin Ott - Rockstar (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:22",
+        "dauerSek": 202,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "Rockstar",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "i_-_8SsGlKs",
+        "titel": "7 Sünden (Party Mix)",
+        "kanal": "DJ Ötzi",
+        "dauer": "4:00",
+        "dauerSek": 240,
+        "kuenstler": "DJ Ötzi & Marc Pircher",
+        "songtitel": "7 Sünden",
+        "gruppe": "Charts 2024"
       },
       {
         "videoId": "0ae2MjF5yoA",
@@ -5892,44 +6042,94 @@
         "gruppe": "Schlager 2025"
       },
       {
-        "videoId": "ZfmRX68MGh4",
-        "titel": "Laura Wilde - Boulevard Sehnsucht (Offizielles Musikvideo)",
-        "kanal": "MORE Music and Media",
-        "dauer": "3:39",
-        "dauerSek": 219,
-        "kuenstler": "Laura Wilde",
-        "songtitel": "Boulevard Sehnsucht",
-        "gruppe": "Schlager 2025"
+        "videoId": "OvynxcD-l6o",
+        "titel": "Doch du willst mich - Mike Leon Grosch (Official Video)",
+        "kanal": "Grosch Music ",
+        "dauer": "3:09",
+        "dauerSek": 189,
+        "kuenstler": "Mike Leon Grosch",
+        "songtitel": "Doch du willst mich",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "qTXvrbZTVRo",
-        "titel": "DJ Herzbeat, Neonlicht - Die Liebe gewinnt (Offizielles Musikvideo)",
+        "videoId": "_PJ3HRjfxTA",
+        "titel": "KRiSS - Maria (Offizielles Musikvideo)",
+        "kanal": "FiestaRecordsMusic",
+        "dauer": "3:15",
+        "dauerSek": 195,
+        "kuenstler": "Kriss",
+        "songtitel": "Maria",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "I9TPnXOffh4",
+        "titel": "Beatrice Egli - Hör nie auf damit (Offizielles Musikvideo)",
         "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:21",
-        "dauerSek": 201,
-        "kuenstler": "DJ Herzbeat, Neonlicht",
-        "songtitel": "Die Liebe gewinnt",
-        "gruppe": "Schlager 2024"
+        "dauer": "2:46",
+        "dauerSek": 166,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Hör nie auf damit",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "RPgsEPWhsbk",
-        "titel": "Caroline Beil, Isabel Varell & Patricia Larrass - Heute tragen wir rot (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:07",
-        "dauerSek": 187,
-        "kuenstler": "Caroline Beil, Isabel Varell & Patricia Larrass",
-        "songtitel": "Heute tragen wir rot",
-        "gruppe": "Schlager 2025"
+        "videoId": "vuSUTQ3kvmc",
+        "titel": "Vanessa Mai - Falling in Love (Official Music Video)",
+        "kanal": "Vanessa Mai and ICH FIND SCHLAGER TOLL",
+        "dauer": "3:09",
+        "dauerSek": 189,
+        "kuenstler": "Vanessa Mai",
+        "songtitel": "Ich fall in Love",
+        "gruppe": "Charts 2026"
       },
       {
-        "videoId": "nZDbbJOK2Mg",
-        "titel": "Ben Zucker - Remmidemmi (Offizielles Musikvideo)",
+        "videoId": "7A-dSaYp0Io",
+        "titel": "Stereoact & Lena Marie Engel - Wir feiern (Official Music Video)",
+        "kanal": "Schlagerverliebt and 2 more",
+        "dauer": "2:34",
+        "dauerSek": 154,
+        "kuenstler": "Stereoact & Lena Marie Engel",
+        "songtitel": "Wir feiern",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "i2aUFz_Q8ro",
+        "titel": "Ben Zucker - Herz zu und durch (Offizielles Musikvideo)",
         "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:08",
-        "dauerSek": 188,
+        "dauer": "3:13",
+        "dauerSek": 193,
         "kuenstler": "Ben Zucker",
-        "songtitel": "Remmidemmi",
-        "gruppe": "Schlager 2025"
+        "songtitel": "Herz zu und durch",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "m_Ho9VvqpW8",
+        "titel": "Achim Petry - Noch eine Nacht (Offizielles Musikvideo)",
+        "kanal": "FiestaRecordsMusic",
+        "dauer": "3:27",
+        "dauerSek": 207,
+        "kuenstler": "Achim Petry",
+        "songtitel": "Noch eine Nacht",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "swLF4E_yUoA",
+        "titel": "Sonia Liebing - Komm und tu's (Offizielles Lyric Video)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:05",
+        "dauerSek": 185,
+        "kuenstler": "Sonia Liebing",
+        "songtitel": "Komm und tu's",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "furfsxQMu3A",
+        "titel": "Verboten Schwach - Laura & Mark (Offizielles Musikvideo)",
+        "kanal": "Laura & Mark",
+        "dauer": "3:35",
+        "dauerSek": 215,
+        "kuenstler": "Laura & Mark",
+        "songtitel": "Verboten schwach",
+        "gruppe": "Charts 2025"
       },
       {
         "videoId": "jQX40VllpUQ",
@@ -5942,54 +6142,364 @@
         "gruppe": "Schlager 2025"
       },
       {
-        "videoId": "M00wgXfOTUQ",
-        "titel": "Ella Endlich - Cinderella (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:49",
-        "dauerSek": 169,
-        "kuenstler": "Ella Endlich",
-        "songtitel": "Cinderella",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "mGUjn6Zk7FM",
-        "titel": "Neonlicht - Du & Ich (Offizielles Video)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "2:52",
-        "dauerSek": 172,
-        "kuenstler": "Neonlicht",
-        "songtitel": "Du & Ich",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "uOwdE_EZBF4",
-        "titel": "Daniel Sommer  - Ich will dich nicht (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:14",
-        "dauerSek": 194,
-        "kuenstler": "Daniel Sommer",
-        "songtitel": "Ich will dich nicht",
+        "videoId": "xm2KqVMTG18",
+        "titel": "Andreas Gabalier - Jukeboxblues (Offizielles Musikvideo)",
+        "kanal": "Andreas Gabalier",
+        "dauer": "3:13",
+        "dauerSek": 193,
+        "kuenstler": "Andreas Gabalier",
+        "songtitel": "Jukeboxblues",
         "gruppe": "Schlager 2024"
       },
       {
-        "videoId": "fdc5nJqGBSA",
-        "titel": "Norman Langen - Warum hast du nicht ja gesagt (Offizielles Musikvideo)",
+        "videoId": "FpvWcZz_vGk",
+        "titel": "Marie Reim - Naiv",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:20",
+        "dauerSek": 200,
+        "kuenstler": "Marie Reim",
+        "songtitel": "Naiv",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "hv60fCLAhoQ",
+        "titel": "Beatrice Egli - Au Revoir (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "2:26",
+        "dauerSek": 146,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Au revoir",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "_jhHK2D83yY",
+        "titel": "Kerstin Ott - 1000x Nein (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "2:40",
+        "dauerSek": 160,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "1000 x Nein",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "9pXrUt05Kfk",
+        "titel": "Frank Lukas - Komm zurück - Unbedingt (Offizielles Musikvideo)",
+        "kanal": "Frank Lukas",
+        "dauer": "4:03",
+        "dauerSek": 243,
+        "kuenstler": "Frank Lukas",
+        "songtitel": "Komm zurück",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "deRF5ETS6-Q",
+        "titel": "Laura Wilde - Es geht wieder los (Offizielles Musikvideo)",
+        "kanal": "MORE Music and Media",
+        "dauer": "3:22",
+        "dauerSek": 202,
+        "kuenstler": "Laura Wilde",
+        "songtitel": "Es geht wieder los",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "dCs3201FXQQ",
+        "titel": "Roger Whittaker - Ein bisschen Aroma 2023 (Stereoact Remix) Tik Tok",
+        "kanal": "Stereoact Official",
+        "dauer": "3:01",
+        "dauerSek": 181,
+        "kuenstler": "Roger Whittaker & Stereoact",
+        "songtitel": "Ein bisschen Aroma",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "huR-Cj5w4Vw",
+        "titel": "Beatrice Egli - Du, Du, Du (Lyric Video)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "2:34",
+        "dauerSek": 154,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Du, Du, Du",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "p115clzZugo",
+        "titel": "Christin Stark - Dich zu lieben (Offizielles Musikvideo)",
+        "kanal": "Schlagerverliebt",
+        "dauer": "3:12",
+        "dauerSek": 192,
+        "kuenstler": "Christin Stark",
+        "songtitel": "Dich zu lieben",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "hhw1AMjZhHM",
+        "titel": "Nik P. - Mein Himmel bist du (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:33",
+        "dauerSek": 213,
+        "kuenstler": "Nik P.",
+        "songtitel": "Mein Himmel bist du",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "spOwcaKVOpg",
+        "titel": "Wolfgang Petry - Morgen Gold (Offizielles Video)",
+        "kanal": "Wolfgang Petry",
+        "dauer": "3:02",
+        "dauerSek": 182,
+        "kuenstler": "Wolfgang Petry",
+        "songtitel": "Morgen Gold",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "OupPRZSZVNA",
+        "titel": "Daniel Sommer - Irgendwann, irgendwo, vielleicht (Offizielles Musikvideo)",
         "kanal": "ICH FIND SCHLAGER TOLL",
         "dauer": "3:00",
         "dauerSek": 180,
-        "kuenstler": "Norman Langen",
-        "songtitel": "Warum hast du nicht ja gesagt",
+        "kuenstler": "Daniel Sommer",
+        "songtitel": "Irgendwann, irgendwo, vielleicht",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "9mfwWK2xR54",
+        "titel": "Pupo x Nockis - La felicità - so nah wie noch nie (official music video)",
+        "kanal": "Bros Music GmbH",
+        "dauer": "3:04",
+        "dauerSek": 184,
+        "kuenstler": "Pupo & Nockis",
+        "songtitel": "La felicità",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "0J46TVJ65_4",
+        "titel": "Christin Stark - Barcelona (Offizielles Musikvideo)",
+        "kanal": "Schlagerverliebt",
+        "dauer": "3:16",
+        "dauerSek": 196,
+        "kuenstler": "Christin Stark",
+        "songtitel": "Barcelona",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "MazvQ9GOJ4Q",
+        "titel": "Matthias Reim - Aus meinem Kopf (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:23",
+        "dauerSek": 203,
+        "kuenstler": "Matthias Reim",
+        "songtitel": "Aus meinem Kopf",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "jU5j9Npm_oc",
+        "titel": "Pietro Basile - Hey Macarena! (Offizielles Musikvideo)",
+        "kanal": "Pietro Basile",
+        "dauer": "3:00",
+        "dauerSek": 180,
+        "kuenstler": "Pietro Basile",
+        "songtitel": "Hey Macarena",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "g5JBe85VYAU",
+        "titel": "Beatrice Egli - Immer immer wieder tun (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "2:34",
+        "dauerSek": 154,
+        "kuenstler": "Beatrice Egli",
+        "songtitel": "Immer immer wieder tun",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "XLxU_go-FLY",
+        "titel": "Stereoact & Mijo - Wenn ein Lied (Offizielles Musikvideo)",
+        "kanal": "Digster Pop Music",
+        "dauer": "2:09",
+        "dauerSek": 129,
+        "kuenstler": "Stereoact & Mijo",
+        "songtitel": "Wenn ein Lied",
+        "gruppe": "Schlager 2025"
+      },
+      {
+        "videoId": "ZaXRgulT30Y",
+        "titel": "Rosanna Rocci - Für mich ist es Liebe (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:02",
+        "dauerSek": 182,
+        "kuenstler": "Rosanna Rocci",
+        "songtitel": "Für mich ist es Liebe",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "bCz5tKkEWQ8",
+        "titel": "Ibo & Nur So! - Schwarze Rose [Official Video]",
+        "kanal": "Nur So! Records",
+        "dauer": "3:31",
+        "dauerSek": 211,
+        "kuenstler": "Ibo & Nur So!",
+        "songtitel": "Schwarze Rose",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "7GY9FTwIeUg",
+        "titel": "Semino Rossi - Magische Momente (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:28",
+        "dauerSek": 208,
+        "kuenstler": "Semino Rossi",
+        "songtitel": "Magische Momente",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "HoZTxEsQIdw",
+        "titel": "Anna-Maria Zimmermann - Arrivederci, Ciao My Love (Official Music Video)",
+        "kanal": "Schlagerverliebt",
+        "dauer": "3:17",
+        "dauerSek": 197,
+        "kuenstler": "Anna-Maria Zimmermann",
+        "songtitel": "Arrivederci, ciao amore",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "sNjqzdb_xmc",
+        "titel": "Mamma Maria",
+        "kanal": "Esteriore Brothers",
+        "dauer": "2:53",
+        "dauerSek": 173,
+        "kuenstler": "Esteriore Brothers & Stereoact",
+        "songtitel": "Mamma Maria",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "ZSXmYnbQe9Q",
+        "titel": "Irgendwann, Irgendwo, Irgendwie",
+        "kanal": "DREWS CORDALIS PETRY - Topic",
+        "dauer": "4:18",
+        "dauerSek": 258,
+        "kuenstler": "Drews Cordalis Petry",
+        "songtitel": "Irgendwann, irgendwo, irgendwie",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "USr9YAMIfrU",
+        "titel": "VINCENT GROSS & OLAF DER FLIPPER - DRINKING WINE FEELING FINE (OFFICIAL VIDEO)",
+        "kanal": "Vincent Gross",
+        "dauer": "3:11",
+        "dauerSek": 191,
+        "kuenstler": "Vincent Gross & Olaf der Flipper",
+        "songtitel": "Drinking wine, feeling fine",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "aAaHV8y_w40",
+        "titel": "Natalie Holzner - Liebt sie dich wie ich (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:13",
+        "dauerSek": 193,
+        "kuenstler": "Natalie Holzner",
+        "songtitel": "Liebt sie dich wie ich",
         "gruppe": "Schlager 2024"
       },
       {
-        "videoId": "3WReLL9Nc5U",
-        "titel": "Ramon Roselly - Süchtig (Offizielles Video)",
-        "kanal": "Schlager für Alle",
-        "dauer": "3:28",
-        "dauerSek": 208,
-        "kuenstler": "Ramon Roselly",
-        "songtitel": "Süchtig",
+        "videoId": "lEzgQn4sTAQ",
+        "titel": "Norman Langen - Am Ende lieben wir uns sowieso (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:01",
+        "dauerSek": 181,
+        "kuenstler": "Norman Langen",
+        "songtitel": "Am Ende lieben wir uns sowieso",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "FQzrl2P0AsQ",
+        "titel": "Charlien - WOW (Ist das denn noch normal) (Offizielles Musikvideo)",
+        "kanal": "Schlager Charts",
+        "dauer": "3:19",
+        "dauerSek": 199,
+        "kuenstler": "Charlien",
+        "songtitel": "WOW",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "w4zcT4zDUBk",
+        "titel": "Sarah Engels - Wie nie zuvor (Offizielles Musikvideo)",
+        "kanal": "Sarah Engels",
+        "dauer": "3:26",
+        "dauerSek": 206,
+        "kuenstler": "Sarah Engels",
+        "songtitel": "Wie nie zuvor",
         "gruppe": "Schlager 2024"
+      },
+      {
+        "videoId": "nIWHVedf3ac",
+        "titel": "Semino Rossi - Wahnsinn oder Liebe (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:15",
+        "dauerSek": 195,
+        "kuenstler": "Semino Rossi",
+        "songtitel": "Wahnsinn oder Liebe",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "35B78qX4ewo",
+        "titel": "Achim Petry & Bianca Holzmann - Tief in mir drin (Offizielles Musikvideo)",
+        "kanal": "FiestaRecordsMusic",
+        "dauer": "3:31",
+        "dauerSek": 211,
+        "kuenstler": "Achim Petry & Bianca Holzmann",
+        "songtitel": "Tief in mir drin",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "Gz2jqM_z1-4",
+        "titel": "Melissa Naschenweng - Legenden (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:51",
+        "dauerSek": 231,
+        "kuenstler": "Melissa Naschenweng",
+        "songtitel": "Legenden",
+        "gruppe": "Schlager 2024"
+      },
+      {
+        "videoId": "ccCBBRTHVmk",
+        "titel": "GENTLEMAN - MIKE LEON GROSCH (Official Video)",
+        "kanal": "Grosch Music ",
+        "dauer": "2:50",
+        "dauerSek": 170,
+        "kuenstler": "Mike Leon Grosch",
+        "songtitel": "Gentleman",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "HuL_yRtlT3Q",
+        "titel": "Michelle - So oder so (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:50",
+        "dauerSek": 230,
+        "kuenstler": "Michelle",
+        "songtitel": "So oder so",
+        "gruppe": "Schlager 2024"
+      },
+      {
+        "videoId": "esDPBaBMegA",
+        "titel": "Andrea Berg - Simsalabim (Official Audio)",
+        "kanal": "Andrea Berg",
+        "dauer": "3:48",
+        "dauerSek": 228,
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Simsalabim",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "y8PgHEoUnXI",
+        "titel": "Wieder alles im Griff - Jürgen Drews ( Keine Panik auf der Titanic ) Original",
+        "kanal": "Jürgen Drews",
+        "dauer": "3:38",
+        "dauerSek": 218,
+        "kuenstler": "DJ Herzbeat & Jürgen Drews",
+        "songtitel": "Wieder alles im Griff",
+        "gruppe": "Charts 2025"
       },
       {
         "videoId": "uJYXxLD0FH0",
@@ -6002,13 +6512,343 @@
         "gruppe": "Schlager 2025"
       },
       {
-        "videoId": "OdLdPjPrNoE",
-        "titel": "Patricia Larrass & Kai Becker - Verdammt ich will dich doch auch (Offizielles Musikvideo)",
+        "videoId": "W7Ple5HyRVs",
+        "titel": "Marianne Rosenberg - Liebe spüren (Offizielles Video)",
+        "kanal": "Schlager für Alle",
+        "dauer": "3:31",
+        "dauerSek": 211,
+        "kuenstler": "Marianne Rosenberg",
+        "songtitel": "Liebe spüren",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "IzUJarZIZh0",
+        "titel": "Sonia Liebing - Nein, Baby! (Offizielles Musikvideo)",
         "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "Sonia Liebing",
+        "songtitel": "Nein, Baby!",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "9s6Csp--Rp4",
+        "titel": "Kerstin Ott - Ganz oder gar nicht (sicher nicht Paris) (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "2:50",
+        "dauerSek": 170,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "Ganz oder gar nicht",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "DbhygMVKXtY",
+        "titel": "Forsberg - Vergessen,Vergeben,Verzeih'n (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "Forsberg",
+        "songtitel": "Vergessen, vergeben, verzeihn",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "XjJWBRZq2Vs",
+        "titel": "Unheilig - Wunderschön (Offizielles Musikvideo)",
+        "kanal": "Unheilig",
+        "dauer": "3:41",
+        "dauerSek": 221,
+        "kuenstler": "Unheilig",
+        "songtitel": "Wunderschön",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "j-c9e-__G3U",
+        "titel": "Pia-Sophie, Daniel Lopes - Ich kann für nichts garantieren (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:06",
+        "dauerSek": 186,
+        "kuenstler": "Pia-Sophie & Daniel Lopes",
+        "songtitel": "Ich kann für nichts garantieren",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "BwNzObuKNW4",
+        "titel": "Melissa Naschenweng - Michl mit der Sichl (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:16",
+        "dauerSek": 196,
+        "kuenstler": "Melissa Naschenweng",
+        "songtitel": "Michl mit der Sichl",
+        "gruppe": "Schlager 2024"
+      },
+      {
+        "videoId": "hFOkAtxDeUg",
+        "titel": "Nino de Angelo - Wer bringt Dich nach Hause (Lyric Video)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:22",
+        "dauerSek": 202,
+        "kuenstler": "Nino de Angelo",
+        "songtitel": "Wer bringt dich nach Hause",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "q9dyzqgVGdY",
+        "titel": "Anna-Carina Woitschack - Unzensiert (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:06",
+        "dauerSek": 186,
+        "kuenstler": "Anna-Carina Woitschack",
+        "songtitel": "Unzensiert",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "h2dGjUXTq7M",
+        "titel": "Vanessa Mai, HBz - Pink (Offizielles Video)",
+        "kanal": "Vanessa Mai",
+        "dauer": "2:50",
+        "dauerSek": 170,
+        "kuenstler": "Vanessa Mai, HBz",
+        "songtitel": "Pink",
+        "gruppe": "Schlager 2024"
+      },
+      {
+        "videoId": "AcTf05zVjgQ",
+        "titel": "CAMPING - VINCENT GROSS (OFFICIAL VIDEO)",
+        "kanal": "Vincent Gross",
+        "dauer": "3:04",
+        "dauerSek": 184,
+        "kuenstler": "Vincent Gross",
+        "songtitel": "Camping",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "jD4ciwKDqhQ",
+        "titel": "MIKE LEON GROSCH - STERNE (OFFICIAL VIDEO)",
+        "kanal": "Grosch Music ",
         "dauer": "2:44",
         "dauerSek": 164,
-        "kuenstler": "Patricia Larrass & Kai Becker",
-        "songtitel": "Verdammt ich will dich doch auch",
+        "kuenstler": "Mike Leon Grosch",
+        "songtitel": "Sterne",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "5kRsAop1Mfs",
+        "titel": "Maite Kelly - Ein Kuss in Paris (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:45",
+        "dauerSek": 225,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Ein Kuss in Paris",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "3fb8MpoHtEM",
+        "titel": "Andrea Berg - Sag niemals nie (Offizielles Musikvideo)",
+        "kanal": "Andrea Berg",
+        "dauer": "3:20",
+        "dauerSek": 200,
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Sag niemals nie",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "V7pz8xXH2Ho",
+        "titel": "Giovanni Zarrella - La Discoteca Italiana (Offizielles Musikvideo)",
+        "kanal": "Giovanni Zarrella",
+        "dauer": "2:41",
+        "dauerSek": 161,
+        "kuenstler": "Giovanni Zarrella",
+        "songtitel": "La Discoteca Italiana",
+        "gruppe": "Schlager 2025"
+      },
+      {
+        "videoId": "_lJv09v7kpI",
+        "titel": "GroßstadtEngel - Gute Laune (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "2:58",
+        "dauerSek": 178,
+        "kuenstler": "Großstadtengel",
+        "songtitel": "Gute Laune",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "vDgmIMrW09U",
+        "titel": "Anna-Maria Zimmermann - Mit dir vielleicht (Offizielles Lyric Video)",
+        "kanal": "Anna-Maria Zimmermann",
+        "dauer": "3:16",
+        "dauerSek": 196,
+        "kuenstler": "Anna-Maria Zimmermann",
+        "songtitel": "Mit dir vielleicht",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "diyJWQkXBTg",
+        "titel": "Die Draufgänger & Pietro Basile - Gianna (Offizielles Musikvideo)",
+        "kanal": "DraufgaengerTV",
+        "dauer": "2:41",
+        "dauerSek": 161,
+        "kuenstler": "Die Draufgänger & Pietro Basile",
+        "songtitel": "Gianna",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "jZ6CPKDvU-s",
+        "titel": "Fantasy - Das bleibt unter uns Chérie (Offizielles Video)",
+        "kanal": "Schlager für Alle",
+        "dauer": "3:17",
+        "dauerSek": 197,
+        "kuenstler": "Fantasy",
+        "songtitel": "Das bleibt unter uns Chérie",
+        "gruppe": "Schlager 2024"
+      },
+      {
+        "videoId": "ptFgt6TIVwI",
+        "titel": "Matthias Reim - Echte Helden (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "4:03",
+        "dauerSek": 243,
+        "kuenstler": "Matthias Reim",
+        "songtitel": "Echte Helden",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "awbYiyUlHTg",
+        "titel": "Halten (Remix)",
+        "kanal": "DJ Herzbeat",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "DJ Herzbeat & Forsberg",
+        "songtitel": "Halten",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "fr51l-VT4ZU",
+        "titel": "Anna-Maria Zimmermann - Nicht verboten sein (Offizielles Musikvideo)",
+        "kanal": "Schlagerverliebt",
+        "dauer": "2:47",
+        "dauerSek": 167,
+        "kuenstler": "Anna-Maria Zimmermann",
+        "songtitel": "Nicht verboten sein",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "fcliIbId57E",
+        "titel": "Laura Wilde - Verliebt in London (Offizielles Musikvideo)",
+        "kanal": "MORE Music and Media",
+        "dauer": "3:33",
+        "dauerSek": 213,
+        "kuenstler": "Laura Wilde",
+        "songtitel": "Verliebt in London",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "y8rpV8ZkStY",
+        "titel": "Nino de Angelo - Irgendwann im Leben (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:57",
+        "dauerSek": 237,
+        "kuenstler": "Nino de Angelo",
+        "songtitel": "Irgendwann im Leben",
+        "gruppe": "Schlager 2024"
+      },
+      {
+        "videoId": "VvZY0wiQnrg",
+        "titel": "Helene Fischer - An meiner Seite (Goldene Henne 2026)",
+        "kanal": "Helene Fischer (Official)",
+        "dauer": "2:59",
+        "dauerSek": 179,
+        "kuenstler": "Helene Fischer",
+        "songtitel": "An meiner Seite",
+        "gruppe": "Charts 2026"
+      },
+      {
+        "videoId": "TbgRu1AaO3w",
+        "titel": "Maite Kelly I Mit Liebe geht das  I Lyric Video",
+        "kanal": "Maite Kelly",
+        "dauer": "3:22",
+        "dauerSek": 202,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Mit Liebe geht das",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "ngdWwNgs4jc",
+        "titel": "Mike Leon Grosch - Ich lieb alles an dir (Official Video)",
+        "kanal": "Grosch Music ",
+        "dauer": "2:57",
+        "dauerSek": 177,
+        "kuenstler": "Mike Leon Grosch",
+        "songtitel": "Ich lieb alles an dir",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "KZjf-VN4Qes",
+        "titel": "Roland Kaiser - Liebe ist alles (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:32",
+        "dauerSek": 212,
+        "kuenstler": "Roland Kaiser",
+        "songtitel": "Liebe ist alles",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "w8rmz73iY8g",
+        "titel": "Nino de Angelo & Jenice - Willst du mit mir gehn (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:13",
+        "dauerSek": 193,
+        "kuenstler": "Nino de Angelo & Jenice",
+        "songtitel": "Willst du mit mir gehn",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "vaUJGM7Dp6M",
+        "titel": "Sonia Liebing - Können diese Augen lügen (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:26",
+        "dauerSek": 206,
+        "kuenstler": "Sonia Liebing",
+        "songtitel": "Können diese Augen lügen",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "hPK3gTbBr4k",
+        "titel": "Maite Kelly - Es ist einfach passiert (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:46",
+        "dauerSek": 226,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Es ist einfach passiert",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "PnO_YUppJ1E",
+        "titel": "Kerstin Ott - Alte Liebe rostet nie (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "3:08",
+        "dauerSek": 188,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "Alte Liebe rostet nie",
+        "gruppe": "Charts 2024"
+      },
+      {
+        "videoId": "JUux8kw3HFE",
+        "titel": "Hildegard Knef x Stereoact - Für Mich Soll's Rote Rosen Regnen (Stereoact Remix)",
+        "kanal": "Hildegard Knef",
+        "dauer": "2:57",
+        "dauerSek": 177,
+        "kuenstler": "Hildegard Knef & Stereoact",
+        "songtitel": "Für mich soll's rote Rosen regnen",
+        "gruppe": "Charts 2025"
+      },
+      {
+        "videoId": "aguQR1Mj03g",
+        "titel": "Giovanni Zarrella - Fantastico (Official Musikvideo)",
+        "kanal": "Giovanni Zarrella",
+        "dauer": "3:40",
+        "dauerSek": 220,
+        "kuenstler": "Giovanni Zarrella",
+        "songtitel": "Fantastico",
         "gruppe": "Schlager 2024"
       },
       {
@@ -6022,64 +6862,44 @@
         "gruppe": "Schlager 2024"
       },
       {
-        "videoId": "xm2KqVMTG18",
-        "titel": "Andreas Gabalier - Jukeboxblues (Offizielles Musikvideo)",
-        "kanal": "Andreas Gabalier",
-        "dauer": "3:13",
-        "dauerSek": 193,
-        "kuenstler": "Andreas Gabalier",
-        "songtitel": "Jukeboxblues",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "KZjf-VN4Qes",
-        "titel": "Roland Kaiser - Liebe ist alles (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:32",
-        "dauerSek": 212,
-        "kuenstler": "Roland Kaiser",
-        "songtitel": "Liebe ist alles",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "DbhygMVKXtY",
-        "titel": "Forsberg - Vergessen,Vergeben,Verzeih'n (Offizielles Musikvideo)",
+        "videoId": "kfv-yVhecaA",
+        "titel": "Maite Kelly - Der Morgen danach (Offizielles Musikvideo)",
         "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:18",
-        "dauerSek": 198,
-        "kuenstler": "Forsberg",
-        "songtitel": "Vergessen,Vergeben,Verzeih'n",
-        "gruppe": "Schlager 2025"
+        "dauer": "3:47",
+        "dauerSek": 227,
+        "kuenstler": "Maite Kelly",
+        "songtitel": "Der Morgen danach",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "aCBsKDMYtEs",
-        "titel": "Alexander Eder - Mit den Jungs (Offizielles Musikvideo)",
-        "kanal": "Alexander Eder",
-        "dauer": "2:38",
-        "dauerSek": 158,
-        "kuenstler": "Alexander Eder",
-        "songtitel": "Mit den Jungs",
-        "gruppe": "Schlager 2024"
+        "videoId": "VmlfFiXKzqI",
+        "titel": "Kerstin Ott - Für immer für dich (Offizielles Musikvideo)",
+        "kanal": "ICH FIND SCHLAGER TOLL",
+        "dauer": "2:55",
+        "dauerSek": 175,
+        "kuenstler": "Kerstin Ott",
+        "songtitel": "Für immer für dich",
+        "gruppe": "Charts 2024"
       },
       {
-        "videoId": "p115clzZugo",
-        "titel": "Christin Stark - Dich zu lieben (Offizielles Musikvideo)",
+        "videoId": "x5-MLUs6goY",
+        "titel": "Lena Marie Engel, Peter Plate & Ulf Leo Sommer - Gib mir Sonne (Offizielles Musikvideo)",
         "kanal": "Schlagerverliebt",
-        "dauer": "3:12",
-        "dauerSek": 192,
-        "kuenstler": "Christin Stark",
-        "songtitel": "Dich zu lieben",
-        "gruppe": "Schlager 2025"
+        "dauer": "3:15",
+        "dauerSek": 195,
+        "kuenstler": "Lena Marie Engel",
+        "songtitel": "Gib mir Sonne",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "aguQR1Mj03g",
-        "titel": "Giovanni Zarrella - Fantastico (Official Musikvideo)",
-        "kanal": "Giovanni Zarrella",
-        "dauer": "3:40",
-        "dauerSek": 220,
-        "kuenstler": "Giovanni Zarrella",
-        "songtitel": "Fantastico",
-        "gruppe": "Schlager 2024"
+        "videoId": "ny1zQ7ZXaG8",
+        "titel": "Marie Reim - Auf allen Sprachen (Te Quiero) (Offizielles Musikvideo)",
+        "kanal": "Mein Herz schlaegt Schlager",
+        "dauer": "3:09",
+        "dauerSek": 189,
+        "kuenstler": "Marie Reim",
+        "songtitel": "Auf allen Sprachen",
+        "gruppe": "Charts 2026"
       },
       {
         "videoId": "e_xYaFUkDGM",
@@ -6088,428 +6908,18 @@
         "dauer": "3:17",
         "dauerSek": 197,
         "kuenstler": "Vincent Gross",
-        "songtitel": "BIER",
-        "gruppe": "Schlager 2025"
+        "songtitel": "Bier",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "i2aUFz_Q8ro",
-        "titel": "Ben Zucker - Herz zu und durch (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:13",
-        "dauerSek": 193,
-        "kuenstler": "Ben Zucker",
-        "songtitel": "Herz zu und durch",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "uCW_C3FGvZM",
-        "titel": "Anna-Carina Woitschack - Ich lebe jetzt (Offizielles Video)",
-        "kanal": "Schlager fuer Alle",
-        "dauer": "3:31",
-        "dauerSek": 211,
-        "kuenstler": "Anna-Carina Woitschack",
-        "songtitel": "Ich lebe jetzt",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "C9Jb_iZb2eQ",
-        "titel": "Tim Peters - Ich liebe dich immer noch ❤️‍🔥 (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:39",
-        "dauerSek": 159,
-        "kuenstler": "Tim Peters",
-        "songtitel": "Ich liebe dich immer noch ❤️‍🔥",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "xnPA3uGKt-s",
-        "titel": "Jürgen Drews - König bleibt König (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:57",
-        "dauerSek": 177,
-        "kuenstler": "Jürgen Drews",
-        "songtitel": "König bleibt König",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "-AbvWwIZp5I",
-        "titel": "Roland Kaiser - Achtung und Respekt (Offizielles Video)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:28",
-        "dauerSek": 208,
-        "kuenstler": "Roland Kaiser",
-        "songtitel": "Achtung und Respekt",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "PGE7ypTLFM4",
-        "titel": "Natalie Holzner - Kleopatra (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:21",
-        "dauerSek": 201,
-        "kuenstler": "Natalie Holzner",
-        "songtitel": "Kleopatra",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "SMPGqiGDzdw",
-        "titel": "Rosanna Rocci - ITALODISCO (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:18",
-        "dauerSek": 198,
-        "kuenstler": "Rosanna Rocci",
-        "songtitel": "ITALODISCO",
+        "videoId": "9gYOne8owbg",
+        "titel": "Alexander Eder & Florian Künstler - Lass dir Zeit mit erwachsen werden (Official Video)",
+        "kanal": "Alexander Eder",
+        "dauer": "2:23",
+        "dauerSek": 143,
+        "kuenstler": "Alexander Eder & Florian Künstler",
+        "songtitel": "Lass dir Zeit mit erwachsen werden",
         "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "h2dGjUXTq7M",
-        "titel": "Vanessa Mai, HBz - Pink (Offizielles Video)",
-        "kanal": "Vanessa Mai",
-        "dauer": "2:50",
-        "dauerSek": 170,
-        "kuenstler": "Vanessa Mai, HBz",
-        "songtitel": "Pink",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "OupPRZSZVNA",
-        "titel": "Daniel Sommer - Irgendwann, irgendwo, vielleicht (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:00",
-        "dauerSek": 180,
-        "kuenstler": "Daniel Sommer",
-        "songtitel": "Irgendwann, irgendwo, vielleicht",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "0CXAnY1mEQA",
-        "titel": "Marie Reim - Marilyn Monroe (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:08",
-        "dauerSek": 188,
-        "kuenstler": "Marie Reim",
-        "songtitel": "Marilyn Monroe",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "35B78qX4ewo",
-        "titel": "Achim Petry & Bianca Holzmann - Tief in mir drin (Offizielles Musikvideo)",
-        "kanal": "FiestaRecordsMusic",
-        "dauer": "3:31",
-        "dauerSek": 211,
-        "kuenstler": "Achim Petry & Bianca Holzmann",
-        "songtitel": "Tief in mir drin",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "hv60fCLAhoQ",
-        "titel": "Beatrice Egli - Au Revoir (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "2:26",
-        "dauerSek": 146,
-        "kuenstler": "Beatrice Egli",
-        "songtitel": "Au Revoir",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "E5e2k5G-sfI",
-        "titel": "Saskia Leppin - Lichter aus Feuer an (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:18",
-        "dauerSek": 198,
-        "kuenstler": "Saskia Leppin",
-        "songtitel": "Lichter aus Feuer an",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "ptFgt6TIVwI",
-        "titel": "Matthias Reim - Echte Helden (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "4:03",
-        "dauerSek": 243,
-        "kuenstler": "Matthias Reim",
-        "songtitel": "Echte Helden",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "FlNBc0aPv-s",
-        "titel": "Roland Kaiser - Ich werde da sein (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:53",
-        "dauerSek": 233,
-        "kuenstler": "Roland Kaiser",
-        "songtitel": "Ich werde da sein",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "0niGz8r9GHc",
-        "titel": "Michelle - Flutlicht (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "4:09",
-        "dauerSek": 249,
-        "kuenstler": "Michelle",
-        "songtitel": "Flutlicht",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "ccCBBRTHVmk",
-        "titel": "GENTLEMAN - MIKE LEON GROSCH (Official Video)",
-        "kanal": "Grosch Music",
-        "dauer": "2:50",
-        "dauerSek": 170,
-        "kuenstler": "Mike Leon Grosch",
-        "songtitel": "Gentleman",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "vaUJGM7Dp6M",
-        "titel": "Sonia Liebing - Können diese Augen lügen (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:26",
-        "dauerSek": 206,
-        "kuenstler": "Sonia Liebing",
-        "songtitel": "Können diese Augen lügen",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "W7cXngl5QL4",
-        "titel": "Christin Stark - Lass mich gehen (Offizielles Musikvideo)",
-        "kanal": "Schlagerverliebt",
-        "dauer": "3:35",
-        "dauerSek": 215,
-        "kuenstler": "Christin Stark",
-        "songtitel": "Lass mich gehen",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "dI2v3ZbdVb0",
-        "titel": "Pia-Sophie - Gib mir noch eine Nacht (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:10",
-        "dauerSek": 190,
-        "kuenstler": "Pia-Sophie",
-        "songtitel": "Gib mir noch eine Nacht",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "ZbK2LlmU6JI",
-        "titel": "Norman Langen - Was wär denn schon dabei (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:29",
-        "dauerSek": 209,
-        "kuenstler": "Norman Langen",
-        "songtitel": "Was wär denn schon dabei",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "fcliIbId57E",
-        "titel": "Laura Wilde - Verliebt in London (Offizielles Musikvideo)",
-        "kanal": "MORE Music and Media",
-        "dauer": "3:33",
-        "dauerSek": 213,
-        "kuenstler": "Laura Wilde",
-        "songtitel": "Verliebt in London",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "HsWu2CkOTOU",
-        "titel": "Sonia Liebing - Ich wünsche dir (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:01",
-        "dauerSek": 181,
-        "kuenstler": "Sonia Liebing",
-        "songtitel": "Ich wünsche dir",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "c2gRSONlDzE",
-        "titel": "Nina Monschein - Starke Arme (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:00",
-        "dauerSek": 180,
-        "kuenstler": "Nina Monschein",
-        "songtitel": "Starke Arme",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "82j34_KYi8M",
-        "titel": "Ben Zucker - Da vorne ist noch Licht (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:47",
-        "dauerSek": 167,
-        "kuenstler": "Ben Zucker",
-        "songtitel": "Da vorne ist noch Licht",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "lEzgQn4sTAQ",
-        "titel": "Norman Langen - Am Ende lieben wir uns sowieso (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:01",
-        "dauerSek": 181,
-        "kuenstler": "Norman Langen",
-        "songtitel": "Am Ende lieben wir uns sowieso",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "A7xqN9W8nOA",
-        "titel": "Andreas Gabalier, Pietro Basile - Una canzone per te (Offizielles Musikvideo)",
-        "kanal": "Andreas Gabalier and Pietro Basile",
-        "dauer": "3:36",
-        "dauerSek": 216,
-        "kuenstler": "Andreas Gabalier, Pietro Basile",
-        "songtitel": "Una canzone per te",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "3fb8MpoHtEM",
-        "titel": "Andrea Berg - Sag niemals nie (Offizielles Musikvideo)",
-        "kanal": "Andrea Berg",
-        "dauer": "3:20",
-        "dauerSek": 200,
-        "kuenstler": "Andrea Berg",
-        "songtitel": "Sag niemals nie",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "g5JBe85VYAU",
-        "titel": "Beatrice Egli - Immer immer wieder tun (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "2:34",
-        "dauerSek": 154,
-        "kuenstler": "Beatrice Egli",
-        "songtitel": "Immer immer wieder tun",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "kfv-yVhecaA",
-        "titel": "Maite Kelly - Der Morgen danach (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:47",
-        "dauerSek": 227,
-        "kuenstler": "Maite Kelly",
-        "songtitel": "Der Morgen danach",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "taqxsGZMPf0",
-        "titel": "Ella Endlich - Cha Cha Baby (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:44",
-        "dauerSek": 164,
-        "kuenstler": "Ella Endlich",
-        "songtitel": "Cha Cha Baby",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "S4ITRlKLl_M",
-        "titel": "Jenice - Ich hasse dich (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:13",
-        "dauerSek": 193,
-        "kuenstler": "Jenice",
-        "songtitel": "Ich hasse dich",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "PnO_YUppJ1E",
-        "titel": "Kerstin Ott - Alte Liebe rostet nie (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:08",
-        "dauerSek": 188,
-        "kuenstler": "Kerstin Ott",
-        "songtitel": "Alte Liebe rostet nie",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "y8rpV8ZkStY",
-        "titel": "Nino de Angelo - Irgendwann im Leben (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:57",
-        "dauerSek": 237,
-        "kuenstler": "Nino de Angelo",
-        "songtitel": "Irgendwann im Leben",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "-CVhj3ZzoUw",
-        "titel": "Stereoact, Drafi Deutscher - Marmor, Stein und Eisen bricht (Lyric Video)",
-        "kanal": "ICH FIND SCHLAGER TOLL and Stereoact Official",
-        "dauer": "2:40",
-        "dauerSek": 160,
-        "kuenstler": "Stereoact, Drafi Deutscher",
-        "songtitel": "Marmor, Stein und Eisen bricht",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "BK-5KpOrKFI",
-        "titel": "Ross Antony - Danke (Offizielles Video) [4K]",
-        "kanal": "Schlager für Alle",
-        "dauer": "3:02",
-        "dauerSek": 182,
-        "kuenstler": "Ross Antony",
-        "songtitel": "Danke",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "TuQcZCzyegc",
-        "titel": "Andrea Berg - Das kann uns keiner nehmen (Offizielles Musikvideo)",
-        "kanal": "Andrea Berg",
-        "dauer": "3:20",
-        "dauerSek": 200,
-        "kuenstler": "Andrea Berg",
-        "songtitel": "Das kann uns keiner nehmen",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "zhSmxQ__rs8",
-        "titel": "VINCENT GROSS - APEROL SPRITZ (OFFICIAL MUSIKVIDEO)",
-        "kanal": "Vincent Gross",
-        "dauer": "2:51",
-        "dauerSek": 171,
-        "kuenstler": "VINCENT GROSS",
-        "songtitel": "APEROL SPRITZ",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "SniCL4xbRqw",
-        "titel": "Helene Fischer - Heute Nacht (Offizielles Musikvideo)",
-        "kanal": "Helene Fischer (Official)",
-        "dauer": "2:40",
-        "dauerSek": 160,
-        "kuenstler": "Helene Fischer",
-        "songtitel": "Heute Nacht",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "G1U5LRAm9Ms",
-        "titel": "Sarah Engels - Für immer (Offizielles Video)",
-        "kanal": "Sarah Engels",
-        "dauer": "2:51",
-        "dauerSek": 171,
-        "kuenstler": "Sarah Engels",
-        "songtitel": "Für immer",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "m_Ho9VvqpW8",
-        "titel": "Achim Petry - Noch eine Nacht (Offizielles Musikvideo)",
-        "kanal": "FiestaRecordsMusic",
-        "dauer": "3:27",
-        "dauerSek": 207,
-        "kuenstler": "Achim Petry",
-        "songtitel": "Noch eine Nacht",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "Lz_le0zbbcg",
-        "titel": "Joey Heindle - Schwer zu erklären (Words) (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:35",
-        "dauerSek": 155,
-        "kuenstler": "Joey Heindle",
-        "songtitel": "Schwer zu erklären",
-        "gruppe": "Schlager 2026"
       },
       {
         "videoId": "mw0BnKvnGdI",
@@ -6522,14 +6932,14 @@
         "gruppe": "Schlager 2025"
       },
       {
-        "videoId": "w8rmz73iY8g",
-        "titel": "Nino de Angelo & Jenice - Willst du mit mir gehn (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:13",
-        "dauerSek": 193,
-        "kuenstler": "Nino de Angelo & Jenice",
-        "songtitel": "Willst du mit mir gehn",
-        "gruppe": "Schlager 2024"
+        "videoId": "bu9u1pmT_Ik",
+        "titel": "Die Rodensteiner - Wind im Haar (Bella Italia) (Offizielles Video)",
+        "kanal": "Schlager für dein Herz",
+        "dauer": "3:21",
+        "dauerSek": 201,
+        "kuenstler": "Die Rodensteiner",
+        "songtitel": "Wind im Haar",
+        "gruppe": "Charts 2025"
       },
       {
         "videoId": "h5CJh7XrVsE",
@@ -6539,367 +6949,97 @@
         "dauerSek": 154,
         "kuenstler": "Vanessa Mai",
         "songtitel": "Himbeerrot",
-        "gruppe": "Schlager 2024"
+        "gruppe": "Charts 2024"
       },
       {
-        "videoId": "_E4Guubbn3o",
-        "titel": "Tim Peters - Sterne Egal (Offizielles Musikvideo)",
+        "videoId": "YGlj1Ba8seI",
+        "titel": "Ben Zucker - Angelina (Offizielles Musikvideo)",
         "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:47",
-        "dauerSek": 167,
-        "kuenstler": "Tim Peters",
-        "songtitel": "Sterne Egal",
-        "gruppe": "Schlager 2024"
+        "dauer": "2:41",
+        "dauerSek": 161,
+        "kuenstler": "Ben Zucker",
+        "songtitel": "Angelina",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "_PVBua1f_wo",
-        "titel": "Joey Heindle - Weil das hier unser Leben ist (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:19",
-        "dauerSek": 199,
-        "kuenstler": "Joey Heindle",
-        "songtitel": "Weil das hier unser Leben ist",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "G3xO5oJ4X8w",
-        "titel": "Anna-Carina Woitschack - Smalltalk (Offizielles Video) [4K]",
-        "kanal": "Schlager für Alle",
-        "dauer": "3:14",
-        "dauerSek": 194,
-        "kuenstler": "Anna-Carina Woitschack",
-        "songtitel": "Smalltalk",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "6QyGuMZVWN4",
-        "titel": "Jenice -  Noch eine Nacht (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:28",
-        "dauerSek": 148,
-        "kuenstler": "Jenice",
-        "songtitel": "Noch eine Nacht",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "tasbsZ40WFI",
-        "titel": "Matthias Reim - Dieses Herz (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:34",
-        "dauerSek": 214,
-        "kuenstler": "Matthias Reim",
-        "songtitel": "Dieses Herz",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "fkfqNULsYco",
-        "titel": "Fantasy - Phönix aus der Asche (Offizielles Video)",
-        "kanal": "Schlager für Alle",
-        "dauer": "3:59",
-        "dauerSek": 239,
-        "kuenstler": "Fantasy",
-        "songtitel": "Phönix aus der Asche",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "OnD53dxuyvw",
-        "titel": "Stereoact, Lena Marie Engel - Kompliment (Offizielles Lyric Video)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:31",
-        "dauerSek": 211,
-        "kuenstler": "Stereoact, Lena Marie Engel",
-        "songtitel": "Kompliment",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "6ez1aXLVZr0",
-        "titel": "Giovanni Zarrella - Danza (Official Music Video)",
-        "kanal": "Giovanni Zarrella",
-        "dauer": "2:53",
-        "dauerSek": 173,
-        "kuenstler": "Giovanni Zarrella",
-        "songtitel": "Danza",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "8cEmOiQbPI4",
-        "titel": "Daniel Lopes - Du schmeckst wie Ice Cream (offizielles Musikvideo)",
-        "kanal": "Daniel Lopes Official",
-        "dauer": "2:32",
-        "dauerSek": 152,
-        "kuenstler": "Daniel Lopes",
-        "songtitel": "Du schmeckst wie Ice Cream",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "5kRsAop1Mfs",
-        "titel": "Maite Kelly - Ein Kuss in Paris (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:45",
-        "dauerSek": 225,
-        "kuenstler": "Maite Kelly",
-        "songtitel": "Ein Kuss in Paris",
+        "videoId": "A7xqN9W8nOA",
+        "titel": "Andreas Gabalier, Pietro Basile - Una canzone per te (Offizielles Musikvideo)",
+        "kanal": "Andreas Gabalier and Pietro Basile",
+        "dauer": "3:36",
+        "dauerSek": 216,
+        "kuenstler": "Andreas Gabalier, Pietro Basile",
+        "songtitel": "Una canzone per te",
         "gruppe": "Schlager 2026"
       },
       {
-        "videoId": "OvynxcD-l6o",
-        "titel": "Doch du willst mich - Mike Leon Grosch (Official Video)",
-        "kanal": "Grosch Music",
-        "dauer": "3:09",
-        "dauerSek": 189,
-        "kuenstler": "Mike Leon Grosch",
-        "songtitel": "Doch du willst mich",
-        "gruppe": "Schlager 2024"
+        "videoId": "kmuGfSNISTg",
+        "titel": "Ein Bisschen Verliebt - Laura & Mark (Offizielles Musikvideo)",
+        "kanal": "Laura & Mark",
+        "dauer": "3:17",
+        "dauerSek": 197,
+        "kuenstler": "Laura & Mark",
+        "songtitel": "Ein bisschen verliebt",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "a3RDTPJgVS8",
-        "titel": "Jenice - Euphorie (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:50",
-        "dauerSek": 170,
-        "kuenstler": "Jenice",
-        "songtitel": "Euphorie",
-        "gruppe": "Schlager 2024"
+        "videoId": "Ucz7sm34-jg",
+        "titel": "Schau mal herein",
+        "kanal": "Helene Fischer (Official)",
+        "dauer": "3:04",
+        "dauerSek": 184,
+        "kuenstler": "Helene Fischer & Florian Silbereisen",
+        "songtitel": "Schau mal herein",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "OHqwG_2II20",
-        "titel": "Vanessa Mai - Nicht von dieser Erde (Offizielles Video)",
-        "kanal": "Vanessa Mai",
-        "dauer": "3:10",
-        "dauerSek": 190,
-        "kuenstler": "Vanessa Mai",
-        "songtitel": "Nicht von dieser Erde",
-        "gruppe": "Schlager 2024"
+        "videoId": "oHyB5odjN1I",
+        "titel": "Michelle - Wahnsinnig (Audio Video)",
+        "kanal": "Mein Herz schlägt Schlager",
+        "dauer": "3:18",
+        "dauerSek": 198,
+        "kuenstler": "Michelle",
+        "songtitel": "Wahnsinnig",
+        "gruppe": "Charts 2025"
       },
       {
-        "videoId": "6wSMUq9KE7g",
-        "titel": "Natalie Holzner - Lebendig (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
+        "videoId": "G1U5LRAm9Ms",
+        "titel": "Sarah Engels - Für immer (Offizielles Video)",
+        "kanal": "Sarah Engels",
         "dauer": "2:51",
         "dauerSek": 171,
-        "kuenstler": "Natalie Holzner",
-        "songtitel": "Lebendig",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "I9TPnXOffh4",
-        "titel": "Beatrice Egli - Hör nie auf damit (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "2:46",
-        "dauerSek": 166,
-        "kuenstler": "Beatrice Egli",
-        "songtitel": "Hör nie auf damit",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "TD2Biy7lbak",
-        "titel": "Alexandra Hofmann - Mein Sommer (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:37",
-        "dauerSek": 217,
-        "kuenstler": "Alexandra Hofmann",
-        "songtitel": "Mein Sommer",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "BwNzObuKNW4",
-        "titel": "Melissa Naschenweng - Michl mit der Sichl (Offizielles Musikvideo)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "3:16",
-        "dauerSek": 196,
-        "kuenstler": "Melissa Naschenweng",
-        "songtitel": "Michl mit der Sichl",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "Kx3ah5xE3mA",
-        "titel": "DJ Herzbeat & Paulina Wagner - Liebe ist mehr als nur ein Wort (Offizielles Video)",
-        "kanal": "Schlager für Alle",
-        "dauer": "2:32",
-        "dauerSek": 152,
-        "kuenstler": "DJ Herzbeat & Paulina Wagner",
-        "songtitel": "Liebe ist mehr als nur ein Wort",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "Fk6RVbPhjv8",
-        "titel": "Ramon Roselly - Luisa (Offizielles Video)",
-        "kanal": "Schlager für Alle",
-        "dauer": "3:13",
-        "dauerSek": 193,
-        "kuenstler": "Ramon Roselly",
-        "songtitel": "Luisa",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "IFBDiAMxDPA",
-        "titel": "Eric Philippi - Ich liebs (Offizielles Video)",
-        "kanal": "Schlager für Alle",
-        "dauer": "2:57",
-        "dauerSek": 177,
-        "kuenstler": "Eric Philippi",
-        "songtitel": "Ich liebs",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "_jhHK2D83yY",
-        "titel": "Kerstin Ott - 1000x Nein (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "2:40",
-        "dauerSek": 160,
-        "kuenstler": "Kerstin Ott",
-        "songtitel": "1000x Nein",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "3qxf96oxPp0",
-        "titel": "Lucas Cordalis - Wir sind reif für die Insel (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:01",
-        "dauerSek": 181,
-        "kuenstler": "Lucas Cordalis",
-        "songtitel": "Wir sind reif für die Insel",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "wt4hP7rjc7k",
-        "titel": "Maite Kelly - Frei (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:32",
-        "dauerSek": 212,
-        "kuenstler": "Maite Kelly",
-        "songtitel": "Frei",
-        "gruppe": "Schlager 2026"
-      },
-      {
-        "videoId": "w4zcT4zDUBk",
-        "titel": "Sarah Engels - Wie nie zuvor (Offizielles Musikvideo)",
-        "kanal": "Sarah Engels",
-        "dauer": "3:26",
-        "dauerSek": 206,
         "kuenstler": "Sarah Engels",
-        "songtitel": "Wie nie zuvor",
+        "songtitel": "Für immer",
         "gruppe": "Schlager 2024"
       },
       {
-        "videoId": "i4EioUfPX5g",
-        "titel": "Marie Reim - Warum bist du so dumm? (Offizielles Video)",
-        "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "2:49",
-        "dauerSek": 169,
-        "kuenstler": "Marie Reim",
-        "songtitel": "Warum bist du so dumm?",
-        "gruppe": "Schlager 2024"
+        "videoId": "20Dl5T9ci0Q",
+        "titel": "voXXclub - Echo (Offizielles Musikvideo)",
+        "kanal": "voXXclub",
+        "dauer": "2:55",
+        "dauerSek": 175,
+        "kuenstler": "Voxxclub",
+        "songtitel": "Echo",
+        "gruppe": "Charts 2024"
       },
       {
-        "videoId": "MDjuDjiMSt8",
-        "titel": "Pia-Sophie - Wenn sie da nicht wäre (Offzielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:05",
-        "dauerSek": 185,
-        "kuenstler": "Pia-Sophie",
-        "songtitel": "Wenn sie da nicht wäre",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "XhGAWwlWd2Y",
-        "titel": "Fantasy - Ein Anderer Duft (Offizielles Video)",
-        "kanal": "Schlager fuer Alle",
-        "dauer": "3:19",
-        "dauerSek": 199,
-        "kuenstler": "Fantasy",
-        "songtitel": "Ein Anderer Duft",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "ZaXRgulT30Y",
-        "titel": "Rosanna Rocci - Für mich ist es Liebe (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
+        "videoId": "HW_QmjRhvFE",
+        "titel": "Andrea Berg - Das ist nicht fair (Official Audio)",
+        "kanal": "Andrea Berg",
         "dauer": "3:02",
         "dauerSek": 182,
-        "kuenstler": "Rosanna Rocci",
-        "songtitel": "Für mich ist es Liebe",
-        "gruppe": "Schlager 2025"
+        "kuenstler": "Andrea Berg",
+        "songtitel": "Das ist nicht fair",
+        "gruppe": "Charts 2024"
       },
       {
-        "videoId": "6YuqRYd-sxQ",
-        "titel": "Neonlicht - Wenn's am schönsten ist (Offizielles Video)",
+        "videoId": "qTXvrbZTVRo",
+        "titel": "DJ Herzbeat, Neonlicht - Die Liebe gewinnt (Offizielles Musikvideo)",
         "kanal": "Mein Herz schlaegt Schlager",
-        "dauer": "2:22",
-        "dauerSek": 142,
-        "kuenstler": "Neonlicht",
-        "songtitel": "Wenn's am schönsten ist",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "IjC_R2_JUeI",
-        "titel": "Patricia Larrass, Kai Becker - Für immer jung (Offizielles Musikvideo)",
-        "kanal": "ICH FIND SCHLAGER TOLL",
-        "dauer": "3:16",
-        "dauerSek": 196,
-        "kuenstler": "Patricia Larrass, Kai Becker",
-        "songtitel": "Für immer jung",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "uRxDyLF4eZ0",
-        "titel": "Anna-Carina Woitschack - Mein Herz ist doch kein Hotel (Offizielles Video)",
-        "kanal": "Schlager für Alle",
-        "dauer": "3:14",
-        "dauerSek": 194,
-        "kuenstler": "Anna-Carina Woitschack",
-        "songtitel": "Mein Herz ist doch kein Hotel",
-        "gruppe": "Schlager 2024"
-      },
-      {
-        "videoId": "SRnCHwrOJeE",
-        "titel": "Annemarie Eilfeld - Neugeboren (Offizielles Video)",
-        "kanal": "Schlager fuer Alle",
-        "dauer": "4:06",
-        "dauerSek": 246,
-        "kuenstler": "Annemarie Eilfeld",
-        "songtitel": "Neugeboren",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "XLxU_go-FLY",
-        "titel": "Stereoact & Mijo - Wenn ein Lied (Offizielles Musikvideo)",
-        "kanal": "Digster Pop Music",
-        "dauer": "2:09",
-        "dauerSek": 129,
-        "kuenstler": "Stereoact & Mijo",
-        "songtitel": "Wenn ein Lied",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "Iydh0CbOjPo",
-        "titel": "Jay Khan - Tariq (Offizielles Video)",
-        "kanal": "Schlager fuer Alle",
-        "dauer": "3:26",
-        "dauerSek": 206,
-        "kuenstler": "Jay Khan",
-        "songtitel": "Tariq",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "0J46TVJ65_4",
-        "titel": "Christin Stark - Barcelona (Offizielles Musikvideo)",
-        "kanal": "Schlagerverliebt",
-        "dauer": "3:16",
-        "dauerSek": 196,
-        "kuenstler": "Christin Stark",
-        "songtitel": "Barcelona",
-        "gruppe": "Schlager 2025"
-      },
-      {
-        "videoId": "7A-dSaYp0Io",
-        "titel": "Stereoact & Lena Marie Engel - Wir feiern (Official Music Video)",
-        "kanal": "Schlagerverliebt and 2 more",
-        "dauer": "2:34",
-        "dauerSek": 154,
-        "kuenstler": "Stereoact & Lena Marie Engel",
-        "songtitel": "Wir feiern",
-        "gruppe": "Schlager 2026"
+        "dauer": "3:21",
+        "dauerSek": 201,
+        "kuenstler": "DJ Herzbeat & Neonlicht",
+        "songtitel": "Die Liebe gewinnt",
+        "gruppe": "Charts 2024"
       }
     ]
   }
