@@ -238,8 +238,8 @@ nach jedem Song eine Pause. Deshalb:
 - **Erste Wahl:** YouTube-Mix des zuletzt gespielten Songs,
   `https://www.youtube.com/watch?v=<id>&list=RD<id>`, mit `--flat-playlist
   --playlist-end 25`. Neue Supervisor-Funktion `mix(video_id)`.
-- **Rückfall 1:** Last.fm `track.getSimilar` (im Dashboard schon für das
-  Musik-Widget vorhanden), dann je Song `ytsearch1:"Künstler Titel official
+- **Rückfall 1:** Last.fm `track.getSimilar` (im Dashboard vorhanden,
+  `LASTFM_API_KEY`), dann je Song `ytsearch1:"Künstler Titel official
   video"`. Höchstens 5 Suchen, nacheinander.
 - **Rückfall 2:** das heutige `aehnliche()` (Titelsuche).
 - Bereits gespielte Titel der letzten 2 Stunden und das laufende Video

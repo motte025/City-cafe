@@ -7,7 +7,8 @@ Stand beschreiben, nicht den von vorgestern.
 
 Letzte Durchsicht: 5. Oktober 2026 (DJ-Übergänge per Studio-Abgleich, offizielle
 Videos überall, Playlists bearbeiten/erstellen am Handy, Playlists 5–8, Aufrufe,
-Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt).
+Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
+und Musik-Empfehlung entfernt).
 
 ## Was das Projekt ist
 
@@ -65,7 +66,7 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   `~/.config/citycafe.env` und startet sway in einer Schleife. sway startet
   `citycafe-chromium`, den Supervisor und `citycafe-bt`.
 - **Einstellungen je Gerät** in `/home/citycafe/.config/citycafe.env`:
-  `CITYCAFE_RAUM=city-cafe` (Café, kein Roulette-Spiel, nur die Werbung),
+  `CITYCAFE_RAUM=city-cafe` (Café, kein Roulette-Spiel),
   `CITYCAFE_HWDEC=vaapi`, mpv-Puffer 512/64 MiB, `CITYCAFE_CAM_CACHE_SECS=3`
   (Dartcam), `CITYCAFE_VOLUME=1.0`, `CITYCAFE_MIX_COOKIES=0` (Mixe ohne
   Konto, sonst Lobpreis-Lieder aus dem Verlauf), `CITYCAFE_URL=https://
@@ -276,7 +277,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   4 Minuten ab, behoben 01.10.). Ein Wunsch ohne Ort zeigt seinen Titel groß
   in der Überschrift, darunter „Per Fernbedienung gestartet".
 - **Vollbild-Ansichten außerhalb von `.media-inner-view`** (CL-Tabelle
-  `#ucl-fullscreen-table`, Mittagsteller, Roulette-Werbung, Dart-Anheizer)
+  `#ucl-fullscreen-table`, Mittagsteller, Dart-Anheizer)
   muss `runMasterSequence()` selbst abbauen – ihr eigener Zeitgeber geht bei
   einem Wunsch vom Handy (`cancelSequenceTimers`) verloren. Die CL-Tabelle
   fehlte dort und blieb über Nightlife und mpv stehen (behoben 01.10.).
@@ -394,7 +395,9 @@ wieder live gerechnet.
   ausdrücklich bestellt, gelten als freigegeben).
 - Die Chef-PIN kommt nicht ins Repo (steht nur in `citycafe.env` auf dem W1
   und in Firebase `djremote/<raum>/chef/pin`).
-- Im Café läuft das Roulette-Spiel nicht, nur die Werbung.
+- Im Café läuft das Roulette-Spiel nicht. Die Roulette-Werbung („Demnächst“)
+  und die Musik-Empfehlung (großes Widget „Nächster Titel empfohlen“) sind
+  seit 05.10.2026 ganz aus dem Dashboard entfernt.
 - TV-Seite neu laden oder Supervisor neu starten nur nach Rückfrage – es
   unterbricht die Musik. Sonst gilt eine neue Fassung ab dem nächsten Neustart
   (tägliches Update 8:30). Eine Selbst-Aktualisierung ist bewusst nicht gebaut.

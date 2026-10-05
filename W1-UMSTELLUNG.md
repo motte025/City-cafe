@@ -92,4 +92,4 @@ geholfen.
 - Verweigerte Berechtigungen nicht umgehen; fragen.
 - Nichts an Partitionen, Bootloader oder Windows ohne Freigabe.
 - Keine YouTube- oder Google-Cookies im Kiosk-Profil löschen.
-- Im Café kein Roulette-Spiel, nur die Werbung.
+- Im Café kein Roulette-Spiel (die Roulette-Werbung ist seit 05.10.2026 entfernt).
