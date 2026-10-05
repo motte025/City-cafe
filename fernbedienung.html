@@ -99,7 +99,7 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-10-05-roulette';
+    var FASSUNG = '2026-10-05-roulette2';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 
@@ -161,14 +161,19 @@
      * "Roulette am Screen starten": legt einen Zeitstempel unter
      * djremote/<raum>/roulette/wecken ab; der Screen hoert darauf und schaltet
      * in den Roulette-Slot (siehe rouletteWeckerStarten in index.html).
+     * Serverzeit statt Handy-Uhr: der Screen nimmt nur Weckrufe der letzten
+     * Minute an, eine nachgehende Handy-Uhr wuerde sonst ignoriert.
+     * Seit 05.10.2026 weckt schon das Antippen des Roulette-Reiters.
      */
-    el('wecken').addEventListener('click', function () {
+    var weckenWartet = false;
+    function rouletteWecken() {
         var knopf = el('wecken');
-        if (!verbindung) { knopf.textContent = 'Keine Verbindung zum Screen'; return; }
+        if (!verbindung) { weckenWartet = true; knopf.textContent = 'Keine Verbindung zum Screen'; return; }
+        weckenWartet = false;
         knopf.disabled = true;
         knopf.textContent = 'Wird am Screen geöffnet …';
         verbindung.db.ref('djremote/' + raum + '/roulette/wecken')
-            .set({ ts: Date.now() })
+            .set({ ts: { '.sv': 'timestamp' } })
             .then(function () {
                 knopf.textContent = '✓ Am Screen geöffnet';
                 setTimeout(function () {
@@ -180,7 +185,8 @@
                 knopf.textContent = 'Nicht gesendet — Verbindung prüfen';
                 knopf.disabled = false;
             });
-    });
+    }
+    el('wecken').addEventListener('click', rouletteWecken);
 
     // Kommt eine neue Spielkennung herein, waehrend das Kartenspiel offen ist,
     // laedt es sich damit von selbst.
@@ -196,7 +202,12 @@
         k.type = 'button';
         k.textContent = s.text;
         k.dataset.teil = s.schluessel;
-        k.addEventListener('click', function () { aktiv = s.schluessel; rahmenSetzen(); });
+        k.addEventListener('click', function () {
+            aktiv = s.schluessel;
+            rahmenSetzen();
+            // Roulette-Reiter angetippt: Roulette gleich an den Screen holen.
+            if (s.schluessel === 'roulette') rouletteWecken();
+        });
         el('tabs').appendChild(k);
     });
     rahmenSetzen();
@@ -271,6 +282,8 @@
         YT_REMOTE_NET.bereit().then(function (verb) {
             if (!verb) { screenText(raum, 'keine Verbindung'); return; }
             verbindung = verb;
+            // Roulette-Reiter wurde vor dem Verbindungsaufbau angetippt.
+            if (weckenWartet) rouletteWecken();
             statusAbo(verb);
             tonAbo(verb);
             Promise.all([

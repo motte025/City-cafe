@@ -295,7 +295,10 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   spielt eine Partie immer zu Ende, auch wenn er nicht mehr gewinnen kann. Ein
   laufendes Spiel wird von YouTube und Twitch nicht unterbrochen.
 - **Roulette im Dashboard (seit 05.10.2026 wieder)**: im Café (`city-cafe`) und
-  zuhause (`zuhause`), andere Räume und `?roulette=0` ohne. Immer im Vollbild
+  zuhause (`zuhause`), andere Räume und `?roulette=0` ohne. **Seit 05.10.2026
+  mittags vorerst nicht in der Rotation, nur per Handy** (`ROULETTE_IN_ROTATION`
+  in `index.html`), bis alles läuft. Schon das Antippen des Roulette-Reiters
+  weckt (Serverzeit, nicht Handy-Uhr). Immer im Vollbild
   (`#roulette-fullscreen` über dem ganzen Dashboard). Fester Slot nach
   den Musik-Slides (`ROULETTE_SLOT_INDEX` 9.5): mindestens 4 Minuten, danach
   so lange die Seite „läuft noch" meldet (Zyklus, Spiel, Siegerfeier),
