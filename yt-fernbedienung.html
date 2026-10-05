@@ -395,7 +395,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-aufrufe2';
+    var FASSUNG = '2026-10-05-plweg';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -414,7 +414,8 @@
         var eigene = Object.keys(listen || {}).filter(function (nr) {
             return listen[nr] && listen[nr].eigen && !playlists.some(function (p) { return String(p.nr) === String(nr); });
         }).map(function (nr) { return { nr: Number(nr), name: listen[nr].name || 'Eigene Playlist', eigen: true }; });
-        return playlists.concat(eigene.sort(function (a, b) { return a.nr - b.nr; }));
+        return playlists.filter(function (p) { return !(listen[p.nr] && listen[p.nr].geloescht); })
+            .concat(eigene.sort(function (a, b) { return a.nr - b.nr; }));
     }
     var boxName = RAUM;
 
@@ -1161,7 +1162,7 @@
                 + '<button type="button" data-a="start">▶ Ganze Playlist starten</button>'
                 + '<button type="button" class="still" data-a="anhaengen">➕ Ganze Playlist anhängen</button>'
                 + (inhalt.bearbeitet && !inhalt.eigen ? '<button type="button" class="still" data-a="original">↺ Original wiederherstellen</button>' : '')
-                + (inhalt.eigen ? '<button type="button" class="still" data-a="weg">🗑️ Playlist löschen</button>' : '')
+                + '<button type="button" class="still" data-a="weg">🗑️ Playlist löschen</button>'
                 + '</div><div class="hinweis">✕ löscht einen Song aus der Playlist, ☰ ziehen verschiebt ihn.</div></div>'
                 + '<div class="liste"></div>';
             d.querySelector('[data-a=start]').addEventListener('click', function () { musik('playlist', { nr: p.nr, art: 'start' }); melden('▶ ' + p.name + ' startet', ''); });
@@ -1169,9 +1170,11 @@
             var wegK = d.querySelector('[data-a=weg]');
             if (wegK) wegK.addEventListener('click', function () {
                 if (wegK.dataset.sicher !== '1') { wegK.dataset.sicher = '1'; wegK.textContent = '🗑️ Wirklich löschen? Nochmal tippen'; return; }
-                verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).remove()
+                var ref = verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr);
+                // Eigene ganz weg; feste (aus dem Repo) nur ausblenden - unten wiederherstellbar.
+                (p.eigen ? ref.remove() : ref.set({ nr: p.nr, name: p.name || '', geloescht: true, ts: firebase.database.ServerValue.TIMESTAMP }))
                     .then(function () { melden('🗑️ Playlist „' + p.name + '" gelöscht', 'ok'); })
-                    .catch(function (err) { melden(err.message, 'nein'); });
+                    .catch(function (err) { melden(/permission/i.test(err.message) ? 'Nur mit Chef-Anmeldung möglich.' : err.message, 'nein'); });
             });
             var orig = d.querySelector('[data-a=original]');
             if (orig) orig.addEventListener('click', function () { musik('listeOriginal', { nr: p.nr }); melden('↺ ' + p.name + ': Original kommt zurück', ''); });
@@ -1187,6 +1190,30 @@
             if (offeneListen[p.nr]) { d.open = true; gerendert = true; zeigen(); }   // nach dem Speichern offen lassen
             box.appendChild(d);
         });
+        var weg = playlists.filter(function (p) { return listen[p.nr] && listen[p.nr].geloescht; });
+        if (weg.length && istChef) {
+            var w = document.createElement('div');
+            w.className = 'hinweis';
+            w.style.marginTop = '16px';
+            w.textContent = 'Gelöschte Playlists (antippen = wiederherstellen):';
+            box.appendChild(w);
+            var z = document.createElement('div');
+            z.className = 'zeiten';
+            weg.forEach(function (p) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'still';
+                b.textContent = '↺ ' + p.nr + ' ' + p.name;
+                b.addEventListener('click', function () {
+                    verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).remove().then(function () {
+                        musik('listeOriginal', { nr: p.nr });
+                        melden('↺ „' + p.name + '" ist wieder da', 'ok');
+                    }).catch(function (err) { melden(err.message, 'nein'); });
+                });
+                z.appendChild(b);
+            });
+            box.appendChild(z);
+        }
     }
 
     // --- Playlist am Handy bearbeiten (Chef): Song loeschen, per ☰ verschieben.

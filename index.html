@@ -7951,6 +7951,7 @@
         let ytmStartNachSpiel = false;    // Wunsch kam waehrend Hos'n Obe
         let ytmBekannteIds = null;        // Eintraege beim letzten Blick (neue = Start)
         let ytmPlaylists = [];
+        let ytmPlaylistsRepo = [];   // so wie in yt_playlists.json (fuer "geloeschte wiederherstellen")
         let ytmMixLaeuft = null;          // { id, seed, schritt } - laufender Mix-Auftrag
         let ytmFindeLaeuft = null;        // { id, eintragId }
         let ytmQualitaet = { hoehe: 0, fps: 0 };   // Obergrenze vom Handy ("Mehr")
@@ -8170,7 +8171,7 @@
         function ytmPlaylistsLaden() {
             return fetch('yt_playlists.json?v=' + Date.now(), { cache: 'no-store' })
                 .then(r => r.json())
-                .then(l => { ytmPlaylists = Array.isArray(l) ? l : []; })
+                .then(l => { ytmPlaylists = Array.isArray(l) ? l : []; ytmPlaylistsRepo = ytmPlaylists.slice(); })
                 .catch(() => { ytmPlaylists = []; });
         }
 
@@ -8225,6 +8226,7 @@
             } catch (e) {}
             ytmPlaylists.forEach(pl => {
                 const g = gespeichert[pl.nr];
+                if (g && g.geloescht) return;      // am Handy geloescht: Markierung nicht ueberschreiben
                 if (g && g.bearbeitet && Array.isArray(g.titel)) ytmListenInhalt[pl.nr] = g.titel.map(t => ytmAufbereiten(t));
                 else ytmListeNeuMelden(pl);
             });
@@ -8241,8 +8243,11 @@
         }
         // Am Handy selbst erstellte Playlists (yt/listen/<nr> mit "eigen: true", 05.10.2026):
         // gibt es nicht in yt_playlists.json - hier in ytmPlaylists aufnehmen bzw. entfernen.
+        // Am Handy geloeschte Repo-Playlists ({ geloescht: true }) sind ausgeblendet, bis sie
+        // dort wiederhergestellt werden (Knoten weg -> wieder da).
         function ytmEigeneListen(alle) {
-            ytmPlaylists = ytmPlaylists.filter(p => !p.eigen || (alle[p.nr] && alle[p.nr].eigen));
+            const behalten = ytmPlaylists.filter(p => p.eigen && alle[p.nr] && alle[p.nr].eigen);
+            ytmPlaylists = ytmPlaylistsRepo.filter(p => !(alle[p.nr] && alle[p.nr].geloescht)).concat(behalten);
             Object.keys(alle).forEach(nr => {
                 const g = alle[nr];
                 if (!g || !g.eigen) return;
