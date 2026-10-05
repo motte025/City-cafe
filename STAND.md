@@ -301,7 +301,10 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   so lange die Seite „läuft noch" meldet (Zyklus, Spiel, Siegerfeier),
   höchstens 2 Stunden. Dazu holt „🎰 Roulette am Screen starten" im
   Roulette-Reiter der Sammel-Fernbedienung es sofort an den Screen
-  (`djremote/<raum>/roulette/wecken`, gilt 1 Minute). Gezeigt wird der
+  (`djremote/<raum>/roulette/wecken`, gilt 1 Minute). Der Weckruf geht immer
+  durch, nur eine laufende Runde Hos'n Obe hat Vorrang: Musik pausiert wie bei
+  Hos'n Obe und läuft danach weiter, Video- und DJ-Wunsch enden, Dart-Abend
+  und Anheizer machen danach weiter (`rouletteVorrang`). Gezeigt wird der
   Spielmodus `roulette-vorschau-spiel/` (dieselbe Seite wie die Handy-
   Fernbedienung), nicht `roulette/`. Lokal nur über `localhost` testen —
   unter `127.0.0.1` lässt Firebase die Seite nicht verbinden.
