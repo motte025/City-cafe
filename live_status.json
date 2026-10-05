@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-05T11:32:46Z",
+  "checked_at": "2026-10-05T11:37:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥DARK ANGEL VIBES🔥PP 21/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Music Monday <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
