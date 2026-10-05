@@ -8029,6 +8029,7 @@
                 modus: ytmAktiv() ? ytm.modus : 'aus',
                 videoId: j ? j.videoId : '',
                 titel: j ? (j.titel || '') : '',
+                kanal: j ? (j.kanal || '') : '',
                 kuenstler: j ? (j.kuenstler || '') : '',
                 songtitel: j ? (j.songtitel || '') : '',
                 genre: gj ? gj.genre : '',
@@ -8226,6 +8227,7 @@
                 if (g && g.bearbeitet && Array.isArray(g.titel)) ytmListenInhalt[pl.nr] = g.titel.map(t => ytmAufbereiten(t));
                 else ytmListeNeuMelden(pl);
             });
+            ytmEigeneListen(gespeichert);
             ytmNaechsteListe();
             // Aenderungen vom Handy sofort uebernehmen
             YT_REMOTE_NET.aufListenHoeren(nlFernVerb, NL_FERN_RAUM, alle => {
@@ -8233,6 +8235,21 @@
                     const g = alle[nr];
                     if (g && g.bearbeitet && Array.isArray(g.titel)) ytmListenInhalt[nr] = g.titel.map(t => ytmAufbereiten(t));
                 });
+                ytmEigeneListen(alle || {});
+            });
+        }
+        // Am Handy selbst erstellte Playlists (yt/listen/<nr> mit "eigen: true", 05.10.2026):
+        // gibt es nicht in yt_playlists.json - hier in ytmPlaylists aufnehmen bzw. entfernen.
+        function ytmEigeneListen(alle) {
+            ytmPlaylists = ytmPlaylists.filter(p => !p.eigen || (alle[p.nr] && alle[p.nr].eigen));
+            Object.keys(alle).forEach(nr => {
+                const g = alle[nr];
+                if (!g || !g.eigen) return;
+                const titel = Array.isArray(g.titel) ? g.titel : [];
+                ytmListenInhalt[nr] = titel.map(t => ytmAufbereiten(t));
+                const da = ytmPlaylists.find(p => String(p.nr) === String(nr));
+                if (da) da.name = g.name || da.name;
+                else ytmPlaylists.push({ nr: Number(nr), name: String(g.name || 'Eigene Playlist').slice(0, 60), eigen: true, quelle: '' });
             });
         }
         function ytmListeNeuMelden(pl) {

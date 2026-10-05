@@ -92,7 +92,8 @@
     nav.reiterleiste button.aktiv { color: #6ea8ff; font-weight: 800; }
 
     /* --- Jetzt ---------------------------------------------------------- */
-    .jetzt-kopf { font-size: 21px; font-weight: 800; letter-spacing: 1.5px; color: #00e5ff; }
+    .jetzt-kopf { font-size: 21px; font-weight: 800; letter-spacing: 1.5px; color: #00e5ff; padding-right: 110px; }
+    .pl-plus { position: absolute; top: 12px; right: 12px; font-size: 24px; padding: 8px 14px; border-radius: 14px; background: #1d2a55; color: #cfe0ff; }
     .jetzt-titel { font-size: 38px; font-weight: 800; line-height: 1.2; margin-top: 6px; }
     .jetzt-kuenstler { font-size: 26px; color: #cbd5f5; margin-top: 4px; }
     .jetzt-liste { font-size: 22px; font-weight: 700; color: #f9a8e8; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -227,7 +228,8 @@
 
 <!-- ============================ JETZT ============================ -->
 <section class="reiter-inhalt aktiv" id="reiter-jetzt">
-    <div class="karte" id="jetzt-karte">
+    <div class="karte" id="jetzt-karte" style="position:relative">
+        <button type="button" class="nur-chef pl-plus" id="k-pl" title="Laufenden Song zu einer Playlist hinzufügen">📃＋</button>
         <div class="jetzt-kopf">JETZT LÄUFT · CITY CAFE</div>
         <div class="jetzt-titel" id="jetzt-titel">—</div>
         <div class="jetzt-kuenstler" id="jetzt-kuenstler"></div>
@@ -303,6 +305,10 @@
 <!-- ============================ LISTEN ============================ -->
 <section class="reiter-inhalt" id="reiter-listen">
     <div class="feldname">Playlists</div>
+    <div class="zeile2 nur-chef" style="margin-bottom:10px">
+        <input type="text" id="neue-pl-name" placeholder="Name der neuen Playlist" maxlength="60">
+        <button type="button" id="neue-pl-knopf">➕ Neue Playlist</button>
+    </div>
     <div id="playlists"></div>
     <details id="listeBox">
         <summary>📺 Videos aus der Dauerliste</summary>
@@ -389,7 +395,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-zerlegen';
+    var FASSUNG = '2026-10-05-eigene';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
@@ -403,6 +409,13 @@
     var verb = null, istChef = false, uhrVersatz = 0;
     var jetzt = null, schlange = [], radio = { titel: [] }, listen = {}, status = null;
     var playlists = [];
+    // Repo-Playlists plus am Handy selbst erstellte (yt/listen/<nr>, eigen: true)
+    function alleListen() {
+        var eigene = Object.keys(listen || {}).filter(function (nr) {
+            return listen[nr] && listen[nr].eigen && !playlists.some(function (p) { return String(p.nr) === String(nr); });
+        }).map(function (nr) { return { nr: Number(nr), name: listen[nr].name || 'Eigene Playlist', eigen: true }; });
+        return playlists.concat(eigene.sort(function (a, b) { return a.nr - b.nr; }));
+    }
     var boxName = RAUM;
 
     // ------------------------------------------------------------------ Hilfen
@@ -561,7 +574,7 @@
         knopf('5️⃣ An 5. Stelle', false, function () { if (eintrag) aufPlatz5(eintrag); else einreihen(t, 'platz5'); });
         if (t.videoId) knopf('📻 Radio-Mix starten', false, function () { radioStarten(t); });
         if (!eintrag) knopf('➕ Ans Ende', true, function () { einreihen(t, 'ende'); });
-        if (t.videoId && playlists.length) knopf('📃 Zu Playlist hinzufügen', true, function () {
+        if (t.videoId) knopf('📃 Zu Playlist hinzufügen', true, function () {
             setTimeout(function () { zuPlaylistMenue(t); }, 0);
         });
         knopf('Abbrechen', true, function () {});
@@ -573,7 +586,7 @@
         var hg = el('menue-hg'), box = el('menue-knoepfe');
         el('menue-titel').textContent = '📃 „' + (t.songtitel || t.titel || '') + '" hinzufügen zu …';
         box.innerHTML = '';
-        playlists.forEach(function (p) {
+        alleListen().forEach(function (p) {
             var inhalt = listen[p.nr] || {};
             var titel = Array.isArray(inhalt.titel) ? inhalt.titel : [];
             var b = document.createElement('button');
@@ -616,6 +629,15 @@
             });
             box.appendChild(b);
         });
+        var neuB = document.createElement('button');
+        neuB.type = 'button';
+        neuB.textContent = '➕ Neue Playlist mit diesem Song';
+        neuB.addEventListener('click', function () {
+            hg.classList.remove('an');
+            var name = (window.prompt('Name der neuen Playlist:') || '').trim();
+            if (name) neuePlaylist(name, [t]);
+        });
+        box.appendChild(neuB);
         var ab = document.createElement('button');
         ab.type = 'button';
         ab.className = 'still';
@@ -623,6 +645,20 @@
         ab.addEventListener('click', function () { hg.classList.remove('an'); });
         box.appendChild(ab);
         hg.classList.add('an');
+    }
+    // Eigene Playlist anlegen (Nummern ab 101, damit sie nie mit Repo-Playlists kollidieren)
+    function neuePlaylist(name, songs) {
+        if (!verb) return;
+        var nr = alleListen().reduce(function (m, p) { return Math.max(m, Number(p.nr) || 0); }, 100) + 1;
+        var titel = (songs || []).filter(function (t) { return t && t.videoId; }).map(function (t) {
+            return { videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
+                     dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0, kuenstler: t.kuenstler || '', songtitel: t.songtitel || '' };
+        });
+        verb.db.ref('djremote/' + RAUM + '/yt/listen/' + nr).set({
+            nr: nr, name: String(name).slice(0, 60), platzhalter: false, bearbeitet: true, eigen: true,
+            titel: titel, ts: firebase.database.ServerValue.TIMESTAMP
+        }).then(function () { melden('📃 Playlist „' + name + '" angelegt' + (titel.length ? ' mit 1 Song' : ''), 'ok'); })
+          .catch(function (err) { melden(/permission/i.test(err.message) ? 'Nur mit Chef-Anmeldung möglich.' : err.message, 'nein'); });
     }
 
     // Warteschlange bereinigen (Chef): Auswahl im selben Unten-Menue wie bei den Songs.
@@ -843,6 +879,17 @@
     el('k-pause').addEventListener('click', function () { musik('pauseUm'); });
     el('k-skip').addEventListener('click', function () { musik('skip'); melden('⏭ Übersprungen', ''); });
     el('k-zurueck').addEventListener('click', function () { musik('zurueck'); });
+    el('k-pl').addEventListener('click', function () {
+        if (!jetzt || !jetzt.videoId) { melden('Gerade läuft kein Song', 'nein'); return; }
+        zuPlaylistMenue({ videoId: jetzt.videoId, titel: jetzt.titel || '', kanal: jetzt.kanal || '',
+                          dauerSek: Number(jetzt.dauerSek) || 0, kuenstler: jetzt.kuenstler || '', songtitel: jetzt.songtitel || '' });
+    });
+    el('neue-pl-knopf').addEventListener('click', function () {
+        var name = (el('neue-pl-name').value || '').trim();
+        if (!name) { melden('Bitte einen Namen eingeben', 'nein'); return; }
+        el('neue-pl-name').value = '';
+        neuePlaylist(name, []);
+    });
     el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⤨ Blende zum nächsten Song …', ''); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
     // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
@@ -1079,7 +1126,7 @@
     function playlistsZeigen() {
         var chips = el('playlist-chips');
         chips.innerHTML = '';
-        playlists.forEach(function (p) {
+        alleListen().forEach(function (p) {
             var b = document.createElement('button');
             b.type = 'button';
             b.innerHTML = '<b>' + esc(p.nr) + '</b>' + esc(p.name);
@@ -1088,21 +1135,29 @@
         });
         var box = el('playlists');
         box.innerHTML = '';
-        playlists.forEach(function (p) {
+        alleListen().forEach(function (p) {
             var inhalt = listen[p.nr] || {};
             var titel = Array.isArray(inhalt.titel) ? inhalt.titel : [];
             var d = document.createElement('details');
-            d.innerHTML = '<summary><b style="color:#00e5ff">' + esc(p.nr) + '</b> ' + esc(p.name) + ' · ' + (titel.length || '…')
+            d.innerHTML = '<summary><b style="color:#00e5ff">' + esc(p.nr) + '</b> ' + esc(p.name) + ' · ' + (titel.length || (inhalt.eigen ? 0 : '…'))
                 + (inhalt.platzhalter ? ' <small style="color:#8ea0c8">(Platzhalter)</small>' : '')
-                + (inhalt.bearbeitet ? ' <small style="color:#f9a8e8">(bearbeitet)</small>' : '') + '</summary>'
+                + (inhalt.eigen ? ' <small style="color:#9be7a4">(eigene)</small>' : inhalt.bearbeitet ? ' <small style="color:#f9a8e8">(bearbeitet)</small>' : '') + '</summary>'
                 + '<div class="nur-chef"><div class="zeiten" style="margin-top:12px">'
                 + '<button type="button" data-a="start">▶ Ganze Playlist starten</button>'
                 + '<button type="button" class="still" data-a="anhaengen">➕ Ganze Playlist anhängen</button>'
-                + (inhalt.bearbeitet ? '<button type="button" class="still" data-a="original">↺ Original wiederherstellen</button>' : '')
+                + (inhalt.bearbeitet && !inhalt.eigen ? '<button type="button" class="still" data-a="original">↺ Original wiederherstellen</button>' : '')
+                + (inhalt.eigen ? '<button type="button" class="still" data-a="weg">🗑️ Playlist löschen</button>' : '')
                 + '</div><div class="hinweis">✕ löscht einen Song aus der Playlist, ☰ ziehen verschiebt ihn.</div></div>'
                 + '<div class="liste"></div>';
             d.querySelector('[data-a=start]').addEventListener('click', function () { musik('playlist', { nr: p.nr, art: 'start' }); melden('▶ ' + p.name + ' startet', ''); });
             d.querySelector('[data-a=anhaengen]').addEventListener('click', function () { musik('playlist', { nr: p.nr, art: 'anhaengen' }); melden('➕ ' + p.name + ' angehängt', ''); });
+            var wegK = d.querySelector('[data-a=weg]');
+            if (wegK) wegK.addEventListener('click', function () {
+                if (wegK.dataset.sicher !== '1') { wegK.dataset.sicher = '1'; wegK.textContent = '🗑️ Wirklich löschen? Nochmal tippen'; return; }
+                verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).remove()
+                    .then(function () { melden('🗑️ Playlist „' + p.name + '" gelöscht', 'ok'); })
+                    .catch(function (err) { melden(err.message, 'nein'); });
+            });
             var orig = d.querySelector('[data-a=original]');
             if (orig) orig.addEventListener('click', function () { musik('listeOriginal', { nr: p.nr }); melden('↺ ' + p.name + ': Original kommt zurück', ''); });
             var liste = d.querySelector('.liste');
@@ -1126,7 +1181,7 @@
     function listeSpeichern(p, neu) {
         if (!verb) return;
         verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).set({
-            nr: p.nr, name: p.name || '', platzhalter: false, bearbeitet: true, titel: neu,
+            nr: p.nr, name: p.name || '', platzhalter: false, bearbeitet: true, eigen: !!p.eigen, titel: neu,
             ts: firebase.database.ServerValue.TIMESTAMP
         }).catch(function (err) {
             melden(/permission/i.test(err.message) ? 'Nur mit Chef-Anmeldung möglich.' : err.message, 'nein');
