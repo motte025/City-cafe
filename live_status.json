@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-05T15:07:45Z",
+  "checked_at": "2026-10-05T15:22:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Music Monday <3 -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 95 😈 Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -20,13 +27,6 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥DARK ANGEL VIBES🔥PP 21/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 95 😈 Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
