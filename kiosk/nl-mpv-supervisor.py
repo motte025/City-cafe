@@ -1930,14 +1930,14 @@ def main():
             bt_seite["id"] = page_id
             # Seite halb geladen haengen geblieben (05.10.2026 nach dem Neustart des
             # Updates um 8:30: Netz noch nicht stabil, nur 217 von 842 KB, Chromium wartet
-            # ewig auf den Rest). Laenger als 90 s "loading" -> neu laden.
+            # ewig auf den Rest). Laenger als 60 s "loading" -> neu laden.
             if page_id and time.time() - laden_pruef >= 10:
                 laden_pruef = time.time()
                 zustand = cdp_eval(page_id, "document.readyState")
                 if zustand == "loading":
                     laden_seit = laden_seit or time.time()
-                    if time.time() - laden_seit > 90:
-                        log("Seite haengt beim Laden (> 90 s) - neu laden")
+                    if time.time() - laden_seit > 60:
+                        log("Seite haengt beim Laden (> 60 s) - neu laden")
                         cdp_eval(page_id, "location.reload(), 1")
                         laden_seit = time.time()
                 else:
