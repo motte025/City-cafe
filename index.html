@@ -453,15 +453,15 @@
             background: #21150c;
         }
         #mittagsteller-fullscreen.active { display: block; }
-        /* Roulette-Rahmen: gleiche Buehne wie die Plakate, der Inhalt kommt aus
-           roulette-vorschau-spiel/ (Spielmodus, eigene Seite im selben Repo). Die
-           Seite ist fuer 1280x720 gebaut und steht mittig auf der 1280x815-Buehne. */
-        .roulette-rahmen {
-            width: 1280px; height: 815px; position: relative;
-            border-radius: 22px; overflow: hidden; background: #071713;
-            display: grid; place-items: center;
+        /* Roulette immer im Vollbild (Wunsch Betreiber 05.10.2026): eigene Ebene
+           ueber dem ganzen Dashboard wie der Mittagsteller. Der Inhalt kommt aus
+           roulette-vorschau-spiel/ und richtet sich selbst nach der Groesse. */
+        #roulette-fullscreen {
+            display: none; position: absolute; inset: 0; z-index: 600;
+            background: #071713;
         }
-        .roulette-rahmen iframe { width: 1280px; height: 720px; border: 0; display: block; }
+        #roulette-fullscreen.active { display: block; }
+        #roulette-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
         #mittagsteller-fullscreen img {
             width: 100%; height: 100%; object-fit: contain; display: block;
         }
@@ -2555,13 +2555,6 @@
                     </div>
                 </div>
 
-                <!-- Roulette am Fernseher (siehe runRouletteState). Die Seite wird nur
-                     fuer die Dauer des Slots geladen - ein WebGL-Rad im Hintergrund
-                     muss niemand mitrechnen. -->
-                <div class="media-inner-view" id="media-view-roulette">
-                    <div class="roulette-rahmen" id="roulette-rahmen"></div>
-                </div>
-
                 <div class="media-inner-view" id="media-view-musicslides">
                     <div class="poster-container">
                         <img class="poster-image active" id="musicSlide1" src="" alt="Musik-Slide 1">
@@ -3160,6 +3153,11 @@
         <div id="mittagsteller-fullscreen">
             <img src="mittagsteller-querformat.jpg" alt="Gasthaus Reiterklause Mittagsteller">
         </div>
+
+        <!-- Roulette im Vollbild (siehe runRouletteState). Die Seite wird nur fuer
+             die Dauer des Slots geladen - ein WebGL-Rad im Hintergrund muss
+             niemand mitrechnen. -->
+        <div id="roulette-fullscreen"></div>
 
         <!-- Champions-League-Tabelle im Vollbild: eigenes Element direkt unter
              #dashboard-scaler (nicht unter .media-zone), damit sie per z-index
@@ -6574,7 +6572,7 @@
                         // Laeuft gerade eine Runde Hos'n Obe, hat die Vorrang.
                         if (window.ktSpielLaeuft && window.ktSpielLaeuft()) return;
                         // Steht das Roulette schon am Screen, nichts neu laden.
-                        if (document.getElementById('media-view-roulette').classList.contains('active')) return;
+                        if (document.getElementById('roulette-fullscreen').classList.contains('active')) return;
                         cancelSequenceTimers();
                         mediaStateIndex = ROULETTE_SLOT_INDEX;
                         runMasterSequence();
@@ -6583,20 +6581,21 @@
         }
 
         function rouletteStop() {
-            const halter = document.getElementById('roulette-rahmen');
-            if (halter && halter.firstChild) halter.innerHTML = '';
+            const halter = document.getElementById('roulette-fullscreen');
+            if (!halter) return;
+            halter.classList.remove('active');
+            if (halter.firstChild) halter.innerHTML = '';
         }
 
         function runRouletteState(nextStateIndex) {
-            const halter = document.getElementById('roulette-rahmen');
-            const view = document.getElementById('media-view-roulette');
-            if (!rouletteAn() || !halter || !view) {
+            const halter = document.getElementById('roulette-fullscreen');
+            if (!rouletteAn() || !halter) {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
                 return;
             }
-            view.classList.add('active');
             halter.innerHTML = '';
+            halter.classList.add('active');
             const rahmen = document.createElement('iframe');
             rahmen.setAttribute('allow', 'autoplay');
             rahmen.setAttribute('title', 'Roulette');
