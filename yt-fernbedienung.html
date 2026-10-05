@@ -135,13 +135,19 @@
     .video .oben { display: flex; gap: 14px; align-items: center; }
     .video img { width: 150px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 10px; background: #000; flex-shrink: 0; }
     .video .t { font-size: 28px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .video .k { font-size: 24px; color: #9fb0d8; margin-top: 4px; }
+    .video .k { font-size: 24px; color: #9fb0d8; margin-top: 6px; }
+    .video .k.q { font-size: 22px; color: #7f8fb8; }
+    .video .k.q b { color: #c7d2f0; }
+    .video .k.q b.schlecht { color: #ffb36b; }
     /* Bis zu 7 Knoepfe: in zwei Zeilen zu je 3, damit sie am Handy gross bleiben */
     .video .knoepfe { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
     .video .knoepfe button { flex: 1 1 calc(33.3% - 10px); min-width: 0; font-size: 26px; padding: 16px 6px; }
     .video .knoepfe button.still { background: #1d2647; }
     .plus-zeile { display: flex; align-items: center; gap: 12px; background: #131a33; border: 1px solid #27325c; border-radius: 18px; padding: 14px 16px; margin-top: 10px; }
     .plus-zeile .text { flex: 1; min-width: 0; }
+    .plus-zeile { flex-wrap: wrap; }
+    .plus-zeile .unten { order: 99; flex-basis: 100%; min-width: 0; }
+    .plus-zeile .unten .k, .plus-zeile .unten .q { white-space: normal; overflow: visible; }
     .plus-zeile img.mini { width: 150px; height: 84px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #0b1024; }
     .plus-zeile .q { font-size: 22px; color: #7f8fb8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
     .plus-zeile .q b { font-weight: 700; color: #c7d2f0; }
@@ -399,7 +405,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-zoom';
+    var FASSUNG = '2026-10-05-unten';
     // Schriftgroesse je Geraet (A-/A+ oben): vergroessert die ganze Seite (CSS zoom),
     // gemerkt im Browser des Geraets (Handy und Tablet unabhaengig, Wunsch 05.10.2026).
     (function () {
@@ -960,13 +966,14 @@
         var d = document.createElement('div');
         d.className = 'plus-zeile';
         var art = videoArt(t);
+        // Bild und Titel nebeneinander, Interpret und Infozeile darunter ueber die volle Breite
         d.innerHTML = (t.videoId ? '<img class="mini" loading="lazy" alt="" src="https://i.ytimg.com/vi/' + esc(t.videoId) + '/mqdefault.jpg">' : '')
-            + '<div class="text"><div class="t">' + esc(t.songtitel || t.titel) + '</div><div class="k">'
-            + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div>'
+            + '<div class="text"><div class="t">' + esc(t.songtitel || t.titel) + '</div></div>'
+            + '<button type="button" class="plus" aria-label="Hinzufügen">＋</button>'
+            + '<div class="unten"><div class="k">' + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div>'
             + '<div class="q"><b' + (art[1] ? ' class="schlecht"' : '') + '>' + art[0] + '</b>'
             + (t.kanal ? ' · ' + esc(String(t.kanal).replace(/ - Topic$/, '')) : '')
-            + (t.aufrufe ? ' · ' + aufrufeText(t.aufrufe) : '') + '</div>'
-            + '</div><button type="button" class="plus" aria-label="Hinzufügen">＋</button>';
+            + (t.aufrufe ? ' · ' + aufrufeText(t.aufrufe) : '') + '</div></div>';
         var knopf = d.querySelector('.plus'), lang = null, langGedrueckt = false;
         if (istChef) d.insertBefore(mehrKnopf(t, null, abHier), knopf);
         knopf.addEventListener('pointerdown', function () {
@@ -1004,11 +1011,12 @@
         var abPl = istChef && offenePlaylist && typeof i === 'number' ? offenePlaylist : null;
         var d = document.createElement('div');
         d.className = 'video';
+        var artK = videoArt(t);
         d.innerHTML = '<div class="oben"><img loading="lazy" alt="" src="https://i.ytimg.com/vi/' + esc(t.videoId) + '/mqdefault.jpg">'
-            + '<div><div class="t">' + esc(t.songtitel || t.titel) + '</div><div class="k">'
-            + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div>'
-            + (t.aufrufe || t.kanal ? '<div class="k" style="opacity:.8">' + esc([String(t.kanal || '').replace(/ - Topic$/, ''), aufrufeText(t.aufrufe)].filter(Boolean).join(' · ')) + '</div>' : '')
-            + '</div></div>'
+            + '<div><div class="t">' + esc(t.songtitel || t.titel) + '</div></div></div>'
+            + '<div class="k">' + esc([t.kuenstler || t.kanal, t.dauer].filter(Boolean).join(' · ')) + '</div>'
+            + '<div class="k q"><b' + (artK[1] ? ' class="schlecht"' : '') + '>' + artK[0] + '</b>'
+            + esc([t.kanal ? ' · ' + String(t.kanal).replace(/ - Topic$/, '') : '', t.aufrufe ? ' · ' + aufrufeText(t.aufrufe) : ''].join('')) + '</div>'
             + '<div class="knoepfe">'
             + (abPl ? '<button type="button" data-a="abhier">⤵ Ab hier</button>' : '')
             + (istChef ? '<button type="button" data-a="sofort">▶ Sofort</button><button type="button" class="still" data-a="naechstes">⏭ Nächstes</button><button type="button" class="still" data-a="platz5">5️⃣ Platz 5</button><button type="button" class="still" data-a="radio">📻 Radio</button><button type="button" class="still" data-a="ende">➕ Ende</button><button type="button" class="still" data-a="pl">📃 Playlist</button>'
