@@ -453,6 +453,15 @@
             background: #21150c;
         }
         #mittagsteller-fullscreen.active { display: block; }
+        /* Roulette-Rahmen: gleiche Buehne wie die Plakate, der Inhalt kommt aus
+           roulette-vorschau-spiel/ (Spielmodus, eigene Seite im selben Repo). Die
+           Seite ist fuer 1280x720 gebaut und steht mittig auf der 1280x815-Buehne. */
+        .roulette-rahmen {
+            width: 1280px; height: 815px; position: relative;
+            border-radius: 22px; overflow: hidden; background: #071713;
+            display: grid; place-items: center;
+        }
+        .roulette-rahmen iframe { width: 1280px; height: 720px; border: 0; display: block; }
         #mittagsteller-fullscreen img {
             width: 100%; height: 100%; object-fit: contain; display: block;
         }
@@ -2544,6 +2553,13 @@
                         <img class="poster-image active" id="jaegerImage" src="" alt="Jägermeister & Puntigamer">
                         <div class="poster-ambient-glaze"></div>
                     </div>
+                </div>
+
+                <!-- Roulette am Fernseher (siehe runRouletteState). Die Seite wird nur
+                     fuer die Dauer des Slots geladen - ein WebGL-Rad im Hintergrund
+                     muss niemand mitrechnen. -->
+                <div class="media-inner-view" id="media-view-roulette">
+                    <div class="roulette-rahmen" id="roulette-rahmen"></div>
                 </div>
 
                 <div class="media-inner-view" id="media-view-musicslides">
@@ -6479,6 +6495,130 @@
             if (preloader.complete) apply(); else { preloader.onload = apply; preloader.onerror = apply; }
         }
 
+        /* ---------- Roulette am Fernseher ----------
+         *
+         * Seit 05.10.2026 wieder im Dashboard, im Cafe (city-cafe) und zuhause:
+         * ein fester Slot in der Rotation (nach den Musik-Slides) und auf Zuruf
+         * vom Handy ("Roulette am Screen starten" in der Sammel-Fernbedienung).
+         * Gezeigt wird der Spielmodus (roulette-vorschau-spiel/), dieselbe Seite,
+         * deren Fernbedienung im Roulette-Reiter steckt. Andere Raeume (Tests)
+         * und ?roulette=0 lassen den Slot aus.
+         */
+        const ROULETTE_SLOT_INDEX = 9.5;
+        const ROULETTE_SLOT_MS = 240000;                      // mindestens vier Minuten
+        const ROULETTE_RAEUME = ['city-cafe', 'zuhause'];
+        // Bewusst eine Funktion: NL_FERN_RAUM wird weiter unten im Skript
+        // angelegt. Als const hier oben gelesen, liefe es in die "temporale
+        // Totzone" - das Skript bricht beim Laden ab, das Dashboard bleibt schwarz.
+        function rouletteAn() {
+            try {
+                return ROULETTE_RAEUME.includes(NL_FERN_RAUM)
+                    && !/(?:^|[?&])roulette=0(?:&|$)/.test(location.search);
+            } catch (e) { return false; }
+        }
+
+        /*
+         * Weckruf vom Handy: die Sammel-Fernbedienung legt unter
+         * djremote/<raum>/roulette/wecken einen Zeitstempel ab, der Screen
+         * schaltet daraufhin in den Roulette-Slot. Ohne laufenden Slot meldet
+         * der TV keinen Status, und die Roulette-Fernbedienung wartet sonst nur.
+         * Ein Weckruf gilt eine Minute, damit ein alter Eintrag nicht bei jedem
+         * Seitenstart Roulette aufruft.
+         */
+        const ROULETTE_WECKRUF_GUELTIG_MS = 60000;
+        let ktRouletteWeckerLetzter = 0;
+
+        /*
+         * Wie lange der Slot bleibt: mindestens vier Minuten, danach so lange,
+         * wie die Seite "laeuft noch" meldet (Zyklus, Spiel oder Siegerfeier).
+         * Notbremse nach zwei Stunden, falls "unendlich" gewaehlt wurde.
+         */
+        const ROULETTE_MAX_MS = 2 * 60 * 60 * 1000;
+        let rouletteStand = null;       // letzter Stand, den das Rad gemeldet hat
+        let rouletteStandZeit = 0;
+
+        function rouletteStandHoeren() {
+            if (!rouletteAn() || !nlFernVerb) return;
+            try {
+                nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/roulette/status')
+                    .on('value', schnappschuss => {
+                        const wert = schnappschuss.val() || {};
+                        rouletteStandZeit = Number(wert.ts) || 0;
+                        try {
+                            rouletteStand = typeof wert.payload === 'string'
+                                ? JSON.parse(wert.payload) : null;
+                        } catch (e) { rouletteStand = null; }
+                    });
+            } catch (e) { /* ohne Verbindung eben nicht */ }
+        }
+
+        function rouletteZyklusLaeuft() {
+            if (!rouletteStand) return false;
+            // Meldet sich das Rad nicht mehr, gilt der Zyklus als beendet.
+            if (Date.now() - rouletteStandZeit > 15000) return false;
+            if (!rouletteStand.running) return false;
+            return rouletteStand.remaining === null || Number(rouletteStand.remaining) > 0
+                || !!rouletteStand.match;
+        }
+
+        function rouletteWeckerStarten() {
+            if (!rouletteAn() || !nlFernVerb) return;
+            try {
+                nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/roulette/wecken')
+                    .on('value', schnappschuss => {
+                        const wert = schnappschuss.val() || {};
+                        const ts = Number(wert.ts) || 0;
+                        if (!ts || ts === ktRouletteWeckerLetzter) return;
+                        if (Date.now() - ts > ROULETTE_WECKRUF_GUELTIG_MS) return;
+                        ktRouletteWeckerLetzter = ts;
+                        // Laeuft gerade eine Runde Hos'n Obe, hat die Vorrang.
+                        if (window.ktSpielLaeuft && window.ktSpielLaeuft()) return;
+                        // Steht das Roulette schon am Screen, nichts neu laden.
+                        if (document.getElementById('media-view-roulette').classList.contains('active')) return;
+                        cancelSequenceTimers();
+                        mediaStateIndex = ROULETTE_SLOT_INDEX;
+                        runMasterSequence();
+                    });
+            } catch (e) { /* ohne Verbindung eben nicht */ }
+        }
+
+        function rouletteStop() {
+            const halter = document.getElementById('roulette-rahmen');
+            if (halter && halter.firstChild) halter.innerHTML = '';
+        }
+
+        function runRouletteState(nextStateIndex) {
+            const halter = document.getElementById('roulette-rahmen');
+            const view = document.getElementById('media-view-roulette');
+            if (!rouletteAn() || !halter || !view) {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
+            view.classList.add('active');
+            halter.innerHTML = '';
+            const rahmen = document.createElement('iframe');
+            rahmen.setAttribute('allow', 'autoplay');
+            rahmen.setAttribute('title', 'Roulette');
+            rahmen.src = 'roulette-vorschau-spiel/index.html?raum=' + encodeURIComponent(NL_FERN_RAUM)
+                       + '&v=' + Date.now();
+            halter.appendChild(rahmen);
+            // Wie bei den Video-Slots: Effekte ruhig halten, solange bewegtes Bild laeuft.
+            videoRuheModus(true);
+            mediaStateIndex = nextStateIndex;
+            // Nach der Mindestzeit alle zehn Sekunden nachsehen: laeuft noch
+            // ein Zyklus oder ein Spiel, bleibt der Slot stehen.
+            const spaetestens = Date.now() + ROULETTE_MAX_MS;
+            const weiterschauen = () => {
+                if (rouletteZyklusLaeuft() && Date.now() < spaetestens) {
+                    globalMasterTimer = later(weiterschauen, 10000);
+                    return;
+                }
+                runMasterSequence();
+            };
+            globalMasterTimer = later(weiterschauen, ROULETTE_SLOT_MS);
+        }
+
         function runMusicSlidesState(nextStateIndex) {
             document.getElementById('media-view-musicslides').classList.add('active');
             musicSlidesIndex = 0;
@@ -7413,6 +7553,9 @@
                 // Eigene Intervalle: sollen den Ansichtswechsel ueberleben.
                 setInterval(nlFernStatusMelden, 5000);
                 setInterval(nlTrefferWeiterreichen, 1000);
+                // Weckruf und Stand fuers Roulette (siehe rouletteWeckerStarten).
+                try { rouletteWeckerStarten(); } catch (e) {}
+                try { rouletteStandHoeren(); } catch (e) {}
             }).catch(() => {});
         }
         nlFernStarten();
@@ -13940,6 +14083,7 @@
             // Ein ausgeblendetes iframe streamt weiter - die Player muessen deshalb
             // bei jedem Ansichtswechsel wirklich aus dem DOM.
             djStopPlayer();
+            if (mediaStateIndex !== ROULETTE_SLOT_INDEX) rouletteStop();
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
             if (mediaStateIndex !== QR_SLOT_INDEX) qrCountdownStoppen();
             // Native <video>-Elemente spielen im Hintergrund weiter, auch wenn ihre
@@ -14134,7 +14278,10 @@
                 }
 
             } else if (mediaStateIndex === 9) {
-                runMusicSlidesState(10); // -> Trinkspiel V1 (Foto)
+                runMusicSlidesState(ROULETTE_SLOT_INDEX); // -> Roulette
+
+            } else if (mediaStateIndex === ROULETTE_SLOT_INDEX) {
+                runRouletteState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
                 runPhotoTrinkspielV1(QR_SLOT_INDEX); // -> Zyklusanfang

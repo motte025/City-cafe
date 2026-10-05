@@ -20,8 +20,9 @@ City
 | `DART-LIGA-SETUP.md` | Dart-Widgets des Hausvereins |
 | `roulette-src/README.md` | Roulette (von Codex gebaut): TV-Seite, Fernbedienung, eigener Bau mit Vite |
 
-Der Roulette-Slot im Dashboard laeuft **nur am Fernseher zuhause**
-(`?raum=zuhause`); im Lokal ueberspringt er sich selbst.
+Der Roulette-Slot im Dashboard (Spielmodus aus `roulette-vorschau-spiel/`)
+laeuft im Cafe (`city-cafe`) und zuhause (`zuhause`), in der Rotation und auf
+Zuruf vom Handy; andere Raeume und `?roulette=0` ueberspringen ihn.
 
 ## Performance: Frame-Verluste auf dem ODROID
 

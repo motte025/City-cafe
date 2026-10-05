@@ -8,7 +8,7 @@ Stand beschreiben, nicht den von vorgestern.
 Letzte Durchsicht: 5. Oktober 2026 (DJ-Übergänge per Studio-Abgleich, offizielle
 Videos überall, Playlists bearbeiten/erstellen am Handy, Playlists 5–8, Aufrufe,
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
-und Musik-Empfehlung entfernt).
+und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard).
 
 ## Was das Projekt ist
 
@@ -49,11 +49,11 @@ sich auf den Push zu verlassen.
 ## Geräte
 
 Seit 30.09.2026 läuft der Kiosk auf dem **ACEMAGIC W1** (Ryzen 7 H255, Radeon
-780M, 15 GB RAM). **Der alte ODROID hängt noch im Café** (Raum `city-cafe`,
-alter Supervisor) – er ist Geschichte, auf ihn wird keine Rücksicht mehr
-genommen. Sobald der W1 im Café hängt, fallen die ODROID-Sonderregeln weg
-(v. a. die Sparregel „box-shadow/filter/animation: none" in `index.html`).
-Bis dahin filtern die Fernbedienungen seinen Status heraus (`chefTv`).
+780M, 15 GB RAM). **Der alte ODROID ist seit 05.10.2026
+weg.** Seine Sonderregeln können fallen (v. a. die Sparregel
+„box-shadow/filter/animation: none" in `index.html`, mit `?fx=1` abschaltbar);
+noch nicht umgestellt. Der `chefTv`-Filter der Fernbedienungen (zwei Screens
+im selben Raum) schadet nicht mehr, wird aber auch nicht mehr gebraucht.
 
 **ACEMAGIC W1**, Zugang vom Beelink `ssh w1` (Benutzer `sabrina`, Schlüssel
 `~/.ssh/citycafe_w1_ed25519`, `sudo` ohne Passwort über
@@ -66,7 +66,7 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   `~/.config/citycafe.env` und startet sway in einer Schleife. sway startet
   `citycafe-chromium`, den Supervisor und `citycafe-bt`.
 - **Einstellungen je Gerät** in `/home/citycafe/.config/citycafe.env`:
-  `CITYCAFE_RAUM=city-cafe` (Café, kein Roulette-Spiel),
+  `CITYCAFE_RAUM=city-cafe` (Café),
   `CITYCAFE_HWDEC=vaapi`, mpv-Puffer 512/64 MiB, `CITYCAFE_CAM_CACHE_SECS=3`
   (Dartcam), `CITYCAFE_VOLUME=1.0`, `CITYCAFE_MIX_COOKIES=0` (Mixe ohne
   Konto, sonst Lobpreis-Lieder aus dem Verlauf), `CITYCAFE_URL=https://
@@ -294,7 +294,17 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   acht Runden mit an die Spielerzahl angepasstem Zeitbudget. Der Computer
   spielt eine Partie immer zu Ende, auch wenn er nicht mehr gewinnen kann. Ein
   laufendes Spiel wird von YouTube und Twitch nicht unterbrochen.
-- **Roulette**: Codex' Modul, im Dashboard nur für den Fernseher zuhause. Der
+- **Roulette im Dashboard (seit 05.10.2026 wieder)**: im Café (`city-cafe`) und
+  zuhause (`zuhause`), andere Räume und `?roulette=0` ohne. Fester Slot nach
+  den Musik-Slides (`ROULETTE_SLOT_INDEX` 9.5): mindestens 4 Minuten, danach
+  so lange die Seite „läuft noch" meldet (Zyklus, Spiel, Siegerfeier),
+  höchstens 2 Stunden. Dazu holt „🎰 Roulette am Screen starten" im
+  Roulette-Reiter der Sammel-Fernbedienung es sofort an den Screen
+  (`djremote/<raum>/roulette/wecken`, gilt 1 Minute). Gezeigt wird der
+  Spielmodus `roulette-vorschau-spiel/` (dieselbe Seite wie die Handy-
+  Fernbedienung), nicht `roulette/`. Lokal nur über `localhost` testen —
+  unter `127.0.0.1` lässt Firebase die Seite nicht verbinden.
+- **Roulette**: Codex' Modul. Der
   Kessel gehört schräg dargestellt: `topView` aus, `correction` an, Helligkeit
   `0.8`, Radgröße `zoom` `0.96` (im localStorage unter
   `atelier-show-settings`).
@@ -351,11 +361,9 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   Steht in `roulette-src` und ist **nur** nach `roulette-vorschau-spiel/`
   gebaut — `roulette/` (das Dashboard) ist bewusst unberührt, weil ein Neubau
   dorthin auch Schriftring, Rauten-Widerstand und Modell A mitbringen würde.
-  Vorschau (liegt auf main, damit GitHub Pages sie ausliefert; die Boxen
-  laden sie nicht): TV `roulette-vorschau-spiel/?raum=spieltest`, Handy
-  `roulette-vorschau-spiel/remote.html?raum=spieltest`. Eigener Raum, damit
-  sich Vorschau und Boxen auch über Firebase nicht begegnen. Der
-  Roulette-Reiter der Sammel-Fernbedienung zeigt noch die alte Seite.
+  Seit 05.10.2026 lädt das Dashboard genau diese Fassung (siehe oben).
+  Zum Ausprobieren ohne Screen: TV `roulette-vorschau-spiel/?raum=spieltest`,
+  Handy `roulette-vorschau-spiel/remote.html?raum=spieltest`.
 - **Schriftring "CITY-CAFE KLAGENFURT"**: goldener, umlaufender Schriftzug auf der
   inneren Kesselfläche, ganz außen direkt an der Kante zum Zahlenkranz
   (r 1,02–1,525, dieselben Eckpunkte wie die Fläche darunter, folgt also exakt
@@ -395,9 +403,9 @@ wieder live gerechnet.
   ausdrücklich bestellt, gelten als freigegeben).
 - Die Chef-PIN kommt nicht ins Repo (steht nur in `citycafe.env` auf dem W1
   und in Firebase `djremote/<raum>/chef/pin`).
-- Im Café läuft das Roulette-Spiel nicht. Die Roulette-Werbung („Demnächst“)
-  und die Musik-Empfehlung (großes Widget „Nächster Titel empfohlen“) sind
-  seit 05.10.2026 ganz aus dem Dashboard entfernt.
+- Die Roulette-Werbung („Demnächst“) und die Musik-Empfehlung (großes Widget
+  „Nächster Titel empfohlen“) sind seit 05.10.2026 ganz aus dem Dashboard
+  entfernt; das Roulette-Spiel läuft seitdem im Café und zuhause.
 - TV-Seite neu laden oder Supervisor neu starten nur nach Rückfrage – es
   unterbricht die Musik. Sonst gilt eine neue Fassung ab dem nächsten Neustart
   (tägliches Update 8:30). Eine Selbst-Aktualisierung ist bewusst nicht gebaut.
