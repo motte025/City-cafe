@@ -427,6 +427,16 @@
      * Kanal (ohne " - Topic" / "VEVO") der Kuenstler. Steht der Kanal hinter dem
      * Trenner ("Oceans - Hillsong UNITED - Live"), wird getauscht.
      */
+    // Hat der Textteil ein markantes Wort (>= 4 Zeichen) mit dem Kanalnamen gemeinsam?
+    // (Fuellwoerter wie Music/Official/Records zaehlen nicht.)
+    var KANAL_FUELL = /^(music|musik|official|offiziell|records|recordings|media|entertainment|channel|kanal|videos?|topic|vevo|tv)$/;
+    function kanalWortIn(kanal, text) {
+        var t = normal(String(text || '').replace(/[\(\[][^\)\]]*[\)\]]/g, ' '));   // Klammern zaehlen nicht
+        return String(kanal || '').split(/[^A-Za-zÄÖÜäöüß0-9]+/).some(function (w) {
+            var n = normal(w);
+            return n.length >= 4 && !KANAL_FUELL.test(n) && t.indexOf(n) >= 0;
+        });
+    }
     function titelZerlegen(titel, kanal) {
         var info = { jahr: null };
         var kanalKlar = kanalName(kanal);
@@ -436,11 +446,11 @@
         // ist er der Kuenstler, und vorn steht der Song (Rest = Album).
         var strich = roh.split(/\s+\|\s+/);
         if (strich.length >= 2 && kanalNorm && normal(strich[strich.length - 1]) === kanalNorm) {
-            var vorn = strich.slice(0, -1).join(' | ').split(/\s+[-–—]\s+/)[0];
+            var vorn = strich.slice(0, -1).join(' | ').split(/\s+(?:--|[-–—])\s+/)[0];
             var songVorn = klammernAufraeumen(vorn, kanalNorm, info);
             return { kuenstler: kanalKlar, songtitel: songVorn || vorn, jahr: info.jahr };
         }
-        var teile = roh.split(/\s+[-–—]\s+/);
+        var teile = roh.split(/\s+(?:--|[-–—])\s+/);
         if (teile.length < 2) {
             var rohr = roh.split(/\s+\|\s+/);
             if (rohr.length >= 2) teile = rohr;
@@ -451,6 +461,11 @@
             song = teile.slice(1).join(' - ');
             var zweiter = normal(klammernAufraeumen(teile[1], '', {}));
             if (kanalNorm && zweiter === kanalNorm && normal(teile[0]).indexOf(kanalNorm) < 0) {
+                kuenstler = teile[1];
+                song = [teile[0]].concat(teile.slice(2)).join(' - ');
+            } else if (kanalWortIn(kanalKlar, teile[1]) && !kanalWortIn(kanalKlar, teile[0])) {
+                // "Doch du willst mich - Mike Leon Grosch (Official Video)" vom Kanal
+                // "Grosch Music": der Kuenstler steht hinten (gemeinsames Wort mit dem Kanal).
                 kuenstler = teile[1];
                 song = [teile[0]].concat(teile.slice(2)).join(' - ');
             }
