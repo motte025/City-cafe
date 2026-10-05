@@ -228,11 +228,16 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Party-Hits 2-2-2); 6 „Mix 04.10.2026 (2)" (200, Stil der Betreiber-Liste
     05.05.2024: Latin, Dance, 80er/90er, Pop, Deutsch/Austro; am Handy
     bearbeitet); 7 „Klausi" (144, Nachbau der Apple-Music-Playlist „City
-    Café", gleiche Reihenfolge); 8 „Schlager 2024–2026" (128, offizielle
-    Videos ab 2024 mit iTunes-Jahresprüfung, nie zweimal derselbe Interpret
-    hintereinander, Mike Leon Grosch nur die bekanntesten + „Gentleman",
-    Stereoact-Remixe dazu). Am 05.10. wurden 12 Fan-/TV-Einträge durch
+    Café", gleiche Reihenfolge); 8 „Schlager 2024–2026" (142, nach den Schlager-Charts: DDP-Jahrescharts 2024/2025,
+    Schlager-Jahres-Charts 2025, DDP Top 100 Okt. 2026 – 119 Chart-Hits plus meistgesehene,
+    alle Stereoact-Remixe, höchstens 5 je Interpret, nie zweimal derselbe hintereinander;
+    ohne Ballermann). Am 05.10. wurden 12 Fan-/TV-Einträge durch
     offizielle Videos ersetzt.
+- **Firebase (Gratis-Tarif, 10 GB/Monat):** Status und „Jetzt" werden nur bei
+  Änderung geschrieben (Jetzt: Positionssprung > 3 s oder alle 30 s, Status-Herzschlag
+  60 s), das Handy zählt die Position selbst. Vorher ~40 MB/h je offenem Handy, jetzt
+  ~1,5 MB/h. Ein alter Bildschirm (vermutlich der ODROID im Café) schreibt noch in
+  denselben Raum, bis er die neue Seite lädt; am besten abstecken.
 - **YouTube-Musik, offen:** Test der Dart-Ausnahme an einem Dart-Abend.
   Einige Songs haben nur TV-/Live-Fassungen (Rosanna Rocci „Solo con te",
   Draufgänger „Marie", CCR „Proud Mary" – bleiben vorerst).
