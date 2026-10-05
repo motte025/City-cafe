@@ -7611,10 +7611,15 @@
             return !!(nlFern && (nlFern.bisWann === -1 || nlFern.bisWann > Date.now()));
         }
 
+        // Firebase sparen (Gratis-Tarif, 10 GB Download/Monat, 05.10.2026): Status und
+        // "Jetzt" gingen alle ~1,5 s komplett an jedes offene Handy (~40 MB/h je Handy).
+        // Jetzt nur bei Aenderung, sonst Herzschlag alle 60 s (Handys werten den Chef-TV
+        // 120 s lang aus); die Songposition zaehlt das Handy selbst weiter.
+        let nlStatusSig = '', nlStatusZeit = 0;
         function nlFernStatusMelden() {
             if (!nlFernVerb || !window.YT_REMOTE_NET) return;
             const offen = !!(window.nlSucheAuftrag && window.nlSucheAuftrag.id !== nlTrefferLetzteId);
-            YT_REMOTE_NET.statusMelden(nlFernVerb, NL_FERN_RAUM, {
+            const daten = {
                 laeuft: nlFernAktiv(),
                 videoId: nlFern ? nlFern.videoId : '',
                 titel: nlFern ? (nlFern.titel || '') : '',
@@ -7646,7 +7651,12 @@
                 // zweiter, alter Screen im selben Raum meldet das nicht - die
                 // Handys hoeren dann nur auf diesen (sonst "zuckt" die Fernbedienung).
                 chefTv: !!(new URLSearchParams(location.search).get('chefpin') || '').trim()
-            }).catch(() => {});
+            };
+            const sig = JSON.stringify(daten);
+            if (sig === nlStatusSig && Date.now() - nlStatusZeit < 60000) return;
+            nlStatusSig = sig;
+            nlStatusZeit = Date.now();
+            YT_REMOTE_NET.statusMelden(nlFernVerb, NL_FERN_RAUM, daten).catch(() => {});
         }
 
         /*
@@ -8005,6 +8015,7 @@
         }
 
         let ytmZuletztGemeldet = 0;
+        let ytmJetztGemeldet = { sig: '', pos: 0, zeit: 0 };
         function ytmMelden() {
             window.nlMusik = ytmAktiv();
             // Vor dem Wiederherstellen nichts schreiben - sonst ueberschreibt der
@@ -8014,7 +8025,7 @@
             const st = ytmStand();
             const j = ytm.jetzt;
             const gj = j ? ytmGenreJahr(j) : null;
-            YT_REMOTE_NET.jetztMelden(nlFernVerb, NL_FERN_RAUM, {
+            const daten = {
                 modus: ytmAktiv() ? ytm.modus : 'aus',
                 videoId: j ? j.videoId : '',
                 titel: j ? (j.titel || '') : '',
@@ -8036,7 +8047,16 @@
                 spielPause: ytmSpielPause,
                 // Bluetooth-Waechter des Supervisors: { ok, text, seit } (Warnung am Handy)
                 bt: window.nlBtZustand || null
-            }).catch(() => {});
+            };
+            // Nur schreiben, wenn sich ausser der Position etwas aendert, die Position
+            // springt (Spulen, Ueberblenden: > 3 s neben der Hochrechnung) oder 30 s um sind.
+            const ohnePos = JSON.stringify(Object.assign({}, daten, { posSek: 0, bt: daten.bt && { ok: daten.bt.ok, text: daten.bt.text } }));
+            const jetztMs = Date.now();
+            const erwartet = ytmJetztGemeldet.pos + (daten.pausiert ? 0 : (jetztMs - ytmJetztGemeldet.zeit) / 1000);
+            if (ohnePos === ytmJetztGemeldet.sig && Math.abs(daten.posSek - erwartet) <= 3
+                && jetztMs - ytmJetztGemeldet.zeit < 30000) return;
+            ytmJetztGemeldet = { sig: ohnePos, pos: daten.posSek, zeit: jetztMs };
+            YT_REMOTE_NET.jetztMelden(nlFernVerb, NL_FERN_RAUM, daten).catch(() => {});
         }
 
         function ytmRadioMelden() {
