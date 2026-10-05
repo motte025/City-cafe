@@ -299,7 +299,9 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   (`#roulette-fullscreen` über dem ganzen Dashboard). Fester Slot nach
   den Musik-Slides (`ROULETTE_SLOT_INDEX` 9.5): mindestens 4 Minuten, danach
   so lange die Seite „läuft noch" meldet (Zyklus, Spiel, Siegerfeier),
-  höchstens 2 Stunden. Dazu holt „🎰 Roulette am Screen starten" im
+  höchstens 2 Stunden. Steht der Kessel auf Pause oder ist ein Spiel gerade
+  zu Ende, bleibt das Roulette noch bis zu 15 Minuten stehen (vorher
+  verschwand es nach dem Spiel sofort). Dazu holt „🎰 Roulette am Screen starten" im
   Roulette-Reiter der Sammel-Fernbedienung es sofort an den Screen
   (`djremote/<raum>/roulette/wecken`, gilt 1 Minute). Der Weckruf geht immer
   durch, nur eine laufende Runde Hos'n Obe hat Vorrang: Musik pausiert wie bei

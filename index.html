@@ -6532,8 +6532,13 @@
          * Notbremse nach zwei Stunden, falls "unendlich" gewaehlt wurde.
          */
         const ROULETTE_MAX_MS = 2 * 60 * 60 * 1000;
+        // Pausiert (Knopf am Handy) oder Spiel gerade zu Ende: das Roulette bleibt
+        // trotzdem stehen - am 05.10.2026 verschwand es sonst nach dem Spiel.
+        // Erst wenn so lange nichts mehr laeuft, geht die Rotation weiter.
+        const ROULETTE_RUHE_MAX_MS = 15 * 60 * 1000;
         let rouletteStand = null;       // letzter Stand, den das Rad gemeldet hat
         let rouletteStandZeit = 0;
+        let rouletteRuheSeit = 0;       // seit wann das Rad nicht mehr laeuft (0 = laeuft)
 
         function rouletteStandHoeren() {
             if (!rouletteAn() || !nlFernVerb) return;
@@ -6546,6 +6551,9 @@
                             rouletteStand = typeof wert.payload === 'string'
                                 ? JSON.parse(wert.payload) : null;
                         } catch (e) { rouletteStand = null; }
+                        const laeuft = !!(rouletteStand && rouletteStand.running);
+                        if (laeuft) rouletteRuheSeit = 0;
+                        else if (!rouletteRuheSeit) rouletteRuheSeit = Date.now();
                     });
             } catch (e) { /* ohne Verbindung eben nicht */ }
         }
@@ -6554,7 +6562,12 @@
             if (!rouletteStand) return false;
             // Meldet sich das Rad nicht mehr, gilt der Zyklus als beendet.
             if (Date.now() - rouletteStandZeit > 15000) return false;
-            if (!rouletteStand.running) return false;
+            if (!rouletteStand.running) {
+                // Pause oder Spiel(ende) am Tisch: noch eine Weile stehen lassen.
+                const inBenutzung = rouletteStand.phase === 'paused' || !!rouletteStand.match;
+                return inBenutzung && rouletteRuheSeit > 0
+                    && Date.now() - rouletteRuheSeit < ROULETTE_RUHE_MAX_MS;
+            }
             return rouletteStand.remaining === null || Number(rouletteStand.remaining) > 0
                 || !!rouletteStand.match;
         }
@@ -6615,6 +6628,7 @@
             }
             halter.innerHTML = '';
             halter.classList.add('active');
+            rouletteRuheSeit = 0;
             const rahmen = document.createElement('iframe');
             rahmen.setAttribute('allow', 'autoplay');
             rahmen.setAttribute('title', 'Roulette');
