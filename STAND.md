@@ -119,12 +119,6 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   192.168.0.42).  startet beim Hochfahren. In der Tailscale-Verwaltung
   für city-cafe-w1 „Disable key expiry" setzen, sonst läuft die Anmeldung nach
   180 Tagen ab.
-- **Fernzugriff (Tailscale, seit 05.10.2026):** Der W1 ist im Tailscale-Netz des
-  Betreibers (Google-Konto) als „city-cafe-w1" (100.65.64.126), der PC als „motte".
-  `ssh w1` geht darüber – zuhause und im Café (`w1-lokal` = altes Heimnetz
-  192.168.0.42). `tailscaled` startet beim Hochfahren. In der Tailscale-Verwaltung
-  für city-cafe-w1 „Disable key expiry" setzen, sonst läuft die Anmeldung nach
-  180 Tagen ab.
 - **Nächtliche Aktualisierung** (`citycafe-update.timer`, täglich 8:30):
   `pacman -Syu`, dann Supervisor und Chromium-Starter aus GitHub `main`
   (nur nach Syntaxprüfung; abschaltbar in `/etc/citycafe-update.conf`),
