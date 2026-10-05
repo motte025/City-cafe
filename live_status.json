@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-05T17:32:45Z",
+  "checked_at": "2026-10-05T17:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "⭐️ MUTE MONDAY - Nur eure Musikwünsche (🇩🇪 / 🇺🇸) ⭐️ !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "⭐️ MUTE MONDAY - Nur eure Musikwünsche (🇩🇪 / 🇺🇸) ⭐️ !Shakes !Holy !Moumint !Shop !Socials",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
       "game": "DJs"
     }
   ]
