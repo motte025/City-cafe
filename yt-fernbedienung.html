@@ -117,8 +117,8 @@
     }
     .eintrag .griff { font-size: 32px; color: #8fa0d0; padding: 6px 4px 6px 12px; touch-action: none; user-select: none; cursor: grab; }
     .eintrag .text { flex: 1; min-width: 0; }
-    .eintrag .t { font-size: 29px; font-weight: 800; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .eintrag .k { font-size: 22px; color: #9fb0d8; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .eintrag .t { font-size: 29px; font-weight: 800; line-height: 1.2; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .eintrag .k { font-size: 24px; color: #9fb0d8; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .eintrag .k .wunsch { color: #f9a8e8; background: rgba(192, 38, 211, 0.22); border-radius: 999px; padding: 1px 10px; }
     .eintrag .k .in { color: #00e5ff; }
     .eintrag .weg { background: transparent; color: #ff7b8a; font-size: 32px; padding: 8px 12px; }
@@ -133,18 +133,19 @@
     .video .oben { display: flex; gap: 14px; align-items: center; }
     .video img { width: 150px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 10px; background: #000; flex-shrink: 0; }
     .video .t { font-size: 28px; font-weight: 800; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .video .k { font-size: 22px; color: #9fb0d8; margin-top: 4px; }
-    .video .knoepfe { display: flex; gap: 10px; margin-top: 12px; }
-    .video .knoepfe button { flex: 1; font-size: 25px; padding: 14px 8px; }
+    .video .k { font-size: 24px; color: #9fb0d8; margin-top: 4px; }
+    /* Bis zu 7 Knoepfe: in zwei Zeilen zu je 3, damit sie am Handy gross bleiben */
+    .video .knoepfe { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .video .knoepfe button { flex: 1 1 calc(33.3% - 10px); min-width: 0; font-size: 26px; padding: 16px 6px; }
     .video .knoepfe button.still { background: #1d2647; }
     .plus-zeile { display: flex; align-items: center; gap: 12px; background: #131a33; border: 1px solid #27325c; border-radius: 18px; padding: 14px 16px; margin-top: 10px; }
     .plus-zeile .text { flex: 1; min-width: 0; }
     .plus-zeile img.mini { width: 150px; height: 84px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #0b1024; }
-    .plus-zeile .q { font-size: 19px; color: #7f8fb8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+    .plus-zeile .q { font-size: 22px; color: #7f8fb8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
     .plus-zeile .q b { font-weight: 700; color: #c7d2f0; }
     .plus-zeile .q b.schlecht { color: #ffb36b; }
-    .plus-zeile .t { font-size: 28px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .plus-zeile .k { font-size: 22px; color: #9fb0d8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .plus-zeile .t { font-size: 29px; font-weight: 800; line-height: 1.2; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .plus-zeile .k { font-size: 24px; color: #9fb0d8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .plus-zeile button { background: transparent; color: #6ea8ff; font-size: 46px; padding: 0 10px; line-height: 1; }
     .plus-zeile button.pl-weg { color: #ff7b8a; font-size: 32px; padding: 0 12px 0 0; }
     .plus-zeile .pl-griff { font-size: 32px; color: #8fa0d0; padding: 6px 4px 6px 12px; touch-action: none; user-select: none; cursor: grab; }
@@ -193,10 +194,10 @@
         .jetzt-liste { font-size: 15px; }
         .zeitzeile { font-size: 14px; }
         .steuerung button { font-size: 22px; padding: 12px 0; }
-        .eintrag .t, .plus-zeile .t, .video .t { font-size: 18px; }
-        .eintrag .k, .plus-zeile .k, .video .k { font-size: 14px; }
+        .eintrag .t, .plus-zeile .t, .video .t { font-size: 19px; }
+        .eintrag .k, .plus-zeile .k, .video .k { font-size: 15px; }
         .plus-zeile img.mini { width: 96px; height: 54px; border-radius: 6px; }
-        .plus-zeile .q { font-size: 12px; }
+        .plus-zeile .q { font-size: 14px; }
         .eintrag .griff, .eintrag .weg { font-size: 22px; }
         .eintrag .nr { font-size: 17px; }
         .video img { width: 120px; }
@@ -395,7 +396,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-plweg';
+    var FASSUNG = '2026-10-05-gross';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
