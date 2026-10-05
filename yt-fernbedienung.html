@@ -44,6 +44,8 @@
         -webkit-text-size-adjust: 100%;
     }
     .kopf { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+    .schrift-knoepfe { margin-left: auto; display: flex; gap: 8px; }
+    .schrift-knoepfe button { background: #1d2647; color: #cfe0ff; font-weight: 800; padding: 6px 14px; border-radius: 12px; }
     h1 { font-size: 40px; margin: 0; line-height: 1.15; }
     .chef-abzeichen { display: none; font-size: 24px; font-weight: 800; color: #1b1300; background: #ffc83d; border-radius: 999px; padding: 6px 16px; }
     body.ist-chef .chef-abzeichen { display: inline-block; }
@@ -224,7 +226,8 @@
 </head>
 <body>
 
-<div class="kopf"><h1>🎵 Musik</h1><span class="chef-abzeichen">👑 Chef</span></div>
+<div class="kopf"><h1>🎵 Musik</h1><span class="chef-abzeichen">👑 Chef</span>
+    <span class="schrift-knoepfe"><button type="button" id="schrift-klein" aria-label="Schrift kleiner">A−</button><button type="button" id="schrift-gross" aria-label="Schrift größer">A+</button></span></div>
 <div class="raum" id="raum">City Cafe</div>
 
 <!-- ============================ JETZT ============================ -->
@@ -396,7 +399,23 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-gross';
+    var FASSUNG = '2026-10-05-zoom';
+    // Schriftgroesse je Geraet (A-/A+ oben): vergroessert die ganze Seite (CSS zoom),
+    // gemerkt im Browser des Geraets (Handy und Tablet unabhaengig, Wunsch 05.10.2026).
+    (function () {
+        var z = 1;
+        // ohne eigene Einstellung: Tablet/PC (breiter als 700 px) 20 % groesser, Handy normal
+        z = window.innerWidth >= 700 ? 1.2 : 1;
+        try { z = Number(localStorage.getItem('fbZoom')) || z; } catch (e) {}
+        function setzen(n) {
+            z = Math.max(0.8, Math.min(2, Math.round(n * 10) / 10));
+            document.body.style.zoom = z;
+            try { localStorage.setItem('fbZoom', String(z)); } catch (e) {}
+        }
+        setzen(z);
+        document.getElementById('schrift-klein').addEventListener('click', function () { setzen(z - 0.1); });
+        document.getElementById('schrift-gross').addEventListener('click', function () { setzen(z + 0.1); });
+    })();
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var W = window.YtWarteschlange;
     // Raum = welcher Screen gesteuert wird: ?raum=, sonst zuletzt gewaehlt, sonst
