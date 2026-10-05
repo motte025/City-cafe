@@ -7,7 +7,7 @@ Stand beschreiben, nicht den von vorgestern.
 
 Letzte Durchsicht: 5. Oktober 2026 (DJ-Übergänge per Studio-Abgleich, offizielle
 Videos überall, Playlists bearbeiten/erstellen am Handy, Playlists 5–8, Aufrufe,
-Bluetooth-Wächter, Tailscale).
+Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt).
 
 ## Was das Projekt ist
 
@@ -100,12 +100,14 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
   Kopplung gelöscht war (bluetoothctl mit Agent NoInputNoOutput: pair,
   trust, connect). Der LG-TV taucht selbst als Bluetooth-Gerät auf; der B03
   gehört nicht in seine Geräteliste.
-- **Bluetooth zur Anlage**: 1Mii B03 Pro (Empfänger, RX) gekoppelt; der
-  Betreiber nimmt genau diesen ins Café mit, dort ist also kein Koppeln
-  nötig. Ein weiterer Empfänger müsste einmal gekoppelt werden
+- **Bluetooth zur Anlage**: Zwei 1Mii B03 Pro (Empfänger, RX) sind am W1
+  gekoppelt (der zweite seit 05.10.2026, Bonded/Trusted); beide gehen mit
+  dem W1 ins Café, dort ist also kein Koppeln nötig. Ein weiterer Empfänger
+  müsste einmal gekoppelt werden
   (`bluetoothctl`: scan, pair, trust – mit Agent, sonst wird der Schlüssel
   nicht gespeichert); der Supervisor kommt mit mehreren gekoppelten zurecht
-  („Verbinden" nimmt den ersten erreichbaren, wartet bis 20 s auf den Ton).
+  („Verbinden" nimmt den ersten erreichbaren, wartet bis 20 s auf den Ton –
+  soll ein bestimmter B03 spielen, nur diesen einschalten).
   **Verbunden und getrennt wird nur per Knopf** in der Handy-Fernbedienung
   (Wunsch des Betreibers): „Trennen" trennt und blockiert den Empfänger
   (sonst meldet er sich nach ~30 s von selbst wieder), „Verbinden" hebt die

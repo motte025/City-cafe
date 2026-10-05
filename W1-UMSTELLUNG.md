@@ -83,8 +83,8 @@ geholfen.
 ## Noch offen
 
 - Dartcam im Café-Netz prüfen.
-- Im Café einmal „Verbinden" am Handy testen (derselbe B03 Pro wie zuhause,
-  kein Koppeln nötig).
+- Im Café einmal „Verbinden" am Handy testen (beide B03 Pro sind schon am
+  W1 gekoppelt, kein Koppeln nötig).
 
 ## Regeln (aus `STAND.md`)
 
