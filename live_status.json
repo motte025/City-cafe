@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-06T12:22:45Z",
+  "checked_at": "2026-10-06T12:32:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Classic Trance - here? Can u believe it?  💫 !charity",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "deejayfamily",
@@ -17,9 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Classic Trance - here? Can u believe it?  💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wilder Dienstag <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -27,6 +27,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
