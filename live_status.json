@@ -1,19 +1,4 @@
 {
-  "checked_at": "2026-10-06T21:02:45Z",
-  "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s vs. 2010s - All In One - Live aus Studio 2",
-      "game": "DJs"
-    }
-  ]
+  "checked_at": "2026-10-06T21:07:46Z",
+  "live": []
 }
