@@ -50,9 +50,9 @@ sich auf den Push zu verlassen.
 
 Seit 30.09.2026 läuft der Kiosk auf dem **ACEMAGIC W1** (Ryzen 7 H255, Radeon
 780M, 15 GB RAM). **Der alte ODROID ist seit 05.10.2026
-weg.** Seine Sonderregeln können fallen (v. a. die Sparregel
-„box-shadow/filter/animation: none" in `index.html`, mit `?fx=1` abschaltbar);
-noch nicht umgestellt. Der `chefTv`-Filter der Fernbedienungen (zwei Screens
+weg.** Die Sparregel „box-shadow/filter/animation: none" in `index.html` ist
+seit 06.10.2026 aus, die Effekte sind wieder Standard; `?fx=0` holt sie als
+Notschalter zurück. Der `chefTv`-Filter der Fernbedienungen (zwei Screens
 im selben Raum) schadet nicht mehr, wird aber auch nicht mehr gebraucht.
 
 **ACEMAGIC W1**, Zugang vom Beelink `ssh w1` (Benutzer `sabrina`, Schlüssel
@@ -120,9 +120,8 @@ abgeschaltet; Ruhezustand/Standby sind gesperrt.
 - **Fernzugriff (Tailscale, seit 05.10.2026):** Der W1 ist im Tailscale-Netz des
   Betreibers (Google-Konto) als „city-cafe-w1" (100.65.64.126), der PC als „motte".
   `ssh w1` geht darüber – zuhause und im Café (`w1-lokal` = altes Heimnetz
-  192.168.0.42). `tailscaled` startet beim Hochfahren. In der Tailscale-Verwaltung
-  für city-cafe-w1 „Disable key expiry" setzen, sonst läuft die Anmeldung nach
-  180 Tagen ab.
+  192.168.0.42). `tailscaled` startet beim Hochfahren. „Disable key expiry" ist für
+  city-cafe-w1 gesetzt, die Anmeldung läuft also nicht ab.
 - **Nächtliche Aktualisierung** (`citycafe-update.timer`, täglich 8:30):
   `pacman -Syu`, dann Supervisor und Chromium-Starter aus GitHub `main`
   (nur nach Syntaxprüfung; abschaltbar in `/etc/citycafe-update.conf`),

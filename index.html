@@ -16,14 +16,17 @@
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <script>
-        // Steht bewusst hier oben und nicht unten im Hauptskript: ?fx=1 holt die
-        // teuren Effekte zum Vergleich zurueck, und das muss vor dem ersten
-        // Bildaufbau feststehen, sonst blitzt kurz die sparsame Fassung auf.
+        // Steht bewusst hier oben und nicht unten im Hauptskript: ob die Effekte
+        // an sind, muss vor dem ersten Bildaufbau feststehen, sonst blitzt kurz
+        // die falsche Fassung auf. Seit der ODROID weg ist (05.10.2026) sind sie
+        // Standard; ?fx=0 holt die alte sparsame Fassung zurueck.
         try {
-            if (new URLSearchParams(location.search).get('fx') === '1') {
+            if (new URLSearchParams(location.search).get('fx') !== '0') {
                 document.documentElement.setAttribute('data-fx', '1');
             }
-        } catch (e) {}
+        } catch (e) {
+            document.documentElement.setAttribute('data-fx', '1');
+        }
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -313,8 +316,11 @@
         body.video-extern .nl-player-hint { display: none !important; }
 
         /* ==================================================================
-           Dauerhaft sparsam gerendert
+           Sparsam gerendert - nur noch mit ?fx=0
            ==================================================================
+           Seit 05.10.2026 aus: der W1 (Radeon 780M) hat Reserven genug, die
+           Effekte sind wieder Standard. Die Regeln bleiben als Notschalter.
+
            Auf dem Odroid startete Android TV neu, sobald das Dashboard in
            Chrome geladen wurde - das ist ein haengender Grafiktreiber, kein
            Speicherproblem. Die nackte Testseite lief auf derselben Box 5:29
@@ -325,7 +331,7 @@
            Durchgaenge pro Bild und sind auf Mali-GPUs der klassische
            Aufhaenger.
 
-           Mit ?fx=1 kommt das alte Aussehen zum Vergleich zurueck.        */
+           Greift nur noch mit ?fx=0.                                       */
         html:not([data-fx="1"]) *,
         html:not([data-fx="1"]) *::before,
         html:not([data-fx="1"]) *::after {
@@ -3326,8 +3332,8 @@
         // ab, weil eine reine Webseite von sich aus keinen Wachzustand haelt.
         let kioskWachschloss = null;
 
-        // Stufe 1 und 2 (Weichzeichner, Schatten, Animationen) sind inzwischen
-        // der Normalfall - siehe den Stylesheet-Block "Dauerhaft sparsam".
+        // Stufe 1 und 2 (Weichzeichner, Schatten, Animationen) stecken in ?fx=0 -
+        // siehe den Stylesheet-Block "Sparsam gerendert".
         // Uebrig bleibt Stufe 3 zum Eingrenzen: gar kein Video. Muss vor allem
         // anderen stehen, der Nightlife-Slot fragt sie frueh ab.
         let SPARSTUFE = 0;
@@ -9018,8 +9024,8 @@
             const masse = nlGroesse();
             const zeilen = [];
             zeilen.push(document.documentElement.getAttribute('data-fx') === '1'
-                ? 'Effekte AN (?fx=1) - nur zum Vergleich'
-                : 'Effekte aus (Weichzeichner, Schatten, Animationen)');
+                ? 'Effekte an (Standard)'
+                : 'Effekte aus (?fx=0: Weichzeichner, Schatten, Animationen)');
             if (SPARSTUFE >= 3) zeilen.push('SPARMODUS 3 - Video abgeschaltet');
             zeilen.push('Player ' + masse[0] + 'x' + masse[1] + '  (' + NL_CONFIG.maxAufloesung + ')');
 
