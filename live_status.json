@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-10-06T21:07:46Z",
-  "live": []
+  "checked_at": "2026-10-06T21:42:45Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "gotham city voibes !bewbs !morestreams !schedule !consult",
+      "game": "DJs"
+    }
+  ]
 }
