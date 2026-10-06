@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-06T20:07:45Z",
+  "checked_at": "2026-10-06T20:22:49Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !prep | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Community Show mit @ericssl",
       "game": "DJs"
     },
     {
