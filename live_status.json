@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-06T14:37:46Z",
+  "checked_at": "2026-10-06T14:52:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wilder Dienstag <3 -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 96 😈 Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -27,20 +34,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 96 😈 Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
