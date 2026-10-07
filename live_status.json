@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-07T17:47:45Z",
+  "checked_at": "2026-10-07T18:02:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Bergfest.. auf geht´s! <3 !release @just_jenny_official @two_crazy_girls",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Shakes !Holy !Moumint !Shop !Socials",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Bergfest.. auf geht´s! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -34,6 +34,13 @@
       "channel": "l4uchm3ld3r",
       "name": "L4uchm3ld3r",
       "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | MOSHER",
       "game": "DJs"
     }
   ]
