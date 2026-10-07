@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-07T14:02:47Z",
+  "checked_at": "2026-10-07T14:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,23 +10,23 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ HOUSE NATION - House Music | !play ✨",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "16-18 Uhr: DJs after work mit @dj_falk & felix kroecher",
       "game": "DJs"
     },
     {
       "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
-      "title": "Montagsquicky! (HARDERSTYLES) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "title": "Mittwochsquicky (HARDERSTYLES) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "16-18 Uhr: DJs after work mit @dj_falk & felix kroecher",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ HOUSE NATION - House Music | !play ✨",
       "game": "DJs"
     }
   ]
