@@ -74,11 +74,13 @@ export function startDisplay(){
   $('audio-unlock').textContent=sound.error?sound.error:sound.ready?(settings.muted?'♫ Ton einschalten':'♫ Ton ausschalten'):'♫ Ton aktivieren';
  }
  // Wer beginnt, lost der Computer aus (Web Crypto); die Tafel zeigt dazu kurz eine Auslosung.
- // Danach wird auch der Rest der Reihenfolge ausgelost: der Beginner hat die 1, die anderen bekommen 2, 3, … zufällig.
+ // Mit Namen wird danach auch der Rest der Reihenfolge ausgelost: der Beginner hat die 1, die anderen bekommen 2, 3, … zufällig.
+ // Ohne Namen erkennt sich jeder an seiner Spielernummer – dann geht es ab dem Beginner reihum (Spieler 3 → 4 → 1 → 2).
  function startMatch(mode:Match['mode'],players:number,rounds?:number|null,names?:string[]){
   const first=Number.isInteger(players)&&players>0?randomBelow(players):0;
-  const rest=Array.from({length:Math.max(0,players)},(_,i)=>i).filter(i=>i!==first);
-  for(let k=rest.length-1;k>0;k--){const j=randomBelow(k+1);[rest[k],rest[j]]=[rest[j],rest[k]];}
+  const named=Array.isArray(names)&&names.some(n=>typeof n==='string'&&n.trim()!=='');
+  const rest=Array.from({length:Math.max(0,players)},(_,k)=>(first+k)%Math.max(1,players)).slice(1);
+  if(named)for(let k=rest.length-1;k>0;k--){const j=randomBelow(k+1);[rest[k],rest[j]]=[rest[j],rest[k]];}
   try{match=new Match(mode,players,rounds===undefined?(mode==='rounds'?MATCH_ROUNDS:null):rounds,first,[first,...rest]);}catch{return false;}
   if(Array.isArray(names))match.players.forEach((p,i)=>{p.name=cleanName(names[i],i);});fitKey='';
   matchSpin=null;matchKey='';drawElapsed=0;drawTick=0;cycle.history=[];celebration.hide();matchStart=Date.now();matchEnd=0;applyTempo();cycle.start(null);return true;
