@@ -145,7 +145,11 @@ export function startDisplay(){
   const info=document.querySelector<HTMLElement>('.result-panel')!.getBoundingClientRect(),right=info.width>0?info.left:innerWidth;
   for(let i=0;i<3;i++){const b=wheel.rimBounds(),scale=Math.min((bottom-top-2*gap)/(b.bottom-b.top),(right-left-2*gap)/(b.right-b.left))*settings.zoom;if(Math.abs(scale-1)<.004)break;wheel.setFit(wheel.fit*scale);}
   const b=wheel.rimBounds(),y=Math.round((top+bottom)/2-(b.top+b.bottom)/2),x=match&&!panel.hidden?Math.round((left+right)/2-(b.left+b.right)/2):0;
-  document.body.style.setProperty('--wheel-x',`${x+Math.round(settings.wheelX*innerWidth)}px`);document.body.style.setProperty('--wheel-y',`${y+Math.round(settings.wheelY*innerHeight)}px`);
+  const dx=x+Math.round(settings.wheelX*innerWidth);
+  document.body.style.setProperty('--wheel-x',`${dx}px`);document.body.style.setProperty('--wheel-y',`${y+Math.round(settings.wheelY*innerHeight)}px`);
+  // „Live am Tisch“ folgt der Kesselmitte, egal wie Spiel-Tafel, Verschiebung oder Radgröße sie verlegen.
+  const header=document.querySelector<HTMLElement>('.show-header')!,mark=header.querySelector<HTMLElement>('.live-mark');
+  if(mark)mark.style.left=`${Math.round((b.left+b.right)/2+dx-header.getBoundingClientRect().left)}px`;
  }
  addEventListener('resize',()=>{matchKey='';render();});void document.fonts?.ready.then(()=>{matchKey='';fitKey='';render();});
  function clockText(ms:number){const t=Math.max(0,Math.floor(ms/1000)),h=Math.floor(t/3600),mi=Math.floor(t/60)%60,se=t%60;return h?`${h}:${String(mi).padStart(2,'0')}:${String(se).padStart(2,'0')}`:`${mi}:${String(se).padStart(2,'0')}`;}
