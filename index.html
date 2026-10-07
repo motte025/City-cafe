@@ -6490,7 +6490,7 @@
          * und ?roulette=0 lassen den Slot aus.
          */
         const ROULETTE_SLOT_INDEX = 9.5;
-        const ROULETTE_IN_ROTATION = false;                   // vorerst nur per Handy
+        const ROULETTE_IN_ROTATION = true;                    // seit 07.10.2026 wieder in der Rotation
         const ROULETTE_SLOT_MS = 240000;                      // mindestens vier Minuten
         const ROULETTE_RAEUME = ['city-cafe', 'zuhause'];
         // Bewusst eine Funktion: NL_FERN_RAUM wird weiter unten im Skript
@@ -14312,8 +14312,8 @@
                 }
 
             } else if (mediaStateIndex === 9) {
-                // Roulette vorerst nicht in der Rotation (Wunsch Betreiber 05.10.2026,
-                // bis alles laeuft) - nur per Handy. Wieder rein: ROULETTE_IN_ROTATION.
+                // Roulette in der Rotation (05.10.2026 kurz nur per Handy, seit 07.10.2026
+                // wieder drin). Abschalten: ROULETTE_IN_ROTATION = false.
                 runMusicSlidesState(ROULETTE_IN_ROTATION ? ROULETTE_SLOT_INDEX : 10);
 
             } else if (mediaStateIndex === ROULETTE_SLOT_INDEX) {
