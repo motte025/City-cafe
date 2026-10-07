@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-07T15:32:45Z",
+  "checked_at": "2026-10-07T15:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "16-18 Uhr: DJs after work mit @dj_falk & felix kroecher",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ HOUSE NATION - House Music | !play ✨",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ HOUSE NATION - House Music | !play ✨",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "16-18 Uhr: DJs after work mit @dj_falk & felix kroecher",
       "game": "DJs"
     },
     {
