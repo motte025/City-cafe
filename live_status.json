@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-07T14:52:47Z",
+  "checked_at": "2026-10-07T14:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ HOUSE NATION - House Music | !play ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴  HardTECHNO - BERGFEST ☆ !naturtreu 🔴🔴",
       "game": "DJs"
     }
   ]
