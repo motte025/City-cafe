@@ -27,7 +27,7 @@ export function startDisplay(){
  let lastMatch:{match:MatchState;start:number;end:number}|null=null;
  try{const v=JSON.parse(localStorage.getItem('atelier-last-match')||'null');const m=readMatchState(v?.match);if(m&&Number.isFinite(v.start)&&Number.isFinite(v.end))lastMatch={match:m,start:v.start,end:v.end};}catch{}
  function saveLastMatch(m:Match){lastMatch={match:m.state(),start:matchStart,end:matchEnd};try{localStorage.setItem('atelier-last-match',JSON.stringify(lastMatch));}catch{}}
- /** Elegante Trennlinie in der Tafel nach der 4. und 9. Zeile (Gruppen zum schnelleren Lesen). */const SEP_AFTER=[4,9],SEP_ROW='<tr class="sep" aria-hidden="true"><td colspan="6"></td></tr>';/** Nach der letzten Kugel so lange warten, bis die Siegerfeier erscheint. */const CELEBRATE_DELAY=4000;const DEFAULT_ROUNDS=30,celebration=new Celebration(app,180,()=>{if(!match?.finished)return;match=null;matchSpin=null;applyTempo();cycle.start(DEFAULT_ROUNDS);render();});
+ /** Elegante Trennlinie in der Tafel nach der 4. und 9. Zeile (Gruppen zum schnelleren Lesen). */const SEP_AFTER=[4,9],SEP_ROW='<tr class="sep" aria-hidden="true"><td colspan="6"></td></tr>';/** Nach der letzten Kugel so lange warten, bis die Siegerfeier erscheint. */const CELEBRATE_DELAY=4000;/** Nach einem fertigen normalen Zyklus beginnt nach dieser Pause von selbst der nächste. */const CYCLE_RESTART_MS=60000;let completeSince=0;const DEFAULT_ROUNDS=30,celebration=new Celebration(app,180,()=>{if(!match?.finished)return;match=null;matchSpin=null;applyTempo();cycle.start(DEFAULT_ROUNDS);render();});
  let nextIndex:number|null=null,planKey='',tickInfo:{dt:number;before:number}|null=null,lastCountdown=NaN,lastCounting=false;let message='',throwInfo='Erster Abwurf bei 0 · Kessel ↻ · Kugel ↺',lastCommand='',lastHistory='',lastBroadcast=0,lastPaint=0;
  try{wheel=new Wheel($('wheel'));}catch{$('message').textContent='Dieser Browser benötigt WebGL 2. Bitte Hardwarebeschleunigung aktivieren.';return;}
  // Pause, Rundendauer und Abweichung getrennt für normalen Zyklus und Spielmodus.
@@ -46,7 +46,7 @@ export function startDisplay(){
  function snapshot():State{return {session,phase:cycle.phase,seconds:Math.ceil(cycle.countdown),remaining:cycle.remaining,total:cycle.total,completed:cycle.completed,history:[...cycle.history],message:statusText(),throwInfo,settings,audioReady:sound.ready,lastCommand,running:cycle.running||celebration.active,designPending:wheel.designPending,match:match?.state()??null,lastMatch,tv:tvInfo()};}
  function tvInfo(){const pn=$('match-panel'),cs=getComputedStyle(pn);return {w:innerWidth,h:innerHeight,dpr:Math.round((devicePixelRatio||1)*100)/100,font:pn.hidden?0:Math.round(parseFloat(cs.fontSize)*10)/10,fit:Number(cs.getPropertyValue('--fit'))||0,ua:navigator.userAgent.slice(0,160),gl:wheel.bufferInfo(),eco:settings.economy};}
  function statusText(){if(pendingMatch)return 'Spielmodus startet, sobald die Kugel liegt.';if(match){const p=match.players[match.turn].name;if(match.finished)return `Spiel beendet · ${winnerText(match)}`;if(cycle.phase==='countdown')return `${p} ist dran · Abwurf in ${Math.ceil(cycle.countdown)} Sekunden`;if(cycle.phase==='spinning'&&matchSpin!==null)return `Die Kugel rollt für ${p}.`;}
-  return cycle.phase==='countdown'?`Nächster Abwurf in ${Math.ceil(cycle.countdown)} Sekunden`:cycle.phase==='complete'?'Zyklus beendet. Bereit für die nächste Runde.':cycle.phase==='paused'?'Der Croupier pausiert.':message;}
+  return cycle.phase==='countdown'?`Nächster Abwurf in ${Math.ceil(cycle.countdown)} Sekunden`:cycle.phase==='complete'?(completeSince?`Zyklus beendet. Der nächste beginnt in ${Math.max(1,Math.ceil((CYCLE_RESTART_MS-(performance.now()-completeSince))/1000))} Sekunden.`:'Zyklus beendet. Bereit für die nächste Runde.'):cycle.phase==='paused'?'Der Croupier pausiert.':message;}
  // Die Gewinnzahl wird zu Beginn des Countdowns gezogen (randomIndex, Web Crypto), damit die
  // Kugelbewegung währenddessen im Hintergrund physikalisch gesucht werden kann.
  function drawIndex(){const forced=import.meta.env.DEV&&params.has('dev')&&params.has('target')?Number(params.get('target')):NaN;return Number.isInteger(forced)&&forced>=0&&forced<=36?ORDER.indexOf(forced):randomIndex();}
@@ -233,6 +233,8 @@ export function startDisplay(){
   const counting=cycle.phase==='countdown'&&cycle.running;
   if(counting&&(nextIndex===null||changed)){if(nextIndex===null)nextIndex=drawIndex();planKey='';replan();}
   lastCountdown=cycle.countdown;lastCounting=counting;
+  // Normaler Zyklus fertig (kein Spiel): eine Minute Pause, dann von selbst weiter. Spielende läuft über die Siegerfeier.
+  if(cycle.phase==='complete'&&!match&&!pendingMatch){if(!completeSince)completeSince=time;else if(time-completeSince>=CYCLE_RESTART_MS){completeSince=0;cycle.start(cycle.total??DEFAULT_ROUNDS);}}else completeSince=0;
   if(debug)debug.textContent=wheel.debugInfo()+(nextIndex!==null&&counting?`\nnächste Zahl (nur Dev): ${ORDER[nextIndex]}`:'');
   if(time-lastPaint>90){render();lastPaint=time;}if(time-lastBroadcast>1000){lastBroadcast=time;void relay.send(snapshot());}requestAnimationFrame(frame);}requestAnimationFrame(frame);
  document.addEventListener('visibilitychange',()=>{clock.reset();if(document.hidden)sound.stop(true);else if(wheel.motion)sound.roll(wheel.rollProgress);});render();
