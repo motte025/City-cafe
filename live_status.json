@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-07T15:47:45Z",
+  "checked_at": "2026-10-07T16:03:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "16-18 Uhr: DJs after work mit @dj_falk & felix kroecher",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Mittwochsquicky (HARDERSTYLES) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Mittwochsquicky (HARDERSTYLES) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Bergfest.. auf geht´s! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
