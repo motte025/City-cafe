@@ -74,9 +74,12 @@ export function startDisplay(){
   $('audio-unlock').textContent=sound.error?sound.error:sound.ready?(settings.muted?'♫ Ton einschalten':'♫ Ton ausschalten'):'♫ Ton aktivieren';
  }
  // Wer beginnt, lost der Computer aus (Web Crypto); die Tafel zeigt dazu kurz eine Auslosung.
+ // Danach wird auch der Rest der Reihenfolge ausgelost: der Beginner hat die 1, die anderen bekommen 2, 3, … zufällig.
  function startMatch(mode:Match['mode'],players:number,rounds?:number|null,names?:string[]){
   const first=Number.isInteger(players)&&players>0?randomBelow(players):0;
-  try{match=new Match(mode,players,rounds===undefined?(mode==='rounds'?MATCH_ROUNDS:null):rounds,first);}catch{return false;}
+  const rest=Array.from({length:Math.max(0,players)},(_,i)=>i).filter(i=>i!==first);
+  for(let k=rest.length-1;k>0;k--){const j=randomBelow(k+1);[rest[k],rest[j]]=[rest[j],rest[k]];}
+  try{match=new Match(mode,players,rounds===undefined?(mode==='rounds'?MATCH_ROUNDS:null):rounds,first,[first,...rest]);}catch{return false;}
   if(Array.isArray(names))match.players.forEach((p,i)=>{p.name=cleanName(names[i],i);});fitKey='';
   matchSpin=null;matchKey='';drawElapsed=0;drawTick=0;cycle.history=[];celebration.hide();matchStart=Date.now();matchEnd=0;applyTempo();cycle.start(null);return true;
  }
@@ -195,7 +198,7 @@ export function startDisplay(){
    const cells=ko?`${rnd}<td>${p.cur!=null?`<span class="match-chip ${color(p.cur)}">${p.cur}</span>`:p.prev!=null?`<span class="match-chip prev ${color(p.prev)}">${p.prev}</span>`:'<span class="match-none">—</span>'}</td><td class="gap ko-status ${p.out?(m.mode==='ko'?'is-out':'is-safe'):m.tie&&inPool?'is-tie':''}">${status}</td>`
     :x01?`${rnd}<td>${pts}</td><td class="gap noch">${m.needed(i)}</td><td>${p.out?'<span class="match-out">✓ aus</span>':out===null?'<span class="match-none">—</span>':`<span class="match-chip ${color(out)}">${out}</span>`}</td>`
     :`${rnd}<td>${pts}</td><td class="gap">${best-p.score===0?(best>0?'<span class="match-lead">Führt</span>':'<span class="match-none">—</span>'):`−${best-p.score}`}</td>`;
-   return `<tr data-p="${i}" class="${turn?'turn':''} ${won?'won':''} ${lead&&!ko?'lead':''} ${drawing&&turn?'draw':''} ${ko&&p.out&&m.mode==='ko'?'gone':''} ${ko&&m.finished&&m.loser===i?'loser':''} ${i===next?'next':''}"><td class="pl">${place}.</td><th><span class="match-next" title="Kommt als Nächstes">${i===next?'▸':''}</span><span class="match-seat" title="Wurf-Reihenfolge">${(i-m.first+n)%n+1}</span>${won?'★ ':''}${p.name}${lead?' <span class="match-lead-star">★</span>':''}</th>${cells}</tr>`;}).map((row,k)=>row+(SEP_AFTER.includes(k+1)&&k+1<m.players.length?SEP_ROW:'')).join('');
+   return `<tr data-p="${i}" class="${turn?'turn':''} ${won?'won':''} ${lead&&!ko?'lead':''} ${drawing&&turn?'draw':''} ${ko&&p.out&&m.mode==='ko'?'gone':''} ${ko&&m.finished&&m.loser===i?'loser':''} ${i===next?'next':''}"><td class="pl">${place}.</td><th><span class="match-next" title="Kommt als Nächstes">${i===next?'▸':''}</span><span class="match-seat" title="Wurf-Reihenfolge">${drawing?'?':m.seat(i)}</span>${won?'★ ':''}${p.name}${lead?' <span class="match-lead-star">★</span>':''}</th>${cells}</tr>`;}).map((row,k)=>row+(SEP_AFTER.includes(k+1)&&k+1<m.players.length?SEP_ROW:'')).join('');
   for(const r of Array.from(rowsEl.querySelectorAll<HTMLElement>('tr[data-p]'))){const old=before.get(r.dataset.p!);if(old===undefined)continue;const dy=old-r.getBoundingClientRect().top;if(Math.abs(dy)>2)r.animate([{transform:`translateY(${dy}px)`},{transform:'none'}],{duration:700,easing:'cubic-bezier(.2,.8,.2,1)'});}
   const ev=m.event,evText=ev?(ev.kind==='tie'?`Stechen: ${ev.players.map(j=>m.players[j].name).join(', ')}`:ev.kind==='out'?`${m.players[ev.players[0]].name} scheidet aus`:`${m.players[ev.players[0]].name} ist in Sicherheit`):'';
   $('match-last').innerHTML=ko&&l?`Letzter Wurf: ${m.players[l.player].name} · <span class="match-chip ${color(l.number)}">${l.number}</span>${evText?` · <b>${evText}</b>`:''}`:l?`Letzter Wurf: ${m.players[l.player].name} · <span class="match-chip ${color(l.number)}">${l.number}</span> ${l.win?(m.finished?'· ausgemacht!':'· ausgemacht! Runde wird fertig gespielt'):l.bust?'· zählt nicht':''}`:'Der Computer dreht reihum. <span class="match-first-legend">⚑ hat begonnen · ▸ kommt als Nächstes</span>';

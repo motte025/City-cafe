@@ -40,24 +40,30 @@ export interface KoEvent {kind:'out'|'safe'|'tie';players:number[];round:number}
 export interface MatchThrow {player:number;number:number;counted:boolean;bust:boolean;win:boolean}
 /** exact = genau getroffen, rounds = Rundenlimit erreicht */
 export type MatchEnd='exact'|'rounds'|'ko';
-export interface MatchState {mode:MatchMode;target:number|null;rounds:number|null;round:number;turn:number;first:number;finished:boolean;end:MatchEnd|null;winners:number[];players:MatchPlayer[];last:MatchThrow|null;pool?:number[];tie?:boolean;loser?:number|null;event?:KoEvent|null}
+export interface MatchState {mode:MatchMode;target:number|null;rounds:number|null;round:number;turn:number;first:number;order?:number[];finished:boolean;end:MatchEnd|null;winners:number[];players:MatchPlayer[];last:MatchThrow|null;pool?:number[];tie?:boolean;loser?:number|null;event?:KoEvent|null}
 
 export class Match {
  readonly target:number|null;readonly players:MatchPlayer[];readonly rounds:number|null;readonly first:number;
+ /** Wurf-Reihenfolge: order[0] ist der Beginner, danach wie ausgelost. */
+ readonly order:number[];
  turn:number;round=1;finished=false;end:MatchEnd|null=null;winners:number[]=[];last:MatchThrow|null=null;
  pool:number[]=[];tie=false;loser:number|null=null;event:KoEvent|null=null;
- /** rounds: Rundenlimit (bei 301/501 null = unbegrenzt); first: wer beginnt. */
- constructor(readonly mode:MatchMode,count:number,rounds:number|null=mode==='rounds'?MATCH_ROUNDS:null,first=0){
+ /** rounds: Rundenlimit (bei 301/501 null = unbegrenzt); first: wer beginnt; order: ganze Wurf-Reihenfolge ab first (ohne: reihum ab first). */
+ constructor(readonly mode:MatchMode,count:number,rounds:number|null=mode==='rounds'?MATCH_ROUNDS:null,first=0,order?:number[]){
   if(!isMatchMode(mode)||!Number.isInteger(count)||count<MIN_PLAYERS||count>MAX_PLAYERS)throw new Error('Ungültiger Spielmodus');
   this.target=modeTarget(mode);
   if(isKo(mode)?rounds!==null:rounds===null?this.target===null:(!Number.isInteger(rounds)||rounds<MIN_ROUNDS||rounds>MAX_ROUNDS))throw new Error('Ungültige Rundenzahl');
   if(!Number.isInteger(first)||first<0||first>=count)throw new Error('Ungültiger Beginner');
   this.rounds=rounds;this.first=first;this.turn=first;
+  this.order=order??Array.from({length:count},(_,k)=>(first+k)%count);
+  if(!isOrder(this.order,count,first))throw new Error('Ungültige Reihenfolge');
   this.players=Array.from({length:count},(_,i)=>({name:`Spieler ${i+1}`,score:0,throws:0,out:false}));
   if(isKo(mode)){this.pool=this.inOrder(this.players.map((_,i)=>i));this.players.forEach(p=>p.cur=null);}
  }
  /** Indizes in Spielreihenfolge ab dem Beginner. */
- private inOrder(list:number[]){const n=this.players.length;return [...list].sort((a,b)=>(a-this.first+n)%n-(b-this.first+n)%n);}
+ private inOrder(list:number[]){return [...list].sort((a,b)=>this.order.indexOf(a)-this.order.indexOf(b));}
+ /** Platz in der Wurf-Reihenfolge, 1 = Beginner. */
+ seat(i:number){return this.order.indexOf(i)+1;}
  /** Punkte, die dem Spieler noch fehlen (nur 301/501). */
  needed(i:number){return this.target===null?null:this.target-this.players[i].score;}
  /** Die eine Zahl, die das Spiel beendet – nur wenn höchstens 36 fehlen. */
@@ -99,9 +105,9 @@ export class Match {
  }
  private advance(){
   // Wer schon ausgemacht hat, wird übersprungen; am Rundenende entscheidet sich das Spiel.
-  const n=this.players.length;let wrapped=false;
-  do{this.turn=(this.turn+1)%n;if(this.turn===this.first)wrapped=true;}while(this.players[this.turn].out&&!wrapped);
-  if(!wrapped)return;this.turn=this.first;
+  const n=this.players.length;let k=this.order.indexOf(this.turn);
+  do{k++;}while(k<n&&this.players[this.order[k]].out);
+  if(k<n){this.turn=this.order[k];return;}this.turn=this.first;
   const exact=this.players.flatMap((p,i)=>p.out?[i]:[]);
   if(exact.length){this.finished=true;this.end='exact';this.winners=exact;return;}
   if(this.rounds!==null&&this.round>=this.rounds){
@@ -115,16 +121,20 @@ export class Match {
  upNext():number|null{
   if(this.finished)return null;
   if(isKo(this.mode)){const k=this.pool.indexOf(this.turn);return k>=0&&k<this.pool.length-1?this.pool[k+1]:null;}
-  const n=this.players.length;let t=this.turn;
-  do{t=(t+1)%n;if(t===this.first)break;}while(this.players[t].out);
-  if(t!==this.first)return t;
+  const n=this.players.length;let k=this.order.indexOf(this.turn);
+  do{k++;}while(k<n&&this.players[this.order[k]].out);
+  if(k<n)return this.order[k];
   return this.players.some(p=>p.out)||(this.rounds!==null&&this.round>=this.rounds)?null:this.first;
  }
- state():MatchState{return {mode:this.mode,target:this.target,rounds:this.rounds,round:this.round,turn:this.turn,first:this.first,finished:this.finished,end:this.end,winners:[...this.winners],players:this.players.map(p=>({...p})),last:this.last&&{...this.last},pool:[...this.pool],tie:this.tie,loser:this.loser,event:this.event&&{...this.event,players:[...this.event.players]}};}
+ state():MatchState{return {mode:this.mode,target:this.target,rounds:this.rounds,round:this.round,turn:this.turn,first:this.first,order:[...this.order],finished:this.finished,end:this.end,winners:[...this.winners],players:this.players.map(p=>({...p})),last:this.last&&{...this.last},pool:[...this.pool],tie:this.tie,loser:this.loser,event:this.event&&{...this.event,players:[...this.event.players]}};}
 }
 
+/** Ist order eine vollständige Reihenfolge aller Spieler, die mit dem Beginner anfängt? */
+function isOrder(order:unknown,count:number,first:number):order is number[]{
+ return Array.isArray(order)&&order.length===count&&order[0]===first&&new Set(order).size===count&&order.every(i=>Number.isInteger(i)&&i>=0&&i<count);}
+
 /** Reihenfolge ab dem Beginner (für Rangliste bei Gleichstand). */
-export function rankPlayers(s:MatchState){const n=s.players.length,order=(i:number)=>(i-s.first+n)%n;
+export function rankPlayers(s:MatchState){const n=s.players.length,order=(i:number)=>s.order?s.order.indexOf(i):(i-s.first+n)%n;
  if(isKo(s.mode)){
   // K.-o.: vergebene Plätze zählen; Verbliebene stehen bei ko oben, bei kol (Letzter verliert) unten.
   const key=(i:number)=>s.players[i].place??(s.mode==='ko'?0:n+1);return s.players.map((_,i)=>i).sort((a,b)=>key(a)-key(b)||order(a)-order(b));}
@@ -137,5 +147,6 @@ export function readMatchState(v:unknown):MatchState|null{
  if(!s.players.every(p=>p&&typeof p.name==='string'&&Number.isFinite(p.score)&&Number.isFinite(p.throws)))return null;
  if(!Number.isInteger(s.turn)||s.turn<0||s.turn>=s.players.length||!Array.isArray(s.winners))return null;
  if(!Number.isInteger(s.first)||s.first<0||s.first>=s.players.length)return null;
+ if(s.order!==undefined&&!isOrder(s.order,s.players.length,s.first))return null;
  return s;
 }
