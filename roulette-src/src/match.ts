@@ -9,15 +9,15 @@
  * - „Runden“: jeder Spieler bekommt so viele Würfe wie gewählt (Standard 10),
  *   die Zahlen werden addiert, am Ende gewinnt die höchste Summe
  *   (Gleichstand: mehrere Sieger).
- * - „101“/„151“/„201“/„301“/„501“: wer genau auf das Ziel kommt, hat ausgemacht. Die angefangene Runde wird
+ * - „51“/„101“/„151“/„201“/„301“/„501“: wer genau auf das Ziel kommt, hat ausgemacht. Die angefangene Runde wird
  *   immer fertig gespielt; machen darin mehrere aus, teilen sie sich den Sieg.
  *   Eine Zahl, die über das Ziel hinausführt, zählt nicht („überworfen“).
  *   Ab 36 fehlenden Punkten gibt es genau eine Zahl, die ausmacht.
  *   Optional mit Rundenlimit: trifft bis dahin niemand genau, gewinnt, wer
  *   am nächsten dran ist.
  */
-export type MatchMode='rounds'|'x101'|'x151'|'x201'|'x301'|'x501'|'ko'|'kol';
-export const MATCH_MODES:MatchMode[]=['rounds','x101','x151','x201','x301','x501','ko','kol'];
+export type MatchMode='rounds'|'x51'|'x101'|'x151'|'x201'|'x301'|'x501'|'ko'|'kol';
+export const MATCH_MODES:MatchMode[]=['rounds','x51','x101','x151','x201','x301','x501','ko','kol'];
 /** K.-o.-Modus: jede Runde wirft jeder Verbliebene einmal. ko = die niedrigste Zahl scheidet aus, der Letzte gewinnt;
  *  kol = die höchste Zahl ist in Sicherheit, der Letzte ist der Verlierer. Gleichstand am Ende → Stechen nur unter den Gleichen. */
 export const isKo=(m:MatchMode)=>m==='ko'||m==='kol';
