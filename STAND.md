@@ -358,7 +358,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   getestet (kein voller Testlauf wie bei `roulette-src`), da reine
   Entscheidungsvorlage.
 - **Roulette-Spielmodus** (27.09.2026, erster Versuch): 2–12 Spieler, Modi
-  „Runden“ (höchste Summe) sowie 101/151/201/301/501 (101 und 151 seit 05.10.2026) (genau treffen, Runde wird
+  „Runden“ (höchste Summe) sowie 51/101/151/201/301/501 (101 und 151 seit 05.10.2026, 51 seit 07.10.2026) (genau treffen, Runde wird
   fertig gespielt, überworfen zählt nicht, ab 36 Rest wird die Ausmach-Zahl
   angezeigt), Rundenzahl 3–30 wählbar
   (bei 301/501 auch ohne Limit). Beginner wird ausgelost, Sieger 3 Minuten mit Feuerwerk,
@@ -366,7 +366,9 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   jetzt 30 Runden, Tempo 4 s Pause / 12 s Kugel (nur Quelle + Vorschau); ist ein
   Zyklus durch, beginnt nach 1 Minute von selbst der nächste (seit 07.10.2026). Nur per Fernbedienung
   aktivierbar, Punktetafel links am TV (nach Punkten sortiert; Wurf-Nummer vor jedem
-  Namen, ▸ = kommt als Nächstes, seit 07.10.2026). „Live am Tisch“ steht immer über
+  Namen, ▸ = kommt als Nächstes, seit 07.10.2026). Reihenfolge: Beginner wird ausgelost
+  (Nummer 1); mit eingetragenen Namen auch die übrigen Nummern zufällig, ohne Namen
+  reihum nach Spielernummer (Spieler 3 → 4 → 1 → 2). „Live am Tisch“ steht immer über
   der Kesselmitte. Der Computer dreht reihum, das
   Ergebnis bleibt reiner Zufall. Beschreibung: `roulette-src/README.md`.
   Steht in `roulette-src` und ist **nur** nach `roulette-vorschau-spiel/`
