@@ -285,27 +285,12 @@
            ausserhalb der Medienansichten - die kommen fuer die Dauer ganz raus. */
         body.video-laeuft #weather-effects { display: none !important; }
 
-        /* Und die Laufschrift. Sie ist die EINZIGE Animation, die waehrend eines
-           Videoslots ueberhaupt noch laeuft: der grosse Effekte-Block weiter
-           unten schaltet alle anderen per "animation: none" ab, und was in einer
-           nicht aktiven Medienansicht liegt, pausiert ohnehin. Die Laufschrift
-           sitzt aber in der Ticker-Leiste ausserhalb davon und laeuft durch.
-           Billig ist sie (nur transform), umsonst nicht: sie ist eine weitere
-           Ebene, die der Compositor ueber dem skalierten Video in jedem Bild
-           neu zusammensetzen muss.
-
-           "html body" statt nur "body": der Effekte-Block setzt die Animation
-           mit !important und gleicher Spezifitaet, steht aber SPAETER in der
-           Datei - ohne das zusaetzliche html gewinnt er und die Laufschrift
-           liefe weiter. */
-        html body.video-laeuft:not(.video-extern) .ticker-move,
-        html body.video-laeuft:not(.video-extern) .bl-ticker-move {
-            animation-play-state: paused !important;
-        }
+        /* Die Laufschrift laeuft auch waehrend eines Videos weiter. Frueher hielt
+           sie an, damit die schwache Grafik des ODROID das Video schaffte; seit
+           der ODROID weg ist (05.10.2026), war das nur noch ein stehender Ticker. */
         /* .video-extern: der Nightlife-Slot laeuft im Kiosk ueber mpv (eigener
-           Prozess, siehe nlExtern()) - Chromium dekodiert dann nichts, die
-           Laufschrift darf weiterlaufen. */
-        /* ... und das angehaltene YouTube-Embed darunter bleibt unsichtbar: beim
+           Prozess, siehe nlExtern()) - Chromium dekodiert dann nichts. Das
+           angehaltene YouTube-Embed darunter bleibt unsichtbar: beim
            Umschalten oder Songwechsel ist mpv kurz ausgeblendet, sonst sah man in
            der Luecke das Standbild vom Videoanfang ("falsches Cover"). Die Flaeche
            bleibt gleich gross (visibility), mpv misst sie weiter. */
