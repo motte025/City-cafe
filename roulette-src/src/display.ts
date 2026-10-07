@@ -44,6 +44,15 @@ export function startDisplay(){
   case 'names':if(match&&Array.isArray(cmd.names)){match.players.forEach((p,i)=>{if(i<cmd.names.length)p.name=cleanName(cmd.names[i],i);});matchKey='';fitKey='';}break;
   case 'matchEnd':if(pendingMatch){pendingMatch=null;cycle.resume();}if(!match)break;match=null;matchSpin=null;celebration.hide();applyTempo();cycle.start(DEFAULT_ROUNDS);break;}render();}
  function snapshot():State{return {session,phase:cycle.phase,seconds:Math.ceil(cycle.countdown),remaining:cycle.remaining,total:cycle.total,completed:cycle.completed,history:[...cycle.history],message:statusText(),throwInfo,settings,audioReady:sound.ready,lastCommand,running:cycle.running||celebration.active,designPending:wheel.designPending,match:match?.state()??null,lastMatch,tv:tvInfo()};}
+ // Firebase sparen (Gratis-Tarif 10 GB/Monat, jedes offene Handy lädt alles mit): der Status geht nur bei einer Änderung
+ // raus, sonst als Herzschlag alle 5 s – die Fernbedienung gilt nach 6,5 s ohne Nachricht als getrennt, das Dashboard nach 15 s.
+ // Einstellungen, letztes Spiel und TV-Daten (gut die Hälfte) ändern sich selten und gehen auf einem eigenen Kanal.
+ let lastFast='',lastFastAt=-Infinity,lastSlow='';const HEARTBEAT_MS=5000;
+ function broadcast(forceFast=false,forceSlow=false){
+  const {settings:s,lastMatch:l,tv,...fast}=snapshot(),f=JSON.stringify(fast),now=performance.now();
+  if(forceFast||f!==lastFast||now-lastFastAt>=HEARTBEAT_MS){lastFast=f;lastFastAt=now;void relay.send(fast);}
+  const slow=JSON.stringify({settings:s,lastMatch:l,tv});if(forceSlow||slow!==lastSlow){lastSlow=slow;void relay.sendSlow({settings:s,lastMatch:l,tv});}
+ }
  function tvInfo(){const pn=$('match-panel'),cs=getComputedStyle(pn);return {w:innerWidth,h:innerHeight,dpr:Math.round((devicePixelRatio||1)*100)/100,font:pn.hidden?0:Math.round(parseFloat(cs.fontSize)*10)/10,fit:Number(cs.getPropertyValue('--fit'))||0,ua:navigator.userAgent.slice(0,160),gl:wheel.bufferInfo(),eco:settings.economy};}
  function statusText(){if(pendingMatch)return 'Spielmodus startet, sobald die Kugel liegt.';if(match){const p=match.players[match.turn].name;if(match.finished)return `Spiel beendet · ${winnerText(match)}`;if(cycle.phase==='countdown')return `${p} ist dran · Abwurf in ${Math.ceil(cycle.countdown)} Sekunden`;if(cycle.phase==='spinning'&&matchSpin!==null)return `Die Kugel rollt für ${p}.`;}
   return cycle.phase==='countdown'?`Nächster Abwurf in ${Math.ceil(cycle.countdown)} Sekunden`:cycle.phase==='complete'?(completeSince?`Zyklus beendet. Der nächste beginnt in ${Math.max(1,Math.ceil((CYCLE_RESTART_MS-(performance.now()-completeSince))/1000))} Sekunden.`:'Zyklus beendet. Bereit für die nächste Runde.'):cycle.phase==='paused'?'Der Croupier pausiert.':message;}
@@ -67,7 +76,7 @@ export function startDisplay(){
    // Im normalen Zyklus mit genug Pause: „Faites vos jeux“ vor dem nächsten Wurf.
    if(!match&&tempo().delay>=7)lines.push({text:PHRASES.bets,lang:'fr',delay:2200});
    say(lines,Math.max(.5,settings.effects+.35));}
-  render();void relay.send(snapshot());};
+  render();broadcast(true);};
  function render(){const counting=cycle.phase==='countdown',spinning=cycle.phase==='spinning';$('seconds').textContent=counting?String(Math.ceil(cycle.countdown)):spinning?'•':cycle.phase==='complete'?'✓':'Ⅱ';$('timer-label').textContent=counting?'NÄCHSTER ABWURF':spinning?'KUGEL IST IM SPIEL':cycle.phase==='complete'?'ZYKLUS BEENDET':'PAUSIERT';$('timer-unit').textContent=counting?'SEKUNDEN':spinning?'RIEN NE VA PLUS':'';$('count-ring').style.setProperty('--progress',`${counting?cycle.countdown/tempo().delay*360:0}deg`);$('count-ring').classList.toggle('is-spinning',spinning);$('remaining').textContent=cycle.remaining===null?'∞':String(cycle.remaining);$('round-progress').textContent=cycle.total===null?`${cycle.completed} Runden gespielt`:`${cycle.completed} von ${cycle.total} gespielt`;$('pause').textContent=cycle.running?'Ⅱ Pausieren':'▶ Fortsetzen';$('message').textContent=statusText();$('throw-info').textContent=throwInfo;
   const h=cycle.history.join(',');if(h!==lastHistory){lastHistory=h;const n=cycle.history[0];if(n===undefined){$('latest').textContent='—';$('latest').className='latest empty-result';$('latest-color').textContent='Das Spiel beginnt.';$('history').innerHTML='';}else{$('latest').textContent=String(n);$('latest').className=`latest ${color(n)}`;$('latest-color').textContent=color(n)==='red'?'ROT':color(n)==='black'?'SCHWARZ':'ZERO';$('history').innerHTML=cycle.history.map((v,i)=>`<span class="history-number ${color(v)} ${i===0?'newest':''}">${v}</span>`).join('');}}
   renderMatch();
@@ -219,8 +228,8 @@ export function startDisplay(){
  const remoteUrl=`https://motte025.github.io/City-cafe/fernbedienung.html?teil=roulette&raum=${encodeURIComponent(room)}`;$<HTMLAnchorElement>('remote-link').href=remoteUrl;$('room-label').textContent='CITY CAFE';$('pair-room').textContent=`Screen: ${room}`;
  $('pair').onclick=()=>{$<HTMLDialogElement>('pair-dialog').showModal();void QRCode.toCanvas($<HTMLCanvasElement>('qr'),remoteUrl,{width:240,margin:2,color:{dark:'#10221b',light:'#f1e8ce'}});};
  // Nur melden, wenn etwas nicht stimmt - „Fernbedienung bereit“ stand sonst dauernd am TV.
- relay.onConnection=online=>{$('connection').textContent=online?'':'○ Fernbedienung offline';if(online)void relay.send(snapshot());};
- relay.onMessage=(body,id)=>{if(!body||typeof body!=='object')return;const b=body as {session?:string;command?:Command};if(b.session!==session||!b.command)return;lastCommand=id;command(b.command);void relay.send(snapshot());};
+ relay.onConnection=online=>{$('connection').textContent=online?'':'○ Fernbedienung offline';if(online)broadcast(true,true);};
+ relay.onMessage=(body,id)=>{if(!body||typeof body!=='object')return;const b=body as {session?:string;command?:Command};if(b.session!==session||!b.command)return;lastCommand=id;command(b.command);broadcast(true);};
  void relay.connect(room);
  // Countdown-Überschuss im auslösenden Bild wird an den Kessel weitergereicht (exakte Abwurflage).
  const dev=import.meta.env.DEV&&params.has('dev'),debug=dev?document.createElement('pre'):null;
@@ -241,7 +250,7 @@ export function startDisplay(){
   // Normaler Zyklus fertig (kein Spiel): eine Minute Pause, dann von selbst weiter. Spielende läuft über die Siegerfeier.
   if(cycle.phase==='complete'&&!match&&!pendingMatch){if(!completeSince)completeSince=time;else if(time-completeSince>=CYCLE_RESTART_MS){completeSince=0;cycle.start(cycle.total??DEFAULT_ROUNDS);}}else completeSince=0;
   if(debug)debug.textContent=wheel.debugInfo()+(nextIndex!==null&&counting?`\nnächste Zahl (nur Dev): ${ORDER[nextIndex]}`:'');
-  if(time-lastPaint>90){render();lastPaint=time;}if(time-lastBroadcast>1000){lastBroadcast=time;void relay.send(snapshot());}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+  if(time-lastPaint>90){render();lastPaint=time;}if(time-lastBroadcast>1000){lastBroadcast=time;broadcast();}requestAnimationFrame(frame);}requestAnimationFrame(frame);
  document.addEventListener('visibilitychange',()=>{clock.reset();if(document.hidden)sound.stop(true);else if(wheel.motion)sound.roll(wheel.rollProgress);});render();
 }
 
