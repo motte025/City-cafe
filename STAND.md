@@ -267,6 +267,14 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   60 s), das Handy zählt die Position selbst. Vorher ~40 MB/h je offenem Handy, jetzt
   ~1,5 MB/h. Ein alter Bildschirm (vermutlich der ODROID im Café) schreibt noch in
   denselben Raum, bis er die neue Seite lädt; am besten abstecken.
+  Roulette (seit 07.10.2026): Status nur bei Änderung, sonst Herzschlag alle 5 s
+  (Fernbedienung gilt nach 6,5 s ohne Nachricht als getrennt, Dashboard nach 15 s);
+  Einstellungen, letztes Spiel und TV-Daten auf eigenem Kanal `roulette/selten`, nur
+  bei Änderung/neuer Verbindung. Gemessen je Fernbedienung: Spielmodus 14,7 → 2,3 MB/h,
+  Zyklus ~14 → 0,8 MB/h. Leistung am W1 im Spiel: 60 fps ohne Ruckler, GPU 30–36 %,
+  CPU ~5 %, unter 40 °C. Roulette-Einstellungen liegen im Kiosk-Browser
+  (localStorage `atelier-show-settings`), Sicherung der alten in
+  `/home/sabrina/roulette-settings-backup-2026-10-07.json`.
 - **YouTube-Musik, offen:** Test der Dart-Ausnahme an einem Dart-Abend.
   Einige Songs haben nur TV-/Live-Fassungen (Rosanna Rocci „Solo con te",
   Draufgänger „Marie", CCR „Proud Mary" – bleiben vorerst).
