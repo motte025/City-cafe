@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-10-07T10:52:46Z",
-  "live": []
+  "checked_at": "2026-10-07T11:32:46Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Brettwoch <3 -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    }
+  ]
 }
