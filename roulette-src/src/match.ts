@@ -111,6 +111,15 @@ export class Match {
   }
   this.round++;
  }
+ /** Wer nach dem aktuellen Werfer dran ist, ohne etwas zu verändern; null, wenn das offen ist (Ende einer K.O.-Runde) oder das Spiel dann vorbei wäre. */
+ upNext():number|null{
+  if(this.finished)return null;
+  if(isKo(this.mode)){const k=this.pool.indexOf(this.turn);return k>=0&&k<this.pool.length-1?this.pool[k+1]:null;}
+  const n=this.players.length;let t=this.turn;
+  do{t=(t+1)%n;if(t===this.first)break;}while(this.players[t].out);
+  if(t!==this.first)return t;
+  return this.players.some(p=>p.out)||(this.rounds!==null&&this.round>=this.rounds)?null:this.first;
+ }
  state():MatchState{return {mode:this.mode,target:this.target,rounds:this.rounds,round:this.round,turn:this.turn,first:this.first,finished:this.finished,end:this.end,winners:[...this.winners],players:this.players.map(p=>({...p})),last:this.last&&{...this.last},pool:[...this.pool],tie:this.tie,loser:this.loser,event:this.event&&{...this.event,players:[...this.event.players]}};}
 }
 

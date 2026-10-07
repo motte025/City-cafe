@@ -227,6 +227,12 @@ body.embedded .remote-shell{padding-top:10px}
 .match-table .match-first{display:inline-block;color:#e8c983;font-size:.95em;margin-right:.35em;text-shadow:0 0 6px #e8c98366}
 .match-table tr.won .match-first{color:#10261c;text-shadow:none}
 .match-first-legend{color:#e8c983;white-space:nowrap;margin-left:.4em}
+/* Wurf-Reihenfolge vor dem Namen und ▸ für den nächsten Werfer: die Tabelle ist nach Punkten sortiert, mit echten Namen sieht man sonst nicht, wer wann dran ist. */
+.match-table .match-next{display:inline-block;width:.9em;color:#e8c983;text-shadow:0 0 6px #e8c98388}
+.match-table .match-seat{display:inline-grid;place-items:center;min-width:1.35em;height:1.35em;margin-right:.45em;border:1px solid #cbb58166;border-radius:50%;font-size:.7em;font-weight:600;color:#cbb581;vertical-align:.12em;font-variant-numeric:tabular-nums}
+.match-table tr.turn .match-seat{background:#e8c983;border-color:#e8c983;color:#10261c}
+.match-table tr.next .match-seat{border-color:#e8c983;color:#ffe3a6}
+.match-table tr.won .match-seat{border-color:#10261c88;color:#10261c}
 
 /* Ohne die zwei Querlinien (Kopf und Zahlenleiste) – die Flächen bleiben als Grenzen für den Kessel. */
 .show-header{border-bottom:0}.result-strip{border-top:0}
