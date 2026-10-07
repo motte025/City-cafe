@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-07T13:47:45Z",
+  "checked_at": "2026-10-07T13:57:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Brettwoch <3 -  !dc  !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ HOUSE NATION - House Music | !play ✨",
       "game": "DJs"
     }
   ]
