@@ -280,14 +280,10 @@
         .media-inner-view:not(.active),
         .media-inner-view:not(.active) * { animation-play-state: paused !important; }
 
-        /* Solange ein Video laeuft, gehoert die Bildrate dem Video. Die Regentropfen
-           im Wetter-Widget sind Dutzende einzeln animierter Elemente und liegen
-           ausserhalb der Medienansichten - die kommen fuer die Dauer ganz raus. */
-        body.video-laeuft #weather-effects { display: none !important; }
-
-        /* Die Laufschrift laeuft auch waehrend eines Videos weiter. Frueher hielt
-           sie an, damit die schwache Grafik des ODROID das Video schaffte; seit
-           der ODROID weg ist (05.10.2026), war das nur noch ein stehender Ticker. */
+        /* Regen im Wetter-Widget und Laufschrift laufen auch waehrend eines Videos
+           weiter. Frueher kamen sie fuer die Dauer raus bzw. hielten an, damit die
+           schwache Grafik des ODROID das Video schaffte; seit der ODROID weg ist
+           (05.10.2026), war das nur noch fehlender Regen und ein stehender Ticker. */
         /* .video-extern: der Nightlife-Slot laeuft im Kiosk ueber mpv (eigener
            Prozess, siehe nlExtern()) - Chromium dekodiert dann nichts. Das
            angehaltene YouTube-Embed darunter bleibt unsichtbar: beim
