@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T13:07:46Z",
+  "checked_at": "2026-10-08T13:22:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥FEEL THE HEAT🔥NEW RELEASE TOMORROW🎶 PP 24/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
