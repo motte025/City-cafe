@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-10-08T05:32:45Z",
+  "checked_at": "2026-10-08T05:47:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Miranda Lambert Songline Live",
-      "game": "Music"
-    },
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "down the rabbit hole 🐇",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Miranda Lambert Songline Live",
+      "game": "Music"
     }
   ]
 }
