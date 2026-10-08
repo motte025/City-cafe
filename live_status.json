@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T18:37:45Z",
+  "checked_at": "2026-10-08T18:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,13 +17,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Miranda Lambert Songline Live",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
@@ -35,6 +28,13 @@
       "name": "roice",
       "title": "10K CELEBRATION !thankyou !squatcam !bewbs !ALT",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Miranda Lambert Songline Live",
+      "game": "Music"
     },
     {
       "platform": "twitch",
