@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T20:22:45Z",
+  "checked_at": "2026-10-08T20:27:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -21,13 +21,6 @@
       "name": "AmazonMusic",
       "title": "Miranda Lambert Songline Live",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "10K CELEBRATION !thankyou !squatcam !bewbs !ALT",
-      "game": "DJs"
     },
     {
       "platform": "twitch",
