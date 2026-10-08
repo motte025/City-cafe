@@ -7596,7 +7596,14 @@
         // mehr fuers Radio. Eine Zahl (Minuten) stellt die alte Grenze wieder her.
         const YT_RADIO_MAX_MIN = Infinity;
         const YT_VOLLBILD_STANDARD = false;   // Ansicht beim Start der Musik
-        const YT_QR_AN = false;               // QR "Song wuenschen" im Video (vorerst aus, Wunsch Betreiber)
+        const YT_QR_AN = false;               // QR "Song wuenschen" im Video: Standard, solange der Chef am Handy nichts umgeschaltet hat
+        // Der Chef schaltet den QR am Handy ein/aus (Musik-Fernbedienung, Befehl "qr"); die
+        // Wahl bleibt im Browser-Speicher des Screens und gilt auch nach einem Neustart.
+        let ytmQrAn = YT_QR_AN;
+        try {
+            const gespeichertQr = localStorage.getItem('ytm-qr-an');
+            if (gespeichertQr === '1' || gespeichertQr === '0') ytmQrAn = gespeichertQr === '1';
+        } catch (e) {}
         const YT_VORLADEN_SEKUNDEN = 40;      // so lange vor Songende den naechsten aufloesen (reicht fuer 9 s Ueberblendung, yt-dlp braucht <= 25 s)
         const YT_CHEF_PIN = (new URLSearchParams(location.search).get('chefpin') || '').trim();
 
@@ -7737,6 +7744,7 @@
                 vollbild: ytmVollbild,
                 seite: ytmSeiteFotos ? 'fotos' : 'songs',
                 ambi: ytmAmbi,
+                qr: ytmQrAn,
                 letzterWunschTs: ytm.letzterWunschTs || 0,
                 gespielt: (ytm.gespielt || []).slice(-40),
                 spielPause: ytmSpielPause,
@@ -8360,6 +8368,14 @@
                 ytmMelden();
                 return;
             }
+            if (was === 'qr') {             // Chef: QR "Song wuenschen" im Video ein/aus
+                ytmQrAn = !!b.an;
+                try { localStorage.setItem('ytm-qr-an', ytmQrAn ? '1' : '0'); } catch (e) {}
+                ytmQrAnwenden();
+                ytmAnzeigen();
+                ytmMelden();
+                return;
+            }
             if (was === 'fotos' || was === 'songs') {
                 ytmSeiteFotos = was === 'fotos';
                 ytmFotoNaechste = 0;
@@ -8559,7 +8575,7 @@
             body.classList.toggle('ytm-an', an);
             body.classList.toggle('ytm-vollbild', an && ytmVollbild);
             body.classList.toggle('ytm-browser', an && !nlExtern());
-            body.classList.toggle('ytm-qr-an', an && YT_QR_AN);
+            body.classList.toggle('ytm-qr-an', an && ytmQrAn);
             body.classList.toggle('ytm-ambi', an && ytmAmbi);
             window.nlAmbiAn = an && ytmAmbi;   // Supervisor misst nur dann (normal und Vollbild)
             // Supervisor: welche Flaeche gerade das Video traegt (6.8).
@@ -8572,7 +8588,7 @@
                 if (label) label.textContent = an ? '▶ JETZT LÄUFT' : '☕ CITY CAFE';
                 window.ytmTickerText = null;
                 if (!an) { ytmEinblendungen = []; ytmEinblendungJetzt = null; ytmTorStand = null; }
-                if (an && YT_QR_AN) ytmQrKarteBauen();
+                if (an && ytmQrAn) ytmQrKarteBauen();
             }
             if (!an) {
                 const h = document.getElementById('nl-stadt');
@@ -8738,6 +8754,15 @@
         // 6.5 QR "Song wuenschen": Kaertchen einmal ins Canvas zeichnen; der
         // Supervisor legt es per mpv overlay-add in die Ecke des Videos.
         let ytmQrGebaut = false;
+        let ytmQrKarte = null;      // fertiges Kaertchen (fuers Wiederanschalten, ohne neu zu zeichnen)
+        // Schaltet das Kaertchen fuer den Supervisor (window.nlQrKarte) ein oder aus. Ohne
+        // nlQrKarte nimmt er das Overlay aus dem Video; die Seite blendet ihr HTML-QR ueber
+        // die Klasse ytm-qr-an (ytmAnzeigen) ein und aus.
+        function ytmQrAnwenden() {
+            if (!ytmQrAn) { window.nlQrKarte = null; return; }
+            if (ytmQrKarte) window.nlQrKarte = ytmQrKarte;
+            else ytmQrKarteBauen();
+        }
         async function ytmQrKarteBauen() {
             const ziel = 'https://motte025.github.io/City-cafe/fernbedienung.html?raum=' + encodeURIComponent(NL_FERN_RAUM);
             const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=0&data=' + encodeURIComponent(ziel);
@@ -8763,9 +8788,10 @@
                 g.textAlign = 'center';
                 g.textBaseline = 'middle';
                 g.fillText('SONG WÜNSCHEN', breite / 2, PAD + QR + TEXT / 2);
-                window.nlQrKarte = { id: 'qr-' + Date.now(), png: c.toDataURL('image/png'), breite, hoehe,
-                                     rand: 3, randVoll: 3, faktorVoll: 160 / 150 };
+                ytmQrKarte = { id: 'qr-' + Date.now(), png: c.toDataURL('image/png'), breite, hoehe,
+                               rand: 3, randVoll: 3, faktorVoll: 160 / 150 };
                 ytmQrGebaut = true;
+                if (ytmQrAn) window.nlQrKarte = ytmQrKarte;   // kann waehrend des Bauens ausgeschaltet worden sein
             } catch (e) {
                 console.log('QR-Kaertchen nicht gebaut', e);
             }

@@ -29,7 +29,7 @@ Antwortsprache im Gespräch: Deutsch.
 | `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef |
 | `yt-fernbedienung-net.js` | Firebase-Pfade der Musik (`yt/…`, `chef/…`) |
 | `yt-warteschlange.js` | Reihenfolge-Logik der Musik (Warteschlange, Radio, Vorschau), Tests in `yt-warteschlange.test.js` |
-| `yt_playlists.json` | Stimmungs-Playlists nach Uhrzeit (Platzhalter, keine eigenen Links) |
+| `yt_playlists.json` | Stimmungs-Playlists nach Uhrzeit (1–4 mit festen Titellisten, 5–8 eigene Mixe) |
 | `YOUTUBE-MUSIK-SETUP.md`, `docs/musik/` | Spec der Musik, Firebase-Regeln, Bilder |
 | `dj-fernbedienung.html` | Twitch-Kanäle, Anmeldung über ein eigenes Fenster |
 | `hosn-obe-engine.js` | Spiellogik des Kartenspiels, dazu `hosn-obe-engine.test.js` |
@@ -223,7 +223,11 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     eine Zeile tiefer links neben dem Logo. Die Werbe-Abdeckung
     (`nl-player-hint` mit Titel) ist aus, solange mpv spielt
     (`body.video-extern`) – sie schien sonst mitten in der Überblendung durch.
-    QR „Song wünschen" ist vorerst aus (`YT_QR_AN`).
+    QR „Song wünschen" ist standardmäßig aus (`YT_QR_AN = false`), der Chef schaltet ihn
+    am Handy mit dem Knopf **🔳 QR-Code / QR aus** (Reiter „Jetzt", neben Ambilight) im
+    Video ein und aus: Befehl `musik`/`qr` (`an: true|false`), Rückmeldung `yt/jetzt.qr`.
+    Die Wahl merkt sich der TV im Browser-Speicher (`ytm-qr-an`) und behält sie nach
+    Neustart; das gebaute QR-Bild wird beim Aus/Ein wiederverwendet.
   - **Handy:** Suche nach Songs oder Playlists (Playlist öffnen, einzelne Titel
     nehmen), ⋯-Menü je Song (Ab hier abspielen, Sofort, Als Nächstes, An 5.
     Stelle, Radio-Mix starten, Ende, Zu Playlist hinzufügen), Radio-Mix zum
@@ -252,7 +256,9 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Playlist im Repo ändert, muss die Änderung auch in `yt/listen/<nr>`
     nachziehen (so geschehen bei Playlist 6 am 05.10.).
   - **Playlists (`yt_playlists.json`, feste Titellisten mit videoId):**
-    1–4 Platzhalter (Party Hits, Schlager, Après-Ski, Chill); 5 „Mix
+    1–4 feste Titellisten (seit 08.10.2026, aus den Titeln von 5–8 zusammengestellt, jede videoId
+    einmal je Liste): 1 „Party Hits" (250, 21–8 Uhr), 2 „Schlager" (219, 17–21 Uhr),
+    3 „Après-Ski" (155, ohne Uhrzeit), 4 „Chill" (126, 8–17 Uhr); 5 „Mix
     04.10.2026" (210, moderne Schlager / internationale / deutsche
     Party-Hits 2-2-2); 6 „Mix 04.10.2026 (2)" (200, Stil der Betreiber-Liste
     05.05.2024: Latin, Dance, 80er/90er, Pop, Deutsch/Austro; am Handy

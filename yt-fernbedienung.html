@@ -273,7 +273,10 @@
         <div class="zeile2">
             <button type="button" class="still" id="k-ansicht">⛶ Vollbild</button>
             <button type="button" class="still" id="k-seite">🖼️ Fotos</button>
+        </div>
+        <div class="zeile2">
             <button type="button" class="still" id="k-ambi">🌈 Ambilight</button>
+            <button type="button" class="still" id="k-qr">🔳 QR-Code</button>
         </div>
         <div class="zeile2">
             <button type="button" class="still" id="k-start">▶ Musik starten</button>
@@ -743,6 +746,7 @@
         // Rechte Karte im Widget: Fotos aus der Drive-Galerie <-> Aehnliche Songs
         el('k-seite').textContent = jetzt && jetzt.seite === 'fotos' ? '🎶 Songs rechts' : '🖼️ Fotos rechts';
         el('k-ambi').textContent = jetzt && jetzt.ambi ? '🌈 Ambi aus' : '🌈 Ambilight';
+        el('k-qr').textContent = jetzt && jetzt.qr ? '🔳 QR aus' : '🔳 QR-Code';
         var hinweis = '';
         if (status && status.spielLaeuft) hinweis = '🃏 Hos’n Obe läuft gerade – Wünsche warten, bis die Runde vorbei ist.';
         // Bluetooth zur Anlage weg: deutlich warnen (der W1 versucht selbst neu zu verbinden)
@@ -940,6 +944,11 @@
         var an = !(jetzt && jetzt.ambi);
         musik('ambi', { an: an });
         melden(an ? '🌈 Ambilight an' : 'Ambilight aus', '');
+    });
+    el('k-qr').addEventListener('click', function () {
+        var an = !(jetzt && jetzt.qr);
+        musik('qr', { an: an });
+        melden(an ? '🔳 QR-Code „Song wünschen" im Video an' : 'QR-Code im Video aus', '');
     });
     el('k-seite').addEventListener('click', function () {
         var fotos = !(jetzt && jetzt.seite === 'fotos');

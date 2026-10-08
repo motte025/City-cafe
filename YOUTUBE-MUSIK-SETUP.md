@@ -26,7 +26,7 @@ ursprünglichen Texts:
 
 | Abschnitt | Heute |
 |---|---|
-| 2.2 / 6.5 QR-Code | **vorerst aus** (`YT_QR_AN = false` in `index.html`). Stattdessen zeichnet mpv einen **Kontrastrahmen** (2 px schwarz + 30 px weicher Verlauf, `RAHMEN_*` im Supervisor). |
+| 2.2 / 6.5 QR-Code | **standardmäßig aus** (`YT_QR_AN = false` in `index.html`), am Chef-Handy mit **🔳 QR-Code / QR aus** ein- und ausschaltbar (gemerkt im Browser des TV). Ohne QR zeichnet mpv einen **Kontrastrahmen** (2 px schwarz + 30 px weicher Verlauf, `RAHMEN_*` im Supervisor). |
 | 5.1 Gästewünsche | frühestens **Platz 5** der Schlange, hinter schon wartende Wünsche (`WUNSCH_AB_PLATZ`). |
 | 5.2 Lücken | Statt „< 3 s Stille“ eine **echte Überblendung, 9 s** (`XF_SEK`): zweiter mpv, gleichbleibende Gesamtlautstärke (equal power), Bild per sway-Opacity. Vorladen **40 s** vor Ende (`YT_VORLADEN_SEKUNDEN`). **Intro und Ausklang** werden nach Lautstärke abgeschnitten (ffmpeg-Pegel je 0,5 s): Start, wenn der Song 3 s fast normal laut ist (Intro ≤ 35 s), Ende, sobald er 10 dB darunter fällt. Der neue Song startet so, dass sein Musikbeginn ans Blendenende fällt. |
 | 5.3 Radio-Mix | Mix **ohne Konto-Cookies** (`CITYCAFE_MIX_COOKIES=0`). Neuer Mix **zu jedem Titel** (`MIX_JE_TITEL`); ein schon angekündigter Titel bleibt vorn. **Musikvideos bevorzugt**: Lyric/Audio/„Topic“/Visualizer fliegen raus. „Radio-Mix starten“ legt die Titel **in die Warteschlange** (verschiebbar). |
@@ -38,7 +38,7 @@ ursprünglichen Texts:
 | 6.8 Vollbild | „Gleich dran“: Countdown oben rechts, Titel groß, Interpret türkis (je eine Zeile); Liste „Danach“ füllt die Spalte; City Cafe + Uhr fest oben rechts; Auflösungsschild über der Videoecke. Umschalten über den Umschalt-Wächter (Video erst ausblenden, dann umbauen); `--keepaspect-window=no`. |
 | neu: Bild | **Ambilight** (4×/s per `grim`, normal und Vollbild, per Handy an/aus). **Seitenbalken** (4:3, Hochformat, auch eingebrannte per cropdetect) mit unscharfem eigenem Video gefüllt (~42 % eines Kerns, nur bei diesen Videos). Neuer mpv startet unsichtbar, sichtbar erst wenn er sitzt. |
 | 7 Handy | Suche **Songs/Playlists** (Playlist öffnen, einzelne Titel nehmen), ⋯-Menü je Song (Sofort, Als Nächstes, Radio-Mix starten, Ende), Ziehgriff rechts, „Warteschlange bereinigen“, Fortschrittsbalken antippen = springen, Lauter/Leiser 5er-Schritte (max. 100 %), Knöpfe Vollbild/Fotos/Ambilight/Radio-Mix/„Musik beenden“. Status nur vom Chef-TV (`chefTv`), Listen nur bei Änderung neu gezeichnet (kein Zucken). |
-| 7.3 Playlists | Es gibt keine eigenen Links; die vier Platzhalter bleiben. Playlist-Titel werden vor dem Vorladen gegen das offizielle Musikvideo getauscht, Mixe > 10 min übersprungen. |
+| 7.3 Playlists | Playlists 1–4 (Party Hits, Schlager, Après-Ski, Chill) haben feste Titellisten in `yt_playlists.json`; der Chef kann sie am Handy ändern. Playlist-Titel werden vor dem Vorladen gegen das offizielle Musikvideo getauscht, Mixe > 10 min übersprungen. |
 | 8 Bluetooth-Tasten | eingebaut, aber ungenutzt (nur Handy). |
 | 11 Festlegungen | Chef-PIN angelegt (nur Firebase + `citycafe.env`), Bluetooth 100 %. |
 
@@ -373,7 +373,7 @@ Video) [4K]“. Eine Funktion `titelZerlegen(titel, kanal)`:
 
 ### 6.5 QR-Code unten rechts im Video
 
-> Vorerst ausgeschaltet (`YT_QR_AN = false` in `index.html`). Auf `true` setzen, um ihn wieder zu zeigen.
+> Standardmäßig aus (`YT_QR_AN = false` in `index.html`). Der Chef schaltet ihn am Handy mit dem Knopf **🔳 QR-Code** (Reiter „Jetzt", neben Ambilight) ein und aus (Befehl `musik`/`qr`, `an: true|false`; Rückmeldung `yt/jetzt.qr`). Die Wahl bleibt im Browser des TV (`ytm-qr-an`) auch nach einem Neustart erhalten. `YT_QR_AN = true` macht ihn zum Standard, solange der Chef nichts umgeschaltet hat.
 
 Der QR-Code zum Wünschen sitzt **unten rechts in der Videofläche**: weißes
 Kärtchen mit abgerundeten Ecken, QR ca. 120×120 px (bei 1920er Auflösung),
@@ -536,9 +536,9 @@ Mittelklasse-Handy flüssig bleiben.
 - Der Supervisor liest eine Playlist mit `--flat-playlist` und legt das
   Ergebnis 24 Stunden im Cache ab (`/tmp` ist RAM, also eine kleine
   JSON-Datei unter `/home/citycafe/.cache/citycafe/`).
-- Bis echte Links da sind: Platzhalter-Playlists aus Titeln der
-  Songs-Datenbank (`category`), aufgelöst per `ytsearch1:"Künstler Titel"`
-  beim ersten Abspielen. So ist das Feature sofort testbar.
+- Playlists ohne feste Titelliste (Platzhalter, `platzhalter: true`) werden aus Titeln der
+  Songs-Datenbank (`category`) gebaut, aufgelöst per `ytsearch1:"Künstler Titel"`
+  beim ersten Abspielen. Playlists 1–4 haben seit 08.10.2026 feste Titellisten.
 
 ---
 
@@ -626,5 +626,5 @@ wie vorher, wenn keine Musik läuft.
 | Wünsche pro Handy | 2 offene |
 | Radio ohne Wunsch | ~~60 Minuten, dann Rotation~~ → läuft bis Stopp (siehe 0) |
 | Uhrzeiten der Stimmungs-Playlists | siehe 5.5 |
-| Playlist-Links | Platzhalter aus der Songs-Datenbank, bis echte Links da sind |
+| Playlist-Links | Playlists 1–4: feste Titellisten (`yt_playlists.json`); Playlists am Handy bearbeitet gehen vor |
 | Ansicht beim Start der Musik | Normal (`YT_VOLLBILD_STANDARD = false`) |
