@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-08T16:17:56Z",
+  "checked_at": "2026-10-08T16:27:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Thursday <3 -  !dc  !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "colaway",
@@ -31,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "The Ante Perry Radio Show @ SUNSHINE LIVE, Oct26",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
@@ -41,13 +41,6 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Happy Thursday!  💫 !charity",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "The Ante Perry Radio Show @ SUNSHINE LIVE, Oct26",
       "game": "DJs"
     }
   ]
