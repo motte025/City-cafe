@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T20:02:46Z",
+  "checked_at": "2026-10-08T20:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "roice",
+      "name": "roice",
+      "title": "10K CELEBRATION !thankyou !squatcam !bewbs !ALT",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "10K CELEBRATION !thankyou !squatcam !bewbs !ALT",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
