@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T01:07:46Z",
+  "checked_at": "2026-10-08T01:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,13 @@
       "name": "AmazonMusic",
       "title": "Miranda Lambert Songline Live",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🔮✨ I predict chat wants a Wacky Wednesday ✨🔮 Happy ChazzyWeen REQUESTS OPEN !request !tip !patreon !youtube !merch",
+      "game": "DJs"
     }
   ]
 }
