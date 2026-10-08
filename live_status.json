@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-08T17:17:48Z",
+  "checked_at": "2026-10-08T17:37:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ganz normaler Donnerstag? | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "colaway",
@@ -14,13 +21,6 @@
       "name": "AmazonMusic",
       "title": "Miranda Lambert Songline Live",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ganz normaler Donnerstag? | !bier | !zug | !holy | #werbung",
-      "game": "DJs"
     },
     {
       "platform": "twitch",
@@ -45,16 +45,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Happy Thursday!  💫 !charity",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Hands-Up & Hardstyle - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Hands-Up & Hardstyle - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Happy Thursday!  💫 !charity",
       "game": "DJs"
     }
   ]
