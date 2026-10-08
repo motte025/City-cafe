@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-08T20:57:45Z",
+  "checked_at": "2026-10-08T21:12:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ganz normaler Donnerstag? | !bier | !zug | !holy | #werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "djmikemorino",
@@ -17,17 +10,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Miranda Lambert Songline Live",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Miranda Lambert Songline Live",
+      "game": "Music"
     }
   ]
 }
