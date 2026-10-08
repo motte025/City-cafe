@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T09:37:46Z",
+  "checked_at": "2026-10-08T09:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,13 @@
       "name": "AmazonMusic",
       "title": "Miranda Lambert Songline Live",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥FEEL THE HEAT🔥NEW RELEASE TOMORROW🎶 PP 24/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
     }
   ]
 }
