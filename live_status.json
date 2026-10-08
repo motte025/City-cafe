@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T16:52:45Z",
+  "checked_at": "2026-10-08T17:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,20 @@
       "channel": "roice",
       "name": "roice",
       "title": "10K CELEBRATION !thankyou !squatcam !bewbs !ALT",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ganz normaler Donnerstag? | !bier | !zug | !prep | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Hands-Up & Hardstyle - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
