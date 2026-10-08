@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T15:32:48Z",
+  "checked_at": "2026-10-08T15:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,17 +10,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Miranda Lambert Songline Live",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴  HARDSTYLE ONE DAY TILL WEEKEND ☆ !naturtreu 🔴🔴",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Miranda Lambert Songline Live",
+      "game": "Music"
     },
     {
       "platform": "twitch",
@@ -56,6 +56,13 @@
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #614 with Hybrid",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "The Ante Perry Radio Show @ SUNSHINE LIVE, Oct26",
+      "game": "DJs"
     }
   ]
 }
