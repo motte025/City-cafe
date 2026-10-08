@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-08T01:22:45Z",
+  "checked_at": "2026-10-08T01:32:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🔮✨ I predict chat wants a Wacky Wednesday ✨🔮 Happy ChazzyWeen REQUESTS OPEN !request !tip !patreon !youtube !merch",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "down the rabbit hole 🐇",
       "game": "DJs"
     }
   ]
