@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-10-08T12:52:46Z",
+  "checked_at": "2026-10-08T13:07:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Miranda Lambert Songline Live",
-      "game": "Music"
-    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Thursday <3 -  !dc  !peepo !linktree !shop",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Miranda Lambert Songline Live",
+      "game": "Music"
     },
     {
       "platform": "twitch",
