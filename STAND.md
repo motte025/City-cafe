@@ -229,14 +229,20 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     sonst Datenbank/iTunes), rechte Karte per Handy „Ähnliche Songs", Drive-Fotos
     oder **YouTube Shorts** (Knopf „📱 Shorts rechts", `yt/jetzt.seite` =
     songs|fotos|shorts). Shorts (seit 09.10.2026): stumm, hochkant vor
-    unscharfem Standbild; gesucht über den Suchweg der Handy-Suche
-    (`window.nlSucheAuftrag` mit Kennung `tvs-`, die Treffer gehen nicht ans
-    Handy) nach „<Künstler des laufenden Songs> #shorts", danach „party",
-    „tanzen", „lustig"; nur Clips von 4–75 s, einfache Wortsperre, Einbetten
-    verboten → nächster Short; pausiert im Vollbild und bei Hos'n Obe/Roulette;
-    Rückmeldung `yt/jetzt.shorts` = ok|suche|leer (Hinweis am Handy). **Noch
-    nicht auf der Box geprüft:** Chromium dekodiert den Short zusätzlich zu
-    mpv, und die Auswahl ist nicht handverlesen. Vollbild: „NÄCHSTER TITEL"
+    unscharfem Standbild; Auftrag über den Suchweg der Handy-Suche
+    (`window.nlSucheAuftrag`, Kennung `tvs-`, `art: "shorts"`, die Treffer gehen
+    nicht ans Handy). Der Supervisor (`shorts_suchen`) nimmt den Shorts-Reiter
+    der Kanäle des laufenden und der nächsten 3 Songs, dann des offiziellen
+    Künstlerkanals (Cache 6–24 h); erst wenn die nichts Neues haben „schlager
+    party", „apres ski", „oktoberfest", dort nur per yt-dlp bestätigtes
+    Hochformat. Sperre für News/Boulevard (BILD, RTL, Promiflash, Unfall …).
+    Das Dashboard nimmt nur Treffer mit `hochkant: true`. Player doppelt so groß
+    gerechnet und halbiert → hd720 statt 360p. Einbetten verboten → nächster
+    Short; pausiert im Vollbild und bei Hos'n Obe/Roulette; Rückmeldung
+    `yt/jetzt.shorts` = ok|suche|leer. **Auf der Box geprüft 09.10.2026:** 40
+    Shorts vom Kanal in ~5 s, 60 fps ohne Ruckler, GPU ~25 %, CPU ~8 % neben mpv.
+    (Die erste Fassung suchte „<Künstler> #shorts" und zeigte Querformat und
+    BILD-Clips.) Vollbild: „NÄCHSTER TITEL"
     (früher „Gleich dran") und „WARTESCHLANGE" (früher „Danach"). Widget: Leiste „Als Nächstes" mit
     Interpret 24 px; Überschrift bis 880 px, das Auflösungsschild sitzt klein
     eine Zeile tiefer links neben dem Logo. Die Werbe-Abdeckung
@@ -305,8 +311,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   (localStorage `atelier-show-settings`), Sicherung der alten in
   `/home/sabrina/roulette-settings-backup-2026-10-07.json`.
 - **YouTube-Musik, offen:** Auf der Box prüfen (09.10.2026 nur mit
-  Headless-Chromium und Firebase-Ersatz getestet): Shorts in der rechten Karte
-  (Last neben mpv, passt die Auswahl?), QR-Schalter am Handy, Playlists 1–4
+  Headless-Chromium und Firebase-Ersatz getestet): QR-Schalter am Handy, Playlists 1–4
   (Reihenfolge, Uhrzeit-Automatik: 21–8 Uhr Party Hits, 17–21 Schlager, 8–17
   Chill). Test der Dart-Ausnahme an einem Dart-Abend. Einige Songs haben nur
   TV-/Live-Fassungen (Rosanna Rocci „Solo con te", Draufgänger „Marie", CCR
