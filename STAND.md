@@ -260,7 +260,10 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Video ein und aus: Befehl `musik`/`qr` (`an: true|false`), Rückmeldung `yt/jetzt.qr`.
     Die Wahl merkt sich der TV im Browser-Speicher (`ytm-qr-an`) und behält sie nach
     Neustart; das gebaute QR-Bild wird beim Aus/Ein wiederverwendet.
-  - **Handy:** Suche nach Songs oder Playlists (Playlist öffnen, einzelne Titel
+  - **Handy:** „🔀 Mischen" (Chef, seit 09.10.2026, `YTW.mischen`): Playlist-Titel
+    der Schlange zufällig, der nächste Song (schon vorgeladen/vermessen), Wünsche und
+    „Als Nächstes" bleiben; gleicher Künstler nach Möglichkeit nicht hintereinander.
+    Suche nach Songs oder Playlists (Playlist öffnen, einzelne Titel
     nehmen), ⋯-Menü je Song (Ab hier abspielen, Sofort, Als Nächstes, An 5.
     Stelle, Radio-Mix starten, Ende, Zu Playlist hinzufügen), Radio-Mix zum
     laufenden Song, Warteschlange bereinigen (✕ links, ☰ rechts),

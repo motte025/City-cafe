@@ -308,6 +308,45 @@ eq('1:02:03 -> 3723', W.sekunden({ dauer: '1:02:03' }), 3723);
 eq('dauerSek hat Vorrang', W.sekunden({ dauer: '3:40', dauerSek: 99 }), 99);
 eq('ohne Angabe 0', W.sekunden({}), 0);
 
+// --- Mischen (Chef-Knopf) --------------------------------------------------------------
+(function () {
+    var e = [
+        { id: 'p1', pos: 1000, quelle: 'playlist', kuenstler: 'A' },     // naechster Song: bleibt
+        { id: 'p2', pos: 2000, quelle: 'playlist', kuenstler: 'B' },
+        { id: 'n1', pos: 2500, quelle: 'chef', naechstes: true, kuenstler: 'X' },
+        { id: 'p3', pos: 3000, quelle: 'playlist', kuenstler: 'C' },
+        { id: 'w1', pos: 4000, quelle: 'wunsch', kuenstler: 'Y' },
+        { id: 'p4', pos: 5000, quelle: 'playlist', kuenstler: 'D' },
+        { id: 'p5', pos: 6000, quelle: 'playlist', kuenstler: 'E' },
+        { id: 'p6', pos: 7000, quelle: 'playlist', kuenstler: 'F' }
+    ];
+    var folge = [0.9, 0.1, 0.5, 0.3, 0.7], n = 0;
+    var r = W.mischen({ eintraege: e }, function () { return folge[n++ % folge.length]; });
+    var pos = {}; r.state.eintraege.forEach(function (x) { pos[x.id] = x.pos; });
+    eq('Mischen: naechster Song bleibt vorn', pos.p1, 1000);
+    eq('Mischen: "Als Naechstes" bleibt', pos.n1, 2500);
+    eq('Mischen: Wunsch bleibt', pos.w1, 4000);
+    eq('Mischen: Playlist-Titel nutzen nur ihre Plaetze',
+        ['p2', 'p3', 'p4', 'p5', 'p6'].map(function (id) { return pos[id]; }).sort(), [2000, 3000, 5000, 6000, 7000].sort());
+    check('Mischen: Reihenfolge hat sich geaendert', r.geaendert.length > 0);
+    eq('Mischen: geaendert nennt genau die verschobenen',
+        r.geaendert.map(function (g) { return g.id; }).sort(),
+        ['p2', 'p3', 'p4', 'p5', 'p6'].filter(function (id) {
+            return pos[id] !== e.filter(function (x) { return x.id === id; })[0].pos;
+        }).sort());
+    eq('Mischen: alter Zustand unberuehrt', e[1].pos, 2000);
+    eq('Mischen: zu wenig Playlist-Titel -> nichts', W.mischen({ eintraege: e.slice(0, 2) }).geaendert, []);
+    // Gleicher Kuenstler nicht direkt hintereinander, wenn es anders geht
+    var gleich = [{ id: 'a0', pos: 1, quelle: 'playlist', kuenstler: 'Z' }];
+    for (var i = 1; i <= 8; i++) gleich.push({ id: 'a' + i, pos: i + 1, quelle: 'playlist', kuenstler: i <= 4 ? 'Q' : 'R' + i });
+    for (var lauf = 0; lauf < 50; lauf++) {
+        var g = W.mischen({ eintraege: gleich }).state.eintraege.slice().sort(function (x, y) { return x.pos - y.pos; });
+        var doppelt = g.some(function (x, j) { return j > 0 && x.kuenstler === 'Q' && g[j - 1].kuenstler === 'Q'; });
+        if (doppelt) { check('Mischen: Kuenstler Q nicht doppelt hintereinander (Lauf ' + lauf + ')', false); break; }
+    }
+    check('Mischen: Kuenstler-Abstand eingehalten (50 Laeufe)', true);
+})();
+
 if (failed.length) {
     console.log(failed.length + ' von ' + (passed + failed.length) + ' Checks fehlgeschlagen:');
     failed.forEach(function (f) { console.log('  ✗ ' + f); });

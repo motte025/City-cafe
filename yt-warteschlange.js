@@ -165,6 +165,50 @@
         });
     }
 
+    /**
+     * Chef "Mischen": die Playlist-Titel der Schlange in zufaellige Reihenfolge bringen.
+     * Fest bleiben der erste Eintrag (schon vorgeladen und vermessen - die Ueberblendung
+     * soll nicht leiden), Gaestewuensche und "Als Naechstes": die Playlist-Titel tauschen
+     * nur ihre eigenen Plaetze. Gleicher Kuenstler direkt hintereinander wird nach
+     * Moeglichkeit vermieden. zufall: () => [0,1) (Math.random, im Test fest).
+     * -> { state, geaendert: [{ id, pos }] } - nur die geaenderten pos fuer Firebase.
+     */
+    function mischen(state, zufall) {
+        zufall = zufall || Math.random;
+        var s = sortiert(liste(state));
+        var idx = [];
+        s.forEach(function (e, j) {
+            if (j > 0 && e.quelle === 'playlist' && !e.naechstes) idx.push(j);
+        });
+        if (idx.length < 2) return { state: state, geaendert: [] };
+        // Plaetze der Reihe nach besetzen: zufaelliger Titel eines anderen Kuenstlers als davor.
+        // Hat ein Kuenstler mehr Titel uebrig, als sich sonst noch trennen liessen, kommt er
+        // zuerst dran - so geht es immer auf, wenn es ueberhaupt aufgehen kann.
+        var rest = idx.map(function (j) { return s[j]; });
+        var reihe = s.slice();
+        idx.forEach(function (j) {
+            var vorher = kuenstlerVon(reihe[j - 1]);
+            var zahl = {};
+            rest.forEach(function (t) { var k = kuenstlerVon(t); zahl[k] = (zahl[k] || 0) + 1; });
+            var erlaubt = rest.filter(function (t) { return !vorher || kuenstlerVon(t) !== vorher; });
+            if (!erlaubt.length) erlaubt = rest;
+            var dringend = erlaubt.filter(function (t) { return zahl[kuenstlerVon(t)] * 2 > rest.length; });
+            var wahl = (dringend.length ? dringend : erlaubt);
+            var t = wahl[Math.floor(zufall() * wahl.length)];
+            reihe[j] = t;
+            rest.splice(rest.indexOf(t), 1);
+        });
+        var neuePos = {};
+        idx.forEach(function (j) { neuePos[reihe[j].id] = s[j].pos; });   // Plaetze bleiben, Titel wandern
+        var geaendert = [];
+        var eintraege = liste(state).map(function (e) {
+            if (!(e.id in neuePos) || neuePos[e.id] === e.pos) return e;
+            geaendert.push({ id: e.id, pos: neuePos[e.id] });
+            return Object.assign({}, e, { pos: neuePos[e.id] });
+        });
+        return { state: Object.assign({}, state, { eintraege: eintraege }), geaendert: geaendert };
+    }
+
     function kuenstlerVon(t) {
         return String((t && (t.kuenstler || t.kanal)) || '').toLowerCase().trim();
     }
@@ -496,6 +540,7 @@
         posZwischen: posZwischen,
         posFuer: posFuer,
         einreihen: einreihen,
+        mischen: mischen,
         entfernen: entfernen,
         verschieben: verschieben,
         radioFiltern: radioFiltern,

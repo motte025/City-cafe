@@ -3247,7 +3247,7 @@
         })();
     </script>
     <script src="hosn-obe-engine.js"></script>
-    <script src="yt-warteschlange.js?v=2026-10-05-zerlegen"></script>
+    <script src="yt-warteschlange.js?v=2026-10-09-mischen"></script>
     <script src="hosn-obe-sound.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
@@ -8648,6 +8648,16 @@
                     ytmAnzeigen();
                     ytmMelden();
                 }, nlExtern() ? 250 : 0);
+                return;
+            }
+            if (was === 'mischen') {         // Chef: Playlist-Titel der Schlange zufaellig (yt-warteschlange.js)
+                const r = YTW.mischen(ytm, Math.random);
+                ytm = r.state;
+                if (nlFernVerb) r.geaendert.forEach(g =>
+                    YT_REMOTE_NET.posSetzen(nlFernVerb, NL_FERN_RAUM, g.id, g.pos).catch(() => {}));
+                console.log('[Musik] gemischt:', r.geaendert.length, 'Titel');
+                ytmAnzeigen();
+                ytmMelden();
                 return;
             }
             if (was === 'start') {           // "Musik starten" ohne Song

@@ -285,6 +285,9 @@
             <button type="button" class="still" id="k-start">▶ Musik starten</button>
             <button type="button" class="still" id="k-radio">📻 Radio-Mix</button>
         </div>
+        <div class="zeile2">
+            <button type="button" class="still" id="k-mischen">🔀 Mischen</button>
+        </div>
         <button type="button" class="rot breit" id="k-ende" style="margin-top:10px">■ Musik beenden</button>
         </div>
     </div>
@@ -414,7 +417,7 @@
 <script src="dj-fernbedienung-config.js"></script>
 <script src="dj-fernbedienung-net.js"></script>
 <script src="yt-fernbedienung-net.js"></script>
-<script src="yt-warteschlange.js?v=2026-10-05-zerlegen"></script>
+<script src="yt-warteschlange.js?v=2026-10-09-mischen"></script>
 <script>
 (function () {
     'use strict';
@@ -966,6 +969,12 @@
         melden(an ? '📱 Rechts laufen jetzt Shorts (stumm)' : '🎶 Rechts wieder Ähnliche Songs', '');
     });
     el('k-start').addEventListener('click', function () { musik('start'); melden('▶ Musik startet …', ''); });
+    // Playlist-Titel der Warteschlange zufaellig; der naechste Song, Wuensche und "Als Naechstes"
+    // bleiben (der naechste ist schon vorgeladen - die Ueberblendung bleibt sauber).
+    el('k-mischen').addEventListener('click', function () {
+        musik('mischen');
+        melden('🔀 Playlist gemischt – der nächste Song und Wünsche bleiben', '');
+    });
 
     // ------------------------------------------------------------------ Passt dazu
     // Zeile mit ＋: Gast wuenscht, Chef: Tippen = ans Ende, lange druecken = als Naechstes.
