@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T13:27:45Z",
+  "checked_at": "2026-10-09T13:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "süßer Freitag <3 - !dc !peepo !linktree !shop",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "FREITAAAAG RAVE | !holy",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "FREITAAAAG RAVE | !holy",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "süßer Freitag <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
