@@ -26,6 +26,7 @@ import struct
 import subprocess
 import threading
 import time
+import unicodedata
 import urllib.parse
 import urllib.request
 
@@ -960,6 +961,25 @@ MV_SCHLECHT = re.compile(r"lyric|lyrics|songtext|\baudio\b|visuali[sz]er|karaoke
 
 MV_LIVE = re.compile(r"\blive\b|en vivo|ao vivo|concierto|\btour\b|festival|fernsehgarten|hitparade|"
                      r"giovanni zarrella|silvesterstadl|\bzdf\b|\bard\b|\bsrf\b|\borf\b", re.I)
+
+
+FUELLWOERTER = {"ein", "eine", "einen", "der", "die", "das", "den", "dem", "und", "von", "mit", "auf",
+                "fuer", "ich", "du", "wir", "the", "and", "you", "for", "with", "are", "not", "dont"}
+
+
+def titel_passt(titel, songtitel):
+    """Mindestens die Haelfte der Woerter des Songtitels (ab 3 Buchstaben, ohne Fuellwoerter)
+    kommt im Videotitel vor. Nur die Haelfte, weil YouTube Titel uebersetzt ("A Kiss in Paris")."""
+    def ohne_akzente(s):
+        s = unicodedata.normalize("NFD", str(s or "").lower())
+        return "".join(c for c in s if unicodedata.category(c) != "Mn").replace("ß", "ss")
+    woerter = [w for w in re.split(r"[^a-z0-9]+", ohne_akzente(songtitel)) if len(w) >= 3 and w not in FUELLWOERTER]
+    if not woerter:
+        return True
+    t = re.sub(r"[^a-z0-9]", "", ohne_akzente(titel))
+    # Kurze Titel: die Haelfte reicht (uebersetzt), laengere brauchen drei Viertel - sonst
+    # bestand "I Need Your Love" die Pruefung fuer "How Deep Is Your Love".
+    return sum(1 for w in woerter if w in t) / len(woerter) >= (0.5 if len(woerter) <= 2 else 0.75)
 
 
 def musikvideo_wertung(t, suchtext=""):
@@ -2263,12 +2283,24 @@ def main():
                 finde = state["finde"]
                 finde_id = finde["id"]
 
-                def aufgabe(fid=finde_id, text=str(finde.get("text") or "")[:120], seite=page_id):
+                def aufgabe(fid=finde_id, text=str(finde.get("text") or "")[:120], seite=page_id,
+                            songtitel=str(finde.get("titel") or "")[:120]):
                     # "Kuenstler Titel official video" (Spec 5.3/7.3): unter den ersten
                     # fuenf das beste echte Musikvideo (nicht laenger als 10 Minuten)
-                    gefunden = suchen(text + " official video", 8) if text else []
-                    gefunden = sorted([t for t in gefunden if (t.get("dauerSek") or 0) <= 600] or gefunden,
-                                      key=lambda t: -musikvideo_wertung(t, text))[:1]
+                    def auswahl(liste):
+                        # Nur Treffer zum selben Song: sonst kam "Alles neu" fuer "Haus am See" (09.10.2026)
+                        if songtitel:
+                            liste = [t for t in liste if titel_passt(t.get("titel", ""), songtitel)]
+                        # Bei gleicher Note gewinnt das meistgesehene (offiziell statt 4K-Fan-Kopie)
+                        return sorted([t for t in liste if (t.get("dauerSek") or 0) <= 600] or liste,
+                                      key=lambda t: (-musikvideo_wertung(t, text), -(t.get("aufrufe") or 0)))
+
+                    gefunden = auswahl(suchen(text + " official video", 8) if text else [])
+                    # Bester Treffer wenig gesehen (Fan-Upload?): auch ohne "official video" suchen
+                    if text and (not gefunden or (gefunden[0].get("aufrufe") or 0) < 100000):
+                        bekannt = {t["videoId"] for t in gefunden}
+                        gefunden = auswahl(gefunden + [t for t in suchen(text, 8) if t["videoId"] not in bekannt])
+                    gefunden = gefunden[:1]
                     log(f"Gefunden {text!r}: {gefunden[0]['videoId'] if gefunden else '-'}")
                     zustellen(seite, "window.nlFindeErgebnis = "
                               + json.dumps({"id": fid, "text": text,

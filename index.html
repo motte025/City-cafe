@@ -8251,7 +8251,8 @@
             if (!eintrag || ytmFindeLaeuft) return;
             const id = ytmId();
             ytmFindeLaeuft = { id, eintrag, gleichSpielen };
-            window.nlFindeAuftrag = { id, text: eintrag.suche || ((eintrag.kuenstler || '') + ' ' + (eintrag.songtitel || '')) };
+            window.nlFindeAuftrag = { id, text: eintrag.suche || ((eintrag.kuenstler || '') + ' ' + (eintrag.songtitel || '')),
+                                      titel: eintrag.songtitel || '' };   // der Supervisor nimmt nur passende Titel
         }
 
         // --- Playlists: echte Musikvideos statt Audio-/Lyric-Uploads ---------------
@@ -8266,7 +8267,35 @@
         const YTM_MV_LIVE = /\blive\b|en vivo|ao vivo|concierto|\btour\b|festival|fernsehgarten|hitparade|\bzdf\b|\bsrf\b|\borf\b/i;
         function ytmKeinMusikvideo(e) {
             return / - Topic$/.test(e.kanal || '') || YTM_MV_SCHLECHT.test(e.titel || '')
-                || YTM_MV_LIVE.test(e.titel || '') || /fan|lyric|karaoke/i.test(e.kanal || '');
+                || YTM_MV_LIVE.test(e.titel || '') || /fan|lyric|karaoke/i.test(e.kanal || '')
+                || ytmFanUpload(e);
+        }
+        // Fan-Uploads mit sauberem Titel: fremder Kanal (weder Kuenstler noch Label) und wenige
+        // Aufrufe. Maite Kelly "Ein Kuss in Paris" kam als Standbild von "aV1tamin" (4.900
+        // Aufrufe), das offizielle Video hat 1,2 Mio. (09.10.2026).
+        const YTM_KANAL_OFFIZIELL = /vevo|official|offiziell|records|recordings|music|musik|entertainment|ich find schlager toll|universal|sony|warner|electrola|ariola|telamo|polydor|atlantic|columbia|island|capitol|interscope|parlophone|\bemi\b|\brca\b|\bepic\b|def jam|spinnin|kontor|armada/i;
+        function ytmNorm(s) {
+            return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ß/g, 'ss').replace(/[^a-z0-9]/g, '');
+        }
+        function ytmFanUpload(e) {
+            const aufrufe = Number(e.aufrufe) || 0;
+            if (!aufrufe || aufrufe >= 100000) return false;
+            const k = ytmNorm(String(e.kuenstler || '').split(/,|&| feat\.?| ft\.?| x /i)[0]);
+            return !(k && ytmNorm(e.kanal).includes(k)) && !YTM_KANAL_OFFIZIELL.test(e.kanal || '');
+        }
+        // Passt ein gefundener Titel zum Song? Mindestens die Haelfte der Woerter (ab 3 Buchstaben)
+        // des Songtitels muss vorkommen - sonst lieferte die Suche "Alles neu" fuer "Haus am See".
+        // Bewusst nur die Haelfte: YouTube uebersetzt Titel ("A Kiss in Paris").
+        const YTM_FUELLWOERTER = new Set(['ein', 'eine', 'einen', 'der', 'die', 'das', 'den', 'dem', 'und', 'von', 'mit',
+            'auf', 'fuer', 'ich', 'du', 'wir', 'the', 'and', 'you', 'for', 'with', 'are', 'not', 'dont']);
+        function ytmTitelPasst(titel, songtitel) {
+            const woerter = String(songtitel || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+                .replace(/ß/g, 'ss').split(/[^a-z0-9]+/).filter(w => w.length >= 3 && !YTM_FUELLWOERTER.has(w));
+            if (!woerter.length) return true;
+            const t = ytmNorm(titel);
+            // Kurze Titel: die Haelfte reicht (uebersetzt), laengere brauchen drei Viertel - sonst
+            // bestand "I Need Your Love" die Pruefung fuer "How Deep Is Your Love".
+            return woerter.filter(w => t.includes(w)).length / woerter.length >= (woerter.length <= 2 ? 0.5 : 0.75);
         }
         function ytmPlaylistTitelPruefen() {
             if (!ytmAktiv() || ytmFindeLaeuft || !nlFernVerb) return;
@@ -8382,6 +8411,13 @@
             if (ytmFindeLaeuft && f && f.id === ytmFindeLaeuft.id) {
                 const w = ytmFindeLaeuft;
                 ytmFindeLaeuft = null;
+                // Treffer zu einem anderen Song (nur bei einem Tausch, nicht bei der freien Suche)
+                // verwerfen: dann bleibt das bisherige Video.
+                if (f.treffer && w.eintrag.videoId && !ytmTitelPasst(f.treffer.titel, w.eintrag.songtitel)) {
+                    console.log('[Musik] gefundenes Video passt nicht zum Song:', f.treffer.titel);
+                    if (w.gleichSpielen && ytmAktiv()) ytmSpielen(w.eintrag);
+                    return;
+                }
                 if (f.treffer) {
                     const ersetzt = Object.assign({}, w.eintrag, { videoId: f.treffer.videoId,
                         dauer: f.treffer.dauer, dauerSek: f.treffer.dauerSek,
