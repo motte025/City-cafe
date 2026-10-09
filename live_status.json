@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T19:17:46Z",
+  "checked_at": "2026-10-09T19:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "THE BIGGER THE BETTER",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "THE BIGGER THE BETTER",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
