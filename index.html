@@ -7766,13 +7766,14 @@
         function ytmShortsNaechstes() {
             const s = ytmShorts;
             const n = s.liste.shift();
-            if (!n || !s.player || !s.bereit) { s.aktuell = null; return false; }
+            const karte = document.querySelector('#ytm-seite .ytm-shorts');
+            // Ohne naechsten Short bliebe YouTubes Endseite mit Videovorschlaegen stehen: verdecken.
+            if (!n || !s.player || !s.bereit) { s.aktuell = null; if (karte) karte.classList.add('laedt'); return false; }
             s.aktuell = n; s.start = Date.now(); s.pausiertSeit = 0;
             s.gesehen.push(n.videoId);
             if (s.gesehen.length > 80) s.gesehen.shift();
             const hg = document.querySelector('#ytm-seite .ytm-shorts-hg');
             if (hg) hg.style.backgroundImage = 'url(https://i.ytimg.com/vi/' + n.videoId + '/hqdefault.jpg)';
-            const karte = document.querySelector('#ytm-seite .ytm-shorts');
             if (karte) karte.classList.add('laedt');     // sichtbar erst, wenn er laeuft (onStateChange)
             try { s.player.loadVideoById({ videoId: n.videoId, startSeconds: 0 }); s.player.mute(); }
             catch (e) { s.aktuell = null; return false; }
