@@ -558,6 +558,13 @@ wieder live gerechnet.
   schreiben, CRLF beibehalten) statt sed über mehrere Zeilen.
 - Vor jedem Push `git pull --rebase origin main`: der DJ-Live-Checker
   committet bis zu 4-mal pro Stunde auf `main`.
+- **Fan-Uploads in Playlists (09.10.2026):** 113 von 1446 Einträgen kommen von fremden
+  Kanälen mit < 100.000 Aufrufen (z. B. Maite Kelly „Ein Kuss in Paris" als Standbild
+  von „aV1tamin"). Das Dashboard tauscht sie jetzt vor dem Abspielen (`ytmFanUpload`),
+  aber nur gegen ein Video mit passendem Titel (`ytmTitelPasst`, im Supervisor
+  `titel_passt`) – vorher kam „Alles neu" statt „Haus am See". Playlist 5 korrigiert
+  (Repo und Firebase `yt/listen/5/titel/4`). Für Peter Fox „Haus am See" und Rihanna
+  „Don't Stop the Music" findet die Suche nur Kopien; bei Bedarf von Hand eintragen.
 - Ohne Box lässt sich die Logik von TV und Handy mit Headless-Chromium
   (Playwright) gegeneinander prüfen: Firebase im Speicher ersetzen,
   `index.html` und `yt-fernbedienung.html` über einen lokalen Server laden,
