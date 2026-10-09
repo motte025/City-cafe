@@ -60,7 +60,9 @@ Seit 30.09.2026 läuft der Kiosk auf dem **ACEMAGIC W1** (Ryzen 7 H255, Radeon
 780M, 15 GB RAM). **Der alte ODROID ist seit 05.10.2026
 weg.** Die Sparregel „box-shadow/filter/animation: none" in `index.html` ist
 seit 06.10.2026 aus, die Effekte sind wieder Standard; `?fx=0` holt sie als
-Notschalter zurück. Der `chefTv`-Filter der Fernbedienungen (zwei Screens
+Notschalter zurück. Seit 07.10.2026 laufen auch Laufschrift und Regen im
+Wetter-Widget während Videos weiter (vorher angehalten bzw. ausgeblendet, damit
+der ODROID das Video schaffte). Der `chefTv`-Filter der Fernbedienungen (zwei Screens
 im selben Raum) schadet nicht mehr, wird aber auch nicht mehr gebraucht.
 
 **ACEMAGIC W1**, Zugang vom Beelink `ssh w1` (Benutzer `sabrina`, Schlüssel
