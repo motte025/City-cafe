@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T19:02:45Z",
+  "checked_at": "2026-10-09T19:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "THE BIGGER THE BETTER",
       "game": "DJs"
     },
     {
@@ -42,13 +49,6 @@
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #697 Trilucid",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "THE BIGGER THE BETTER",
-      "game": "DJs"
     }
   ]
 }
