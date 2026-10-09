@@ -2354,8 +2354,16 @@
         .ytm-shorts-rahmen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; container-type: size; }
         /* YouTube waehlt die Aufloesung nach der Groesse des Players: bei 384x683 kam nur
            "medium" (360p). Der Player wird doppelt so gross angelegt und fuer die Anzeige halbiert. */
+        /* Ausserdem blendet YouTube oben eine Titelzeile und unten "Shorts"-Logo und Teilen-Knopf ein
+           (abschaltbar ist das nicht): leicht vergroessert (0.58 statt 0.5) und seitlich per clip-path
+           beschnitten, faellt ringsum ein Rand von ~7 % weg - genau dort sitzen die Einblendungen.
+           Oben und unten schneidet die Karte selbst ab (overflow: hidden). */
         .ytm-shorts-rahmen > div, .ytm-shorts-rahmen iframe { display: block; border: 0; flex: none;
-            height: 200cqh; width: min(200cqw, calc(200cqh * 9 / 16)); transform: scale(0.5); }
+            height: 200cqh; width: min(200cqw, calc(200cqh * 9 / 16)); transform: scale(0.58);
+            clip-path: inset(0 7%); transition: opacity 0.4s; }
+        /* Beim Start jedes Shorts zeigt YouTube kurz ein Pause-Symbol in der Mitte: so lange
+           bleibt nur der unscharfe Hintergrund zu sehen. */
+        .ytm-shorts.laedt .ytm-shorts-rahmen > div, .ytm-shorts.laedt .ytm-shorts-rahmen iframe { opacity: 0; }
         .ytm-seite-fuss { margin-top: 12px; font-size: 16px; font-weight: 600; color: #94a3b8; }
 
         /* Vollbild-Ansicht */
@@ -7763,6 +7771,8 @@
             if (s.gesehen.length > 80) s.gesehen.shift();
             const hg = document.querySelector('#ytm-seite .ytm-shorts-hg');
             if (hg) hg.style.backgroundImage = 'url(https://i.ytimg.com/vi/' + n.videoId + '/hqdefault.jpg)';
+            const karte = document.querySelector('#ytm-seite .ytm-shorts');
+            if (karte) karte.classList.add('laedt');     // sichtbar erst, wenn er laeuft (onStateChange)
             try { s.player.loadVideoById({ videoId: n.videoId, startSeconds: 0 }); s.player.mute(); }
             catch (e) { s.aktuell = null; return false; }
             return true;
@@ -7790,7 +7800,14 @@
                 events: {
                     onReady: () => { s.bereit = true; try { s.player.mute(); } catch (e) {} ytmShortsOhneUntertitel(); },
                     onStateChange: ev => {
-                        if (ev.data === 1) { s.folgefehler = 0; ytmShortsOhneUntertitel(); }
+                        if (ev.data === 1) {
+                            s.folgefehler = 0; ytmShortsOhneUntertitel();
+                            const id = s.aktuell && s.aktuell.videoId;
+                            setTimeout(() => {           // Pause-Symbol des Starts ist dann weg
+                                const karte = document.querySelector('#ytm-seite .ytm-shorts');
+                                if (karte && (!s.aktuell || s.aktuell.videoId === id)) karte.classList.remove('laedt');
+                            }, 1500);
+                        }
                         else if (ev.data === 0) ytmShortsNaechstes();
                     },
                     onError: () => {      // Einbetten verboten, privat, Altersgrenze ...: gleich der naechste
