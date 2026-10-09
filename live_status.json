@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-09T09:42:46Z",
+  "checked_at": "2026-10-09T10:02:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ RAVE INTO THE WEEKEND ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥LIVE LONG & PROSPER🔥NEW RELEASE🎶 PP 24/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
