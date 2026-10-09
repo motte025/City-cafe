@@ -7737,6 +7737,9 @@
                     // Nichts gefunden (Kanal ohne Shorts) ist hier kein Fehler: dann eben die Reserve.
                     const vorne = new Set(neu.map(x => x.videoId));
                     s.liste = shuffleArray(neu).concat(s.liste.filter(x => !vorne.has(x.videoId))).slice(0, 60);
+                    // Und gleich umschalten: der Short wechselt mit Titel und Kuenstler (Wunsch Betreiber),
+                    // nicht erst, wenn der alte zu Ende ist.
+                    if (neu.length && s.aktuell) ytmShortsNaechstes();
                     return;
                 }
                 s.liste = s.liste.concat(shuffleArray(neu)).slice(0, 60);
@@ -7765,6 +7768,16 @@
             return true;
         }
 
+        // cc_load_policy: 0 reicht nicht: das angemeldete Kiosk-Konto blendet automatisch
+        // uebersetzte Untertitel ein. Darum bei jedem Short das Untertitel-Modul entladen.
+        function ytmShortsOhneUntertitel() {
+            const p = ytmShorts.player;
+            if (!p) return;
+            try { p.unloadModule('captions'); } catch (e) {}
+            try { p.unloadModule('cc'); } catch (e) {}
+            try { p.setOption('captions', 'track', {}); } catch (e) {}
+        }
+
         function ytmShortsPlayerBauen() {
             const s = ytmShorts;
             if (s.player || !document.getElementById('ytm-shorts-frame')) return;
@@ -7775,9 +7788,9 @@
                 playerVars: { autoplay: 1, controls: 0, mute: 1, rel: 0, modestbranding: 1, playsinline: 1,
                               iv_load_policy: 3, cc_load_policy: 0, disablekb: 1, fs: 0, origin: location.origin },
                 events: {
-                    onReady: () => { s.bereit = true; try { s.player.mute(); } catch (e) {} },
+                    onReady: () => { s.bereit = true; try { s.player.mute(); } catch (e) {} ytmShortsOhneUntertitel(); },
                     onStateChange: ev => {
-                        if (ev.data === 1) s.folgefehler = 0;
+                        if (ev.data === 1) { s.folgefehler = 0; ytmShortsOhneUntertitel(); }
                         else if (ev.data === 0) ytmShortsNaechstes();
                     },
                     onError: () => {      // Einbetten verboten, privat, Altersgrenze ...: gleich der naechste
