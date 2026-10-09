@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-09T20:37:47Z",
+  "checked_at": "2026-10-09T20:47:48Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Jenny allein zu Haus! Wir starten ins Wochenende! <3 !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
@@ -10,23 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 97 😈 HARDER Styles | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Jenny allein zu Haus! Wir starten ins Wochenende! <3 !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
