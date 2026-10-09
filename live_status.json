@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T17:57:45Z",
+  "checked_at": "2026-10-09T18:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -42,6 +42,13 @@
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #697 Trilucid",
+      "game": "Music"
     }
   ]
 }
