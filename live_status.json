@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-09T13:02:45Z",
+  "checked_at": "2026-10-09T13:07:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "FREITAAAAG RAVE | !holy",
       "game": "DJs"
     },
     {
