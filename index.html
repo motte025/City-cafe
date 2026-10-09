@@ -7675,7 +7675,7 @@
         const YT_SHORTS_SPERRE = /(porn|sex|nackt|nude|nsfw|18\+|xxx|erotik|hentai|onlyfans|gore)|\b(news|nachrichten|bild|rtl|promiflash|bunte|exclusiv|explosiv|gala|boulevard|skandal|unfall|klatsch|tratsch|polizei|gericht|prozess|krank|tot|tod|gestorben)\b/i;
         let ytmShorts = { liste: [], gesehen: [], suche: null, themaIdx: 0, fehler: 0, sperreBis: 0,
                           aktuell: null, start: 0, abspielenAb: 0, folgefehler: 0, pausiertSeit: 0,
-                          player: null, bereit: false, status: '', fuerSong: '', kanaeleLeer: '' };
+                          player: null, bereit: false, status: '', fuerSong: '', kanaeleLeer: '', vorrangFuer: '' };
 
         function ytmShortsThema() {
             return YT_SHORTS_THEMEN[ytmShorts.themaIdx++ % YT_SHORTS_THEMEN.length];
@@ -7691,19 +7691,24 @@
             return ids.filter(v => /^[A-Za-z0-9_-]{11}$/.test(v || '')).filter((v, i, a) => a.indexOf(v) === i).join(',');
         }
 
-        function ytmShortsSuchen() {
+        // vorrang: gleich nach einem Songwechsel nur der neue Song (sein Kanal, dann der des
+        // Kuenstlers), ohne Themen - die Treffer kommen vorne in die Reihe, damit die Shorts zum
+        // laufenden Song passen. Sonst fuellt die Suche den Vorrat auf (naechste Songs, Themen).
+        function ytmShortsSuchen(vorrang) {
             const s = ytmShorts;
-            if (s.suche || Date.now() < s.sperreBis) return;
+            if (s.suche || (!vorrang && Date.now() < s.sperreBis)) return false;
             // Eine Handy-Suche laeuft oder wartet noch auf ihre Treffer: nicht dazwischenfunken.
-            if (window.nlSucheAuftrag && window.nlSucheAuftrag.id !== nlTrefferLetzteId) return;
+            if (window.nlSucheAuftrag && window.nlSucheAuftrag.id !== nlTrefferLetzteId) return false;
             const id = 'tvs-' + ytmId();
-            const kanalVon = ytmShortsKanalVon();
-            const nurThema = !kanalVon || s.kanaeleLeer === kanalVon;   // diese Kanaele sind durchgesehen
-            window.nlSucheAuftrag = { id, text: (ytmShortsThema() + ' #shorts').slice(0, 100), art: 'shorts',
+            const song = (ytm.jetzt && ytm.jetzt.videoId) || '';
+            const kanalVon = vorrang ? song : ytmShortsKanalVon();
+            const nurThema = !vorrang && (!kanalVon || s.kanaeleLeer === kanalVon);   // diese Kanaele sind durchgesehen
+            window.nlSucheAuftrag = { id, text: vorrang ? '' : (ytmShortsThema() + ' #shorts').slice(0, 100), art: 'shorts',
                                       kanalVon: nurThema ? '' : kanalVon,
                                       kuenstler: nurThema ? '' : String((ytm.jetzt && ytm.jetzt.kuenstler) || '').slice(0, 80),
                                       listId: '', vorschlaege: false, aehnlichZu: '', anzahl: 40 };
-            s.suche = { id, ts: Date.now(), kanalVon: nurThema ? '' : kanalVon };
+            s.suche = { id, ts: Date.now(), kanalVon: nurThema ? '' : kanalVon, vorrang: !!vorrang };
+            return true;
         }
 
         function ytmShortsErgebnis() {
@@ -7711,9 +7716,10 @@
             if (!s.suche) return;
             const t = window.nlSucheTreffer;
             if (t && t.id === s.suche.id) {
-                const kanalVon = s.suche.kanalVon;
+                const kanalVon = s.suche.kanalVon, vorrang = s.suche.vorrang;
                 s.suche = null;
-                const bekannt = new Set(s.gesehen.concat(s.liste.map(x => x.videoId)));
+                // Bei Vorrang darf, was schon im Vorrat liegt, nach vorne geholt werden.
+                const bekannt = new Set(vorrang ? s.gesehen : s.gesehen.concat(s.liste.map(x => x.videoId)));
                 const neu = [];
                 (t.liste || []).forEach(x => {
                     if (!x || !/^[A-Za-z0-9_-]{11}$/.test(x.videoId || '') || bekannt.has(x.videoId)) return;
@@ -7726,6 +7732,13 @@
                     bekannt.add(x.videoId);
                     neu.push({ videoId: x.videoId, dauerSek: x.dauerSek || 0 });
                 });
+                if (vorrang) {
+                    // Shorts zum laufenden Song zuerst, der bisherige Vorrat bleibt als Reserve dahinter.
+                    // Nichts gefunden (Kanal ohne Shorts) ist hier kein Fehler: dann eben die Reserve.
+                    const vorne = new Set(neu.map(x => x.videoId));
+                    s.liste = shuffleArray(neu).concat(s.liste.filter(x => !vorne.has(x.videoId))).slice(0, 60);
+                    return;
+                }
                 s.liste = s.liste.concat(shuffleArray(neu)).slice(0, 60);
                 // Kanaele dieser Songs geben nichts Neues mehr her: bis zum naechsten Song Themen nehmen.
                 if (!neu.length && kanalVon) s.kanaeleLeer = kanalVon;
@@ -7790,11 +7803,14 @@
             const song = (ytm.jetzt && ytm.jetzt.videoId) || '';
             if (song !== s.fuerSong) {          // neuer Song: seine Kanaele duerfen wieder gefragt werden
                 s.fuerSong = song; s.kanaeleLeer = ''; s.fehler = 0; s.sperreBis = 0;
+                s.vorrangFuer = song;           // und seine Shorts sollen als Naechstes kommen
             }
             const erlaubt = ytmAktiv() && !ytmVollbild && !spiel && !ytmSpielPause;
             ytmShortsPlayerBauen();
             ytmShortsErgebnis();
-            if (erlaubt && s.liste.length < 4) ytmShortsSuchen();
+            if (erlaubt && s.vorrangFuer && s.vorrangFuer === song) {
+                if (ytmShortsSuchen(true)) s.vorrangFuer = '';
+            } else if (erlaubt && s.liste.length < 4) ytmShortsSuchen();
             if (s.player && s.bereit) {
                 let zustand = -1;
                 try { zustand = s.player.getPlayerState(); } catch (e) {}
