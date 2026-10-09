@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-09T15:02:47Z",
+  "checked_at": "2026-10-09T15:22:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "FREITAAAAG RAVE | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 97 😈 HARDER Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -41,13 +48,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 97 😈 HARDER Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
