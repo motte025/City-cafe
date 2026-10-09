@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T19:57:46Z",
+  "checked_at": "2026-10-09T20:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -35,13 +35,6 @@
       "name": "Colaway",
       "title": "🔴🔴  ROCK -ALL NIGHT ☆ !naturtreu 🔴🔴",
       "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "Above & Beyond Group Therapy #697 Trilucid",
-      "game": "Music"
     }
   ]
 }
