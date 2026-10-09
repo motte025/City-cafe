@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T16:52:46Z",
+  "checked_at": "2026-10-09T17:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,20 @@
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Ego Boost & Fat Burn. Join the techno therapy!! dopamine boost",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "MIX MISSION TV | SKALA",
       "game": "DJs"
     }
   ]
