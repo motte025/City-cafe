@@ -239,7 +239,11 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Das Dashboard nimmt nur Treffer mit `hochkant: true`. Beim Songwechsel sofort
     eine Vorrang-Suche nur für den neuen Song (`vorrangFuer`): dessen Shorts kommen
     vorne in die Reihe, der Vorrat bleibt als Reserve (geprüft: Kesha → 39 Shorts
-    in 10 s, ab dem nächsten Short nur noch Kesha). Player doppelt so groß
+    in 10 s); sind sie da, wird sofort umgeschaltet. YouTube-Einblendungen weg:
+    Player ringsum ~7 % beschnitten (Titelzeile oben, „Shorts"-Logo/Teilen unten),
+    beim Start 2,5 s verdeckt (Pause-Symbol), `pointer-events: none` (sonst
+    Pause-Symbol beim Kiosk-Mauszeiger), Untertitel-Modul wird entladen (das
+    Premium-Konto blendete automatisch übersetzte Untertitel ein). Player doppelt so groß
     gerechnet und halbiert → hd720 statt 360p. Einbetten verboten → nächster
     Short; pausiert im Vollbild und bei Hos'n Obe/Roulette; Rückmeldung
     `yt/jetzt.shorts` = ok|suche|leer. **Auf der Box geprüft 09.10.2026:** 40

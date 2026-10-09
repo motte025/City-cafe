@@ -2360,7 +2360,8 @@
            Oben und unten schneidet die Karte selbst ab (overflow: hidden). */
         .ytm-shorts-rahmen > div, .ytm-shorts-rahmen iframe { display: block; border: 0; flex: none;
             height: 200cqh; width: min(200cqw, calc(200cqh * 9 / 16)); transform: scale(0.58);
-            clip-path: inset(0 7%); transition: opacity 0.4s; }
+            clip-path: inset(0 7%); transition: opacity 0.4s;
+            pointer-events: none; }   /* sonst zeigt YouTube beim (unsichtbaren) Mauszeiger ein Pause-Symbol */
         /* Beim Start jedes Shorts zeigt YouTube kurz ein Pause-Symbol in der Mitte: so lange
            bleibt nur der unscharfe Hintergrund zu sehen. */
         .ytm-shorts.laedt .ytm-shorts-rahmen > div, .ytm-shorts.laedt .ytm-shorts-rahmen iframe { opacity: 0; }
@@ -7806,7 +7807,7 @@
                             setTimeout(() => {           // Pause-Symbol des Starts ist dann weg
                                 const karte = document.querySelector('#ytm-seite .ytm-shorts');
                                 if (karte && (!s.aktuell || s.aktuell.videoId === id)) karte.classList.remove('laedt');
-                            }, 1500);
+                            }, 2500);
                         }
                         else if (ev.data === 0) ytmShortsNaechstes();
                     },
