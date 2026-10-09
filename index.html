@@ -2347,6 +2347,13 @@
         .ytm-foto-text { position: absolute; left: 0; right: 0; bottom: 0; padding: 70px 26px 24px;
             background: linear-gradient(transparent, rgba(0, 0, 0, 0.8)); color: #ffffff; font-size: 28px; font-weight: 800; }
         .ytm-foto-text small { display: block; margin-top: 4px; font-size: 18px; font-weight: 700; color: #00f2fe; }
+        /* Rechte Karte als Shorts (stumm): hochkant in der Mitte, dahinter das unscharfe Standbild */
+        .ytm-shorts { position: absolute; inset: 0; border-radius: 24px; overflow: hidden; background: #000; }
+        .ytm-shorts-hg { position: absolute; inset: -40px; background-size: cover; background-position: center;
+            filter: blur(30px) brightness(0.5); }
+        .ytm-shorts-rahmen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; container-type: size; }
+        .ytm-shorts-rahmen > div, .ytm-shorts-rahmen iframe { display: block; border: 0; height: 100%;
+            width: min(100cqw, calc(100cqh * 9 / 16)); }
         .ytm-seite-fuss { margin-top: 12px; font-size: 16px; font-weight: 600; color: #94a3b8; }
 
         /* Vollbild-Ansicht */
@@ -7307,7 +7314,8 @@
         let nlStatusSig = '', nlStatusZeit = 0;
         function nlFernStatusMelden() {
             if (!nlFernVerb || !window.YT_REMOTE_NET) return;
-            const offen = !!(window.nlSucheAuftrag && window.nlSucheAuftrag.id !== nlTrefferLetzteId);
+            const offen = !!(window.nlSucheAuftrag && window.nlSucheAuftrag.id !== nlTrefferLetzteId
+                             && String(window.nlSucheAuftrag.id).indexOf('tvs-') !== 0);   // eigene Shorts-Suche zeigt das Handy nicht als "sucht"
             const daten = {
                 laeuft: nlFernAktiv(),
                 videoId: nlFern ? nlFern.videoId : '',
@@ -7520,7 +7528,10 @@
                 nlFernStatusMelden();
             }
             const t = window.nlSucheTreffer;
-            if (!t || !t.id || t.id === nlTrefferLetzteId || !nlFernVerb) return;
+            if (!t || !t.id || t.id === nlTrefferLetzteId) return;
+            // Eigene Shorts-Suche des Screens (ytmShortsSuchen): bleibt hier, geht nicht ans Handy.
+            if (String(t.id).indexOf('tvs-') === 0) { nlTrefferLetzteId = t.id; return; }
+            if (!nlFernVerb) return;
             nlTrefferLetzteId = t.id;
             YT_REMOTE_NET.trefferMelden(nlFernVerb, NL_FERN_RAUM, t.id, t.liste || [], t.art || '')
                 .catch(() => {});
@@ -7612,8 +7623,9 @@
                     gespielt: [], letzterWunschTs: 0, seedVonWunsch: false };
         let ytmPausiert = false;
         let ytmVollbild = YT_VOLLBILD_STANDARD;
-        // Rechte Karte im Widget: Aehnliche Songs (false) oder Fotos aus der Drive-Galerie (true)
-        let ytmSeiteFotos = false;
+        // Rechte Karte im Widget: 'songs' = Aehnliche Songs, 'fotos' = Fotos aus der
+        // Drive-Galerie, 'shorts' = YouTube Shorts (stumm). Der Chef schaltet am Handy um.
+        let ytmSeite = 'songs';
         let ytmAmbi = false;          // Ambilight im Widget an?
         // (frueher: Farben aus window.nlAmbiFarben - jetzt setzt der Supervisor die
         // CSS-Variablen direkt, viermal pro Sekunde, siehe ambi_schleife)
@@ -7646,6 +7658,132 @@
             };
             neu.src = d.src;
         }
+        // --- Shorts in der rechten Karte (Befehl "shorts" vom Chef-Handy) ----------------
+        // Gesucht wird ueber denselben Weg wie bei der Handy-Suche (window.nlSucheAuftrag ->
+        // Supervisor mit yt-dlp -> window.nlSucheTreffer); die eigenen Auftraege dieses
+        // Screens tragen die Kennung "tvs-" und gehen NICHT ans Handy (nlTrefferWeiterreichen).
+        // Gespielt wird stumm im YouTube-Player der Seite, der Ton kommt von mpv.
+        const YT_SHORTS_MIN_SEK = 4, YT_SHORTS_MAX_SEK = 75;
+        const YT_SHORTS_THEMEN = ['party', 'tanzen', 'lustig'];   // wenn zum Kuenstler nichts da ist
+        const YT_SHORTS_SPERRE = /(porn|sex|nackt|nude|nsfw|18\+|xxx|erotik|hentai|onlyfans|gore)/i;
+        let ytmShorts = { liste: [], gesehen: [], suche: null, themaIdx: 0, fehler: 0, sperreBis: 0,
+                          aktuell: null, start: 0, abspielenAb: 0, folgefehler: 0, pausiertSeit: 0,
+                          player: null, bereit: false, status: '' };
+
+        // Erst der Kuenstler des laufenden Songs, dann der Reihe nach allgemeine Themen.
+        function ytmShortsThema() {
+            const k = String((ytm.jetzt && ytm.jetzt.kuenstler) || '').trim();
+            const themen = (k ? [k] : []).concat(YT_SHORTS_THEMEN);
+            return themen[ytmShorts.themaIdx++ % themen.length];
+        }
+
+        function ytmShortsSuchen() {
+            const s = ytmShorts;
+            if (s.suche || Date.now() < s.sperreBis) return;
+            // Eine Handy-Suche laeuft oder wartet noch auf ihre Treffer: nicht dazwischenfunken.
+            if (window.nlSucheAuftrag && window.nlSucheAuftrag.id !== nlTrefferLetzteId) return;
+            const id = 'tvs-' + ytmId();
+            window.nlSucheAuftrag = { id, text: (ytmShortsThema() + ' #shorts').slice(0, 100), art: '',
+                                      listId: '', vorschlaege: false, aehnlichZu: '', anzahl: 40 };
+            s.suche = { id, ts: Date.now() };
+        }
+
+        function ytmShortsErgebnis() {
+            const s = ytmShorts;
+            if (!s.suche) return;
+            const t = window.nlSucheTreffer;
+            if (t && t.id === s.suche.id) {
+                s.suche = null;
+                const bekannt = new Set(s.gesehen.concat(s.liste.map(x => x.videoId)));
+                const neu = [];
+                (t.liste || []).forEach(x => {
+                    if (!x || !/^[A-Za-z0-9_-]{11}$/.test(x.videoId || '') || bekannt.has(x.videoId)) return;
+                    if (!(x.dauerSek >= YT_SHORTS_MIN_SEK && x.dauerSek <= YT_SHORTS_MAX_SEK)) return;
+                    if (YT_SHORTS_SPERRE.test((x.titel || '') + ' ' + (x.kanal || ''))) return;
+                    bekannt.add(x.videoId);
+                    neu.push({ videoId: x.videoId, dauerSek: x.dauerSek });
+                });
+                s.liste = s.liste.concat(shuffleArray(neu)).slice(0, 60);
+                if (neu.length) s.fehler = 0;
+                else { s.fehler++; s.sperreBis = Date.now() + (s.fehler < 4 ? 4000 : Math.min(300000, 30000 * (s.fehler - 3))); }
+            } else if (Date.now() - s.suche.ts > 60000) {
+                s.suche = null;       // Supervisor antwortet nicht (oder die Handy-Suche kam dazwischen)
+                s.fehler++;
+                s.sperreBis = Date.now() + Math.min(300000, 15000 * s.fehler);
+            }
+        }
+
+        function ytmShortsNaechstes() {
+            const s = ytmShorts;
+            const n = s.liste.shift();
+            if (!n || !s.player || !s.bereit) { s.aktuell = null; return false; }
+            s.aktuell = n; s.start = Date.now(); s.pausiertSeit = 0;
+            s.gesehen.push(n.videoId);
+            if (s.gesehen.length > 80) s.gesehen.shift();
+            const hg = document.querySelector('#ytm-seite .ytm-shorts-hg');
+            if (hg) hg.style.backgroundImage = 'url(https://i.ytimg.com/vi/' + n.videoId + '/hqdefault.jpg)';
+            try { s.player.loadVideoById({ videoId: n.videoId, startSeconds: 0 }); s.player.mute(); }
+            catch (e) { s.aktuell = null; return false; }
+            return true;
+        }
+
+        function ytmShortsPlayerBauen() {
+            const s = ytmShorts;
+            if (s.player || !document.getElementById('ytm-shorts-frame')) return;
+            if (!(window.YT && window.YT.Player)) { try { nlApiLaden(); } catch (e) {} return; }   // API noch nicht da: laden, beim naechsten Takt nochmal
+            s.bereit = false;
+            s.player = new window.YT.Player('ytm-shorts-frame', {
+                width: '100%', height: '100%',
+                playerVars: { autoplay: 1, controls: 0, mute: 1, rel: 0, modestbranding: 1, playsinline: 1,
+                              iv_load_policy: 3, cc_load_policy: 0, disablekb: 1, fs: 0, origin: location.origin },
+                events: {
+                    onReady: () => { s.bereit = true; try { s.player.mute(); } catch (e) {} },
+                    onStateChange: ev => {
+                        if (ev.data === 1) s.folgefehler = 0;
+                        else if (ev.data === 0) ytmShortsNaechstes();
+                    },
+                    onError: () => {      // Einbetten verboten, privat, Altersgrenze ...: gleich der naechste
+                        s.folgefehler++;
+                        if (s.folgefehler >= 6) {      // alles schlaegt fehl (kein Netz?): kurz Ruhe
+                            s.aktuell = null; s.abspielenAb = Date.now() + 120000; s.folgefehler = 0;
+                        } else ytmShortsNaechstes();
+                    }
+                }
+            });
+        }
+
+        function ytmShortsAbbauen() {
+            const s = ytmShorts;
+            try { if (s.player && s.player.destroy) s.player.destroy(); } catch (e) {}
+            s.player = null; s.bereit = false; s.aktuell = null; s.pausiertSeit = 0;
+        }
+
+        // Jede Sekunde (ytmTakt). spiel = Hos'n Obe / Roulette haben den Screen.
+        function ytmShortsTakt(spiel) {
+            const s = ytmShorts;
+            if (ytmSeite !== 'shorts') { if (s.player) ytmShortsAbbauen(); return; }
+            const erlaubt = ytmAktiv() && !ytmVollbild && !spiel && !ytmSpielPause;
+            ytmShortsPlayerBauen();
+            ytmShortsErgebnis();
+            if (erlaubt && s.liste.length < 4) ytmShortsSuchen();
+            if (s.player && s.bereit) {
+                let zustand = -1;
+                try { zustand = s.player.getPlayerState(); } catch (e) {}
+                if (!erlaubt) {
+                    // Karte nicht zu sehen: nicht im Hintergrund weiterdekodieren
+                    if (zustand === 1) { try { s.player.pauseVideo(); s.pausiertSeit = Date.now(); } catch (e) {} }
+                } else if (!s.aktuell) {
+                    if (Date.now() >= s.abspielenAb && s.liste.length) ytmShortsNaechstes();
+                } else if (zustand === 2) {
+                    if (s.pausiertSeit) { s.start += Date.now() - s.pausiertSeit; s.pausiertSeit = 0; }
+                    try { s.player.playVideo(); } catch (e) {}
+                } else if (Date.now() - s.start > ((s.aktuell.dauerSek || 60) + 5) * 1000) {
+                    ytmShortsNaechstes();     // Ende-Meldung des Players verpasst
+                }
+            }
+            s.status = s.aktuell ? 'ok' : (s.fehler >= 3 && !s.suche && !s.liste.length ? 'leer' : 'suche');
+        }
+
         let ytmSpielPause = false;        // Hos'n Obe hat die Musik unterbrochen
         let ytmStartNachSpiel = false;    // Wunsch kam waehrend Hos'n Obe
         let ytmBekannteIds = null;        // Eintraege beim letzten Blick (neue = Start)
@@ -7742,7 +7880,8 @@
                 posSek: Math.round(st.pos),
                 pausiert: ytmPausiert,
                 vollbild: ytmVollbild,
-                seite: ytmSeiteFotos ? 'fotos' : 'songs',
+                seite: ytmSeite,
+                shorts: ytmSeite === 'shorts' ? ytmShorts.status : '',   // ok | suche | leer (Hinweis am Handy)
                 ambi: ytmAmbi,
                 qr: ytmQrAn,
                 letzterWunschTs: ytm.letzterWunschTs || 0,
@@ -8195,7 +8334,7 @@
         function ytmTakt() {
             ytmErgebnissePruefen();
             ytmPlaylistTitelPruefen();
-            if (ytmSeiteFotos && ytmAktiv() && !ytmVollbild && Date.now() >= ytmFotoNaechste) {
+            if (ytmSeite === 'fotos' && ytmAktiv() && !ytmVollbild && Date.now() >= ytmFotoNaechste) {
                 ytmFotoNaechste = Date.now() + 8000;   // alle 8 s ein neues Foto
                 ytmFotoWeiter();
             }
@@ -8203,6 +8342,7 @@
             // Vorrang: Musik unterbrechen, danach weiter.
             const spiel = !!(window.ktSpielLaeuft && window.ktSpielLaeuft())
                 || !!(window.rouletteAmScreen && window.rouletteAmScreen());
+            ytmShortsTakt(spiel);
 
             if (ytmAktiv() && spiel && !ytmSpielPause) {
                 ytmSpielPause = true;
@@ -8376,9 +8516,10 @@
                 ytmMelden();
                 return;
             }
-            if (was === 'fotos' || was === 'songs') {
-                ytmSeiteFotos = was === 'fotos';
+            if (was === 'fotos' || was === 'songs' || was === 'shorts') {
+                ytmSeite = was;
                 ytmFotoNaechste = 0;
+                if (was === 'shorts') { ytmShorts.fehler = 0; ytmShorts.sperreBis = 0; ytmShorts.abspielenAb = 0; }
                 ytmAnzeigen();
                 ytmMelden();
                 return;
@@ -8611,12 +8752,21 @@
             // 6.6 Seitenleiste
             const seite = document.getElementById('ytm-seite');
             if (seite) {
-                seite.classList.toggle('fotos', ytmSeiteFotos);
-                if (ytmSeiteFotos) {
+                seite.classList.toggle('fotos', ytmSeite !== 'songs');   // Fotos und Shorts: ohne Rand, randvoll
+                seite.classList.toggle('shorts', ytmSeite === 'shorts');
+                if (ytmSeite !== 'shorts' && ytmShorts.player) ytmShortsAbbauen();   // vor dem Umbau, solange der Player noch im Bild steht
+                if (ytmSeite === 'fotos') {
                     // Fotoschau nur einmal aufbauen - die Bilder wechselt ytmTakt()
                     if (!seite.querySelector('.ytm-fotos')) {
                         seite.innerHTML = '<div class="ytm-fotos"><img alt=""><img alt=""><div class="ytm-foto-text"></div></div>';
                         ytmFotoNaechste = 0;
+                    }
+                } else if (ytmSeite === 'shorts') {
+                    // Geruest nur einmal bauen - den Player legt ytmShortsTakt() hinein
+                    if (!seite.querySelector('.ytm-shorts')) {
+                        ytmShortsAbbauen();
+                        seite.innerHTML = '<div class="ytm-shorts"><div class="ytm-shorts-hg"></div>'
+                            + '<div class="ytm-shorts-rahmen"><div id="ytm-shorts-frame"></div></div></div>';
                     }
                 } else {
                     seite.innerHTML = '<div class="ytm-seite-kopf">🎶 ÄHNLICHE SONGS</div><div class="ytm-seite-liste">'
@@ -8857,7 +9007,7 @@
                 YT_REMOTE_NET.aufNeueWuenscheHoeren(verb, NL_FERN_RAUM, ytmWunschBearbeiten);
                 if (jetzt) {
                     ytmVollbild = !!jetzt.vollbild;
-                    ytmSeiteFotos = jetzt.seite === 'fotos';
+                    ytmSeite = (jetzt.seite === 'fotos' || jetzt.seite === 'shorts') ? jetzt.seite : 'songs';
                     ytmAmbi = !!jetzt.ambi;
                     ytm.gespielt = Array.isArray(jetzt.gespielt) ? jetzt.gespielt : [];
                     ytm.letzterWunschTs = Number(jetzt.letzterWunschTs) || 0;

@@ -216,8 +216,9 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     (erst ausblenden, dann umbauen); `--keepaspect-window=no`.
   - **TV:** Überschrift „Interpret – Titel" (Widget fest 36 px, Vollbild
     48 px, gekürzt statt verkleinert), Cover in allen Listen (YouTube-Bild,
-    sonst Datenbank/iTunes), rechte Karte per Handy „Ähnliche Songs" oder
-    Drive-Fotos. Vollbild: „NÄCHSTER TITEL" (früher „Gleich dran") und
+    sonst Datenbank/iTunes), rechte Karte per Handy „Ähnliche Songs", Drive-Fotos
+    oder **YouTube Shorts** (Knopf „📱 Shorts rechts", stumm, noch nicht auf der Box
+    geprüft: Chromium dekodiert den Short zusätzlich zu mpv). Vollbild: „NÄCHSTER TITEL" (früher „Gleich dran") und
     „WARTESCHLANGE" (früher „Danach"). Widget: Leiste „Als Nächstes" mit
     Interpret 24 px; Überschrift bis 880 px, das Auflösungsschild sitzt klein
     eine Zeile tiefer links neben dem Logo. Die Werbe-Abdeckung

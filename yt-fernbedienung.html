@@ -275,6 +275,9 @@
             <button type="button" class="still" id="k-seite">🖼️ Fotos</button>
         </div>
         <div class="zeile2">
+            <button type="button" class="still" id="k-shorts">📱 Shorts rechts</button>
+        </div>
+        <div class="zeile2">
             <button type="button" class="still" id="k-ambi">🌈 Ambilight</button>
             <button type="button" class="still" id="k-qr">🔳 QR-Code</button>
         </div>
@@ -745,10 +748,12 @@
         el('k-ansicht').textContent = jetzt && jetzt.vollbild ? '▭ Normal' : '⛶ Vollbild';
         // Rechte Karte im Widget: Fotos aus der Drive-Galerie <-> Aehnliche Songs
         el('k-seite').textContent = jetzt && jetzt.seite === 'fotos' ? '🎶 Songs rechts' : '🖼️ Fotos rechts';
+        el('k-shorts').textContent = jetzt && jetzt.seite === 'shorts' ? '📱 Shorts aus' : '📱 Shorts rechts';
         el('k-ambi').textContent = jetzt && jetzt.ambi ? '🌈 Ambi aus' : '🌈 Ambilight';
         el('k-qr').textContent = jetzt && jetzt.qr ? '🔳 QR aus' : '🔳 QR-Code';
         var hinweis = '';
         if (status && status.spielLaeuft) hinweis = '🃏 Hos’n Obe läuft gerade – Wünsche warten, bis die Runde vorbei ist.';
+        else if (istChef && jetzt && jetzt.seite === 'shorts' && jetzt.shorts === 'leer') hinweis = '📱 Keine passenden Shorts gefunden – der Screen sucht weiter.';
         // Bluetooth zur Anlage weg: deutlich warnen (der W1 versucht selbst neu zu verbinden)
         if (istChef && jetzt && jetzt.bt && jetzt.bt.ok === false) {
             var min = Math.max(0, Math.round((serverJetzt() - (jetzt.bt.seit || serverJetzt())) / 60000));
@@ -954,6 +959,11 @@
         var fotos = !(jetzt && jetzt.seite === 'fotos');
         musik(fotos ? 'fotos' : 'songs');
         melden(fotos ? '🖼️ Rechts laufen jetzt Fotos' : '🎶 Rechts wieder Ähnliche Songs', '');
+    });
+    el('k-shorts').addEventListener('click', function () {
+        var an = !(jetzt && jetzt.seite === 'shorts');
+        musik(an ? 'shorts' : 'songs');
+        melden(an ? '📱 Rechts laufen jetzt Shorts (stumm)' : '🎶 Rechts wieder Ähnliche Songs', '');
     });
     el('k-start').addEventListener('click', function () { musik('start'); melden('▶ Musik startet …', ''); });
 
