@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T20:57:45Z",
+  "checked_at": "2026-10-09T21:12:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
