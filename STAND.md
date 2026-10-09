@@ -5,10 +5,14 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 5. Oktober 2026 (DJ-Übergänge per Studio-Abgleich, offizielle
-Videos überall, Playlists bearbeiten/erstellen am Handy, Playlists 5–8, Aufrufe,
+Letzte Durchsicht: 9. Oktober 2026 (YouTube-Musik: Playlists 1–4 mit Titeln,
+QR „Song wünschen" am Handy schaltbar, YouTube Shorts in der rechten Karte;
+Firebase-Regeln und DJ-Live-Status durchgesehen, Ergebnis unter „Offene Punkte").
+Davor, 5.–7. Oktober: DJ-Übergänge per Studio-Abgleich, offizielle Videos
+überall, Playlists bearbeiten/erstellen am Handy, Playlists 5–8, Aufrufe,
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
-und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard).
+und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
+und wieder in der Rotation.
 
 ## Was das Projekt ist
 
@@ -35,6 +39,9 @@ Antwortsprache im Gespräch: Deutsch.
 | `hosn-obe-engine.js` | Spiellogik des Kartenspiels, dazu `hosn-obe-engine.test.js` |
 | `roulette/` | Gebaute Roulette-Seite (stammt von Codex) |
 | `roulette-src/` | Deren Quelle (Vite + TypeScript) |
+| `dj_channels.json`, `live_status.json`, `google-apps-script/dj-live-checker.gs` | DJ-Livestream-Widget (Twitch): Kanalliste, Live-Stand und der Checker, der ihn schreibt; siehe `DJ-LIVESTREAM-SETUP.md` und „Zustand der Bauteile" |
+| `google-apps-script/dart-liga-scraper.gs`, `galerie.gs` | Dart-Liga-Tabelle (`dart_liga.json`) und Foto-Galerie aus Google Drive |
+| `DART-LIGA-SETUP.md`, `HOSN-OBE-SETUP.md`, `NIGHTLIFE-SETUP.md`, `DJ-FERNBEDIENUNG-SETUP.md`, `KIOSK-SETUP.md`, `TWITCH-AUTOSTART-ANALYSE.md` | Einrichtung und Hintergründe der jeweiligen Widgets |
 | `kiosk/` | Supervisor, sway-Konfiguration, Chromium-Starter der Box |
 | `W1-UMSTELLUNG.md` | Einstellwerte (`CITYCAFE_*`) und Reihenfolge der W1-Einrichtung |
 | `README.md` | Wegweiser über alle Bauteile |
@@ -42,9 +49,10 @@ Antwortsprache im Gespräch: Deutsch.
 | `KIOSK-SUPERVISOR.md` | Wie der Aufpasser auf der Box arbeitet |
 
 Veröffentlicht wird über GitHub Pages (`motte025/City-cafe`). **Nach einem Push
-dauert es oft 5 bis 15 Minuten**, bis die neue Fassung wirklich ausgeliefert
-wird — vorher mit `curl` auf eine Zeichenfolge aus dem neuen Stand prüfen, statt
-sich auf den Push zu verlassen.
+dauert es oft 5 bis 15 Minuten** (am 09.10.2026 etwa 2), bis die neue Fassung
+wirklich ausgeliefert wird — vorher mit `curl` auf eine Zeichenfolge aus dem
+neuen Stand prüfen, statt sich auf den Push zu verlassen. Jeder Commit auf
+`main` löst einen Pages-Build aus, auch die Auto-Commits des DJ-Live-Checkers.
 
 ## Geräte
 
@@ -161,7 +169,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
 - **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, seit 03.10.2026 auf `main`,
   Firebase-Regeln und Chef-PIN eingetragen). Gäste wünschen per Handy, der
   Chef (PIN) steuert; der TV ist die einzige Quelle der Reihenfolge
-  (`yt-warteschlange.js`, 107 Checks).
+  (`yt-warteschlange.js`, 110 Checks).
   - **Ablauf:** Musik läuft bis Stopp (keine Zeitgrenze; ist nichts da, startet
     die Playlist zur Uhrzeit). Gästewünsche frühestens auf Platz 5. Ist die
     Schlange leer, läuft der Radio-Mix; „Ähnliche Songs" folgt jedem neuen
@@ -217,14 +225,22 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   - **TV:** Überschrift „Interpret – Titel" (Widget fest 36 px, Vollbild
     48 px, gekürzt statt verkleinert), Cover in allen Listen (YouTube-Bild,
     sonst Datenbank/iTunes), rechte Karte per Handy „Ähnliche Songs", Drive-Fotos
-    oder **YouTube Shorts** (Knopf „📱 Shorts rechts", stumm, noch nicht auf der Box
-    geprüft: Chromium dekodiert den Short zusätzlich zu mpv). Vollbild: „NÄCHSTER TITEL" (früher „Gleich dran") und
-    „WARTESCHLANGE" (früher „Danach"). Widget: Leiste „Als Nächstes" mit
+    oder **YouTube Shorts** (Knopf „📱 Shorts rechts", `yt/jetzt.seite` =
+    songs|fotos|shorts). Shorts (seit 09.10.2026): stumm, hochkant vor
+    unscharfem Standbild; gesucht über den Suchweg der Handy-Suche
+    (`window.nlSucheAuftrag` mit Kennung `tvs-`, die Treffer gehen nicht ans
+    Handy) nach „<Künstler des laufenden Songs> #shorts", danach „party",
+    „tanzen", „lustig"; nur Clips von 4–75 s, einfache Wortsperre, Einbetten
+    verboten → nächster Short; pausiert im Vollbild und bei Hos'n Obe/Roulette;
+    Rückmeldung `yt/jetzt.shorts` = ok|suche|leer (Hinweis am Handy). **Noch
+    nicht auf der Box geprüft:** Chromium dekodiert den Short zusätzlich zu
+    mpv, und die Auswahl ist nicht handverlesen. Vollbild: „NÄCHSTER TITEL"
+    (früher „Gleich dran") und „WARTESCHLANGE" (früher „Danach"). Widget: Leiste „Als Nächstes" mit
     Interpret 24 px; Überschrift bis 880 px, das Auflösungsschild sitzt klein
     eine Zeile tiefer links neben dem Logo. Die Werbe-Abdeckung
     (`nl-player-hint` mit Titel) ist aus, solange mpv spielt
     (`body.video-extern`) – sie schien sonst mitten in der Überblendung durch.
-    QR „Song wünschen" ist standardmäßig aus (`YT_QR_AN = false`), der Chef schaltet ihn
+    QR „Song wünschen" (seit 09.10.2026 schaltbar) ist standardmäßig aus (`YT_QR_AN = false`), der Chef schaltet ihn
     am Handy mit dem Knopf **🔳 QR-Code / QR aus** (Reiter „Jetzt", neben Ambilight) im
     Video ein und aus: Befehl `musik`/`qr` (`an: true|false`), Rückmeldung `yt/jetzt.qr`.
     Die Wahl merkt sich der TV im Browser-Speicher (`ytm-qr-an`) und behält sie nach
@@ -235,7 +251,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     laufenden Song, Warteschlange bereinigen (✕ links, ☰ rechts),
     Fortschrittsbalken antippen, Überblenden ⤨, Lauter/Leiser (bis 70 % 5er-,
     darüber 3er-Schritte, max. 100 %), Player zeigt die laufende Playlist,
-    Fotos/Ambilight/Vollbild, „Musik beenden". „Passt dazu", Suche und
+    Fotos/Shorts/Ambilight/QR-Code/Vollbild, „Musik beenden". „Passt dazu", Suche und
     Playlists mit Vorschaubild; darunter über die volle Breite Titel,
     Interpret · Dauer und „Art · Aufrufe · Kanal" (Art: Video/Audio/Lyric/
     Live/Remix). **Aufrufe** nur am Handy: Suche liefert sie, beim Radio-Mix
@@ -257,8 +273,9 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Playlist im Repo ändert, muss die Änderung auch in `yt/listen/<nr>`
     nachziehen (so geschehen bei Playlist 6 am 05.10.).
   - **Playlists (`yt_playlists.json`, feste Titellisten mit videoId):**
-    1–4 feste Titellisten (seit 08.10.2026, aus den Titeln von 5–8 zusammengestellt, jede videoId
-    einmal je Liste): 1 „Party Hits" (250, 21–8 Uhr), 2 „Schlager" (219, 17–21 Uhr),
+    1–4 feste Titellisten (seit 09.10.2026, nach Stimmung aus den Titeln von 5–8
+    zusammengestellt, jede videoId einmal je Liste; die Einordnung ist eine
+    Einschätzung und am Handy änderbar): 1 „Party Hits" (250, 21–8 Uhr), 2 „Schlager" (219, 17–21 Uhr),
     3 „Après-Ski" (155, ohne Uhrzeit), 4 „Chill" (126, 8–17 Uhr); 5 „Mix
     04.10.2026" (210, moderne Schlager / internationale / deutsche
     Party-Hits 2-2-2); 6 „Mix 04.10.2026 (2)" (200, Stil der Betreiber-Liste
@@ -268,7 +285,10 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Schlager-Jahres-Charts 2025, DDP Top 100 Okt. 2026 – 119 Chart-Hits plus meistgesehene,
     alle Stereoact-Remixe, höchstens 5 je Interpret, nie zweimal derselbe hintereinander;
     ohne Ballermann). Am 05.10. wurden 12 Fan-/TV-Einträge durch
-    offizielle Videos ersetzt.
+    offizielle Videos ersetzt. `ytmListeMelden` lädt je Liste höchstens 250
+    Titel nach `yt/listen` (Liste 1 hat genau 250). Die neuen Listen 1–4
+    erreichen das Handy erst nach dem nächsten Laden der TV-Seite; war eine
+    davon am Handy bearbeitet oder gelöscht, gilt weiter die Firebase-Fassung.
 - **Firebase (Gratis-Tarif, 10 GB/Monat):** Status und „Jetzt" werden nur bei
   Änderung geschrieben (Jetzt: Positionssprung > 3 s oder alle 30 s, Status-Herzschlag
   60 s), das Handy zählt die Position selbst. Vorher ~40 MB/h je offenem Handy, jetzt
@@ -282,9 +302,29 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   CPU ~5 %, unter 40 °C. Roulette-Einstellungen liegen im Kiosk-Browser
   (localStorage `atelier-show-settings`), Sicherung der alten in
   `/home/sabrina/roulette-settings-backup-2026-10-07.json`.
-- **YouTube-Musik, offen:** Test der Dart-Ausnahme an einem Dart-Abend.
-  Einige Songs haben nur TV-/Live-Fassungen (Rosanna Rocci „Solo con te",
-  Draufgänger „Marie", CCR „Proud Mary" – bleiben vorerst).
+- **YouTube-Musik, offen:** Auf der Box prüfen (09.10.2026 nur mit
+  Headless-Chromium und Firebase-Ersatz getestet): Shorts in der rechten Karte
+  (Last neben mpv, passt die Auswahl?), QR-Schalter am Handy, Playlists 1–4
+  (Reihenfolge, Uhrzeit-Automatik: 21–8 Uhr Party Hits, 17–21 Schlager, 8–17
+  Chill). Test der Dart-Ausnahme an einem Dart-Abend. Einige Songs haben nur
+  TV-/Live-Fassungen (Rosanna Rocci „Solo con te", Draufgänger „Marie", CCR
+  „Proud Mary" – bleiben vorerst).
+- **DJ-Livestream-Widget (Twitch)**, Slot an (`DJ_SLOT_AN`, `NL_SLOT_AN`):
+  Das Dashboard fragt Twitch nicht selbst ab, es liest alle 3 Minuten
+  `live_status.json` von `raw.githubusercontent.com` (Stand älter als 45
+  Minuten = Slot aus). Geschrieben wird die Datei vom Apps-Script
+  `google-apps-script/dj-live-checker.gs` (Takt 5 Minuten, liest die Kanäle in
+  Music/DJs, denen der Account motte025 folgt): Commit auf `main` nur bei
+  Änderung der Live-Liste, dazu alle 15 Minuten ein „Herzschlag", solange
+  jemand live ist (09.10.2026: JULIAONAIR, JenniferLeeDj). **Folgen:** in 7
+  Tagen 351 von 400 Commits automatisch (49 sonstige), jeder löst einen
+  Pages-Build aus (über 11 700 Läufe insgesamt), `main` bewegt sich bis zu
+  4-mal pro Stunde (vor jedem Push `git pull --rebase`), ein neuer Stream
+  erscheint nach wenigen bis etwa 13 Minuten (5-Minuten-Takt, 5 Minuten Zwischenspeicher bei
+  GitHub, 3 Minuten Abfrage im Dashboard). `index.html` ändern die Auto-Commits
+  nicht, die Selbst-Aktualisierung löst dadurch nicht aus. Der GitHub-Token
+  im Apps-Script darf das ganze Repo schreiben und wird mit dem Song-Collector
+  geteilt, siehe „Offene Punkte".
 - **Nightlife/YouTube**: Zyklus-Videos steigen zufällig ein (4-Minuten-Slot).
   Wünsche vom Handy beginnen von vorn und laufen die gewählte Zeit; „Bis
   Stopp" läuft bis Stopp, neuem Wunsch oder Videoende (vorher brach es nach
@@ -408,6 +448,40 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   `roulette/index.html` **und** `roulette-src/index.html` und muss einen Neubau
   durch Codex überleben.
 
+## Offene Punkte (Durchsicht 09.10.2026)
+
+Noch nicht umgesetzt, nach Wichtigkeit:
+
+- **DJ-Live-Status über GitHub:** Der Token im Apps-Script ist ein
+  Schreibschlüssel fürs ganze Repo. `main` landet nachts auf dem W1
+  (Supervisor, Chromium-Starter) und liefert das Dashboard aus; wer den Token
+  hat, kann also Code ins Café bringen. Laut `DJ-LIVESTREAM-SETUP.md` war der
+  GitHub-PAT am 12.09.2026 in einem Screenshot zu sehen; ob er danach
+  widerrufen wurde, ist hier nicht bekannt – prüfen. Vorschlag: Statusdatei in
+  ein eigenes Mini-Repo (z. B. `City-cafe-status`) mit eigenem, auf dieses Repo
+  beschränktem Token; das Dashboard liest von dort (bis zur Umstellung mit
+  Rückgriff auf `main`). Dann gibt es keine Auto-Commits und Pages-Builds auf
+  `main` mehr. Firebase statt GitHub wäre schneller, taugt aber erst, wenn die
+  Regeln unten dicht sind (sonst ließe sich „DJ live" vortäuschen).
+- **Firebase-Regeln zu offen** (`docs/musik/firebase-regeln.json`): `yt/status`,
+  `yt/treffer`, `yt/diagnose` und der Sammelzweig `$sonst` (alles im Raum außer
+  `chef` und `yt`, z. B. DJ-Fernbedienung und Roulette-Wecken) kann jede
+  anonyme Anmeldung lesen und beschreiben. Die Zugangsdaten stehen im
+  Seitenquelltext, jeder Gast kann also Müll oder falsche Meldungen schreiben
+  und das Gratis-Kontingent verbrauchen. Die Musik-Befehle selbst sind
+  geschützt (Gäste nur Suche und Zurückziehen, alles andere nur Chef-Geräte).
+  Das Wunschlimit von 2 je Gerät hängt an der anonymen ID und lässt sich mit
+  einem neuen Browserprofil umgehen. Vorschlag: `status`, `treffer`,
+  `diagnose` nur für Chef-Geräte (der TV ist eins), `$sonst` einschränken;
+  vorher prüfen, wer die Pfade legitim beschreibt (sonst bricht die
+  Gäste-Suche). Die Regeln trägt der Betreiber in der Firebase-Konsole ein.
+- **Kamera-Passwort** steht in `DART_CAM_URL` in `index.html` und ist damit
+  öffentlich: Passwort der Kamera ändern, aus dem Repo nehmen (Feste Regeln).
+- **Chef-PIN:** Länge prüfen. Das Eingabefeld ist numerisch, die
+  Firebase-Regeln begrenzen Fehlversuche nicht.
+- **Veraltete Kopfzeilen:** `NIGHTLIFE-SETUP.md` und `DJ-FERNBEDIENUNG-SETUP.md`
+  sagen „zurzeit abgeschaltet", im Code sind `NL_SLOT_AN` und `DJ_SLOT_AN` an.
+
 ## Verworfen
 
 Der Kessel lief auf der Mali-Grafik des ODROID nur mit 16 Bildern pro Sekunde.
@@ -435,8 +509,10 @@ wieder live gerechnet.
   „Nächster Titel empfohlen“) sind seit 05.10.2026 ganz aus dem Dashboard
   entfernt; das Roulette-Spiel läuft seitdem im Café und zuhause.
 - TV-Seite neu laden oder Supervisor neu starten nur nach Rückfrage – es
-  unterbricht die Musik. Sonst gilt eine neue Fassung ab dem nächsten Neustart
-  (tägliches Update 8:30). Eine Selbst-Aktualisierung ist bewusst nicht gebaut.
+  unterbricht die Musik. Eine neue `index.html` holt sich der Screen selbst
+  beim nächsten Slotwechsel (Selbst-Aktualisierung, siehe oben); Supervisor und
+  Chromium-Starter kommen mit dem täglichen Update 8:30. **Ein Push von
+  `index.html` geht also ohne weiteren Schritt am TV live** – vorher prüfen.
 
 ## Arbeitsweisen, die sich bewährt haben
 
@@ -466,3 +542,11 @@ wieder live gerechnet.
   `fetch(…, {cache:"reload"})` vor dem Neuladen.
 - Größere Dateiänderungen per kleinem Node-Skript (lesen, `replace`,
   schreiben, CRLF beibehalten) statt sed über mehrere Zeilen.
+- Vor jedem Push `git pull --rebase origin main`: der DJ-Live-Checker
+  committet bis zu 4-mal pro Stunde auf `main`.
+- Ohne Box lässt sich die Logik von TV und Handy mit Headless-Chromium
+  (Playwright) gegeneinander prüfen: Firebase im Speicher ersetzen,
+  `index.html` und `yt-fernbedienung.html` über einen lokalen Server laden,
+  den YouTube-Player nachbauen (YouTube ist von dort nicht erreichbar). So
+  geschehen am 09.10.2026 für QR-Schalter, Playlists 1–4 und Shorts; die
+  Skripte liegen nicht im Repo. Das ersetzt nicht die Prüfung auf der Box.
