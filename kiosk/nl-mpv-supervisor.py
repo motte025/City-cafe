@@ -764,6 +764,111 @@ def playlists_suchen(text, anzahl=20):
     return treffer
 
 
+# --- Shorts fuer die rechte Karte des TV (Auftrag art "shorts") ---------------------
+# Die normale Suche "<Kuenstler> #shorts" liefert fast nur Querformat und viel
+# Boulevard (BILD, RTL ...). Echte Shorts stehen im Shorts-Reiter eines Kanals: zuerst
+# der Kanal des laufenden Musikvideos, dann der offizielle Kanal des Kuenstlers. Erst
+# wenn beide nichts haben, allgemeine Themen - dort nur nachweislich hochkant.
+SHORTS_SPERRE = re.compile(
+    r"\b(news|nachrichten|bild|rtl|promiflash|bunte|exclusiv|explosiv|gala|boulevard|"
+    r"skandal|unfall|klatsch|tratsch|polizei|gericht|prozess|krank|tot|tod|gestorben)\b", re.I)
+SHORTS_KANAL_VON = {}    # videoId -> (zeit, kanal-URL oder "")
+SHORTS_KUENSTLER = {}    # kuenstler -> (zeit, kanal-URL oder "")
+SHORTS_LISTEN = {}       # kanal-URL -> (zeit, treffer)
+
+
+def ytdlp_ausgabe(argumente, timeout=60):
+    for programm in ytdlp_programme():
+        try:
+            out = subprocess.run([programm, "--js-runtimes", "node", "--no-warnings"] + argumente,
+                                 capture_output=True, text=True, timeout=timeout)
+        except (subprocess.TimeoutExpired, OSError) as fehler:
+            log(f"Shorts: {os.path.basename(programm)} {type(fehler).__name__}")
+            continue
+        if out.stdout.strip():
+            return out.stdout
+    return ""
+
+
+def shorts_kanal_von(video_id):
+    alt = SHORTS_KANAL_VON.get(video_id)
+    if alt and time.time() - alt[0] < 86400:
+        return alt[1]
+    url = ytdlp_ausgabe(["--skip-download", "--print", "%(channel_url)s", "https://www.youtube.com/watch?v=" + video_id], 40).strip()
+    url = url if url.startswith("https://www.youtube.com/") else ""
+    SHORTS_KANAL_VON[video_id] = (time.time(), url)
+    return url
+
+
+def shorts_kanal_des_kuenstlers(kuenstler):
+    """Kanal, dessen Name den Kuenstler enthaelt (bevorzugt "Official"), aus den ersten Suchtreffern."""
+    schluessel = kuenstler.lower()
+    alt = SHORTS_KUENSTLER.get(schluessel)
+    if alt and time.time() - alt[0] < 86400:
+        return alt[1]
+    norm = lambda s: re.sub(r"[^a-z0-9äöüß]", "", s.lower())
+    gesucht, gefunden = norm(kuenstler), []
+    for zeile in ytdlp_ausgabe(["--flat-playlist", "--print", "%(channel)s\t%(channel_url)s",
+                                f"ytsearch8:{kuenstler}"]).splitlines():
+        teile = zeile.split("\t")
+        if len(teile) == 2 and gesucht and gesucht in norm(teile[0]) and teile[1].startswith("https://"):
+            gefunden.append(teile)
+    gefunden.sort(key=lambda t: "official" not in t[0].lower() and "offiziell" not in t[0].lower())
+    url = gefunden[0][1] if gefunden else ""
+    SHORTS_KUENSTLER[schluessel] = (time.time(), url)
+    return url
+
+
+def shorts_vom_kanal(kanal_url):
+    alt = SHORTS_LISTEN.get(kanal_url)
+    if alt and time.time() - alt[0] < 6 * 3600:
+        return alt[1]
+    treffer = []
+    for zeile in ytdlp_ausgabe(["--flat-playlist", "--playlist-end", "40", "--print",
+                                "%(id)s\t%(title)s\t%(channel)s", kanal_url.rstrip("/") + "/shorts"]).splitlines():
+        teile = zeile.split("\t")
+        if not re.fullmatch(r"[A-Za-z0-9_-]{11}", teile[0]):
+            continue
+        titel = teile[1] if len(teile) > 1 else ""
+        if SHORTS_SPERRE.search(titel):
+            continue
+        treffer.append({"videoId": teile[0], "titel": titel,
+                        "kanal": teile[2] if len(teile) > 2 and teile[2] != "NA" else "", "hochkant": True})
+    SHORTS_LISTEN[kanal_url] = (time.time(), treffer)
+    return treffer
+
+
+def shorts_suchen(kanal_von, kuenstler, text):
+    """-> (treffer, quelle). Treffer tragen hochkant=True; quelle = kanal | thema."""
+    kanaele = []
+    if kanal_von:
+        kanaele.append(shorts_kanal_von(kanal_von))
+    if kuenstler:
+        kanaele.append(shorts_kanal_des_kuenstlers(kuenstler))
+    for url in dict.fromkeys(k for k in kanaele if k):
+        liste = shorts_vom_kanal(url)
+        if len(liste) >= 4:
+            log(f"Shorts vom Kanal {url}: {len(liste)}")
+            return liste, "kanal"
+    if not text:
+        return [], "thema"
+    # Allgemeine Themen: kurze Clips ohne Boulevard, dann Breite/Hoehe nachsehen.
+    kandidaten = [t for t in suchen(text, 40)
+                  if 4 <= (t.get("dauerSek") or 0) <= 75
+                  and not SHORTS_SPERRE.search(t.get("titel", "") + " " + t.get("kanal", ""))][:15]
+    masse = {}
+    if kandidaten:
+        for zeile in ytdlp_ausgabe(["--skip-download", "--ignore-errors", "--print",
+                                    "%(id)s\t%(width)s\t%(height)s"] + ["https://www.youtube.com/watch?v=" + t["videoId"] for t in kandidaten], 120).splitlines():
+            teile = zeile.split("\t")
+            if len(teile) == 3 and teile[1].isdigit() and teile[2].isdigit():
+                masse[teile[0]] = (int(teile[1]), int(teile[2]))
+    treffer = [dict(t, hochkant=True) for t in kandidaten
+               if masse.get(t["videoId"], (1, 0))[1] > masse.get(t["videoId"], (1, 0))[0]]
+    log(f"Shorts zum Thema {text!r}: {len(treffer)} hochkant von {len(kandidaten)}")
+    return treffer, "thema"
+
+
 def treffer_lesen(ausgabe):
     """yt-dlp-Zeilen "id<TAB>titel<TAB>kanal<TAB>dauer_text<TAB>dauer_sek<TAB>aufrufe" -> Treffer.
     Aufrufe liefert YouTube bei der Suche, beim Radio-Mix meist nicht ("NA")."""
@@ -2112,10 +2217,16 @@ def main():
                             nur_playlists=auftrag.get("art") == "playlist",
                             liste_id=(str(auftrag.get("listId") or "")[:64]
                                       if auftrag.get("art") == "playlistInhalt" else ""),
+                            shorts=auftrag.get("art") == "shorts",
+                            kanal_von=re.sub(r"[^A-Za-z0-9_-]", "", str(auftrag.get("kanalVon") or ""))[:11],
+                            kuenstler=str(auftrag.get("kuenstler") or "")[:80],
                             anzahl=max(SUCH_TREFFER, min(SUCH_TREFFER_MAX, int(auftrag.get("anzahl") or 0)))):
+                    quelle = ""
                     # Automatische Vorschlaege beim Oeffnen der Fernbedienung:
                     # mehrere Begriffe gemischt statt vieler Treffer zu einem Thema.
-                    if liste_id:
+                    if shorts:
+                        treffer, quelle = shorts_suchen(kanal_von, kuenstler, text)
+                    elif liste_id:
                         # Playlist in der Suche oeffnen: ihre Songs (24-h-Cache)
                         treffer = playlist_lesen(f"https://www.youtube.com/playlist?list={liste_id}")[:200]
                     elif nur_playlists:
@@ -2128,14 +2239,15 @@ def main():
                         treffer = suchen(text, anzahl)
                         # Live-/Fan-/Lyric-/Audio-Uploads ans Ende, Reihenfolge sonst wie YouTube
                         treffer = sorted(treffer, key=lambda t: musikvideo_wertung(t, text) < 0)
-                    if not gemischt:
+                    if not gemischt and not shorts:
                         log(f"Suche {text!r}: {len(treffer)} Treffer")
                     # art bestaetigt, welche Suche wirklich lief: ein alter Supervisor
                     # im selben Raum kennt Playlists nicht - das Handy verwirft dann
                     # seine Song-Treffer, statt die richtigen zu ueberschreiben.
-                    art = "playlistInhalt" if liste_id else ("playlist" if nur_playlists else "")
+                    art = ("shorts" if shorts else "playlistInhalt" if liste_id
+                           else "playlist" if nur_playlists else "")
                     zustellen(seite, "window.nlSucheTreffer = "
-                              + json.dumps({"id": sid, "liste": treffer, "art": art}) + "; 1", "Treffer")
+                              + json.dumps({"id": sid, "liste": treffer, "art": art, "quelle": quelle}) + "; 1", "Treffer")
             elif (vor_key and vor_key not in cache
                     and time.time() - failed.get(vor_vid, 0) >= RETRY_FAILED_AFTER):
                 def aufgabe(key=vor_key, vid=vor_vid, h=int(vor.get("hoehe") or 0),
