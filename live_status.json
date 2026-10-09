@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-10-09T00:02:46Z",
-  "live": []
+  "checked_at": "2026-10-09T06:52:45Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ RAVE INTO THE WEEKEND ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    }
+  ]
 }
