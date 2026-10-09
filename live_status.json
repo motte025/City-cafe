@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-09T18:57:47Z",
+  "checked_at": "2026-10-09T19:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -42,6 +42,13 @@
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #697 Trilucid",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "THE BIGGER THE BETTER",
+      "game": "DJs"
     }
   ]
 }
