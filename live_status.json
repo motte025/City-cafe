@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-09T20:02:47Z",
+  "checked_at": "2026-10-09T20:22:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 97 😈 HARDER Styles | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "THE BIGGER THE BETTER",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 97 😈 HARDER Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
