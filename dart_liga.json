@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T17:10:33Z",
+  "aktualisiert": "2026-10-10T17:16:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1048,16 +1048,26 @@
         },
         {
           "rang": 2,
-          "spieler": "DANIEL Utta",
-          "spiele": 6,
+          "spieler": "JANESCH Christine",
+          "spiele": 7,
           "siege": 5,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 15,
-          "legs_minus": 6,
+          "legs_minus": 8,
           "punkte": 15
         },
         {
           "rang": 3,
+          "spieler": "DANIEL Utta",
+          "spiele": 7,
+          "siege": 5,
+          "niederlagen": 2,
+          "legs_plus": 15,
+          "legs_minus": 9,
+          "punkte": 15
+        },
+        {
+          "rang": 4,
           "spieler": "MARKTL Werner",
           "spiele": 5,
           "siege": 4,
@@ -1065,16 +1075,6 @@
           "legs_plus": 13,
           "legs_minus": 6,
           "punkte": 13
-        },
-        {
-          "rang": 4,
-          "spieler": "JANESCH Christine",
-          "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
-          "legs_plus": 12,
-          "legs_minus": 8,
-          "punkte": 12
         },
         {
           "rang": 5,
@@ -1590,7 +1590,7 @@
             "datum": "2026-10-10",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC Garzern",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 0,
             "id": 108927,
             "paarungen": [
@@ -1598,7 +1598,7 @@
                 "art": "DE",
                 "spieler1": "JANESCH Christine",
                 "spieler2": "DANIEL Utta",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
