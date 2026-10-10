@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:02:35Z",
+  "aktualisiert": "2026-10-10T20:08:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -254,6 +254,16 @@
         },
         {
           "rang": 12,
+          "spieler": "KOLLER Elias",
+          "spiele": 8,
+          "siege": 3,
+          "niederlagen": 5,
+          "legs_plus": 10,
+          "legs_minus": 16,
+          "punkte": 10
+        },
+        {
+          "rang": 13,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 4,
           "siege": 3,
@@ -263,7 +273,7 @@
           "punkte": 9
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 5,
           "siege": 2,
@@ -273,23 +283,13 @@
           "punkte": 9
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 5,
           "siege": 2,
           "niederlagen": 3,
           "legs_plus": 8,
           "legs_minus": 7,
-          "punkte": 8
-        },
-        {
-          "rang": 15,
-          "spieler": "HOCHEGGER Andrea",
-          "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
-          "legs_plus": 8,
-          "legs_minus": 8,
           "punkte": 8
         },
         {
@@ -304,12 +304,12 @@
         },
         {
           "rang": 17,
-          "spieler": "KOLLER Elias",
-          "spiele": 7,
+          "spieler": "HOCHEGGER Andrea",
+          "spiele": 5,
           "siege": 2,
-          "niederlagen": 5,
+          "niederlagen": 3,
           "legs_plus": 8,
-          "legs_minus": 16,
+          "legs_minus": 8,
           "punkte": 8
         },
         {
@@ -324,20 +324,20 @@
         },
         {
           "rang": 19,
-          "spieler": "REINISCH Jessica",
+          "spieler": "HOCHEGGER Martin",
           "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
+          "siege": 2,
+          "niederlagen": 3,
           "legs_plus": 7,
           "legs_minus": 8,
           "punkte": 7
         },
         {
           "rang": 20,
-          "spieler": "HOCHEGGER Martin",
+          "spieler": "REINISCH Jessica",
           "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
+          "siege": 3,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 8,
           "punkte": 7
@@ -354,7 +354,7 @@
         },
         {
           "rang": 22,
-          "spieler": "FRIEßNEGGER Sarah",
+          "spieler": "SCHNEIDER Thomas",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -364,7 +364,7 @@
         },
         {
           "rang": 23,
-          "spieler": "SCHNEIDER Thomas",
+          "spieler": "FRIEßNEGGER Sarah",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -394,6 +394,16 @@
         },
         {
           "rang": 26,
+          "spieler": "SATZ Klemens",
+          "spiele": 2,
+          "siege": 2,
+          "niederlagen": 0,
+          "legs_plus": 5,
+          "legs_minus": 2,
+          "punkte": 5
+        },
+        {
+          "rang": 27,
           "spieler": "POLZER Hannah",
           "spiele": 4,
           "siege": 2,
@@ -403,7 +413,7 @@
           "punkte": 5
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "SCHADER Andreas",
           "spiele": 2,
           "siege": 1,
@@ -413,7 +423,7 @@
           "punkte": 4
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
@@ -423,7 +433,7 @@
           "punkte": 4
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "LUBE Mario",
           "spiele": 2,
           "siege": 1,
@@ -433,7 +443,7 @@
           "punkte": 4
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "KOGLER Sabine",
           "spiele": 3,
           "siege": 1,
@@ -443,7 +453,7 @@
           "punkte": 4
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "KERNSTOCK Michael",
           "spiele": 3,
           "siege": 1,
@@ -453,7 +463,7 @@
           "punkte": 4
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "BÄCKER Josephine",
           "spiele": 3,
           "siege": 0,
@@ -463,7 +473,7 @@
           "punkte": 4
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "JESENKO Julia",
           "spiele": 2,
           "siege": 1,
@@ -473,28 +483,18 @@
           "punkte": 3
         },
         {
-          "rang": 34,
-          "spieler": "SATZ Klemens",
-          "spiele": 1,
-          "siege": 1,
-          "niederlagen": 0,
-          "legs_plus": 3,
-          "legs_minus": 2,
-          "punkte": 3
-        },
-        {
           "rang": 35,
           "spieler": "SIMONITSCH Christopher",
-          "spiele": 2,
+          "spiele": 3,
           "siege": 0,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 3,
-          "legs_minus": 5,
+          "legs_minus": 7,
           "punkte": 3
         },
         {
           "rang": 36,
-          "spieler": "GORICNIK Cornelia",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -504,7 +504,7 @@
         },
         {
           "rang": 37,
-          "spieler": "ROSSMANN Christoph",
+          "spieler": "GORICNIK Cornelia",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -515,11 +515,11 @@
         {
           "rang": 38,
           "spieler": "BERCHTOLD Alex",
-          "spiele": 1,
+          "spiele": 2,
           "siege": 0,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 2,
-          "legs_minus": 3,
+          "legs_minus": 5,
           "punkte": 2
         },
         {
@@ -869,7 +869,7 @@
             "datum": "2026-10-10",
             "heim": "Dart Fuchs 4",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 2,
             "id": 109554,
             "paarungen": [
@@ -912,7 +912,7 @@
                 "art": "OD",
                 "spieler1": "SATZ Klemens / KOLLER Elias",
                 "spieler2": "BERCHTOLD Alex / SIMONITSCH Christopher",
-                "legs1": 0,
+                "legs1": 2,
                 "legs2": 0
               }
             ]
