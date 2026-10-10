@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T17:40:50Z",
+  "aktualisiert": "2026-10-10T17:41:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1108,6 +1108,16 @@
         },
         {
           "rang": 8,
+          "spieler": "WIESER (J) David",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 10,
+          "legs_minus": 3,
+          "punkte": 10
+        },
+        {
+          "rang": 9,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1117,23 +1127,13 @@
           "punkte": 10
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "STINGLER Engelbert",
           "spiele": 6,
           "siege": 3,
           "niederlagen": 3,
           "legs_plus": 9,
           "legs_minus": 10,
-          "punkte": 9
-        },
-        {
-          "rang": 10,
-          "spieler": "FRADL Ingemar",
-          "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 9,
-          "legs_minus": 11,
           "punkte": 9
         },
         {
@@ -1148,6 +1148,16 @@
         },
         {
           "rang": 12,
+          "spieler": "FRADL Ingemar",
+          "spiele": 7,
+          "siege": 3,
+          "niederlagen": 4,
+          "legs_plus": 9,
+          "legs_minus": 14,
+          "punkte": 9
+        },
+        {
+          "rang": 13,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 3,
           "siege": 3,
@@ -1157,7 +1167,7 @@
           "punkte": 8
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "OBERZAN Lukas",
           "spiele": 3,
           "siege": 3,
@@ -1165,16 +1175,6 @@
           "legs_plus": 8,
           "legs_minus": 2,
           "punkte": 8
-        },
-        {
-          "rang": 14,
-          "spieler": "WIESER (J) David",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 7,
-          "legs_minus": 3,
-          "punkte": 7
         },
         {
           "rang": 15,
@@ -1268,16 +1268,6 @@
         },
         {
           "rang": 24,
-          "spieler": "REIF Daniel-Stefan",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 3,
-          "punkte": 4
-        },
-        {
-          "rang": 25,
           "spieler": "KRENN Klaus",
           "spiele": 2,
           "siege": 1,
@@ -1287,7 +1277,7 @@
           "punkte": 4
         },
         {
-          "rang": 26,
+          "rang": 25,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1297,8 +1287,18 @@
           "punkte": 4
         },
         {
-          "rang": 27,
+          "rang": 26,
           "spieler": "PAULITSCH Brigitte",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 3,
+          "punkte": 4
+        },
+        {
+          "rang": 27,
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1548,7 +1548,7 @@
             "datum": "2026-10-10",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC Garzern",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 0,
             "id": 108927,
             "paarungen": [
@@ -1570,7 +1570,7 @@
                 "art": "OE",
                 "spieler1": "WIESER (J) David",
                 "spieler2": "FRADL Ingemar",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
