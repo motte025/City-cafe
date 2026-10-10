@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:40:35Z",
+  "aktualisiert": "2026-10-10T20:41:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -185,12 +185,12 @@
         {
           "rang": 5,
           "spieler": "BERGLER Benjamin",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 5,
-          "niederlagen": 3,
-          "legs_plus": 16,
-          "legs_minus": 14,
-          "punkte": 16
+          "niederlagen": 4,
+          "legs_plus": 17,
+          "legs_minus": 17,
+          "punkte": 17
         },
         {
           "rang": 6,
@@ -234,6 +234,16 @@
         },
         {
           "rang": 10,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 5,
+          "siege": 4,
+          "niederlagen": 1,
+          "legs_plus": 12,
+          "legs_minus": 7,
+          "punkte": 12
+        },
+        {
+          "rang": 11,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 6,
           "siege": 3,
@@ -241,16 +251,6 @@
           "legs_plus": 12,
           "legs_minus": 11,
           "punkte": 12
-        },
-        {
-          "rang": 11,
-          "spieler": "ASPRIAN Johann",
-          "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 11,
-          "legs_minus": 9,
-          "punkte": 11
         },
         {
           "rang": 12,
@@ -264,6 +264,16 @@
         },
         {
           "rang": 13,
+          "spieler": "ASPRIAN Johann",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 11,
+          "legs_minus": 9,
+          "punkte": 11
+        },
+        {
+          "rang": 14,
           "spieler": "FELLNER Johann",
           "spiele": 6,
           "siege": 3,
@@ -273,7 +283,7 @@
           "punkte": 10
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "JAHN Andreas",
           "spiele": 6,
           "siege": 3,
@@ -283,7 +293,7 @@
           "punkte": 10
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "KOLLER Elias",
           "spiele": 8,
           "siege": 3,
@@ -291,16 +301,6 @@
           "legs_plus": 10,
           "legs_minus": 16,
           "punkte": 10
-        },
-        {
-          "rang": 16,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 4,
-          "siege": 3,
-          "niederlagen": 1,
-          "legs_plus": 9,
-          "legs_minus": 6,
-          "punkte": 9
         },
         {
           "rang": 17,
@@ -789,7 +789,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "DC Schwarzer Kater",
             "erg_heim": 1,
-            "erg_auswaerts": 7,
+            "erg_auswaerts": 8,
             "id": 109543,
             "paarungen": [
               {
@@ -852,8 +852,8 @@
                 "art": "OE",
                 "spieler1": "BERGLER Benjamin",
                 "spieler2": "HOPFGARTNER Joachim",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
