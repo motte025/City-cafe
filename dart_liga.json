@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:08:34Z",
+  "aktualisiert": "2026-10-10T20:09:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -913,6 +913,34 @@
                 "spieler1": "SATZ Klemens / KOLLER Elias",
                 "spieler2": "BERCHTOLD Alex / SIMONITSCH Christopher",
                 "legs1": 2,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "SATZ Klemens",
+                "spieler2": "SIMONITSCH Erhard",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "BÄCKER Josephine",
+                "spieler2": "REINISCH Jessica",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "FELLNER Johann",
+                "spieler2": "SIMONITSCH Christopher",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "KOLLER Elias",
+                "spieler2": "BERCHTOLD Alex",
+                "legs1": 0,
                 "legs2": 0
               }
             ]
