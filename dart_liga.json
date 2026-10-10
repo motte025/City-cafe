@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:19:39Z",
+  "aktualisiert": "2026-10-10T18:25:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -214,6 +214,16 @@
         },
         {
           "rang": 8,
+          "spieler": "JAHN Corinna",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 11,
+          "legs_minus": 4,
+          "punkte": 11
+        },
+        {
+          "rang": 9,
           "spieler": "JAMMER Fabian",
           "spiele": 6,
           "siege": 3,
@@ -223,7 +233,7 @@
           "punkte": 11
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "JAHN Andreas",
           "spiele": 6,
           "siege": 3,
@@ -231,16 +241,6 @@
           "legs_plus": 10,
           "legs_minus": 12,
           "punkte": 10
-        },
-        {
-          "rang": 10,
-          "spieler": "JAHN Corinna",
-          "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 9,
-          "legs_minus": 1,
-          "punkte": 9
         },
         {
           "rang": 11,
@@ -434,6 +434,16 @@
         },
         {
           "rang": 30,
+          "spieler": "KERNSTOCK Michael",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 4,
+          "legs_minus": 8,
+          "punkte": 4
+        },
+        {
+          "rang": 31,
           "spieler": "BÄCKER Josephine",
           "spiele": 3,
           "siege": 0,
@@ -443,7 +453,7 @@
           "punkte": 4
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "JESENKO Julia",
           "spiele": 2,
           "siege": 1,
@@ -453,7 +463,7 @@
           "punkte": 3
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "GORICNIK Cornelia",
           "spiele": 3,
           "siege": 0,
@@ -463,7 +473,7 @@
           "punkte": 3
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
@@ -473,7 +483,7 @@
           "punkte": 3
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "BERCHTOLD Alex",
           "spiele": 1,
           "siege": 0,
@@ -483,7 +493,7 @@
           "punkte": 2
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "AMBROS Thomas",
           "spiele": 3,
           "siege": 0,
@@ -493,23 +503,13 @@
           "punkte": 2
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "SIMONITSCH Christopher",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
           "legs_plus": 1,
           "legs_minus": 2,
-          "punkte": 1
-        },
-        {
-          "rang": 37,
-          "spieler": "KERNSTOCK Michael",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 1,
-          "legs_minus": 6,
           "punkte": 1
         },
         {
@@ -717,7 +717,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "DC Schwarzer Kater",
             "erg_heim": 0,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 109543,
             "paarungen": [
               {
@@ -745,8 +745,8 @@
                 "art": "OE",
                 "spieler1": "JAHN Corinna",
                 "spieler2": "KERNSTOCK Michael",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               }
             ]
           },
