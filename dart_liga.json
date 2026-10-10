@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:45:32Z",
+  "aktualisiert": "2026-10-10T18:46:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1019,7 +1019,7 @@
         },
         "3": {
           "heim": 2,
-          "auswaerts": 1,
+          "auswaerts": 2,
           "id": 108938
         },
         "4": {
@@ -1136,6 +1136,16 @@
         },
         {
           "rang": 7,
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 7,
+          "siege": 4,
+          "niederlagen": 3,
+          "legs_plus": 12,
+          "legs_minus": 12,
+          "punkte": 12
+        },
+        {
+          "rang": 8,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 4,
           "siege": 4,
@@ -1145,7 +1155,7 @@
           "punkte": 11
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "OBERZAN Lukas",
           "spiele": 4,
           "siege": 4,
@@ -1155,7 +1165,7 @@
           "punkte": 11
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "WIMMER Leon",
           "spiele": 5,
           "siege": 4,
@@ -1165,7 +1175,7 @@
           "punkte": 11
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "WIESER (J) David",
           "spiele": 4,
           "siege": 3,
@@ -1175,7 +1185,7 @@
           "punkte": 10
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1185,7 +1195,7 @@
           "punkte": 10
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 4,
           "siege": 2,
@@ -1195,23 +1205,13 @@
           "punkte": 9
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "STINGLER Engelbert",
           "spiele": 6,
           "siege": 3,
           "niederlagen": 3,
           "legs_plus": 9,
           "legs_minus": 10,
-          "punkte": 9
-        },
-        {
-          "rang": 14,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 9,
-          "legs_minus": 12,
           "punkte": 9
         },
         {
@@ -1396,22 +1396,22 @@
         },
         {
           "rang": 33,
-          "spieler": "PINTER Michele",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 3,
-          "legs_minus": 6,
-          "punkte": 3
-        },
-        {
-          "rang": 34,
           "spieler": "STEINER Lydia",
           "spiele": 3,
           "siege": 1,
           "niederlagen": 2,
           "legs_plus": 3,
           "legs_minus": 8,
+          "punkte": 3
+        },
+        {
+          "rang": 34,
+          "spieler": "PINTER Michele",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 3,
+          "legs_minus": 9,
           "punkte": 3
         },
         {
@@ -1506,7 +1506,7 @@
       "letztes_spiel": {
         "runde": 3,
         "heim": 2,
-        "auswaerts": 1,
+        "auswaerts": 2,
         "paarungen": [
           {
             "art": "DE",
@@ -1533,6 +1533,20 @@
             "art": "OE",
             "spieler1": "PINTER Michele",
             "spieler2": "SCHMALNAUER Daniel",
+            "legs1": 0,
+            "legs2": 3
+          },
+          {
+            "art": "MD",
+            "spieler1": "POSCHINGER Franz / FRÜSTÜCK Kerstin",
+            "spieler2": "STÜCKLER Heidemarie / GÖSCHL Mario",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OD",
+            "spieler1": "SONNBERGER Harald / KRENN Klaus",
+            "spieler2": "LANG Melanie / SCHMALNAUER Daniel",
             "legs1": 0,
             "legs2": 0
           }
@@ -1654,7 +1668,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 2,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 108938,
             "paarungen": [
               {
@@ -1684,6 +1698,20 @@
                 "spieler2": "SCHMALNAUER Daniel",
                 "legs1": 0,
                 "legs2": 3
+              },
+              {
+                "art": "MD",
+                "spieler1": "POSCHINGER Franz / FRÜSTÜCK Kerstin",
+                "spieler2": "STÜCKLER Heidemarie / GÖSCHL Mario",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "SONNBERGER Harald / KRENN Klaus",
+                "spieler2": "LANG Melanie / SCHMALNAUER Daniel",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           }
