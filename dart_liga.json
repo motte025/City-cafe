@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-01T11:04:34Z",
+  "aktualisiert": "2026-10-10T16:30:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -658,7 +658,42 @@
           }
         ]
       },
-      "spieltag": null,
+      "spieltag": {
+        "datum": "2026-10-10",
+        "runde": 3,
+        "spiele": [
+          {
+            "runde": 3,
+            "datum": "2026-10-10",
+            "heim": "PBC DC Skorpions Reichenfels",
+            "auswaerts": "Askö DC Sonne 2",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109521,
+            "paarungen": []
+          },
+          {
+            "runde": 3,
+            "datum": "2026-10-10",
+            "heim": "DC Fighting Penguins „Waddling Arrows“",
+            "auswaerts": "DC Schwarzer Kater",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109543,
+            "paarungen": []
+          },
+          {
+            "runde": 3,
+            "datum": "2026-10-10",
+            "heim": "Dart Fuchs 4",
+            "auswaerts": "DC Cafe Seven",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109554,
+            "paarungen": []
+          }
+        ]
+      },
       "spielplan": [
         {
           "runde": 1,
@@ -1420,7 +1455,42 @@
           }
         ]
       },
-      "spieltag": null,
+      "spieltag": {
+        "datum": "2026-10-10",
+        "runde": 3,
+        "spiele": [
+          {
+            "runde": 3,
+            "datum": "2026-10-10",
+            "heim": "DC Drautal Dart Vipers",
+            "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108916,
+            "paarungen": []
+          },
+          {
+            "runde": 3,
+            "datum": "2026-10-10",
+            "heim": "DSZKärnten \"2er\"",
+            "auswaerts": "DC Garzern",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108927,
+            "paarungen": []
+          },
+          {
+            "runde": 3,
+            "datum": "2026-10-10",
+            "heim": "City-Flyers \"Fraggles\"",
+            "auswaerts": "ESV DC Inferno",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108938,
+            "paarungen": []
+          }
+        ]
+      },
       "spielplan": [
         {
           "runde": 1,
