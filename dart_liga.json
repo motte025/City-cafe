@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:09:34Z",
+  "aktualisiert": "2026-10-10T20:10:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1069,15 +1069,15 @@
         {
           "rang": 1,
           "team": "DSZKärnten \"2er\"",
-          "spiele": 3,
-          "siege": 2,
+          "spiele": 4,
+          "siege": 3,
           "unentschieden": 1,
           "niederlagen": 0,
-          "punkte": 5
+          "punkte": 7
         },
         {
           "rang": 2,
-          "team": "DC Garzern",
+          "team": "ESV DC Inferno",
           "spiele": 3,
           "siege": 2,
           "unentschieden": 1,
@@ -1086,11 +1086,11 @@
         },
         {
           "rang": 3,
-          "team": "ESV DC Inferno",
-          "spiele": 3,
+          "team": "DC Garzern",
+          "spiele": 4,
           "siege": 2,
           "unentschieden": 1,
-          "niederlagen": 0,
+          "niederlagen": 1,
           "punkte": 5
         },
         {
@@ -1285,11 +1285,11 @@
         {
           "rang": 9,
           "spieler": "MARKTL Werner",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 4,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 13,
-          "legs_minus": 11,
+          "legs_minus": 14,
           "punkte": 13
         },
         {
@@ -1314,6 +1314,16 @@
         },
         {
           "rang": 12,
+          "spieler": "ANWALD Guenther",
+          "spiele": 7,
+          "siege": 3,
+          "niederlagen": 4,
+          "legs_plus": 11,
+          "legs_minus": 12,
+          "punkte": 11
+        },
+        {
+          "rang": 13,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1323,7 +1333,7 @@
           "punkte": 10
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "FRADL Ingemar",
           "spiele": 9,
           "siege": 3,
@@ -1333,7 +1343,7 @@
           "punkte": 10
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "STINGLER Engelbert",
           "spiele": 6,
           "siege": 3,
@@ -1343,7 +1353,7 @@
           "punkte": 9
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 6,
           "siege": 2,
@@ -1353,7 +1363,7 @@
           "punkte": 9
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 6,
           "siege": 3,
@@ -1363,23 +1373,13 @@
           "punkte": 8
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "SONNBERGER Harald",
           "spiele": 5,
           "siege": 2,
           "niederlagen": 3,
           "legs_plus": 8,
           "legs_minus": 9,
-          "punkte": 8
-        },
-        {
-          "rang": 18,
-          "spieler": "ANWALD Guenther",
-          "spiele": 6,
-          "siege": 2,
-          "niederlagen": 4,
-          "legs_plus": 8,
-          "legs_minus": 12,
           "punkte": 8
         },
         {
@@ -1808,7 +1808,7 @@
             "datum": "2026-10-10",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC Garzern",
-            "erg_heim": 8,
+            "erg_heim": 9,
             "erg_auswaerts": 1,
             "id": 108927,
             "paarungen": [
@@ -1879,7 +1879,7 @@
                 "art": "OE",
                 "spieler1": "ANWALD Guenther",
                 "spieler2": "MARKTL Werner",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
