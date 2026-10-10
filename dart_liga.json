@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T21:07:43Z",
+  "aktualisiert": "2026-10-10T21:09:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1147,7 +1147,7 @@
         },
         "3": {
           "heim": 3,
-          "auswaerts": 5,
+          "auswaerts": 6,
           "id": 108938
         },
         "4": {
@@ -1274,20 +1274,20 @@
         },
         {
           "rang": 8,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 8,
+          "spieler": "BRUNNER Peter",
+          "spiele": 9,
           "siege": 5,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 14,
           "legs_minus": 13,
           "punkte": 14
         },
         {
           "rang": 9,
-          "spieler": "BRUNNER Peter",
-          "spiele": 9,
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 8,
           "siege": 5,
-          "niederlagen": 4,
+          "niederlagen": 3,
           "legs_plus": 14,
           "legs_minus": 13,
           "punkte": 14
@@ -1354,16 +1354,6 @@
         },
         {
           "rang": 16,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 7,
-          "siege": 3,
-          "niederlagen": 4,
-          "legs_plus": 9,
-          "legs_minus": 12,
-          "punkte": 9
-        },
-        {
-          "rang": 17,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 6,
           "siege": 2,
@@ -1373,7 +1363,7 @@
           "punkte": 9
         },
         {
-          "rang": 18,
+          "rang": 17,
           "spieler": "SONNBERGER Harald",
           "spiele": 6,
           "siege": 2,
@@ -1383,7 +1373,27 @@
           "punkte": 9
         },
         {
+          "rang": 18,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 7,
+          "siege": 3,
+          "niederlagen": 4,
+          "legs_plus": 9,
+          "legs_minus": 12,
+          "punkte": 9
+        },
+        {
           "rang": 19,
+          "spieler": "LANG Melanie",
+          "spiele": 7,
+          "siege": 3,
+          "niederlagen": 4,
+          "legs_plus": 9,
+          "legs_minus": 14,
+          "punkte": 9
+        },
+        {
+          "rang": 20,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 6,
           "siege": 2,
@@ -1393,7 +1403,7 @@
           "punkte": 8
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "KRENN Klaus",
           "spiele": 4,
           "siege": 1,
@@ -1403,7 +1413,7 @@
           "punkte": 7
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1413,7 +1423,7 @@
           "punkte": 6
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1423,7 +1433,7 @@
           "punkte": 6
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 5,
           "siege": 2,
@@ -1433,7 +1443,7 @@
           "punkte": 6
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "PINTER Michele",
           "spiele": 4,
           "siege": 1,
@@ -1443,7 +1453,7 @@
           "punkte": 6
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "GREINIG Petra",
           "spiele": 4,
           "siege": 1,
@@ -1453,7 +1463,7 @@
           "punkte": 6
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "ETTL Theresa",
           "spiele": 5,
           "siege": 2,
@@ -1463,17 +1473,17 @@
           "punkte": 6
         },
         {
-          "rang": 27,
-          "spieler": "LANG Melanie",
+          "rang": 28,
+          "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 6,
-          "siege": 2,
-          "niederlagen": 4,
+          "siege": 1,
+          "niederlagen": 5,
           "legs_plus": 6,
           "legs_minus": 13,
           "punkte": 6
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "GRAF Franz",
           "spiele": 2,
           "siege": 2,
@@ -1483,7 +1493,7 @@
           "punkte": 5
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
@@ -1493,18 +1503,8 @@
           "punkte": 5
         },
         {
-          "rang": 30,
-          "spieler": "FRÜSTÜCK Kerstin",
-          "spiele": 5,
-          "siege": 1,
-          "niederlagen": 4,
-          "legs_plus": 5,
-          "legs_minus": 10,
-          "punkte": 5
-        },
-        {
           "rang": 31,
-          "spieler": "OSTRY Samantha-Lee",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1514,7 +1514,7 @@
         },
         {
           "rang": 32,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1644,7 +1644,7 @@
       "letztes_spiel": {
         "runde": 3,
         "heim": 3,
-        "auswaerts": 5,
+        "auswaerts": 6,
         "paarungen": [
           {
             "art": "DE",
@@ -1706,8 +1706,8 @@
             "art": "OE",
             "spieler1": "FRÜSTÜCK Kerstin",
             "spieler2": "LANG Melanie",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 3
           },
           {
             "art": "OE",
@@ -1890,7 +1890,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 3,
-            "erg_auswaerts": 5,
+            "erg_auswaerts": 6,
             "id": 108938,
             "paarungen": [
               {
@@ -1953,8 +1953,8 @@
                 "art": "OE",
                 "spieler1": "FRÜSTÜCK Kerstin",
                 "spieler2": "LANG Melanie",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
