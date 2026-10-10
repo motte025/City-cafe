@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:10:34Z",
+  "aktualisiert": "2026-10-10T20:15:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -145,12 +145,12 @@
         {
           "rang": 1,
           "spieler": "RAINER Gerald",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 8,
-          "niederlagen": 0,
-          "legs_plus": 21,
-          "legs_minus": 3,
-          "punkte": 21
+          "niederlagen": 1,
+          "legs_plus": 22,
+          "legs_minus": 6,
+          "punkte": 22
         },
         {
           "rang": 2,
@@ -234,6 +234,16 @@
         },
         {
           "rang": 10,
+          "spieler": "ASPRIAN Johann",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 11,
+          "legs_minus": 9,
+          "punkte": 11
+        },
+        {
+          "rang": 11,
           "spieler": "FELLNER Johann",
           "spiele": 6,
           "siege": 3,
@@ -243,7 +253,7 @@
           "punkte": 10
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "JAHN Andreas",
           "spiele": 6,
           "siege": 3,
@@ -253,7 +263,7 @@
           "punkte": 10
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "KOLLER Elias",
           "spiele": 8,
           "siege": 3,
@@ -263,7 +273,7 @@
           "punkte": 10
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 4,
           "siege": 3,
@@ -273,7 +283,7 @@
           "punkte": 9
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 5,
           "siege": 2,
@@ -283,23 +293,13 @@
           "punkte": 9
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 5,
           "siege": 2,
           "niederlagen": 3,
           "legs_plus": 8,
           "legs_minus": 7,
-          "punkte": 8
-        },
-        {
-          "rang": 16,
-          "spieler": "ASPRIAN Johann",
-          "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
-          "legs_plus": 8,
-          "legs_minus": 8,
           "punkte": 8
         },
         {
@@ -324,20 +324,20 @@
         },
         {
           "rang": 19,
-          "spieler": "HOCHEGGER Martin",
+          "spieler": "REINISCH Jessica",
           "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
+          "siege": 3,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 8,
           "punkte": 7
         },
         {
           "rang": 20,
-          "spieler": "REINISCH Jessica",
+          "spieler": "HOCHEGGER Martin",
           "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
+          "siege": 2,
+          "niederlagen": 3,
           "legs_plus": 7,
           "legs_minus": 8,
           "punkte": 7
@@ -707,7 +707,7 @@
             "datum": "2026-10-10",
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Askö DC Sonne 2",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 6,
             "id": 109521,
             "paarungen": [
@@ -757,8 +757,8 @@
                 "art": "HE",
                 "spieler1": "ASPRIAN Johann",
                 "spieler2": "RAINER Gerald",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "DE",
