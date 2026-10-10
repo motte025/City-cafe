@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T17:55:33Z",
+  "aktualisiert": "2026-10-10T17:59:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -215,12 +215,12 @@
         {
           "rang": 8,
           "spieler": "JAMMER Fabian",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 3,
-          "niederlagen": 2,
-          "legs_plus": 10,
-          "legs_minus": 10,
-          "punkte": 10
+          "niederlagen": 3,
+          "legs_plus": 11,
+          "legs_minus": 13,
+          "punkte": 11
         },
         {
           "rang": 9,
@@ -334,6 +334,16 @@
         },
         {
           "rang": 20,
+          "spieler": "FRIEßNEGGER Gerhard",
+          "spiele": 4,
+          "siege": 1,
+          "niederlagen": 3,
+          "legs_plus": 6,
+          "legs_minus": 9,
+          "punkte": 6
+        },
+        {
+          "rang": 21,
           "spieler": "POLZER Hannah",
           "spiele": 3,
           "siege": 2,
@@ -343,7 +353,7 @@
           "punkte": 5
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 3,
           "siege": 1,
@@ -353,7 +363,7 @@
           "punkte": 5
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "REINISCH Jessica",
           "spiele": 4,
           "siege": 2,
@@ -363,7 +373,7 @@
           "punkte": 5
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "KOLLER Elias",
           "spiele": 6,
           "siege": 1,
@@ -373,7 +383,7 @@
           "punkte": 5
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "SCHECK Guenther",
           "spiele": 2,
           "siege": 2,
@@ -383,7 +393,7 @@
           "punkte": 4
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
@@ -393,7 +403,7 @@
           "punkte": 4
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 2,
           "siege": 1,
@@ -403,7 +413,7 @@
           "punkte": 4
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "LUBE Mario",
           "spiele": 2,
           "siege": 1,
@@ -413,7 +423,7 @@
           "punkte": 4
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "KOGLER Sabine",
           "spiele": 3,
           "siege": 1,
@@ -423,7 +433,7 @@
           "punkte": 4
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "BÄCKER Josephine",
           "spiele": 3,
           "siege": 0,
@@ -433,23 +443,13 @@
           "punkte": 4
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "JESENKO Julia",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
           "legs_plus": 3,
           "legs_minus": 2,
-          "punkte": 3
-        },
-        {
-          "rang": 31,
-          "spieler": "FRIEßNEGGER Gerhard",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
-          "legs_plus": 3,
-          "legs_minus": 8,
           "punkte": 3
         },
         {
@@ -707,7 +707,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "DC Schwarzer Kater",
             "erg_heim": 0,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 109543,
             "paarungen": [
               {
@@ -728,8 +728,8 @@
                 "art": "OE",
                 "spieler1": "JAMMER Fabian",
                 "spieler2": "FRIEßNEGGER Gerhard",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
