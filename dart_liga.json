@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T21:06:53Z",
+  "aktualisiert": "2026-10-10T21:07:43Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -27,24 +27,24 @@
         {
           "rang": 3,
           "team": "DC Fighting Penguins „Waddling Arrows“",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 3,
           "unentschieden": 0,
-          "niederlagen": 0,
+          "niederlagen": 1,
           "punkte": 6
         },
         {
           "rang": 4,
-          "team": "DC Cafe Seven",
-          "spiele": 2,
-          "siege": 1,
+          "team": "DC Schwarzer Kater",
+          "spiele": 3,
+          "siege": 2,
           "unentschieden": 0,
           "niederlagen": 1,
-          "punkte": 2
+          "punkte": 4
         },
         {
           "rang": 5,
-          "team": "DC Schwarzer Kater",
+          "team": "DC Cafe Seven",
           "spiele": 2,
           "siege": 1,
           "unentschieden": 0,
