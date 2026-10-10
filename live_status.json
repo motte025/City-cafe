@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-10T18:47:45Z",
+  "checked_at": "2026-10-10T19:02:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ THE BIG MEET 2026 - MUSIC with FRIENDS: @alexvaganza & @das_mondlicht ✨",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Wochenende? Wir geben Gas! <3  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ THE BIG MEET 2026 - MUSIC with FRIENDS: @alexvaganza & @das_mondlicht ✨",
       "game": "DJs"
     },
     {
@@ -41,6 +41,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "SWITCH OFF THE LIGHTS",
       "game": "DJs"
     }
   ]
