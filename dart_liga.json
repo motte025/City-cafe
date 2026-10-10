@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T17:24:31Z",
+  "aktualisiert": "2026-10-10T17:29:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1039,12 +1039,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 6,
-          "siege": 6,
+          "spiele": 7,
+          "siege": 7,
           "niederlagen": 0,
-          "legs_plus": 16,
+          "legs_plus": 19,
           "legs_minus": 2,
-          "punkte": 16
+          "punkte": 19
         },
         {
           "rang": 2,
@@ -1069,11 +1069,11 @@
         {
           "rang": 4,
           "spieler": "MARKTL Werner",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 4,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 13,
-          "legs_minus": 6,
+          "legs_minus": 9,
           "punkte": 13
         },
         {
@@ -1548,7 +1548,7 @@
             "datum": "2026-10-10",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC Garzern",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 0,
             "id": 108927,
             "paarungen": [
@@ -1563,7 +1563,7 @@
                 "art": "HE",
                 "spieler1": "NIKOLIC Dennis",
                 "spieler2": "MARKTL Werner",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
