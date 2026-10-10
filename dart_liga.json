@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T17:41:40Z",
+  "aktualisiert": "2026-10-10T17:55:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -981,7 +981,7 @@
         },
         "3": {
           "heim": 1,
-          "auswaerts": 0,
+          "auswaerts": 1,
           "id": 108938
         },
         "4": {
@@ -1068,6 +1068,16 @@
         },
         {
           "rang": 4,
+          "spieler": "GÖSCHL Mario",
+          "spiele": 7,
+          "siege": 5,
+          "niederlagen": 2,
+          "legs_plus": 14,
+          "legs_minus": 10,
+          "punkte": 14
+        },
+        {
+          "rang": 5,
           "spieler": "MARKTL Werner",
           "spiele": 6,
           "siege": 4,
@@ -1077,7 +1087,17 @@
           "punkte": 13
         },
         {
-          "rang": 5,
+          "rang": 6,
+          "spieler": "OBERZAN Lukas",
+          "spiele": 4,
+          "siege": 4,
+          "niederlagen": 0,
+          "legs_plus": 11,
+          "legs_minus": 3,
+          "punkte": 11
+        },
+        {
+          "rang": 7,
           "spieler": "WIMMER Leon",
           "spiele": 5,
           "siege": 4,
@@ -1087,17 +1107,7 @@
           "punkte": 11
         },
         {
-          "rang": 6,
-          "spieler": "GÖSCHL Mario",
-          "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
-          "legs_plus": 11,
-          "legs_minus": 8,
-          "punkte": 11
-        },
-        {
-          "rang": 7,
+          "rang": 8,
           "spieler": "BRUNNER Peter",
           "spiele": 6,
           "siege": 4,
@@ -1107,7 +1117,7 @@
           "punkte": 11
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "WIESER (J) David",
           "spiele": 4,
           "siege": 3,
@@ -1117,7 +1127,7 @@
           "punkte": 10
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1127,7 +1137,7 @@
           "punkte": 10
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "STINGLER Engelbert",
           "spiele": 6,
           "siege": 3,
@@ -1137,7 +1147,7 @@
           "punkte": 9
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 6,
           "siege": 3,
@@ -1147,7 +1157,7 @@
           "punkte": 9
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "FRADL Ingemar",
           "spiele": 7,
           "siege": 3,
@@ -1157,23 +1167,13 @@
           "punkte": 9
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
           "legs_plus": 8,
           "legs_minus": 0,
-          "punkte": 8
-        },
-        {
-          "rang": 14,
-          "spieler": "OBERZAN Lukas",
-          "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 2,
           "punkte": 8
         },
         {
@@ -1198,6 +1198,16 @@
         },
         {
           "rang": 17,
+          "spieler": "KRENN Klaus",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 18,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 5,
           "siege": 2,
@@ -1207,7 +1217,7 @@
           "punkte": 6
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "GREINIG Petra",
           "spiele": 4,
           "siege": 1,
@@ -1217,7 +1227,7 @@
           "punkte": 6
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "ETTL Theresa",
           "spiele": 5,
           "siege": 2,
@@ -1227,7 +1237,7 @@
           "punkte": 6
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "GRAF Franz",
           "spiele": 2,
           "siege": 2,
@@ -1237,7 +1247,7 @@
           "punkte": 5
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 3,
           "siege": 1,
@@ -1247,7 +1257,7 @@
           "punkte": 5
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 4,
           "siege": 1,
@@ -1257,7 +1267,7 @@
           "punkte": 5
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "ANWALD Guenther",
           "spiele": 4,
           "siege": 1,
@@ -1265,16 +1275,6 @@
           "legs_plus": 5,
           "legs_minus": 9,
           "punkte": 5
-        },
-        {
-          "rang": 24,
-          "spieler": "KRENN Klaus",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 3,
-          "punkte": 4
         },
         {
           "rang": 25,
@@ -1288,7 +1288,7 @@
         },
         {
           "rang": 26,
-          "spieler": "PAULITSCH Brigitte",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1298,7 +1298,7 @@
         },
         {
           "rang": 27,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "PAULITSCH Brigitte",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1378,6 +1378,16 @@
         },
         {
           "rang": 35,
+          "spieler": "KÜHWEIDER Thomas",
+          "spiele": 4,
+          "siege": 0,
+          "niederlagen": 4,
+          "legs_plus": 3,
+          "legs_minus": 11,
+          "punkte": 3
+        },
+        {
+          "rang": 36,
           "spieler": "SCHMID Thomas",
           "spiele": 1,
           "siege": 1,
@@ -1387,7 +1397,7 @@
           "punkte": 2
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 2,
           "siege": 0,
@@ -1397,7 +1407,7 @@
           "punkte": 2
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "POSCHINGER Franz",
           "spiele": 2,
           "siege": 0,
@@ -1407,23 +1417,13 @@
           "punkte": 2
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "RUS Kerstin",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
           "legs_plus": 2,
           "legs_minus": 5,
-          "punkte": 2
-        },
-        {
-          "rang": 39,
-          "spieler": "KÜHWEIDER Thomas",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
-          "legs_plus": 2,
-          "legs_minus": 8,
           "punkte": 2
         },
         {
@@ -1468,7 +1468,7 @@
       "letztes_spiel": {
         "runde": 3,
         "heim": 1,
-        "auswaerts": 0,
+        "auswaerts": 1,
         "paarungen": [
           {
             "art": "DE",
@@ -1481,8 +1481,8 @@
             "art": "HE",
             "spieler1": "KRENN Klaus",
             "spieler2": "GÖSCHL Mario",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 2,
+            "legs2": 3
           },
           {
             "art": "OE",
@@ -1510,7 +1510,7 @@
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "erg_heim": 1,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 108916,
             "paarungen": [
               {
@@ -1524,8 +1524,8 @@
                 "art": "HE",
                 "spieler1": "KÜHWEIDER Thomas",
                 "spieler2": "OBERZAN Lukas",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
@@ -1588,7 +1588,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 1,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 108938,
             "paarungen": [
               {
@@ -1602,8 +1602,8 @@
                 "art": "HE",
                 "spieler1": "KRENN Klaus",
                 "spieler2": "GÖSCHL Mario",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
