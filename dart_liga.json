@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:33:33Z",
+  "aktualisiert": "2026-10-10T18:34:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -184,6 +184,16 @@
         },
         {
           "rang": 5,
+          "spieler": "ELEZOSKI Serif",
+          "spiele": 5,
+          "siege": 4,
+          "niederlagen": 1,
+          "legs_plus": 14,
+          "legs_minus": 3,
+          "punkte": 14
+        },
+        {
+          "rang": 6,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -193,7 +203,7 @@
           "punkte": 14
         },
         {
-          "rang": 6,
+          "rang": 7,
           "spieler": "BERGLER Benjamin",
           "spiele": 7,
           "siege": 4,
@@ -201,16 +211,6 @@
           "legs_plus": 14,
           "legs_minus": 13,
           "punkte": 14
-        },
-        {
-          "rang": 7,
-          "spieler": "ELEZOSKI Serif",
-          "spiele": 4,
-          "siege": 3,
-          "niederlagen": 1,
-          "legs_plus": 11,
-          "legs_minus": 3,
-          "punkte": 11
         },
         {
           "rang": 8,
@@ -274,16 +274,6 @@
         },
         {
           "rang": 14,
-          "spieler": "HOCHEGGER Martin",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 7,
-          "legs_minus": 3,
-          "punkte": 7
-        },
-        {
-          "rang": 15,
           "spieler": "BRUNNER Jürgen",
           "spiele": 3,
           "siege": 2,
@@ -293,13 +283,23 @@
           "punkte": 7
         },
         {
-          "rang": 16,
+          "rang": 15,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 5,
+          "punkte": 7
+        },
+        {
+          "rang": 16,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 6,
           "punkte": 7
         },
         {
@@ -314,10 +314,10 @@
         },
         {
           "rang": 18,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 3,
+          "spieler": "HOCHEGGER Martin",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 6,
           "punkte": 7
@@ -678,7 +678,7 @@
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Askö DC Sonne 2",
             "erg_heim": 0,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 109521,
             "paarungen": [
               {
@@ -707,7 +707,7 @@
                 "spieler1": "HOCHEGGER Martin",
                 "spieler2": "ELEZOSKI Serif",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               }
             ]
           },
