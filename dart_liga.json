@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T21:30:35Z",
+  "aktualisiert": "2026-10-10T21:39:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -44,16 +44,16 @@
         },
         {
           "rang": 5,
-          "team": "DC Cafe Seven",
-          "spiele": 2,
-          "siege": 1,
+          "team": "Dart Fuchs 4",
+          "spiele": 4,
+          "siege": 2,
           "unentschieden": 0,
-          "niederlagen": 1,
-          "punkte": 2
+          "niederlagen": 2,
+          "punkte": 4
         },
         {
           "rang": 6,
-          "team": "Dart Fuchs 4",
+          "team": "DC Cafe Seven",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -244,6 +244,16 @@
         },
         {
           "rang": 11,
+          "spieler": "KOLLER Elias",
+          "spiele": 9,
+          "siege": 4,
+          "niederlagen": 5,
+          "legs_plus": 13,
+          "legs_minus": 16,
+          "punkte": 13
+        },
+        {
+          "rang": 12,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 5,
           "siege": 4,
@@ -253,7 +263,7 @@
           "punkte": 12
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 6,
           "siege": 3,
@@ -263,7 +273,7 @@
           "punkte": 12
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 6,
           "siege": 3,
@@ -273,7 +283,7 @@
           "punkte": 11
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "ASPRIAN Johann",
           "spiele": 6,
           "siege": 3,
@@ -283,7 +293,7 @@
           "punkte": 11
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "REINISCH Jessica",
           "spiele": 6,
           "siege": 4,
@@ -293,23 +303,13 @@
           "punkte": 10
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "JAHN Andreas",
           "spiele": 6,
           "siege": 3,
           "niederlagen": 3,
           "legs_plus": 10,
           "legs_minus": 12,
-          "punkte": 10
-        },
-        {
-          "rang": 17,
-          "spieler": "KOLLER Elias",
-          "spiele": 8,
-          "siege": 3,
-          "niederlagen": 5,
-          "legs_plus": 10,
-          "legs_minus": 16,
           "punkte": 10
         },
         {
@@ -514,17 +514,17 @@
         },
         {
           "rang": 38,
-          "spieler": "BERCHTOLD Alex",
-          "spiele": 2,
+          "spieler": "AMBROS Thomas",
+          "spiele": 3,
           "siege": 0,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 2,
-          "legs_minus": 5,
+          "legs_minus": 8,
           "punkte": 2
         },
         {
           "rang": 39,
-          "spieler": "AMBROS Thomas",
+          "spieler": "BERCHTOLD Alex",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -869,7 +869,7 @@
             "datum": "2026-10-10",
             "heim": "Dart Fuchs 4",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 5,
+            "erg_heim": 6,
             "erg_auswaerts": 4,
             "id": 109554,
             "paarungen": [
@@ -940,7 +940,7 @@
                 "art": "OE",
                 "spieler1": "KOLLER Elias",
                 "spieler2": "BERCHTOLD Alex",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
