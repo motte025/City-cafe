@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T23:02:47Z",
+  "checked_at": "2026-10-10T23:07:44Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🃏🎸80’s NIGHT WHY SO SERIOUS??? 🃏❤️‍🔥 REQUESTS OPEN !request !tip !patreon !youtube !merch Stream #4 of ChazzyWeen 👻",
       "game": "DJs"
     }
   ]
