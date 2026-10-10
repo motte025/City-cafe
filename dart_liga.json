@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T19:12:42Z",
+  "aktualisiert": "2026-10-10T19:14:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1111,12 +1111,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 8,
-          "siege": 8,
+          "spiele": 9,
+          "siege": 9,
           "niederlagen": 0,
-          "legs_plus": 21,
-          "legs_minus": 2,
-          "punkte": 21
+          "legs_plus": 24,
+          "legs_minus": 3,
+          "punkte": 24
         },
         {
           "rang": 2,
@@ -1230,6 +1230,16 @@
         },
         {
           "rang": 13,
+          "spieler": "FRADL Ingemar",
+          "spiele": 9,
+          "siege": 3,
+          "niederlagen": 6,
+          "legs_plus": 10,
+          "legs_minus": 19,
+          "punkte": 10
+        },
+        {
+          "rang": 14,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 5,
           "siege": 2,
@@ -1239,23 +1249,13 @@
           "punkte": 9
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "STINGLER Engelbert",
           "spiele": 6,
           "siege": 3,
           "niederlagen": 3,
           "legs_plus": 9,
           "legs_minus": 10,
-          "punkte": 9
-        },
-        {
-          "rang": 15,
-          "spieler": "FRADL Ingemar",
-          "spiele": 8,
-          "siege": 3,
-          "niederlagen": 5,
-          "legs_plus": 9,
-          "legs_minus": 16,
           "punkte": 9
         },
         {
@@ -1648,7 +1648,7 @@
             "datum": "2026-10-10",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC Garzern",
-            "erg_heim": 5,
+            "erg_heim": 6,
             "erg_auswaerts": 1,
             "id": 108927,
             "paarungen": [
@@ -1698,8 +1698,8 @@
                 "art": "HE",
                 "spieler1": "NIKOLIC Dennis",
                 "spieler2": "FRADL Ingemar",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "DE",
