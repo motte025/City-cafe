@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T19:25:37Z",
+  "aktualisiert": "2026-10-10T19:34:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1687,6 +1687,34 @@
                 "spieler1": "UNTERDORFER Heimo / STEINER Manuel",
                 "spieler2": "STEINER Lydia / STEINER Sandro Emmanuel",
                 "legs1": 2,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "BRUNNER Katharina",
+                "spieler2": "OBERZAN Lukas",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "BRUNNER Peter",
+                "spieler2": "STEINER Lydia",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "STEINER Manuel",
+                "spieler2": "PAULITSCH Brigitte",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "UNTERDORFER Heimo",
+                "spieler2": "STEINER Sandro Emmanuel",
+                "legs1": 0,
                 "legs2": 0
               }
             ]
