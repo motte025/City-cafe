@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:25:32Z",
+  "aktualisiert": "2026-10-10T18:26:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -747,6 +747,20 @@
                 "spieler2": "KERNSTOCK Michael",
                 "legs1": 2,
                 "legs2": 3
+              },
+              {
+                "art": "MD",
+                "spieler1": "POLZER Hannah / SCHERWITZEL Manuel",
+                "spieler2": "HOPFGARTNER Joachim / FRIEßNEGGER Sarah",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "BERGLER Benjamin / JAMMER Fabian",
+                "spieler2": "SCHADER Andreas / FRIEßNEGGER Manuela",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           },
@@ -1108,6 +1122,16 @@
         },
         {
           "rang": 7,
+          "spieler": "STEINER Sandro Emmanuel",
+          "spiele": 4,
+          "siege": 4,
+          "niederlagen": 0,
+          "legs_plus": 11,
+          "legs_minus": 0,
+          "punkte": 11
+        },
+        {
+          "rang": 8,
           "spieler": "OBERZAN Lukas",
           "spiele": 4,
           "siege": 4,
@@ -1117,7 +1141,7 @@
           "punkte": 11
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "WIMMER Leon",
           "spiele": 5,
           "siege": 4,
@@ -1127,7 +1151,7 @@
           "punkte": 11
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "WIESER (J) David",
           "spiele": 4,
           "siege": 3,
@@ -1137,7 +1161,7 @@
           "punkte": 10
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1147,7 +1171,7 @@
           "punkte": 10
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 4,
           "siege": 2,
@@ -1157,7 +1181,7 @@
           "punkte": 9
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "STINGLER Engelbert",
           "spiele": 6,
           "siege": 3,
@@ -1167,7 +1191,7 @@
           "punkte": 9
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 6,
           "siege": 3,
@@ -1177,7 +1201,7 @@
           "punkte": 9
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "FRADL Ingemar",
           "spiele": 7,
           "siege": 3,
@@ -1185,16 +1209,6 @@
           "legs_plus": 9,
           "legs_minus": 14,
           "punkte": 9
-        },
-        {
-          "rang": 15,
-          "spieler": "STEINER Sandro Emmanuel",
-          "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 8,
-          "legs_minus": 0,
-          "punkte": 8
         },
         {
           "rang": 16,
@@ -1268,16 +1282,6 @@
         },
         {
           "rang": 23,
-          "spieler": "UNTERDORFER Heimo",
-          "spiele": 3,
-          "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 5,
-          "legs_minus": 6,
-          "punkte": 5
-        },
-        {
-          "rang": 24,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 4,
           "siege": 1,
@@ -1287,8 +1291,18 @@
           "punkte": 5
         },
         {
+          "rang": 24,
+          "spieler": "UNTERDORFER Heimo",
+          "spiele": 4,
+          "siege": 1,
+          "niederlagen": 3,
+          "legs_plus": 5,
+          "legs_minus": 9,
+          "punkte": 5
+        },
+        {
           "rang": 25,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1298,7 +1312,7 @@
         },
         {
           "rang": 26,
-          "spieler": "OSTRY Samantha-Lee",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1448,7 +1462,7 @@
         },
         {
           "rang": 41,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1458,7 +1472,7 @@
         },
         {
           "rang": 42,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1520,7 +1534,7 @@
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "erg_heim": 2,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 108916,
             "paarungen": [
               {
@@ -1549,7 +1563,7 @@
                 "spieler1": "UNTERDORFER Heimo",
                 "spieler2": "STEINER Sandro Emmanuel",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               }
             ]
           },
