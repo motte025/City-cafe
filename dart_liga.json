@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:15:35Z",
+  "aktualisiert": "2026-10-10T20:16:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1147,7 +1147,7 @@
         },
         "3": {
           "heim": 2,
-          "auswaerts": 4,
+          "auswaerts": 5,
           "id": 108938
         },
         "4": {
@@ -1224,6 +1224,16 @@
         },
         {
           "rang": 3,
+          "spieler": "GÖSCHL Mario",
+          "spiele": 9,
+          "siege": 7,
+          "niederlagen": 2,
+          "legs_plus": 19,
+          "legs_minus": 11,
+          "punkte": 19
+        },
+        {
+          "rang": 4,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
@@ -1233,23 +1243,13 @@
           "punkte": 17
         },
         {
-          "rang": 4,
+          "rang": 5,
           "spieler": "OBERZAN Lukas",
           "spiele": 6,
           "siege": 6,
           "niederlagen": 0,
           "legs_plus": 16,
           "legs_minus": 3,
-          "punkte": 16
-        },
-        {
-          "rang": 5,
-          "spieler": "GÖSCHL Mario",
-          "spiele": 8,
-          "siege": 6,
-          "niederlagen": 2,
-          "legs_plus": 16,
-          "legs_minus": 10,
           "punkte": 16
         },
         {
@@ -1364,19 +1364,19 @@
         },
         {
           "rang": 17,
-          "spieler": "STÜCKLER Heidemarie",
+          "spieler": "SONNBERGER Harald",
           "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 8,
-          "legs_minus": 9,
-          "punkte": 8
+          "siege": 2,
+          "niederlagen": 4,
+          "legs_plus": 9,
+          "legs_minus": 12,
+          "punkte": 9
         },
         {
           "rang": 18,
-          "spieler": "SONNBERGER Harald",
-          "spiele": 5,
-          "siege": 2,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 6,
+          "siege": 3,
           "niederlagen": 3,
           "legs_plus": 8,
           "legs_minus": 9,
@@ -1644,7 +1644,7 @@
       "letztes_spiel": {
         "runde": 3,
         "heim": 2,
-        "auswaerts": 4,
+        "auswaerts": 5,
         "paarungen": [
           {
             "art": "DE",
@@ -1692,8 +1692,8 @@
             "art": "HE",
             "spieler1": "SONNBERGER Harald",
             "spieler2": "GÖSCHL Mario",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 3
           },
           {
             "art": "DE",
@@ -1890,7 +1890,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 2,
-            "erg_auswaerts": 4,
+            "erg_auswaerts": 5,
             "id": 108938,
             "paarungen": [
               {
@@ -1939,8 +1939,8 @@
                 "art": "HE",
                 "spieler1": "SONNBERGER Harald",
                 "spieler2": "GÖSCHL Mario",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "DE",
