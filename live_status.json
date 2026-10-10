@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T13:22:45Z",
+  "checked_at": "2026-10-10T13:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "roice",
+      "name": "roice",
+      "title": "The Love Potion Raid Train !lovepotion !bewbs !morestreams !alt",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "The Love Potion Raid Train !lovepotion !bewbs !morestreams !alt",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
