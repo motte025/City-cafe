@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T14:42:45Z",
+  "checked_at": "2026-10-10T14:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Cyber Nun: Convent of Techno!! dopamine boost",
       "game": "DJs"
     }
   ]
