@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T17:36:32Z",
+  "aktualisiert": "2026-10-10T17:40:50Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -144,6 +144,16 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "KLEINHAPPEL Ernestine",
+          "spiele": 7,
+          "siege": 7,
+          "niederlagen": 0,
+          "legs_plus": 19,
+          "legs_minus": 5,
+          "punkte": 19
+        },
+        {
+          "rang": 2,
           "spieler": "DOUJAK Siegfried",
           "spiele": 6,
           "siege": 6,
@@ -153,23 +163,13 @@
           "punkte": 16
         },
         {
-          "rang": 2,
+          "rang": 3,
           "spieler": "RAINER Gerald",
           "spiele": 6,
           "siege": 6,
           "niederlagen": 0,
           "legs_plus": 16,
           "legs_minus": 3,
-          "punkte": 16
-        },
-        {
-          "rang": 3,
-          "spieler": "KLEINHAPPEL Ernestine",
-          "spiele": 6,
-          "siege": 6,
-          "niederlagen": 0,
-          "legs_plus": 16,
-          "legs_minus": 4,
           "punkte": 16
         },
         {
@@ -244,17 +244,17 @@
         },
         {
           "rang": 11,
-          "spieler": "HOCHEGGER Martin",
-          "spiele": 3,
+          "spieler": "HOCHEGGER Andrea",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 7,
-          "legs_minus": 3,
-          "punkte": 7
+          "niederlagen": 2,
+          "legs_plus": 8,
+          "legs_minus": 6,
+          "punkte": 8
         },
         {
           "rang": 12,
-          "spieler": "HOCHEGGER Andrea",
+          "spieler": "HOCHEGGER Martin",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -274,20 +274,20 @@
         },
         {
           "rang": 14,
-          "spieler": "FRIEßNEGGER Manuela",
-          "spiele": 4,
+          "spieler": "BRUNNER Jürgen",
+          "spiele": 3,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 1,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
         },
         {
           "rang": 15,
-          "spieler": "BRUNNER Jürgen",
-          "spiele": 3,
+          "spieler": "FRIEßNEGGER Manuela",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
@@ -454,7 +454,7 @@
         },
         {
           "rang": 32,
-          "spieler": "GORICNIK Cornelia",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -464,7 +464,7 @@
         },
         {
           "rang": 33,
-          "spieler": "ROSSMANN Christoph",
+          "spieler": "GORICNIK Cornelia",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -668,15 +668,15 @@
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Askö DC Sonne 2",
             "erg_heim": 0,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109521,
             "paarungen": [
               {
                 "art": "DE",
                 "spieler1": "HOCHEGGER Andrea",
                 "spieler2": "KLEINHAPPEL Ernestine",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "HE",
