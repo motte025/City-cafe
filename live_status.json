@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-10T17:52:45Z",
+  "checked_at": "2026-10-10T18:07:51Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ THE BIG MEET 2026 - MUSIC with FRIENDS: @alexvaganza & @das_mondlicht ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 MUTE MARATHON TAG 98😈 | House Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -48,6 +41,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 MUTE MARATHON TAG 98😈 | House Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
