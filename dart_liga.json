@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:28:34Z",
+  "aktualisiert": "2026-10-10T20:38:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -144,6 +144,16 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "KLEINHAPPEL Ernestine",
+          "spiele": 9,
+          "siege": 9,
+          "niederlagen": 0,
+          "legs_plus": 24,
+          "legs_minus": 5,
+          "punkte": 24
+        },
+        {
+          "rang": 2,
           "spieler": "RAINER Gerald",
           "spiele": 9,
           "siege": 8,
@@ -153,7 +163,17 @@
           "punkte": 22
         },
         {
-          "rang": 2,
+          "rang": 3,
+          "spieler": "URANK Romeo",
+          "spiele": 9,
+          "siege": 7,
+          "niederlagen": 2,
+          "legs_plus": 22,
+          "legs_minus": 11,
+          "punkte": 22
+        },
+        {
+          "rang": 4,
           "spieler": "DOUJAK Siegfried",
           "spiele": 8,
           "siege": 8,
@@ -161,26 +181,6 @@
           "legs_plus": 21,
           "legs_minus": 3,
           "punkte": 21
-        },
-        {
-          "rang": 3,
-          "spieler": "KLEINHAPPEL Ernestine",
-          "spiele": 8,
-          "siege": 8,
-          "niederlagen": 0,
-          "legs_plus": 21,
-          "legs_minus": 5,
-          "punkte": 21
-        },
-        {
-          "rang": 4,
-          "spieler": "URANK Romeo",
-          "spiele": 8,
-          "siege": 6,
-          "niederlagen": 2,
-          "legs_plus": 19,
-          "legs_minus": 11,
-          "punkte": 19
         },
         {
           "rang": 5,
@@ -195,11 +195,11 @@
         {
           "rang": 6,
           "spieler": "ELEZOSKI Serif",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 4,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 14,
-          "legs_minus": 3,
+          "legs_minus": 6,
           "punkte": 14
         },
         {
@@ -305,11 +305,11 @@
         {
           "rang": 17,
           "spieler": "HOCHEGGER Andrea",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 2,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 8,
-          "legs_minus": 8,
+          "legs_minus": 11,
           "punkte": 8
         },
         {
@@ -707,8 +707,8 @@
             "datum": "2026-10-10",
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Askö DC Sonne 2",
-            "erg_heim": 1,
-            "erg_auswaerts": 6,
+            "erg_heim": 2,
+            "erg_auswaerts": 7,
             "id": 109521,
             "paarungen": [
               {
@@ -765,13 +765,13 @@
                 "spieler1": "HOCHEGGER Andrea",
                 "spieler2": "KLEINHAPPEL Ernestine",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "OE",
                 "spieler1": "URANK Romeo",
                 "spieler2": "ELEZOSKI Serif",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
