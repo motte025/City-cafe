@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T12:22:46Z",
+  "checked_at": "2026-10-10T12:37:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Es gibt Bass und Melodie | !holy",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Es gibt Bass und Melodie | !holy",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
