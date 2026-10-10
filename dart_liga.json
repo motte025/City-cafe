@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T19:16:33Z",
+  "aktualisiert": "2026-10-10T19:21:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -184,6 +184,16 @@
         },
         {
           "rang": 5,
+          "spieler": "BERGLER Benjamin",
+          "spiele": 8,
+          "siege": 5,
+          "niederlagen": 3,
+          "legs_plus": 16,
+          "legs_minus": 14,
+          "punkte": 16
+        },
+        {
+          "rang": 6,
           "spieler": "ELEZOSKI Serif",
           "spiele": 5,
           "siege": 4,
@@ -193,7 +203,7 @@
           "punkte": 14
         },
         {
-          "rang": 6,
+          "rang": 7,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -203,33 +213,23 @@
           "punkte": 14
         },
         {
-          "rang": 7,
-          "spieler": "BERGLER Benjamin",
+          "rang": 8,
+          "spieler": "JAMMER Fabian",
           "spiele": 7,
           "siege": 4,
           "niederlagen": 3,
-          "legs_plus": 14,
-          "legs_minus": 13,
-          "punkte": 14
+          "legs_plus": 13,
+          "legs_minus": 14,
+          "punkte": 13
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "JAHN Corinna",
           "spiele": 4,
           "siege": 3,
           "niederlagen": 1,
           "legs_plus": 11,
           "legs_minus": 4,
-          "punkte": 11
-        },
-        {
-          "rang": 9,
-          "spieler": "JAMMER Fabian",
-          "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 11,
-          "legs_minus": 13,
           "punkte": 11
         },
         {
@@ -264,6 +264,16 @@
         },
         {
           "rang": 13,
+          "spieler": "FRIEßNEGGER Manuela",
+          "spiele": 5,
+          "siege": 2,
+          "niederlagen": 3,
+          "legs_plus": 8,
+          "legs_minus": 7,
+          "punkte": 8
+        },
+        {
+          "rang": 14,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 5,
           "siege": 2,
@@ -273,7 +283,7 @@
           "punkte": 8
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "KOLLER Elias",
           "spiele": 7,
           "siege": 2,
@@ -281,16 +291,6 @@
           "legs_plus": 8,
           "legs_minus": 16,
           "punkte": 8
-        },
-        {
-          "rang": 15,
-          "spieler": "FRIEßNEGGER Manuela",
-          "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
-          "legs_plus": 7,
-          "legs_minus": 5,
-          "punkte": 7
         },
         {
           "rang": 16,
@@ -524,6 +524,16 @@
         },
         {
           "rang": 39,
+          "spieler": "SCHADER Andreas",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 1,
+          "legs_minus": 2,
+          "punkte": 1
+        },
+        {
+          "rang": 40,
           "spieler": "JAHN Christian",
           "spiele": 3,
           "siege": 0,
@@ -533,7 +543,7 @@
           "punkte": 1
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "GORICNIK Michael",
           "spiele": 4,
           "siege": 0,
@@ -543,7 +553,7 @@
           "punkte": 1
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "SCHERWITZEL Manuel",
           "spiele": 1,
           "siege": 0,
@@ -553,7 +563,7 @@
           "punkte": 0
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "PROVNIK Gabriele",
           "spiele": 1,
           "siege": 0,
@@ -563,7 +573,7 @@
           "punkte": 0
         },
         {
-          "rang": 43,
+          "rang": 44,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -573,7 +583,7 @@
           "punkte": 0
         },
         {
-          "rang": 44,
+          "rang": 45,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
@@ -583,7 +593,7 @@
           "punkte": 0
         },
         {
-          "rang": 45,
+          "rang": 46,
           "spieler": "APOVNIK Gabriele",
           "spiele": 3,
           "siege": 0,
@@ -593,7 +603,7 @@
           "punkte": 0
         },
         {
-          "rang": 46,
+          "rang": 47,
           "spieler": "JAHN Herbert",
           "spiele": 5,
           "siege": 0,
@@ -750,7 +760,7 @@
             "datum": "2026-10-10",
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "DC Schwarzer Kater",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 5,
             "id": 109543,
             "paarungen": [
@@ -793,8 +803,8 @@
                 "art": "OD",
                 "spieler1": "BERGLER Benjamin / JAMMER Fabian",
                 "spieler2": "SCHADER Andreas / FRIEßNEGGER Manuela",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 1
               }
             ]
           },
