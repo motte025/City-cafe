@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T08:32:45Z",
+  "checked_at": "2026-10-10T08:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴  HARDSTYLE + HARDTECHNO ☆ !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴  HARDSTYLE + HARDTECHNO ☆ !naturtreu 🔴🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
