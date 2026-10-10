@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:43:53Z",
+  "aktualisiert": "2026-10-10T21:00:48Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -870,7 +870,7 @@
             "heim": "Dart Fuchs 4",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 4,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 109554,
             "paarungen": [
               {
@@ -926,8 +926,8 @@
                 "art": "DE",
                 "spieler1": "BÄCKER Josephine",
                 "spieler2": "REINISCH Jessica",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
