@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T01:47:45Z",
+  "checked_at": "2026-10-10T02:04:21Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "👩‍⚕️🏥 911 whats your emergency?? 🏥🧠 Stream 3 of ChazzyWeen !request !tip !patreon !youtube !merch",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "👩‍⚕️🏥 911 whats your emergency?? 🏥🧠 Stream 3 of ChazzyWeen !request !tip !patreon !youtube !merch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "Let the Sound Infect",
       "game": "DJs"
     }
   ]
