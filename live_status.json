@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-10T21:52:47Z",
+  "checked_at": "2026-10-10T22:02:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "SWITCH OFF THE LIGHTS",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wochenende? Wir geben Gas! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -27,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SCHRANZ IS BACK | FELIX KRÖCHER",
       "game": "DJs"
     }
   ]
