@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T06:47:52Z",
+  "checked_at": "2026-10-10T07:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -19,7 +19,21 @@
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
-      "title": "Let the Sound Infect",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "09-13 Uhr: Classics mit @dj_falk",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     }
   ]
