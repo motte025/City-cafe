@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T01:22:45Z",
+  "checked_at": "2026-10-10T01:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "Let the Sound Infect",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "👩‍⚕️🏥 911 whats your emergency?? 🏥🧠 Stream 3 of ChazzyWeen !request !tip !patreon !youtube !merch",
       "game": "DJs"
     }
   ]
