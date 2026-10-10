@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T15:27:45Z",
+  "checked_at": "2026-10-10T15:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Cyber Nun: Convent of Techno!! dopamine boost",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Cyber Nun: Convent of Techno!! dopamine boost",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
