@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:46:33Z",
+  "aktualisiert": "2026-10-10T18:47:43Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -254,6 +254,16 @@
         },
         {
           "rang": 12,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 9,
+          "legs_minus": 6,
+          "punkte": 9
+        },
+        {
+          "rang": 13,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 4,
           "siege": 2,
@@ -263,7 +273,7 @@
           "punkte": 8
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "KOLLER Elias",
           "spiele": 7,
           "siege": 2,
@@ -273,7 +283,7 @@
           "punkte": 8
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "BRUNNER Jürgen",
           "spiele": 3,
           "siege": 2,
@@ -283,23 +293,13 @@
           "punkte": 7
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 5,
-          "punkte": 7
-        },
-        {
-          "rang": 16,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 7,
-          "legs_minus": 6,
           "punkte": 7
         },
         {
@@ -334,7 +334,7 @@
         },
         {
           "rang": 20,
-          "spieler": "SCHNEIDER Thomas",
+          "spieler": "FRIEßNEGGER Sarah",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
@@ -344,6 +344,16 @@
         },
         {
           "rang": 21,
+          "spieler": "SCHNEIDER Thomas",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 6,
+          "legs_minus": 4,
+          "punkte": 6
+        },
+        {
+          "rang": 22,
           "spieler": "SCHNEIDER Hermann",
           "spiele": 3,
           "siege": 1,
@@ -353,7 +363,7 @@
           "punkte": 6
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 4,
           "siege": 1,
@@ -361,16 +371,6 @@
           "legs_plus": 6,
           "legs_minus": 9,
           "punkte": 6
-        },
-        {
-          "rang": 23,
-          "spieler": "POLZER Hannah",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 5,
-          "legs_minus": 6,
-          "punkte": 5
         },
         {
           "rang": 24,
@@ -384,6 +384,16 @@
         },
         {
           "rang": 25,
+          "spieler": "POLZER Hannah",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 5,
+          "legs_minus": 8,
+          "punkte": 5
+        },
+        {
+          "rang": 26,
           "spieler": "SCHECK Guenther",
           "spiele": 2,
           "siege": 2,
@@ -393,18 +403,8 @@
           "punkte": 4
         },
         {
-          "rang": 26,
-          "spieler": "KREUZER Silvia",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 4,
-          "punkte": 4
-        },
-        {
           "rang": 27,
-          "spieler": "FRIEßNEGGER Sarah",
+          "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -464,7 +464,7 @@
         },
         {
           "rang": 33,
-          "spieler": "GORICNIK Cornelia",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -474,7 +474,7 @@
         },
         {
           "rang": 34,
-          "spieler": "ROSSMANN Christoph",
+          "spieler": "GORICNIK Cornelia",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -534,7 +534,7 @@
         },
         {
           "rang": 40,
-          "spieler": "PROVNIK Gabriele",
+          "spieler": "SCHERWITZEL Manuel",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -544,6 +544,16 @@
         },
         {
           "rang": 41,
+          "spieler": "PROVNIK Gabriele",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 0,
+          "legs_minus": 2,
+          "punkte": 0
+        },
+        {
+          "rang": 42,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -553,7 +563,7 @@
           "punkte": 0
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
@@ -563,7 +573,7 @@
           "punkte": 0
         },
         {
-          "rang": 43,
+          "rang": 44,
           "spieler": "APOVNIK Gabriele",
           "spiele": 3,
           "siege": 0,
@@ -573,7 +583,7 @@
           "punkte": 0
         },
         {
-          "rang": 44,
+          "rang": 45,
           "spieler": "JAHN Herbert",
           "spiele": 5,
           "siege": 0,
@@ -731,7 +741,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "DC Schwarzer Kater",
             "erg_heim": 0,
-            "erg_auswaerts": 4,
+            "erg_auswaerts": 5,
             "id": 109543,
             "paarungen": [
               {
@@ -767,7 +777,7 @@
                 "spieler1": "POLZER Hannah / SCHERWITZEL Manuel",
                 "spieler2": "HOPFGARTNER Joachim / FRIEßNEGGER Sarah",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               },
               {
                 "art": "OD",
