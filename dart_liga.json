@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T17:30:37Z",
+  "aktualisiert": "2026-10-10T17:36:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -195,12 +195,12 @@
         {
           "rang": 6,
           "spieler": "BERGLER Benjamin",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 4,
-          "niederlagen": 2,
-          "legs_plus": 12,
-          "legs_minus": 10,
-          "punkte": 12
+          "niederlagen": 3,
+          "legs_plus": 14,
+          "legs_minus": 13,
+          "punkte": 14
         },
         {
           "rang": 7,
@@ -294,6 +294,16 @@
         },
         {
           "rang": 16,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 6,
+          "punkte": 7
+        },
+        {
+          "rang": 17,
           "spieler": "FELLNER Johann",
           "spiele": 4,
           "siege": 2,
@@ -303,7 +313,7 @@
           "punkte": 7
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 3,
           "siege": 2,
@@ -313,7 +323,7 @@
           "punkte": 6
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "SCHNEIDER Hermann",
           "spiele": 3,
           "siege": 1,
@@ -323,7 +333,7 @@
           "punkte": 6
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "POLZER Hannah",
           "spiele": 3,
           "siege": 2,
@@ -333,7 +343,7 @@
           "punkte": 5
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 3,
           "siege": 1,
@@ -343,7 +353,17 @@
           "punkte": 5
         },
         {
-          "rang": 21,
+          "rang": 22,
+          "spieler": "REINISCH Jessica",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 5,
+          "legs_minus": 8,
+          "punkte": 5
+        },
+        {
+          "rang": 23,
           "spieler": "KOLLER Elias",
           "spiele": 6,
           "siege": 1,
@@ -353,7 +373,7 @@
           "punkte": 5
         },
         {
-          "rang": 22,
+          "rang": 24,
           "spieler": "SCHECK Guenther",
           "spiele": 2,
           "siege": 2,
@@ -363,17 +383,7 @@
           "punkte": 4
         },
         {
-          "rang": 23,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 4,
-          "punkte": 4
-        },
-        {
-          "rang": 24,
+          "rang": 25,
           "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
@@ -383,7 +393,7 @@
           "punkte": 4
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 2,
           "siege": 1,
@@ -393,7 +403,7 @@
           "punkte": 4
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "LUBE Mario",
           "spiele": 2,
           "siege": 1,
@@ -403,7 +413,7 @@
           "punkte": 4
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "KOGLER Sabine",
           "spiele": 3,
           "siege": 1,
@@ -413,7 +423,17 @@
           "punkte": 4
         },
         {
-          "rang": 28,
+          "rang": 29,
+          "spieler": "BÄCKER Josephine",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 4,
+          "legs_minus": 9,
+          "punkte": 4
+        },
+        {
+          "rang": 30,
           "spieler": "JESENKO Julia",
           "spiele": 2,
           "siege": 1,
@@ -423,28 +443,8 @@
           "punkte": 3
         },
         {
-          "rang": 29,
-          "spieler": "BÄCKER Josephine",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 3,
-          "legs_minus": 6,
-          "punkte": 3
-        },
-        {
-          "rang": 30,
-          "spieler": "FRIEßNEGGER Gerhard",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
-          "legs_plus": 3,
-          "legs_minus": 8,
-          "punkte": 3
-        },
-        {
           "rang": 31,
-          "spieler": "ROSSMANN Christoph",
+          "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -464,13 +464,13 @@
         },
         {
           "rang": 33,
-          "spieler": "REINISCH Jessica",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
-          "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 2,
-          "legs_minus": 7,
-          "punkte": 2
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 3,
+          "legs_minus": 8,
+          "punkte": 3
         },
         {
           "rang": 34,
@@ -707,7 +707,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "DC Schwarzer Kater",
             "erg_heim": 0,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109543,
             "paarungen": [
               {
@@ -721,8 +721,8 @@
                 "art": "HE",
                 "spieler1": "BERGLER Benjamin",
                 "spieler2": "HOPFGARTNER Joachim",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
@@ -746,15 +746,15 @@
             "heim": "Dart Fuchs 4",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 0,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109554,
             "paarungen": [
               {
                 "art": "DE",
                 "spieler1": "BÄCKER Josephine",
                 "spieler2": "REINISCH Jessica",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "HE",
