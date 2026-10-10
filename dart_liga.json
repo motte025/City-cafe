@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T19:06:34Z",
+  "aktualisiert": "2026-10-10T19:08:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -284,16 +284,6 @@
         },
         {
           "rang": 15,
-          "spieler": "BRUNNER Jürgen",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 7,
-          "legs_minus": 5,
-          "punkte": 7
-        },
-        {
-          "rang": 16,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 4,
           "siege": 2,
@@ -303,8 +293,18 @@
           "punkte": 7
         },
         {
+          "rang": 16,
+          "spieler": "BRUNNER Jürgen",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 5,
+          "punkte": 7
+        },
+        {
           "rang": 17,
-          "spieler": "ASPRIAN Johann",
+          "spieler": "HOCHEGGER Martin",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
@@ -314,7 +314,7 @@
         },
         {
           "rang": 18,
-          "spieler": "HOCHEGGER Martin",
+          "spieler": "ASPRIAN Johann",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
@@ -464,16 +464,26 @@
         },
         {
           "rang": 33,
-          "spieler": "ROSSMANN Christoph",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
+          "spieler": "SATZ Klemens",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
           "legs_plus": 3,
-          "legs_minus": 8,
+          "legs_minus": 2,
           "punkte": 3
         },
         {
           "rang": 34,
+          "spieler": "SIMONITSCH Christopher",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 3,
+          "legs_minus": 5,
+          "punkte": 3
+        },
+        {
+          "rang": 35,
           "spieler": "GORICNIK Cornelia",
           "spiele": 3,
           "siege": 0,
@@ -483,7 +493,17 @@
           "punkte": 3
         },
         {
-          "rang": 35,
+          "rang": 36,
+          "spieler": "ROSSMANN Christoph",
+          "spiele": 3,
+          "siege": 0,
+          "niederlagen": 3,
+          "legs_plus": 3,
+          "legs_minus": 8,
+          "punkte": 3
+        },
+        {
+          "rang": 37,
           "spieler": "BERCHTOLD Alex",
           "spiele": 1,
           "siege": 0,
@@ -493,7 +513,7 @@
           "punkte": 2
         },
         {
-          "rang": 36,
+          "rang": 38,
           "spieler": "AMBROS Thomas",
           "spiele": 3,
           "siege": 0,
@@ -503,17 +523,7 @@
           "punkte": 2
         },
         {
-          "rang": 37,
-          "spieler": "SIMONITSCH Christopher",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 1,
-          "legs_minus": 2,
-          "punkte": 1
-        },
-        {
-          "rang": 38,
+          "rang": 39,
           "spieler": "JAHN Christian",
           "spiele": 3,
           "siege": 0,
@@ -523,7 +533,7 @@
           "punkte": 1
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "GORICNIK Michael",
           "spiele": 4,
           "siege": 0,
@@ -533,7 +543,7 @@
           "punkte": 1
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "SCHERWITZEL Manuel",
           "spiele": 1,
           "siege": 0,
@@ -543,7 +553,7 @@
           "punkte": 0
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "PROVNIK Gabriele",
           "spiele": 1,
           "siege": 0,
@@ -553,7 +563,7 @@
           "punkte": 0
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -563,7 +573,7 @@
           "punkte": 0
         },
         {
-          "rang": 43,
+          "rang": 44,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
@@ -573,7 +583,7 @@
           "punkte": 0
         },
         {
-          "rang": 44,
+          "rang": 45,
           "spieler": "APOVNIK Gabriele",
           "spiele": 3,
           "siege": 0,
@@ -583,7 +593,7 @@
           "punkte": 0
         },
         {
-          "rang": 45,
+          "rang": 46,
           "spieler": "JAHN Herbert",
           "spiele": 5,
           "siege": 0,
@@ -793,7 +803,7 @@
             "datum": "2026-10-10",
             "heim": "Dart Fuchs 4",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 1,
             "id": 109554,
             "paarungen": [
@@ -822,8 +832,8 @@
                 "art": "OE",
                 "spieler1": "SATZ Klemens",
                 "spieler2": "SIMONITSCH Christopher",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               }
             ]
           }
