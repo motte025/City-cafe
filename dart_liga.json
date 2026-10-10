@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T21:09:38Z",
+  "aktualisiert": "2026-10-10T21:20:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -234,6 +234,16 @@
         },
         {
           "rang": 10,
+          "spieler": "FELLNER Johann",
+          "spiele": 7,
+          "siege": 4,
+          "niederlagen": 3,
+          "legs_plus": 13,
+          "legs_minus": 11,
+          "punkte": 13
+        },
+        {
+          "rang": 11,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 5,
           "siege": 4,
@@ -243,7 +253,7 @@
           "punkte": 12
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 6,
           "siege": 3,
@@ -253,7 +263,7 @@
           "punkte": 12
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 6,
           "siege": 3,
@@ -263,7 +273,7 @@
           "punkte": 11
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "ASPRIAN Johann",
           "spiele": 6,
           "siege": 3,
@@ -273,23 +283,13 @@
           "punkte": 11
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "REINISCH Jessica",
           "spiele": 6,
           "siege": 4,
           "niederlagen": 2,
           "legs_plus": 10,
           "legs_minus": 10,
-          "punkte": 10
-        },
-        {
-          "rang": 15,
-          "spieler": "FELLNER Johann",
-          "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 10,
-          "legs_minus": 11,
           "punkte": 10
         },
         {
@@ -484,12 +484,12 @@
         },
         {
           "rang": 35,
-          "spieler": "SIMONITSCH Christopher",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
           "legs_plus": 3,
-          "legs_minus": 7,
+          "legs_minus": 8,
           "punkte": 3
         },
         {
@@ -504,12 +504,12 @@
         },
         {
           "rang": 37,
-          "spieler": "ROSSMANN Christoph",
-          "spiele": 3,
+          "spieler": "SIMONITSCH Christopher",
+          "spiele": 4,
           "siege": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 3,
-          "legs_minus": 8,
+          "legs_minus": 10,
           "punkte": 3
         },
         {
@@ -869,7 +869,7 @@
             "datum": "2026-10-10",
             "heim": "Dart Fuchs 4",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 4,
             "id": 109554,
             "paarungen": [
@@ -933,7 +933,7 @@
                 "art": "OE",
                 "spieler1": "FELLNER Johann",
                 "spieler2": "SIMONITSCH Christopher",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
