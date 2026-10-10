@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:47:43Z",
+  "aktualisiert": "2026-10-10T18:48:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1087,12 +1087,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 7,
-          "siege": 7,
+          "spiele": 8,
+          "siege": 8,
           "niederlagen": 0,
-          "legs_plus": 19,
+          "legs_plus": 21,
           "legs_minus": 2,
-          "punkte": 19
+          "punkte": 21
         },
         {
           "rang": 2,
@@ -1137,15 +1137,25 @@
         {
           "rang": 6,
           "spieler": "MARKTL Werner",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 4,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 13,
-          "legs_minus": 9,
+          "legs_minus": 11,
           "punkte": 13
         },
         {
           "rang": 7,
+          "spieler": "WIESER (J) David",
+          "spiele": 5,
+          "siege": 4,
+          "niederlagen": 1,
+          "legs_plus": 12,
+          "legs_minus": 3,
+          "punkte": 12
+        },
+        {
+          "rang": 8,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 7,
           "siege": 4,
@@ -1155,7 +1165,7 @@
           "punkte": 12
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 4,
           "siege": 4,
@@ -1165,7 +1175,7 @@
           "punkte": 11
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "OBERZAN Lukas",
           "spiele": 4,
           "siege": 4,
@@ -1175,7 +1185,7 @@
           "punkte": 11
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "WIMMER Leon",
           "spiele": 5,
           "siege": 4,
@@ -1183,16 +1193,6 @@
           "legs_plus": 11,
           "legs_minus": 5,
           "punkte": 11
-        },
-        {
-          "rang": 11,
-          "spieler": "WIESER (J) David",
-          "spiele": 4,
-          "siege": 3,
-          "niederlagen": 1,
-          "legs_plus": 10,
-          "legs_minus": 3,
-          "punkte": 10
         },
         {
           "rang": 12,
@@ -1207,11 +1207,11 @@
         {
           "rang": 13,
           "spieler": "GRAFSCHAFTER Bastian",
-          "spiele": 4,
+          "spiele": 5,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 9,
-          "legs_minus": 7,
+          "legs_minus": 9,
           "punkte": 9
         },
         {
@@ -1624,7 +1624,7 @@
             "datum": "2026-10-10",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC Garzern",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 1,
             "id": 108927,
             "paarungen": [
@@ -1667,7 +1667,7 @@
                 "art": "OD",
                 "spieler1": "WIESER (J) David / NIKOLIC Dennis",
                 "spieler2": "GRAFSCHAFTER Bastian / MARKTL Werner",
-                "legs1": 0,
+                "legs1": 2,
                 "legs2": 0
               }
             ]
