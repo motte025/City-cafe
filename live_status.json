@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-10T14:07:46Z",
+  "checked_at": "2026-10-10T14:22:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "The Love Potion Raid Train !lovepotion !bewbs !morestreams !alt",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "The Love Potion Raid Train !lovepotion !bewbs !morestreams !alt",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
