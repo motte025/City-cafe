@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:48:33Z",
+  "aktualisiert": "2026-10-10T18:50:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1668,6 +1668,34 @@
                 "spieler1": "WIESER (J) David / NIKOLIC Dennis",
                 "spieler2": "GRAFSCHAFTER Bastian / MARKTL Werner",
                 "legs1": 2,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "NIKOLIC Dennis",
+                "spieler2": "FRADL Ingemar",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "JANESCH Christine",
+                "spieler2": "DANIEL Utta",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "WIESER (J) David",
+                "spieler2": "GRAFSCHAFTER Bastian",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "ANWALD Guenther",
+                "spieler2": "MARKTL Werner",
+                "legs1": 0,
                 "legs2": 0
               }
             ]
