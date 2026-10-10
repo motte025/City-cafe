@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T19:39:32Z",
+  "aktualisiert": "2026-10-10T19:41:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -235,11 +235,11 @@
         {
           "rang": 10,
           "spieler": "FELLNER Johann",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 3,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 10,
-          "legs_minus": 9,
+          "legs_minus": 11,
           "punkte": 10
         },
         {
@@ -264,6 +264,16 @@
         },
         {
           "rang": 13,
+          "spieler": "SIMONITSCH Erhard",
+          "spiele": 5,
+          "siege": 2,
+          "niederlagen": 3,
+          "legs_plus": 9,
+          "legs_minus": 9,
+          "punkte": 9
+        },
+        {
+          "rang": 14,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 5,
           "siege": 2,
@@ -273,7 +283,7 @@
           "punkte": 8
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 5,
           "siege": 2,
@@ -283,7 +293,7 @@
           "punkte": 8
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "KOLLER Elias",
           "spiele": 7,
           "siege": 2,
@@ -293,7 +303,7 @@
           "punkte": 8
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "BRUNNER Jürgen",
           "spiele": 3,
           "siege": 2,
@@ -303,7 +313,7 @@
           "punkte": 7
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "ASPRIAN Johann",
           "spiele": 4,
           "siege": 2,
@@ -313,7 +323,7 @@
           "punkte": 7
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "HOCHEGGER Martin",
           "spiele": 5,
           "siege": 2,
@@ -323,17 +333,17 @@
           "punkte": 7
         },
         {
-          "rang": 19,
-          "spieler": "SIMONITSCH Erhard",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
+          "rang": 20,
+          "spieler": "REINISCH Jessica",
+          "spiele": 5,
+          "siege": 3,
+          "niederlagen": 2,
           "legs_plus": 7,
-          "legs_minus": 9,
+          "legs_minus": 8,
           "punkte": 7
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 3,
           "siege": 2,
@@ -343,7 +353,7 @@
           "punkte": 6
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 3,
           "siege": 2,
@@ -353,7 +363,7 @@
           "punkte": 6
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "SCHNEIDER Hermann",
           "spiele": 3,
           "siege": 1,
@@ -363,7 +373,7 @@
           "punkte": 6
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 4,
           "siege": 1,
@@ -371,16 +381,6 @@
           "legs_plus": 6,
           "legs_minus": 9,
           "punkte": 6
-        },
-        {
-          "rang": 24,
-          "spieler": "REINISCH Jessica",
-          "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
-          "legs_plus": 5,
-          "legs_minus": 8,
-          "punkte": 5
         },
         {
           "rang": 25,
@@ -564,22 +564,22 @@
         },
         {
           "rang": 43,
-          "spieler": "PROVNIK Gabriele",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 0,
-          "legs_minus": 2,
-          "punkte": 0
-        },
-        {
-          "rang": 44,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
           "legs_plus": 0,
           "legs_minus": 3,
+          "punkte": 0
+        },
+        {
+          "rang": 44,
+          "spieler": "PROVNIK Gabriele",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 0,
+          "legs_minus": 4,
           "punkte": 0
         },
         {
@@ -842,7 +842,7 @@
             "heim": "Dart Fuchs 4",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 3,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109554,
             "paarungen": [
               {
@@ -878,7 +878,7 @@
                 "spieler1": "PROVNIK Gabriele / FELLNER Johann",
                 "spieler2": "SIMONITSCH Erhard / REINISCH Jessica",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               },
               {
                 "art": "OD",
