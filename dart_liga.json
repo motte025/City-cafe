@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T16:45:40Z",
+  "aktualisiert": "2026-10-10T16:54:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1525,7 +1525,36 @@
             "erg_heim": 0,
             "erg_auswaerts": 0,
             "id": 108916,
-            "paarungen": []
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "BRUNNER Katharina",
+                "spieler2": "STEINER Lydia",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "KÜHWEIDER Thomas",
+                "spieler2": "OBERZAN Lukas",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "BRUNNER Peter",
+                "spieler2": "PAULITSCH Brigitte",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "UNTERDORFER Heimo",
+                "spieler2": "STEINER Sandro Emmanuel",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
           },
           {
             "runde": 3,
@@ -1535,7 +1564,36 @@
             "erg_heim": 0,
             "erg_auswaerts": 0,
             "id": 108927,
-            "paarungen": []
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "JANESCH Christine",
+                "spieler2": "DANIEL Utta",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "NIKOLIC Dennis",
+                "spieler2": "MARKTL Werner",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "WIESER (J) David",
+                "spieler2": "FRADL Ingemar",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "ANWALD Guenther",
+                "spieler2": "GRAFSCHAFTER Bastian",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
           },
           {
             "runde": 3,
