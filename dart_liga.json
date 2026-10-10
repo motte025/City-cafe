@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T19:41:33Z",
+  "aktualisiert": "2026-10-10T19:44:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1091,7 +1091,7 @@
         },
         "3": {
           "heim": 2,
-          "auswaerts": 3,
+          "auswaerts": 4,
           "id": 108938
         },
         "4": {
@@ -1198,6 +1198,16 @@
         },
         {
           "rang": 6,
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 8,
+          "siege": 5,
+          "niederlagen": 3,
+          "legs_plus": 14,
+          "legs_minus": 13,
+          "punkte": 14
+        },
+        {
+          "rang": 7,
           "spieler": "OBERZAN Lukas",
           "spiele": 5,
           "siege": 5,
@@ -1207,7 +1217,7 @@
           "punkte": 13
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "MARKTL Werner",
           "spiele": 7,
           "siege": 4,
@@ -1217,23 +1227,13 @@
           "punkte": 13
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "WIESER (J) David",
           "spiele": 5,
           "siege": 4,
           "niederlagen": 1,
           "legs_plus": 12,
           "legs_minus": 3,
-          "punkte": 12
-        },
-        {
-          "rang": 9,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 7,
-          "siege": 4,
-          "niederlagen": 3,
-          "legs_plus": 12,
-          "legs_minus": 12,
           "punkte": 12
         },
         {
@@ -1308,6 +1308,16 @@
         },
         {
           "rang": 17,
+          "spieler": "SONNBERGER Harald",
+          "spiele": 5,
+          "siege": 2,
+          "niederlagen": 3,
+          "legs_plus": 8,
+          "legs_minus": 9,
+          "punkte": 8
+        },
+        {
+          "rang": 18,
           "spieler": "ANWALD Guenther",
           "spiele": 6,
           "siege": 2,
@@ -1317,17 +1327,17 @@
           "punkte": 8
         },
         {
-          "rang": 18,
-          "spieler": "SONNBERGER Harald",
+          "rang": 19,
+          "spieler": "KRENN Klaus",
           "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
+          "siege": 1,
+          "niederlagen": 3,
           "legs_plus": 7,
-          "legs_minus": 7,
+          "legs_minus": 8,
           "punkte": 7
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 5,
           "siege": 2,
@@ -1335,16 +1345,6 @@
           "legs_plus": 7,
           "legs_minus": 9,
           "punkte": 7
-        },
-        {
-          "rang": 20,
-          "spieler": "SPANRING Andreas",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 6,
-          "punkte": 6
         },
         {
           "rang": 21,
@@ -1358,10 +1358,10 @@
         },
         {
           "rang": 22,
-          "spieler": "KRENN Klaus",
+          "spieler": "SPANRING Andreas",
           "spiele": 3,
-          "siege": 1,
-          "niederlagen": 2,
+          "siege": 2,
+          "niederlagen": 1,
           "legs_plus": 6,
           "legs_minus": 6,
           "punkte": 6
@@ -1388,6 +1388,16 @@
         },
         {
           "rang": 25,
+          "spieler": "LANG Melanie",
+          "spiele": 6,
+          "siege": 2,
+          "niederlagen": 4,
+          "legs_plus": 6,
+          "legs_minus": 13,
+          "punkte": 6
+        },
+        {
+          "rang": 26,
           "spieler": "GRAF Franz",
           "spiele": 2,
           "siege": 2,
@@ -1397,7 +1407,7 @@
           "punkte": 5
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 5,
           "siege": 1,
@@ -1407,7 +1417,7 @@
           "punkte": 5
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1417,23 +1427,13 @@
           "punkte": 4
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
           "legs_plus": 4,
           "legs_minus": 3,
-          "punkte": 4
-        },
-        {
-          "rang": 29,
-          "spieler": "LANG Melanie",
-          "spiele": 5,
-          "siege": 1,
-          "niederlagen": 4,
-          "legs_plus": 4,
-          "legs_minus": 12,
           "punkte": 4
         },
         {
@@ -1558,7 +1558,7 @@
         },
         {
           "rang": 42,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1568,7 +1568,7 @@
         },
         {
           "rang": 43,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1588,7 +1588,7 @@
       "letztes_spiel": {
         "runde": 3,
         "heim": 2,
-        "auswaerts": 3,
+        "auswaerts": 4,
         "paarungen": [
           {
             "art": "DE",
@@ -1629,8 +1629,8 @@
             "art": "OD",
             "spieler1": "SONNBERGER Harald / KRENN Klaus",
             "spieler2": "LANG Melanie / SCHMALNAUER Daniel",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 2
           }
         ]
       },
@@ -1806,7 +1806,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 2,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 108938,
             "paarungen": [
               {
@@ -1848,8 +1848,8 @@
                 "art": "OD",
                 "spieler1": "SONNBERGER Harald / KRENN Klaus",
                 "spieler2": "LANG Melanie / SCHMALNAUER Daniel",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 2
               }
             ]
           }
