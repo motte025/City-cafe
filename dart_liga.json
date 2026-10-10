@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:18:33Z",
+  "aktualisiert": "2026-10-10T20:28:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1264,20 +1264,20 @@
         },
         {
           "rang": 7,
-          "spieler": "BRUNNER Peter",
-          "spiele": 9,
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 8,
           "siege": 5,
-          "niederlagen": 4,
+          "niederlagen": 3,
           "legs_plus": 14,
           "legs_minus": 13,
           "punkte": 14
         },
         {
           "rang": 8,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 8,
+          "spieler": "BRUNNER Peter",
+          "spiele": 9,
           "siege": 5,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 14,
           "legs_minus": 13,
           "punkte": 14
@@ -1404,12 +1404,12 @@
         },
         {
           "rang": 21,
-          "spieler": "PAULITSCH Brigitte",
+          "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
           "legs_plus": 6,
-          "legs_minus": 6,
+          "legs_minus": 4,
           "punkte": 6
         },
         {
@@ -1424,6 +1424,16 @@
         },
         {
           "rang": 23,
+          "spieler": "PAULITSCH Brigitte",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 24,
           "spieler": "GREINIG Petra",
           "spiele": 4,
           "siege": 1,
@@ -1433,7 +1443,7 @@
           "punkte": 6
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "ETTL Theresa",
           "spiele": 5,
           "siege": 2,
@@ -1443,7 +1453,7 @@
           "punkte": 6
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "LANG Melanie",
           "spiele": 6,
           "siege": 2,
@@ -1453,7 +1463,7 @@
           "punkte": 6
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "GRAF Franz",
           "spiele": 2,
           "siege": 2,
@@ -1463,7 +1473,7 @@
           "punkte": 5
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 5,
           "siege": 1,
@@ -1473,7 +1483,7 @@
           "punkte": 5
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1483,7 +1493,7 @@
           "punkte": 4
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
@@ -1493,7 +1503,7 @@
           "punkte": 4
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "GREINIG Hubert",
           "spiele": 5,
           "siege": 0,
@@ -1503,23 +1513,13 @@
           "punkte": 4
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
           "niederlagen": 0,
           "legs_plus": 3,
           "legs_minus": 0,
-          "punkte": 3
-        },
-        {
-          "rang": 32,
-          "spieler": "BRUNNER Katharina",
-          "spiele": 3,
-          "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 3,
-          "legs_minus": 4,
           "punkte": 3
         },
         {
@@ -1534,22 +1534,22 @@
         },
         {
           "rang": 34,
-          "spieler": "STEINER Lydia",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
-          "legs_plus": 3,
-          "legs_minus": 10,
-          "punkte": 3
-        },
-        {
-          "rang": 35,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 4,
           "siege": 0,
           "niederlagen": 4,
           "legs_plus": 3,
           "legs_minus": 11,
+          "punkte": 3
+        },
+        {
+          "rang": 35,
+          "spieler": "STEINER Lydia",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 3,
+          "legs_minus": 13,
           "punkte": 3
         },
         {
@@ -1727,7 +1727,7 @@
             "datum": "2026-10-10",
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 4,
             "id": 108916,
             "paarungen": [
@@ -1784,7 +1784,7 @@
                 "art": "DE",
                 "spieler1": "BRUNNER Katharina",
                 "spieler2": "STEINER Lydia",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
