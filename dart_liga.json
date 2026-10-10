@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:41:34Z",
+  "aktualisiert": "2026-10-10T20:43:53Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1264,20 +1264,20 @@
         },
         {
           "rang": 7,
-          "spieler": "BRUNNER Peter",
-          "spiele": 9,
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 8,
           "siege": 5,
-          "niederlagen": 4,
+          "niederlagen": 3,
           "legs_plus": 14,
           "legs_minus": 13,
           "punkte": 14
         },
         {
           "rang": 8,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 8,
+          "spieler": "BRUNNER Peter",
+          "spiele": 9,
           "siege": 5,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 14,
           "legs_minus": 13,
           "punkte": 14
@@ -1364,7 +1364,7 @@
         },
         {
           "rang": 17,
-          "spieler": "SONNBERGER Harald",
+          "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 6,
           "siege": 2,
           "niederlagen": 4,
@@ -1374,7 +1374,7 @@
         },
         {
           "rang": 18,
-          "spieler": "GRAFSCHAFTER Bastian",
+          "spieler": "SONNBERGER Harald",
           "spiele": 6,
           "siege": 2,
           "niederlagen": 4,
@@ -1414,22 +1414,22 @@
         },
         {
           "rang": 22,
-          "spieler": "PAULITSCH Brigitte",
-          "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
-          "legs_plus": 6,
-          "legs_minus": 6,
-          "punkte": 6
-        },
-        {
-          "rang": 23,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
           "legs_plus": 6,
           "legs_minus": 6,
+          "punkte": 6
+        },
+        {
+          "rang": 23,
+          "spieler": "PAULITSCH Brigitte",
+          "spiele": 5,
+          "siege": 2,
+          "niederlagen": 3,
+          "legs_plus": 6,
+          "legs_minus": 9,
           "punkte": 6
         },
         {
@@ -1484,6 +1484,16 @@
         },
         {
           "rang": 29,
+          "spieler": "STEINER Manuel",
+          "spiele": 2,
+          "siege": 2,
+          "niederlagen": 0,
+          "legs_plus": 5,
+          "legs_minus": 0,
+          "punkte": 5
+        },
+        {
+          "rang": 30,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 5,
           "siege": 1,
@@ -1493,7 +1503,7 @@
           "punkte": 5
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1503,7 +1513,7 @@
           "punkte": 4
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
@@ -1513,7 +1523,7 @@
           "punkte": 4
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "GREINIG Hubert",
           "spiele": 5,
           "siege": 0,
@@ -1523,7 +1533,7 @@
           "punkte": 4
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
@@ -1533,7 +1543,7 @@
           "punkte": 3
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 4,
           "siege": 0,
@@ -1543,7 +1553,7 @@
           "punkte": 3
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "STEINER Lydia",
           "spiele": 5,
           "siege": 1,
@@ -1551,16 +1561,6 @@
           "legs_plus": 3,
           "legs_minus": 13,
           "punkte": 3
-        },
-        {
-          "rang": 36,
-          "spieler": "STEINER Manuel",
-          "spiele": 1,
-          "siege": 1,
-          "niederlagen": 0,
-          "legs_plus": 2,
-          "legs_minus": 0,
-          "punkte": 2
         },
         {
           "rang": 37,
@@ -1727,7 +1727,7 @@
             "datum": "2026-10-10",
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 4,
             "id": 108916,
             "paarungen": [
@@ -1791,7 +1791,7 @@
                 "art": "OE",
                 "spieler1": "STEINER Manuel",
                 "spieler2": "PAULITSCH Brigitte",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
