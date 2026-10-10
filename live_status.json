@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-10T19:02:45Z",
+  "checked_at": "2026-10-10T19:17:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "SWITCH OFF THE LIGHTS",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
@@ -41,13 +48,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "SWITCH OFF THE LIGHTS",
       "game": "DJs"
     }
   ]
