@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T21:01:35Z",
+  "aktualisiert": "2026-10-10T21:04:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -9,19 +9,19 @@
         {
           "rang": 1,
           "team": "Askö DC Sonne 2",
-          "spiele": 3,
-          "siege": 3,
+          "spiele": 4,
+          "siege": 4,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 6
+          "punkte": 8
         },
         {
           "rang": 2,
           "team": "PBC DC Skorpions Reichenfels",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 3,
           "unentschieden": 0,
-          "niederlagen": 0,
+          "niederlagen": 1,
           "punkte": 6
         },
         {
@@ -314,6 +314,16 @@
         },
         {
           "rang": 18,
+          "spieler": "SCHECK Guenther",
+          "spiele": 4,
+          "siege": 4,
+          "niederlagen": 0,
+          "legs_plus": 9,
+          "legs_minus": 1,
+          "punkte": 9
+        },
+        {
+          "rang": 19,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 6,
           "siege": 2,
@@ -323,7 +333,7 @@
           "punkte": 8
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "SATZ Klemens",
           "spiele": 3,
           "siege": 2,
@@ -333,7 +343,7 @@
           "punkte": 7
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "BRUNNER Jürgen",
           "spiele": 3,
           "siege": 2,
@@ -343,24 +353,14 @@
           "punkte": 7
         },
         {
-          "rang": 21,
-          "spieler": "HOCHEGGER Martin",
-          "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
-          "legs_plus": 7,
-          "legs_minus": 8,
-          "punkte": 7
-        },
-        {
           "rang": 22,
-          "spieler": "SCHECK Guenther",
-          "spiele": 3,
-          "siege": 3,
-          "niederlagen": 0,
-          "legs_plus": 6,
-          "legs_minus": 1,
-          "punkte": 6
+          "spieler": "HOCHEGGER Martin",
+          "spiele": 6,
+          "siege": 2,
+          "niederlagen": 4,
+          "legs_plus": 7,
+          "legs_minus": 11,
+          "punkte": 7
         },
         {
           "rang": 23,
@@ -494,7 +494,7 @@
         },
         {
           "rang": 36,
-          "spieler": "GORICNIK Cornelia",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -504,7 +504,7 @@
         },
         {
           "rang": 37,
-          "spieler": "ROSSMANN Christoph",
+          "spieler": "GORICNIK Cornelia",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -708,7 +708,7 @@
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Askö DC Sonne 2",
             "erg_heim": 2,
-            "erg_auswaerts": 7,
+            "erg_auswaerts": 8,
             "id": 109521,
             "paarungen": [
               {
@@ -779,7 +779,7 @@
                 "spieler1": "HOCHEGGER Martin",
                 "spieler2": "SCHECK Guenther",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               }
             ]
           },
