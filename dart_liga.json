@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T17:29:33Z",
+  "aktualisiert": "2026-10-10T17:30:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1268,16 +1268,6 @@
         },
         {
           "rang": 24,
-          "spieler": "PAULITSCH Brigitte",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 3,
-          "punkte": 4
-        },
-        {
-          "rang": 25,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
@@ -1287,7 +1277,7 @@
           "punkte": 4
         },
         {
-          "rang": 26,
+          "rang": 25,
           "spieler": "KRENN Klaus",
           "spiele": 2,
           "siege": 1,
@@ -1297,8 +1287,18 @@
           "punkte": 4
         },
         {
-          "rang": 27,
+          "rang": 26,
           "spieler": "OSTRY Samantha-Lee",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 3,
+          "punkte": 4
+        },
+        {
+          "rang": 27,
+          "spieler": "PAULITSCH Brigitte",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1338,12 +1338,12 @@
         },
         {
           "rang": 31,
-          "spieler": "STEINER Lydia",
+          "spieler": "BRUNNER Katharina",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
           "legs_plus": 3,
-          "legs_minus": 5,
+          "legs_minus": 2,
           "punkte": 3
         },
         {
@@ -1358,6 +1358,16 @@
         },
         {
           "rang": 33,
+          "spieler": "STEINER Lydia",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 3,
+          "legs_minus": 8,
+          "punkte": 3
+        },
+        {
+          "rang": 34,
           "spieler": "LANG Melanie",
           "spiele": 4,
           "siege": 1,
@@ -1367,7 +1377,7 @@
           "punkte": 3
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "SCHMID Thomas",
           "spiele": 1,
           "siege": 1,
@@ -1377,7 +1387,7 @@
           "punkte": 2
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 2,
           "siege": 0,
@@ -1387,7 +1397,7 @@
           "punkte": 2
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "POSCHINGER Franz",
           "spiele": 2,
           "siege": 0,
@@ -1397,7 +1407,7 @@
           "punkte": 2
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "RUS Kerstin",
           "spiele": 2,
           "siege": 0,
@@ -1407,7 +1417,7 @@
           "punkte": 2
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 3,
           "siege": 0,
@@ -1417,7 +1427,7 @@
           "punkte": 2
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "KRUSCHITZ Harald",
           "spiele": 3,
           "siege": 0,
@@ -1425,16 +1435,6 @@
           "legs_plus": 1,
           "legs_minus": 8,
           "punkte": 1
-        },
-        {
-          "rang": 40,
-          "spieler": "BRUNNER Katharina",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 0,
-          "legs_minus": 2,
-          "punkte": 0
         },
         {
           "rang": 41,
@@ -1509,7 +1509,7 @@
             "datum": "2026-10-10",
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 0,
             "id": 108916,
             "paarungen": [
@@ -1517,7 +1517,7 @@
                 "art": "DE",
                 "spieler1": "BRUNNER Katharina",
                 "spieler2": "STEINER Lydia",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
