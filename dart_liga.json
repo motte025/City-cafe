@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:43:36Z",
+  "aktualisiert": "2026-10-10T18:45:32Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1683,7 +1683,7 @@
                 "spieler1": "PINTER Michele",
                 "spieler2": "SCHMALNAUER Daniel",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               }
             ]
           }
