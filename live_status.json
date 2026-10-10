@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-10T23:12:45Z",
+  "checked_at": "2026-10-10T23:27:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "SWITCH OFF THE LIGHTS",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ GOBLIN HOUR TUNES 🔥 !mods !mercy !tip",
       "game": "DJs"
     },
     {
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ GOBLIN HOUR TUNES 🔥 !mods !mercy !tip",
       "game": "DJs"
     }
   ]
