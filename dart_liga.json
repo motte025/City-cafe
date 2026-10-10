@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T20:38:34Z",
+  "aktualisiert": "2026-10-10T20:39:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -234,6 +234,16 @@
         },
         {
           "rang": 10,
+          "spieler": "SIMONITSCH Erhard",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 12,
+          "legs_minus": 11,
+          "punkte": 12
+        },
+        {
+          "rang": 11,
           "spieler": "ASPRIAN Johann",
           "spiele": 6,
           "siege": 3,
@@ -243,7 +253,7 @@
           "punkte": 11
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 6,
           "siege": 3,
@@ -253,7 +263,7 @@
           "punkte": 11
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "FELLNER Johann",
           "spiele": 6,
           "siege": 3,
@@ -263,7 +273,7 @@
           "punkte": 10
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "JAHN Andreas",
           "spiele": 6,
           "siege": 3,
@@ -273,7 +283,7 @@
           "punkte": 10
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "KOLLER Elias",
           "spiele": 8,
           "siege": 3,
@@ -283,23 +293,13 @@
           "punkte": 10
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 4,
           "siege": 3,
           "niederlagen": 1,
           "legs_plus": 9,
           "legs_minus": 6,
-          "punkte": 9
-        },
-        {
-          "rang": 16,
-          "spieler": "SIMONITSCH Erhard",
-          "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
-          "legs_plus": 9,
-          "legs_minus": 9,
           "punkte": 9
         },
         {
@@ -324,6 +324,16 @@
         },
         {
           "rang": 19,
+          "spieler": "SATZ Klemens",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 5,
+          "punkte": 7
+        },
+        {
+          "rang": 20,
           "spieler": "HOCHEGGER Martin",
           "spiele": 5,
           "siege": 2,
@@ -333,7 +343,7 @@
           "punkte": 7
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "REINISCH Jessica",
           "spiele": 5,
           "siege": 3,
@@ -343,7 +353,7 @@
           "punkte": 7
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "SCHECK Guenther",
           "spiele": 3,
           "siege": 3,
@@ -353,7 +363,7 @@
           "punkte": 6
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 3,
           "siege": 2,
@@ -363,7 +373,7 @@
           "punkte": 6
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 3,
           "siege": 2,
@@ -373,7 +383,7 @@
           "punkte": 6
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "SCHNEIDER Hermann",
           "spiele": 3,
           "siege": 1,
@@ -383,7 +393,7 @@
           "punkte": 6
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 4,
           "siege": 1,
@@ -391,16 +401,6 @@
           "legs_plus": 6,
           "legs_minus": 9,
           "punkte": 6
-        },
-        {
-          "rang": 26,
-          "spieler": "SATZ Klemens",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 5,
-          "legs_minus": 2,
-          "punkte": 5
         },
         {
           "rang": 27,
@@ -870,7 +870,7 @@
             "heim": "Dart Fuchs 4",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 4,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 109554,
             "paarungen": [
               {
@@ -919,8 +919,8 @@
                 "art": "HE",
                 "spieler1": "SATZ Klemens",
                 "spieler2": "SIMONITSCH Erhard",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "DE",
