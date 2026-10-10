@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:34:34Z",
+  "aktualisiert": "2026-10-10T18:35:49Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1073,21 +1073,21 @@
         {
           "rang": 2,
           "spieler": "JANESCH Christine",
-          "spiele": 7,
-          "siege": 5,
+          "spiele": 8,
+          "siege": 6,
           "niederlagen": 2,
-          "legs_plus": 15,
+          "legs_plus": 17,
           "legs_minus": 8,
-          "punkte": 15
+          "punkte": 17
         },
         {
           "rang": 3,
           "spieler": "DANIEL Utta",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 5,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 15,
-          "legs_minus": 9,
+          "legs_minus": 11,
           "punkte": 15
         },
         {
@@ -1203,15 +1203,25 @@
         {
           "rang": 15,
           "spieler": "FRADL Ingemar",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 3,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 9,
-          "legs_minus": 14,
+          "legs_minus": 16,
           "punkte": 9
         },
         {
           "rang": 16,
+          "spieler": "ANWALD Guenther",
+          "spiele": 6,
+          "siege": 2,
+          "niederlagen": 4,
+          "legs_plus": 8,
+          "legs_minus": 12,
+          "punkte": 8
+        },
+        {
+          "rang": 17,
           "spieler": "SONNBERGER Harald",
           "spiele": 4,
           "siege": 2,
@@ -1221,7 +1231,7 @@
           "punkte": 7
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "KRENN Klaus",
           "spiele": 3,
           "siege": 1,
@@ -1231,7 +1241,7 @@
           "punkte": 6
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1241,7 +1251,7 @@
           "punkte": 6
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 5,
           "siege": 2,
@@ -1251,7 +1261,7 @@
           "punkte": 6
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "GREINIG Petra",
           "spiele": 4,
           "siege": 1,
@@ -1261,23 +1271,13 @@
           "punkte": 6
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "ETTL Theresa",
           "spiele": 5,
           "siege": 2,
           "niederlagen": 3,
           "legs_plus": 6,
           "legs_minus": 11,
-          "punkte": 6
-        },
-        {
-          "rang": 22,
-          "spieler": "ANWALD Guenther",
-          "spiele": 5,
-          "siege": 1,
-          "niederlagen": 4,
-          "legs_plus": 6,
-          "legs_minus": 12,
           "punkte": 6
         },
         {
@@ -1586,7 +1586,7 @@
             "datum": "2026-10-10",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC Garzern",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 1,
             "id": 108927,
             "paarungen": [
@@ -1622,7 +1622,7 @@
                 "art": "MD",
                 "spieler1": "JANESCH Christine / ANWALD Guenther",
                 "spieler2": "DANIEL Utta / FRADL Ingemar",
-                "legs1": 0,
+                "legs1": 2,
                 "legs2": 0
               },
               {
