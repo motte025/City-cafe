@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-10T07:12:45Z",
+  "checked_at": "2026-10-10T07:17:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "jessu",
-      "name": "Jessu",
-      "title": "MALFOID ON THE DECKS🐍TWITCHCON SCHED IS UP⭐!twitchcon !afterparty",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sunshineliveradio",
@@ -17,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
