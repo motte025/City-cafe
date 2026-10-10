@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-10T18:57:32Z",
+  "aktualisiert": "2026-10-10T19:06:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1029,7 +1029,7 @@
         },
         "3": {
           "heim": 2,
-          "auswaerts": 2,
+          "auswaerts": 3,
           "id": 108938
         },
         "4": {
@@ -1106,6 +1106,16 @@
         },
         {
           "rang": 3,
+          "spieler": "GÖSCHL Mario",
+          "spiele": 8,
+          "siege": 6,
+          "niederlagen": 2,
+          "legs_plus": 16,
+          "legs_minus": 10,
+          "punkte": 16
+        },
+        {
+          "rang": 4,
           "spieler": "DANIEL Utta",
           "spiele": 8,
           "siege": 5,
@@ -1113,16 +1123,6 @@
           "legs_plus": 15,
           "legs_minus": 11,
           "punkte": 15
-        },
-        {
-          "rang": 4,
-          "spieler": "GÖSCHL Mario",
-          "spiele": 7,
-          "siege": 5,
-          "niederlagen": 2,
-          "legs_plus": 14,
-          "legs_minus": 10,
-          "punkte": 14
         },
         {
           "rang": 5,
@@ -1236,6 +1236,16 @@
         },
         {
           "rang": 16,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 8,
+          "legs_minus": 9,
+          "punkte": 8
+        },
+        {
+          "rang": 17,
           "spieler": "ANWALD Guenther",
           "spiele": 6,
           "siege": 2,
@@ -1245,7 +1255,7 @@
           "punkte": 8
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "SONNBERGER Harald",
           "spiele": 4,
           "siege": 2,
@@ -1255,7 +1265,7 @@
           "punkte": 7
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1265,7 +1275,7 @@
           "punkte": 6
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 4,
           "siege": 2,
@@ -1275,23 +1285,13 @@
           "punkte": 6
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "KRENN Klaus",
           "spiele": 3,
           "siege": 1,
           "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 6,
-          "punkte": 6
-        },
-        {
-          "rang": 21,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
-          "legs_plus": 6,
-          "legs_minus": 9,
           "punkte": 6
         },
         {
@@ -1326,22 +1326,22 @@
         },
         {
           "rang": 25,
-          "spieler": "FRÜSTÜCK Kerstin",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
-          "legs_plus": 5,
-          "legs_minus": 8,
-          "punkte": 5
-        },
-        {
-          "rang": 26,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 4,
           "siege": 1,
           "niederlagen": 3,
           "legs_plus": 5,
           "legs_minus": 9,
+          "punkte": 5
+        },
+        {
+          "rang": 26,
+          "spieler": "FRÜSTÜCK Kerstin",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 5,
+          "legs_minus": 10,
           "punkte": 5
         },
         {
@@ -1456,7 +1456,7 @@
         },
         {
           "rang": 38,
-          "spieler": "POSCHINGER Franz",
+          "spieler": "RUS Kerstin",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
@@ -1466,12 +1466,12 @@
         },
         {
           "rang": 39,
-          "spieler": "RUS Kerstin",
-          "spiele": 2,
+          "spieler": "POSCHINGER Franz",
+          "spiele": 3,
           "siege": 0,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 2,
-          "legs_minus": 5,
+          "legs_minus": 7,
           "punkte": 2
         },
         {
@@ -1486,7 +1486,7 @@
         },
         {
           "rang": 41,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1496,7 +1496,7 @@
         },
         {
           "rang": 42,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1516,7 +1516,7 @@
       "letztes_spiel": {
         "runde": 3,
         "heim": 2,
-        "auswaerts": 2,
+        "auswaerts": 3,
         "paarungen": [
           {
             "art": "DE",
@@ -1551,7 +1551,7 @@
             "spieler1": "POSCHINGER Franz / FRÜSTÜCK Kerstin",
             "spieler2": "STÜCKLER Heidemarie / GÖSCHL Mario",
             "legs1": 0,
-            "legs2": 0
+            "legs2": 2
           },
           {
             "art": "OD",
@@ -1706,7 +1706,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 2,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 108938,
             "paarungen": [
               {
@@ -1742,7 +1742,7 @@
                 "spieler1": "POSCHINGER Franz / FRÜSTÜCK Kerstin",
                 "spieler2": "STÜCKLER Heidemarie / GÖSCHL Mario",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               },
               {
                 "art": "OD",
