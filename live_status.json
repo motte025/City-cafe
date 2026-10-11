@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-11T11:12:45Z",
+  "checked_at": "2026-10-11T11:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,20 @@
     },
     {
       "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Sunday <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Lazy relaxed vibes on Sunday from the Cherry Corner and a travel partner for @alexvaganza 🍒✨💞💋🌈 | TY Raiders: @enola_jones",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Quicky Sunday (harderstyles)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
@@ -31,23 +45,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Lazy relaxed vibes on Sunday from the Cherry Corner and a travel partner for @alexvaganza 🍒✨💞💋🌈",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Sunday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
