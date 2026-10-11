@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-11T10:52:46Z",
+  "checked_at": "2026-10-11T11:12:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 MUTE MARATHON TAG 98.2😈 | House Styles Quicky + danach Klemmbausteine | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     },
     {
@@ -41,6 +41,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Sunday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
