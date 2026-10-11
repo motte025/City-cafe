@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-11T16:47:46Z",
+  "checked_at": "2026-10-11T17:02:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ende Oktoberfest! | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "deejayfamily",
@@ -17,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ende Oktoberfest! | !bier | !zug | !holy | #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "l4uchm3ld3r",
       "name": "L4uchm3ld3r",
       "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
@@ -34,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Dance Classics Sunday - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
