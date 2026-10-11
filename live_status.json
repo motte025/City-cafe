@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-11T16:12:47Z",
+  "checked_at": "2026-10-11T16:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ende Oktoberfest! | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
