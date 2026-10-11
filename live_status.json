@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-10-11T07:07:45Z",
+  "checked_at": "2026-10-11T07:17:46Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🃏🎸80’s NIGHT WHY SO SERIOUS??? 🃏❤️‍🔥 FT @fishyfreak REQUESTS OPEN !request !tip !patreon !youtube !merch Stream #4 of ChazzyWeen 👻",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     },
     {
@@ -20,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     }
   ]
