@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-11T15:47:45Z",
+  "checked_at": "2026-10-11T15:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,13 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
