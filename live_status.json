@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-11T09:52:45Z",
+  "checked_at": "2026-10-11T10:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Quicky Sunday (harderstyles)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Quicky Sunday (harderstyles)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
