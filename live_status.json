@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-11T12:17:45Z",
+  "checked_at": "2026-10-11T12:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Quicky Sunday (harderstyles)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Quicky Sunday (harderstyles)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
