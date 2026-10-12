@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-12T12:47:45Z",
+  "checked_at": "2026-10-12T13:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ CLASSIC MONDAY - CLEAN UP - PUTZSTREAM ✨",
       "game": "DJs"
     }
   ]
