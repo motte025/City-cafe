@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-12T10:52:46Z",
+  "checked_at": "2026-10-12T11:12:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥BREWING SOME BEATS & MAGIC✨🔥PP 43/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
