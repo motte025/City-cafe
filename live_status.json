@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-13T17:22:46Z",
+  "checked_at": "2026-10-13T17:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner  🍒✨💞💋🌈 | TY Raiders: @das_mondlicht, @caseyryback59",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !holy | #werbung",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner  🍒✨💞💋🌈 | TY Raiders: @das_mondlicht, @caseyryback59",
       "game": "DJs"
     },
     {
@@ -41,6 +41,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "⭐️ MUTE TUESDAY - Special Edition (🇩🇪 / 🇺🇸) ⭐️ !Rad !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
