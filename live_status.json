@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-13T16:17:47Z",
+  "checked_at": "2026-10-13T16:32:47Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Back 2 the 90s - Mit @Chris_Nitro und Super Solli - Eure Whatsapp an die 030 - 20 19 16 16",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "colaway",
@@ -13,13 +20,6 @@
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
       "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner  🍒✨💞💋🌈 | TY Raiders: @das_mondlicht, @caseyryback59",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Back 2 the 90s - Mit @Chris_Nitro und Super Solli - Eure Whatsapp an die 030 - 20 19 16 16",
       "game": "DJs"
     },
     {
