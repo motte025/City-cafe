@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-13T15:57:48Z",
+  "checked_at": "2026-10-13T16:17:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Back 2 the 90s - Mit @Chris_Nitro und Super Solli - Eure Whatsapp an die 030 - 20 19 16 16",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "2000s vs. 2010s - All In One - Live aus Studio 2",
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Back 2 the 90s - Mit @Chris_Nitro und Super Solli - Eure Whatsapp an die 030 - 20 19 16 16",
       "game": "DJs"
     }
   ]
