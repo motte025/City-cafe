@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-13T11:42:47Z",
+  "checked_at": "2026-10-13T12:02:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s vs. 2010s - All In One - Live aus Studio 2",
       "game": "DJs"
     }
   ]
