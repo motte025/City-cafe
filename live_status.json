@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-13T19:17:46Z",
+  "checked_at": "2026-10-13T19:37:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl - Zu Gast @heinrichundheinehh",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "⭐️ MUTE TUESDAY - Special Edition (🇩🇪 / 🇺🇸) ⭐️ !Rad !Shakes !Holy !Moumint !Shop !Socials",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Community Show mit @ericssl - Zu Gast @heinrichundheinehh",
       "game": "DJs"
     },
     {
