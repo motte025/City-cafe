@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-13T14:02:47Z",
+  "checked_at": "2026-10-13T14:17:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,16 @@
     },
     {
       "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴  HARDSTYLE ONLY ☆ !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner  🍒✨💞💋🌈",
+      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner  🍒✨💞💋🌈 | TY Raiders: @caseyryback59",
       "game": "DJs"
     },
     {
@@ -34,13 +41,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴  HARDSTYLE ONLY ☆ !naturtreu 🔴🔴",
       "game": "DJs"
     }
   ]
