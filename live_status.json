@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-13T23:02:46Z",
+  "checked_at": "2026-10-13T23:17:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "⭐️ MUTE TUESDAY - Special Edition (🇩🇪 / 🇺🇸) ⭐️ !Rad !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "roice",
@@ -20,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ TUNESDAY TERROR 🔥 !mods !mercy !tip",
       "game": "DJs"
     }
   ]
