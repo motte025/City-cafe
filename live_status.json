@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-13T21:12:46Z",
+  "checked_at": "2026-10-13T21:27:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "😈 Hell YEA baby 😈 !bewbs !morestreams !consult !alt",
       "game": "DJs"
     }
   ]
