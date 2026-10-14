@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-14T17:52:46Z",
+  "checked_at": "2026-10-14T18:02:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,20 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | HONEY GEE",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
