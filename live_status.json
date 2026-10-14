@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-14T22:52:46Z",
+  "checked_at": "2026-10-14T23:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🐰❤️‍🔥 DRUM & BASS BUNS 🐰❤️‍🔥 | !tip | !spawn | !checkin | !patreon | !youtube | #5of ChazzyWeen 👻",
       "game": "DJs"
     }
   ]
