@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-14T13:07:45Z",
+  "checked_at": "2026-10-14T13:22:48Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "HIER GIBT ES TECHNO & (HARD)TRANCE | !holy",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "lionastone",
@@ -20,13 +27,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "HIER GIBT ES TECHNO & (HARD)TRANCE | !holy",
       "game": "DJs"
     }
   ]
