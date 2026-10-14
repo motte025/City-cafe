@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-14T23:37:45Z",
+  "checked_at": "2026-10-14T23:52:49Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🐰❤️‍🔥 DRUM & BASS BUNS 🐰❤️‍🔥 | !tip | !spawn | !checkin | !patreon | !youtube | #5of ChazzyWeen 👻",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🐰❤️‍🔥 DRUM & BASS BUNS 🐰❤️‍🔥 | !tip | !spawn | !checkin | !patreon | !youtube | #5of ChazzyWeen 👻",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
