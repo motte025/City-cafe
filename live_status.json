@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-14T15:27:45Z",
+  "checked_at": "2026-10-14T15:42:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "HIER GIBT ES TECHNO & (HARD)TRANCE | !holy",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Space Lions Techno Party.. Well its about Time!! !! dopamine boost",
       "game": "DJs"
     },
     {
@@ -27,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Space Lions Techno Party.. Well its about Time!! !! dopamine boost",
       "game": "DJs"
     }
   ]
