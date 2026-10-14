@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-10-14T17:02:45Z",
+  "checked_at": "2026-10-14T17:17:45Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "HIER GIBT ES TECHNO & (HARD)TRANCE | !holy",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "YOU SEE THE TROUBLE IN ME",
       "game": "DJs"
     },
     {
@@ -27,13 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "YOU SEE THE TROUBLE IN ME",
       "game": "DJs"
     }
   ]
