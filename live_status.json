@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-14T17:17:45Z",
+  "checked_at": "2026-10-14T17:32:49Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
