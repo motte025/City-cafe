@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-14T14:07:47Z",
+  "checked_at": "2026-10-14T14:22:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
