@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-14T15:57:46Z",
+  "checked_at": "2026-10-14T16:07:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Mit ganz viel Liebe... Die geilsten Beats am Mittwoch! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
