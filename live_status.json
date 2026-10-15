@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-15T15:22:45Z",
+  "checked_at": "2026-10-15T15:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -42,6 +42,13 @@
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #615 with Dusky",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "Techno Kitty !bewbs !morestreams !consult !alt",
+      "game": "DJs"
     }
   ]
 }
