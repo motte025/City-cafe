@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-15T17:32:48Z",
+  "checked_at": "2026-10-15T17:52:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴  HARDSTYLE ft. HARDTECHNO ☆ !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "COLLECTIVE CHEMISTRY MIT LES MOCHES",
       "game": "DJs"
     },
     {
@@ -24,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "COLLECTIVE CHEMISTRY MIT LES MOCHES",
       "game": "DJs"
     },
     {
@@ -34,6 +27,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "HandsUp in the Chat!!!! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
