@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-15T14:52:45Z",
+  "checked_at": "2026-10-15T15:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -35,6 +35,13 @@
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "The Anjunadeep Edition #615 with Dusky",
+      "game": "Music"
     }
   ]
 }
