@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-15T01:12:45Z",
+  "checked_at": "2026-10-15T01:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "💀I GOT A BONE TO PICK WITH YOU🦴BIG ANNOUNCMENT⭐!patreon",
       "game": "DJs"
     }
   ]
