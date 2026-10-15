@@ -485,6 +485,41 @@
         }
         .hp-fuss { position: absolute; bottom: 52px; font-size: 30px; font-weight: 600; color: #8fa6d4; letter-spacing: 0.08em; }
         @keyframes hpRein { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+        /* Werbung rund um den Musik-Player im Vollbild (15.10.2026): Die Flaechen
+           neben dem Video wechseln zeitweise auf Aktionen bzw. Termine. Das Video
+           selbst (mpv) bleibt unberuehrt - auf die Videoflaeche darf kein HTML. */
+        .ytv-aktionen, .ytv-termine { display: none; }
+        #ytm-vollbild.wb-rechts .ytv-danach-kopf, #ytm-vollbild.wb-rechts .ytv-liste { display: none; }
+        #ytm-vollbild.wb-rechts .ytv-aktionen {
+            display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; margin-top: 22px;
+            border-radius: 16px; overflow: hidden; background: rgba(0, 229, 255, 0.06);
+            border: 1px solid rgba(0, 229, 255, 0.45); animation: hpRein 0.7s ease-out both;
+        }
+        .ytv-aktionen .wb-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px; color: #00f2fe;
+            letter-spacing: 1px; padding: 16px 22px 12px; }
+        .ytv-aktionen img { width: 100%; flex: 1 1 auto; min-height: 0; object-fit: cover; object-position: center; display: block; }
+        .ytv-aktionen .wb-preise { padding: 10px 22px 16px; display: flex; flex-direction: column; gap: 8px; }
+        .ytv-aktionen .wb-preis { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; }
+        .ytv-aktionen .wb-preis span { font-size: 28px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-aktionen .wb-preis b { font-family: 'Orbitron', sans-serif; font-size: 34px; font-weight: 900; color: #7ff7ff; white-space: nowrap; }
+        #ytm-vollbild.wb-unten .ytv-radio-kopf, #ytm-vollbild.wb-unten .ytv-radio { visibility: hidden; }
+        #ytm-vollbild.wb-unten .ytv-termine {
+            display: block; position: absolute; left: 40px; right: 40px; top: 893px; bottom: 26px;
+            animation: hpRein 0.7s ease-out both;
+        }
+        .ytv-termine .wb-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px; color: #00f2fe; letter-spacing: 1px; }
+        .ytv-termine .wb-reihe { position: absolute; left: 0; right: 0; top: 42px; bottom: 0; display: flex; gap: 18px; }
+        .ytv-termine .wb-termin {
+            flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 20px; padding: 0 22px; border-radius: 14px;
+            background: rgba(0, 229, 255, 0.07); border: 1px solid rgba(0, 229, 255, 0.35);
+        }
+        .ytv-termine .wb-termin.wb-heute { background: rgba(0, 229, 255, 0.18); border-color: #00e5ff; }
+        .ytv-termine .wb-datum { flex-shrink: 0; text-align: center; min-width: 110px; }
+        .ytv-termine .wb-datum small { display: block; font-size: 17px; font-weight: 800; letter-spacing: 2px; color: #7ff7ff; }
+        .ytv-termine .wb-datum b { display: block; font-family: 'Orbitron', sans-serif; font-size: 34px; font-weight: 900; color: #ffffff; }
+        .ytv-termine .wb-text { min-width: 0; display: flex; flex-direction: column; }
+        .ytv-termine .wb-text strong { font-size: 26px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytv-termine .wb-text span { font-size: 20px; font-weight: 600; color: #b8c8e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         /* Roulette immer im Vollbild (Wunsch Betreiber 05.10.2026): eigene Ebene
            ueber dem ganzen Dashboard wie der Mittagsteller. Der Inhalt kommt aus
            roulette-vorschau-spiel/ und richtet sich selbst nach der Groesse. */
@@ -3195,9 +3230,13 @@
                 </div>
                 <div class="ytv-danach-kopf" id="ytv-danach-kopf">WARTESCHLANGE</div>
                 <div class="ytv-liste" id="ytv-liste"></div>
+                <!-- Werbung rechts statt Warteschlange (siehe musikWerbungTakt) -->
+                <div class="ytv-aktionen" id="ytv-aktionen"></div>
             </div>
             <div class="ytv-radio-kopf">🎶 ÄHNLICHE SONGS</div>
             <div class="ytv-radio" id="ytv-radio"></div>
+            <!-- Werbung unten statt Radio-Mix (siehe musikWerbungTakt) -->
+            <div class="ytv-termine" id="ytv-termine"></div>
         </div>
 
         <div id="mittagsteller-fullscreen">
@@ -9680,6 +9719,67 @@
             return true;
         }
         if (HAUSPROGRAMM_AN) hausprogrammLaden();
+
+        // ---------- Werbung rund um den Musik-Player (Vollbild, 15.10.2026) ----------
+        // Laeuft Musik "bis Stopp", steht die Rotation - die Hausprogramm-Folie kaeme
+        // nie dran. Darum wechseln im Musik-Vollbild die Flaechen NEBEN dem Video:
+        //   unten  (statt Radio-Mix):     Termine aus werbung.json    Sekunde  0-29 von 120
+        //   rechts (statt Warteschlange): Aktionen aus werbung.json   Sekunde 60-89 von 120
+        // Nie beide zugleich; "Naechster Titel" und das Video bleiben immer sichtbar.
+        // Nur Klassen am #ytm-vollbild - die Musik-Darstellung selbst bleibt unangetastet.
+        const MUSIK_WERBUNG_AN = slotSchalter(true, 'mwan');
+        const MUSIK_WERBUNG_TAKT_S = 120, MUSIK_WERBUNG_DAUER_S = 30;
+        let musikWerbungGeladen = 0, musikWerbungSig = '';
+        function musikWerbungAktionen() {
+            const d = hausprogrammDaten || {};
+            return { bild: d.aktionenBild || '',
+                     liste: (d.aktionen || []).filter(a => a && a.aktiv !== false && a.titel && a.preis).slice(0, 3) };
+        }
+        function musikWerbungZeichnen(art) {
+            const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+            if (art === 'unten') {
+                const heute = hausprogrammJetzt().slice(0, 10);
+                document.getElementById('ytv-termine').innerHTML =
+                    '<div class="wb-kopf">📅 DEMNÄCHST IM CITY CAFE</div><div class="wb-reihe">'
+                    + hausprogrammKommende().map(v => {
+                        const d = new Date(v.datum + 'T12:00:00Z');
+                        const tag = v.datum === heute ? 'HEUTE'
+                            : d.toLocaleDateString('de-AT', { weekday: 'short', timeZone: 'UTC' }).replace('.', '').toUpperCase();
+                        return `<div class="wb-termin${v.datum === heute ? ' wb-heute' : ''}"><div class="wb-datum"><small>${esc(tag)}</small>`
+                            + `<b>${esc(d.toLocaleDateString('de-AT', { day: '2-digit', month: '2-digit', timeZone: 'UTC' }))}</b></div>`
+                            + `<div class="wb-text"><strong>${esc(v.titel)}</strong>`
+                            + `<span>${esc([v.ab ? 'ab ' + v.ab + ' Uhr' : '', v.zusatz].filter(Boolean).join(' · '))}</span></div></div>`;
+                    }).join('') + '</div>';
+            } else {
+                const a = musikWerbungAktionen();
+                document.getElementById('ytv-aktionen').innerHTML =
+                    '<div class="wb-kopf">🍻 UNSERE AKTIONEN</div>'
+                    + (a.bild ? `<img src="${esc(a.bild)}" alt="">` : '')
+                    + '<div class="wb-preise">' + a.liste.map(x =>
+                        `<div class="wb-preis"><span>${esc(x.titel)}</span><b>${esc(x.preis)}</b></div>`).join('') + '</div>';
+            }
+        }
+        function musikWerbungTakt() {
+            const vb = document.getElementById('ytm-vollbild');
+            if (!vb) return;
+            const imVollbild = document.body.classList.contains('ytm-an') && document.body.classList.contains('ytm-vollbild');
+            // Waehrend der Musik laufen keine Slots - die Daten hier alle 10 min frisch holen.
+            if (imVollbild && Date.now() - musikWerbungGeladen > 600000) { musikWerbungGeladen = Date.now(); hausprogrammLaden(); }
+            const s = Math.floor(Date.now() / 1000) % MUSIK_WERBUNG_TAKT_S;
+            let art = '';
+            if (MUSIK_WERBUNG_AN && imVollbild && hausprogrammDaten) {
+                if (s < MUSIK_WERBUNG_DAUER_S && hausprogrammKommende().length) art = 'unten';
+                else if (s >= 60 && s < 60 + MUSIK_WERBUNG_DAUER_S && musikWerbungAktionen().liste.length) art = 'rechts';
+            }
+            // Nur beim Wechsel neu zeichnen (sonst startet die Einblend-Animation jede Sekunde neu).
+            const sig = art + '|' + (art === 'unten' ? hausprogrammJetzt().slice(0, 10) : '');
+            if (sig === musikWerbungSig) return;
+            musikWerbungSig = sig;
+            if (art) musikWerbungZeichnen(art);
+            vb.classList.toggle('wb-unten', art === 'unten');
+            vb.classList.toggle('wb-rechts', art === 'rechts');
+        }
+        setInterval(musikWerbungTakt, 1000);
 
         // Nightlife steht hinter der Dart-Strecke - vor dem Tag/Nacht-Plakat.
         const NL_SLOT_INDEX = -0.5;

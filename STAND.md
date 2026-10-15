@@ -190,8 +190,19 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   „HEUTE"/„MORGEN", Eintrag fällt nach `bis` von selbst heraus. Die Datei wird je
   Slot frisch geholt – neue Termine brauchen nur einen Push von `werbung.json`, kein
   Neuladen. Abbau in `runMasterSequence()` eingetragen. Abschalten:
-  `HAUSPROGRAMM_AN`. **Grenze:** Läuft Musik „bis Stopp", steht die Rotation – die
-  Folie erscheint dann nicht (nächster Schritt: Hinweis in der Musik-Ansicht).
+  `HAUSPROGRAMM_AN`. Läuft Musik „bis Stopp", steht die Rotation – die Folie
+  erscheint dann nicht; dafür gibt es die Werbung rund um den Player (unten).
+- **Werbung rund um den Musik-Player** (Vollbild, 15.10.2026,
+  `musikWerbungTakt`, sekündlich): in jedem 120-s-Takt Sekunde 0–29 statt
+  „Ähnliche Songs" die Leiste **„📅 Demnächst im City Cafe"** (Termine aus
+  `werbung.json`), Sekunde 60–89 statt der Warteschlange die Karte **„🍻 Unsere
+  Aktionen"** (`aktionenBild` + `aktionen` mit `titel`/`preis` aus
+  `werbung.json`). „Nächster Titel" und Video bleiben immer; auf die Videofläche
+  kommt kein HTML (mpv). Nur Klassen `wb-unten`/`wb-rechts` am `#ytm-vollbild`, die
+  Musik-Darstellung selbst ist unverändert. Daten während der Musik alle 10 min
+  frisch. Abschalten: `MUSIK_WERBUNG_AN` (`?mwan=1` zum Ansehen, wenn aus). Nur im
+  Musik-**Vollbild**, nicht in der Widget-Ansicht. Getestet mit Headless-Edge
+  (gestellte Uhr, Firebase gesperrt).
   Getestet mit Headless-Edge und gestellter Uhr (15./16./17.10., 1.11.), Firebase
   dabei gesperrt.
 - **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, seit 03.10.2026 auf `main`,

@@ -1,5 +1,10 @@
 {
   "_hinweis": "Hausprogramm des City Cafe fuer die Folie 'Demnaechst im City Cafe' (index.html, runHausprogrammState). datum/ab/bis in Wiener Zeit. Ein Eintrag verschwindet von selbst, sobald 'bis' vorbei ist. Nur echte, vom Betreiber genannte Angaben eintragen.",
+  "aktionenBild": "jaeger.webp",
+  "aktionen": [
+    { "id": "jaegermeister-5er", "aktiv": true, "titel": "5 × Jägermeister", "preis": "14,00 €" },
+    { "id": "puntigamer-05", "aktiv": true, "titel": "Puntigamer 0,5 l", "preis": "4,60 €" }
+  ],
   "veranstaltungen": [
     {
       "id": "oktoberfest-2026-10-16",
