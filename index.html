@@ -520,6 +520,33 @@
         .ytv-termine .wb-text { min-width: 0; display: flex; flex-direction: column; }
         .ytv-termine .wb-text strong { font-size: 26px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ytv-termine .wb-text span { font-size: 20px; font-weight: 600; color: #b8c8e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Normale Musik-Ansicht: eigene Karte ueber der rechten Seitenkarte (Fotos,
+           Shorts, Aehnliche Songs laufen darunter weiter). */
+        .ytm-werbung { display: none; }
+        body.ytm-an:not(.ytm-vollbild).wb-karte .ytm-werbung {
+            display: flex; flex-direction: column; position: absolute; inset: 0; z-index: 32; overflow: hidden;
+            border-radius: 24px; background: linear-gradient(170deg, #071d3d 0%, #061229 60%, #040b1f 100%);
+            border: 1px solid rgba(0, 229, 255, 0.45); animation: hpRein 0.7s ease-out both;
+        }
+        .ytm-werbung .wb-kopf { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px; color: #00f2fe;
+            letter-spacing: 1px; padding: 24px 26px 14px; }
+        .ytm-werbung .wb-liste { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 14px; padding: 0 22px 22px; }
+        .ytm-werbung .wb-termin { flex: 1 1 0; min-height: 0; display: flex; align-items: center; gap: 18px; padding: 0 18px;
+            border-radius: 16px; background: rgba(0, 229, 255, 0.07); border: 1px solid rgba(0, 229, 255, 0.3); }
+        .ytm-werbung .wb-termin.wb-heute { background: rgba(0, 229, 255, 0.18); border-color: #00e5ff; }
+        .ytm-werbung .wb-datum { flex-shrink: 0; text-align: center; min-width: 104px; }
+        .ytm-werbung .wb-datum small { display: block; font-size: 17px; font-weight: 800; letter-spacing: 2px; color: #7ff7ff; }
+        .ytm-werbung .wb-datum b { display: block; font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; }
+        .ytm-werbung .wb-text { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+        .ytm-werbung .wb-text strong { font-size: 27px; font-weight: 800; color: #ffffff; line-height: 1.15;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .ytm-werbung .wb-text span { font-size: 20px; font-weight: 600; color: #b8c8e8; line-height: 1.25;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .ytm-werbung img { width: 100%; flex: 1 1 auto; min-height: 0; object-fit: contain; display: block; background: #02060f; }
+        .ytm-werbung .wb-preise { padding: 16px 24px 22px; display: flex; flex-direction: column; gap: 10px; }
+        .ytm-werbung .wb-preis { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; }
+        .ytm-werbung .wb-preis span { font-size: 28px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ytm-werbung .wb-preis b { font-family: 'Orbitron', sans-serif; font-size: 34px; font-weight: 900; color: #7ff7ff; white-space: nowrap; }
         /* Roulette immer im Vollbild (Wunsch Betreiber 05.10.2026): eigene Ebene
            ueber dem ganzen Dashboard wie der Mittagsteller. Der Inhalt kommt aus
            roulette-vorschau-spiel/ und richtet sich selbst nach der Groesse. */
@@ -3182,6 +3209,8 @@
                 </div>
                 <!-- YouTube-Musik: "Passt dazu" ueber dem Rotator -->
                 <div class="ytm-seite" id="ytm-seite"></div>
+                <!-- Werbung ueber der rechten Karte (Musik, normale Ansicht; siehe musikWerbungTakt) -->
+                <div class="ytm-werbung" id="ytm-werbung"></div>
                 <button class="dj-ton-knopf" id="dj-ton-knopf" type="button">
                     <span class="dj-ton-zeichen" id="dj-ton-zeichen">▶</span>
                     <span class="dj-ton-text"><span id="dj-ton-haupt">Stream starten</span>
@@ -9782,6 +9811,30 @@
         }
         function musikWerbungZeichnen(art) {
             const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+            // Normale Ansicht: eine Karte ueber der rechten Seitenkarte, Termine untereinander.
+            if (art === 'karte-termine' || art === 'karte-aktionen') {
+                const box = document.getElementById('ytm-werbung');
+                if (art === 'karte-termine') {
+                    const heute = hausprogrammJetzt().slice(0, 10);
+                    box.innerHTML = '<div class="wb-kopf">📅 DEMNÄCHST BEI UNS</div><div class="wb-liste">'
+                        + hausprogrammKommende().map(v => {
+                            const d = new Date(v.datum + 'T12:00:00Z');
+                            const tag = v.datum === heute ? 'HEUTE'
+                                : d.toLocaleDateString('de-AT', { weekday: 'short', timeZone: 'UTC' }).replace('.', '').toUpperCase();
+                            return `<div class="wb-termin${v.datum === heute ? ' wb-heute' : ''}"><div class="wb-datum"><small>${esc(tag)}</small>`
+                                + `<b>${esc(d.toLocaleDateString('de-AT', { day: '2-digit', month: '2-digit', timeZone: 'UTC' }))}</b></div>`
+                                + `<div class="wb-text"><strong>${esc(v.titel)}</strong>`
+                                + `<span>${esc([v.ab ? 'ab ' + v.ab + ' Uhr' : '', v.zusatz].filter(Boolean).join(' · '))}</span></div></div>`;
+                        }).join('') + '</div>';
+                } else {
+                    const a = musikWerbungAktionen();
+                    box.innerHTML = '<div class="wb-kopf">🍻 UNSERE AKTIONEN</div>'
+                        + (a.bild ? `<img src="${esc(a.bild)}" alt="">` : '')
+                        + '<div class="wb-preise">' + a.liste.map(x =>
+                            `<div class="wb-preis"><span>${esc(x.titel)}</span><b>${esc(x.preis)}</b></div>`).join('') + '</div>';
+                }
+                return;
+            }
             if (art === 'unten') {
                 const heute = hausprogrammJetzt().slice(0, 10);
                 document.getElementById('ytv-termine').innerHTML =
@@ -9807,28 +9860,40 @@
         function musikWerbungTakt() {
             const vb = document.getElementById('ytm-vollbild');
             if (!vb) return;
-            const imVollbild = document.body.classList.contains('ytm-an') && document.body.classList.contains('ytm-vollbild');
+            const musikAn = document.body.classList.contains('ytm-an');
+            const imVollbild = musikAn && document.body.classList.contains('ytm-vollbild');
+            const normal = musikAn && !imVollbild;
             // Waehrend der Musik laufen keine Slots - die Daten hier alle 10 min frisch holen.
-            if (imVollbild && Date.now() - musikWerbungGeladen > 600000) { musikWerbungGeladen = Date.now(); hausprogrammLaden(); }
+            if (musikAn && Date.now() - musikWerbungGeladen > 600000) { musikWerbungGeladen = Date.now(); hausprogrammLaden(); }
             // Chef-Handy: aus / zeitweise (alle N Minuten je 30 s, rechts um einen halben
             // Takt versetzt) / durchgehend (beide Flaechen dauerhaft).
             const modus = werbungWert('musik', 'modus');
             const takt = Math.max(1, Math.min(60, Number(werbungWert('musik', 'alleMin')) || 2)) * 60;
             const s = Math.floor(Date.now() / 1000) % takt;
-            let unten = false, rechts = false;
-            if (MUSIK_WERBUNG_AN && imVollbild && hausprogrammDaten && modus !== 'aus') {
+            let unten = false, rechts = false;      // "unten" = Termine, "rechts" = Aktionen
+            if (MUSIK_WERBUNG_AN && musikAn && hausprogrammDaten && modus !== 'aus') {
                 const durch = modus === 'durchgehend';
-                unten = (durch || s < MUSIK_WERBUNG_DAUER_S) && hausprogrammKommende().length > 0;
-                rechts = (durch || (s >= takt / 2 && s < takt / 2 + MUSIK_WERBUNG_DAUER_S)) && musikWerbungAktionen().liste.length > 0;
+                const hatTermine = hausprogrammKommende().length > 0;
+                const hatAktionen = musikWerbungAktionen().liste.length > 0;
+                unten = (durch || s < MUSIK_WERBUNG_DAUER_S) && hatTermine;
+                rechts = (durch || (s >= takt / 2 && s < takt / 2 + MUSIK_WERBUNG_DAUER_S)) && hatAktionen;
+                // Normale Ansicht hat nur EINE Karte: durchgehend wechseln Termine
+                // und Aktionen alle 30 s, sonst nimmt die Karte, was gerade dran ist.
+                if (normal && unten && rechts) {
+                    const termineDran = Math.floor(Date.now() / (MUSIK_WERBUNG_DAUER_S * 1000)) % 2 === 0;
+                    unten = termineDran; rechts = !termineDran;
+                }
             }
             // Nur beim Wechsel neu zeichnen (sonst startet die Einblend-Animation jede Sekunde neu).
-            const sig = (unten ? 'u' : '') + (rechts ? 'r' : '') + '|' + hausprogrammJetzt().slice(0, 10);
+            const sig = (imVollbild ? 'V' : 'N') + (unten ? 'u' : '') + (rechts ? 'r' : '') + '|' + hausprogrammJetzt().slice(0, 10);
             if (sig === musikWerbungSig) return;
             musikWerbungSig = sig;
-            if (unten) musikWerbungZeichnen('unten');
-            if (rechts) musikWerbungZeichnen('rechts');
-            vb.classList.toggle('wb-unten', unten);
-            vb.classList.toggle('wb-rechts', rechts);
+            if (imVollbild && unten) musikWerbungZeichnen('unten');
+            if (imVollbild && rechts) musikWerbungZeichnen('rechts');
+            if (normal && (unten || rechts)) musikWerbungZeichnen(unten ? 'karte-termine' : 'karte-aktionen');
+            vb.classList.toggle('wb-unten', imVollbild && unten);
+            vb.classList.toggle('wb-rechts', imVollbild && rechts);
+            document.body.classList.toggle('wb-karte', normal && (unten || rechts));
         }
         setInterval(musikWerbungTakt, 1000);
 

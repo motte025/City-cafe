@@ -224,8 +224,12 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   bisher nur `hosn-obe.html?session=…`, DJ (QR-Slot, aus) nur
   `dj-fernbedienung.html`. **Echter Schutz** gegen Gäste, die eine andere Adresse
   von Hand aufrufen, kommt erst mit dichteren Firebase-Regeln (Offene Punkte).
-- **Musik in der Widget-Ansicht** (nicht Vollbild) zeigt die Werbung noch nicht –
-  am 15.10. 17:04 lief die Musik genau so (rechte Karte Fotos). Nächster Schritt.
+- **Musik-Werbung auch in der normalen Ansicht** (15.10.2026): eigene Karte
+  `#ytm-werbung` über der rechten Seitenkarte (Fotos/Shorts/Ähnliche laufen
+  darunter weiter), Body-Klasse `wb-karte`. Gleicher Takt wie im Vollbild: Termine
+  in der ersten, Aktionen in der zweiten Takthälfte; bei „Immer" wechselt die eine
+  Karte alle 30 s zwischen Terminen und Aktionen. 11 Prüfungen mit Headless-Edge
+  bestanden (Termine, Aktionen, Pause, Aus, Immer-Wechsel).
   Getestet mit Headless-Edge und gestellter Uhr (15./16./17.10., 1.11.), Firebase
   dabei gesperrt.
 - **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, seit 03.10.2026 auf `main`,
