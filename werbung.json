@@ -1,0 +1,32 @@
+{
+  "_hinweis": "Hausprogramm des City Cafe fuer die Folie 'Demnaechst im City Cafe' (index.html, runHausprogrammState). datum/ab/bis in Wiener Zeit. Ein Eintrag verschwindet von selbst, sobald 'bis' vorbei ist. Nur echte, vom Betreiber genannte Angaben eintragen.",
+  "veranstaltungen": [
+    {
+      "id": "oktoberfest-2026-10-16",
+      "aktiv": true,
+      "datum": "2026-10-16",
+      "ab": "19:00",
+      "titel": "Oktoberfest",
+      "zusatz": "Livemusik mit Reinisch & H. Dreier",
+      "bis": "2026-10-17 04:00"
+    },
+    {
+      "id": "oktoberfest-fpoe-2026-10-23",
+      "aktiv": true,
+      "datum": "2026-10-23",
+      "ab": "16:00",
+      "titel": "Oktoberfest der FPÖ Klagenfurt",
+      "zusatz": "Livemusik mit Almrebell",
+      "bis": "2026-10-24 04:00"
+    },
+    {
+      "id": "halloween-2026-10-31",
+      "aktiv": true,
+      "datum": "2026-10-31",
+      "ab": "18:00",
+      "titel": "Halloween-Party",
+      "zusatz": "Livemusik",
+      "bis": "2026-11-01 04:00"
+    }
+  ]
+}

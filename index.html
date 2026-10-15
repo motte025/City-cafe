@@ -440,6 +440,51 @@
             background: #21150c;
         }
         #mittagsteller-fullscreen.active { display: block; }
+        /* Hausprogramm "Demnaechst im City Cafe" (15.10.2026): eigene Vollbild-
+           Ebene wie der Mittagsteller, Inhalt aus werbung.json. */
+        #hausprogramm-fullscreen {
+            display: none; position: absolute; inset: 0; z-index: 600; overflow: hidden;
+            background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(0, 229, 255, 0.22), rgba(0, 0, 0, 0) 70%),
+                        radial-gradient(ellipse 60% 50% at 50% 110%, rgba(0, 140, 255, 0.18), rgba(0, 0, 0, 0) 70%),
+                        linear-gradient(180deg, #071633 0%, #040b1f 100%);
+            color: #f2f7ff; font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        #hausprogramm-fullscreen.active { display: flex; flex-direction: column; align-items: center; }
+        .hp-kopf { margin-top: 70px; text-align: center; }
+        .hp-kopf .hp-klein { font-size: 30px; font-weight: 700; letter-spacing: 0.35em; color: #5ff3ff; }
+        .hp-kopf .hp-gross {
+            font-size: 92px; font-weight: 800; letter-spacing: 0.02em; margin-top: 6px;
+            text-shadow: 0 0 40px rgba(0, 229, 255, 0.35);
+        }
+        .hp-kopf .hp-linie {
+            width: 260px; height: 5px; margin: 22px auto 0; border-radius: 3px;
+            background: linear-gradient(90deg, rgba(0, 229, 255, 0), #00e5ff, rgba(0, 229, 255, 0));
+        }
+        .hp-karten { display: flex; gap: 44px; margin: auto 0 150px; padding: 0 80px; justify-content: center; width: 100%; }
+        .hp-karte {
+            flex: 1 1 0; max-width: 560px; min-width: 0; position: relative;
+            background: linear-gradient(160deg, rgba(20, 52, 110, 0.85), rgba(8, 22, 54, 0.9));
+            border: 2px solid rgba(95, 243, 255, 0.35); border-radius: 30px; padding: 44px 40px 46px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), inset 0 0 40px rgba(0, 229, 255, 0.06);
+            animation: hpRein 0.9s ease-out both;
+        }
+        .hp-karte:nth-child(2) { animation-delay: 0.25s; }
+        .hp-karte:nth-child(3) { animation-delay: 0.5s; }
+        .hp-karte.hp-heute { border-color: #00e5ff; box-shadow: 0 0 50px rgba(0, 229, 255, 0.35), 0 20px 60px rgba(0, 0, 0, 0.45); }
+        .hp-tag { font-size: 30px; font-weight: 700; letter-spacing: 0.2em; color: #5ff3ff; text-transform: uppercase; }
+        .hp-datum { font-size: 104px; font-weight: 800; line-height: 1; margin-top: 8px; }
+        .hp-titel { font-size: 50px; font-weight: 800; line-height: 1.12; margin-top: 30px; overflow-wrap: anywhere; }
+        .hp-zusatz { font-size: 32px; font-weight: 500; color: #c8d6f2; margin-top: 16px; line-height: 1.3; }
+        .hp-zeit {
+            display: inline-block; margin-top: 30px; font-size: 36px; font-weight: 800;
+            padding: 10px 26px; border-radius: 16px; background: rgba(0, 229, 255, 0.14); color: #7ff7ff;
+        }
+        .hp-marke {
+            position: absolute; top: -24px; right: 30px; font-size: 28px; font-weight: 800; letter-spacing: 0.12em;
+            padding: 8px 22px; border-radius: 14px; background: #00e5ff; color: #04102a;
+        }
+        .hp-fuss { position: absolute; bottom: 52px; font-size: 30px; font-weight: 600; color: #8fa6d4; letter-spacing: 0.08em; }
+        @keyframes hpRein { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
         /* Roulette immer im Vollbild (Wunsch Betreiber 05.10.2026): eigene Ebene
            ueber dem ganzen Dashboard wie der Mittagsteller. Der Inhalt kommt aus
            roulette-vorschau-spiel/ und richtet sich selbst nach der Groesse. */
@@ -3157,6 +3202,17 @@
 
         <div id="mittagsteller-fullscreen">
             <img src="mittagsteller-querformat.jpg" alt="Gasthaus Reiterklause Mittagsteller">
+        </div>
+
+        <!-- Hausprogramm "Demnaechst im City Cafe" (siehe runHausprogrammState). -->
+        <div id="hausprogramm-fullscreen">
+            <div class="hp-kopf">
+                <div class="hp-klein">CITY CAFE · KLAGENFURT</div>
+                <div class="hp-gross" id="hp-ueberschrift">DEMNÄCHST BEI UNS</div>
+                <div class="hp-linie"></div>
+            </div>
+            <div class="hp-karten" id="hp-karten"></div>
+            <div class="hp-fuss">Wir freuen uns auf euch!</div>
         </div>
 
         <!-- Roulette im Vollbild (siehe runRouletteState). Die Seite wird nur fuer
@@ -9554,6 +9610,77 @@
             return (14 * 3600 + 30 * 60 - sekunden) * 1000;
         }
 
+        // ---------- Hausprogramm "Demnaechst im City Cafe" (15.10.2026) ----------
+        // Eigene Veranstaltungen aus werbung.json, bis zu drei Karten, direkt nach
+        // dem Tag/Nacht-Plakat. Ein Eintrag faellt nach "bis" (Wiener Zeit) von
+        // selbst heraus; ohne kommende Termine ueberspringt sich der Slot.
+        // Die Datei wird bei jedem Slot frisch geholt - neue Termine brauchen
+        // also kein Neuladen der Seite. Abschalten: HAUSPROGRAMM_AN = false.
+        const HAUSPROGRAMM_AN = slotSchalter(true, 'hausan');
+        const HAUSPROGRAMM_SLOT_INDEX = 0.5;
+        const HAUSPROGRAMM_DAUER_MS = 20000;
+        let hausprogrammDaten = null;      // letzter gelesener Stand (Rueckfall bei Netzfehler)
+        function hausprogrammLaden() {
+            return fetch('werbung.json?v=' + Date.now(), { cache: 'no-store' })
+                .then(r => r.ok ? r.json() : Promise.reject(r.status))
+                .then(d => { hausprogrammDaten = d; })
+                .catch(() => {});
+        }
+        // "JJJJ-MM-TT HH:MM" in Wiener Zeit - so vergleichbar wie die Angaben in werbung.json.
+        function hausprogrammJetzt() {
+            const t = new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+            }).formatToParts(new Date());
+            const w = typ => t.find(teil => teil.type === typ).value;
+            return w('year') + '-' + w('month') + '-' + w('day') + ' ' + w('hour') + ':' + w('minute');
+        }
+        function hausprogrammKommende() {
+            const jetzt = hausprogrammJetzt();
+            const liste = (hausprogrammDaten && hausprogrammDaten.veranstaltungen) || [];
+            return liste
+                .filter(v => v && v.aktiv !== false && v.datum && v.titel
+                             && String(v.bis || (v.datum + ' 23:59')) > jetzt)
+                .sort((a, b) => String(a.datum + (a.ab || '')).localeCompare(String(b.datum + (b.ab || ''))))
+                .slice(0, 3);
+        }
+        function hausprogrammZeichnen(termine) {
+            const heute = hausprogrammJetzt().slice(0, 10);
+            const morgenD = new Date(heute + 'T12:00:00Z'); morgenD.setUTCDate(morgenD.getUTCDate() + 1);
+            const morgen = morgenD.toISOString().slice(0, 10);
+            const box = document.getElementById('hp-karten');
+            box.innerHTML = '';
+            termine.forEach(v => {
+                const d = new Date(v.datum + 'T12:00:00Z');
+                const karte = document.createElement('div');
+                karte.className = 'hp-karte' + (v.datum === heute ? ' hp-heute' : '');
+                const teil = (cls, text) => {
+                    const e = document.createElement('div'); e.className = cls; e.textContent = text;
+                    karte.appendChild(e); return e;
+                };
+                if (v.datum === heute) teil('hp-marke', 'HEUTE');
+                else if (v.datum === morgen) teil('hp-marke', 'MORGEN');
+                teil('hp-tag', d.toLocaleDateString('de-AT', { weekday: 'long', timeZone: 'UTC' }));
+                teil('hp-datum', d.toLocaleDateString('de-AT', { day: '2-digit', month: '2-digit', timeZone: 'UTC' }));
+                teil('hp-titel', v.titel);
+                if (v.zusatz) teil('hp-zusatz', v.zusatz);
+                if (v.ab) teil('hp-zeit', 'ab ' + v.ab + ' Uhr');
+                box.appendChild(karte);
+            });
+            document.getElementById('hp-ueberschrift').textContent =
+                termine.length && termine.every(v => v.datum === heute) ? 'HEUTE BEI UNS' : 'DEMNÄCHST BEI UNS';
+        }
+        // Zeigt die Folie und liefert true - oder false, wenn es nichts zu zeigen gibt.
+        function runHausprogrammState() {
+            const termine = HAUSPROGRAMM_AN ? hausprogrammKommende() : [];
+            hausprogrammLaden();            // fuer den naechsten Durchlauf
+            if (!termine.length) return false;
+            hausprogrammZeichnen(termine);
+            document.getElementById('hausprogramm-fullscreen').classList.add('active');
+            return true;
+        }
+        if (HAUSPROGRAMM_AN) hausprogrammLaden();
+
         // Nightlife steht hinter der Dart-Strecke - vor dem Tag/Nacht-Plakat.
         const NL_SLOT_INDEX = -0.5;
 
@@ -14393,6 +14520,7 @@
             // Verhindert, dass eine abgeloeste Sequenz im Hintergrund weiterlaeuft.
             cancelSequenceTimers();
             document.getElementById('mittagsteller-fullscreen').classList.remove('active');
+            document.getElementById('hausprogramm-fullscreen').classList.remove('active');
             // Die CL-Tabelle im Vollbild haengt ausserhalb von .media-inner-view
             // und verschwindet sonst nur ueber ihren eigenen Zeitgeber - den
             // loescht ein Wunsch vom Handy (cancelSequenceTimers), und die
@@ -14529,8 +14657,14 @@
                 // ausgeblendeten Ansicht ablehnt.
                 djVorpuffern();
 
-                mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
+                mediaStateIndex = HAUSPROGRAMM_SLOT_INDEX;
                 globalMasterTimer = later(runMasterSequence, 35000);
+
+            } else if (mediaStateIndex === HAUSPROGRAMM_SLOT_INDEX) {
+                // Eigene Veranstaltungen (werbung.json); ohne Termine sofort weiter.
+                mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
+                if (runHausprogrammState()) globalMasterTimer = later(runMasterSequence, HAUSPROGRAMM_DAUER_MS);
+                else runMasterSequence();
 
             } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {
                 const restzeit = mittagstellerRestzeitMs();

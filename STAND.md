@@ -181,7 +181,19 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   offener Übersicht. Welcher Rotations-Slot gerade läuft, meldet der Screen noch
   nicht – dafür müsste `index.html` ein Feld mehr schreiben. Getestet mit
   Headless-Edge gegen die Live-Daten (Handy 390 px, Tablet 1024 px, kein
-  Querscrollen; Gast sieht vier Reiter); Chef-Ansicht am echten Handy noch offen.
+  Querscrollen; Gast sieht vier Reiter); am Handy des Betreibers bestätigt.
+- **Hausprogramm „Demnächst bei uns"** (15.10.2026): Vollbild-Folie
+  (`#hausprogramm-fullscreen`, z-index 600 wie Mittagsteller) mit bis zu drei
+  eigenen Veranstaltungen aus **`werbung.json`** (`datum`, `ab`, `titel`, `zusatz`,
+  `bis` in Wiener Zeit, `aktiv`). Slot `HAUSPROGRAMM_SLOT_INDEX` 0.5, 20 s, direkt
+  nach dem Tag/Nacht-Plakat; ohne kommende Termine überspringt er sich. Marke
+  „HEUTE"/„MORGEN", Eintrag fällt nach `bis` von selbst heraus. Die Datei wird je
+  Slot frisch geholt – neue Termine brauchen nur einen Push von `werbung.json`, kein
+  Neuladen. Abbau in `runMasterSequence()` eingetragen. Abschalten:
+  `HAUSPROGRAMM_AN`. **Grenze:** Läuft Musik „bis Stopp", steht die Rotation – die
+  Folie erscheint dann nicht (nächster Schritt: Hinweis in der Musik-Ansicht).
+  Getestet mit Headless-Edge und gestellter Uhr (15./16./17.10., 1.11.), Firebase
+  dabei gesperrt.
 - **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, seit 03.10.2026 auf `main`,
   Firebase-Regeln und Chef-PIN eingetragen). Gäste wünschen per Handy, der
   Chef (PIN) steuert; der TV ist die einzige Quelle der Reihenfolge
