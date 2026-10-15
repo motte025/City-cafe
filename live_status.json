@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-15T17:17:46Z",
+  "checked_at": "2026-10-15T17:32:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "HandsUp in the Chat!!!! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "HandsUp in the Chat!!!! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
