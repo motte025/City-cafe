@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-15T15:27:45Z",
+  "checked_at": "2026-10-15T15:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "Techno Kitty !bewbs !morestreams !consult !alt",
       "game": "DJs"
     },
     {
@@ -38,17 +38,17 @@
     },
     {
       "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #615 with Dusky",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "Techno Kitty !bewbs !morestreams !consult !alt",
-      "game": "DJs"
     }
   ]
 }
