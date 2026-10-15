@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-15T16:57:47Z",
+  "checked_at": "2026-10-15T17:17:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴  HARDSTYLE ft. HARDTECHNO ☆ !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "Techno Kitty !bewbs !morestreams !consult !alt",
       "game": "DJs"
     },
     {
@@ -24,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "Techno Kitty !bewbs !morestreams !consult !alt",
       "game": "DJs"
     },
     {
@@ -34,6 +27,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "HandsUp in the Chat!!!! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
