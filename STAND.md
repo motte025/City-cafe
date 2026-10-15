@@ -216,6 +216,16 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   bis dahin fällt der Pfad unter `$sonst` (jede Anmeldung darf schreiben).
   16 Prüfungen mit Headless-Edge bestanden (Handy-Schalter, alle Modi am TV,
   Abschalten/Dauer je Plakat, Grenzwerte).
+- **QR-Codes am TV öffnen nur ihr eigenes Ziel** (Wunsch Betreiber 15.10.2026):
+  „Song wünschen" führt seitdem direkt zu `yt-fernbedienung.html?raum=…` statt zur
+  Sammel-Fernbedienung (dort hätten Gäste auch DJ, Roulette-Wecken und Hos'n Obe
+  gesehen). Als Gast: nur Suchen, Wünschen (2 je Gerät), eigene Wünsche
+  zurückziehen; Screen-Wahl dort nur noch für den Chef. Hos'n Obe öffnet wie
+  bisher nur `hosn-obe.html?session=…`, DJ (QR-Slot, aus) nur
+  `dj-fernbedienung.html`. **Echter Schutz** gegen Gäste, die eine andere Adresse
+  von Hand aufrufen, kommt erst mit dichteren Firebase-Regeln (Offene Punkte).
+- **Musik in der Widget-Ansicht** (nicht Vollbild) zeigt die Werbung noch nicht –
+  am 15.10. 17:04 lief die Musik genau so (rechte Karte Fotos). Nächster Schritt.
   Getestet mit Headless-Edge und gestellter Uhr (15./16./17.10., 1.11.), Firebase
   dabei gesperrt.
 - **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, seit 03.10.2026 auf `main`,

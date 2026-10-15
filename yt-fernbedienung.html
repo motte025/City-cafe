@@ -394,9 +394,11 @@
         <div class="feldname">Bildrate</div>
         <div class="zeiten" id="bildraten"></div>
     </details>
-    <div class="feldname">Screen</div>
+    <!-- Screen-Wahl nur fuer den Chef: Gaeste kommen per QR-Code vom TV und
+         sollen nur diesen Screen steuern (Wunsch Betreiber 15.10.2026). -->
+    <div class="feldname nur-chef">Screen</div>
     <div class="hinweis" id="raum-hinweis"></div>
-    <div class="zeiten" id="boxen2"></div>
+    <div class="zeiten nur-chef" id="boxen2"></div>
     <button class="rot breit nur-chef" id="stoppknopf">■ Stopp, zurück zur normalen Rotation</button>
     <div class="hinweis" id="fassung"></div>
 </section>
@@ -422,7 +424,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-05-unten4';
+    var FASSUNG = '2026-10-15-qr1';
     // Schriftgroesse je Geraet (A-/A+ oben): vergroessert die ganze Seite (CSS zoom),
     // gemerkt im Browser des Geraets (Handy und Tablet unabhaengig, Wunsch 05.10.2026).
     (function () {

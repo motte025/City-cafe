@@ -9140,7 +9140,12 @@
             else ytmQrKarteBauen();
         }
         async function ytmQrKarteBauen() {
-            const ziel = 'https://motte025.github.io/City-cafe/fernbedienung.html?raum=' + encodeURIComponent(NL_FERN_RAUM);
+            // Nur die Musik-Fernbedienung, nicht die Sammel-Fernbedienung mit DJ,
+            // Roulette und Hos'n Obe: Gaeste sollen per QR genau das bekommen,
+            // was der Code verspricht (Wunsch Betreiber 15.10.2026). Als Gast
+            // geht dort nur Suchen, Wuenschen (2 je Geraet) und eigene Wuensche
+            // zurueckziehen; alles andere braucht die Chef-PIN.
+            const ziel = 'https://motte025.github.io/City-cafe/yt-fernbedienung.html?raum=' + encodeURIComponent(NL_FERN_RAUM);
             const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=0&data=' + encodeURIComponent(ziel);
             document.querySelectorAll('.ytm-qr-html img').forEach(img => { if (img.src !== qrUrl) img.src = qrUrl; });
             if (ytmQrGebaut) return;
