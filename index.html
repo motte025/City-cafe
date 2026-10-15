@@ -5325,13 +5325,19 @@
         // ---------- Jägermeister & Puntigamer (30s, nach Trinkspiel V1) ----------
         function runJaegerPuntigamerState(nextStateIndex) {
             document.getElementById('media-view-hypereel').classList.remove('active'); // V1 lag sonst noch drüber und verdeckte das Bild
+            // Getraenkeplakat: am Chef-Handy abschaltbar, Dauer einstellbar.
+            if (werbungWert('getraenke', 'an') === false) {
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+                return;
+            }
             document.getElementById('media-view-jaeger').classList.add('active');
             document.getElementById('jaegerImage').src = JAEGER_PUNTIGAMER_URL;
 
             later(() => {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
-            }, JAEGER_PUNTIGAMER_SECONDS * 1000);
+            }, werbungDauerMs('getraenke'));
         }
 
         function announcePolaroidHighlight(lastCard, nextStateIndex) {
@@ -7693,6 +7699,7 @@
                 // Weckruf und Stand fuers Roulette (siehe rouletteWeckerStarten).
                 try { rouletteWeckerStarten(); } catch (e) {}
                 try { rouletteStandHoeren(); } catch (e) {}
+                try { werbungEinstellungHoeren(verb); } catch (e) {}
             }).catch(() => {});
         }
         nlFernStarten();
@@ -9649,6 +9656,38 @@
             return (14 * 3600 + 30 * 60 - sekunden) * 1000;
         }
 
+        // ---------- Werbe-Einstellungen vom Chef-Handy (15.10.2026) ----------
+        // djremote/<raum>/werbung/einstellung, geschrieben in der Chef-Uebersicht
+        // (chef-zentrale.html). Fehlt etwas, gelten die Vorgaben hier - das ist
+        // genau das Verhalten von vorher.
+        //   musik:      { modus: 'zeitweise' | 'durchgehend' | 'aus', alleMin }
+        //   folie:      { an, dauerS }   Hausprogramm "Demnaechst bei uns"
+        //   willkommen: { an, dauerS }   Tag/Nacht-Plakat
+        //   getraenke:  { an, dauerS }   Jaegermeister & Puntigamer
+        const WERBUNG_VORGABE = {
+            musik: { modus: 'zeitweise', alleMin: 2 },
+            folie: { an: true, dauerS: 60 },
+            willkommen: { an: true, dauerS: 35 },
+            getraenke: { an: true, dauerS: 30 }
+        };
+        let werbungEinst = {};
+        function werbungWert(teil, feld) {
+            const t = werbungEinst && werbungEinst[teil];
+            const v = t ? t[feld] : undefined;
+            return v === undefined || v === null ? WERBUNG_VORGABE[teil][feld] : v;
+        }
+        // Dauer in ms, auf vernuenftige Grenzen (5 s bis 10 min) beschraenkt.
+        function werbungDauerMs(teil) {
+            const s = Number(werbungWert(teil, 'dauerS'));
+            return Math.min(600, Math.max(5, isFinite(s) ? s : WERBUNG_VORGABE[teil].dauerS)) * 1000;
+        }
+        function werbungEinstellungHoeren(verb) {
+            verb.db.ref('djremote/' + NL_FERN_RAUM + '/werbung/einstellung').on('value', snap => {
+                werbungEinst = snap.val() || {};
+                musikWerbungSig = '';           // sofort neu bewerten
+            }, () => {});
+        }
+
         // ---------- Hausprogramm "Demnaechst im City Cafe" (15.10.2026) ----------
         // Eigene Veranstaltungen aus werbung.json, bis zu drei Karten, direkt nach
         // dem Tag/Nacht-Plakat. Ein Eintrag faellt nach "bis" (Wiener Zeit) von
@@ -9657,7 +9696,6 @@
         // also kein Neuladen der Seite. Abschalten: HAUSPROGRAMM_AN = false.
         const HAUSPROGRAMM_AN = slotSchalter(true, 'hausan');
         const HAUSPROGRAMM_SLOT_INDEX = 0.5;
-        const HAUSPROGRAMM_DAUER_MS = 60000;   // 1 Minute je Zyklus (Wunsch Betreiber 15.10.2026)
         let hausprogrammDaten = null;      // letzter gelesener Stand (Rueckfall bei Netzfehler)
         function hausprogrammLaden() {
             return fetch('werbung.json?v=' + Date.now(), { cache: 'no-store' })
@@ -9711,7 +9749,7 @@
         }
         // Zeigt die Folie und liefert true - oder false, wenn es nichts zu zeigen gibt.
         function runHausprogrammState() {
-            const termine = HAUSPROGRAMM_AN ? hausprogrammKommende() : [];
+            const termine = HAUSPROGRAMM_AN && werbungWert('folie', 'an') !== false ? hausprogrammKommende() : [];
             hausprogrammLaden();            // fuer den naechsten Durchlauf
             if (!termine.length) return false;
             hausprogrammZeichnen(termine);
@@ -9723,12 +9761,14 @@
         // ---------- Werbung rund um den Musik-Player (Vollbild, 15.10.2026) ----------
         // Laeuft Musik "bis Stopp", steht die Rotation - die Hausprogramm-Folie kaeme
         // nie dran. Darum wechseln im Musik-Vollbild die Flaechen NEBEN dem Video:
-        //   unten  (statt Radio-Mix):     Termine aus werbung.json    Sekunde  0-29 von 120
-        //   rechts (statt Warteschlange): Aktionen aus werbung.json   Sekunde 60-89 von 120
-        // Nie beide zugleich; "Naechster Titel" und das Video bleiben immer sichtbar.
+        //   unten  (statt Radio-Mix):     Termine aus werbung.json
+        //   rechts (statt Warteschlange): Aktionen aus werbung.json
+        // Wie oft, stellt der Chef am Handy ein (werbung/einstellung.musik): zeitweise
+        // je 30 s, unten und rechts um einen halben Takt versetzt - oder durchgehend.
+        // "Naechster Titel" und das Video bleiben immer sichtbar.
         // Nur Klassen am #ytm-vollbild - die Musik-Darstellung selbst bleibt unangetastet.
         const MUSIK_WERBUNG_AN = slotSchalter(true, 'mwan');
-        const MUSIK_WERBUNG_TAKT_S = 120, MUSIK_WERBUNG_DAUER_S = 30;
+        const MUSIK_WERBUNG_DAUER_S = 30;
         let musikWerbungGeladen = 0, musikWerbungSig = '';
         function musikWerbungAktionen() {
             const d = hausprogrammDaten || {};
@@ -9765,19 +9805,25 @@
             const imVollbild = document.body.classList.contains('ytm-an') && document.body.classList.contains('ytm-vollbild');
             // Waehrend der Musik laufen keine Slots - die Daten hier alle 10 min frisch holen.
             if (imVollbild && Date.now() - musikWerbungGeladen > 600000) { musikWerbungGeladen = Date.now(); hausprogrammLaden(); }
-            const s = Math.floor(Date.now() / 1000) % MUSIK_WERBUNG_TAKT_S;
-            let art = '';
-            if (MUSIK_WERBUNG_AN && imVollbild && hausprogrammDaten) {
-                if (s < MUSIK_WERBUNG_DAUER_S && hausprogrammKommende().length) art = 'unten';
-                else if (s >= 60 && s < 60 + MUSIK_WERBUNG_DAUER_S && musikWerbungAktionen().liste.length) art = 'rechts';
+            // Chef-Handy: aus / zeitweise (alle N Minuten je 30 s, rechts um einen halben
+            // Takt versetzt) / durchgehend (beide Flaechen dauerhaft).
+            const modus = werbungWert('musik', 'modus');
+            const takt = Math.max(1, Math.min(60, Number(werbungWert('musik', 'alleMin')) || 2)) * 60;
+            const s = Math.floor(Date.now() / 1000) % takt;
+            let unten = false, rechts = false;
+            if (MUSIK_WERBUNG_AN && imVollbild && hausprogrammDaten && modus !== 'aus') {
+                const durch = modus === 'durchgehend';
+                unten = (durch || s < MUSIK_WERBUNG_DAUER_S) && hausprogrammKommende().length > 0;
+                rechts = (durch || (s >= takt / 2 && s < takt / 2 + MUSIK_WERBUNG_DAUER_S)) && musikWerbungAktionen().liste.length > 0;
             }
             // Nur beim Wechsel neu zeichnen (sonst startet die Einblend-Animation jede Sekunde neu).
-            const sig = art + '|' + (art === 'unten' ? hausprogrammJetzt().slice(0, 10) : '');
+            const sig = (unten ? 'u' : '') + (rechts ? 'r' : '') + '|' + hausprogrammJetzt().slice(0, 10);
             if (sig === musikWerbungSig) return;
             musikWerbungSig = sig;
-            if (art) musikWerbungZeichnen(art);
-            vb.classList.toggle('wb-unten', art === 'unten');
-            vb.classList.toggle('wb-rechts', art === 'rechts');
+            if (unten) musikWerbungZeichnen('unten');
+            if (rechts) musikWerbungZeichnen('rechts');
+            vb.classList.toggle('wb-unten', unten);
+            vb.classList.toggle('wb-rechts', rechts);
         }
         setInterval(musikWerbungTakt, 1000);
 
@@ -14750,20 +14796,21 @@
                 runNightlifeState(KT.testFirstInCycle ? -1 : 0); // -> Hos'n Obe bzw. Plakat
 
             } else if (mediaStateIndex === 0) {
-                showPosterImage(getDayNightPoster());
-
                 // Die aktuelle Live-Liste schon hier laden. Der Twitch-Player wird
                 // erst im sichtbaren DJ-Slot erzeugt, weil Twitch Autoplay in einer
                 // ausgeblendeten Ansicht ablehnt.
                 djVorpuffern();
 
                 mediaStateIndex = HAUSPROGRAMM_SLOT_INDEX;
-                globalMasterTimer = later(runMasterSequence, 35000);
+                // Willkommensplakat: am Chef-Handy abschaltbar, Dauer einstellbar.
+                if (werbungWert('willkommen', 'an') === false) { runMasterSequence(); return; }
+                showPosterImage(getDayNightPoster());
+                globalMasterTimer = later(runMasterSequence, werbungDauerMs('willkommen'));
 
             } else if (mediaStateIndex === HAUSPROGRAMM_SLOT_INDEX) {
                 // Eigene Veranstaltungen (werbung.json); ohne Termine sofort weiter.
                 mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
-                if (runHausprogrammState()) globalMasterTimer = later(runMasterSequence, HAUSPROGRAMM_DAUER_MS);
+                if (runHausprogrammState()) globalMasterTimer = later(runMasterSequence, werbungDauerMs('folie'));
                 else runMasterSequence();
 
             } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {

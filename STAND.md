@@ -203,6 +203,19 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   frisch. Abschalten: `MUSIK_WERBUNG_AN` (`?mwan=1` zum Ansehen, wenn aus). Nur im
   Musik-**Vollbild**, nicht in der Widget-Ansicht. Getestet mit Headless-Edge
   (gestellte Uhr, Firebase gesperrt).
+- **Werbe-Schalter am Chef-Handy** (15.10.2026): In der Chef-Übersicht Bereich
+  „📢 Werbung am Screen" → `djremote/<raum>/werbung/einstellung`
+  (`musik.modus` aus|zeitweise|durchgehend + `musik.alleMin` 1/2/5/10;
+  `folie`, `willkommen` (Tag/Nacht-Plakat), `getraenke` (Jäger/Puntigamer) je
+  `an` + `dauerS`). Der Screen hört live darauf (`werbungEinstellungHoeren`),
+  fehlende Werte = `WERBUNG_VORGABE` (Verhalten von vorher; Dauer auf 5 s–10 min
+  begrenzt). **Arbeitsteilung (Wunsch Betreiber):** Der Betreiber schaltet nur
+  an/aus und wie oft/lange; neue Termine und Aktionen trägt Claude in
+  `werbung.json` ein. **Firebase-Regel** `werbung` (nur Chef-Geräte schreiben) steht
+  in `docs/musik/firebase-regeln.json` und muss in der Konsole ergänzt werden –
+  bis dahin fällt der Pfad unter `$sonst` (jede Anmeldung darf schreiben).
+  16 Prüfungen mit Headless-Edge bestanden (Handy-Schalter, alle Modi am TV,
+  Abschalten/Dauer je Plakat, Grenzwerte).
   Getestet mit Headless-Edge und gestellter Uhr (15./16./17.10., 1.11.), Firebase
   dabei gesperrt.
 - **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, seit 03.10.2026 auf `main`,

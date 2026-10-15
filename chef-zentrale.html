@@ -8,9 +8,13 @@
 <!--
     CHEF-ZENTRALE (erste Fassung, 15.10.2026)
 
-    Eine Seite, die auf einen Blick zeigt, was am Screen los ist. Sie LIEST nur
-    mit und schickt keine Befehle - gesteuert wird weiter in den Reitern Musik,
-    DJ, Roulette und Hos'n Obe. Darum braucht sie keine neuen Firebase-Regeln.
+    Eine Seite, die auf einen Blick zeigt, was am Screen los ist. Gesteuert wird
+    weiter in den Reitern Musik, DJ, Roulette und Hos'n Obe.
+
+    Einzige Schreibstelle (seit 15.10.2026): Werbe-Schalter unter
+    djremote/<raum>/werbung/einstellung (an/aus, Dauer, wie oft im Musik-
+    Vollbild). Der Screen hoert darauf (werbungEinstellungHoeren in index.html).
+    Schreiben duerfen laut Firebase-Regel nur Chef-Geraete.
 
     Quellen (alle schreibt der Screen ohnehin, hier entsteht keine neue Abfrage
     am Screen):
@@ -69,6 +73,21 @@
         padding: 18px 8px; border-radius: 14px; background: #1d2647; color: #f2f5ff;
     }
     .fuss { font-size: 15px; color: #5b6890; text-align: center; margin-top: 18px; }
+    /* Werbe-Schalter */
+    .wb-block { background: #141c38; border: 1px solid #27325c; border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+    .wb-block .titel { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+    .wb-block .titel small { display: block; font-size: 16px; font-weight: 500; color: #8ea0c8; }
+    .wahl { display: flex; gap: 8px; flex-wrap: wrap; }
+    .wahl + .wahl { margin-top: 8px; }
+    .wahl .etikett { font-size: 17px; color: #8ea0c8; align-self: center; min-width: 52px; }
+    .wahl button {
+        flex: 1 1 0; min-width: 0; font: inherit; font-size: 20px; font-weight: 700; border: 0; border-radius: 12px;
+        padding: 14px 6px; background: #1d2647; color: #cdd7f5; cursor: pointer;
+    }
+    .wahl button.aktiv { background: #0e9fb3; color: #fff; box-shadow: inset 0 0 0 2px #7ff7ff; }
+    .wahl button.aus.aktiv { background: #5b2333; box-shadow: inset 0 0 0 2px #ff6b81; }
+    .wahl[hidden] { display: none; }
+    #wb-meldung { font-size: 17px; color: #8ea0c8; text-align: center; min-height: 22px; margin-top: 4px; }
     @media (min-width: 700px) {
         body { font-size: 18px; max-width: 900px; margin: 0 auto; padding: 16px; }
         .jetzt .gross { font-size: 28px; }
@@ -104,6 +123,10 @@
     <div class="kachel"><div class="titel">🖥️ Video über mpv</div><div class="wert aus" id="k-mpv">–</div><div class="zusatz" id="k-mpv-z"></div></div>
 </div>
 
+<h2>📢 Werbung am Screen</h2>
+<div id="werbung"></div>
+<div id="wb-meldung"></div>
+
 <h2>Steuern</h2>
 <div class="knoepfe">
     <a href="#" data-teil="yt">🎵 Musik</a>
@@ -123,7 +146,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-15-zentrale1';
+    var FASSUNG = '2026-10-15-werbung1';
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var abfrage = new URLSearchParams(location.search);
     var raum = (abfrage.get('raum') || '').trim() || CFG.raum || 'city-cafe';
@@ -142,7 +165,98 @@
     };
     var jetztEmpfangen = 0;         // Ortszeit, als posSek zuletzt kam
 
-    el('fuss').textContent = 'Screen: ' + raum + ' · Fassung ' + FASSUNG + ' · nur Anzeige';
+    el('fuss').textContent = 'Screen: ' + raum + ' · Fassung ' + FASSUNG;
+
+    // --- Werbe-Schalter ---------------------------------------------------------
+    // Vorgaben = Verhalten des Screens ohne Einstellung (WERBUNG_VORGABE in index.html).
+    var WB_VORGABE = {
+        musik: { modus: 'zeitweise', alleMin: 2 },
+        folie: { an: true, dauerS: 60 },
+        willkommen: { an: true, dauerS: 35 },
+        getraenke: { an: true, dauerS: 30 }
+    };
+    var WB_TEILE = [
+        { teil: 'musik', titel: '🎵 Musik-Player (Vollbild)', unter: 'Termine unten, Aktionen rechts neben dem Video',
+          reihen: [
+            { feld: 'modus', werte: [['aus', 'Aus'], ['zeitweise', 'Zeitweise'], ['durchgehend', 'Immer']] },
+            { feld: 'alleMin', etikett: 'alle', nurWenn: ['modus', 'zeitweise'],
+              werte: [[1, '1 min'], [2, '2 min'], [5, '5 min'], [10, '10 min']] }
+          ] },
+        { teil: 'folie', titel: '📅 Große Folie „Demnächst bei uns"', unter: 'einmal je Zyklus, im Vollbild',
+          reihen: [
+            { feld: 'an', werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'dauerS', etikett: 'Dauer', nurWenn: ['an', true], werte: [[30, '30 s'], [60, '1 min'], [120, '2 min']] }
+          ] },
+        { teil: 'willkommen', titel: '☕ Willkommensplakat', unter: 'Tag- bzw. Nacht-Plakat mit Öffnungszeiten',
+          reihen: [
+            { feld: 'an', werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'dauerS', etikett: 'Dauer', nurWenn: ['an', true], werte: [[20, '20 s'], [35, '35 s'], [60, '1 min']] }
+          ] },
+        { teil: 'getraenke', titel: '🍺 Getränkeplakat', unter: 'Jägermeister & Puntigamer',
+          reihen: [
+            { feld: 'an', werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'dauerS', etikett: 'Dauer', nurWenn: ['an', true], werte: [[15, '15 s'], [30, '30 s'], [60, '1 min']] }
+          ] }
+    ];
+    var wbEinst = {};
+    var wbVerb = null;
+    function wbWert(teil, feld) {
+        var t = wbEinst[teil];
+        var v = t ? t[feld] : undefined;
+        return v === undefined || v === null ? WB_VORGABE[teil][feld] : v;
+    }
+    function wbZeichnen() {
+        var box = el('werbung');
+        box.innerHTML = '';
+        WB_TEILE.forEach(function (t) {
+            var block = document.createElement('div');
+            block.className = 'wb-block';
+            var kopf = document.createElement('div');
+            kopf.className = 'titel';
+            kopf.textContent = t.titel;
+            var unter = document.createElement('small');
+            unter.textContent = t.unter;
+            kopf.appendChild(unter);
+            block.appendChild(kopf);
+            t.reihen.forEach(function (r) {
+                var zeile = document.createElement('div');
+                zeile.className = 'wahl';
+                if (r.nurWenn && wbWert(t.teil, r.nurWenn[0]) !== r.nurWenn[1]) zeile.hidden = true;
+                if (r.etikett) {
+                    var et = document.createElement('span');
+                    et.className = 'etikett';
+                    et.textContent = r.etikett;
+                    zeile.appendChild(et);
+                }
+                r.werte.forEach(function (w) {
+                    var k = document.createElement('button');
+                    k.type = 'button';
+                    k.textContent = w[1];
+                    var aktiv = wbWert(t.teil, r.feld) === w[0];
+                    k.className = (aktiv ? 'aktiv' : '') + (w[0] === false || w[0] === 'aus' ? ' aus' : '');
+                    k.addEventListener('click', function () { wbSetzen(t.teil, r.feld, w[0]); });
+                    zeile.appendChild(k);
+                });
+                block.appendChild(zeile);
+            });
+            box.appendChild(block);
+        });
+    }
+    function wbSetzen(teil, feld, wert) {
+        if (!wbVerb) { el('wb-meldung').textContent = 'Keine Verbindung'; return; }
+        // Sofort zeigen, Firebase bestaetigt ueber das Abo.
+        wbEinst[teil] = Object.assign({}, wbEinst[teil] || {});
+        wbEinst[teil][feld] = wert;
+        wbZeichnen();
+        var neu = {};
+        neu[teil + '/' + feld] = wert;
+        neu.ts = { '.sv': 'timestamp' };
+        el('wb-meldung').textContent = 'Wird gespeichert …';
+        wbVerb.db.ref('djremote/' + raum + '/werbung/einstellung').update(neu)
+            .then(function () { el('wb-meldung').textContent = '✓ Gespeichert – der Screen übernimmt es sofort'; })
+            .catch(function () { el('wb-meldung').textContent = 'Nicht gespeichert – nur Chef-Geräte dürfen das ändern'; });
+    }
+    wbZeichnen();
 
     // --- Steuer-Knoepfe -------------------------------------------------------
     [].forEach.call(document.querySelectorAll('[data-teil]'), function (a) {
@@ -311,6 +425,11 @@
         feld(verb, basis + '/yt/warteschlange', function (v) { d.ws = v || {}; });
         feld(verb, basis + '/status', function (v) { d.dj = v; });
         feld(verb, basis + '/roulette/status/ts', function (v) { d.roulette = v; });
+        wbVerb = verb;
+        verb.db.ref(basis + '/werbung/einstellung').on('value', function (s) {
+            wbEinst = s.val() || {};
+            wbZeichnen();
+        });
     });
 
     // Zeiten ("vor 40 s", Songposition, stiller Screen) laufen auch ohne neue Daten weiter.
