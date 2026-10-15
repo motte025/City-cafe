@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-15T09:52:46Z",
+  "checked_at": "2026-10-15T09:57:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥THE DOLLHOUSE IS HAUNTED✨TECH-HOUSE🔥PP 50/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
