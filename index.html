@@ -9618,7 +9618,7 @@
         // also kein Neuladen der Seite. Abschalten: HAUSPROGRAMM_AN = false.
         const HAUSPROGRAMM_AN = slotSchalter(true, 'hausan');
         const HAUSPROGRAMM_SLOT_INDEX = 0.5;
-        const HAUSPROGRAMM_DAUER_MS = 20000;
+        const HAUSPROGRAMM_DAUER_MS = 60000;   // 1 Minute je Zyklus (Wunsch Betreiber 15.10.2026)
         let hausprogrammDaten = null;      // letzter gelesener Stand (Rueckfall bei Netzfehler)
         function hausprogrammLaden() {
             return fetch('werbung.json?v=' + Date.now(), { cache: 'no-store' })

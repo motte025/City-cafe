@@ -185,7 +185,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
 - **Hausprogramm „Demnächst bei uns"** (15.10.2026): Vollbild-Folie
   (`#hausprogramm-fullscreen`, z-index 600 wie Mittagsteller) mit bis zu drei
   eigenen Veranstaltungen aus **`werbung.json`** (`datum`, `ab`, `titel`, `zusatz`,
-  `bis` in Wiener Zeit, `aktiv`). Slot `HAUSPROGRAMM_SLOT_INDEX` 0.5, 20 s, direkt
+  `bis` in Wiener Zeit, `aktiv`). Slot `HAUSPROGRAMM_SLOT_INDEX` 0.5, 1 Minute je Zyklus, direkt
   nach dem Tag/Nacht-Plakat; ohne kommende Termine überspringt er sich. Marke
   „HEUTE"/„MORGEN", Eintrag fällt nach `bis` von selbst heraus. Die Datei wird je
   Slot frisch geholt – neue Termine brauchen nur einen Push von `werbung.json`, kein
