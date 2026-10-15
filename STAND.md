@@ -5,9 +5,13 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 9. Oktober 2026 (YouTube-Musik: Playlists 1–4 mit Titeln,
-QR „Song wünschen" am Handy schaltbar, YouTube Shorts in der rechten Karte;
-Firebase-Regeln und DJ-Live-Status durchgesehen, Ergebnis unter „Offene Punkte").
+Letzte Durchsicht: 15. Oktober 2026 (GitHub-Token getauscht; Chef-Übersicht
+als fünfter Reiter der Fernbedienung; Werbung: große Folie „Demnächst bei uns",
+Termine/Aktionen rund um den Musik-Player in Vollbild und normaler Ansicht,
+Werbe-Schalter am Chef-Handy, `werbung.json`; QR „Song wünschen" öffnet nur
+noch die Musik-Fernbedienung; Firebase-Regel `werbung` eingetragen – alles am
+TV mit Bildschirmfotos geprüft). Davor, 9. Oktober: YouTube-Musik Playlists 1–4
+mit Titeln, QR „Song wünschen" schaltbar, YouTube Shorts in der rechten Karte.
 Davor, 5.–7. Oktober: DJ-Übergänge per Studio-Abgleich, offizielle Videos
 überall, Playlists bearbeiten/erstellen am Handy, Playlists 5–8, Aufrufe,
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
@@ -529,16 +533,21 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   `roulette/index.html` **und** `roulette-src/index.html` und muss einen Neubau
   durch Codex überleben.
 
-## Offene Punkte (Durchsicht 09.10.2026)
+## Offene Punkte (Durchsicht 15.10.2026)
 
 Noch nicht umgesetzt, nach Wichtigkeit:
 
 - **DJ-Live-Status über GitHub:** Der Token im Apps-Script ist ein
   Schreibschlüssel fürs ganze Repo. `main` landet nachts auf dem W1
   (Supervisor, Chromium-Starter) und liefert das Dashboard aus; wer den Token
-  hat, kann also Code ins Café bringen. Laut `DJ-LIVESTREAM-SETUP.md` war der
-  GitHub-PAT am 12.09.2026 in einem Screenshot zu sehen; ob er danach
-  widerrufen wurde, ist hier nicht bekannt – prüfen. Vorschlag: Statusdatei in
+  hat, kann also Code ins Café bringen. **Erledigt am 15.10.2026:** Der alte PAT
+  „Stadt-Café-Liedersammler" (12.08.2026, ohne Ablauf, vermutlich der vom
+  Screenshot 12.09.) ist gelöscht; neuer feingranularer Token nur für
+  `motte025/City-cafe`, Contents lesen/schreiben, Ablauf 1 Jahr, in den
+  Skripteigenschaften (`GITHUB_TOKEN`) eingetragen – DJ-Live schrieb danach
+  weiter (15:47). Ob das Dart-Liga-Skript ein eigenes Apps-Script-Projekt mit
+  eigenem Token hat, beim nächsten Spieltag an den Auto-Commits prüfen.
+  **Weiter offen:** Der Token darf immer noch das ganze Repo schreiben. Vorschlag: Statusdatei in
   ein eigenes Mini-Repo (z. B. `City-cafe-status`) mit eigenem, auf dieses Repo
   beschränktem Token; das Dashboard liest von dort (bis zur Umstellung mit
   Rückgriff auf `main`). Dann gibt es keine Auto-Commits und Pages-Builds auf
@@ -556,10 +565,24 @@ Noch nicht umgesetzt, nach Wichtigkeit:
   `diagnose` nur für Chef-Geräte (der TV ist eins), `$sonst` einschränken;
   vorher prüfen, wer die Pfade legitim beschreibt (sonst bricht die
   Gäste-Suche). Die Regeln trägt der Betreiber in der Firebase-Konsole ein.
+  **15.10.2026:** Zweig `werbung` (nur Chef-Geräte schreiben) ist eingetragen und
+  geprüft (Gast: Lesen ja, Schreiben „Permission denied"). Die Konsole stimmte
+  davor genau mit `docs/musik/firebase-regeln.json` überein. Seit die QR-Codes
+  nur noch ihr eigenes Ziel öffnen, sehen Gäste die anderen Reiter nicht mehr –
+  wer die Adresse von Hand eintippt, kommt aber weiter hinein, bis `$sonst`
+  eingeschränkt ist.
 - **Kamera-Passwort** steht in `DART_CAM_URL` in `index.html` und ist damit
-  öffentlich: Passwort der Kamera ändern, aus dem Repo nehmen (Feste Regeln).
+  öffentlich. **Entscheidung Betreiber 15.10.2026: bleibt so** (Kamera nur im
+  lokalen Netz 192.168.0.x). Eine fertige Umstellung liegt nur lokal am PC auf dem
+  Branch `sicherheit-dartcam` (Adresse ohne Zugangsdaten, Supervisor setzt sie
+  aus `CITYCAFE_CAM_ZUGANG` ein; Reihenfolge: Variable → Supervisor → index.html
+  → Passwort ändern).
 - **Chef-PIN:** Länge prüfen. Das Eingabefeld ist numerisch, die
   Firebase-Regeln begrenzen Fehlversuche nicht.
+- **Werbung, nächste Ideen:** eigene Bilder je Aktion (heute ein gemeinsames
+  `aktionenBild`), Laufschrift-Hinweis auf den nächsten Termin, Dauer der
+  Musik-Einblendung (fest 30 s) einstellbar. In der Vollbild-Leiste unten wird
+  ein langer Zusatz gekürzt („Reinisch & H. …").
 - **Veraltete Kopfzeilen:** `NIGHTLIFE-SETUP.md` und `DJ-FERNBEDIENUNG-SETUP.md`
   sagen „zurzeit abgeschaltet", im Code sind `NL_SLOT_AN` und `DJ_SLOT_AN` an.
 
@@ -596,6 +619,21 @@ wieder live gerechnet.
   `index.html` geht also ohne weiteren Schritt am TV live** – vorher prüfen.
 
 ## Arbeitsweisen, die sich bewährt haben
+
+- **Arbeitsplatz-PC (Beelink, Windows):** GitHub CLI seit 15.10.2026 unter
+  `C:\Program Files\GitHub CLI\gh.exe`, angemeldet als `motte025` (auch als
+  Git-Anmeldung eingerichtet). Arbeitskopie `C:\Users\motte\City-cafe`
+  (Git-Name/E-Mail dort lokal gesetzt), zweite Kopie
+  `C:\Users\motte\Documents\city-cafe`. Kein Python am PC – Python-Prüfungen
+  per `ssh w1 python3 -` (Datei über stdin, nichts in /tmp liegen lassen).
+- **Seiten ohne Box prüfen:** Playwright mit dem installierten Edge
+  (`channel: 'msedge'`), Seite über `http://localhost` ausliefern, **alle
+  fremden Adressen sperren** (sonst meldet sich der Test-TV in der echten
+  Firebase an und schreibt Status/Boxen). Mit `page.clock.install` steht die Uhr
+  fest und die Seiten-Timer laufen nur bei `clock.runFor` – so lassen sich
+  Termine/Takte testen, ohne dass die Musik-Logik Klassen zurücksetzt.
+- `kiosk-cdp` wartet nicht auf Promises (liefert `{}`): Ergebnis in
+  `window.__x` ablegen und mit einem zweiten Aufruf lesen.
 
 - Auf der Box keine Testprofile in `/tmp` liegen lassen. Das ist eine
   RAM-Disk; ein volles `/tmp` hat schon einmal yt-dlp scheitern lassen und den
