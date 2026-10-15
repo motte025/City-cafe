@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>City Cafe · Übersicht</title>
+<!--
+    CHEF-ZENTRALE (erste Fassung, 15.10.2026)
+
+    Eine Seite, die auf einen Blick zeigt, was am Screen los ist. Sie LIEST nur
+    mit und schickt keine Befehle - gesteuert wird weiter in den Reitern Musik,
+    DJ, Roulette und Hos'n Obe. Darum braucht sie keine neuen Firebase-Regeln.
+
+    Quellen (alle schreibt der Screen ohnehin, hier entsteht keine neue Abfrage
+    am Screen):
+      djremote/<raum>/yt/status    Herzschlag alle 60 s, Hos'n Obe, Wunschvideo
+      djremote/<raum>/yt/jetzt     laufender Song, Bluetooth (bt)
+      djremote/<raum>/yt/warteschlange
+      djremote/<raum>/status       DJ-Stream
+      djremote/<raum>/roulette/status/ts  nur solange das Roulette am Screen ist
+      .info/connected, .info/serverTimeOffset
+
+    Firebase sparen (Gratis-Tarif, 10 GB Download/Monat): Von yt/status,
+    yt/jetzt und roulette/status werden nur einzelne kleine Felder abonniert -
+    die Zweige tragen grosse Listen (laengen ~40 KB, gespielt, Roulette-Zustand),
+    die hier nicht gebraucht werden. Geschaetzt unter 0,1 MB/h je offener
+    Uebersicht (Musik-Reiter zum Vergleich ~1,5 MB/h). Wird der Reiter
+    gewechselt, faellt der Rahmen weg und mit ihm alle Abos.
+
+    Laeuft im Rahmen von fernbedienung.html; die Knoepfe unten schalten dort
+    den Reiter um (postMessage). Allein geoeffnet fuehren sie zur Fernbedienung.
+-->
+<style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+        margin: 0; background: #0b1020; color: #f2f5ff;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 26px;
+        -webkit-text-size-adjust: 100%; padding: 12px 12px calc(20px + env(safe-area-inset-bottom, 0px));
+    }
+    .warnung {
+        background: #4a1620; border: 2px solid #ff6b81; color: #ffe3e8; border-radius: 14px;
+        padding: 12px 14px; margin-bottom: 10px; font-weight: 700; line-height: 1.3;
+    }
+    .warnung.gelb { background: #3d3112; border-color: #ffc44d; color: #fff1cc; }
+    .jetzt {
+        background: linear-gradient(135deg, #10306b, #0f1630); border: 1px solid #2f6bff;
+        border-radius: 18px; padding: 16px; margin-bottom: 12px;
+    }
+    .jetzt .klein { font-size: 19px; color: #9fb4e8; text-transform: uppercase; letter-spacing: .06em; }
+    .jetzt .gross { font-size: 34px; font-weight: 800; margin: 6px 0 4px; line-height: 1.15; overflow-wrap: anywhere; }
+    .jetzt .neben { font-size: 21px; color: #cdd7f5; overflow-wrap: anywhere; }
+    .balken { height: 8px; background: #1d2647; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+    .balken div { height: 100%; width: 0; background: #2f6bff; transition: width 1s linear; }
+    .kacheln { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .kachel { background: #141c38; border: 1px solid #27325c; border-radius: 14px; padding: 12px; min-width: 0; }
+    .kachel .titel { font-size: 18px; color: #8ea0c8; }
+    .kachel .wert { font-size: 23px; font-weight: 700; margin-top: 4px; overflow-wrap: anywhere; }
+    .kachel .wert.ok::before { content: '● '; color: #4ade80; }
+    .kachel .wert.schlecht::before { content: '● '; color: #ff6b81; }
+    .kachel .wert.aus::before { content: '● '; color: #5b6890; }
+    .kachel .zusatz { font-size: 17px; color: #8ea0c8; margin-top: 2px; overflow-wrap: anywhere; }
+    h2 { font-size: 20px; color: #8ea0c8; font-weight: 600; margin: 18px 2px 8px; }
+    .knoepfe { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .knoepfe a {
+        display: block; text-align: center; text-decoration: none; font-weight: 700; font-size: 25px;
+        padding: 18px 8px; border-radius: 14px; background: #1d2647; color: #f2f5ff;
+    }
+    .fuss { font-size: 15px; color: #5b6890; text-align: center; margin-top: 18px; }
+    @media (min-width: 700px) {
+        body { font-size: 18px; max-width: 900px; margin: 0 auto; padding: 16px; }
+        .jetzt .gross { font-size: 28px; }
+        .jetzt .neben, .jetzt .klein { font-size: 15px; }
+        .kacheln { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .kachel .titel, .kachel .zusatz { font-size: 13px; }
+        .kachel .wert { font-size: 17px; }
+        .knoepfe { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .knoepfe a { font-size: 17px; padding: 12px 8px; }
+        h2 { font-size: 15px; }
+    }
+</style>
+</head>
+<body>
+
+<div id="warnungen"></div>
+
+<div class="jetzt">
+    <div class="klein">Am Screen gerade</div>
+    <div class="gross" id="jetzt-gross">Verbinde …</div>
+    <div class="neben" id="jetzt-neben"></div>
+    <div class="balken" id="balken" hidden><div id="balken-fuell"></div></div>
+</div>
+
+<div class="kacheln">
+    <div class="kachel"><div class="titel">📺 Screen</div><div class="wert aus" id="k-screen">–</div><div class="zusatz" id="k-screen-z"></div></div>
+    <div class="kachel"><div class="titel">🔊 Anlage (Bluetooth)</div><div class="wert aus" id="k-bt">–</div><div class="zusatz" id="k-bt-z"></div></div>
+    <div class="kachel"><div class="titel">☁️ Verbindung</div><div class="wert aus" id="k-netz">–</div><div class="zusatz" id="k-netz-z"></div></div>
+    <div class="kachel"><div class="titel">🎵 Warteschlange</div><div class="wert aus" id="k-ws">–</div><div class="zusatz" id="k-ws-z"></div></div>
+    <div class="kachel"><div class="titel">🎧 DJ-Stream</div><div class="wert aus" id="k-dj">–</div><div class="zusatz" id="k-dj-z"></div></div>
+    <div class="kachel"><div class="titel">🎰 Roulette</div><div class="wert aus" id="k-roulette">–</div><div class="zusatz" id="k-roulette-z"></div></div>
+    <div class="kachel"><div class="titel">🃏 Hos’n Obe</div><div class="wert aus" id="k-spiel">–</div><div class="zusatz" id="k-spiel-z"></div></div>
+    <div class="kachel"><div class="titel">🖥️ Video über mpv</div><div class="wert aus" id="k-mpv">–</div><div class="zusatz" id="k-mpv-z"></div></div>
+</div>
+
+<h2>Steuern</h2>
+<div class="knoepfe">
+    <a href="#" data-teil="yt">🎵 Musik</a>
+    <a href="#" data-teil="dj">🎧 DJ</a>
+    <a href="#" data-teil="roulette">🎰 Roulette</a>
+    <a href="#" data-teil="spiel">🃏 Hos’n Obe</a>
+</div>
+
+<div class="fuss" id="fuss"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="dj-fernbedienung-config.js"></script>
+<script src="dj-fernbedienung-net.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    var FASSUNG = '2026-10-15-zentrale1';
+    var CFG = window.DJ_REMOTE_CONFIG || {};
+    var abfrage = new URLSearchParams(location.search);
+    var raum = (abfrage.get('raum') || '').trim() || CFG.raum || 'city-cafe';
+    var imRahmen = window.parent && window.parent !== window;
+    var el = function (id) { return document.getElementById(id); };
+
+    // Ab wann gilt der Screen als still? yt/status hat einen Herzschlag alle
+    // 60 s; zwei verpasste plus Luft.
+    var SCREEN_STILL_MS = 150000;
+    // Roulette meldet alle 5 s, solange es am Screen ist.
+    var ROULETTE_FRISCH_MS = 20000;
+
+    var d = {                       // alles, was hereinkommt
+        verbunden: null, versatz: 0,
+        st: {}, jetzt: {}, ws: null, dj: null, roulette: null
+    };
+    var jetztEmpfangen = 0;         // Ortszeit, als posSek zuletzt kam
+
+    el('fuss').textContent = 'Screen: ' + raum + ' · Fassung ' + FASSUNG + ' · nur Anzeige';
+
+    // --- Steuer-Knoepfe -------------------------------------------------------
+    [].forEach.call(document.querySelectorAll('[data-teil]'), function (a) {
+        var teil = a.getAttribute('data-teil');
+        a.href = 'fernbedienung.html?teil=' + encodeURIComponent(teil) + '&raum=' + encodeURIComponent(raum);
+        a.addEventListener('click', function (ev) {
+            if (!imRahmen) return;               // allein geoeffnet: normaler Link
+            ev.preventDefault();
+            window.parent.postMessage({ typ: 'cc-teil', teil: teil }, location.origin);
+        });
+    });
+
+    // --- Hilfen ---------------------------------------------------------------
+    function jetztServer() { return Date.now() + d.versatz; }
+    function vorWann(ts) {
+        if (!ts) return '';
+        var s = Math.max(0, Math.round((jetztServer() - ts) / 1000));
+        if (s < 60) return 'vor ' + s + ' s';
+        if (s < 3600) return 'vor ' + Math.round(s / 60) + ' min';
+        if (s < 86400) return 'vor ' + Math.round(s / 3600) + ' h';
+        return 'vor ' + Math.round(s / 86400) + ' Tagen';
+    }
+    function mmss(sek) {
+        sek = Math.max(0, Math.floor(sek || 0));
+        return Math.floor(sek / 60) + ':' + ('0' + (sek % 60)).slice(-2);
+    }
+    function kachel(id, art, wert, zusatz) {
+        var w = el('k-' + id);
+        w.className = 'wert ' + art;
+        w.textContent = wert;
+        el('k-' + id + '-z').textContent = zusatz || '';
+    }
+    // Nur der Zeitstempel wird abonniert (Firebase-Gratis-Tarif): das Roulette
+    // schreibt alle 5 s seinen ganzen Zustand (~1 KB) - das braeuchte hier
+    // ~0,7 MB/h nur fuer einen Begleitsatz.
+    function rouletteDaten() {
+        var ts = d.roulette;
+        return (ts && jetztServer() - ts <= ROULETTE_FRISCH_MS) ? {} : null;
+    }
+
+    // --- Anzeige --------------------------------------------------------------
+    function zeichnen() {
+        var st = d.st, j = d.jetzt, warn = [];
+        var letzterHerzschlag = Math.max(st.ts || 0, (d.dj && d.dj.ts) || 0);
+        var screenDa = letzterHerzschlag && jetztServer() - letzterHerzschlag < SCREEN_STILL_MS;
+        var musik = j.modus && j.modus !== 'aus';
+        var djLaeuft = !!(d.dj && d.dj.laeuft);
+        var spiel = !!st.spielLaeuft;
+        var rou = rouletteDaten();
+
+        // Verbindung des Handys selbst
+        if (d.verbunden === false) {
+            kachel('netz', 'schlecht', 'Getrennt', 'Dieses Handy hat keine Verbindung');
+            warn.push(['rot', 'Dieses Handy ist nicht mit der Datenbank verbunden. Angaben können veraltet sein.']);
+        } else if (d.verbunden) {
+            kachel('netz', 'ok', 'Verbunden', 'Datenbank erreichbar');
+        }
+
+        // Screen
+        if (!letzterHerzschlag) {
+            kachel('screen', 'aus', 'Keine Meldung', '');
+        } else if (screenDa) {
+            kachel('screen', 'ok', 'Meldet sich', 'zuletzt ' + vorWann(letzterHerzschlag));
+        } else {
+            kachel('screen', 'schlecht', 'Still', 'zuletzt ' + vorWann(letzterHerzschlag));
+            warn.push(['rot', 'Der Screen meldet sich seit ' + vorWann(letzterHerzschlag).replace('vor ', '')
+                + ' nicht mehr. Strom, Internet oder Browser prüfen.']);
+        }
+
+        // Bluetooth (kommt vom Supervisor ueber yt/jetzt)
+        var bt = j.bt;
+        if (!bt) kachel('bt', 'aus', 'Unbekannt', 'noch keine Meldung');
+        else if (bt.ok) kachel('bt', 'ok', 'Verbunden', (bt.text || '') + (bt.seit ? ' · seit ' + vorWann(bt.seit).replace('vor ', '') : ''));
+        else {
+            kachel('bt', 'schlecht', 'Getrennt', bt.text || '');
+            if (musik && screenDa) warn.push(['gelb', 'Musik läuft, aber die Anlage ist nicht verbunden: ' + (bt.text || 'kein Ton')]);
+        }
+
+        // Warteschlange
+        if (d.ws === null) kachel('ws', 'aus', '–', '');
+        else {
+            var anzahl = Object.keys(d.ws || {}).length;
+            kachel('ws', anzahl ? 'ok' : 'aus', anzahl + (anzahl === 1 ? ' Song' : ' Songs'),
+                   anzahl ? '' : (musik ? 'danach Radio-Mix / Playlist' : ''));
+        }
+
+        // DJ
+        if (!d.dj) kachel('dj', 'aus', '–', '');
+        else if (djLaeuft) kachel('dj', 'ok', d.dj.name || d.dj.kanal || 'läuft',
+                                  (d.dj.istQuali ? d.dj.istQuali + ' · ' : '') + (d.dj.tonAus ? 'Ton aus' : 'Ton an'));
+        else kachel('dj', 'aus', 'Aus', '');
+        if (djLaeuft && d.dj.befund) warn.push(['gelb', 'DJ-Stream: ' + d.dj.befund]);
+
+        // Roulette
+        if (rou) {
+            kachel('roulette', 'ok', 'Am Screen', 'Details im Roulette-Reiter');
+        } else kachel('roulette', 'aus', 'Nicht am Screen', '');
+
+        // Hos'n Obe
+        kachel('spiel', spiel ? 'ok' : 'aus', spiel ? 'Runde läuft' : 'Keine Runde',
+               spiel ? 'hat Vorrang vor Musik und Videos' : '');
+
+        // mpv (der Supervisor legt das Video ueber den Browser)
+        kachel('mpv', st.ueberMpv ? 'ok' : 'aus', st.ueberMpv ? 'Ja' : 'Nein',
+               st.ueberMpv ? 'Supervisor spielt das Video' : '');
+
+        // Was ist am Screen?
+        var gross = 'Normale Rotation', neben = '', zeigeBalken = false;
+        if (!screenDa && letzterHerzschlag) {
+            gross = 'Keine Meldung vom Screen'; neben = 'zuletzt ' + vorWann(letzterHerzschlag);
+        } else if (spiel) {
+            gross = '🃏 Hos’n Obe'; neben = 'Kartenspiel läuft – andere Inhalte warten';
+        } else if (rou) {
+            gross = '🎰 Roulette'; neben = 'Details im Roulette-Reiter';
+        } else if (djLaeuft) {
+            gross = '🎧 ' + (d.dj.name || d.dj.kanal);
+            neben = 'DJ-Stream' + (d.dj.bisWann > 0 ? ' bis ' + new Date(d.dj.bisWann).toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit' }) : '');
+        } else if (musik) {
+            gross = '🎵 ' + ([j.kuenstler, j.songtitel].filter(Boolean).join(' – ') || j.titel || 'Musik');
+            var pos = (j.posSek || 0) + (j.pausiert ? 0 : (Date.now() - jetztEmpfangen) / 1000);
+            if (j.dauerSek) pos = Math.min(pos, j.dauerSek);
+            neben = (j.pausiert ? '⏸ Pausiert · ' : '') + (j.liste ? j.liste + ' · ' : '')
+                + (j.dauerSek ? mmss(pos) + ' / ' + mmss(j.dauerSek) : '')
+                + (j.vollbild ? ' · Vollbild' : '');
+            if (j.dauerSek) { zeigeBalken = true; el('balken-fuell').style.width = Math.min(100, pos / j.dauerSek * 100) + '%'; }
+        } else if (st.laeuft) {
+            gross = '▶️ ' + (st.titel || 'Video vom Handy');
+            neben = st.bisWann === -1 ? 'läuft bis Stopp' : (st.bisWann > 0 ? 'bis ' + new Date(st.bisWann).toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit' }) : '');
+        }
+        el('jetzt-gross').textContent = d.verbunden === null && !letzterHerzschlag ? 'Verbinde …' : gross;
+        el('jetzt-neben').textContent = neben;
+        el('balken').hidden = !zeigeBalken;
+
+        // Warnungen
+        var box = el('warnungen');
+        box.innerHTML = '';
+        warn.forEach(function (w) {
+            var div = document.createElement('div');
+            div.className = 'warnung' + (w[0] === 'gelb' ? ' gelb' : '');
+            div.textContent = '⚠️ ' + w[1];
+            box.appendChild(div);
+        });
+    }
+
+    // --- Abos -----------------------------------------------------------------
+    function feld(verb, pfad, rueckruf) {
+        verb.db.ref(pfad).on('value', function (s) { rueckruf(s.val()); zeichnen(); });
+    }
+
+    if (!window.DJ_REMOTE_NET || !DJ_REMOTE_NET.istEingerichtet()) {
+        el('jetzt-gross').textContent = 'Keine Datenbank eingerichtet';
+        return;
+    }
+    DJ_REMOTE_NET.bereit().then(function (verb) {
+        if (!verb) { el('jetzt-gross').textContent = 'Keine Verbindung'; d.verbunden = false; zeichnen(); return; }
+        var basis = 'djremote/' + raum;
+        feld(verb, '.info/connected', function (v) { d.verbunden = !!v; });
+        feld(verb, '.info/serverTimeOffset', function (v) { d.versatz = Number(v) || 0; });
+        ['ts', 'laeuft', 'titel', 'bisWann', 'spielLaeuft', 'ueberMpv'].forEach(function (k) {
+            feld(verb, basis + '/yt/status/' + k, function (v) { d.st[k] = v; });
+        });
+        ['modus', 'kuenstler', 'songtitel', 'titel', 'liste', 'pausiert', 'dauerSek', 'vollbild', 'bt'].forEach(function (k) {
+            feld(verb, basis + '/yt/jetzt/' + k, function (v) { d.jetzt[k] = v; });
+        });
+        feld(verb, basis + '/yt/jetzt/posSek', function (v) { d.jetzt.posSek = v; jetztEmpfangen = Date.now(); });
+        feld(verb, basis + '/yt/warteschlange', function (v) { d.ws = v || {}; });
+        feld(verb, basis + '/status', function (v) { d.dj = v; });
+        feld(verb, basis + '/roulette/status/ts', function (v) { d.roulette = v; });
+    });
+
+    // Zeiten ("vor 40 s", Songposition, stiller Screen) laufen auch ohne neue Daten weiter.
+    setInterval(zeichnen, 1000);
+})();
+</script>
+</body>
+</html>

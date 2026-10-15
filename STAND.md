@@ -168,6 +168,20 @@ auch das Roulette, im Café ist es nicht eingeblendet.
 - **Fernbedienungen**: Schriftgrößen für Handy, Tablet und PC getrennt. Der
   Reiter „🎵 Musik" (früher „Videos") ist die neue Musik-Fernbedienung, siehe
   unten.
+- **Chef-Übersicht** (`chef-zentrale.html`, 15.10.2026, erste Fassung): fünfter
+  Reiter „📋 Übersicht" in `fernbedienung.html`, nur sichtbar auf Chef-Geräten
+  (`chef/geraete/<uid>`, live mitgehört – nach der PIN-Anmeldung im Musik-Reiter
+  erscheint er sofort). **Nur Anzeige, keine Befehle**, darum keine neuen
+  Firebase-Regeln: was am Screen läuft (Hos'n Obe > Roulette > DJ > Musik >
+  Handy-Video > Rotation), Screen-Herzschlag (still ab 150 s → rote Warnung),
+  Bluetooth (`yt/jetzt/bt`), Verbindung des Handys, Warteschlange, DJ, Roulette,
+  Hos'n Obe, mpv. Knöpfe unten schalten den Reiter der Fernbedienung um
+  (postMessage `cc-teil`). **Firebase sparen:** abonniert nur Einzelfelder
+  (nicht `laengen`, `gespielt`, Roulette-Zustand), geschätzt < 0,1 MB/h je
+  offener Übersicht. Welcher Rotations-Slot gerade läuft, meldet der Screen noch
+  nicht – dafür müsste `index.html` ein Feld mehr schreiben. Getestet mit
+  Headless-Edge gegen die Live-Daten (Handy 390 px, Tablet 1024 px, kein
+  Querscrollen; Gast sieht vier Reiter); Chef-Ansicht am echten Handy noch offen.
 - **YouTube-Musik** (Spec `YOUTUBE-MUSIK-SETUP.md`, seit 03.10.2026 auf `main`,
   Firebase-Regeln und Chef-PIN eingetragen). Gäste wünschen per Handy, der
   Chef (PIN) steuert; der TV ist die einzige Quelle der Reihenfolge

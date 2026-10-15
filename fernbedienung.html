@@ -32,6 +32,8 @@
     }
     .zeile { display: flex; gap: 10px; }
     #tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* Fuenfter Reiter (Uebersicht, nur Chef) ueber die volle Breite. */
+    #tabs.mit-chef button[data-teil="zentrale"] { grid-column: 1 / -1; }
     .zeile + .zeile { margin-top: 10px; }
     button {
         font: inherit; font-size: 27px; font-weight: 700; border: 0; border-radius: 14px;
@@ -53,6 +55,8 @@
        ueber den halben Schirm gehen. */
     @media (min-width: 700px) {
         #tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        #tabs.mit-chef { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+        #tabs.mit-chef button[data-teil="zentrale"] { grid-column: auto; }
         body { font-size: 19px; }
         header { padding: 10px 14px; }
         .zeile { max-width: 760px; margin-left: auto; margin-right: auto; }
@@ -99,7 +103,7 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-10-05-roulette2';
+    var FASSUNG = '2026-10-15-zentrale1';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 
@@ -112,8 +116,13 @@
         // die sonst im QR-Code am Screen steht. Der Screen meldet sie im Status
         // mit, hier wird sie als ?session=... angehaengt.
         { schluessel: 'spiel', text: '🃏 Hos’n Obe', datei: 'hosn-obe.html', raumParameter: false,
-          brauchtSpiel: true }
+          brauchtSpiel: true },
+        // Seit 15.10.2026: Uebersicht fuer den Chef (nur Anzeige). Der Reiter
+        // erscheint nur auf Chef-Geraeten (siehe chefReiterPruefen).
+        { schluessel: 'zentrale', text: '📋 Übersicht', datei: 'chef-zentrale.html', raumParameter: true,
+          nurChef: true }
     ];
+    var istChef = false;
 
     var spielSession = '';      // laufende Hos'n-Obe-Runde des gewaehlten Screens
 
@@ -131,7 +140,8 @@
     var geladen = {};
 
     function rahmenSetzen() {
-        var seite = SEITEN.filter(function (s) { return s.schluessel === aktiv; })[0] || SEITEN[0];
+        var seite = SEITEN.filter(function (s) { return s.schluessel === aktiv && (!s.nurChef || istChef); })[0] || SEITEN[0];
+        aktiv = seite.schluessel;
         [].forEach.call(el('tabs').children, function (k) {
             k.className = k.dataset.teil === aktiv ? 'aktiv' : '';
         });
@@ -202,6 +212,7 @@
         k.type = 'button';
         k.textContent = s.text;
         k.dataset.teil = s.schluessel;
+        if (s.nurChef) k.hidden = true;
         k.addEventListener('click', function () {
             aktiv = s.schluessel;
             rahmenSetzen();
@@ -210,7 +221,37 @@
         });
         el('tabs').appendChild(k);
     });
+    // ?teil=zentrale bleibt gemerkt, bis feststeht, ob dieses Geraet Chef ist.
+    var gewuenscht = aktiv;
     rahmenSetzen();
+
+    // Die Uebersicht schaltet ueber ihre Knoepfe hier den Reiter um - wie ein
+    // Tippen auf den Reiter (Roulette weckt dabei also auch den Screen).
+    window.addEventListener('message', function (ev) {
+        if (ev.origin !== location.origin || !ev.data || ev.data.typ !== 'cc-teil') return;
+        var k = el('tabs').querySelector('[data-teil="' + String(ev.data.teil).replace(/[^a-z]/g, '') + '"]');
+        if (k && !k.hidden) k.click();
+    });
+
+    // Reiter "Uebersicht" nur fuer Chef-Geraete (Anmeldung mit PIN im Musik-
+    // Reiter). Kein Zugriffsschutz - die Seite zeigt nur, was jedes Handy ohnehin
+    // lesen darf -, sondern damit Gaeste keinen leeren Chef-Reiter sehen.
+    // Live mitgehoert: meldet sich das Handy im Musik-Reiter als Chef an,
+    // erscheint der Reiter sofort.
+    var chefAus = null;
+    function chefReiterPruefen(verb) {
+        if (chefAus) { chefAus(); chefAus = null; }
+        var ref = verb.db.ref('djremote/' + raum + '/chef/geraete/' + verb.uid);
+        var rueckruf = function (s) {
+            istChef = s.exists();
+            el('tabs').querySelector('[data-teil="zentrale"]').hidden = !istChef;
+            el('tabs').classList.toggle('mit-chef', istChef);
+            if (istChef && gewuenscht === 'zentrale') { aktiv = 'zentrale'; gewuenscht = ''; }
+            rahmenSetzen();
+        };
+        ref.on('value', rueckruf, function () { istChef = false; });
+        chefAus = function () { ref.off('value', rueckruf); };
+    }
 
     // --- Screen bestimmen ---------------------------------------------------
     function screenText(name, zusatz) {
@@ -235,6 +276,7 @@
                 boxenKnoepfe(boxen);
                 if (verbindung) statusAbo(verbindung);
                 if (verbindung) tonAbo(verbindung);
+                if (verbindung) chefReiterPruefen(verbindung);
                 rahmenSetzen();
             });
             box.appendChild(k);
@@ -286,6 +328,7 @@
             if (weckenWartet) rouletteWecken();
             statusAbo(verb);
             tonAbo(verb);
+            chefReiterPruefen(verb);
             Promise.all([
                 YT_REMOTE_NET.boxenLesen(verb),
                 fetch('https://api.ipify.org?format=json', { cache: 'no-store' })
@@ -300,6 +343,7 @@
                     screenText(passend[0].name, 'im selben Netz erkannt');
                     statusAbo(verb);
                     tonAbo(verb);
+                    chefReiterPruefen(verb);
                     rahmenSetzen();
                 } else {
                     var eigene = boxen.filter(function (b) { return b.raum === raum; })[0];
