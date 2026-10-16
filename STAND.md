@@ -10,7 +10,9 @@ gleich, Limiter höchstens 2 dB, Test mit 458 Playlist-Songs; Überblendung 4/6/
 mit DJ-Kurve; Limiter/Blende am Chef-Handy; Neuladen startete alten DJ-Befehl
 und gestoppte Musik neu – behoben und am TV getestet; Dauersuche begrenzt;
 Fernbedienung mit Startseite aus Kacheln, Musik-Steuerung aufgeräumt; alter
-Screen „spieltest-x" gelöscht). Davor, 15. Oktober: GitHub-Token getauscht; Chef-Übersicht
+Screen „spieltest-x" gelöscht; große Folie mit Rahmen und Ambilight, Plakate
+Jägermeister/Spirituosen, Werbe-Einstellungen erweitert, A−/A+ in der
+Übersicht; Roulette-Helligkeit untersucht). Davor, 15. Oktober: GitHub-Token getauscht; Chef-Übersicht
 als fünfter Reiter der Fernbedienung; Werbung: große Folie „Demnächst bei uns",
 Termine/Aktionen rund um den Musik-Player in Vollbild und normaler Ansicht,
 Werbe-Schalter am Chef-Handy, `werbung.json`; QR „Song wünschen" öffnet nur
@@ -642,6 +644,18 @@ Noch nicht umgesetzt, nach Wichtigkeit:
   die Übersicht beide. Vorschlag: die zuletzt getroffene Wahl gewinnt.
 - **Bluetooth:** im Protokoll 44× „verbunden, aber kein Tonkanal" – der
   Wächter verbindet neu, Ursache am Empfänger (B03 Pro).
+- **Roulette im Café zu dunkel (16.10.2026):** Das Bild aus der Box (`kiosk-foto`)
+  ist hell und normal – die Ursache liegt am Café-Fernseher. Zu prüfen im TV-Menü:
+  Energiesparen/Eco, Lichtsensor (Umgebungslicht), HDMI-Schwarzwert bzw.
+  RGB-Bereich (die Box sendet „Broadcast RGB: Automatic", amdgpu, HDMI-A-1),
+  Bildmodus (nicht Kino/Film). TV-Marke ist noch nicht bekannt. Die
+  Roulette-Einstellungen liegen je Gerät im Browser (`localStorage`
+  „atelier-show-settings"); auf der Café-Box: Helligkeit 1,35 (fast Maximum),
+  `innerTone` 0,15 (dunkelster Innenkessel). Reicht die TV-Einstellung nicht,
+  `innerTone` anheben.
+- **Selbst-Update der TV-Seite** hat am 16.10.2026 eine neue Fassung nach über
+  5 min noch nicht geholt; zum Testen von Hand neu geladen (`kiosk-cdp
+  "location.reload()"`, startet laufende Musik mit dem Song von vorn).
 - **Veraltete Kopfzeilen:** `NIGHTLIFE-SETUP.md` und `DJ-FERNBEDIENUNG-SETUP.md`
   sagen „zurzeit abgeschaltet", im Code sind `NL_SLOT_AN` und `DJ_SLOT_AN` an.
 
