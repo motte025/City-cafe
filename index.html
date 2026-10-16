@@ -10288,6 +10288,11 @@
         function djFernBefehlAusfuehren(befehl) {
             if (!befehl || !befehl.id || befehl.id === djFernLetzteId) return;
             djFernLetzteId = befehl.id;
+            // Wie bei der Musik-Fernbedienung: beim Laden der Seite liegt der zuletzt
+            // gesendete Befehl noch in der Datenbank. Ohne diese Grenze startete jedes
+            // Neuladen (auch das Selbst-Update) den letzten DJ-Wunsch neu - am 16.10.2026
+            // DJMissShelton aus einem Befehl vom 01.10.2026.
+            if (befehl.ts && Date.now() - Number(befehl.ts) > 120000) return;
 
             if (befehl.aktion === 'ton') {
                 // Twitch-Ton an/aus. mpv (Box) folgt ueber nlTonWunsch, der
