@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T15:22:46Z",
+  "checked_at": "2026-10-16T15:37:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,13 +17,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wunderschöner Freitag   <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴  BEST ROCK WAY ☆ !naturtreu 🔴🔴",
@@ -31,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
       "game": "DJs"
     },
     {
