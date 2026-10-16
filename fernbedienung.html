@@ -31,9 +31,21 @@
         background: #0f1630; border-bottom: 1px solid #27325c; flex-shrink: 0;
     }
     .zeile { display: flex; gap: 10px; }
-    #tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    /* Fuenfter Reiter (Uebersicht, nur Chef) ueber die volle Breite. */
-    #tabs.mit-chef button[data-teil="zentrale"] { grid-column: 1 / -1; }
+    /* Startseite (16.10.2026): nur grosse Kacheln, die Steuerung oeffnet sich beim
+       Antippen; "← Start" fuehrt zurueck. */
+    #start { flex: 1; overflow-y: auto; padding: calc(16px + env(safe-area-inset-top, 0px)) 14px 20px; }
+    #start h1 { font-size: 30px; margin: 4px 0 16px; text-align: center; color: #cdd7f5; }
+    #tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    #tabs button { min-height: 150px; font-size: 32px; border-radius: 20px; background: #1d2647; color: #fff;
+                   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+    #tabs button[hidden] { display: none; }
+    #tabs button .sym { font-size: 56px; line-height: 1; }
+    /* Fuenfte Kachel (Uebersicht, nur Chef) ueber die volle Breite. */
+    #tabs.mit-chef button[data-teil="zentrale"] { grid-column: 1 / -1; min-height: 110px; }
+    #start #boxen { margin-top: 16px; }
+    #kopfzeile { align-items: center; }
+    #zurueck { flex: 0 0 auto; padding: 12px 18px; font-size: 24px; }
+    #titel { flex: 1; font-size: 28px; font-weight: 700; text-align: center; padding-right: 8px; }
     .zeile + .zeile { margin-top: 10px; }
     button {
         font: inherit; font-size: 27px; font-weight: 700; border: 0; border-radius: 14px;
@@ -54,9 +66,12 @@
        Reiterleiste bekommt eine begrenzte Breite, damit die drei Knoepfe nicht
        ueber den halben Schirm gehen. */
     @media (min-width: 700px) {
-        #tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        #tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 900px; margin: 0 auto; }
         #tabs.mit-chef { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-        #tabs.mit-chef button[data-teil="zentrale"] { grid-column: auto; }
+        #tabs.mit-chef button[data-teil="zentrale"] { grid-column: auto; min-height: 130px; }
+        #tabs button { font-size: 20px; min-height: 130px; }
+        #titel { font-size: 20px; }
+        #zurueck { font-size: 17px; padding: 8px 14px; }
         body { font-size: 19px; }
         header { padding: 10px 14px; }
         .zeile { max-width: 760px; margin-left: auto; margin-right: auto; }
@@ -67,9 +82,17 @@
 </head>
 <body>
 
-<header>
-    <div class="zeile" id="tabs"></div>
+<main id="start">
+    <h1>City Cafe · Fernbedienung</h1>
+    <div id="tabs"></div>
     <div class="zeile" id="boxen"></div>
+    <div class="screen" id="screen">Screen wird gesucht …</div>
+</main>
+<header id="kopf" hidden>
+    <div class="zeile" id="kopfzeile">
+        <button type="button" id="zurueck">← Start</button>
+        <div id="titel"></div>
+    </div>
     <!-- Spielton gehört nur zu Hos'n Obe: nur in diesem Reiter sichtbar. -->
     <div id="spielton" hidden>
         <div class="ton-label">Hos’n Obe · Spielton am Screen</div>
@@ -84,7 +107,6 @@
     <div class="zeile" id="weckzeile" hidden>
         <button type="button" id="wecken">🎰 Roulette am Screen starten</button>
     </div>
-    <div class="screen" id="screen">Screen wird gesucht …</div>
 </header>
 <div id="hinweis" class="hinweis" hidden>
     Der Screen meldet gerade keine Hos’n-Obe-Runde.<br>
@@ -103,23 +125,23 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-10-15-zentrale1';
+    var FASSUNG = '2026-10-16-start1';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 
     var SEITEN = [
-        { schluessel: 'yt', text: '🎵 Musik', datei: 'yt-fernbedienung.html', raumParameter: true },
-        { schluessel: 'dj', text: '🎧 DJ', datei: 'dj-fernbedienung.html', raumParameter: true },
+        { schluessel: 'yt', sym: '🎵', name: 'Musik', text: '🎵 Musik', datei: 'yt-fernbedienung.html', raumParameter: true },
+        { schluessel: 'dj', sym: '🎧', name: 'DJ', text: '🎧 DJ', datei: 'dj-fernbedienung.html', raumParameter: true },
         // Seit 28.09.2026 die neue Roulette-Fernbedienung (Spielmodus, aufgeräumt fürs Handy).
-        { schluessel: 'roulette', text: '🎰 Roulette', datei: 'roulette-vorschau-spiel/remote.html', raumParameter: true },
+        { schluessel: 'roulette', sym: '🎰', name: 'Roulette', text: '🎰 Roulette', datei: 'roulette-vorschau-spiel/remote.html', raumParameter: true },
         // Das Kartenspiel braucht die Kennung der laufenden Runde - dieselbe,
         // die sonst im QR-Code am Screen steht. Der Screen meldet sie im Status
         // mit, hier wird sie als ?session=... angehaengt.
-        { schluessel: 'spiel', text: '🃏 Hos’n Obe', datei: 'hosn-obe.html', raumParameter: false,
+        { schluessel: 'spiel', sym: '🃏', name: 'Hos’n Obe', text: '🃏 Hos’n Obe', datei: 'hosn-obe.html', raumParameter: false,
           brauchtSpiel: true },
         // Seit 15.10.2026: Uebersicht fuer den Chef (nur Anzeige). Der Reiter
         // erscheint nur auf Chef-Geraeten (siehe chefReiterPruefen).
-        { schluessel: 'zentrale', text: '📋 Übersicht', datei: 'chef-zentrale.html', raumParameter: true,
+        { schluessel: 'zentrale', sym: '📋', name: 'Übersicht', text: '📋 Übersicht', datei: 'chef-zentrale.html', raumParameter: true,
           nurChef: true }
     ];
     var istChef = false;
@@ -132,7 +154,8 @@
     var raumFest = !!(abfrage.get('raum') || '').trim();
     var verbindung = null;
     var tonAus = null;
-    var aktiv = (abfrage.get('teil') || '').trim() || 'yt';
+    // Leer = Startseite mit den Kacheln. ?teil=... oeffnet gleich eine Steuerung.
+    var aktiv = (abfrage.get('teil') || '').trim();
 
     // Merkt sich je Reiter, was zuletzt geladen wurde. Ohne das wuerde jeder
     // Status vom Screen den Rahmen neu laden (der Zeitstempel gegen den Cache
@@ -140,11 +163,21 @@
     var geladen = {};
 
     function rahmenSetzen() {
-        var seite = SEITEN.filter(function (s) { return s.schluessel === aktiv && (!s.nurChef || istChef); })[0] || SEITEN[0];
+        var seite = SEITEN.filter(function (s) { return s.schluessel === aktiv && (!s.nurChef || istChef); })[0];
+        if (!seite) {                       // Startseite: nur die Kacheln
+            aktiv = '';
+            el('start').hidden = false;
+            el('kopf').hidden = true;
+            el('spielton').hidden = true;
+            el('weckzeile').hidden = true;
+            el('hinweis').hidden = true;
+            el('rahmen').hidden = true;
+            return;
+        }
         aktiv = seite.schluessel;
-        [].forEach.call(el('tabs').children, function (k) {
-            k.className = k.dataset.teil === aktiv ? 'aktiv' : '';
-        });
+        el('start').hidden = true;
+        el('kopf').hidden = false;
+        el('titel').textContent = seite.text;
         try { localStorage.setItem('fbTeil', aktiv); } catch (e) {}
         el('spielton').hidden = seite.schluessel !== 'spiel';
         el('weckzeile').hidden = seite.schluessel !== 'roulette';
@@ -164,7 +197,9 @@
         var ziel = seite.datei + '?v=' + Date.now()
             + (seite.raumParameter ? '&raum=' + encodeURIComponent(raum) : '')
             + (seite.brauchtSpiel ? '&session=' + encodeURIComponent(spielSession) : '');
-        el('rahmen').setAttribute('src', ziel);
+        // replace statt src: ein neuer src legt einen Verlaufseintrag an, die Zurueck-Taste
+        // des Handys bliebe dann im Rahmen haengen statt zur Startseite zu gehen.
+        try { el('rahmen').contentWindow.location.replace(ziel); } catch (e) { el('rahmen').setAttribute('src', ziel); }
     }
 
     /*
@@ -210,10 +245,18 @@
     SEITEN.forEach(function (s) {
         var k = document.createElement('button');
         k.type = 'button';
-        k.textContent = s.text;
+        var sym = document.createElement('span');
+        sym.className = 'sym';
+        sym.textContent = s.sym;
+        k.appendChild(sym);
+        k.appendChild(document.createTextNode(s.name));
         k.dataset.teil = s.schluessel;
         if (s.nurChef) k.hidden = true;
         k.addEventListener('click', function () {
+            if (aktiv !== s.schluessel) {
+                // Eigener Verlaufseintrag: die Zurueck-Taste des Handys fuehrt zur Startseite.
+                try { history.pushState({ teil: s.schluessel }, ''); } catch (e) {}
+            }
             aktiv = s.schluessel;
             rahmenSetzen();
             // Roulette-Reiter angetippt: Roulette gleich an den Screen holen.
@@ -221,8 +264,20 @@
         });
         el('tabs').appendChild(k);
     });
+    function zumStart() {
+        aktiv = '';
+        rahmenSetzen();
+    }
+    el('zurueck').addEventListener('click', function () {
+        if (history.state && history.state.teil) history.back(); else zumStart();
+    });
+    window.addEventListener('popstate', function (ev) {
+        aktiv = (ev.state && ev.state.teil) || '';
+        rahmenSetzen();
+    });
     // ?teil=zentrale bleibt gemerkt, bis feststeht, ob dieses Geraet Chef ist.
     var gewuenscht = aktiv;
+    if (aktiv === 'zentrale') aktiv = '';
     rahmenSetzen();
 
     // Die Uebersicht schaltet ueber ihre Knoepfe hier den Reiter um - wie ein
@@ -246,7 +301,7 @@
             istChef = s.exists();
             el('tabs').querySelector('[data-teil="zentrale"]').hidden = !istChef;
             el('tabs').classList.toggle('mit-chef', istChef);
-            if (istChef && gewuenscht === 'zentrale') { aktiv = 'zentrale'; gewuenscht = ''; }
+            if (istChef && gewuenscht === 'zentrale' && !aktiv) { aktiv = 'zentrale'; gewuenscht = ''; }
             rahmenSetzen();
         };
         ref.on('value', rueckruf, function () { istChef = false; });
@@ -263,6 +318,9 @@
     function boxenKnoepfe(boxen) {
         var box = el('boxen');
         box.innerHTML = '';
+        // Nur Screens, die sich in den letzten 3 Tagen gemeldet haben - alte
+        // Test-Screens (spieltest-x) verschwinden so von selbst.
+        boxen = boxen.filter(function (b) { return b.raum === raum || Date.now() - (b.ts || 0) < 3 * 86400000; });
         if (boxen.length < 2) return;
         boxen.forEach(function (b) {
             var k = document.createElement('button');
