@@ -283,6 +283,12 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Spitzen; damit 92 % innerhalb ±1,5 dB. Mit Limiter steckt die ganze
     Verstärkung im Filter (mpv rechnet `volume-gain` erst nach den Filtern).
     Am Handy (Chef, 🔊 Ton) abschaltbar.
+  - **Neuladen (16.10.2026 behoben):** Das Selbst-Update lädt die TV-Seite neu.
+    Dabei startete (1) der letzte DJ-Befehl aus der Datenbank neu (DJMissShelton
+    vom 01.10.) – jetzt wie bei der Musik: Befehle älter als 2 min zählen nicht –
+    und (2) die gestoppte Playlist, weil ihre Titel beim Stopp in der Schlange
+    bleiben – jetzt starten beim Laden nur echte Wünsche nach dem Stopp. Getestet
+    am TV: Playlist starten, stoppen, neu laden → bleibt aus.
   - **Überblendung am Handy einstellbar (16.10.2026):** kurz 4 s (Standard),
     mittel 6 s, lang 9 s. Mit den bisherigen festen 9 s liefen beide Songs
     rund 4 s fast voll übereinander und die Beats schlugen sich.
