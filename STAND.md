@@ -269,10 +269,16 @@ auch das Roulette, im Café ist es nicht eingeblendet.
       Schlussteil bleibt, höchstens 10 s vor dem Studio-Ende.
     - Grenze: Video mit anderer Abmischung als jede Studiofassung (Hallo
       kleine Maus) → nur Pegel-Regel.
-  - **Lautstärke:** leise Songs werden automatisch angehoben (mpv
-    `volume-gain`, ab 2 dB unter −11 dB, bis +8 dB, nie über die Spitzen,
-    1 dB Reserve – Betreiber will **keine Übersteuerung**, keinen Limiter).
-    Abgesenkt wird nichts. Der alte Ton-Ausgleich (dynaudnorm) ist abgeschafft.
+  - **Lautstärke (seit 16.10.2026):** jeder Song wird auf dieselbe
+    Hörlautstärke gebracht – gemessen als Lautheit nach EBU R128 (ffmpeg
+    `ebur128`, ganzer Song), Ziel **−11 LUFS** (`LAUT_ZIEL_LUFS`), über mpv
+    `volume-gain`: laute Songs werden abgesenkt, leise angehoben (je bis
+    15 dB), nie über die Spitzen (1 dB Reserve – Betreiber will **keine
+    Übersteuerung**, keinen Limiter). Test mit 458 Playlist-Songs: Original
+    −29 bis −5 LUFS; mit der alten Regel (nur leise anheben, grober RMS-Pegel)
+    lagen 39 % innerhalb ±1,5 dB, jetzt 79 %. Rest: leise Songs mit Spitzen
+    nahe 0 dBFS (z. B. Hey Mama, One Kiss) – ginge nur mit Limiter.
+    Der alte Ton-Ausgleich (dynaudnorm) ist abgeschafft.
     Bluetooth und W1 stehen auf 100 %, die Lautstärke stellt der Betreiber
     selbst am Handy ein (ab 70 % in 3er-Schritten).
   - **Richtige Videos:** offizielle Videos (Künstler-Kanal, VEVO, Label)

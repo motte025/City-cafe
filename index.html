@@ -8000,6 +8000,13 @@
         let ytmPlaylistsRepo = [];   // so wie in yt_playlists.json (fuer "geloeschte wiederherstellen")
         let ytmMixLaeuft = null;          // { id, seed, schritt } - laufender Mix-Auftrag
         let ytmFindeLaeuft = null;        // { id, eintragId }
+        // Suchtext -> Zahl erfolgloser Suchen. Ohne Grenze suchte der TV alle 2-3 s neu,
+        // solange der Titel vorn stand (The Strokes: 60 Suchen in 3 Minuten, 16.10.2026).
+        const ytmFindeFehlschlaege = new Map();
+        const YTM_FINDE_MAX_VERSUCHE = 3;
+        function ytmFindeText(eintrag) {
+            return eintrag.suche || ((eintrag.kuenstler || '') + ' ' + (eintrag.songtitel || ''));
+        }
         let ytmQualitaet = { hoehe: 0, fps: 0 };   // Obergrenze vom Handy ("Mehr")
         let ytmGenreCache = {};           // "kuenstler|titel" -> { genre, jahr }
         let ytmBereit = false;            // Firebase da, Stand gelesen
@@ -8382,7 +8389,7 @@
             if (!eintrag || ytmFindeLaeuft) return;
             const id = ytmId();
             ytmFindeLaeuft = { id, eintrag, gleichSpielen };
-            window.nlFindeAuftrag = { id, text: eintrag.suche || ((eintrag.kuenstler || '') + ' ' + (eintrag.songtitel || '')),
+            window.nlFindeAuftrag = { id, text: ytmFindeText(eintrag),
                                       titel: eintrag.songtitel || '' };   // der Supervisor nimmt nur passende Titel
         }
 
@@ -8557,8 +8564,10 @@
                     // Nur spielen, wenn die Musik noch laeuft - kam das Ergebnis erst
                     // nach "Stopp", startete die Musik sonst von selbst wieder.
                     if (w.gleichSpielen && ytmAktiv()) ytmSpielen(ersetzt);
-                } else if (w.gleichSpielen && ytmAktiv()) {
-                    ytmWeiter();             // nicht gefunden: einfach der naechste
+                } else {
+                    const t = ytmFindeText(w.eintrag);
+                    ytmFindeFehlschlaege.set(t, (ytmFindeFehlschlaege.get(t) || 0) + 1);
+                    if (w.gleichSpielen && ytmAktiv()) ytmWeiter();   // nicht gefunden: einfach der naechste
                 }
             }
         }
@@ -8607,7 +8616,8 @@
                 // Die naechsten drei schon im Voraus messen lassen (Supervisor: Intro, Ende, Anhebung)
                 window.nlMusikAnalyse = naechste.map(t => t.videoId).filter(Boolean);
                 // Naechste zwei ohne videoId? Jetzt schon finden.
-                const ohne = naechste.slice(0, 2).find(t => !t.videoId);
+                const ohne = naechste.slice(0, 2).find(t => !t.videoId
+                    && (ytmFindeFehlschlaege.get(ytmFindeText(t)) || 0) < YTM_FINDE_MAX_VERSUCHE);
                 if (ohne) ytmFinden(ohne, false);
                 // 60 s vor Schluss den naechsten Song vorladen (5.2).
                 const st = ytmStand();
