@@ -108,6 +108,10 @@
     .steuerung { display: grid; grid-template-columns: 1fr 1.4fr 1fr 1fr; gap: 10px; margin-top: 16px; }
     .steuerung button { font-size: 32px; padding: 20px 0; background: #1d2647; }
     .steuerung button.haupt { background: #2f6bff; }
+    /* Ueberblenden: Zeichen + Wort, das Pfeilzeichen allein war kaum lesbar (16.10.2026). */
+    .steuerung #k-blend { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; gap: 2px; }
+    .steuerung #k-blend .blend-sym { font-size: 1.1em; font-weight: 800; letter-spacing: -2px; }
+    .steuerung #k-blend .blend-wort { font-size: 0.42em; font-weight: 700; letter-spacing: 0; }
     .zeile2 { display: flex; gap: 10px; margin-top: 10px; }
     .zeile2 button { flex: 1; }
     .laut-zeile { align-items: center; }
@@ -258,11 +262,7 @@
             <button type="button" id="k-zurueck" title="Song von vorn">⏮</button>
             <button type="button" class="haupt" id="k-pause" title="Pause / weiter">⏸</button>
             <button type="button" id="k-skip" title="Überspringen">⏭</button>
-            <button type="button" id="k-blend" title="Jetzt zum nächsten Song überblenden">⤨</button>
-        </div>
-        <div class="zeile2 nur-chef">
-            <button type="button" class="still" id="k-handy">📱 Handy an die Anlage</button>
-            <button type="button" class="still" id="k-screen">🖥️ Screen an die Anlage</button>
+            <button type="button" id="k-blend" title="Jetzt zum nächsten Song überblenden" aria-label="Überblenden"><span class="blend-sym">⇄</span><span class="blend-wort">Blende</span></button>
         </div>
         <div class="zeile2 nur-chef laut-zeile">
             <button type="button" id="k-leiser" aria-label="Leiser">🔉 −</button>
@@ -270,17 +270,25 @@
             <button type="button" id="k-lauter" aria-label="Lauter">🔊 +</button>
         </div>
         <div class="nur-chef">
-        <div class="zeile2">
-            <button type="button" class="still" id="k-ansicht">⛶ Vollbild</button>
-            <button type="button" class="still" id="k-seite">🖼️ Fotos</button>
-        </div>
-        <div class="zeile2">
-            <button type="button" class="still" id="k-shorts">📱 Shorts rechts</button>
-        </div>
-        <div class="zeile2">
-            <button type="button" class="still" id="k-ambi">🌈 Ambilight</button>
-            <button type="button" class="still" id="k-qr">🔳 QR-Code</button>
-        </div>
+        <!-- Seltener gebraucht: zugeklappt, damit oben nur das Wichtigste steht (16.10.2026). -->
+        <details class="klein" id="anzeige-box">
+            <summary>⚙️ Anzeige &amp; Anlage</summary>
+            <div class="zeile2">
+                <button type="button" class="still" id="k-ansicht">⛶ Vollbild</button>
+                <button type="button" class="still" id="k-seite">🖼️ Fotos</button>
+            </div>
+            <div class="zeile2">
+                <button type="button" class="still" id="k-shorts">📱 Shorts rechts</button>
+            </div>
+            <div class="zeile2">
+                <button type="button" class="still" id="k-ambi">🌈 Ambilight</button>
+                <button type="button" class="still" id="k-qr">🔳 QR-Code</button>
+            </div>
+            <div class="zeile2">
+                <button type="button" class="still" id="k-handy">📱 Handy an die Anlage</button>
+                <button type="button" class="still" id="k-screen">🖥️ Screen an die Anlage</button>
+            </div>
+        </details>
         <div class="zeile2">
             <button type="button" class="still" id="k-start">▶ Musik starten</button>
             <button type="button" class="still" id="k-radio">📻 Radio-Mix</button>
@@ -429,7 +437,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-16-ton1';
+    var FASSUNG = '2026-10-16-ton2';
     // Schriftgroesse je Geraet (A-/A+ oben): vergroessert die ganze Seite (CSS zoom),
     // gemerkt im Browser des Geraets (Handy und Tablet unabhaengig, Wunsch 05.10.2026).
     (function () {
@@ -946,7 +954,7 @@
         el('neue-pl-name').value = '';
         neuePlaylist(name, []);
     });
-    el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⤨ Blende zum nächsten Song …', ''); });
+    el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⇄ Blende zum nächsten Song …', ''); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
     // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
     el('k-radio').addEventListener('click', function () {
