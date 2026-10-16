@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T15:47:45Z",
+  "checked_at": "2026-10-16T16:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴  BEST ROCK WAY ☆ !naturtreu 🔴🔴",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 99 😈 | Harder Styles Quicky | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴  BEST ROCK WAY ☆ !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
@@ -55,13 +55,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 99 😈 | Harder Styles Quicky | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
