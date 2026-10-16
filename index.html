@@ -442,15 +442,49 @@
         #mittagsteller-fullscreen.active { display: block; }
         /* Hausprogramm "Demnaechst im City Cafe" (15.10.2026): eigene Vollbild-
            Ebene wie der Mittagsteller, Inhalt aus werbung.json. */
-        #hausprogramm-fullscreen {
-            display: none; position: absolute; inset: 0; z-index: 600; overflow: hidden;
+        /* Buehne fuer grosse Folie und Plakate (16.10.2026): Inhalt in einer Flaeche mit
+           schwarzem, nach innen und aussen weich auslaufendem Rand, dahinter Ambilight,
+           vom Bildschirmrand her wieder Schwarz - wie der Musik-Player. Rahmen und Licht
+           stellt der Chef am Handy ein (werbung/einstellung: rahmen, ambi). */
+        .cc-buehne-ebene { display: none; position: absolute; inset: 0; z-index: 600; overflow: hidden; background: #020308; }
+        .cc-buehne-ebene.active { display: block; }
+        .cc-buehne-ebene::after {
+            content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+            box-shadow: inset 0 0 0 8px #000, inset 0 0 70px 36px rgba(0, 0, 0, 0.97);
+        }
+        .cc-glow, .cc-buehne { position: absolute; inset: 60px 70px; border-radius: 18px; }
+        .cc-glow { z-index: 1; }
+        .cc-buehne { z-index: 3; overflow: hidden; box-shadow: 0 0 0 4px #000, 0 0 28px 16px rgba(0, 0, 0, 0.95); }
+        .cc-buehne::after {
+            content: ''; position: absolute; inset: 0; z-index: 5; pointer-events: none; border-radius: inherit;
+            box-shadow: inset 0 0 0 3px #000, inset 0 0 46px 22px rgba(0, 0, 0, 0.8);
+        }
+        .cc-buehne-ebene.amb-cyan .cc-glow { box-shadow: -80px 0 140px 14px rgba(0,200,255,.85), 80px 0 140px 14px rgba(120,80,255,.85), 0 -50px 120px 8px rgba(0,229,255,.7), 0 60px 130px 8px rgba(60,120,255,.7); }
+        .cc-buehne-ebene.amb-warm .cc-glow { box-shadow: -80px 0 140px 14px rgba(255,120,0,.85), 80px 0 140px 14px rgba(255,40,140,.85), 0 -50px 120px 8px rgba(255,190,40,.7), 0 60px 130px 8px rgba(200,40,255,.7); }
+        .cc-buehne-ebene.amb-wechsel .cc-glow { animation: ccAmbi 30s linear infinite; }
+        @keyframes ccAmbi {
+            0%, 100% { box-shadow: -80px 0 140px 14px rgba(0,200,255,.85), 80px 0 140px 14px rgba(120,80,255,.85), 0 -50px 120px 8px rgba(0,229,255,.7), 0 60px 130px 8px rgba(60,120,255,.7); }
+            25% { box-shadow: -80px 0 140px 14px rgba(120,80,255,.85), 80px 0 140px 14px rgba(255,40,160,.85), 0 -50px 120px 8px rgba(170,90,255,.7), 0 60px 130px 8px rgba(255,60,140,.7); }
+            50% { box-shadow: -80px 0 140px 14px rgba(255,40,160,.85), 80px 0 140px 14px rgba(255,130,0,.85), 0 -50px 120px 8px rgba(255,90,120,.7), 0 60px 130px 8px rgba(255,170,40,.7); }
+            75% { box-shadow: -80px 0 140px 14px rgba(255,130,0,.85), 80px 0 140px 14px rgba(0,200,255,.85), 0 -50px 120px 8px rgba(255,200,60,.7), 0 60px 130px 8px rgba(0,180,255,.7); }
+        }
+        /* Rahmen aus: Inhalt wieder randlos ueber den ganzen Bildschirm */
+        .cc-buehne-ebene.rahmen-aus::after, .cc-buehne-ebene.rahmen-aus .cc-glow,
+        .cc-buehne-ebene.rahmen-aus .cc-buehne::after { display: none; }
+        .cc-buehne-ebene.rahmen-aus .cc-buehne { inset: 0; border-radius: 0; box-shadow: none; }
+        #hausprogramm-fullscreen .cc-buehne {
+            display: flex; flex-direction: column; align-items: center;
             background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(0, 229, 255, 0.22), rgba(0, 0, 0, 0) 70%),
                         radial-gradient(ellipse 60% 50% at 50% 110%, rgba(0, 140, 255, 0.18), rgba(0, 0, 0, 0) 70%),
                         linear-gradient(180deg, #071633 0%, #040b1f 100%);
             color: #f2f7ff; font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        #hausprogramm-fullscreen.active { display: flex; flex-direction: column; align-items: center; }
-        .hp-kopf { margin-top: 70px; text-align: center; }
+        /* Plakate sind 16:9: Buehne auf 16:9 (1708 x 960) */
+        #plakat-fullscreen .cc-glow, #plakat-fullscreen .cc-buehne { inset: 60px 106px; }
+        #plakat-fullscreen.rahmen-aus .cc-buehne { inset: 0; }
+        #plakat-fullscreen .cc-buehne { background: #000; }
+        #plakat-bild { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hp-kopf { margin-top: 50px; text-align: center; }
         .hp-kopf .hp-klein { font-size: 30px; font-weight: 700; letter-spacing: 0.35em; color: #5ff3ff; }
         .hp-kopf .hp-gross {
             font-size: 92px; font-weight: 800; letter-spacing: 0.02em; margin-top: 6px;
@@ -460,7 +494,7 @@
             width: 260px; height: 5px; margin: 22px auto 0; border-radius: 3px;
             background: linear-gradient(90deg, rgba(0, 229, 255, 0), #00e5ff, rgba(0, 229, 255, 0));
         }
-        .hp-karten { display: flex; gap: 44px; margin: auto 0 150px; padding: 0 80px; justify-content: center; width: 100%; }
+        .hp-karten { display: flex; gap: 44px; margin: auto 0 120px; padding: 0 80px; justify-content: center; width: 100%; }
         .hp-karte {
             flex: 1 1 0; max-width: 560px; min-width: 0; position: relative;
             background: linear-gradient(160deg, rgba(20, 52, 110, 0.85), rgba(8, 22, 54, 0.9));
@@ -483,7 +517,7 @@
             position: absolute; top: -24px; right: 30px; font-size: 28px; font-weight: 800; letter-spacing: 0.12em;
             padding: 8px 22px; border-radius: 14px; background: #00e5ff; color: #04102a;
         }
-        .hp-fuss { position: absolute; bottom: 52px; font-size: 30px; font-weight: 600; color: #8fa6d4; letter-spacing: 0.08em; }
+        .hp-fuss { position: absolute; bottom: 40px; font-size: 30px; font-weight: 600; color: #8fa6d4; letter-spacing: 0.08em; }
         @keyframes hpRein { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
         /* Werbung rund um den Musik-Player im Vollbild (15.10.2026): Die Flaechen
            neben dem Video wechseln zeitweise auf Aktionen bzw. Termine. Das Video
@@ -3273,14 +3307,22 @@
         </div>
 
         <!-- Hausprogramm "Demnaechst im City Cafe" (siehe runHausprogrammState). -->
-        <div id="hausprogramm-fullscreen">
-            <div class="hp-kopf">
-                <div class="hp-klein">CITY CAFE · KLAGENFURT</div>
-                <div class="hp-gross" id="hp-ueberschrift">DEMNÄCHST BEI UNS</div>
-                <div class="hp-linie"></div>
+        <div id="hausprogramm-fullscreen" class="cc-buehne-ebene amb-wechsel">
+            <div class="cc-glow"></div>
+            <div class="cc-buehne">
+                <div class="hp-kopf">
+                    <div class="hp-klein">CITY CAFE · KLAGENFURT</div>
+                    <div class="hp-gross" id="hp-ueberschrift">DEMNÄCHST BEI UNS</div>
+                    <div class="hp-linie"></div>
+                </div>
+                <div class="hp-karten" id="hp-karten"></div>
+                <div class="hp-fuss">Wir freuen uns auf euch!</div>
             </div>
-            <div class="hp-karten" id="hp-karten"></div>
-            <div class="hp-fuss">Wir freuen uns auf euch!</div>
+        </div>
+        <!-- Plakate aus werbung.json ("plakate"), je Zyklus eines (siehe runPlakatState). -->
+        <div id="plakat-fullscreen" class="cc-buehne-ebene amb-wechsel rahmen-aus">
+            <div class="cc-glow"></div>
+            <div class="cc-buehne"><img id="plakat-bild" alt=""></div>
         </div>
 
         <!-- Roulette im Vollbild (siehe runRouletteState). Die Seite wird nur fuer
@@ -9724,9 +9766,13 @@
         //   folie:      { an, dauerS }   Hausprogramm "Demnaechst bei uns"
         //   willkommen: { an, dauerS }   Tag/Nacht-Plakat
         //   getraenke:  { an, dauerS }   Jaegermeister & Puntigamer
+        //   plakate:    { an, dauerS, rahmen, ambi, jede }   Plakate aus werbung.json
+        //   folie/plakate: rahmen true|false, ambi 'aus'|'cyan'|'warm'|'wechsel',
+        //   jede = in jeder n-ten Runde (1 = jede Runde)
         const WERBUNG_VORGABE = {
             musik: { modus: 'zeitweise', alleMin: 2 },
-            folie: { an: true, dauerS: 60 },
+            folie: { an: true, dauerS: 60, rahmen: true, ambi: 'wechsel', jede: 1 },
+            plakate: { an: true, dauerS: 20, rahmen: false, ambi: 'wechsel', jede: 1 },   // Bilder unveraendert, randlos (Wunsch 16.10.2026)
             willkommen: { an: true, dauerS: 35 },
             getraenke: { an: true, dauerS: 30 }
         };
@@ -9740,6 +9786,20 @@
         function werbungDauerMs(teil) {
             const s = Number(werbungWert(teil, 'dauerS'));
             return Math.min(600, Math.max(5, isFinite(s) ? s : WERBUNG_VORGABE[teil].dauerS)) * 1000;
+        }
+        // Rahmen und Ambilight einer Buehnen-Ebene nach der Einstellung setzen.
+        function buehneEinstellen(id, teil) {
+            const e = document.getElementById(id);
+            const ambi = String(werbungWert(teil, 'ambi'));
+            ['aus', 'cyan', 'warm', 'wechsel'].forEach(a => e.classList.toggle('amb-' + a, a === ambi));
+            e.classList.toggle('rahmen-aus', werbungWert(teil, 'rahmen') === false);
+        }
+        // "Wie oft": zaehlt die Runden je Teil, zeigt nur in jeder n-ten.
+        const werbungRunden = {};
+        function werbungDiesmal(teil) {
+            const jede = Math.max(1, Math.min(10, Number(werbungWert(teil, 'jede')) || 1));
+            const n = werbungRunden[teil] = (werbungRunden[teil] || 0) + 1;
+            return (n - 1) % jede === 0;
         }
         function werbungEinstellungHoeren(verb) {
             verb.db.ref('djremote/' + NL_FERN_RAUM + '/werbung/einstellung').on('value', snap => {
@@ -9811,12 +9871,39 @@
         function runHausprogrammState() {
             const termine = HAUSPROGRAMM_AN && werbungWert('folie', 'an') !== false ? hausprogrammKommende() : [];
             hausprogrammLaden();            // fuer den naechsten Durchlauf
-            if (!termine.length) return false;
+            if (!termine.length || !werbungDiesmal('folie')) return false;
             hausprogrammZeichnen(termine);
+            buehneEinstellen('hausprogramm-fullscreen', 'folie');
             document.getElementById('hausprogramm-fullscreen').classList.add('active');
             return true;
         }
         if (HAUSPROGRAMM_AN) hausprogrammLaden();
+
+        // ---------- Plakate (16.10.2026) ----------
+        // Fertige Bilder (16:9) aus werbung.json "plakate": [{ id, aktiv, datei, titel }],
+        // je Zyklus eines, reihum, direkt nach der grossen Folie. Gleiche Buehne
+        // (Rahmen, Ambilight); an/aus, Dauer, Rahmen, Licht, wie oft: Chef-Handy.
+        const PLAKAT_SLOT_INDEX = 0.6;
+        let plakatNr = 0;
+        function runPlakatState() {
+            if (werbungWert('plakate', 'an') === false) return false;
+            const liste = ((hausprogrammDaten && hausprogrammDaten.plakate) || [])
+                .filter(pl => pl && pl.aktiv !== false && pl.datei);
+            if (!liste.length || !werbungDiesmal('plakate')) return false;
+            const pl = liste[plakatNr++ % liste.length];
+            const bild = document.getElementById('plakat-bild');
+            bild.onerror = () => {            // Datei fehlt: gleich weiter statt schwarzer Flaeche
+                bild.onerror = null;
+                if (document.getElementById('plakat-fullscreen').classList.contains('active')) {
+                    cancelSequenceTimers(); runMasterSequence();
+                }
+            };
+            bild.src = pl.datei;
+            bild.alt = pl.titel || '';
+            buehneEinstellen('plakat-fullscreen', 'plakate');
+            document.getElementById('plakat-fullscreen').classList.add('active');
+            return true;
+        }
 
         // ---------- Werbung rund um den Musik-Player (Vollbild, 15.10.2026) ----------
         // Laeuft Musik "bis Stopp", steht die Rotation - die Hausprogramm-Folie kaeme
@@ -14768,6 +14855,7 @@
             cancelSequenceTimers();
             document.getElementById('mittagsteller-fullscreen').classList.remove('active');
             document.getElementById('hausprogramm-fullscreen').classList.remove('active');
+            document.getElementById('plakat-fullscreen').classList.remove('active');
             // Die CL-Tabelle im Vollbild haengt ausserhalb von .media-inner-view
             // und verschwindet sonst nur ueber ihren eigenen Zeitgeber - den
             // loescht ein Wunsch vom Handy (cancelSequenceTimers), und die
@@ -14910,8 +14998,14 @@
 
             } else if (mediaStateIndex === HAUSPROGRAMM_SLOT_INDEX) {
                 // Eigene Veranstaltungen (werbung.json); ohne Termine sofort weiter.
-                mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
+                mediaStateIndex = PLAKAT_SLOT_INDEX;
                 if (runHausprogrammState()) globalMasterTimer = later(runMasterSequence, werbungDauerMs('folie'));
+                else runMasterSequence();
+
+            } else if (mediaStateIndex === PLAKAT_SLOT_INDEX) {
+                // Plakate (werbung.json); ohne Plakat sofort weiter.
+                mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
+                if (runPlakatState()) globalMasterTimer = later(runMasterSequence, werbungDauerMs('plakate'));
                 else runMasterSequence();
 
             } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {

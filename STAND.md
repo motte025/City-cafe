@@ -201,6 +201,19 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   Neuladen. Abbau in `runMasterSequence()` eingetragen. Abschalten:
   `HAUSPROGRAMM_AN`. Läuft Musik „bis Stopp", steht die Rotation – die Folie
   erscheint dann nicht; dafür gibt es die Werbung rund um den Player (unten).
+  **Seit 16.10.2026 auf einer „Bühne"** (`.cc-buehne-ebene`, `.cc-glow`,
+  `.cc-buehne`): Inhalt in einer Fläche mit schwarzem, nach innen und außen weich
+  auslaufendem Rand, dahinter Ambilight, vom Bildschirmrand her wieder Schwarz.
+  Licht Aus/Cyan/Warm/Wechsel (`amb-*`, Wechsel = 30-s-Farbrunde), `rahmen-aus`
+  macht die Fläche wieder randlos. Einstellbar am Chef-Handy: an/aus, Dauer
+  20 s–3 min, jede/jede 2./jede 3. Runde (`jede`, `werbungDiesmal`), Rahmen, Licht.
+- **Plakate** (16.10.2026): fertige 16:9-Bilder aus `werbung.json` `plakate`
+  (`datei`, `titel`, `aktiv`), je Zyklus eines reihum, Slot `PLAKAT_SLOT_INDEX`
+  0.6 direkt nach der großen Folie (`runPlakatState`). Bilder laufen **unverändert
+  und randlos** (Wunsch Betreiber; Rahmen am Handy zuschaltbar). Heute:
+  `jaegermeister_aktion_tv.jpg`, `spirituosen_tv.jpg` (von Codex). Fehlt eine
+  Datei, geht es sofort weiter. Am Chef-Handy: an/aus, Dauer, wie oft, Rahmen, Licht.
+  Die Übersicht hat seit 16.10. auch A−/A+ (gleicher Speicher `fbZoom` wie Musik).
 - **Werbung rund um den Musik-Player** (Vollbild, 15.10.2026,
   `musikWerbungTakt`, sekündlich): in jedem 120-s-Takt Sekunde 0–29 statt
   „Ähnliche Songs" die Leiste **„📅 Demnächst im City Cafe"** (Termine aus

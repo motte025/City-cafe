@@ -87,6 +87,12 @@
     .wahl button.aktiv { background: #0e9fb3; color: #fff; box-shadow: inset 0 0 0 2px #7ff7ff; }
     .wahl button.aus.aktiv { background: #5b2333; box-shadow: inset 0 0 0 2px #ff6b81; }
     .wahl[hidden] { display: none; }
+    /* Viele Werte (Dauer, Licht): Etikett eigene Zeile, Knoepfe zu viert je Zeile */
+    .wahl.viele .etikett { flex-basis: 100%; }
+    .wahl.viele button { flex: 1 0 calc(25% - 6px); }
+    .kopf { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 8px; }
+    .kopf button { font: inherit; font-size: 22px; font-weight: 800; border: 0; border-radius: 12px;
+                   padding: 6px 16px; background: #1d2647; color: #cfe0ff; cursor: pointer; }
     #wb-meldung { font-size: 17px; color: #8ea0c8; text-align: center; min-height: 22px; margin-top: 4px; }
     @media (min-width: 700px) {
         body { font-size: 18px; max-width: 900px; margin: 0 auto; padding: 16px; }
@@ -103,6 +109,7 @@
 </head>
 <body>
 
+<div class="kopf"><button type="button" id="schrift-klein" aria-label="Schrift kleiner">A−</button><button type="button" id="schrift-gross" aria-label="Schrift größer">A+</button></div>
 <div id="warnungen"></div>
 
 <div class="jetzt">
@@ -146,7 +153,20 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-15-werbung1';
+    var FASSUNG = '2026-10-16-buehne1';
+    // Schriftgroesse wie in der Musik-Fernbedienung (A-/A+, gleicher Speicher "fbZoom").
+    (function () {
+        var z = window.innerWidth >= 700 ? 1.2 : 1;
+        try { z = Number(localStorage.getItem('fbZoom')) || z; } catch (e) {}
+        function setzen(n) {
+            z = Math.max(0.8, Math.min(2, Math.round(n * 10) / 10));
+            document.body.style.zoom = z;
+            try { localStorage.setItem('fbZoom', String(z)); } catch (e) {}
+        }
+        setzen(z);
+        document.getElementById('schrift-klein').addEventListener('click', function () { setzen(z - 0.1); });
+        document.getElementById('schrift-gross').addEventListener('click', function () { setzen(z + 0.1); });
+    })();
     var CFG = window.DJ_REMOTE_CONFIG || {};
     var abfrage = new URLSearchParams(location.search);
     var raum = (abfrage.get('raum') || '').trim() || CFG.raum || 'city-cafe';
@@ -171,10 +191,14 @@
     // Vorgaben = Verhalten des Screens ohne Einstellung (WERBUNG_VORGABE in index.html).
     var WB_VORGABE = {
         musik: { modus: 'zeitweise', alleMin: 2 },
-        folie: { an: true, dauerS: 60 },
+        folie: { an: true, dauerS: 60, rahmen: true, ambi: 'wechsel', jede: 1 },
+        plakate: { an: true, dauerS: 20, rahmen: false, ambi: 'wechsel', jede: 1 },
         willkommen: { an: true, dauerS: 35 },
         getraenke: { an: true, dauerS: 30 }
     };
+    var WB_DAUER = [[20, '20 s'], [30, '30 s'], [45, '45 s'], [60, '1 min'], [90, '1½ min'], [120, '2 min'], [180, '3 min']];
+    var WB_JEDE = [[1, 'jede'], [2, 'jede 2.'], [3, 'jede 3.']];
+    var WB_AMBI = [['aus', 'Aus'], ['cyan', 'Cyan'], ['warm', 'Warm'], ['wechsel', 'Wechsel']];
     var WB_TEILE = [
         { teil: 'musik', titel: '🎵 Musik-Player (Vollbild)', unter: 'Termine unten, Aktionen rechts neben dem Video',
           reihen: [
@@ -182,10 +206,21 @@
             { feld: 'alleMin', etikett: 'alle', nurWenn: ['modus', 'zeitweise'],
               werte: [[1, '1 min'], [2, '2 min'], [5, '5 min'], [10, '10 min']] }
           ] },
-        { teil: 'folie', titel: '📅 Große Folie „Demnächst bei uns"', unter: 'einmal je Zyklus, im Vollbild',
+        { teil: 'folie', titel: '📅 Große Folie „Demnächst bei uns"', unter: 'im Vollbild, mit Rahmen und Ambilight',
           reihen: [
             { feld: 'an', werte: [[false, 'Aus'], [true, 'An']] },
-            { feld: 'dauerS', etikett: 'Dauer', nurWenn: ['an', true], werte: [[30, '30 s'], [60, '1 min'], [120, '2 min']] }
+            { feld: 'dauerS', etikett: 'Dauer', nurWenn: ['an', true], werte: WB_DAUER },
+            { feld: 'jede', etikett: 'Runde', nurWenn: ['an', true], werte: WB_JEDE },
+            { feld: 'rahmen', etikett: 'Rahmen', nurWenn: ['an', true], werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'ambi', etikett: 'Licht', nurWenn: ['rahmen', true], werte: WB_AMBI }
+          ] },
+        { teil: 'plakate', titel: '🖼️ Plakate', unter: 'Jägermeister-Aktion, Spirituosen – je Runde eines, reihum',
+          reihen: [
+            { feld: 'an', werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'dauerS', etikett: 'Dauer', nurWenn: ['an', true], werte: WB_DAUER },
+            { feld: 'jede', etikett: 'Runde', nurWenn: ['an', true], werte: WB_JEDE },
+            { feld: 'rahmen', etikett: 'Rahmen', nurWenn: ['an', true], werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'ambi', etikett: 'Licht', nurWenn: ['rahmen', true], werte: WB_AMBI }
           ] },
         { teil: 'willkommen', titel: '☕ Willkommensplakat', unter: 'Tag- bzw. Nacht-Plakat mit Öffnungszeiten',
           reihen: [
@@ -220,7 +255,7 @@
             block.appendChild(kopf);
             t.reihen.forEach(function (r) {
                 var zeile = document.createElement('div');
-                zeile.className = 'wahl';
+                zeile.className = 'wahl' + (r.werte.length >= 4 ? ' viele' : '');
                 if (r.nurWenn && wbWert(t.teil, r.nurWenn[0]) !== r.nurWenn[1]) zeile.hidden = true;
                 if (r.etikett) {
                     var et = document.createElement('span');
