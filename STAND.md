@@ -633,12 +633,21 @@ Noch nicht umgesetzt, nach Wichtigkeit:
   `aktionenBild`), Laufschrift-Hinweis auf den nächsten Termin, Dauer der
   Musik-Einblendung (fest 30 s) einstellbar. In der Vollbild-Leiste unten wird
   ein langer Zusatz gekürzt („Reinisch & H. …").
-- **Playlists aufräumen (Test 16.10.2026):** In „Schlager" ist bei Rosanna
-  Rocci „Balla con me" das Video „Solo con te" (ZDF-Fernsehgarten) hinterlegt –
-  falscher Song. Rund 20 Schlager-Einträge sind Lyric-/Audio-Videos oder
-  TV-Auftritte (Hitparade, Helene-Fischer-Show, Goldene Henne); der TV tauscht
-  sie zwar vor dem Abspielen, das kostet aber jedes Mal eine Suche. Einmal gegen
-  die offiziellen Videos tauschen.
+- **Playlists (16.10.2026 aufgeräumt):** Rosanna Rocci „Balla con me" hat jetzt
+  das richtige Video (ZDF), Helene Fischer „Herzbeben" und Wolfgang Petry
+  „Verlieben, verloren…" das offizielle statt TV-Auftritt (in Schlager, Après-Ski,
+  Klausi). Neu: DJ Ötzi (Sweet Caroline Party Remix, Hey Baby, Anton aus Tirol,
+  Burger Dance, Der hellste Stern, Noch in 100.000 Jahren, Du), Josh. (Cordula
+  Grün, Expresso & Tschianti, Vielleicht, Wo bist du, Martina, Ich gehör
+  repariert), Pietro Basile (Ich liebe nur dich, Hey Macarena!, Buongiorno,
+  Grande Amore) in „Schlager"; die Party-Titel davon auch in „Après-Ski".
+  **Bleibt so:** Für rund 20 Schlager-Songs gibt es auf YouTube gar kein
+  offizielles Musikvideo, nur Lyric/Visualizer/Live (Egli „Du, Du, Du", Mai
+  „100 % verliebt", Michelle „Wahnsinnig", Stereoact-Remixe, Kerstin Ott
+  „Rosalinde" …) – die bleiben. Die Topic-Einträge in Après-Ski/Klausi sind
+  Party-Mixe ohne Video. Party Hits, Mix 1/2 und Schlager 2024–2026 sind am
+  Handy bearbeitet (Firebase `yt/listen/<nr>` mit `bearbeitet`) – Änderungen am
+  Repo wirken dort erst nach „Original wiederherstellen"; also am Handy pflegen.
 - **Wer gewinnt, Musik oder DJ?** Startet man Musik, während ein DJ-Wunsch
   läuft (oder umgekehrt), bleiben beide eingetragen; der TV zeigt die Musik,
   die Übersicht beide. Vorschlag: die zuletzt getroffene Wahl gewinnt.
