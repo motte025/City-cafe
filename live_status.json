@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T13:57:46Z",
+  "checked_at": "2026-10-16T14:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -61,7 +61,14 @@
       "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl - Zu Gast @heinrichundheinehh",
+      "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ Back to the 90s - Euro Dance, Charts, Rock, Rnb, HipHop & more | !tip ✨",
       "game": "DJs"
     }
   ]
