@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-16T20:07:45Z",
+  "checked_at": "2026-10-16T20:22:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 99 😈 | Harder Styles Quicky | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "COUNTDOWN TO HALLOWEEN",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 99 😈 | Harder Styles Quicky | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
