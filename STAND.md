@@ -5,7 +5,12 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 15. Oktober 2026 (GitHub-Token getauscht; Chef-Übersicht
+Letzte Durchsicht: 16. Oktober 2026 (Musik: Lautstärke nach LUFS für alle Songs
+gleich, Limiter höchstens 2 dB, Test mit 458 Playlist-Songs; Überblendung 4/6/9 s
+mit DJ-Kurve; Limiter/Blende am Chef-Handy; Neuladen startete alten DJ-Befehl
+und gestoppte Musik neu – behoben und am TV getestet; Dauersuche begrenzt;
+Fernbedienung mit Startseite aus Kacheln, Musik-Steuerung aufgeräumt; alter
+Screen „spieltest-x" gelöscht). Davor, 15. Oktober: GitHub-Token getauscht; Chef-Übersicht
 als fünfter Reiter der Fernbedienung; Werbung: große Folie „Demnächst bei uns",
 Termine/Aktionen rund um den Musik-Player in Vollbild und normaler Ansicht,
 Werbe-Schalter am Chef-Handy, `werbung.json`; QR „Song wünschen" öffnet nur
@@ -34,7 +39,7 @@ Antwortsprache im Gespräch: Deutsch.
 | --- | --- |
 | `index.html` | Das Dashboard selbst: Rotation, alle Widgets, Verbindung zu den Fernbedienungen |
 | `fernbedienung.html` | Sammel-Fernbedienung: Startseite mit Kacheln (🎵 Musik, DJ, Roulette, Hos'n Obe, Chef: Übersicht), die Steuerung öffnet beim Antippen, „← Start" bzw. die Zurück-Taste führt zurück (seit 16.10.2026); zeigt nur Screens, die sich in den letzten 3 Tagen gemeldet haben |
-| `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef |
+| `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef. In „Jetzt" oben nur Steuerung (⏮ ⏸ ⏭ ⇄ Blende) und Lautstärke; Vollbild, Fotos/Shorts rechts, Ambilight, QR, Handy/Screen an die Anlage zugeklappt unter „⚙️ Anzeige & Anlage" (16.10.2026); Limiter und Überblendung unter Mehr → „🔊 Ton" |
 | `yt-fernbedienung-net.js` | Firebase-Pfade der Musik (`yt/…`, `chef/…`) |
 | `yt-warteschlange.js` | Reihenfolge-Logik der Musik (Warteschlange, Radio, Vorschau), Tests in `yt-warteschlange.test.js` |
 | `yt_playlists.json` | Stimmungs-Playlists nach Uhrzeit (1–4 mit festen Titellisten, 5–8 eigene Mixe) |
@@ -250,7 +255,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     gleichbleibende Gesamtlautstärke, Bild per sway-Opacity; Pause/Skip/Stopp
     mittendrin sauber). Der Musikbeginn des neuen Songs fällt in die **Mitte**
     der Blende (kein Lautstärkeloch, höchstens −3 dB). Chef kann am Handy mit
-    ⤨ mitten im Song überblenden. Vorladen 40 s vor Ende; die nächsten 3 Songs
+    ⇄ Blende mitten im Song überblenden. Vorladen 40 s vor Ende; die nächsten 3 Songs
     der Schlange werden schon vorab gemessen (eigener Arbeiter), damit
     Umstellen kurz vor Schluss trotzdem stimmt.
   - **Songbeginn und -ende (Stand 05.10.2026, Test mit 100 Songs):**
@@ -274,7 +279,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     `ebur128`, ganzer Song), Ziel **−11 LUFS** (`LAUT_ZIEL_LUFS`), über mpv
     `volume-gain`: laute Songs werden abgesenkt, leise angehoben (je bis
     15 dB), nie über die Spitzen (1 dB Reserve – Betreiber will **keine
-    Übersteuerung**, keinen Limiter). Test mit 458 Playlist-Songs: Original
+    Übersteuerung**). Test mit 458 Playlist-Songs: Original
     −29 bis −5 LUFS; mit der alten Regel (nur leise anheben, grober RMS-Pegel)
     lagen 39 % innerhalb ±1,5 dB, ohne Limiter 79 %. Für leise Songs mit
     Spitzen nahe 0 dBFS (z. B. Hey Mama, One Kiss) holt ein sanfter Limiter
@@ -295,9 +300,16 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Dazu DJ-Kurve: der Ton wechselt nur in einem 2-s-Fenster um den
     Musikbeginn des neuen Songs (beide hörbar laut nur ~0,5 s), das Bild
     blendet über die ganze Länge.
-    Der alte Ton-Ausgleich (dynaudnorm) ist abgeschafft.
+  - **Ton allgemein:** Der alte Ton-Ausgleich (dynaudnorm) ist abgeschafft.
     Bluetooth und W1 stehen auf 100 %, die Lautstärke stellt der Betreiber
-    selbst am Handy ein (ab 70 % in 3er-Schritten).
+    selbst am Handy ein (ab 70 % in 3er-Schritten). Seit der LUFS-Angleichung
+    sind laute Songs 2–4 dB leiser – die Handy-Lautstärke entsprechend höher.
+    Messwerkzeug fürs nächste Mal: Audio mit `yt-dlp` am PC laden (nicht über
+    die Box, schont YouTube-Kontingent und Café-IP), `ffmpeg -af ebur128=peak=true`.
+  - **Titelsuche begrenzt (16.10.2026):** Fand der TV zu einem Radio-Titel
+    (Last.fm, ohne Video) nichts, suchte er alle 2–3 s neu, solange der Titel
+    vorn stand (The Strokes: 60 Suchen in 3 min). Jetzt höchstens 3 Versuche
+    je Suchtext (`ytmFindeFehlschlaege`).
   - **Richtige Videos:** offizielle Videos (Künstler-Kanal, VEVO, Label)
     werden überall bevorzugt: Suche sortiert Live/Fan/Lyric/Audio ans Ende,
     der TV prüft jeden Song der Warteschlange vor dem Abspielen und tauscht
@@ -556,7 +568,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   `roulette/index.html` **und** `roulette-src/index.html` und muss einen Neubau
   durch Codex überleben.
 
-## Offene Punkte (Durchsicht 15.10.2026)
+## Offene Punkte (Durchsicht 16.10.2026)
 
 Noch nicht umgesetzt, nach Wichtigkeit:
 
@@ -606,6 +618,17 @@ Noch nicht umgesetzt, nach Wichtigkeit:
   `aktionenBild`), Laufschrift-Hinweis auf den nächsten Termin, Dauer der
   Musik-Einblendung (fest 30 s) einstellbar. In der Vollbild-Leiste unten wird
   ein langer Zusatz gekürzt („Reinisch & H. …").
+- **Playlists aufräumen (Test 16.10.2026):** In „Schlager" ist bei Rosanna
+  Rocci „Balla con me" das Video „Solo con te" (ZDF-Fernsehgarten) hinterlegt –
+  falscher Song. Rund 20 Schlager-Einträge sind Lyric-/Audio-Videos oder
+  TV-Auftritte (Hitparade, Helene-Fischer-Show, Goldene Henne); der TV tauscht
+  sie zwar vor dem Abspielen, das kostet aber jedes Mal eine Suche. Einmal gegen
+  die offiziellen Videos tauschen.
+- **Wer gewinnt, Musik oder DJ?** Startet man Musik, während ein DJ-Wunsch
+  läuft (oder umgekehrt), bleiben beide eingetragen; der TV zeigt die Musik,
+  die Übersicht beide. Vorschlag: die zuletzt getroffene Wahl gewinnt.
+- **Bluetooth:** im Protokoll 44× „verbunden, aber kein Tonkanal" – der
+  Wächter verbindet neu, Ursache am Empfänger (B03 Pro).
 - **Veraltete Kopfzeilen:** `NIGHTLIFE-SETUP.md` und `DJ-FERNBEDIENUNG-SETUP.md`
   sagen „zurzeit abgeschaltet", im Code sind `NL_SLOT_AN` und `DJ_SLOT_AN` an.
 
