@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T15:07:46Z",
+  "checked_at": "2026-10-16T15:22:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,13 +31,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
@@ -45,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ Back to the 90s - Euro Dance, Charts, Rock, Rnb, HipHop & more | !tip ✨",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -55,6 +48,13 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥RETRO FUTURE VIBES: STREET FIGHTER🔥PP 53/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ Back to the 90s - Euro Dance, Charts, Rock, Rnb, HipHop & more | !tip ✨",
       "game": "DJs"
     },
     {
