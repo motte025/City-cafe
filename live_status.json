@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T16:52:46Z",
+  "checked_at": "2026-10-16T17:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -55,6 +55,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "MIX MISSION TV | DJ SWEEDEE",
       "game": "DJs"
     }
   ]
