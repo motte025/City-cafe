@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T09:57:45Z",
+  "checked_at": "2026-10-16T10:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥RETRO FUTURE VIBES: STREET FIGHTER🔥PP 53/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
