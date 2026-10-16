@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T14:17:45Z",
+  "checked_at": "2026-10-16T14:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴  BEST ROCK WAY ☆ !naturtreu 🔴🔴",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴  BEST ROCK WAY ☆ !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
@@ -52,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ Back to the 90s - Euro Dance, Charts, Rock, Rnb, HipHop & more | !tip ✨",
       "game": "DJs"
     },
     {
@@ -62,13 +62,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ Back to the 90s - Euro Dance, Charts, Rock, Rnb, HipHop & more | !tip ✨",
       "game": "DJs"
     }
   ]
