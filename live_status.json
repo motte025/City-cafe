@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T14:22:45Z",
+  "checked_at": "2026-10-16T14:37:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴  BEST ROCK WAY ☆ !naturtreu 🔴🔴",
@@ -38,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥RETRO FUTURE VIBES: STREET FIGHTER🔥PP 53/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -48,6 +41,13 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥RETRO FUTURE VIBES: STREET FIGHTER🔥PP 53/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
