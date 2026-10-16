@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T16:17:46Z",
+  "checked_at": "2026-10-16T16:37:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,6 +31,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Heute Releaseparty! Lasst uns feiern! <3  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
@@ -41,13 +48,6 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Back to the 90s - Euro Dance, Charts, Rock, Rnb, HipHop & more | !tip ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Heute Releaseparty! Lasst uns feiern! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
