@@ -110,7 +110,11 @@ MPV_SOCK = "/tmp/mpv-nl.sock"
 # zweite der Haupt-Player: sein Socket wird auf MPV_SOCK umbenannt, und die
 # app_id wechselt zwischen "mpv" und "mpvxf" (MPV_APP["id"] = aktueller).
 MPV_SOCK_XF = "/tmp/mpv-nl-xf.sock"
-XF_SEK = 9
+# Laenge der Ueberblendung: am Handy einstellbar (Ton: 4/6/9 s). Mit 9 s liefen beide
+# Songs ~4 s fast voll uebereinander und die Beats schlugen sich (16.10.2026) - kurz
+# ist deshalb der Standard.
+XF_SEK = 4
+XF_ERLAUBT = (4, 6, 9)
 MPV_APP = {"id": "mpv"}
 # Watchdog: so lange darf mpv bis zum ersten Bild bzw. ohne Fortschritt
 # brauchen, bevor es abgeschossen wird und das YouTube-Embed weiterlaeuft.
@@ -1785,12 +1789,13 @@ def stille_messen(vid, audio_url, laenge):
                 ende = s_ende
         elif s_ende - 10 > bis:
             ende = s_ende - 10
-    gain = anhebung(audio_url)
-    STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None, "gain": gain}
+    gain, limiter = anhebung(audio_url)
+    STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None, "gain": gain,
+                   "limiter": limiter}
     log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s "
         + (f"(Studio-Abgleich, Guete {abgl['guete']:.2f}), " if abgl else f"(erlaubt {erlaubt:.0f}s), ") +
         f"Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge:.0f}s)"
-        + (f", Lautheit {gain:+.1f} dB" if gain else ""))
+        + (f", Lautheit {gain:+.1f} dB" if gain else "") + (f", Limiter +{limiter:.1f} dB" if limiter else ""))
 
 
 # Alle Songs auf dieselbe Hoerlautstaerke (Wunsch 16.10.2026): feste Verstaerkung je
@@ -1799,15 +1804,20 @@ def stille_messen(vid, audio_url, laenge):
 # nie ueber die Spitzen hinaus (keine Uebersteuerung, kein Limiter); kein Pumpen wie
 # beim dynaudnorm-Ausgleich. Test mit 458 Playlist-Songs (16.10.2026): Original -29 bis
 # -5 LUFS (Median -8,8); bisher (nur leise anheben, RMS) lagen 39 % innerhalb +-1,5 dB,
-# mit Ziel -11 LUFS sind es 79 %. Rest: leise Songs mit Spitzen nahe 0 dBFS.
+# mit Ziel -11 LUFS sind es 79 %. Rest: leise Songs mit Spitzen nahe 0 dBFS - fuer die
+# darf ein sanfter Limiter hoechstens LIMITER_MAX_DB mehr herausholen (am Handy
+# abschaltbar). Er greift nur an den lautesten Spitzen dieser Songs, sonst nie.
 LAUT_ZIEL_LUFS = -11.0
+LIMITER_MAX_DB = 2.0
+LIMITER_GRENZE = 0.891     # -1 dBFS
 GAIN_MAX_DB = 15.0         # hoechstens so viel anheben ...
 ABSENKUNG_MAX_DB = 15.0    # ... bzw. absenken
 GAIN_RESERVE_DB = 1.0      # Abstand der lautesten Spitze zu 0 dBFS
 
 
 def anhebung(audio_url):
-    """dB, um die der Song angehoben (+) oder abgesenkt (-) wird; 0 = unveraendert."""
+    """-> (gain, limiter): dB, um die der Song ohne Limiter angehoben (+) oder abgesenkt (-)
+    wird, und wie viel der Limiter zusaetzlich anheben darf (0 bis LIMITER_MAX_DB)."""
     try:
         aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", audio_url, "-vn",
                               "-af", "ebur128=peak=sample:framelog=verbose", "-f", "null", "-"],
@@ -1816,18 +1826,40 @@ def anhebung(audio_url):
         lufs = float(re.search(r"I:\s*(-?[\d.]+) LUFS", summe).group(1))
         spitze = float(re.search(r"Peak:\s*(-?[\d.]+) dBFS", summe).group(1))
     except (OSError, subprocess.TimeoutExpired, AttributeError, ValueError):
-        return 0.0
+        return 0.0, 0.0
     if lufs < -60:             # (fast) stumm - nichts anheben
-        return 0.0
-    gain = LAUT_ZIEL_LUFS - lufs
-    if gain > 0:
-        gain = max(0.0, min(gain, GAIN_MAX_DB, -GAIN_RESERVE_DB - spitze))   # leise Songs nie absenken
-    gain = max(gain, -ABSENKUNG_MAX_DB)
-    return round(gain, 1) if abs(gain) >= 0.5 else 0.0
+        return 0.0, 0.0
+    wunsch = LAUT_ZIEL_LUFS - lufs
+    limiter = 0.0
+    if wunsch > 0:
+        gain = max(0.0, min(wunsch, GAIN_MAX_DB, -GAIN_RESERVE_DB - spitze))   # leise Songs nie absenken
+        rest = min(wunsch, GAIN_MAX_DB) - gain
+        if rest >= 0.5:
+            limiter = round(min(rest, LIMITER_MAX_DB), 1)
+    else:
+        gain = max(wunsch, -ABSENKUNG_MAX_DB)
+    return (round(gain, 1) if abs(gain) >= 0.5 else 0.0), limiter
 
 
 def gain_von(vid):
     return (STILLE.get(vid) or {}).get("gain") or 0.0
+
+
+def ton_zustand(vid, limiter_an):
+    """-> (volume-gain, Audiofilter oder None) fuer mpv. Mit Limiter steckt die ganze
+    Verstaerkung im Filter: mpv rechnet volume-gain erst NACH den Audiofiltern, der
+    Limiter muss aber das schon verstaerkte Signal sehen."""
+    g = gain_von(vid)
+    lim = (STILLE.get(vid) or {}).get("limiter") or 0.0
+    if not (limiter_an and lim):
+        return g, None
+    return 0.0, (f"lavfi=[volume={g + lim:.1f}dB,"
+                 f"alimiter=limit={LIMITER_GRENZE}:level=false:attack=5:release=100]")
+
+
+def ton_args(vid, limiter_an):
+    g, af = ton_zustand(vid, limiter_an)
+    return [f"--volume-gain={g}"] + ([f"--af={af}"] if af else [])
 
 
 def stille_ende(vid, dauer):
@@ -2029,6 +2061,8 @@ def main():
     ton_id = ""           # zuletzt uebernommene Ton-Einstellung
     ton_vol = 100         # Lautstaerke des Videos in Prozent
     ton_lautheit = False  # Lautheitsausgleich an?
+    ton_limiter = True    # Limiter fuer sehr leise Songs (Handy)
+    xf_sek = XF_SEK       # Laenge der Ueberblendung (Handy)
     streamlink_da = os.path.exists(STREAMLINK)
     letzte_antwort = time.time()   # wann der Browser zuletzt geantwortet hat
     letzter_neustart = 0.0
@@ -2129,7 +2163,10 @@ def main():
                     else:
                         mpv_befehl("af", "clr", "")
             ton_lautheit = neu_lautheit
-            log(f"Ton: {ton_vol} %, Lautheitsausgleich {'an' if ton_lautheit else 'aus'}")
+            ton_limiter = ton.get("limiter") is not False
+            xf_sek = int(ton.get("blende") or XF_SEK) if int(ton.get("blende") or XF_SEK) in XF_ERLAUBT else XF_SEK
+            log(f"Ton: {ton_vol} %, Lautheitsausgleich {'an' if ton_lautheit else 'aus'}, "
+                f"Limiter {'an' if ton_limiter else 'aus'}, Blende {xf_sek} s")
 
         # Vor-/Zuruecksprung vom Handy im laufenden Video.
         sprung = state.get("spulen") or {}
@@ -2386,7 +2423,7 @@ def main():
                 mpv_befehl("set_property", "volume", ton_vol)
                 mpv, shown = xf["proc"], want
                 intro_gesprungen = shown        # Start war schon passend gewaehlt
-                gain_gesetzt = (shown, gain_von(xf["vid"]))   # stand schon beim Start
+                gain_gesetzt = (shown, xf["ton"])   # stand schon beim Start
                 if xf.get("blur"):
                     blur_an = shown
                 started, last_pos, last_progress, embed_paused = time.time(), None, None, False
@@ -2556,11 +2593,15 @@ def main():
 
         # Messung kam erst nach dem Start (frischer Wunsch): Anhebung nachtraeglich setzen.
         if musik and shown and shown.startswith("yt:") and mpv is not None and shown[3:] in STILLE:
-            g = gain_von(shown[3:])
-            if gain_gesetzt != (shown, g) and mpv_befehl("set_property", "volume-gain", g):
-                gain_gesetzt = (shown, g)
-                if g:
-                    log(f"Lautheit nachtraeglich ({shown}): {g:+.1f} dB")
+            z = ton_zustand(shown[3:], ton_limiter)
+            if gain_gesetzt != (shown, z) and mpv_befehl("set_property", "volume-gain", z[0]):
+                # Limiter ein/aus (auch mitten im Song, wenn am Handy umgeschaltet) - den
+                # Filter nur anfassen, wenn er sich aendert (sonst kurzer Tonaussetzer).
+                vorher = gain_gesetzt[1][1] if gain_gesetzt and gain_gesetzt[0] == shown else None
+                if z[1] != vorher:
+                    mpv_befehl("af", "set", z[1]) if z[1] else mpv_befehl("af", "clr", "")
+                gain_gesetzt = (shown, z)
+                log(f"Lautheit gesetzt ({shown}): {z[0]:+.1f} dB" + (f", Filter {z[1]}" if z[1] else ""))
 
         # Ohne Ueberblendung (nichts vorgeladen): an der Schlussstille sofort beenden -
         # das saubere Ende (Code 0) fuehrt wie gewohnt zum naechsten Song.
@@ -2584,12 +2625,12 @@ def main():
             # Chef am Handy: "Ueberblenden" mitten im Song - sobald der naechste Song
             # aufgeloest ist, mit der normalen Blende (XF_SEK) hinueber.
             blend = state.get("blenden") or {}
-            blend_jetzt = bool(blend.get("id")) and blend.get("id") != blend_erledigt and rest > XF_SEK
+            blend_jetzt = bool(blend.get("id")) and blend.get("id") != blend_erledigt and rest > xf_sek
             if blend_jetzt and n_key in cache:
                 blend_erledigt = blend.get("id")
-                rest = XF_SEK
+                rest = xf_sek
                 log(f"Ueberblenden auf Wunsch ({shown[3:]} bei {last_pos:.0f}s)")
-            if 2.0 < rest <= XF_SEK and n_key in cache:
+            if 2.0 < rest <= xf_sek and n_key in cache:
                 video_url, audio_url, _laenge = cache[n_key]
                 neu_app = "mpvxf" if MPV_APP["id"] == "mpv" else "mpv"
                 xf_args = ["mpv", f"--hwdec={MPV_HWDEC}", "--vo=gpu", f"--profile={MPV_PROFILE}", "--sid=no",
@@ -2606,7 +2647,7 @@ def main():
                            # der Ueberblendung faellt: kein Loch (vorher am Ende: bis -10 dB, wenn
                            # davor eine leise Filmszene lief), Saenger nicht schon mitten im Gesang.
                            f"--start={max(0.0, ((STILLE.get(n_vid) or {}).get('anfang') or 0) - rest / 2):.2f}"]
-                xf_args.append(f"--volume-gain={gain_von(n_vid)}")   # Lautheit angleichen
+                xf_args += ton_args(n_vid, ton_limiter)   # Lautheit angleichen
                 if ton_lautheit:
                     xf_args.append(f"--af={LAUTHEIT_FILTER}")
                 xf_args += seiten_blur_args(n_vid)
@@ -2621,6 +2662,7 @@ def main():
                 proc = subprocess.Popen(xf_args, env={**os.environ, **session_env()},
                                         preexec_fn=mpv_dies_with_us)
                 xf = {"proc": proc, "vid": n_vid, "app": neu_app, "t0": time.time(), "dauer": rest - 0.3,
+                      "ton": ton_zustand(n_vid, ton_limiter),
                       "blur": xf_blur}
                 threading.Thread(target=ueberblenden, args=(xf, dict(target), page_id, ton_vol),
                                  daemon=True).start()
@@ -2716,7 +2758,9 @@ def main():
                 # Widget-Stelle (83/248) auf, bevor place_mpv es verschob.
                 args.append("--title=xf-ein")
                 if musik:
-                    args.append(f"--volume-gain={gain_von(schluessel)}")   # Lautheit angleichen
+                    args += ton_args(schluessel, ton_limiter)   # Lautheit angleichen
+                    if schluessel in STILLE:
+                        gain_gesetzt = ("yt:" + schluessel, ton_zustand(schluessel, ton_limiter))
                 if musik and seiten_blur_args(schluessel):
                     args += seiten_blur_args(schluessel)   # 4:3/Hochformat: Seiten fuellen
                     blur_an = "yt:" + schluessel

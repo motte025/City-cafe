@@ -246,7 +246,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Titel. Die Vorschau („Als Nächstes", „Danach") rechnet wie `weiter()`
     und zeigt damit die echte Reihenfolge. Hos'n Obe ist während der Musik
     gesperrt; der Dart-Abend beendet sie, außer der Chef startet sie dabei.
-  - **DJ-Funktionen (Supervisor):** echte Überblendung 9 s (zweiter mpv,
+  - **DJ-Funktionen (Supervisor):** echte Überblendung (4/6/9 s am Handy, zweiter mpv,
     gleichbleibende Gesamtlautstärke, Bild per sway-Opacity; Pause/Skip/Stopp
     mittendrin sauber). Der Musikbeginn des neuen Songs fällt in die **Mitte**
     der Blende (kein Lautstärkeloch, höchstens −3 dB). Chef kann am Handy mit
@@ -276,8 +276,16 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     15 dB), nie über die Spitzen (1 dB Reserve – Betreiber will **keine
     Übersteuerung**, keinen Limiter). Test mit 458 Playlist-Songs: Original
     −29 bis −5 LUFS; mit der alten Regel (nur leise anheben, grober RMS-Pegel)
-    lagen 39 % innerhalb ±1,5 dB, jetzt 79 %. Rest: leise Songs mit Spitzen
-    nahe 0 dBFS (z. B. Hey Mama, One Kiss) – ginge nur mit Limiter.
+    lagen 39 % innerhalb ±1,5 dB, ohne Limiter 79 %. Für leise Songs mit
+    Spitzen nahe 0 dBFS (z. B. Hey Mama, One Kiss) holt ein sanfter Limiter
+    (`alimiter`, −1 dBFS) **höchstens 2 dB** mehr heraus (Wunsch Betreiber:
+    nur 2 dB) – im Test bei 118 von 458 Songs, nur an deren lautesten
+    Spitzen; damit 92 % innerhalb ±1,5 dB. Mit Limiter steckt die ganze
+    Verstärkung im Filter (mpv rechnet `volume-gain` erst nach den Filtern).
+    Am Handy (Chef, 🔊 Ton) abschaltbar.
+  - **Überblendung am Handy einstellbar (16.10.2026):** kurz 4 s (Standard),
+    mittel 6 s, lang 9 s. Mit den bisherigen festen 9 s liefen beide Songs
+    rund 4 s fast voll übereinander und die Beats schlugen sich.
     Der alte Ton-Ausgleich (dynaudnorm) ist abgeschafft.
     Bluetooth und W1 stehen auf 100 %, die Lautstärke stellt der Betreiber
     selbst am Handy ein (ab 70 % in 3er-Schritten).

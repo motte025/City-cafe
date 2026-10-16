@@ -7406,7 +7406,12 @@
         let nlFern = null;            // { videoId, titel, bisWann } - Wunsch vom Handy
         // Ton des Nightlife-Videos: Lautstaerke 0-100 und Lautheitsausgleich.
         // Gilt fuer mpv wie fuers Embed und ueberlebt einen Neustart der Seite.
-        let nlTon = { vol: 100, lautheit: false };
+        // limiter: sehr leise Songs bis 2 dB ueber die Spitzen anheben (Supervisor),
+        // blende: Ueberblendung zwischen Songs in Sekunden (4/6/9) - beides 16.10.2026.
+        let nlTon = { vol: 100, lautheit: false, limiter: true, blende: 4 };
+        function nlTonWunschSetzen(id) {
+            window.nlTonWunsch = { id, vol: nlTon.vol, lautheit: nlTon.lautheit, limiter: nlTon.limiter, blende: nlTon.blende };
+        }
         // Twitch-Ton an/aus (DJ-Fernbedienung). Auf der Box spielt mpv den
         // Stream; der Supervisor liest window.nlTonWunsch. Solange der DJ-Slot
         // laeuft und der Ton aus sein soll, meldet der Getter deshalb
@@ -7420,11 +7425,11 @@
             configurable: true,
             set(v) { nlTonBasis = v; },
             get() {
-                const basis = nlTonBasis || { id: 'standard', vol: 100, lautheit: false };
+                const basis = nlTonBasis || { id: 'standard', vol: 100, lautheit: false, limiter: true, blende: 4 };
                 let djLaeuft = false;
                 try { djLaeuft = mediaStateIndex === DJ_SLOT_INDEX; } catch (e) {}
                 if (!djStumm || !djLaeuft) return basis;
-                return { id: basis.id + '-dj-stumm', vol: 0, lautheit: basis.lautheit };
+                return Object.assign({}, basis, { id: basis.id + '-dj-stumm', vol: 0 });
             }
         });
         try {
@@ -7432,7 +7437,9 @@
             if (gespeichert && typeof gespeichert === 'object') {
                 nlTon.vol = Math.max(0, Math.min(100, Number(gespeichert.vol) || 100));
                 nlTon.lautheit = false;   // Ausgleich abgeschafft: leise Songs hebt der Supervisor an
-                window.nlTonWunsch = { id: 'gespeichert', vol: nlTon.vol, lautheit: nlTon.lautheit };
+                if (typeof gespeichert.limiter === 'boolean') nlTon.limiter = gespeichert.limiter;
+                if ([4, 6, 9].includes(gespeichert.blende)) nlTon.blende = gespeichert.blende;
+                nlTonWunschSetzen('gespeichert');
             }
         } catch (e) {}
         let nlFernVerb = null;
@@ -7467,6 +7474,8 @@
                 ueberMpv: nlExtern(),
                 lautstaerke: nlTon.vol,
                 lautheit: nlTon.lautheit,
+                limiter: nlTon.limiter,
+                blende: nlTon.blende,
                 // Videolaengen, die das Dashboard schon kennt (aus nlDauern) -
                 // damit die Handy-Liste die Laufzeit anzeigen kann, ohne sie
                 // selbst bei YouTube abzufragen.
@@ -7582,7 +7591,9 @@
                     nlTon.vol = Math.max(0, Math.min(100, Number(befehl.lautstaerke) || 0));
                 }
                 nlTon.lautheit = false;   // Ausgleich abgeschafft (04.10.2026)
-                window.nlTonWunsch = { id: befehl.id, vol: nlTon.vol, lautheit: nlTon.lautheit };
+                if (typeof befehl.limiter === 'boolean') nlTon.limiter = befehl.limiter;
+                if ([4, 6, 9].includes(Number(befehl.blende))) nlTon.blende = Number(befehl.blende);
+                nlTonWunschSetzen(befehl.id);
                 try { nlPlayer.setVolume(nlTon.vol); } catch (e) {}   // Rueckfall im Browser
                 try { localStorage.setItem('cityCafeNlTon', JSON.stringify(nlTon)); } catch (e) {}
                 nlFernStatusMelden();

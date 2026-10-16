@@ -375,7 +375,12 @@
         <summary>🔊 Ton</summary>
         <div class="feldname">Lautstärke <span id="lautwert">100 %</span></div>
         <input type="range" id="laut" min="0" max="100" step="1" value="100">
-        <div class="hinweis">Leise Songs hebt der Screen automatisch an (ohne Übersteuern).</div>
+        <div class="hinweis">Alle Songs bringt der Screen automatisch auf dieselbe Lautstärke (ohne Übersteuern).</div>
+        <div class="feldname">Limiter (sehr leise Songs bis 2 dB mehr)</div>
+        <div class="zeiten" id="limiter"></div>
+        <div class="feldname">Überblendung zwischen Songs</div>
+        <div class="zeiten" id="blende"></div>
+        <div class="hinweis">Kurz: die Songs überlappen kaum, die Beats stoßen sich nicht.</div>
     </details>
     <details class="nur-chef">
         <summary>⏩ Vor- und zurückspulen</summary>
@@ -424,7 +429,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-15-qr1';
+    var FASSUNG = '2026-10-16-ton1';
     // Schriftgroesse je Geraet (A-/A+ oben): vergroessert die ganze Seite (CSS zoom),
     // gemerkt im Browser des Geraets (Handy und Tablet unabhaengig, Wunsch 05.10.2026).
     (function () {
@@ -1476,6 +1481,18 @@
           hoehe, function (w) { hoehe = w; qualitaetSenden(); });
     reihe('bildraten', [{ wert: 0, text: 'Egal' }, { wert: 60, text: '60 fps' }, { wert: 30, text: '30 fps' }],
           fps, function (w) { fps = w; qualitaetSenden(); });
+    // Limiter und Ueberblendung (16.10.2026): gehen als "ton"-Befehl an den TV, der
+    // Supervisor wendet sie an. Die Anzeige folgt dem Status des TVs.
+    function tonReiheZeigen(box, wert) {
+        [].forEach.call(el(box).children, function (k) { k.className = k.dataset.wert === String(wert) ? 'aktiv' : ''; });
+    }
+    reihe('limiter', [{ wert: true, text: 'An' }, { wert: false, text: 'Aus' }], true,
+          function (w) { senden({ aktion: 'ton', limiter: w }); });
+    reihe('blende', [{ wert: 4, text: 'Kurz 4 s' }, { wert: 6, text: 'Mittel 6 s' }, { wert: 9, text: 'Lang 9 s' }], 4,
+          function (w) { senden({ aktion: 'ton', blende: w }); });
+    ['limiter', 'blende'].forEach(function (box) {
+        [].forEach.call(el(box).children, function (k, i) { k.dataset.wert = String([[true, false], [4, 6, 9]][box === 'limiter' ? 0 : 1][i]); });
+    });
     // Lautstaerke-Stufen: bis 70 % in 5er-, darueber in 3er-Schritten (70, 73 ... 97, 100).
     var LAUT_STUFEN = [];
     for (var ls = 0; ls < 70; ls += 5) LAUT_STUFEN.push(ls);
@@ -1631,6 +1648,8 @@
                 el('lautwert').textContent = s.lautstaerke + ' %';
                 el('laut-jetzt').textContent = s.lautstaerke + ' %';
             }
+            if (typeof s.limiter === 'boolean') tonReiheZeigen('limiter', s.limiter);
+            if (typeof s.blende === 'number') tonReiheZeigen('blende', s.blende);
             if (s.bluetooth && typeof s.bluetooth === 'object') {
                 el('btstatus').textContent = s.bluetooth.text || (s.bluetooth.verbunden ? 'verbunden' : 'nicht verbunden');
             }
