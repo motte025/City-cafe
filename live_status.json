@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T11:42:46Z",
+  "checked_at": "2026-10-16T11:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,13 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Live: Lainey Wilson",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wunderschöner Freitag   <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
     },
     {
       "platform": "twitch",
@@ -24,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wunderschöner Freitag   <3 - !dc !peepo !linktree !shop",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Space Lions Techno Party.. Well its about Time!! !! dopamine boost",
       "game": "DJs"
     }
   ]
