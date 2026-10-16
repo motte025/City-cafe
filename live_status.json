@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T11:57:45Z",
+  "checked_at": "2026-10-16T12:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "Space Lions Techno Party.. Well its about Time!! !! dopamine boost",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     }
   ]
