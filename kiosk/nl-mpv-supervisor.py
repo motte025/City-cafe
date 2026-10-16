@@ -115,6 +115,7 @@ MPV_SOCK_XF = "/tmp/mpv-nl-xf.sock"
 # ist deshalb der Standard.
 XF_SEK = 4
 XF_ERLAUBT = (4, 6, 9)
+XF_TON_FENSTER_SEK = 2.0   # so lange wechselt der Ton (beide hoerbar laut: ~1/3 davon)
 MPV_APP = {"id": "mpv"}
 # Watchdog: so lange darf mpv bis zum ersten Bild bzw. ohne Fortschritt
 # brauchen, bevor es abgeschossen wird und das YouTube-Embed weiterlaeuft.
@@ -1395,11 +1396,19 @@ def ueberblenden(xf, target, page_id, vol):
         # drehte der Faden den inzwischen neu gestarteten Player leise.
         if xf.get("abbruch"):
             return
-        p = min(1.0, (time.time() - beginn) / dauer)
-        # Gleiche Gesamtlautstaerke (equal power): Amplituden cos/sin. mpv rechnet
-        # die Lautstaerke kubisch (Amplitude = (v/100)^3), daher die dritte Wurzel.
+        t = time.time() - beginn
+        p = min(1.0, t / dauer)
+        # DJ-Kurve (16.10.2026): der Ton wechselt nur in einem kurzen Fenster um die Mitte
+        # der Blende, wo der neue Song mit seiner Musik einsetzt - davor bleibt der alte
+        # voll, danach ist er weg. Ueber die ganze Blende verteilt liefen beide Songs ein
+        # Drittel der Zeit hoerbar gleichzeitig, und die Beats schlugen sich. Das Bild
+        # blendet weiter ueber die ganze Laenge.
+        # Im Fenster gleiche Gesamtlautstaerke (equal power): Amplituden cos/sin. mpv
+        # rechnet die Lautstaerke kubisch (Amplitude = (v/100)^3), daher die dritte Wurzel.
         # Linear (v*(1-p) / v*p) brach die Lautstaerke in der Mitte um ~12 dB ein.
-        alt_a, neu_a = math.cos(p * math.pi / 2), math.sin(p * math.pi / 2)
+        fenster = min(XF_TON_FENSTER_SEK, dauer * 0.4)
+        q = min(1.0, max(0.0, (t - (dauer - fenster) / 2) / fenster))
+        alt_a, neu_a = math.cos(q * math.pi / 2), math.sin(q * math.pi / 2)
         mpv_befehl("set_property", "volume", round(vol * max(0.0, alt_a) ** (1 / 3), 1))
         mpv_befehl("set_property", "volume", round(vol * max(0.0, neu_a) ** (1 / 3), 1), sock=MPV_SOCK_XF)
         sway(f'[app_id="{xf["app"]}"]', "opacity", f"{p:.2f}")

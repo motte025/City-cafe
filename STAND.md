@@ -286,6 +286,9 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   - **Überblendung am Handy einstellbar (16.10.2026):** kurz 4 s (Standard),
     mittel 6 s, lang 9 s. Mit den bisherigen festen 9 s liefen beide Songs
     rund 4 s fast voll übereinander und die Beats schlugen sich.
+    Dazu DJ-Kurve: der Ton wechselt nur in einem 2-s-Fenster um den
+    Musikbeginn des neuen Songs (beide hörbar laut nur ~0,5 s), das Bild
+    blendet über die ganze Länge.
     Der alte Ton-Ausgleich (dynaudnorm) ist abgeschafft.
     Bluetooth und W1 stehen auf 100 %, die Lautstärke stellt der Betreiber
     selbst am Handy ein (ab 70 % in 3er-Schritten).
