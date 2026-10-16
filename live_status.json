@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-16T11:37:45Z",
+  "checked_at": "2026-10-16T11:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wunderschöner Freitag   <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
