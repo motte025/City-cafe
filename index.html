@@ -9303,7 +9303,12 @@
                                       songtitel: jetzt.songtitel, quelle: jetzt.quelle, liste: jetzt.liste || '' };
                         ytmWeiter();
                     } else {
-                        ytmStartWennFrei();      // Wuensche kamen, waehrend der TV aus war
+                        // Wuensche kamen, waehrend der TV aus war - aber nur echte Wuensche
+                        // NACH dem Stopp. Die Playlist-Titel bleiben beim Stopp in der Schlange;
+                        // frueher startete jedes Neuladen (auch das Selbst-Update) die
+                        // gestoppte Musik damit neu (16.10.2026).
+                        const seit = (jetzt && Number(jetzt.ts)) || 0;
+                        if (ytm.eintraege.some(e => e.quelle !== 'playlist' && Number(e.ts || 0) > seit)) ytmStartWennFrei();
                     }
                 }, 4000);
             }).catch(() => {});
