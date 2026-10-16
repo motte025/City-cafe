@@ -33,7 +33,7 @@ Antwortsprache im Gespräch: Deutsch.
 | Datei / Ordner | Wofür |
 | --- | --- |
 | `index.html` | Das Dashboard selbst: Rotation, alle Widgets, Verbindung zu den Fernbedienungen |
-| `fernbedienung.html` | Sammel-Fernbedienung mit vier Reitern (🎵 Musik, DJ, Hos'n Obe, Roulette) |
+| `fernbedienung.html` | Sammel-Fernbedienung: Startseite mit Kacheln (🎵 Musik, DJ, Roulette, Hos'n Obe, Chef: Übersicht), die Steuerung öffnet beim Antippen, „← Start" bzw. die Zurück-Taste führt zurück (seit 16.10.2026); zeigt nur Screens, die sich in den letzten 3 Tagen gemeldet haben |
 | `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef |
 | `yt-fernbedienung-net.js` | Firebase-Pfade der Musik (`yt/…`, `chef/…`) |
 | `yt-warteschlange.js` | Reihenfolge-Logik der Musik (Warteschlange, Radio, Vorschau), Tests in `yt-warteschlange.test.js` |
