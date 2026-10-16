@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-16T19:02:45Z",
+  "checked_at": "2026-10-16T19:17:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music Live: Lainey Wilson",
-      "game": "Music"
-    },
     {
       "platform": "twitch",
       "channel": "sintica",
@@ -17,9 +10,23 @@
     },
     {
       "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live: Lainey Wilson",
+      "game": "Music"
+    },
+    {
+      "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "⭐ WEEKEND STARTER - 180 Minuten Version  (🇩🇪 / 🇺🇸) ⭐ !Shakes !Holy !Moumint !Shop !Socials",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "COUNTDOWN TO HALLOWEEN",
       "game": "DJs"
     },
     {
@@ -83,13 +90,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "COUNTDOWN TO HALLOWEEN",
       "game": "DJs"
     }
   ]
