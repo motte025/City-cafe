@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-17T13:42:47Z",
+  "checked_at": "2026-10-17T13:57:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Bass auf die Ohren | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     },
     {
@@ -17,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 HARDSTYLE ft. HARDTECHNO ☆ !naturtreu 🔴🔴",
       "game": "DJs"
     }
   ]
