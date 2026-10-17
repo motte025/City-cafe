@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-17T16:32:45Z",
+  "checked_at": "2026-10-17T16:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Space Lions Techno Party.. Well its about Time!! !! dopamine boost",
       "game": "DJs"
     }
   ]
