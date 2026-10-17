@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-17T20:47:45Z",
+  "checked_at": "2026-10-17T20:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Live On Stage - 90er Party - Westpark Ingolstadt",
       "game": "DJs"
     }
   ]
