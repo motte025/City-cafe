@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-17T02:07:47Z",
+  "checked_at": "2026-10-17T02:27:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "nyybeats",
       "name": "NyyBeats",
       "title": "🔥♡ GOBLIN HOURS BIG YAPS AND TUNES🔥 !mods !mercy !tip",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "🦇I VANT TO SUCK YOUR BLOOD🩸 !patreon",
       "game": "DJs"
     },
     {
@@ -20,13 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "jessu",
-      "name": "Jessu",
-      "title": "🦇I VANT TO SUCK YOUR BLOOD🩸 !patreon",
       "game": "DJs"
     }
   ]
