@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-17T01:17:45Z",
+  "checked_at": "2026-10-17T01:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "💀🕷️ SPOOKY GOTH NIGHT 🕷️💀 REQUESTS OPEN !request | !tip | !spawn | !checkin | !patreon | !youtube | #6of ChazzyWeen 👻",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "💀🕷️ SPOOKY GOTH NIGHT 🕷️💀 REQUESTS OPEN !request | !tip | !spawn | !checkin | !patreon | !youtube | #6of ChazzyWeen 👻",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
