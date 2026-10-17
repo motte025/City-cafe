@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-10-17T07:07:45Z",
+  "checked_at": "2026-10-17T07:22:45Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
       "game": "DJs"
     },
     {
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
