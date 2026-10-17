@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-17T22:52:45Z",
+  "checked_at": "2026-10-17T23:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Live On Stage - 90er Party - Westpark Ingolstadt",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "SCHRANZ IS BACK MIT FELIX KRÖCHER",
       "game": "DJs"
     },
     {
