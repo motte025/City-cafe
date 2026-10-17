@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-17T17:07:46Z",
+  "checked_at": "2026-10-17T17:27:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴 HARDSTYLE ft. HARDTECHNO ☆ !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wochenende! Wir reißen die Partygarage ab! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -34,13 +41,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wochenende! Wir reißen die Partygarage ab! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
