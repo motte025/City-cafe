@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-17T02:02:47Z",
+  "checked_at": "2026-10-17T02:07:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "🦇I VANT TO SUCK YOUR BLOOD🩸 !patreon",
       "game": "DJs"
     }
   ]
