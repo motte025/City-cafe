@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-17T07:02:45Z",
+  "checked_at": "2026-10-17T07:07:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "jessu",
-      "name": "Jessu",
-      "title": "🦇I VANT TO SUCK YOUR BLOOD🩸 !patreon",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "musikinfection",
@@ -20,6 +13,13 @@
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "DJs after work mit @dj_falk - Zu Gast @nickschwenderling",
       "game": "DJs"
     }
   ]
