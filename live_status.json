@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-17T12:52:45Z",
+  "checked_at": "2026-10-17T13:07:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Bass auf die Ohren | !holy",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "musikinfection",
