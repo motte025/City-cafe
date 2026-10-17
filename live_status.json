@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-17T19:37:46Z",
+  "checked_at": "2026-10-17T19:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "Space Lions Techno Party.. Well its about Time!! !! dopamine boost",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Live On Stage - 90er Party - Westpark Ingolstadt",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Live On Stage - 90er Party - Westpark Ingolstadt",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "Space Lions Techno Party.. Well its about Time!! !! dopamine boost",
       "game": "DJs"
     },
     {
