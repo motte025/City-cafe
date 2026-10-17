@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-17T00:32:49Z",
+  "checked_at": "2026-10-17T00:42:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "COUNTDOWN TO HALLOWEEN",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ GOBLIN HOURS BIG YAPS AND TUNES🔥 !mods !mercy !tip",
       "game": "DJs"
     },
     {
