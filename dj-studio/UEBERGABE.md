@@ -71,7 +71,7 @@ Grundlage ist die Vollbild-Umschaltung aus YOUTUBE-MUSIK-SETUP.md 6.8:
 
 Die Box zuhause ist eine Kopie des W1 und muss zuerst auf den aktuellen Stand. Dabei vier Fallen beachten:
 
-1. **Raum:** In `~/.config/citycafe.env` (Benutzer `citycafe`) muss `CITYCAFE_RAUM=zuhause` stehen, **nicht** `city-cafe`. Sonst hören Café-TV und Test-Box auf dieselbe Fernbedienung und spielen beide los. Ohne Eintrag gilt `zuhause` (`kiosk/citycafe-chromium`).
+1. **Raum:** In `~/.config/citycafe.env` (Benutzer `citycafe`) muss `CITYCAFE_RAUM=zuhause` stehen, **nicht** `city-cafe`. Sonst hören Café-TV und Test-Box auf dieselbe Fernbedienung und spielen beide los. Ohne Eintrag gilt `zuhause` (`kiosk/citycafe-chromium`). Auf der Fernbedienung oben den Bildschirm-Knopf **„Zuhause“** wählen (Bildschirm-Auswahl in `fernbedienung.html`, gemerkt als `fbRaum`). Die Chef-Anmeldung gilt je Raum (`djremote/<raum>/chef`), also im Raum `zuhause` einmal mit PIN anmelden.
 2. **Nächtliches Update:** `citycafe-update.timer` holt jeden Morgen um 8:30 den Supervisor aus `main` und würde Test-Änderungen überschreiben. Während des Tests in `/etc/citycafe-update.conf` abschalten.
 3. **Dashboard vom Branch statt von GitHub Pages:** Standard ist `https://motte025.github.io/City-cafe/`, also `main`. Für den Test den Repo-Klon auf `dj-studio` lokal ausliefern und `CITYCAFE_URL=http://127.0.0.1:8090/index.html` setzen (im Starter so vorgesehen). Den Supervisor ebenfalls aus dem Klon nehmen.
 4. **Tailscale:** Läuft die Kopie mit derselben Tailscale-Kennung wie „city-cafe-w1“, gibt es zwei Geräte unter einem Namen. Prüfen und die Kopie gegebenenfalls umbenennen oder neu anmelden.
