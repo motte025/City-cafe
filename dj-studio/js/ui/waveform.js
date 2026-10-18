@@ -54,7 +54,7 @@ export class DetailWelle {
     g.clearRect(0, 0, w, h);
     const tr = d.track;
     if (!tr) return hinweis(g, w, h, 'KEIN TITEL GELADEN');
-    if (!tr.wf) return hinweis(g, w, h, 'WAVEFORM NICHT VERFÜGBAR');
+    if (!tr.wf) return hinweis(g, w, h, tr.wfHinweis || 'WAVEFORM NICHT VERFÜGBAR');
     const wf = tr.wf, mitteY = h / 2, H = h * 0.46;
     const sekProPx = this.zoom / w;
     const t0 = d.pos - this.zoom / 2;

@@ -2508,6 +2508,13 @@
         .ytm-shorts.laedt .ytm-shorts-rahmen > div, .ytm-shorts.laedt .ytm-shorts-rahmen iframe { opacity: 0; }
         .ytm-seite-fuss { margin-top: 12px; font-size: 16px; font-weight: 600; color: #94a3b8; }
 
+        /* DJ-Modus (nur Raum zuhause): das DJ Studio als Ebene, das Video (mpv) im
+           Studio-Videofenster. Lage = Bild 2 [557, 85, 557, 298] * 1920/1672. */
+        #ytm-dj { display: none; }
+        body.ytm-an.ytm-dj #ytm-dj { display: block; position: absolute; inset: 0; z-index: 520; overflow: hidden; background: #05070d; }
+        #ytm-dj iframe { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; border: 0; }
+        #yt-dj-video { position: absolute; left: 639.6px; top: 97.6px; width: 639.6px; height: 342.2px; background: #000; }
+
         /* Vollbild-Ansicht */
         #ytm-vollbild { display: none; }
         body.ytm-an.ytm-vollbild #ytm-vollbild {
@@ -3301,6 +3308,10 @@
             <!-- Werbung unten statt Radio-Mix (siehe musikWerbungTakt) -->
             <div class="ytv-termine" id="ytv-termine"></div>
         </div>
+
+        <!-- DJ-Modus der YouTube-Musik (nur Raum zuhause): das Studio (dj-studio/?tv)
+             baut ytmDjRahmen() erst beim Einschalten ein; mpv liegt ueber #yt-dj-video. -->
+        <div id="ytm-dj"><div id="yt-dj-video"></div></div>
 
         <div id="mittagsteller-fullscreen">
             <img src="mittagsteller-querformat.jpg" alt="Gasthaus Reiterklause Mittagsteller">
@@ -7818,6 +7829,9 @@
                     gespielt: [], letzterWunschTs: 0, seedVonWunsch: false };
         let ytmPausiert = false;
         let ytmVollbild = YT_VOLLBILD_STANDARD;
+        // DJ-Modus: vorerst nur im Raum zuhause (Test), im Cafe nie.
+        const YTM_DJ_ERLAUBT = NL_FERN_RAUM === 'zuhause';
+        let ytmDj = false;
         // Rechte Karte im Widget: 'songs' = Aehnliche Songs, 'fotos' = Fotos aus der
         // Drive-Galerie, 'shorts' = YouTube Shorts (stumm). Der Chef schaltet am Handy um.
         let ytmSeite = 'songs';
@@ -8021,7 +8035,7 @@
                 s.fuerSong = song; s.kanaeleLeer = ''; s.fehler = 0; s.sperreBis = 0;
                 s.vorrangFuer = song;           // und seine Shorts sollen als Naechstes kommen
             }
-            const erlaubt = ytmAktiv() && !ytmVollbild && !spiel && !ytmSpielPause;
+            const erlaubt = ytmAktiv() && !ytmVollbild && !ytmDj && !spiel && !ytmSpielPause;
             ytmShortsPlayerBauen();
             ytmShortsErgebnis();
             if (erlaubt && s.vorrangFuer && s.vorrangFuer === song) {
@@ -8149,6 +8163,7 @@
                 posSek: Math.round(st.pos),
                 pausiert: ytmPausiert,
                 vollbild: ytmVollbild,
+                dj: ytmDj,
                 seite: ytmSeite,
                 shorts: ytmSeite === 'shorts' ? ytmShorts.status : '',   // ok | suche | leer (Hinweis am Handy)
                 ambi: ytmAmbi,
@@ -8641,7 +8656,7 @@
         function ytmTakt() {
             ytmErgebnissePruefen();
             ytmPlaylistTitelPruefen();
-            if (ytmSeite === 'fotos' && ytmAktiv() && !ytmVollbild && Date.now() >= ytmFotoNaechste) {
+            if (ytmSeite === 'fotos' && ytmAktiv() && !ytmVollbild && !ytmDj && Date.now() >= ytmFotoNaechste) {
                 ytmFotoNaechste = Date.now() + 8000;   // alle 8 s ein neues Foto
                 ytmFotoWeiter();
             }
@@ -8832,13 +8847,15 @@
                 ytmMelden();
                 return;
             }
-            if (was === 'vollbild' || was === 'normal') {
+            if (was === 'vollbild' || was === 'normal' || was === 'dj') {
                 // Erst dem Supervisor "Video ausblenden" sagen, 250 ms spaeter umbauen -
                 // so liegt das mpv-Fenster nie sichtbar an der alten Stelle.
-                if (ytmVollbild === (was === 'vollbild')) return;
+                if (was === 'dj' && !YTM_DJ_ERLAUBT) return;
+                if (ytmVollbild === (was === 'vollbild') && ytmDj === (was === 'dj')) return;
                 window.nlMpvAusblenden = Date.now();
                 setTimeout(() => {
                     ytmVollbild = was === 'vollbild';
+                    ytmDj = was === 'dj';
                     ytmAnzeigen();
                     ytmMelden();
                 }, nlExtern() ? 250 : 0);
@@ -9033,14 +9050,16 @@
             const body = document.body;
             body.classList.toggle('ytm-an', an);
             body.classList.toggle('ytm-vollbild', an && ytmVollbild);
+            body.classList.toggle('ytm-dj', an && ytmDj);
             body.classList.toggle('ytm-browser', an && !nlExtern());
             body.classList.toggle('ytm-qr-an', an && ytmQrAn);
             body.classList.toggle('ytm-ambi', an && ytmAmbi);
             window.nlAmbiAn = an && ytmAmbi;   // Supervisor misst nur dann (normal und Vollbild)
             // Supervisor: welche Flaeche gerade das Video traegt (6.8).
-            window.nlMpvFlaeche = an && ytmVollbild ? 'yt-vollbild-video' : 'nl-player-frame';
+            window.nlMpvFlaeche = an && ytmDj ? 'yt-dj-video' : an && ytmVollbild ? 'yt-vollbild-video' : 'nl-player-frame';
             const vb = document.getElementById('ytm-vollbild');
             if (vb) vb.classList.toggle('active', an && ytmVollbild);
+            ytmDjRahmen(an && ytmDj);
             if (an !== ytmWarAktiv) {
                 ytmWarAktiv = an;
                 const label = document.getElementById('ticker-label-left');
@@ -9116,6 +9135,39 @@
             if (vr) vr.innerHTML = ytmRadioListe(5).map(ytmKachelzeile).join('');
             ytmLeisteZeichnen();
             ytmZeitAnzeigen();
+            ytmDjSenden();
+        }
+
+        // DJ-Modus: Studio nur bei Bedarf laden (im Cafe nie) und mit Daten versorgen.
+        // Das Studio zeigt nur an; der Ton bleibt bei mpv (dj-studio/js/tv.js).
+        function ytmDjRahmen(an) {
+            const ebene = document.getElementById('ytm-dj');
+            if (!ebene) return;
+            ebene.classList.toggle('active', an);
+            const rahmen = ebene.querySelector('iframe');
+            if (an && !rahmen) {
+                const f = document.createElement('iframe');
+                f.src = 'dj-studio/?tv';
+                f.setAttribute('tabindex', '-1');
+                f.addEventListener('load', ytmDjSenden);
+                ebene.insertBefore(f, ebene.firstChild);
+            } else if (!an && rahmen) rahmen.remove();
+        }
+        function ytmDjSenden() {
+            const f = ytmDj && document.querySelector('#ytm-dj iframe');
+            if (!f || !f.contentWindow || !ytm.jetzt) return;
+            const titel = t => {
+                const gj = ytmGenreJahr(t) || {};
+                return { videoId: t.videoId || '', titel: t.songtitel || t.titel || '', kuenstler: t.kuenstler || t.kanal || '',
+                         genre: gj.genre || '', jahr: gj.jahr || null, dauer: YTW.sekunden(t) || 0 };
+            };
+            const st = ytmStand();
+            const vor = YTW.vorschau(ytm, 12, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
+            const jetzt = Object.assign(titel(ytm.jetzt), { dauer: st.dauer, pos: st.pos, pausiert: ytmPausiert });
+            try {
+                f.contentWindow.postMessage({ typ: 'ytm-dj', jetzt, naechster: vor[0] ? titel(vor[0]) : null,
+                                              schlange: vor.slice(1).map(titel) }, location.origin);
+            } catch (e) {}
         }
 
         // 6.2/6.3 Obere Leiste: Einblendung (Tor 15 s, Wunsch 5 s) oder "Als Naechstes".
@@ -9173,6 +9225,7 @@
             if (inEl) inEl.textContent = 'in ' + rest;
             const cd = document.getElementById('ytv-countdown');
             if (cd) cd.textContent = rest;
+            ytmDjSenden();
             const uhr = document.getElementById('ytv-uhr');
             if (uhr) uhr.textContent = new Date().toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Vienna' });
             // Einblendungen nacheinander, Tor zuerst.
@@ -9273,10 +9326,11 @@
         // Ebenen abbauen, wenn keine Musik laeuft (auch aus runMasterSequence).
         function ytmEbenenAbbauen() {
             if (ytmAktiv() && !ytmSpielPause) return;
-            document.body.classList.remove('ytm-an', 'ytm-vollbild', 'ytm-browser', 'ytm-qr-an', 'ytm-ambi');
+            document.body.classList.remove('ytm-an', 'ytm-vollbild', 'ytm-dj', 'ytm-browser', 'ytm-qr-an', 'ytm-ambi');
             window.nlAmbiAn = false;
             const vb = document.getElementById('ytm-vollbild');
             if (vb) vb.classList.remove('active');
+            ytmDjRahmen(false);
             window.nlMpvFlaeche = 'nl-player-frame';
             if (ytmWarAktiv) ytmAnzeigen();
         }
@@ -9330,6 +9384,7 @@
                 YT_REMOTE_NET.aufNeueWuenscheHoeren(verb, NL_FERN_RAUM, ytmWunschBearbeiten);
                 if (jetzt) {
                     ytmVollbild = !!jetzt.vollbild;
+                    ytmDj = YTM_DJ_ERLAUBT && !!jetzt.dj;
                     ytmSeite = (jetzt.seite === 'fotos' || jetzt.seite === 'shorts') ? jetzt.seite : 'songs';
                     ytmAmbi = !!jetzt.ambi;
                     ytm.gespielt = Array.isArray(jetzt.gespielt) ? jetzt.gespielt : [];

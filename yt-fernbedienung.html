@@ -277,6 +277,10 @@
                 <button type="button" class="still" id="k-ansicht">⛶ Vollbild</button>
                 <button type="button" class="still" id="k-seite">🖼️ Fotos</button>
             </div>
+            <!-- DJ-Modus: TV zeigt das DJ Studio, Video im Studio-Fenster (vorerst nur zuhause) -->
+            <div class="zeile2" id="dj-zeile" hidden>
+                <button type="button" class="still" id="k-dj">🎛 DJ-Modus</button>
+            </div>
             <div class="zeile2">
                 <button type="button" class="still" id="k-shorts">📱 Shorts rechts</button>
             </div>
@@ -764,6 +768,7 @@
         el('jetzt-liste').textContent = lq;
         el('k-pause').textContent = jetzt && jetzt.pausiert ? '▶' : '⏸';
         el('k-ansicht').textContent = jetzt && jetzt.vollbild ? '▭ Normal' : '⛶ Vollbild';
+        el('k-dj').textContent = jetzt && jetzt.dj ? '▭ Normal' : '🎛 DJ-Modus';
         // Rechte Karte im Widget: Fotos aus der Drive-Galerie <-> Aehnliche Songs
         el('k-seite').textContent = jetzt && jetzt.seite === 'fotos' ? '🎶 Songs rechts' : '🖼️ Fotos rechts';
         el('k-shorts').textContent = jetzt && jetzt.seite === 'shorts' ? '📱 Shorts aus' : '📱 Shorts rechts';
@@ -956,6 +961,8 @@
     });
     el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⇄ Blende zum nächsten Song …', ''); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
+    el('dj-zeile').hidden = RAUM !== 'zuhause';
+    el('k-dj').addEventListener('click', function () { musik(jetzt && jetzt.dj ? 'normal' : 'dj'); });
     // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
     el('k-radio').addEventListener('click', function () {
         if (!jetzt || !jetzt.videoId || jetzt.modus === 'aus') { melden('Gerade läuft keine Musik.', 'nein'); return; }

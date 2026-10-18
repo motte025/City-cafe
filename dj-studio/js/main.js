@@ -12,6 +12,11 @@ import { leisteBauen } from './ui/leiste.js';
 import { einstellungen, schliessen } from './ui/overlays.js';
 import { texturenLaden } from './texturen.js';
 import { skinAnwenden } from './skin.js';
+import { tvBauen } from './tv.js';
+
+// ?tv: DJ-Modus der YouTube-Musik am Fernseher (eingebettet in index.html).
+// Nur Anzeige - kein eigener Ton, keine Demo-Titel, keine Bedienung.
+const TV = new URLSearchParams(location.search).has('tv');
 
 texturenLaden();
 
@@ -66,6 +71,7 @@ skalieren();
 // Die Klasse muss vor dem Aufbau stehen, damit Meter und Wellen die Bild-Optik waehlen.
 const SKIN = !new URLSearchParams(location.search).has('klassisch');
 buehne.classList.toggle('skin', SKIN);
+document.body.classList.toggle('tv', TV);
 engine.starten(quellen(engine));
 const kopf = kopfBauen(document.getElementById('kopf'), engine);
 const deckA = deckBauen(document.getElementById('deck-a'), 'A', engine, aktionen);
@@ -74,9 +80,11 @@ const mitte = mitteBauen(document.getElementById('mitte'), engine, aktionen);
 leisteBauen(document.getElementById('leiste'), engine, aktionen);
 const automix = automixBauen(engine, aktionen);
 if (SKIN) skinAnwenden();
+const tv = TV ? tvBauen(engine) : null;
+if (TV) engine.ctx.suspend();
 
 // Demo-Titel in die Leiste, die ersten zwei auf die Decks
-(async () => {
+if (!TV) (async () => {
   for (const t of await DEMO.liste()) aktionen.inLeiste(t);
   await aktionen.naechstenLaden('A');
   await aktionen.naechstenLaden('B');
@@ -90,7 +98,7 @@ document.getElementById('start-knopf').addEventListener('click', async () => {
   start.remove();
   document.querySelector('#deck-a .play')?.focus();
 });
-if (new URLSearchParams(location.search).has('ohneStart')) start.remove();
+if (TV || new URLSearchParams(location.search).has('ohneStart')) start.remove();
 
 // ---- Tastatur --------------------------------------------------------------
 const LOOPS = { 1: ['A', 4], 2: ['A', 8], 3: ['A', 16], 4: ['A', 32], 7: ['B', 4], 8: ['B', 8], 9: ['B', 16], 0: ['B', 32] };
@@ -126,8 +134,11 @@ function frame() {
   const t = performance.now() / 1000, dt = Math.min(0.1, t - letzte);
   letzte = t;
   requestAnimationFrame(frame);       // zuerst: ein Fehler unten stoppt die Anzeige nicht
-  sicher('engine', () => engine.takt());
-  sicher('automix', () => automix.takt());
+  if (tv) sicher('tv', () => tv.takt());
+  else {
+    sicher('engine', () => engine.takt());
+    sicher('automix', () => automix.takt());
+  }
   const mix = engine.videoMix();
   sicher('kopf', () => kopf.frame(t));
   sicher('deckA', () => deckA.frame(t, dt, mix < 0.5));

@@ -10,6 +10,7 @@ const hash = s => [...String(s)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>>
 
 export function cover(track, groesse = 256) {
   if (!track) return '';
+  if (track.coverUrl) return track.coverUrl;      // echte Titel (TV-Ansicht): Vorschaubild von YouTube
   const key = track.id + '@' + groesse;
   if (cache.has(key)) return cache.get(key);
   const c = document.createElement('canvas');

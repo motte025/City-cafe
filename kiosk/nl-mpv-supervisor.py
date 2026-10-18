@@ -304,6 +304,9 @@ KIOSK_STARTER = "/usr/local/bin/citycafe-chromium"
 TMP_PRUEFUNG_SEKUNDEN = 30 * 60
 TMP_ALTER_SEKUNDEN = 2 * 60 * 60
 
+# Welche FLAECHE gehoert zu window.nlMpvFlaeche (Musik: normal, Vollbild, DJ-Modus)?
+MUSIK_FLAECHE = {"yt-vollbild-video": "yt_voll", "yt-dj-video": "yt_dj"}
+
 # Videoflaeche erst messen, wenn die Einblend-Animation (scale 1.02 -> 1) durch ist.
 RECT_EXPR = """JSON.stringify((() => {
   const v = document.getElementById('%s');
@@ -317,6 +320,8 @@ RECT_EXPR = """JSON.stringify((() => {
 FLAECHE = {"yt": ("media-view-nightlife", "nl-player-frame"),
            # YouTube-Musik im Vollbild (window.nlMpvFlaeche = 'yt-vollbild-video')
            "yt_voll": ("ytm-vollbild", "yt-vollbild-video"),
+           # DJ-Modus (nur Raum zuhause): Videofenster im DJ Studio ('yt-dj-video')
+           "yt_dj": ("ytm-dj", "yt-dj-video"),
            "twitch": ("media-view-djlive", "dj-live-player"),
            "cam": ("media-view-dart-cam", "dart-cam-frame")}
 # Die Dartcam ist ein Live-Strom im Lokal-Netz: faellt sie aus, nach kurzer
@@ -1263,7 +1268,7 @@ def place_mpv(target, app_id=None, sichtbar=True):
 # (python-pillow). Ohne Pillow gibt es einfach keinen QR im Video.
 QR_DATEI = "/tmp/ytm-qr.bgra"
 QR_OVERLAY_ID = 7
-QR_CSS_BREITE = {"yt": 1200, "yt_voll": 1280}   # Videobreite in CSS-Pixeln je Flaeche
+QR_CSS_BREITE = {"yt": 1200, "yt_voll": 1280, "yt_dj": 640}   # Videobreite in CSS-Pixeln je Flaeche
 
 
 def qr_karte_holen(page_id):
@@ -1465,7 +1470,7 @@ def umschalt_waechter():
             if flaeche != alte_flaeche:
                 break
         # Warten, bis die Flaeche zweimal hintereinander gleich gemessen wird
-        art = "yt_voll" if flaeche == "yt-vollbild-video" else "yt"
+        art = MUSIK_FLAECHE.get(flaeche, "yt")
         ziel, vorher, frist = None, None, time.time() + 1.2
         while time.time() < frist:
             time.sleep(0.08)
@@ -2489,8 +2494,8 @@ def main():
             else:
                 # Musik: Normal oder Vollbild? Wechselt die Flaeche, nur Fenster
                 # und QR neu setzen - mpv laeuft weiter (Ton ohne Aussetzer, 6.8).
-                rect_art = "yt_voll" if (art == "yt" and musik
-                                         and state.get("flaeche") == "yt-vollbild-video") else art
+                rect_art = (MUSIK_FLAECHE.get(state.get("flaeche"), art)
+                            if (art == "yt" and musik) else art)
                 if rect_art != flaeche_jetzt:
                     if flaeche_jetzt is not None:
                         log(f"Flaeche: {flaeche_jetzt} -> {rect_art}")

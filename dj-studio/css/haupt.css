@@ -6,3 +6,8 @@
 @import url(studio.css) layer(alt);
 @import url(material.css) layer(alt);
 @import url(skin.css) layer(skin);
+
+/* TV-Ansicht (?tv, DJ-Modus der YouTube-Musik): nur Anzeige, echte Titel */
+body.tv { cursor: none; }
+body.tv .buehne { pointer-events: none; }
+body.tv .demo-badge, body.tv .video-demo, body.tv .demo-marke, body.tv .karte-demo { display: none !important; }
