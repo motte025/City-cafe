@@ -25,6 +25,7 @@ import signal
 import socket
 import struct
 import subprocess
+import tempfile
 import threading
 import time
 import unicodedata
@@ -1930,7 +1931,7 @@ SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
 # auch nach einem Neustart sofort da. Hoechstens SPUR_PLATTE_MB, die aeltesten fliegen raus.
 SPUR_ORDNER = os.environ.get("CITYCAFE_SPUREN", os.path.expanduser("~/.cache/citycafe/spuren"))
 SPUR_PLATTE_MB = 600
-SPUR_VERSION = 2           # hochzaehlen, wenn sich Messung/Format aendern (alte werden neu gemessen)
+SPUR_VERSION = 3           # hochzaehlen, wenn sich Messung/Format aendern (alte werden neu gemessen)
 SPUR_HZ = 200              # Werte je Sekunde (12000 Hz / 60 Samples: genau, ohne Drift)
 SPUR_LESETEMPO = 8         # ffmpeg liest hoechstens 8x so schnell wie abgespielt
 # Kanaele nach amerge: 1 links, 2 rechts, 3 tief, 4 mitte, 5 hoch (Baender aus der Mono-Summe)
@@ -1941,6 +1942,59 @@ SPUR_FILTER = ("aresample=12000,aformat=channel_layouts=stereo,asplit=2[st][mo];
                "[L][R][l][m][h]amerge=inputs=5,asetnsamples=n=60:p=0,"
                "astats=metadata=1:reset=1:measure_perchannel=RMS_level+Peak_level:measure_overall=none,"
                "ametadata=print:file=-")
+
+
+# Tonart (Wunsch 18.10.2026): im selben ffmpeg-Lauf 48 Halbton-Bandpaesse (C3..H6), Energie je
+# Tonklasse, Vergleich mit den Krumhansl-Profilen der 24 Tonarten. Mit Akkorden geprueft (C-Dur,
+# a-Moll richtig); bei echten Songs ungefaehr - oft Paralleltonart oder Quinte daneben.
+TON_NOTEN = list(range(48, 96))
+TON_DUR = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88]
+TON_MOLL = [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17]
+TON_NAMEN = ["C", "Des", "D", "Es", "E", "F", "Fis", "G", "As", "A", "B", "H"]
+CAMELOT_DUR = {0: "8B", 7: "9B", 2: "10B", 9: "11B", 4: "12B", 11: "1B", 6: "2B", 1: "3B", 8: "4B", 3: "5B", 10: "6B", 5: "7B"}
+CAMELOT_MOLL = {9: "8A", 4: "9A", 11: "10A", 6: "11A", 1: "12A", 8: "1A", 3: "2A", 10: "3A", 5: "4A", 0: "5A", 7: "6A", 2: "7A"}
+
+
+def ton_filter(datei):
+    teile = ["aresample=12000,pan=mono|c0=0.5*c0+0.5*c1,asplit=%d%s"
+             % (len(TON_NOTEN), "".join("[k%d]" % i for i in range(len(TON_NOTEN))))]
+    for i, m in enumerate(TON_NOTEN):
+        teile.append("[k%d]bandpass=f=%.2f:width_type=q:w=25[b%d]" % (i, 440 * 2 ** ((m - 69) / 12), i))
+    teile.append("".join("[b%d]" % i for i in range(len(TON_NOTEN)))
+                 + "amerge=inputs=%d,asetnsamples=n=600000:p=0,astats=metadata=1:reset=1:"
+                   "measure_perchannel=RMS_level:measure_overall=none,ametadata=print:file=%s"
+                 % (len(TON_NOTEN), datei))
+    return ";".join(teile)
+
+
+def ton_bestimmen(text):
+    """ametadata-Ausgabe der Bandpaesse -> (camelot, name, guete) oder None."""
+    energie = [0.0] * len(TON_NOTEN)
+    for z in text.splitlines():
+        m = re.match(r"lavfi\.astats\.(\d+)\.RMS_level=(.*)", z)
+        if m:
+            try:
+                v = float(m.group(2))
+            except ValueError:
+                continue
+            if v == v and v > -200:
+                energie[int(m.group(1)) - 1] += 10 ** (v / 10)
+    chroma = [0.0] * 12
+    for i, m in enumerate(TON_NOTEN):
+        chroma[m % 12] += energie[i]
+    if not any(chroma):
+        return None
+
+    def korr(a, b):
+        ma, mb = sum(a) / 12, sum(b) / 12
+        n = math.sqrt(sum((x - ma) ** 2 for x in a) * sum((y - mb) ** 2 for y in b)) or 1
+        return sum((x - ma) * (y - mb) for x, y in zip(a, b)) / n
+    beste = max(((korr(chroma[t:] + chroma[:t], p), t, art)
+                 for t in range(12) for p, art in ((TON_DUR, "Dur"), (TON_MOLL, "Moll"))))
+    g, t, art = beste
+    cam = (CAMELOT_DUR if art == "Dur" else CAMELOT_MOLL)[t]
+    name = TON_NAMEN[t] + ("-Dur" if art == "Dur" else "-Moll")
+    return cam, name, round(g, 2)
 
 
 def spur_bpm(tief, voll, hz=100):
@@ -2031,9 +2085,24 @@ def spur_messen(vid, audio_url, laenge):
     try:
         # -readrate: hoechstens 8-fache Abspielgeschwindigkeit. Voll aufgedreht zog ffmpeg
         # einen Song in ~3 s - die WLAN-Spitzen stoerten den Bluetooth-Ton (gleicher Funkchip).
+        # ein Lauf, zwei Zweige: Studio-Spur (Ausgabe auf stdout) und Tonart (in eine Datei)
+        fd, ton_datei = tempfile.mkstemp(prefix="ton-", suffix=".txt")
+        os.close(fd)
         aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-readrate", str(SPUR_LESETEMPO),
-                              "-i", audio_url, "-vn", "-af", SPUR_FILTER, "-f", "null", "-"],
+                              "-i", audio_url, "-vn", "-filter_complex",
+                              "[0:a]asplit=2[sa][sb];[sa]" + SPUR_FILTER + "[o1];[sb]" + ton_filter(ton_datei) + "[o2]",
+                              "-map", "[o1]", "-f", "null", "-", "-map", "[o2]", "-f", "null", "-"],
                              capture_output=True, text=True, timeout=180)
+        try:
+            with open(ton_datei) as f:
+                ton = ton_bestimmen(f.read())
+        except OSError:
+            ton = None
+        finally:
+            try:
+                os.remove(ton_datei)
+            except OSError:
+                pass
     except (OSError, subprocess.TimeoutExpired) as e:
         log(f"Studio-Spur {vid}: {type(e).__name__}")
         SPUREN.pop(vid, None)
@@ -2069,6 +2138,7 @@ def spur_messen(vid, audio_url, laenge):
     text = json.dumps({
         "version": SPUR_VERSION, "videoId": vid, "proSek": SPUR_HZ, "dauer": round(len(rahmen) / SPUR_HZ, 2),
         "bpm": bpm, "versatz": versatz, "sicher": round(sicher, 2),
+        "camelot": ton[0] if ton else None, "tonart": ton[1] if ton else None, "tonGuete": ton[2] if ton else None,
         # Wellenform linear 0..1 (wie dj-studio/js/analysis.js), Pegel in dBFS
         "spitze": b64([max(a, b) for a, b in zip(lin[0], lin[2])], lambda x: x * 255),
         "tief": b64(lin[5], lambda x: x * 255), "mitte": b64(lin[7], lambda x: x * 255),
@@ -2077,7 +2147,8 @@ def spur_messen(vid, audio_url, laenge):
         "pegelSpitzeR": b64([r[2] for r in rahmen], db_byte), "pegelRmsR": b64([r[3] for r in rahmen], db_byte)})
     SPUREN[vid] = text
     spur_speichern(vid, text)
-    log(f"Studio-Spur {vid}: {len(rahmen) / SPUR_HZ:.0f}s, {bpm} BPM (Sicherheit {sicher:.2f})")
+    log(f"Studio-Spur {vid}: {len(rahmen) / SPUR_HZ:.0f}s, {bpm} BPM (Sicherheit {sicher:.2f}), "
+        f"Tonart {ton[1] + ' ' + ton[0] + ' (' + str(ton[2]) + ')' if ton else '-'}")
 
 
 def seiten_blur_graph(vid):
@@ -2472,9 +2543,11 @@ def main():
                             break
             fertig = [v for v, s in list(SPUREN.items()) if s]
             if fertig and page_id:
-                # Nachsehen, was die Seite schon hat (nach einem Neuladen ist alles weg)
+                # Nachsehen, was die Seite schon hat - in der aktuellen Fassung (nach einem Neuladen
+                # ist alles weg; nach einer neuen SPUR_VERSION liegen dort noch alte Messungen)
                 try:
-                    da = set(json.loads(cdp_eval(page_id, "JSON.stringify(Object.keys(window.nlStudioSpuren || {}))") or "[]"))
+                    da = set(json.loads(cdp_eval(page_id, "JSON.stringify(Object.entries(window.nlStudioSpuren || {})"
+                                                 f".filter(([k, v]) => v && v.version === {SPUR_VERSION}).map(([k]) => k))") or "[]"))
                 except (OSError, ValueError, ConnectionError):
                     da = set(fertig)
                 for s_vid in fertig:

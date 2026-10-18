@@ -9189,8 +9189,9 @@
                 f.gesendet = f.gesendet || new Set();
                 [ytm.jetzt, vor[0]].forEach(t => {
                     const s = t && spuren[t.videoId];
-                    if (s && !f.gesendet.has(t.videoId)) {
-                        f.gesendet.add(t.videoId);
+                    const schl = s && t.videoId + ':' + (s.version || 0);   // neue Fassung = neu senden
+                    if (s && !f.gesendet.has(schl)) {
+                        f.gesendet.add(schl);
                         f.contentWindow.postMessage({ typ: 'ytm-dj-spur', spur: s }, location.origin);
                     }
                 });

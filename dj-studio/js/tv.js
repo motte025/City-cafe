@@ -15,8 +15,8 @@
 //       pegelSpitzeL, pegelRmsL, pegelSpitzeR, pegelRmsR }  - Reihen als base64-Bytes,
 //       siehe spur_messen() im Supervisor.
 //
-// Wellenform, BPM und Pegel sind gemessen (vorab, ueber den ganzen Song), nicht
-// live abgegriffen; eine Tonart gibt es nicht.
+// Wellenform, BPM, Tonart und Pegel sind gemessen (vorab, ueber den ganzen Song), nicht
+// live abgegriffen. Die Tonart ist ungefaehr (oft Paralleltonart oder Quinte daneben).
 
 import { state, bestaetigen } from './store.js';
 
@@ -76,6 +76,7 @@ function spurLesen(roh) {
   const rms = Float32Array.from(pegel[0].leistung, (l, i) => Math.sqrt(Math.max(l, pegel[1].leistung[i])));
   return {
     videoId: s.videoId, bpm: s.bpm, sicher: s.sicher || 0,
+    camelot: s.camelot || null, tonart: s.tonart || null,   // gemessen, ungefaehr (Supervisor ton_bestimmen)
     versatz: taktEins(tief, s.proSek, s.bpm, s.versatz || 0),   // auf die Eins des Takts
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief, mitte: lin(s.mitte), hoch: lin(s.hoch),
           bild: bildWerte(rms, tief, lin(s.hoch)) },
@@ -108,7 +109,8 @@ export function tvBauen(engine) {
       bpm: sp && sp.bpm ? Math.round(sp.bpm) : null,
       bpmMess: sp && sp.bpm && !sicher ? sp.bpm : null,          // ungefaehr: ohne Taktraster
       grid: sicher ? { bpm: sp.bpm, offset: sp.versatz, herkunft: 'messung' } : null,
-      key: null, quelle: 'YOUTUBE', wf: sp ? sp.wf : null,
+      key: sp && sp.camelot ? sp.camelot : null, tonart: sp ? sp.tonart : null,
+      quelle: 'YOUTUBE', wf: sp ? sp.wf : null,
       wfHinweis: 'YOUTUBE · WELLENFORM WIRD GEMESSEN',
       coverUrl: /^[A-Za-z0-9_-]{11}$/.test(t.videoId) ? `https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg` : '',
     };
