@@ -2399,7 +2399,11 @@ def main():
         # DJ-Modus: laufenden und vorgeladenen Song fuer das Studio messen und zustellen.
         if musik and state.get("flaeche") == "yt-dj-video":
             if not (spur_arbeiter is not None and spur_arbeiter.is_alive()):
-                for key, urls in list(cache.items()):
+                # Reihenfolge: der laufende Song zuerst (sonst bleiben Welle und Meter still),
+                # dann der vorgeladene, dann die naechsten der Warteschlange
+                laufend = shown[3:].split("|", 1)[0] if shown and shown.startswith("yt:") else ""
+                reihe = sorted(cache.items(), key=lambda kv: kv[0].split("|", 1)[0] != laufend)
+                for key, urls in reihe:
                     s_vid = key.split("|", 1)[0]
                     if key.endswith("|m") and urls and s_vid not in SPUREN:
                         spur_arbeiter = threading.Thread(target=spur_messen, daemon=True,
@@ -2408,7 +2412,7 @@ def main():
                         break
                 else:
                     # sonst schon die naechsten Songs der Warteschlange (Kanal 2 frueh fuellen)
-                    for s_vid in [str(v) for v in (state.get("analyse") or [])[:2]]:
+                    for s_vid in [laufend] + [str(v) for v in (state.get("analyse") or [])[:2]]:
                         if re.fullmatch(r"[A-Za-z0-9_-]{11}", s_vid) and s_vid not in SPUREN \
                                 and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER:
                             def spur_vorab(vid=s_vid):

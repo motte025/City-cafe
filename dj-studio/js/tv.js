@@ -26,9 +26,10 @@ const XF_TON_FENSTER_SEK = 2.0;
 let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV: 4/6/9 s, kommt mit)
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
-// Pegelanzeige wie am Mischpult: YouTube ist bis 0 dBFS gemastert, darum an den Kanaelen
-// 3 dB Reserve (Trim auf 0). Der Master zeigt den Ton nach der Lautstaerke der Fernbedienung.
-const RESERVE_DB = -3;        // Kanal-Spitzen duerfen bis ca. +3 auf der Skala (Wunsch 18.10.2026)
+// Pegelanzeige: Kanaele und Master folgen der Lautstaerke der Fernbedienung - rot wird es nur
+// bei 100 % (Wunsch 18.10.2026): dann erreichen die Spitzen (YouTube bis 0 dBFS gemastert) an
+// Kanaelen und Master knapp Rot, bei 80 % bleiben sie ~6 dB darunter. Gemessen, 18.10.2026.
+const RESERVE_DB = 0;
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
@@ -201,13 +202,18 @@ export function tvBauen(engine) {
       for (let k = Math.max(0, i - SPITZE_FAECHER + 1); k <= i; k++) s = Math.max(s, p.spitze[k]);
       const von = Math.max(0, i - VU_FAECHER + 1);
       for (let k = von; k <= i; k++) q += p.leistung[k];
-      return { spitze: s > -60 ? Math.pow(10, s / 20) * RESERVE : 0, rms: Math.sqrt(q / (i - von + 1)) * RESERVE };
+      return { spitze: s > -60 ? Math.pow(10, s / 20) : 0, rms: Math.sqrt(q / (i - von + 1)) };
     });
     return { L, R };
   }
+  // Kanal-Meter: gemessener Pegel x Reserve x Lautstaerke am TV
+  function kanalPegel(id) {
+    const p = pegelBei(id), f = RESERVE * lautFaktor();
+    return { L: { spitze: p.L.spitze * f, rms: p.L.rms * f }, R: { spitze: p.R.spitze * f, rms: p.R.rms * f } };
+  }
   for (const id of ['A', 'B']) {
     const de = engine.decks[id];
-    de.pegel = () => pegelBei(id);
+    de.pegel = () => kanalPegel(id);
     de.meterPost.lesen = de.pegel;
     de.meterPre.lesen = de.pegel;
   }
@@ -215,8 +221,7 @@ export function tvBauen(engine) {
     const m = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 }, reduktion: 0 };
     const laut = lautFaktor();
     for (const id of ['A', 'B']) {
-      // Master-Skala hat eigene Reserve (+9 = 0 dBFS): die Kanal-Reserve wieder heraus
-      const p = pegelBei(id), g = engine.xfPegel(id) * laut / RESERVE;
+      const p = pegelBei(id), g = engine.xfPegel(id) * laut;
       for (const k of ['L', 'R']) {
         m[k].spitze = Math.max(m[k].spitze, p[k].spitze * g);
         m[k].rms = Math.sqrt(m[k].rms ** 2 + (p[k].rms * g) ** 2);
@@ -224,6 +229,10 @@ export function tvBauen(engine) {
     }
     return m;
   };
+
+  // Erst jetzt hoert das Studio zu: dem Dashboard Bescheid geben, dann schickt es alles
+  // (vorher gesendete Messungen gingen verloren und galten trotzdem als zugestellt).
+  try { parent.postMessage({ typ: 'ytm-dj-bereit' }, location.origin); } catch (e) {}
 
   return {
     // je Frame statt engine.takt(): Positionen hochrechnen, Blende fahren

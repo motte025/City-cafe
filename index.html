@@ -9153,13 +9153,21 @@
                 const f = document.createElement('iframe');
                 f.src = 'dj-studio/?tv';
                 f.setAttribute('tabindex', '-1');
-                f.addEventListener('load', ytmDjSenden);
                 ebene.insertBefore(f, ebene.firstChild);
             } else if (!an && rahmen) rahmen.remove();
         }
+        // Das Studio meldet sich, sobald es zuhoert (dj-studio/js/tv.js) - erst dann senden.
+        window.addEventListener('message', e => {
+            if (e.origin !== location.origin || !e.data || e.data.typ !== 'ytm-dj-bereit') return;
+            const f = document.querySelector('#ytm-dj iframe');
+            if (!f || f.contentWindow !== e.source) return;
+            f.bereit = true;
+            f.gesendet = new Set();
+            ytmDjSenden();
+        });
         function ytmDjSenden() {
             const f = ytmDj && document.querySelector('#ytm-dj iframe');
-            if (!f || !f.contentWindow || !ytm.jetzt) return;
+            if (!f || !f.contentWindow || !f.bereit || !ytm.jetzt) return;
             const titel = t => {
                 const gj = ytmGenreJahr(t) || {};
                 return { videoId: t.videoId || '', titel: t.songtitel || t.titel || '', kuenstler: t.kuenstler || t.kanal || '',
