@@ -27,10 +27,10 @@ let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV:
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
 // Pegelanzeige: Kanaele und Master zeigen, was aus der Anlage kommt - Song x Lautheitsanpassung
-// (je Song, wie mpv) x Lautstaerke der Fernbedienung. Rot nur bei 100 % und dann kurz: ueber
-// 11 Songs simuliert (18.10.2026) mit 0 dB Reserve im Mittel 1,3 % der Zeit rot, beim
-// lautesten Song 14 %, bei 80 % nie. Rot sind die obersten 3-4 LEDs (ab ca. -2,5 dBFS).
-const RESERVE_DB = 0;
+// (je Song, wie mpv) x Lautstaerke der Fernbedienung. Rot nur bei 100 % und dann "ein bisschen":
+// ueber 11 Songs simuliert (18.10.2026) mit +1 dB im Mittel 4,7 % der Zeit rot, beim
+// lautesten Song 35 %, bei 80 % nie (0 dB: 1,3 % - war zu wenig). Rot = oberste 3-4 LEDs.
+const RESERVE_DB = 1;
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
