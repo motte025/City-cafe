@@ -255,7 +255,9 @@ export class UebersichtWelle {
     if (!tr || !tr.wf) return;
     if (this.fuer !== tr.id + '@' + w + 'x' + h + (TV() ? TV_STIL() : '')) this.vorzeichnen(tr, w, h);
     g.drawImage(this.vorlage, 0, 0);
-    const dauer = tr.dauer || 1;
+    // Gezeichnet ist die Welle ueber die gemessene Laenge (wf.dauer); tr.dauer kann kuerzer sein
+    // (TV: Songende laut Supervisor) - sonst liefe der Kopf der Welle voraus.
+    const dauer = (tr.wf && tr.wf.dauer) || tr.dauer || 1;
     const xp = d.pos / dauer * w;
     g.fillStyle = 'rgba(0,0,0,.5)'; g.fillRect(0, 0, xp, h);
     // Abschnitte (Generator) als feine Marken
