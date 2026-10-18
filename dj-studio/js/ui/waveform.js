@@ -13,21 +13,22 @@ const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 function spalte(wf, b0, b1) {
   b0 = Math.max(0, Math.floor(b0)); b1 = Math.min(wf.faecher, Math.ceil(b1));
   if (b1 <= b0) return null;
-  let sp = 0, t = 0, m = 0, h = 0;
+  let sp = 0, t = 0, m = 0, h = 0, bi = 0;
   for (let b = b0; b < b1; b++) {
+    if (wf.bild && wf.bild[b] > bi) bi = wf.bild[b];
     if (wf.spitze[b] > sp) sp = wf.spitze[b];
     if (wf.tief[b] > t) t = wf.tief[b];
     if (wf.mitte[b] > m) m = wf.mitte[b];
     if (wf.hoch[b] > h) h = wf.hoch[b];
   }
-  return { sp, t, m, h };
+  return { sp, t, m, h, bi };
 }
 
 // Wie spalte(), aber auch fuer Bereiche kleiner als ein Fach (gezoomt): dann das naechste Fach
 function spalteFein(wf, b0, b1) {
   if (b1 - b0 >= 1) return spalte(wf, b0, b1);
   const b = Math.min(wf.faecher - 1, Math.max(0, Math.floor(b0)));
-  return { sp: wf.spitze[b], t: wf.tief[b], m: wf.mitte[b], h: wf.hoch[b] };
+  return { sp: wf.spitze[b], t: wf.tief[b], m: wf.mitte[b], h: wf.hoch[b], bi: wf.bild ? wf.bild[b] : 0 };
 }
 
 function zeichneSpalte(g, x, mitteY, H, s, farben, breite) {
@@ -45,7 +46,70 @@ function zeichneSpalte(g, x, mitteY, H, s, farben, breite) {
 // Strich in Spitzenhoehe, gefaerbt nach dem Verhaeltnis Bass/Mitte/Hoehen, darin ein hellerer
 // Kern fuer die Lautheit. Keine Glaettung - die Feinheit kommt aus den Spitzen (5 ms).
 const TV = () => document.body.classList.contains('tv');
+// Zeichenart (Vergleich 18.10.2026): 'striche' | 'schichten' | 'misch' | 'schichtenFein'
+const TV_STIL = () => window.welleStil || 'bild';
 function zeichneTv(g, spalten, mitteY, H, farben) {
+  const stil = TV_STIL();
+  if (stil === 'bild') return zeichneNadeln(g, spalten, mitteY, H, farben);
+  if (stil !== 'striche') return zeichneSchichten(g, spalten, mitteY, H, farben, stil);
+  zeichneStriche(g, spalten, mitteY, H, farben);
+}
+
+// Wie Bild 2: einfarbige feine Nadeln (je Pixel), heller Kern zur Mitte, viel Schwarz dazwischen.
+// Hoehe = je Song gespreizter Pegel (tv.js bildWerte), so stehen Schlaege und Songteile heraus.
+function zeichneNadeln(g, spalten, mitteY, H, farben) {
+  const f = farben.mitte, kern = farben.hoch;
+  for (let x = 0; x < spalten.length; x++) {
+    const s = spalten[x];
+    if (!s) continue;
+    const hv = Math.max(0.6, s.bi * H);
+    g.fillStyle = `rgba(${f[0]},${f[1]},${f[2]},${0.35 + 0.6 * s.bi})`;
+    g.fillRect(x, mitteY - hv, 1, hv * 2);
+    const k = hv * 0.38;
+    g.fillStyle = `rgba(${kern[0]},${kern[1]},${kern[2]},${0.25 + 0.6 * s.bi})`;
+    g.fillRect(x, mitteY - k, 1, k * 2);
+  }
+}
+
+// Weiche Schichten: Bass/Mitte/Hoehen als Konturen uebereinander, Spitzen als zarte Huelle.
+// 'misch': dazu die Spitzen als feine Linie am Rand; 'schichtenFein': ohne Glaettung.
+const SCHICHTEN = [            // [Wert, Faktor, Hoehenanteil, Farbe, Deckkraft]
+  ['sp', 1, 1, 'tief', 0.2],
+  ['t', 1.7, 1, 'tief', 0.68],
+  ['m', 1.9, 0.8, 'mitte', 0.55],
+  ['h', 3.2, 0.5, 'hoch', 0.6],
+];
+function kontur(spalten, k, f, H, anteil, glatt) {
+  const n = spalten.length, y = new Float32Array(n);
+  for (let x = 0; x < n; x++) { const s = spalten[x]; y[x] = s ? Math.min(1, s[k] * f) * H * anteil : 0; }
+  return glatt ? y.map((v, x) => Math.max(v * 0.6, (y[x - 1] ?? v) * 0.25 + v * 0.5 + (y[x + 1] ?? v) * 0.25)) : y;
+}
+function zeichneSchichten(g, spalten, mitteY, H, farben, stil) {
+  const n = spalten.length, glatt = stil !== 'schichtenFein';
+  for (const [k, f, anteil, farbe, alpha] of SCHICHTEN) {
+    if (stil === 'misch' && k === 'sp') continue;
+    const y = kontur(spalten, k, f, H, anteil, glatt);
+    g.beginPath();
+    g.moveTo(0, mitteY);
+    for (let x = 0; x < n; x++) g.lineTo(x + 0.5, mitteY - y[x]);
+    g.lineTo(n, mitteY);
+    for (let x = n - 1; x >= 0; x--) g.lineTo(x + 0.5, mitteY + y[x]);
+    g.closePath();
+    g.fillStyle = rgba(farben[farbe], alpha);
+    g.fill();
+  }
+  if (stil === 'misch') {
+    const y = kontur(spalten, 'sp', 1, H, 1, false);
+    g.lineWidth = 1; g.strokeStyle = rgba(farben.hoch, 0.45);
+    for (const vz of [-1, 1]) {
+      g.beginPath();
+      for (let x = 0; x < n; x++) (x ? g.lineTo : g.moveTo).call(g, x + 0.5, mitteY + vz * y[x]);
+      g.stroke();
+    }
+  }
+}
+
+function zeichneStriche(g, spalten, mitteY, H, farben) {
   for (let x = 0; x < spalten.length; x++) {
     const s = spalten[x];
     if (!s) continue;
@@ -109,11 +173,12 @@ export class DetailWelle {
       const s = spalte(wf, t * wf.proSek, (t + sekProPx * schritt) * wf.proSek);
       if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, schritt);
     }
-    if (!tv && (this.glanz ??= !!this.c.closest('.skin'))) {
+    if ((!tv || TV_STIL() === 'bild') && (this.glanz ??= !!this.c.closest('.skin'))) {
       // Bild-2-Optik: weicher Schein um die Welle (Kopie unscharf darueberlegen)
       g.save();
       g.filter = `blur(${Math.round(h * 0.035)}px)`;
-      g.globalAlpha = 0.8;
+      g.globalAlpha = tv ? 0.45 : 0.8;
+      g.globalCompositeOperation = 'lighter';     // Schein addieren (im TV wird sonst ueberdeckt)
       g.drawImage(this.c, 0, 0);
       g.restore();
     }
@@ -162,7 +227,7 @@ export class UebersichtWelle {
       const s = spalte(wf, x / w * wf.faecher, (x + 1) / w * wf.faecher);
       if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, 1);
     }
-    this.vorlage = off; this.fuer = tr.id + '@' + w + 'x' + h;
+    this.vorlage = off; this.fuer = tr.id + '@' + w + 'x' + h + (TV() ? TV_STIL() : '');
   }
   zeichnen(d) {
     const { w, h } = leinwand(this.c);
@@ -170,7 +235,7 @@ export class UebersichtWelle {
     g.clearRect(0, 0, w, h);
     const tr = d.track;
     if (!tr || !tr.wf) return;
-    if (this.fuer !== tr.id + '@' + w + 'x' + h) this.vorzeichnen(tr, w, h);
+    if (this.fuer !== tr.id + '@' + w + 'x' + h + (TV() ? TV_STIL() : '')) this.vorzeichnen(tr, w, h);
     g.drawImage(this.vorlage, 0, 0);
     const dauer = tr.dauer || 1;
     const xp = d.pos / dauer * w;
