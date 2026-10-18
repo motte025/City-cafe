@@ -102,12 +102,10 @@ export function deckBauen(root, id, engine, aktionen) {
   const keyBox = el('div', 'tempo-feld key', {}, [el('span', 'mini-label', { text: 'KEY' }), keyZahl]);
   const tSync = taste({ text: 'SYNC', klasse: 'sync akzent', titel: 'Tempo und Taktphase an das andere Deck angleichen', onKlick: () => wunsch('sync', !s().sync) });
   const linkLed = el('span', 'link-status', { html: ICON.link, title: 'Leuchtet, solange SYNC gekoppelt ist' });
-  // DJ-Modus: statt Tempo (immer +-0) der Taktzaehler, statt der Bereichstasten der Countdown
-  const taktWert = el('div', 'tv-wert', { text: '—' });
-  const taktFeld = el('div', 'tv-takt', {}, [el('span', 'tv-label', { text: 'TAKT' }), taktWert]);
-  const mixLabel = el('span', 'tv-label', { text: 'MIX IN' }), mixWert = el('div', 'tv-wert', { text: '—' });
+  // DJ-Modus: statt der Bereichstasten +-6/10/16 der Countdown (MIX OUT / MIX IN)
+  const mixLabel = el('span', 'tv-label', { text: 'MIX OUT' }), mixWert = el('div', 'tv-wert', { text: '—' });
   const mixFeld = el('div', 'tv-mix', {}, [mixLabel, mixWert]);
-  const tempoZeile = el('div', 'deck-tempo', {}, [bpmBox, tempoBox, el('div', 'bereiche', {}, bereichTasten), keyBox, tSync, linkLed, taktFeld, mixFeld]);
+  const tempoZeile = el('div', 'deck-tempo', {}, [bpmBox, tempoBox, el('div', 'bereiche', {}, bereichTasten), keyBox, tSync, linkLed, mixFeld]);
 
   // ---- Unterteil -----------------------------------------------------------
   const cMeter = el('canvas', 'deck-meter', { 'aria-label': `Pegel Kanal ${nr}` });
@@ -280,16 +278,13 @@ export function deckBauen(root, id, engine, aktionen) {
       const winkel = d.pos * 200;        // 33 1/3 U/min
       jogTeller.style.transform = `rotate(${winkel % 360}deg)`;
       videoLed.classList.toggle('an', imBild);
-      if (TV) {                            // Taktzaehler und Countdown bis zur Ueberblendung
-        const tr = d.track, g = tr && tr.grid;
-        let takt = '—';
-        if (g && d.pos >= g.offset) { const k = Math.floor((d.pos - g.offset) * g.bpm / 60); takt = `${Math.floor(k / 4) + 1}.${(k % 4) + 1}`; }
-        if (taktWert.textContent !== takt) taktWert.textContent = takt;
-        // ON AIR: bis zum eigenen Mix; NEXT: bis es losgeht (Mix des anderen Kanals)
+      if (TV) {                            // Countdown bis zur Ueberblendung
+        const tr = d.track;
+        // ON AIR: MIX OUT = bis er ausgeblendet wird; NEXT: MIX IN = bis er hereinkommt
         const anderer = state.decks[id === 'A' ? 'B' : 'A'];
         const ziel = imBild ? (tr && tr.mixAb != null ? tr.mixAb - d.pos : null)
           : (anderer.track && anderer.track.mixAb != null && anderer.spielt ? anderer.track.mixAb - anderer.pos : null);
-        const label = imBild ? 'MIX IN' : 'START IN';
+        const label = imBild ? 'MIX OUT' : 'MIX IN';
         if (mixLabel.textContent !== label) mixLabel.textContent = label;
         const txt = ziel == null || !tr ? '—' : ziel <= 0 ? 'JETZT' : zeit(ziel);
         if (mixWert.textContent !== txt) mixWert.textContent = txt;

@@ -113,8 +113,9 @@ export function tvBauen(engine) {
       ton: Array.isArray(t.ton) ? t.ton : null,   // [Lautheit dB, Limiter dB, Anfang s, Ende s] (Supervisor)
       // Marken (Supervisor-Analyse): Musik beginnt, Ueberblendung beginnt (Ende - Blende), Ende
       anfang: Array.isArray(t.ton) && t.ton[2] > 0.3 ? t.ton[2] : null,
-      mixAb: Array.isArray(t.ton) && t.ton[3] ? Math.max(0, t.ton[3] - xfSek) : null,
-      ende: Array.isArray(t.ton) && t.ton[3] ? t.ton[3] : null,
+      // ohne gefundene Schlussstille blendet der Supervisor vor dem Dateiende (stille_ende)
+      mixAb: Array.isArray(t.ton) && (t.ton[3] || t.dauer) ? Math.max(0, (t.ton[3] || Number(t.dauer)) - xfSek) : null,
+      ende: Array.isArray(t.ton) ? (t.ton[3] || Number(t.dauer) || null) : null,
       quelle: 'YOUTUBE', wf: sp ? sp.wf : null,
       wfHinweis: 'YOUTUBE · WELLENFORM WIRD GEMESSEN',
       coverUrl: /^[A-Za-z0-9_-]{11}$/.test(t.videoId) ? `https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg` : '',

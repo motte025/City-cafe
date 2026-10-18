@@ -254,12 +254,11 @@ body.tv .skin .deck-kuenstler { font-size: 21px; line-height: 23px; }
 /* DJ-Modus: ON AIR / NEXT neben dem groesseren Songtitel mitgewachsen (36 px) */
 body.tv .skin .deck-kanal { font-size: 36px; line-height: 28px; }
 
-/* DJ-Modus: Taktzaehler (statt TEMPO) und Countdown bis zur Ueberblendung (statt +-6/10/16) */
-.tv-takt, .tv-mix { display: none; }
-body.tv .skin .tv-takt, body.tv .skin .tv-mix { display: flex; flex-direction: column; justify-content: flex-start; }
-body.tv .skin .tempo-zahl, body.tv .skin .bereich { visibility: hidden; }
+/* DJ-Modus: Countdown bis zur Ueberblendung (MIX OUT / MIX IN) statt der Tasten +-6/10/16 */
+.tv-mix { display: none; }
+body.tv .skin .tv-mix { display: flex; flex-direction: column; justify-content: flex-start; }
+body.tv .skin .bereich { visibility: hidden; }
 body.tv .skin .tv-label { font: 500 15px/16px var(--font); letter-spacing: .04em; color: #c4ccd5; margin: 2px 0 0 11px; }
-body.tv .skin .tv-takt .tv-wert { font: 600 28px/32px var(--font); color: #fff; margin-left: 10px; font-variant-numeric: tabular-nums; }
 body.tv .skin .tv-mix { align-items: center; }
 body.tv .skin .tv-mix .tv-label { margin: 0; }
 body.tv .skin .tv-mix .tv-wert { font: 700 26px/28px var(--font); color: #fff; font-variant-numeric: tabular-nums; }
