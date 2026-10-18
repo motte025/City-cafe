@@ -137,6 +137,17 @@ export function tvBauen(engine) {
     }
   }
 
+  // Das Dashboard skaliert seine 1920er-Buehne (und damit diesen Rahmen) aufs Fenster:
+  // ohne diesen Faktor zeichneten Wellen und Meter grob und wuerden hochgezogen.
+  function skalaLesen() {
+    try {
+      const s = parent.document.getElementById('dashboard-scaler');
+      window.studioZusatzSkala = s ? Math.max(1, s.getBoundingClientRect().width / 1920) : 1;
+    } catch (e) { window.studioZusatzSkala = 1; }
+  }
+  skalaLesen();
+  setInterval(skalaLesen, 2000);
+
   addEventListener('message', e => {
     if (e.origin !== location.origin || !e.data) return;
     try {

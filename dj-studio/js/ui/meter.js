@@ -12,7 +12,7 @@ export const SCHWELLEN_MASTER = [-48, -45, -42, -39, -36, -33, -30, -27, -24, -2
 const ABFALL = 26, HALTEN = 1.5, CLIP = -0.1;
 // TV (echte Titel): Ballistik wie ein Spitzenpegelmesser - weich rauf, gleichmaessig runter,
 // die gehaltene Spitze sinkt nach dem Halten langsam ab statt zu springen.
-const TV_ANSTIEG = 0.04, TV_ABFALL = 12, TV_SPITZE_ABFALL = 20;
+const TV_ANSTIEG = 0.01, TV_ABFALL = 12, TV_SPITZE_ABFALL = 20;
 
 // Schwellen passend zu einer gedruckten Skala (Bild 2): punkte = [[Segment, Skalenwert]],
 // versatz = Skalenwert, der 0 dBFS entspricht. Liefert n steigende dBFS-Schwellen.
@@ -31,7 +31,8 @@ export const SCHWELLEN_BILD_MASTER = ausSkala([[0, -24], [3.4, -18], [7, -12], [
 
 export function leinwand(c) {
   const r = c.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
+  // studioZusatzSkala: das Dashboard skaliert den TV-Rahmen noch einmal (js/tv.js)
+  const dpr = (window.devicePixelRatio || 1) * (window.studioZusatzSkala || 1);
   const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
   if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
   return { w, h, f: w / (c.clientWidth || 1) };
@@ -157,10 +158,8 @@ export class LedMeter {
       const haltIdx = isFinite(k.halten) ? S.findLastIndex(s => k.halten >= s) : -1;
       for (let z = 0; z < this.zeilen; z++) {
         const q0 = i * (this.zeilen * breite + (this.zeilen - 1) * zl + kl) + z * (breite + zl);
-        // TV (echte Titel): Balken = Lautheit (VU), darueber nur die gehaltene Spitze
-        const tv = document.body.classList.contains('tv');
         for (let s = 0; s < n; s++) {
-          const an = (tv ? k.rms : k.spitze) >= S[s] || s === haltIdx;
+          const an = k.spitze >= S[s] || s === haltIdx;
           const l0 = v ? h - (s + 1) * teilung + luecke / 2 : s * teilung + luecke / 2;
           const [x, y, sw, sh] = v ? [q0, l0, breite, seg] : [l0, q0, seg, breite];
           const f = farbeRgb(s / (n - 1), this.palette);

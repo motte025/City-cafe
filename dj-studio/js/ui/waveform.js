@@ -41,31 +41,22 @@ function zeichneSpalte(g, x, mitteY, H, s, farben, breite) {
   g.fillStyle = rgba(farben.hoch, 0.6); g.fillRect(x, mitteY - hh * 0.55, breite, hh * 1.1);
 }
 
-// TV-Ansicht (echte, laut gemasterte Titel): Spitzen nur als zarte Huelle, darin
-// Bass/Mitte/Hoehen als abgestufte Schichten - volle Hoehe, aber Struktur statt Block.
-// Gezeichnet als glatte Konturen je Schicht (eine Spalte je Bildschirmpixel, leicht geglaettet).
+// TV-Ansicht (echte, laut gemasterte Titel), wie Rekordbox/Serato: je Bildschirmpixel ein
+// Strich in Spitzenhoehe, gefaerbt nach dem Verhaeltnis Bass/Mitte/Hoehen, darin ein hellerer
+// Kern fuer die Lautheit. Keine Glaettung - die Feinheit kommt aus den Spitzen (5 ms).
 const TV = () => document.body.classList.contains('tv');
-const TV_SCHICHTEN = [            // [Wert, Faktor, Hoehenanteil, Farbe, Deckkraft]
-  ['sp', 1, 1, 'tief', 0.2],
-  ['t', 1.7, 1, 'tief', 0.68],
-  ['m', 1.9, 0.8, 'mitte', 0.55],
-  ['h', 3.2, 0.5, 'hoch', 0.6],
-];
 function zeichneTv(g, spalten, mitteY, H, farben) {
-  const n = spalten.length;
-  for (const [k, f, anteil, farbe, alpha] of TV_SCHICHTEN) {
-    const y = new Float32Array(n);
-    for (let x = 0; x < n; x++) { const s = spalten[x]; y[x] = s ? Math.min(1, s[k] * f) * H * anteil : 0; }
-    // 3er-Glaettung gegen Treppen, Spitzen bleiben erhalten
-    const yg = y.map((v, x) => Math.max(v * 0.6, (y[x - 1] ?? v) * 0.25 + v * 0.5 + (y[x + 1] ?? v) * 0.25));
-    g.beginPath();
-    g.moveTo(0, mitteY);
-    for (let x = 0; x < n; x++) g.lineTo(x + 0.5, mitteY - yg[x]);
-    g.lineTo(n, mitteY);
-    for (let x = n - 1; x >= 0; x--) g.lineTo(x + 0.5, mitteY + yg[x]);
-    g.closePath();
-    g.fillStyle = rgba(farben[farbe], alpha);
-    g.fill();
+  for (let x = 0; x < spalten.length; x++) {
+    const s = spalten[x];
+    if (!s) continue;
+    const t = s.t * 1.7, m = s.m * 1.9, h = s.h * 3.2, summe = t + m + h || 1;
+    const f = [0, 1, 2].map(i => Math.round((farben.tief[i] * t + farben.mitte[i] * m + farben.hoch[i] * h) / summe));
+    const hs = Math.min(1, s.sp) * H;
+    g.fillStyle = `rgba(${f[0]},${f[1]},${f[2]},0.85)`;
+    g.fillRect(x, mitteY - hs, 1, hs * 2);
+    const kern = Math.min(hs, Math.min(1, Math.sqrt(s.t * s.t + s.m * s.m + s.h * s.h) * 1.6) * H);
+    g.fillStyle = `rgba(${f.map(v => Math.round(v + (255 - v) * 0.45)).join(',')},0.9)`;
+    g.fillRect(x, mitteY - kern, 1, kern * 2);
   }
 }
 
