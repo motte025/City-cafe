@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-18T15:52:45Z",
+  "checked_at": "2026-10-18T16:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ruhiger Sonntag? !koffer | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
