@@ -85,8 +85,8 @@
 /* ---------- Texte ---------- */
 .skin .deck-cover { background: center / cover no-repeat; border-radius: 2px; box-shadow: 0 0 0 1px rgba(35, 168, 255, .35); }
 .skin .kanal-b .deck-cover { box-shadow: 0 0 0 1px rgba(255, 154, 26, .35); }
-.skin .deck-titel { font: 600 21px/24px var(--font); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .005em; }
-.skin .deck-kuenstler { font: 400 19px/21px var(--font); color: #d4dae1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.skin .deck-titel { font: 600 27px/34px var(--font); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .005em; }
+.skin .deck-kuenstler { font: 400 20px/24px var(--font); color: #d4dae1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .skin .deck-meta { font: 400 16.5px/18px var(--font); color: #b9c1ca; white-space: nowrap; overflow: hidden; }
 .skin .deck-meta > span { display: inline; }
 .skin .deck-meta > .trenn { margin: 0 9px; color: #7b8590; }

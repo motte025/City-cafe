@@ -28,8 +28,9 @@ const DECK_A = {
     ['.deck-video .led', [297, 99, 10, 10]],
     // Titel
     ['.deck-cover', [29, 130, 97, 78]],
-    ['.deck-titel', [140, 136, 330, 24]],
-    ['.deck-kuenstler', [140, 160, 330, 21]],
+    // Titel groesser (Wunsch 18.10.2026): 27 px statt 21 px, Kuenstler 20 px
+    ['.deck-titel', [140, 129, 330, 31]],
+    ['.deck-kuenstler', [140, 160, 330, 22]],
     ['.deck-meta', [140, 182, 270, 18]],
     ['.herz', [479, 138, 22, 21]],
     ['.deck-info-icons > .taste:not(.herz)', [512, 138, 20, 23]],
@@ -121,8 +122,8 @@ const DECK_B = {
     ['.deck-kopf-rest > .taste.icon', [1613, 91, 28, 26]],
     ['.deck-video .led', [1399, 99, 10, 10]],
     ['.deck-cover', [1136, 130, 102, 78]],
-    ['.deck-titel', [1253, 136, 320, 24]],
-    ['.deck-kuenstler', [1253, 160, 320, 21]],
+    ['.deck-titel', [1253, 129, 320, 31]],
+    ['.deck-kuenstler', [1253, 160, 320, 22]],
     ['.deck-meta', [1253, 182, 255, 18]],
     ['.herz', [1590, 138, 22, 21]],
     ['.deck-info-icons > .taste:not(.herz)', [1622, 138, 20, 23]],

@@ -191,8 +191,8 @@ export function deckBauen(root, id, engine, aktionen) {
     if (t) {
       const bpm = t.grid ? t.grid.bpm.toFixed(0) + ' BPM' : t.bpmMess ? '~' + Math.round(t.bpmMess) + ' BPM'
         : t.bpmTap ? t.bpmTap + ' BPM (Tap)' : 'BPM offen';
-      metaZeile.append(el('span', '', { text: t.genre || '' }), el('span', 'trenn', { text: '|' }),
-        el('span', '', { text: bpm }), el('span', 'trenn', { text: '|' }), el('span', '', { text: t.key || '—' }));
+      if (t.genre) metaZeile.append(el('span', '', { text: t.genre }), el('span', 'trenn', { text: '|' }));
+      metaZeile.append(el('span', '', { text: bpm }), el('span', 'trenn', { text: '|' }), el('span', '', { text: t.key || '—' }));
       if (t.quelle === 'DEMO') metaZeile.append(el('span', 'demo-marke', { text: 'DEMO', title: 'Generator-Werte, nicht gemessen' }));
     }
     zeitGes.textContent = '/ ' + zeit(t ? t.dauer : 0);
