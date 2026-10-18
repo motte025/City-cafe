@@ -1926,6 +1926,7 @@ def balken_messen(vid, video_url, laenge):
 # Gespeichert werden nur diese Zahlen (Bytes, base64), nie der Ton.
 SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
 SPUR_HZ = 200              # Werte je Sekunde (12000 Hz / 60 Samples: genau, ohne Drift)
+SPUR_LESETEMPO = 8         # ffmpeg liest hoechstens 8x so schnell wie abgespielt
 # Kanaele nach amerge: 1 links, 2 rechts, 3 tief, 4 mitte, 5 hoch (Baender aus der Mono-Summe)
 SPUR_FILTER = ("aresample=12000,aformat=channel_layouts=stereo,asplit=2[st][mo];"
                "[st]channelsplit=channel_layout=stereo[L][R];"
@@ -1984,9 +1985,11 @@ def spur_messen(vid, audio_url, laenge):
         return
     SPUREN[vid] = None                      # in Arbeit
     try:
-        aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", audio_url, "-vn",
-                              "-af", SPUR_FILTER, "-f", "null", "-"],
-                             capture_output=True, text=True, timeout=120)
+        # -readrate: hoechstens 8-fache Abspielgeschwindigkeit. Voll aufgedreht zog ffmpeg
+        # einen Song in ~3 s - die WLAN-Spitzen stoerten den Bluetooth-Ton (gleicher Funkchip).
+        aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-readrate", str(SPUR_LESETEMPO),
+                              "-i", audio_url, "-vn", "-af", SPUR_FILTER, "-f", "null", "-"],
+                             capture_output=True, text=True, timeout=180)
     except (OSError, subprocess.TimeoutExpired) as e:
         log(f"Studio-Spur {vid}: {type(e).__name__}")
         SPUREN.pop(vid, None)

@@ -36,11 +36,12 @@ const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 // Anzeige wie in Bild 2: laut gemasterte Titel haben fast ueberall gleich hohe Spitzen.
 // Je Song spreizen - leiseste 20 % = Grundlinie, lauteste Stellen = volle Hoehe -, damit
 // Intro, Strophe, Refrain und die einzelnen Schlaege klar herausstehen.
-function bildWerte(spitze, tief) {
-  const roh = spitze.map((s, i) => 0.6 * s + 0.4 * Math.min(1, tief[i] * 1.7));
+function bildWerte(spitze) {
+  // nur die Spitzen: die Bass-Huellkurve ist traege und machte runde Bloecke statt Nadeln
+  const roh = spitze;
   const sortiert = Float32Array.from(roh).sort();
   const lo = sortiert[Math.floor(sortiert.length * 0.2)] || 0, hi = sortiert[Math.floor(sortiert.length * 0.995)] || 1;
-  return roh.map(x => Math.pow(Math.min(1, Math.max(0, (x - lo) / ((hi - lo) || 1))), 1.6));
+  return roh.map(x => Math.pow(Math.min(1, Math.max(0, (x - lo) / ((hi - lo) || 1))), 2.2));
 }
 
 // Messung -> Wellenform (wie analysis.js) und Pegelreihen
@@ -53,7 +54,7 @@ function spurLesen(roh) {
   return {
     videoId: s.videoId, bpm: s.bpm, versatz: s.versatz || 0, sicher: s.sicher || 0,
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief, mitte: lin(s.mitte), hoch: lin(s.hoch),
-          bild: bildWerte(spitze, tief) },
+          bild: bildWerte(spitze) },
     // je Seite: Spitze (dBFS) und Leistung (linear^2) fuer die VU-Mittelung
     pegel: ['L', 'R'].map(k => ({
       spitze: db(s['pegelSpitze' + k] || s.pegelSpitze),

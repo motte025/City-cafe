@@ -63,10 +63,10 @@ function zeichneNadeln(g, spalten, mitteY, H, farben) {
     const s = spalten[x];
     if (!s) continue;
     const hv = Math.max(0.6, s.bi * H);
-    g.fillStyle = `rgba(${f[0]},${f[1]},${f[2]},${0.35 + 0.6 * s.bi})`;
+    g.fillStyle = `rgba(${f[0]},${f[1]},${f[2]},${0.3 + 0.6 * s.bi})`;
     g.fillRect(x, mitteY - hv, 1, hv * 2);
-    const k = hv * 0.38;
-    g.fillStyle = `rgba(${kern[0]},${kern[1]},${kern[2]},${0.25 + 0.6 * s.bi})`;
+    const k = hv * 0.22;
+    g.fillStyle = `rgba(${kern[0]},${kern[1]},${kern[2]},${0.2 + 0.55 * s.bi})`;
     g.fillRect(x, mitteY - k, 1, k * 2);
   }
 }
