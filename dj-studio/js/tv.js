@@ -46,6 +46,19 @@ function bildWerte(rms, tief) {
   return roh.map(x => Math.pow(Math.min(1, Math.max(0, (x - lo) / ((hi - lo) || 1))), 1.8));
 }
 
+// Die Messung kennt die Schlaege (versatz = ein Schlag), nicht die "Eins" des Takts. Die Eins ist
+// der Schlag, auf dem ueber den ganzen Song am meisten Bass liegt (je 4. Schlag aufsummiert).
+function taktEins(tief, proSek, bpm, versatz) {
+  if (!bpm) return versatz;
+  const schlag = 60 / bpm, summen = [0, 0, 0, 0];
+  for (let k = 0, t = versatz; ; k++, t += schlag) {
+    const i = Math.round(t * proSek);
+    if (i >= tief.length) break;
+    for (let j = Math.max(0, i - 2); j <= Math.min(tief.length - 1, i + 2); j++) summen[k % 4] += tief[j];
+  }
+  return versatz + summen.indexOf(Math.max(...summen)) * schlag;
+}
+
 // Messung -> Wellenform (wie analysis.js) und Pegelreihen
 function spurLesen(roh) {
   const s = typeof roh === 'string' ? JSON.parse(roh) : roh;
@@ -59,7 +72,8 @@ function spurLesen(roh) {
   }));
   const rms = Float32Array.from(pegel[0].leistung, (l, i) => Math.sqrt(Math.max(l, pegel[1].leistung[i])));
   return {
-    videoId: s.videoId, bpm: s.bpm, versatz: s.versatz || 0, sicher: s.sicher || 0,
+    videoId: s.videoId, bpm: s.bpm, sicher: s.sicher || 0,
+    versatz: taktEins(tief, s.proSek, s.bpm, s.versatz || 0),   // auf die Eins des Takts
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief, mitte: lin(s.mitte), hoch: lin(s.hoch),
           bild: bildWerte(rms, tief) },
     pegel,   // je Seite: Spitze (dBFS) und Leistung (linear^2) fuer die Meter

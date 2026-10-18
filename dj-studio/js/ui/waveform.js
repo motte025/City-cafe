@@ -163,6 +163,9 @@ export class DetailWelle {
     if (!tr) return hinweis(g, w, h, 'KEIN TITEL GELADEN');
     if (!tr.wf) return hinweis(g, w, h, tr.wfHinweis || 'WAVEFORM NICHT VERFÜGBAR');
     const wf = tr.wf, mitteY = h / 2, H = h * 0.46;
+    // TV: je 2 Takte vor und nach dem Abspielkopf (16 Schlaege), bei jedem Tempo gleich viele;
+    // ohne sicheres Taktraster 8 s (Wunsch 18.10.2026)
+    if (TV()) this.zoom = tr.grid ? 16 * 60 / (tr.grid.bpm * (1 + (d.tempo || 0) / 100)) : 8;
     const sekProPx = this.zoom / w;
     const t0 = d.pos - this.zoom / 2;
     const schritt = Math.max(1, Math.round((window.devicePixelRatio || 1)));
