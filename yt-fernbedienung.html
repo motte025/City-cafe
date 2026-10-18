@@ -277,6 +277,10 @@
                 <button type="button" class="still" id="k-ansicht">⛶ Vollbild</button>
                 <button type="button" class="still" id="k-seite">🖼️ Fotos</button>
             </div>
+            <!-- DJ-Modus: TV zeigt das DJ Studio, Video im Studio-Fenster (vorerst nur zuhause) -->
+            <div class="zeile2" id="dj-zeile" hidden>
+                <button type="button" class="still" id="k-dj">🎛 DJ-Modus</button>
+            </div>
             <div class="zeile2">
                 <button type="button" class="still" id="k-shorts">📱 Shorts rechts</button>
             </div>
@@ -340,6 +344,9 @@
 <!-- ============================ LISTEN ============================ -->
 <section class="reiter-inhalt" id="reiter-listen">
     <div class="feldname">Playlists</div>
+    <!-- Suche nur in den eigenen Playlists (18.10.2026): Treffer mit Playlist-Namen, ✕ loescht dort -->
+    <input type="search" id="pl-suche" placeholder="🔎 In den Playlists suchen (Song oder Künstler)" enterkeyhint="search" style="margin-bottom:10px">
+    <div id="pl-treffer"></div>
     <div class="zeile2 nur-chef" style="margin-bottom:10px">
         <input type="text" id="neue-pl-name" placeholder="Name der neuen Playlist" maxlength="60">
         <button type="button" id="neue-pl-knopf">➕ Neue Playlist</button>
@@ -714,7 +721,7 @@
             return { videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
                      dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0, kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', aufrufe: Number(t.aufrufe) || 0 };
         });
-        verb.db.ref('djremote/' + RAUM + '/yt/listen/' + nr).set({
+        verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + nr).set({
             nr: nr, name: String(name).slice(0, 60), platzhalter: false, bearbeitet: true, eigen: true,
             titel: titel, ts: firebase.database.ServerValue.TIMESTAMP
         }).then(function () { melden('📃 Playlist „' + name + '" angelegt' + (titel.length ? ' mit 1 Song' : ''), 'ok'); })
@@ -764,6 +771,7 @@
         el('jetzt-liste').textContent = lq;
         el('k-pause').textContent = jetzt && jetzt.pausiert ? '▶' : '⏸';
         el('k-ansicht').textContent = jetzt && jetzt.vollbild ? '▭ Normal' : '⛶ Vollbild';
+        el('k-dj').textContent = jetzt && jetzt.dj ? '▭ Normal' : '🎛 DJ-Modus';
         // Rechte Karte im Widget: Fotos aus der Drive-Galerie <-> Aehnliche Songs
         el('k-seite').textContent = jetzt && jetzt.seite === 'fotos' ? '🎶 Songs rechts' : '🖼️ Fotos rechts';
         el('k-shorts').textContent = jetzt && jetzt.seite === 'shorts' ? '📱 Shorts aus' : '📱 Shorts rechts';
@@ -956,6 +964,8 @@
     });
     el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⇄ Blende zum nächsten Song …', ''); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
+    el('dj-zeile').hidden = RAUM !== 'zuhause';
+    el('k-dj').addEventListener('click', function () { musik(jetzt && jetzt.dj ? 'normal' : 'dj'); });
     // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
     el('k-radio').addEventListener('click', function () {
         if (!jetzt || !jetzt.videoId || jetzt.modus === 'aus') { melden('Gerade läuft keine Musik.', 'nein'); return; }
@@ -1223,6 +1233,7 @@
 
     // ------------------------------------------------------------------ Listen
     function playlistsZeigen() {
+        if (el('pl-suche')) plTrefferZeigen();
         var chips = el('playlist-chips');
         chips.innerHTML = '';
         alleListen().forEach(function (p) {
@@ -1253,7 +1264,7 @@
             var wegK = d.querySelector('[data-a=weg]');
             if (wegK) wegK.addEventListener('click', function () {
                 if (wegK.dataset.sicher !== '1') { wegK.dataset.sicher = '1'; wegK.textContent = '🗑️ Wirklich löschen? Nochmal tippen'; return; }
-                var ref = verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr);
+                var ref = verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + p.nr);
                 // Eigene ganz weg; feste (aus dem Repo) nur ausblenden - unten wiederherstellbar.
                 (p.eigen ? ref.remove() : ref.set({ nr: p.nr, name: p.name || '', geloescht: true, ts: firebase.database.ServerValue.TIMESTAMP }))
                     .then(function () { melden('🗑️ Playlist „' + p.name + '" gelöscht', 'ok'); })
@@ -1288,7 +1299,7 @@
                 b.className = 'still';
                 b.textContent = '↺ ' + p.nr + ' ' + p.name;
                 b.addEventListener('click', function () {
-                    verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).remove().then(function () {
+                    verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + p.nr).remove().then(function () {
                         musik('listeOriginal', { nr: p.nr });
                         melden('↺ „' + p.name + '" ist wieder da', 'ok');
                     }).catch(function (err) { melden(err.message, 'nein'); });
@@ -1299,13 +1310,47 @@
         }
     }
 
+    // --- Suche nur in den Playlists: alle Treffer aus allen Listen, je mit Playlist-Namen.
+    // Gleiche Zeile wie in der Playlist (abspielen ab hier, ✕ loescht dort).
+    function suchNormal(s) {
+        return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/ł/g, 'l').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+    function plTrefferZeigen() {
+        var box = el('pl-treffer'), q = suchNormal(el('pl-suche').value);
+        box.innerHTML = '';
+        if (q.length < 2) return;
+        var woerter = q.split(' '), anzahl = 0;
+        alleListen().forEach(function (p) {
+            var inhalt = listen[p.nr] || {};
+            var titel = Array.isArray(inhalt.titel) ? inhalt.titel : [];
+            titel.forEach(function (tt, i) {
+                var text = suchNormal([tt.songtitel, tt.titel, tt.kuenstler, tt.kanal].join(' '));
+                if (!woerter.every(function (w) { return text.indexOf(w) >= 0; })) return;
+                anzahl++;
+                var schild = document.createElement('div');
+                schild.className = 'hinweis';
+                schild.style.margin = '10px 0 2px';
+                schild.innerHTML = '📃 <b style="color:#00e5ff">' + esc(p.nr) + '</b> ' + esc(p.name) + ' · Platz ' + (i + 1);
+                box.appendChild(schild);
+                box.appendChild(playlistZeile(tt, i, p, titel, box));
+            });
+        });
+        var fuss = document.createElement('div');
+        fuss.className = 'hinweis';
+        fuss.style.margin = '8px 0 14px';
+        fuss.textContent = anzahl ? anzahl + ' Treffer in den Playlists' : 'Kein Treffer in den Playlists.';
+        box.appendChild(fuss);
+    }
+    el('pl-suche').addEventListener('input', plTrefferZeigen);
+
     // --- Playlist am Handy bearbeiten (Chef): Song loeschen, per ☰ verschieben.
     // Gespeichert wird die ganze Liste in yt/listen/<nr> mit "bearbeitet: true";
     // der TV nimmt sie dann statt der Fassung aus dem Repo.
     var offeneListen = {};
     function listeSpeichern(p, neu) {
         if (!verb) return;
-        verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).set({
+        verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + p.nr).set({
             nr: p.nr, name: p.name || '', platzhalter: false, bearbeitet: true, eigen: !!p.eigen, titel: neu,
             ts: firebase.database.ServerValue.TIMESTAMP
         }).catch(function (err) {

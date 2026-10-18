@@ -28,6 +28,9 @@
     'use strict';
 
     var cfg = global.DJ_REMOTE_CONFIG || {};
+    // Playlists (yt/listen) gibt es nur einmal: alle Raeume nutzen die des
+    // Cafes, damit zuhause und im City Cafe dieselben Listen laufen (18.10.2026).
+    var LISTEN_PFAD = 'djremote/city-cafe/yt/listen';
 
     function pfad(raum) {
         return 'djremote/' + (raum || cfg.raum || 'city-cafe') + '/yt';
@@ -176,8 +179,11 @@
         neueId: function (verb, raum) {
             return verb.db.ref(pfad(raum) + '/warteschlange').push().key;
         },
+        listenPfad: function () { return LISTEN_PFAD; },
         aufListenHoeren: function (verb, raum, rueckruf) {
-            return hoeren(verb, raum, 'listen', rueckruf);
+            var ref = verb.db.ref(LISTEN_PFAD);
+            ref.on('value', function (s) { rueckruf(s.val()); });
+            return function () { ref.off(); };
         },
         wunschSenden: function (verb, raum, wunsch) {
             var ref = verb.db.ref(pfad(raum) + '/wuensche').push();

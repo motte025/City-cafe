@@ -14,6 +14,7 @@ der DJ-Buehne; das Dashboard baut dann keinen Twitch-Player.
 """
 import base64
 import glob
+import gzip
 import io
 import json
 import math
@@ -24,6 +25,7 @@ import signal
 import socket
 import struct
 import subprocess
+import tempfile
 import threading
 import time
 import unicodedata
@@ -48,7 +50,10 @@ def ytdlp_programme():
     return [YTDLP]
 
 
-COOKIES_FROM = "chromium:/home/citycafe/.config/chromium-kiosk"
+# CITYCAFE_COOKIES: anderes Browser-Profil (Test im Fenster auf dem PC)
+COOKIES_FROM = os.environ.get("CITYCAFE_COOKIES", "chromium:/home/citycafe/.config/chromium-kiosk")
+# CITYCAFE_JS_RUNTIME: JavaScript fuer yt-dlp (W1: node; geht auch deno)
+JS_RUNTIME = os.environ.get("CITYCAFE_JS_RUNTIME", "node")
 # Bestes H.264 bis 1080p (der Hardware-Decoder kann kein VP9/AV1 in brauchbarer
 # Form), dazu die m4a-Tonspur. Nicht jedes Video hat 1080p60 (299) - manche
 # nur 1080p30 (137).
@@ -301,6 +306,9 @@ KIOSK_STARTER = "/usr/local/bin/citycafe-chromium"
 TMP_PRUEFUNG_SEKUNDEN = 30 * 60
 TMP_ALTER_SEKUNDEN = 2 * 60 * 60
 
+# Welche FLAECHE gehoert zu window.nlMpvFlaeche (Musik: normal, Vollbild, DJ-Modus)?
+MUSIK_FLAECHE = {"yt-vollbild-video": "yt_voll", "yt-dj-video": "yt_dj"}
+
 # Videoflaeche erst messen, wenn die Einblend-Animation (scale 1.02 -> 1) durch ist.
 RECT_EXPR = """JSON.stringify((() => {
   const v = document.getElementById('%s');
@@ -314,6 +322,8 @@ RECT_EXPR = """JSON.stringify((() => {
 FLAECHE = {"yt": ("media-view-nightlife", "nl-player-frame"),
            # YouTube-Musik im Vollbild (window.nlMpvFlaeche = 'yt-vollbild-video')
            "yt_voll": ("ytm-vollbild", "yt-vollbild-video"),
+           # DJ-Modus (nur Raum zuhause): Videofenster im DJ Studio ('yt-dj-video')
+           "yt_dj": ("ytm-dj", "yt-dj-video"),
            "twitch": ("media-view-djlive", "dj-live-player"),
            "cam": ("media-view-dart-cam", "dart-cam-frame")}
 # Die Dartcam ist ein Live-Strom im Lokal-Netz: faellt sie aus, nach kurzer
@@ -680,7 +690,7 @@ def resolve(video_id, fmt=FORMAT, sortierung=None):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                [programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser", COOKIES_FROM,
                  "-f", fmt, *(["-S", sortierung] if sortierung else []),
                  "--print", "duration",
                  "--print", "QUALI %(format_id)s|%(resolution)s|%(fps)s|%(vcodec)s",
@@ -722,7 +732,7 @@ def suchen(text, anzahl=None):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--flat-playlist", "--print",
+                [programm, "--js-runtimes", JS_RUNTIME, "--flat-playlist", "--print",
                  "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
                  f"ytsearch{anzahl}:{text}"],
                 capture_output=True, text=True, timeout=60)
@@ -749,7 +759,7 @@ def playlists_suchen(text, anzahl=20):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--flat-playlist", "--playlist-end", str(anzahl),
+                [programm, "--js-runtimes", JS_RUNTIME, "--flat-playlist", "--playlist-end", str(anzahl),
                  "--print", "%(id)s\t%(title)s\t%(channel)s\t%(thumbnails.0.url)s", url],
                 capture_output=True, text=True, timeout=60)
         except (subprocess.TimeoutExpired, OSError) as fehler:
@@ -786,7 +796,7 @@ SHORTS_LISTEN = {}       # kanal-URL -> (zeit, treffer)
 def ytdlp_ausgabe(argumente, timeout=60):
     for programm in ytdlp_programme():
         try:
-            out = subprocess.run([programm, "--js-runtimes", "node", "--no-warnings"] + argumente,
+            out = subprocess.run([programm, "--js-runtimes", JS_RUNTIME, "--no-warnings"] + argumente,
                                  capture_output=True, text=True, timeout=timeout)
         except (subprocess.TimeoutExpired, OSError) as fehler:
             log(f"Shorts: {os.path.basename(programm)} {type(fehler).__name__}")
@@ -1028,7 +1038,7 @@ def mix(video_id, anzahl=MIX_ANZAHL):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node",
+                [programm, "--js-runtimes", JS_RUNTIME,
                  *(["--cookies-from-browser", COOKIES_FROM] if MIX_MIT_COOKIES else []),
                  "--flat-playlist", "--playlist-end", str(anzahl + 11), "--print",
                  "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
@@ -1064,7 +1074,7 @@ def aufrufe_ergaenzen(treffer, hoechstens=16):
 
     def holen(ids):
         try:
-            r = subprocess.run(["yt-dlp", "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+            r = subprocess.run(["yt-dlp", "--js-runtimes", JS_RUNTIME, "--cookies-from-browser", COOKIES_FROM,
                                 "--skip-download", "--ignore-errors", "--print", "%(id)s\t%(view_count)s",
                                 *[f"https://www.youtube.com/watch?v={i}" for i in ids]],
                                capture_output=True, text=True, timeout=40)
@@ -1109,7 +1119,7 @@ def playlist_lesen(quelle):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                [programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser", COOKIES_FROM,
                  "--flat-playlist", "--playlist-end", str(PLAYLIST_MAX), "--print",
                  "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
                  f"https://www.youtube.com/playlist?list={m.group(1)}"],
@@ -1260,7 +1270,7 @@ def place_mpv(target, app_id=None, sichtbar=True):
 # (python-pillow). Ohne Pillow gibt es einfach keinen QR im Video.
 QR_DATEI = "/tmp/ytm-qr.bgra"
 QR_OVERLAY_ID = 7
-QR_CSS_BREITE = {"yt": 1200, "yt_voll": 1280}   # Videobreite in CSS-Pixeln je Flaeche
+QR_CSS_BREITE = {"yt": 1200, "yt_voll": 1280, "yt_dj": 640}   # Videobreite in CSS-Pixeln je Flaeche
 
 
 def qr_karte_holen(page_id):
@@ -1462,7 +1472,7 @@ def umschalt_waechter():
             if flaeche != alte_flaeche:
                 break
         # Warten, bis die Flaeche zweimal hintereinander gleich gemessen wird
-        art = "yt_voll" if flaeche == "yt-vollbild-video" else "yt"
+        art = MUSIK_FLAECHE.get(flaeche, "yt")
         ziel, vorher, frist = None, None, time.time() + 1.2
         while time.time() < frist:
             time.sleep(0.08)
@@ -1912,6 +1922,235 @@ def balken_messen(vid, video_url, laenge):
         log(f"Seitenbalken {vid}: Bild {cw}x{h} in {b}x{h}")
 
 
+# DJ-Modus (Wunsch 18.10.2026): das Studio zeigt Wellenform, BPM und Pegel des
+# laufenden Songs. Der Ton laeuft weiter nur ueber mpv; hier wird er einmal ganz
+# gemessen (~3 s Rechenzeit): je 5 ms Spitze/RMS links und rechts, RMS in drei Baendern.
+# Gespeichert werden nur diese Zahlen (Bytes, base64), nie der Ton.
+SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
+# Gemessenes bleibt auf der Platte (je Song ~250 KB gz): jeder Song wird nur einmal gemessen,
+# auch nach einem Neustart sofort da. Hoechstens SPUR_PLATTE_MB, die aeltesten fliegen raus.
+SPUR_ORDNER = os.environ.get("CITYCAFE_SPUREN", os.path.expanduser("~/.cache/citycafe/spuren"))
+SPUR_PLATTE_MB = 600
+SPUR_VERSION = 3           # hochzaehlen, wenn sich Messung/Format aendern (alte werden neu gemessen)
+SPUR_HZ = 200              # Werte je Sekunde (12000 Hz / 60 Samples: genau, ohne Drift)
+SPUR_LESETEMPO = 8         # ffmpeg liest hoechstens 8x so schnell wie abgespielt
+# Kanaele nach amerge: 1 links, 2 rechts, 3 tief, 4 mitte, 5 hoch (Baender aus der Mono-Summe)
+SPUR_FILTER = ("aresample=12000,aformat=channel_layouts=stereo,asplit=2[st][mo];"
+               "[st]channelsplit=channel_layout=stereo[L][R];"
+               "[mo]pan=mono|c0=0.5*c0+0.5*c1,asplit=3[a][b][c];"
+               "[a]lowpass=f=200[l];[b]highpass=f=200,lowpass=f=2500[m];[c]highpass=f=2500[h];"
+               "[L][R][l][m][h]amerge=inputs=5,asetnsamples=n=60:p=0,"
+               "astats=metadata=1:reset=1:measure_perchannel=RMS_level+Peak_level:measure_overall=none,"
+               "ametadata=print:file=-")
+
+
+# Tonart (Wunsch 18.10.2026): im selben ffmpeg-Lauf 48 Halbton-Bandpaesse (C3..H6), Energie je
+# Tonklasse, Vergleich mit den Krumhansl-Profilen der 24 Tonarten. Mit Akkorden geprueft (C-Dur,
+# a-Moll richtig); bei echten Songs ungefaehr - oft Paralleltonart oder Quinte daneben.
+TON_NOTEN = list(range(48, 96))
+TON_DUR = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88]
+TON_MOLL = [6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17]
+TON_NAMEN = ["C", "Des", "D", "Es", "E", "F", "Fis", "G", "As", "A", "B", "H"]
+CAMELOT_DUR = {0: "8B", 7: "9B", 2: "10B", 9: "11B", 4: "12B", 11: "1B", 6: "2B", 1: "3B", 8: "4B", 3: "5B", 10: "6B", 5: "7B"}
+CAMELOT_MOLL = {9: "8A", 4: "9A", 11: "10A", 6: "11A", 1: "12A", 8: "1A", 3: "2A", 10: "3A", 5: "4A", 0: "5A", 7: "6A", 2: "7A"}
+
+
+def ton_filter(datei):
+    teile = ["aresample=12000,pan=mono|c0=0.5*c0+0.5*c1,asplit=%d%s"
+             % (len(TON_NOTEN), "".join("[k%d]" % i for i in range(len(TON_NOTEN))))]
+    for i, m in enumerate(TON_NOTEN):
+        teile.append("[k%d]bandpass=f=%.2f:width_type=q:w=25[b%d]" % (i, 440 * 2 ** ((m - 69) / 12), i))
+    teile.append("".join("[b%d]" % i for i in range(len(TON_NOTEN)))
+                 + "amerge=inputs=%d,asetnsamples=n=600000:p=0,astats=metadata=1:reset=1:"
+                   "measure_perchannel=RMS_level:measure_overall=none,ametadata=print:file=%s"
+                 % (len(TON_NOTEN), datei))
+    return ";".join(teile)
+
+
+def ton_bestimmen(text):
+    """ametadata-Ausgabe der Bandpaesse -> (camelot, name, guete) oder None."""
+    energie = [0.0] * len(TON_NOTEN)
+    for z in text.splitlines():
+        m = re.match(r"lavfi\.astats\.(\d+)\.RMS_level=(.*)", z)
+        if m:
+            try:
+                v = float(m.group(2))
+            except ValueError:
+                continue
+            if v == v and v > -200:
+                energie[int(m.group(1)) - 1] += 10 ** (v / 10)
+    chroma = [0.0] * 12
+    for i, m in enumerate(TON_NOTEN):
+        chroma[m % 12] += energie[i]
+    if not any(chroma):
+        return None
+
+    def korr(a, b):
+        ma, mb = sum(a) / 12, sum(b) / 12
+        n = math.sqrt(sum((x - ma) ** 2 for x in a) * sum((y - mb) ** 2 for y in b)) or 1
+        return sum((x - ma) * (y - mb) for x, y in zip(a, b)) / n
+    beste = max(((korr(chroma[t:] + chroma[:t], p), t, art)
+                 for t in range(12) for p, art in ((TON_DUR, "Dur"), (TON_MOLL, "Moll"))))
+    g, t, art = beste
+    cam = (CAMELOT_DUR if art == "Dur" else CAMELOT_MOLL)[t]
+    name = TON_NAMEN[t] + ("-Dur" if art == "Dur" else "-Moll")
+    return cam, name, round(g, 2)
+
+
+def spur_bpm(tief, voll, hz=100):
+    """BPM und Taktbeginn aus der Einsatz-Huellkurve (Bass doppelt) per Autokorrelation.
+    Sicherheit: stimmen erste und zweite Songhaelfte im Tempo ueberein (fester Takt)?
+    -> (bpm, versatz_s, sicherheit 0..1) oder (None, 0, 0)."""
+    n = len(tief)
+    if n < hz * 20:
+        return None, 0.0, 0.0
+    ons = [0.0] + [max(0.0, tief[i] - tief[i - 1]) * 2 + max(0.0, voll[i] - voll[i - 1]) for i in range(1, n)]
+    mittel = sum(ons) / n
+    ons = [x - mittel for x in ons]
+
+    def schaetzen(reihe):
+        def ak(lag):
+            return sum(a * b for a, b in zip(reihe, reihe[lag:]))
+        lags = range(int(hz * 60 / 190), int(hz * 60 / 70) + 1)
+        werte = {lag: ak(lag) for lag in lags}
+        best = max(lags, key=lambda lag: werte[lag] + 0.5 * ak(2 * lag))
+        a, b, c = werte.get(best - 1, 0.0), werte[best], werte.get(best + 1, 0.0)
+        teiler = a - 2 * b + c
+        bpm = 60.0 * hz / (best + (0.5 * (a - c) / teiler if teiler else 0.0))
+        while bpm < 85:
+            bpm *= 2
+        while bpm > 175:
+            bpm /= 2
+        return bpm
+    bpm = schaetzen(ons)
+    h1, h2 = schaetzen(ons[:n // 2]), schaetzen(ons[n // 2:])
+    abweichung = max(abs(h1 - bpm), abs(h2 - bpm)) / bpm * 100       # Prozent
+    sicher = max(0.0, 1.0 - abweichung / 3.0)                        # ab 3 % Abweichung: 0
+    # Taktbeginn: Phase, auf der die Einsaetze im Schlagabstand am staerksten sind
+    schlag = 60.0 * hz / bpm
+
+    def gewicht(ph):
+        s, k = 0.0, float(ph)
+        while k < n:
+            s += ons[int(k)]
+            k += schlag
+        return s
+    versatz = max(range(max(1, int(schlag))), key=gewicht) / hz
+    return round(bpm, 1), round(versatz, 3), sicher
+
+
+def spur_datei(vid):
+    return os.path.join(SPUR_ORDNER, vid + ".json.gz")
+
+
+def spur_von_platte(vid):
+    """Schon einmal gemessen? Dann laden (und als zuletzt benutzt markieren). -> True"""
+    try:
+        with gzip.open(spur_datei(vid), "rt", encoding="utf-8") as f:
+            text = f.read()
+        if json.loads(text).get("version") != SPUR_VERSION:
+            return False
+        os.utime(spur_datei(vid))
+        SPUREN[vid] = text
+        log(f"Studio-Spur {vid}: von der Platte")
+        return True
+    except (OSError, ValueError):
+        return False
+
+
+def spur_speichern(vid, text):
+    try:
+        os.makedirs(SPUR_ORDNER, exist_ok=True)
+        tmp = spur_datei(vid) + ".tmp"
+        with gzip.open(tmp, "wt", encoding="utf-8", compresslevel=6) as f:
+            f.write(text)
+        os.replace(tmp, spur_datei(vid))
+        dateien = sorted(glob.glob(os.path.join(SPUR_ORDNER, "*.json.gz")), key=os.path.getmtime)
+        groesse = sum(os.path.getsize(p) for p in dateien)
+        while dateien and groesse > SPUR_PLATTE_MB * 1024 * 1024:
+            alt = dateien.pop(0)
+            groesse -= os.path.getsize(alt)
+            os.remove(alt)
+    except OSError as e:
+        log(f"Studio-Spur {vid}: nicht gespeichert ({e})")
+
+
+def spur_messen(vid, audio_url, laenge):
+    """Ganzen Song messen -> SPUREN[vid] (und auf die Platte). Laeuft im eigenen Faden."""
+    if SPUREN.get(vid) or spur_von_platte(vid):
+        return
+    if vid in SPUREN or not audio_url:
+        return
+    SPUREN[vid] = None                      # in Arbeit
+    try:
+        # -readrate: hoechstens 8-fache Abspielgeschwindigkeit. Voll aufgedreht zog ffmpeg
+        # einen Song in ~3 s - die WLAN-Spitzen stoerten den Bluetooth-Ton (gleicher Funkchip).
+        # ein Lauf, zwei Zweige: Studio-Spur (Ausgabe auf stdout) und Tonart (in eine Datei)
+        fd, ton_datei = tempfile.mkstemp(prefix="ton-", suffix=".txt")
+        os.close(fd)
+        aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-readrate", str(SPUR_LESETEMPO),
+                              "-i", audio_url, "-vn", "-filter_complex",
+                              "[0:a]asplit=2[sa][sb];[sa]" + SPUR_FILTER + "[o1];[sb]" + ton_filter(ton_datei) + "[o2]",
+                              "-map", "[o1]", "-f", "null", "-", "-map", "[o2]", "-f", "null", "-"],
+                             capture_output=True, text=True, timeout=180)
+        try:
+            with open(ton_datei) as f:
+                ton = ton_bestimmen(f.read())
+        except OSError:
+            ton = None
+        finally:
+            try:
+                os.remove(ton_datei)
+            except OSError:
+                pass
+    except (OSError, subprocess.TimeoutExpired) as e:
+        log(f"Studio-Spur {vid}: {type(e).__name__}")
+        SPUREN.pop(vid, None)
+        return
+    rahmen, akt = [], None
+    for zeile in aus.stdout.splitlines():
+        if zeile.startswith("frame:"):
+            akt = [-90.0] * 10
+            rahmen.append(akt)
+        elif akt is not None and zeile.startswith("lavfi.astats."):
+            k, _, w = zeile.partition("=")
+            teile = k.split(".")
+            try:
+                v = float(w)
+            except ValueError:
+                v = -90.0
+            if v != v or v < -90:
+                v = -90.0
+            akt[(int(teile[2]) - 1) * 2 + (0 if teile[3] == "Peak_level" else 1)] = v
+    if len(rahmen) < SPUR_HZ * 5:
+        log(f"Studio-Spur {vid}: zu wenig Ton ({len(rahmen)} Rahmen)")
+        SPUREN.pop(vid, None)
+        return
+    # Spalten: 0/1 links Spitze/RMS, 2/3 rechts, 5 tief RMS, 7 mitte RMS, 9 hoch RMS
+    lin = [[10 ** (r[i] / 20) for r in rahmen] for i in range(10)]
+    voll = [(a + b) / 2 for a, b in zip(lin[1], lin[3])]
+    halb = lambda r: [(a + b) / 2 for a, b in zip(r[0::2], r[1::2])]      # 200 -> 100 Hz
+    bpm, versatz, sicher = spur_bpm(halb(lin[5]), halb(voll), SPUR_HZ / 2)
+
+    def b64(werte, f):
+        return base64.b64encode(bytes(max(0, min(255, round(f(x)))) for x in werte)).decode()
+    db_byte = lambda db: (db + 60) * 255 / 60            # -60..0 dBFS -> 0..255
+    text = json.dumps({
+        "version": SPUR_VERSION, "videoId": vid, "proSek": SPUR_HZ, "dauer": round(len(rahmen) / SPUR_HZ, 2),
+        "bpm": bpm, "versatz": versatz, "sicher": round(sicher, 2),
+        "camelot": ton[0] if ton else None, "tonart": ton[1] if ton else None, "tonGuete": ton[2] if ton else None,
+        # Wellenform linear 0..1 (wie dj-studio/js/analysis.js), Pegel in dBFS
+        "spitze": b64([max(a, b) for a, b in zip(lin[0], lin[2])], lambda x: x * 255),
+        "tief": b64(lin[5], lambda x: x * 255), "mitte": b64(lin[7], lambda x: x * 255),
+        "hoch": b64(lin[9], lambda x: x * 255),
+        "pegelSpitzeL": b64([r[0] for r in rahmen], db_byte), "pegelRmsL": b64([r[1] for r in rahmen], db_byte),
+        "pegelSpitzeR": b64([r[2] for r in rahmen], db_byte), "pegelRmsR": b64([r[3] for r in rahmen], db_byte)})
+    SPUREN[vid] = text
+    spur_speichern(vid, text)
+    log(f"Studio-Spur {vid}: {len(rahmen) / SPUR_HZ:.0f}s, {bpm} BPM (Sicherheit {sicher:.2f}), "
+        f"Tonart {ton[1] + ' ' + ton[0] + ' (' + str(ton[2]) + ')' if ton else '-'}")
+
+
 def seiten_blur_graph(vid):
     """lavfi-Graph fuer den unscharfen Seitenhintergrund, None bei Breitbild."""
     b, h = FORMATE.get(vid, (0, 0))
@@ -2045,6 +2284,7 @@ def main():
     # Handy), Vorladen (Song endet bald), Mix, Playlist.
     neben = None
     analyse_arbeiter = None   # misst Intro/Ausklang/Anhebung der naechsten Songs im Voraus
+    spur_arbeiter = None      # DJ-Modus: misst Wellenform/BPM/Pegel fuer das Studio
     blend_erledigt = None     # id des zuletzt ausgefuehrten "Jetzt ueberblenden"
     laden_seit = None         # seit wann die Seite in readyState "loading" haengt
     laden_pruef = 0.0
@@ -2273,6 +2513,50 @@ def main():
                 analyse_arbeiter = threading.Thread(target=analyse_lauf, daemon=True)
                 analyse_arbeiter.start()
 
+        # DJ-Modus: laufenden und vorgeladenen Song fuer das Studio messen und zustellen.
+        if musik and state.get("flaeche") == "yt-dj-video":
+            if not (spur_arbeiter is not None and spur_arbeiter.is_alive()):
+                # Reihenfolge: der laufende Song zuerst (sonst bleiben Welle und Meter still),
+                # dann der vorgeladene, dann die naechsten der Warteschlange
+                laufend = shown[3:].split("|", 1)[0] if shown and shown.startswith("yt:") else ""
+                reihe = sorted(cache.items(), key=lambda kv: kv[0].split("|", 1)[0] != laufend)
+                for key, urls in reihe:
+                    s_vid = key.split("|", 1)[0]
+                    if key.endswith("|m") and urls and s_vid not in SPUREN:
+                        spur_arbeiter = threading.Thread(target=spur_messen, daemon=True,
+                                                         args=(s_vid, urls[1] or urls[0], urls[2]))
+                        spur_arbeiter.start()
+                        break
+                else:
+                    # sonst schon die naechsten Songs der Warteschlange (Kanal 2 frueh fuellen)
+                    for s_vid in [laufend] + [str(v) for v in (state.get("analyse") or [])[:2]]:
+                        if re.fullmatch(r"[A-Za-z0-9_-]{11}", s_vid) and s_vid not in SPUREN \
+                                and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER:
+                            def spur_vorab(vid=s_vid):
+                                if spur_von_platte(vid):        # schon gemessen: kein yt-dlp noetig
+                                    return
+                                urls = resolve(vid, "bestaudio", "abr")
+                                if urls:
+                                    spur_messen(vid, urls[0], urls[2])
+                            spur_arbeiter = threading.Thread(target=spur_vorab, daemon=True)
+                            spur_arbeiter.start()
+                            break
+            fertig = [v for v, s in list(SPUREN.items()) if s]
+            if fertig and page_id:
+                # Nachsehen, was die Seite schon hat - in der aktuellen Fassung (nach einem Neuladen
+                # ist alles weg; nach einer neuen SPUR_VERSION liegen dort noch alte Messungen)
+                try:
+                    da = set(json.loads(cdp_eval(page_id, "JSON.stringify(Object.entries(window.nlStudioSpuren || {})"
+                                                 f".filter(([k, v]) => v && v.version === {SPUR_VERSION}).map(([k]) => k))") or "[]"))
+                except (OSError, ValueError, ConnectionError):
+                    da = set(fertig)
+                for s_vid in fertig:
+                    if s_vid not in da and SPUREN.get(s_vid):
+                        zustellen(page_id, "(window.nlStudioSpuren = window.nlStudioSpuren || {})"
+                                  f"[{json.dumps(s_vid)}] = {SPUREN[s_vid]}; 1", "Studio-Spur")
+            for alt in list(SPUREN)[:-6]:       # nur die letzten paar behalten
+                SPUREN.pop(alt, None)
+
         # Neben-Arbeiter (siehe oben): immer nur eine Aufgabe zur Zeit.
         if not (neben is not None and neben.is_alive()):
             aufgabe = None
@@ -2486,8 +2770,8 @@ def main():
             else:
                 # Musik: Normal oder Vollbild? Wechselt die Flaeche, nur Fenster
                 # und QR neu setzen - mpv laeuft weiter (Ton ohne Aussetzer, 6.8).
-                rect_art = "yt_voll" if (art == "yt" and musik
-                                         and state.get("flaeche") == "yt-vollbild-video") else art
+                rect_art = (MUSIK_FLAECHE.get(state.get("flaeche"), art)
+                            if (art == "yt" and musik) else art)
                 if rect_art != flaeche_jetzt:
                     if flaeche_jetzt is not None:
                         log(f"Flaeche: {flaeche_jetzt} -> {rect_art}")
@@ -2713,13 +2997,27 @@ def main():
                 mpv_stand = json.dumps({"videoId": xf["vid"], "pos": round(xp, 1), "aufl": None, "fps": None,
                                         "dauer": stille_ende(xf["vid"], xd) if isinstance(xd, (int, float)) else None,
                                         "pause": pausiert})
+        # DJ-Modus: je Song fuers Studio [gain dB, Limiter-Anhebung dB, Anfang s, Ende s] - die
+        # Meter zeigen damit, was aus der Anlage kommt (wie ton_zustand), die Wellenform zeigt
+        # Anfang/Ende als Marken und den Countdown bis zur Ueberblendung (Ende - Blende).
+        ton_gain = "null"
+        if musik and state.get("flaeche") == "yt-dj-video":
+            vids = {k.split("|", 1)[0] for k in list(cache)} | {str(v) for v in (state.get("analyse") or [])[:3]}
+            if shown and shown.startswith("yt:"):
+                vids.add(shown[3:].split("|", 1)[0])
+            if xf is not None:
+                vids.add(xf["vid"])
+            ton_gain = json.dumps({v: [gain_von(v), ((STILLE.get(v) or {}).get("limiter") or 0.0) if ton_limiter else 0.0,
+                                       STILLE[v].get("anfang") or 0.0, STILLE[v].get("ende")]
+                                   for v in vids if v in STILLE})
         if page_id:
             try:
                 cdp_eval(page_id,
                          f"window.nlExternBis = {'Date.now() + 3000' if nl_ok else '0'}; "
                          f"window.djExternBis = {'Date.now() + 3000' if dj_ok else '0'}; "
                          f"window.djExternLaeuft = {'true' if dj_laeuft else 'false'}; "
-                         f"window.nlMpvStand = {mpv_stand}; 1")
+                         f"window.nlTonGain = {ton_gain}; "
+                         f"window.nlMpvStand = {mpv_stand}; window.nlMpvStandZeit = Date.now(); 1")
             except (OSError, ValueError, ConnectionError):
                 pass
 
