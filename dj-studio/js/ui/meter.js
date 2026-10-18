@@ -12,7 +12,7 @@ export const SCHWELLEN_MASTER = [-48, -45, -42, -39, -36, -33, -30, -27, -24, -2
 const ABFALL = 26, HALTEN = 1.5, CLIP = -0.1;
 // TV (echte Titel): Ballistik wie ein Spitzenpegelmesser - weich rauf, gleichmaessig runter,
 // die gehaltene Spitze sinkt nach dem Halten langsam ab statt zu springen.
-const TV_ANSTIEG = 0.01, TV_ABFALL = 12, TV_SPITZE_ABFALL = 20;
+const TV_ANSTIEG = 0.03, TV_ABFALL = 12, TV_SPITZE_ABFALL = 20;
 
 // Schwellen passend zu einer gedruckten Skala (Bild 2): punkte = [[Segment, Skalenwert]],
 // versatz = Skalenwert, der 0 dBFS entspricht. Liefert n steigende dBFS-Schwellen.

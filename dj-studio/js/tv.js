@@ -27,9 +27,10 @@ let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV:
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
 // Pegelanzeige: Kanaele und Master folgen der Lautstaerke der Fernbedienung - rot wird es nur
-// bei 100 % (Wunsch 18.10.2026): dann erreichen die Spitzen (YouTube bis 0 dBFS gemastert) an
-// Kanaelen und Master knapp Rot, bei 80 % bleiben sie ~6 dB darunter. Gemessen, 18.10.2026.
-const RESERVE_DB = 0;
+// bei 100 % (Wunsch 18.10.2026), und dann nur kurz. Rot sind die obersten 3-4 LEDs (ab ca.
+// -2,5 dBFS). Am Song simuliert: ohne Reserve stand der Balken bei 100 % 54 % der Zeit im Roten,
+// mit 2 dB Reserve und 30 ms Anstieg (meter.js) ~8 %, bei 80 % nie.
+const RESERVE_DB = -2;
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
@@ -221,7 +222,7 @@ export function tvBauen(engine) {
     const m = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 }, reduktion: 0 };
     const laut = lautFaktor();
     for (const id of ['A', 'B']) {
-      const p = pegelBei(id), g = engine.xfPegel(id) * laut;
+      const p = pegelBei(id), g = engine.xfPegel(id) * laut * RESERVE;
       for (const k of ['L', 'R']) {
         m[k].spitze = Math.max(m[k].spitze, p[k].spitze * g);
         m[k].rms = Math.sqrt(m[k].rms ** 2 + (p[k].rms * g) ** 2);
