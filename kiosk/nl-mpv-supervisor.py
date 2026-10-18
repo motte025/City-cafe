@@ -1922,26 +1922,26 @@ def balken_messen(vid, video_url, laenge):
 
 # DJ-Modus (Wunsch 18.10.2026): das Studio zeigt Wellenform, BPM und Pegel des
 # laufenden Songs. Der Ton laeuft weiter nur ueber mpv; hier wird er einmal ganz
-# gemessen (~2 s Rechenzeit): je 10 ms Spitze/RMS links und rechts, RMS in drei Baendern.
+# gemessen (~3 s Rechenzeit): je 5 ms Spitze/RMS links und rechts, RMS in drei Baendern.
 # Gespeichert werden nur diese Zahlen (Bytes, base64), nie der Ton.
 SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
-SPUR_HZ = 100
+SPUR_HZ = 200              # Werte je Sekunde (12000 Hz / 60 Samples: genau, ohne Drift)
 # Kanaele nach amerge: 1 links, 2 rechts, 3 tief, 4 mitte, 5 hoch (Baender aus der Mono-Summe)
-SPUR_FILTER = ("aresample=11025,aformat=channel_layouts=stereo,asplit=2[st][mo];"
+SPUR_FILTER = ("aresample=12000,aformat=channel_layouts=stereo,asplit=2[st][mo];"
                "[st]channelsplit=channel_layout=stereo[L][R];"
                "[mo]pan=mono|c0=0.5*c0+0.5*c1,asplit=3[a][b][c];"
                "[a]lowpass=f=200[l];[b]highpass=f=200,lowpass=f=2500[m];[c]highpass=f=2500[h];"
-               "[L][R][l][m][h]amerge=inputs=5,asetnsamples=n=110:p=0,"
+               "[L][R][l][m][h]amerge=inputs=5,asetnsamples=n=60:p=0,"
                "astats=metadata=1:reset=1:measure_perchannel=RMS_level+Peak_level:measure_overall=none,"
                "ametadata=print:file=-")
 
 
-def spur_bpm(tief, voll):
+def spur_bpm(tief, voll, hz=100):
     """BPM und Taktbeginn aus der Einsatz-Huellkurve (Bass doppelt) per Autokorrelation.
     Sicherheit: stimmen erste und zweite Songhaelfte im Tempo ueberein (fester Takt)?
     -> (bpm, versatz_s, sicherheit 0..1) oder (None, 0, 0)."""
     n = len(tief)
-    if n < SPUR_HZ * 20:
+    if n < hz * 20:
         return None, 0.0, 0.0
     ons = [0.0] + [max(0.0, tief[i] - tief[i - 1]) * 2 + max(0.0, voll[i] - voll[i - 1]) for i in range(1, n)]
     mittel = sum(ons) / n
@@ -1950,12 +1950,12 @@ def spur_bpm(tief, voll):
     def schaetzen(reihe):
         def ak(lag):
             return sum(a * b for a, b in zip(reihe, reihe[lag:]))
-        lags = range(int(SPUR_HZ * 60 / 190), int(SPUR_HZ * 60 / 70) + 1)
+        lags = range(int(hz * 60 / 190), int(hz * 60 / 70) + 1)
         werte = {lag: ak(lag) for lag in lags}
         best = max(lags, key=lambda lag: werte[lag] + 0.5 * ak(2 * lag))
         a, b, c = werte.get(best - 1, 0.0), werte[best], werte.get(best + 1, 0.0)
         teiler = a - 2 * b + c
-        bpm = 60.0 * SPUR_HZ / (best + (0.5 * (a - c) / teiler if teiler else 0.0))
+        bpm = 60.0 * hz / (best + (0.5 * (a - c) / teiler if teiler else 0.0))
         while bpm < 85:
             bpm *= 2
         while bpm > 175:
@@ -1966,7 +1966,7 @@ def spur_bpm(tief, voll):
     abweichung = max(abs(h1 - bpm), abs(h2 - bpm)) / bpm * 100       # Prozent
     sicher = max(0.0, 1.0 - abweichung / 3.0)                        # ab 3 % Abweichung: 0
     # Taktbeginn: Phase, auf der die Einsaetze im Schlagabstand am staerksten sind
-    schlag = 60.0 * SPUR_HZ / bpm
+    schlag = 60.0 * hz / bpm
 
     def gewicht(ph):
         s, k = 0.0, float(ph)
@@ -1974,7 +1974,7 @@ def spur_bpm(tief, voll):
             s += ons[int(k)]
             k += schlag
         return s
-    versatz = max(range(max(1, int(schlag))), key=gewicht) / SPUR_HZ
+    versatz = max(range(max(1, int(schlag))), key=gewicht) / hz
     return round(bpm, 1), round(versatz, 3), sicher
 
 
@@ -2013,7 +2013,8 @@ def spur_messen(vid, audio_url, laenge):
     # Spalten: 0/1 links Spitze/RMS, 2/3 rechts, 5 tief RMS, 7 mitte RMS, 9 hoch RMS
     lin = [[10 ** (r[i] / 20) for r in rahmen] for i in range(10)]
     voll = [(a + b) / 2 for a, b in zip(lin[1], lin[3])]
-    bpm, versatz, sicher = spur_bpm(lin[5], voll)
+    halb = lambda r: [(a + b) / 2 for a, b in zip(r[0::2], r[1::2])]      # 200 -> 100 Hz
+    bpm, versatz, sicher = spur_bpm(halb(lin[5]), halb(voll), SPUR_HZ / 2)
 
     def b64(werte, f):
         return base64.b64encode(bytes(max(0, min(255, round(f(x)))) for x in werte)).decode()

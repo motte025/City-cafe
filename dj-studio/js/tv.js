@@ -20,6 +20,9 @@
 
 import { state, bestaetigen } from './store.js';
 
+// Ton-Fenster der Ueberblendung wie im Supervisor (XF_TON_FENSTER_SEK, DJ-Kurve 16.10.2026):
+// der Ton wechselt nur kurz in der Mitte der Blende - genau dann faehrt der Crossfader.
+const XF_TON_FENSTER_SEK = 2.0;
 let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV: 4/6/9 s, kommt mit)
 const SPRUNG_SEK = 0.8;      // erst ab dieser Abweichung die Position neu setzen
 // Pegelanzeige wie am Mischpult: YouTube ist bis 0 dBFS gemastert, darum an den Kanaelen
@@ -143,8 +146,8 @@ export function tvBauen(engine) {
   });
 
   // ---- Pegel aus der Messung statt aus Web Audio ----------------------------
-  // Wie am Mischpult: Balken = Lautheit ueber 300 ms (VU), Spitze = 50 ms, links/rechts getrennt.
-  const VU_FAECHER = 30, SPITZE_FAECHER = 5, RESERVE = Math.pow(10, RESERVE_DB / 20);
+  // Wie am Mischpult: Balken = Lautheit ueber 50 ms (Ballistik in meter.js), Spitze 30 ms, links/rechts.
+  const VU_FAECHER = 5, SPITZE_FAECHER = 3, RESERVE = Math.pow(10, RESERVE_DB / 20);
   const STILL = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 } };
   function pegelBei(id) {
     const d = state.decks[id], sp = d.track && spuren.get(d.track.videoId);
@@ -200,10 +203,11 @@ export function tvBauen(engine) {
         }
       }
       if (blende) {
-        const a = Math.min(1, (t - blende.ab) / xfSek);
-        const k = (1 - Math.cos(a * Math.PI)) / 2;
-        engine.request('master.crossfader', blende.von + (blende.nach - blende.von) * k);
-        if (a >= 1) blende = null;
+        const lauf = t - blende.ab, fenster = Math.min(XF_TON_FENSTER_SEK, xfSek * 0.4);
+        const q = Math.min(1, Math.max(0, (lauf - (xfSek - fenster) / 2) / fenster));
+        // Crossfader-Kurve 'weich' = gleiche Leistung (cos/sin) wie die Ton-Blende von mpv
+        engine.request('master.crossfader', blende.von + (blende.nach - blende.von) * q);
+        if (lauf >= xfSek) blende = null;
       }
     },
   };

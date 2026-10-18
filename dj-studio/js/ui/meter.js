@@ -10,6 +10,9 @@ export const SKALA = [0, -3, -6, -12, -18, -24, -36, -48];
 // feinere Teilung fuer den Master (mehr, kleinere Segmente wie in Bild 2)
 export const SCHWELLEN_MASTER = [-48, -45, -42, -39, -36, -33, -30, -27, -24, -22, -20, -18, -16, -14, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2.5, -2, -1.5, -1, -0.5, -0.1];
 const ABFALL = 26, HALTEN = 1.5, CLIP = -0.1;
+// TV (echte Titel): Ballistik wie ein Spitzenpegelmesser - weich rauf, gleichmaessig runter,
+// die gehaltene Spitze sinkt nach dem Halten langsam ab statt zu springen.
+const TV_ANSTIEG = 0.04, TV_ABFALL = 12, TV_SPITZE_ABFALL = 20;
 
 // Schwellen passend zu einer gedruckten Skala (Bild 2): punkte = [[Segment, Skalenwert]],
 // versatz = Skalenwert, der 0 dBFS entspricht. Liefert n steigende dBFS-Schwellen.
@@ -67,6 +70,7 @@ export class LedMeter {
 
   // werte: [{ spitze, rms }] linear je Kanal; t: Sekunden (performance)
   update(werte, t, dt) {
+    if (document.body.classList.contains('tv')) return this.updateTv(werte, t, dt);
     for (let i = 0; i < this.kanaele; i++) {
       const k = this.k[i], w = werte[i] || { spitze: 0, rms: 0 };
       const sp = zuDb(w.spitze), rm = zuDb(w.rms);
@@ -75,6 +79,21 @@ export class LedMeter {
       if (k.spitze < -60) k.spitze = -Infinity;
       if (k.rms < -60) k.rms = -Infinity;
       if (sp >= k.halten || t - k.haltenZeit > HALTEN) { k.halten = sp; k.haltenZeit = t; }
+      if (sp >= CLIP) k.clip = t;
+    }
+    this.zeichnen(t);
+  }
+
+  updateTv(werte, t, dt) {
+    const rauf = 1 - Math.exp(-dt / TV_ANSTIEG);
+    for (let i = 0; i < this.kanaele; i++) {
+      const k = this.k[i], w = werte[i] || { spitze: 0, rms: 0 };
+      const sp = Math.max(-60, zuDb(w.spitze)), rm = Math.max(-60, zuDb(w.rms));
+      const bal = (alt, neu) => (!isFinite(alt) ? neu : neu > alt ? alt + (neu - alt) * rauf : Math.max(neu, alt - TV_ABFALL * dt));
+      k.rms = bal(k.rms, rm);
+      k.spitze = bal(k.spitze, sp);
+      if (sp >= k.halten || !isFinite(k.halten)) { k.halten = sp; k.haltenZeit = t; }
+      else if (t - k.haltenZeit > HALTEN) k.halten = Math.max(k.rms, k.halten - TV_SPITZE_ABFALL * dt);
       if (sp >= CLIP) k.clip = t;
     }
     this.zeichnen(t);

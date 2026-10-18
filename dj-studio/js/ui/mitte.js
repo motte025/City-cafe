@@ -142,7 +142,12 @@ export function mitteBauen(root, engine, aktionen) {
       clip.classList.toggle('an', mMeter.clip(t));
       limit.classList.toggle('an', mp.reduktion < -0.3);
       grWert.textContent = mp.reduktion.toFixed(1);
-      grZeichnen(cGr, grG, mp.reduktion, skin);
+      if (document.body.classList.contains('tv')) {
+        // TV: kein eigener Limiter - die Saeule zeigt den Master-Pegel (nach der Lautstaerke)
+        const k = mMeter.k, lautst = Math.max(k[0].rms, k[1].rms);
+        saeuleZeichnen(cGr, grG, lautst, Math.max(k[0].halten, k[1].halten), skin);
+        grWert.textContent = isFinite(lautst) ? lautst.toFixed(1) : '−∞';
+      } else grZeichnen(cGr, grG, mp.reduktion, skin);
       if (state.video.ansicht !== 'link') programm.zeichnen(t, state.video.ansicht);
     },
   };
@@ -164,6 +169,30 @@ function grZeichnen(c, g, reduktion, skin) {
       g.roundRect(k * (sw + ql), i * (sh + lu), sw, sh, skin ? Math.min(sw, sh) * 0.22 : 0);
       g.fillStyle = an ? '#ffc21c' : skin ? '#1d1a10' : '#2b2610';
       g.shadowColor = '#ffb000'; g.shadowBlur = an && skin ? 7 * dpr : 0;
+      g.fill();
+    }
+  }
+  g.shadowBlur = 0;
+}
+
+// Master-Pegel als Saeule (TV): unten -30 dBFS, oben 0 dBFS, gehaltene Spitze als einzelne LED.
+function saeuleZeichnen(c, g, db, spitze, skin) {
+  const { w, h } = leinwand(c);
+  g.clearRect(0, 0, w, h);
+  const segs = skin ? 14 : 12, dpr = window.devicePixelRatio || 1;
+  const lu = skin ? Math.max(1, h / segs * 0.28) : 2, sh = (h - (segs - 1) * lu) / segs;
+  const spalten = skin ? 2 : 1, ql = 3 * dpr, sw = (w - ql * (spalten - 1)) / spalten;
+  const schwelle = i => -30 + 30 * (i + 1) / segs;           // i = 0 unten
+  const spitzeI = isFinite(spitze) ? Math.floor((spitze + 30) / 30 * segs) - 1 : -1;
+  for (let i = 0; i < segs; i++) {
+    const an = db >= schwelle(i) - 30 / segs || i === spitzeI;
+    const farbe = i >= segs - 2 ? '#ff3b2f' : i >= segs - 5 ? '#ffc21c' : '#3be06a';
+    const y = h - (i + 1) * sh - i * lu;
+    for (let k = 0; k < spalten; k++) {
+      g.beginPath();
+      g.roundRect(k * (sw + ql), y, sw, sh, skin ? Math.min(sw, sh) * 0.22 : 0);
+      g.fillStyle = an ? farbe : skin ? '#1d1a10' : '#2b2610';
+      g.shadowColor = farbe; g.shadowBlur = an && skin ? 7 * dpr : 0;
       g.fill();
     }
   }

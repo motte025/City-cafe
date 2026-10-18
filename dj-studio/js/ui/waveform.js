@@ -23,6 +23,13 @@ function spalte(wf, b0, b1) {
   return { sp, t, m, h };
 }
 
+// Wie spalte(), aber auch fuer Bereiche kleiner als ein Fach (gezoomt): dann das naechste Fach
+function spalteFein(wf, b0, b1) {
+  if (b1 - b0 >= 1) return spalte(wf, b0, b1);
+  const b = Math.min(wf.faecher - 1, Math.max(0, Math.floor(b0)));
+  return { sp: wf.spitze[b], t: wf.tief[b], m: wf.mitte[b], h: wf.hoch[b] };
+}
+
 function zeichneSpalte(g, x, mitteY, H, s, farben, breite) {
   const hs = Math.min(1, s.sp) * H;
   const ht = Math.min(1, s.t * 2.3) * H;
@@ -36,16 +43,30 @@ function zeichneSpalte(g, x, mitteY, H, s, farben, breite) {
 
 // TV-Ansicht (echte, laut gemasterte Titel): Spitzen nur als zarte Huelle, darin
 // Bass/Mitte/Hoehen als abgestufte Schichten - volle Hoehe, aber Struktur statt Block.
+// Gezeichnet als glatte Konturen je Schicht (eine Spalte je Bildschirmpixel, leicht geglaettet).
 const TV = () => document.body.classList.contains('tv');
-function zeichneSpalteTv(g, x, mitteY, H, s, farben, breite) {
-  const hs = Math.min(1, s.sp) * H;
-  const ht = Math.min(1, s.t * 1.7) * H;
-  const hm = Math.min(1, s.m * 1.9) * H;
-  const hh = Math.min(1, s.h * 3.2) * H;
-  g.fillStyle = rgba(farben.tief, 0.22); g.fillRect(x, mitteY - hs, breite, hs * 2);
-  g.fillStyle = rgba(farben.tief, 0.7); g.fillRect(x, mitteY - ht, breite, ht * 2);
-  g.fillStyle = rgba(farben.mitte, 0.55); g.fillRect(x, mitteY - hm * 0.8, breite, hm * 1.6);
-  g.fillStyle = rgba(farben.hoch, 0.55); g.fillRect(x, mitteY - hh * 0.5, breite, hh);
+const TV_SCHICHTEN = [            // [Wert, Faktor, Hoehenanteil, Farbe, Deckkraft]
+  ['sp', 1, 1, 'tief', 0.2],
+  ['t', 1.7, 1, 'tief', 0.68],
+  ['m', 1.9, 0.8, 'mitte', 0.55],
+  ['h', 3.2, 0.5, 'hoch', 0.6],
+];
+function zeichneTv(g, spalten, mitteY, H, farben) {
+  const n = spalten.length;
+  for (const [k, f, anteil, farbe, alpha] of TV_SCHICHTEN) {
+    const y = new Float32Array(n);
+    for (let x = 0; x < n; x++) { const s = spalten[x]; y[x] = s ? Math.min(1, s[k] * f) * H * anteil : 0; }
+    // 3er-Glaettung gegen Treppen, Spitzen bleiben erhalten
+    const yg = y.map((v, x) => Math.max(v * 0.6, (y[x - 1] ?? v) * 0.25 + v * 0.5 + (y[x + 1] ?? v) * 0.25));
+    g.beginPath();
+    g.moveTo(0, mitteY);
+    for (let x = 0; x < n; x++) g.lineTo(x + 0.5, mitteY - yg[x]);
+    g.lineTo(n, mitteY);
+    for (let x = n - 1; x >= 0; x--) g.lineTo(x + 0.5, mitteY + yg[x]);
+    g.closePath();
+    g.fillStyle = rgba(farben[farbe], alpha);
+    g.fill();
+  }
 }
 
 function hinweis(g, w, h, text) {
@@ -84,11 +105,18 @@ export class DetailWelle {
     }
     const tv = TV();
     g.globalCompositeOperation = tv ? 'source-over' : 'lighter';
-    for (let x = 0; x < w; x += schritt) {
+    if (tv) {
+      const spalten = new Array(Math.ceil(w));
+      for (let x = 0; x < w; x++) {
+        const t = t0 + x * sekProPx;
+        spalten[x] = t < 0 || t > wf.dauer ? null : spalteFein(wf, t * wf.proSek, (t + sekProPx) * wf.proSek);
+      }
+      zeichneTv(g, spalten, mitteY, H, this.farben);
+    } else for (let x = 0; x < w; x += schritt) {
       const t = t0 + x * sekProPx;
       if (t < 0 || t > wf.dauer) continue;
       const s = spalte(wf, t * wf.proSek, (t + sekProPx * schritt) * wf.proSek);
-      if (s) (tv ? zeichneSpalteTv : zeichneSpalte)(g, x, mitteY, H, s, this.farben, schritt);
+      if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, schritt);
     }
     if (!tv && (this.glanz ??= !!this.c.closest('.skin'))) {
       // Bild-2-Optik: weicher Schein um die Welle (Kopie unscharf darueberlegen)
@@ -138,9 +166,10 @@ export class UebersichtWelle {
     const wf = tr.wf, mitteY = h / 2, H = h * 0.48;
     const tv = TV();
     g.globalCompositeOperation = tv ? 'source-over' : 'lighter';
-    for (let x = 0; x < w; x++) {
+    if (tv) zeichneTv(g, Array.from({ length: w }, (_, x) => spalte(wf, x / w * wf.faecher, (x + 1) / w * wf.faecher)), mitteY, H, this.farben);
+    else for (let x = 0; x < w; x++) {
       const s = spalte(wf, x / w * wf.faecher, (x + 1) / w * wf.faecher);
-      if (s) (tv ? zeichneSpalteTv : zeichneSpalte)(g, x, mitteY, H, s, this.farben, 1);
+      if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, 1);
     }
     this.vorlage = off; this.fuer = tr.id + '@' + w + 'x' + h;
   }
