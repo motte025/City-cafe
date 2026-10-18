@@ -57,17 +57,26 @@ function zeichneTv(g, spalten, mitteY, H, farben) {
 
 // Wie Bild 2: einfarbige feine Nadeln (je Pixel), heller Kern zur Mitte, viel Schwarz dazwischen.
 // Hoehe = je Song gespreizter Pegel (tv.js bildWerte), so stehen Schlaege und Songteile heraus.
-const NADEL_HOEHE = 0.85;     // Anteil der Feldhoehe (Wunsch 18.10.2026: etwas kleiner)
+const NADEL_HOEHE = 0.85;
+const KAMM_PX = 3, KAMM_KOERPER = 0.45;     // Anteil der Feldhoehe (Wunsch 18.10.2026: etwas kleiner)
 // Wie die Fotos der Vorlage: ueberall feine Nadeln, von innen weiss gluehend nach aussen in der
 // Kanalfarbe, durchgehende helle Mittellinie, zarter Schein.
 function zeichneNadeln(g, spalten, mitteY, H, farben) {
   const f = farben.mitte, misch = (a, k) => a.map(v => Math.round(v + (255 - v) * k));
   const f2 = misch(f, 0.45), f3 = misch(f, 0.85);
   const kernMin = Math.max(0.8, H * 0.012);
-  for (let x = 0; x < spalten.length; x++) {
+  // Kamm: nur die hoechste Spalte in +-3 px behaelt die volle Hoehe, die Nachbarn fallen steil
+  // ab - so wird aus dem breiten Bogen eines Schlags eine schmale Nadel wie in den Fotos;
+  // 45 % bleiben als Koerper (Variante G, am echten Song verglichen, 18.10.2026).
+  const n = spalten.length, b = new Float32Array(n);
+  for (let x = 0; x < n; x++) b[x] = spalten[x] ? spalten[x].bi : 0;
+  for (let x = 0; x < n; x++) {
     const s = spalten[x];
     if (!s) continue;
-    const hv = (0.08 + 0.92 * s.bi) * H * NADEL_HOEHE;
+    let lm = 0;
+    for (let k = Math.max(0, x - KAMM_PX); k <= Math.min(n - 1, x + KAMM_PX); k++) if (b[k] > lm) lm = b[k];
+    const v = KAMM_KOERPER * b[x] + (1 - KAMM_KOERPER) * b[x] * Math.pow(lm ? b[x] / lm : 0, 4);
+    const hv = (0.08 + 0.92 * v) * H * NADEL_HOEHE;
     g.fillStyle = `rgba(${f[0]},${f[1]},${f[2]},0.9)`;
     g.fillRect(x, mitteY - hv, 1, hv * 2);
     const h2 = hv * 0.4;
