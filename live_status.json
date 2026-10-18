@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-18T00:17:45Z",
+  "checked_at": "2026-10-18T00:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🌞❤️‍🔥 EH OHHH TELEWUBBIES BASS NIGHT 🌞❤️‍🔥 REQUESTS OPEN !request | !tip | !spawn | !checkin | !patreon | !youtube | #6of ChazzyWeen 👻",
       "game": "DJs"
     }
   ]
