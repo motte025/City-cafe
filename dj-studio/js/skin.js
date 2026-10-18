@@ -180,7 +180,7 @@ const FLICKEN_B = [
   // DJ-Modus: Herz und Menue-Punkte weg (siehe FLICKEN_A)
   { ziel: [1578, 130, 70, 36], quelle: [1560, 130, 6, 36], tv: true },
   // Schriftzug "KANAL 2" weg (siehe FLICKEN_A)
-  { ziel: [1142, 88, 116, 28], quelle: [1258, 88, 8, 28] },
+  { ziel: [1142, 88, 116, 28], quelle: [1312, 88, 6, 28] },   // Quelle in der Farbe des Hintergrunds (gemessen)
   // Play/Pause: in Bild 2 fehlt bei Kanal 2 der zweite Pause-Strich (nur "▶|") - beide Striche
   // aus dem vorhandenen nachmalen, Abstand wie bei Kanal 1 (18.10.2026)
   { ziel: [1347, 701, 4, 19], quelle: [1348, 701, 2, 19], taste: true },
