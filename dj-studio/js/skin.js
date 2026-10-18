@@ -46,6 +46,8 @@ const DECK_A = {
     ['.bpm-zahl', [36, 346, 92, 36]],
     ['.tempo-feld:not(.bpm):not(.key)', [130, 330, 85, 55]],
     ['.tempo-zahl', [143, 350, 72, 28]],
+    ['.tv-takt', [138, 333, 78, 50]],
+    ['.tv-mix', [226, 336, 148, 44]],
     ['.bereich[data-b="6"]', [229, 345, 39, 27]],
     ['.bereich[data-b="10"]', [281, 345, 39, 27]],
     ['.bereich[data-b="16"]', [333, 345, 39, 27]],
@@ -91,6 +93,9 @@ const DECK_A = {
 
 // Geputzte Stellen fuer Kanal 1: ziel <- quelle (gestreckt) oder ziel <- Farbe
 const FLICKEN_A = [
+  // DJ-Modus: Beschriftung TEMPO und die Tasten +-6/10/16 weg (dort Takt und Countdown)
+  { ziel: [146, 334, 44, 15], quelle: [192, 334, 4, 15], tv: true },
+  { ziel: [224, 343, 152, 34], quelle: [275, 343, 2, 34], tv: true },
   // DJ-Modus: Herz und Menue-Punkte aus dem Bild weg (Platz fuer lange Titel)
   { ziel: [466, 130, 72, 36], quelle: [446, 130, 6, 36], tv: true },
   // Schriftzug "KANAL 1" weg: das Feld zeigt echten Text (Demo: KANAL 1, TV: ON AIR / NEXT)
@@ -139,6 +144,8 @@ const DECK_B = {
     ['.taste.sync', [1169, 332, 60, 48], { bild: true, an: true, gross: 4 }],
     ['.tempo-feld.key', [1237, 330, 52, 55]],
     ['.key-zahl', [1250, 353, 40, 28]],
+    ['.tv-takt', [1455, 333, 78, 50]],
+    ['.tv-mix', [1296, 336, 148, 44]],
     ['.bereich[data-b="16"]', [1298, 345, 40, 27]],
     ['.bereich[data-b="10"]', [1350, 345, 40, 27]],
     ['.bereich[data-b="6"]', [1402, 345, 40, 27]],
@@ -177,6 +184,9 @@ const DECK_B = {
   ],
 };
 const FLICKEN_B = [
+  // DJ-Modus: TEMPO und Bereichstasten weg (siehe FLICKEN_A)
+  { ziel: [1462, 334, 44, 15], quelle: [1508, 334, 4, 15], tv: true },
+  { ziel: [1294, 343, 152, 34], quelle: [1344, 343, 2, 34], tv: true },
   // DJ-Modus: Herz und Menue-Punkte weg (siehe FLICKEN_A)
   { ziel: [1578, 130, 70, 36], quelle: [1560, 130, 6, 36], tv: true },
   // Schriftzug "KANAL 2" weg (siehe FLICKEN_A)

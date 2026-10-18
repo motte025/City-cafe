@@ -223,6 +223,18 @@ export class DetailWelle {
         if (takt) { g.fillStyle = 'rgba(255,255,255,.85)'; g.fillRect(Math.round(x) - 3, 0, 8, 4); }
       }
     }
+    // TV: Marken aus der Analyse - gruen Anfang, orange Ueberblendung, rot Ende
+    if (tv) for (const [zeit, farbe, text] of [[tr.anfang, '#2fe36a', 'START'], [tr.mixAb, '#ff9a1a', 'MIX'], [tr.ende, '#ff3b3b', 'ENDE']]) {
+      if (zeit == null) continue;
+      const mx = Math.round((zeit - t0) / sekProPx);
+      if (mx < -2 || mx > w + 2) continue;
+      g.fillStyle = farbe; g.globalAlpha = 0.9;
+      g.fillRect(mx - 1, 0, 2, h);
+      g.beginPath(); g.moveTo(mx - 7, 0); g.lineTo(mx + 7, 0); g.lineTo(mx, 9); g.closePath(); g.fill();
+      g.font = `600 ${Math.round(h * 0.11)}px "Barlow Condensed", sans-serif`; g.textBaseline = 'top'; g.textAlign = 'left';
+      g.fillText(text, mx + 4, h * 0.04);
+      g.globalAlpha = 1;
+    }
     // Cue
     const cx = (d.cue - t0) / sekProPx;
     if (cx >= -10 && cx <= w + 10) {
@@ -278,6 +290,10 @@ export class UebersichtWelle {
       g.fillRect(d.loop.start / dauer * w, h - 4, Math.max(2, (d.loop.ende - d.loop.start) / dauer * w), 4);
     }
     g.fillStyle = '#ff8a00'; g.fillRect(Math.round(d.cue / dauer * w) - 1, 0, 3, h);
+    if (TV()) for (const [zeit, farbe] of [[tr.anfang, '#2fe36a'], [tr.mixAb, '#ff9a1a'], [tr.ende, '#ff3b3b']]) {
+      if (zeit == null) continue;
+      g.fillStyle = farbe; g.fillRect(Math.round(zeit / dauer * w) - 1, 0, 2, h);
+    }
     g.fillStyle = '#fff'; g.fillRect(Math.round(xp) - 1, 0, 2, h);
   }
   // Klick in die Uebersicht -> Sekunden

@@ -110,7 +110,11 @@ export function tvBauen(engine) {
       bpmMess: sp && sp.bpm && !sicher ? sp.bpm : null,          // ungefaehr: ohne Taktraster
       grid: sicher ? { bpm: sp.bpm, offset: sp.versatz, herkunft: 'messung' } : null,
       key: sp && sp.camelot ? sp.camelot : null, tonart: sp ? sp.tonart : null,
-      ton: Array.isArray(t.ton) ? t.ton : null,   // [Lautheit dB, Limiter dB] wie mpv sie anwendet
+      ton: Array.isArray(t.ton) ? t.ton : null,   // [Lautheit dB, Limiter dB, Anfang s, Ende s] (Supervisor)
+      // Marken (Supervisor-Analyse): Musik beginnt, Ueberblendung beginnt (Ende - Blende), Ende
+      anfang: Array.isArray(t.ton) && t.ton[2] > 0.3 ? t.ton[2] : null,
+      mixAb: Array.isArray(t.ton) && t.ton[3] ? Math.max(0, t.ton[3] - xfSek) : null,
+      ende: Array.isArray(t.ton) && t.ton[3] ? t.ton[3] : null,
       quelle: 'YOUTUBE', wf: sp ? sp.wf : null,
       wfHinweis: 'YOUTUBE · WELLENFORM WIRD GEMESSEN',
       coverUrl: /^[A-Za-z0-9_-]{11}$/.test(t.videoId) ? `https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg` : '',
@@ -121,7 +125,7 @@ export function tvBauen(engine) {
     const t = track(roh), alt = state.decks[id].track;
     if (!t) { if (alt) bestaetigen(`decks.${id}.track`, null); }
     else if (!alt || alt.id !== t.id || alt.titel !== t.titel || alt.dauer !== t.dauer || alt.wf !== t.wf
-             || String(alt.ton) !== String(t.ton)) {
+             || String(alt.ton) !== String(t.ton) || alt.mixAb !== t.mixAb) {
       bestaetigen(`decks.${id}.track`, t);
     }
     bestaetigen(`decks.${id}.spielt`, spielt);

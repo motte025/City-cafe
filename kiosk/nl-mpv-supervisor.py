@@ -2997,8 +2997,9 @@ def main():
                 mpv_stand = json.dumps({"videoId": xf["vid"], "pos": round(xp, 1), "aufl": None, "fps": None,
                                         "dauer": stille_ende(xf["vid"], xd) if isinstance(xd, (int, float)) else None,
                                         "pause": pausiert})
-        # DJ-Modus: Lautheitsanpassung je Song (wie ton_zustand) fuers Studio - die Meter zeigen
-        # dann, was wirklich aus der Anlage kommt. [gain dB, Limiter-Anhebung dB]
+        # DJ-Modus: je Song fuers Studio [gain dB, Limiter-Anhebung dB, Anfang s, Ende s] - die
+        # Meter zeigen damit, was aus der Anlage kommt (wie ton_zustand), die Wellenform zeigt
+        # Anfang/Ende als Marken und den Countdown bis zur Ueberblendung (Ende - Blende).
         ton_gain = "null"
         if musik and state.get("flaeche") == "yt-dj-video":
             vids = {k.split("|", 1)[0] for k in list(cache)} | {str(v) for v in (state.get("analyse") or [])[:3]}
@@ -3006,7 +3007,8 @@ def main():
                 vids.add(shown[3:].split("|", 1)[0])
             if xf is not None:
                 vids.add(xf["vid"])
-            ton_gain = json.dumps({v: [gain_von(v), ((STILLE.get(v) or {}).get("limiter") or 0.0) if ton_limiter else 0.0]
+            ton_gain = json.dumps({v: [gain_von(v), ((STILLE.get(v) or {}).get("limiter") or 0.0) if ton_limiter else 0.0,
+                                       STILLE[v].get("anfang") or 0.0, STILLE[v].get("ende")]
                                    for v in vids if v in STILLE})
         if page_id:
             try:

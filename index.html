@@ -9173,7 +9173,7 @@
                 const gj = ytmGenreJahr(t) || {};
                 return { videoId: t.videoId || '', titel: t.songtitel || t.titel || '', kuenstler: t.kuenstler || t.kanal || '',
                          genre: gj.genre || '', jahr: gj.jahr || null, dauer: YTW.sekunden(t) || 0,
-                         ton: tonGain[t.videoId] || null };   // [Lautheit dB, Limiter-Anhebung dB] (Supervisor)
+                         ton: tonGain[t.videoId] || null };   // [Lautheit dB, Limiter dB, Anfang s, Ende s] (Supervisor)
             };
             const st = ytmStand();
             const vor = YTW.vorschau(ytm, 12, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
