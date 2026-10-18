@@ -14,6 +14,7 @@ der DJ-Buehne; das Dashboard baut dann keinen Twitch-Player.
 """
 import base64
 import glob
+import gzip
 import io
 import json
 import math
@@ -1925,6 +1926,11 @@ def balken_messen(vid, video_url, laenge):
 # gemessen (~3 s Rechenzeit): je 5 ms Spitze/RMS links und rechts, RMS in drei Baendern.
 # Gespeichert werden nur diese Zahlen (Bytes, base64), nie der Ton.
 SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
+# Gemessenes bleibt auf der Platte (je Song ~250 KB gz): jeder Song wird nur einmal gemessen,
+# auch nach einem Neustart sofort da. Hoechstens SPUR_PLATTE_MB, die aeltesten fliegen raus.
+SPUR_ORDNER = os.environ.get("CITYCAFE_SPUREN", os.path.expanduser("~/.cache/citycafe/spuren"))
+SPUR_PLATTE_MB = 600
+SPUR_VERSION = 2           # hochzaehlen, wenn sich Messung/Format aendern (alte werden neu gemessen)
 SPUR_HZ = 200              # Werte je Sekunde (12000 Hz / 60 Samples: genau, ohne Drift)
 SPUR_LESETEMPO = 8         # ffmpeg liest hoechstens 8x so schnell wie abgespielt
 # Kanaele nach amerge: 1 links, 2 rechts, 3 tief, 4 mitte, 5 hoch (Baender aus der Mono-Summe)
@@ -1979,8 +1985,46 @@ def spur_bpm(tief, voll, hz=100):
     return round(bpm, 1), round(versatz, 3), sicher
 
 
+def spur_datei(vid):
+    return os.path.join(SPUR_ORDNER, vid + ".json.gz")
+
+
+def spur_von_platte(vid):
+    """Schon einmal gemessen? Dann laden (und als zuletzt benutzt markieren). -> True"""
+    try:
+        with gzip.open(spur_datei(vid), "rt", encoding="utf-8") as f:
+            text = f.read()
+        if json.loads(text).get("version") != SPUR_VERSION:
+            return False
+        os.utime(spur_datei(vid))
+        SPUREN[vid] = text
+        log(f"Studio-Spur {vid}: von der Platte")
+        return True
+    except (OSError, ValueError):
+        return False
+
+
+def spur_speichern(vid, text):
+    try:
+        os.makedirs(SPUR_ORDNER, exist_ok=True)
+        tmp = spur_datei(vid) + ".tmp"
+        with gzip.open(tmp, "wt", encoding="utf-8", compresslevel=6) as f:
+            f.write(text)
+        os.replace(tmp, spur_datei(vid))
+        dateien = sorted(glob.glob(os.path.join(SPUR_ORDNER, "*.json.gz")), key=os.path.getmtime)
+        groesse = sum(os.path.getsize(p) for p in dateien)
+        while dateien and groesse > SPUR_PLATTE_MB * 1024 * 1024:
+            alt = dateien.pop(0)
+            groesse -= os.path.getsize(alt)
+            os.remove(alt)
+    except OSError as e:
+        log(f"Studio-Spur {vid}: nicht gespeichert ({e})")
+
+
 def spur_messen(vid, audio_url, laenge):
-    """Ganzen Song messen -> SPUREN[vid]. Laeuft im eigenen Faden."""
+    """Ganzen Song messen -> SPUREN[vid] (und auf die Platte). Laeuft im eigenen Faden."""
+    if SPUREN.get(vid) or spur_von_platte(vid):
+        return
     if vid in SPUREN or not audio_url:
         return
     SPUREN[vid] = None                      # in Arbeit
@@ -2022,8 +2066,8 @@ def spur_messen(vid, audio_url, laenge):
     def b64(werte, f):
         return base64.b64encode(bytes(max(0, min(255, round(f(x)))) for x in werte)).decode()
     db_byte = lambda db: (db + 60) * 255 / 60            # -60..0 dBFS -> 0..255
-    SPUREN[vid] = json.dumps({
-        "videoId": vid, "proSek": SPUR_HZ, "dauer": round(len(rahmen) / SPUR_HZ, 2),
+    text = json.dumps({
+        "version": SPUR_VERSION, "videoId": vid, "proSek": SPUR_HZ, "dauer": round(len(rahmen) / SPUR_HZ, 2),
         "bpm": bpm, "versatz": versatz, "sicher": round(sicher, 2),
         # Wellenform linear 0..1 (wie dj-studio/js/analysis.js), Pegel in dBFS
         "spitze": b64([max(a, b) for a, b in zip(lin[0], lin[2])], lambda x: x * 255),
@@ -2031,6 +2075,8 @@ def spur_messen(vid, audio_url, laenge):
         "hoch": b64(lin[9], lambda x: x * 255),
         "pegelSpitzeL": b64([r[0] for r in rahmen], db_byte), "pegelRmsL": b64([r[1] for r in rahmen], db_byte),
         "pegelSpitzeR": b64([r[2] for r in rahmen], db_byte), "pegelRmsR": b64([r[3] for r in rahmen], db_byte)})
+    SPUREN[vid] = text
+    spur_speichern(vid, text)
     log(f"Studio-Spur {vid}: {len(rahmen) / SPUR_HZ:.0f}s, {bpm} BPM (Sicherheit {sicher:.2f})")
 
 
@@ -2416,6 +2462,8 @@ def main():
                         if re.fullmatch(r"[A-Za-z0-9_-]{11}", s_vid) and s_vid not in SPUREN \
                                 and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER:
                             def spur_vorab(vid=s_vid):
+                                if spur_von_platte(vid):        # schon gemessen: kein yt-dlp noetig
+                                    return
                                 urls = resolve(vid, "bestaudio", "abr")
                                 if urls:
                                     spur_messen(vid, urls[0], urls[2])
