@@ -25,6 +25,21 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 18.10.2026: DJ-Modus (Branch `dj-studio`, nicht auf `main`)
+
+Ausführlich in **`dj-studio/UEBERGABE.md`** (auf dem Branch `dj-studio`). Kurz:
+
+- **DJ-Modus der YouTube-Musik**, nur Raum `zuhause`: der TV zeigt das DJ Studio, mpv spielt im
+  Studio-Videofenster, Ton weiter über mpv/Bluetooth. Wellenform, BPM, Tonart und Pegel misst der
+  Supervisor je Song (gespeichert unter `~/.cache/citycafe/spuren/`).
+- **Test-Aufbau zuhause = PC `martin-ser`** (EndeavourOS/KDE): sway im Fenster, lokaler Server auf
+  Port 8090 vom Branch, Supervisor aus dem Repo, B03 Pro per Bluetooth gekoppelt. Fallen und Befehle
+  in der Übergabe (u. a.: lokales Dashboard immer mit `?raum=zuhause`).
+- **Playlists für alle Räume gemeinsam** (`djremote/city-cafe/yt/listen`) und **Playlist-Suche** in
+  der Musik-Fernbedienung – liegen bereit für `main`, Push durch den Betreiber.
+- Supervisor: `CITYCAFE_COOKIES` und `CITYCAFE_JS_RUNTIME` einstellbar (Standard wie bisher).
+- Offen: seltenes Überspringen eines Songs (doppeltes „Weiter“, Ursache unbekannt), Test auf dem W1.
+
 ## Was das Projekt ist
 
 Digitale Beschilderung für das City Cafe in Klagenfurt-Fischl: ein Dashboard im

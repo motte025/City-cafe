@@ -1,89 +1,97 @@
-# Übergabe DJ Studio (Stand 18.10.2026, abends)
+# Übergabe DJ Studio / DJ-Modus (Stand 18.10.2026, spätabends)
 
-Für die nächste Claude-Code-Sitzung, zum Beispiel unter EndeavourOS zuhause.
-Zuerst diese Datei lesen, dann `dj-studio/README.md`. Gesprächssprache: Deutsch.
+Für die nächste Claude-Code-Sitzung. Zuerst diese Datei lesen, dann `README.md` in diesem Ordner.
+Gesprächssprache: Deutsch. Alles liegt auf dem Branch **`dj-studio`** (auf GitHub gepusht).
+**Nichts davon ist auf `main` oder im Café**, außer was unten unter „main“ steht.
 
-## 1. Was fertig ist (Branch `dj-studio`)
+## 1. Was der DJ-Modus ist
 
-- **Bild 2 ist die Bühne.** `img/bild2-2x.webp` ist Bild 2, mit ESRGAN auf 3344×1882 hochgerechnet. `js/skin.js` legt jedes echte Bedienelement pixelgenau auf seine Stelle im Bild. Veränderliche Stellen werden beim Start „geputzt“ (`FLICKEN_*`). `css/skin.css` liegt in der CSS-Ebene `skin` (siehe `css/haupt.css`). `?klassisch` zeigt die alte, gezeichnete Oberfläche.
-- **Live:** beide Kanäle, Mitte (Programmbild = Clubfoto + Licht, Transport, Master, Crossfader), Kopf (Uhr), „Nächste Titel“. LEDs und Pegelmeter sind neu gestaltet, die Meter folgen der gedruckten Skala im Bild.
-- **Tests:** `tests/studio.browser.test.js` hat alle 14 Prüfungen bestanden.
-- **Gemessen (PC, 18.10.):**
-  - Ausgangssteuerung VIDEO/AUDIO/AUTO arbeitet wie vorgesehen.
-  - Master 0 ergibt Stille.
-  - Beide Kanäle mit +12 dB und Master voll: Spitze −3,7 dBFS, kein Übersteuern.
-  - BPM-Anzeige = Raster × Tempo. Das gilt nur für Demo-Titel; ihre Werte stammen aus dem Generator.
+Die YouTube-Musik läuft wie immer (Dashboard + Supervisor + mpv, Ton über Bluetooth an die Anlage).
+Im DJ-Modus zeigt der TV statt der Musik-Ansicht das **DJ Studio** (`dj-studio/?tv`), das Video
+(mpv) sitzt im Videofenster in der Mitte. Das Studio spielt **keinen eigenen Ton** und lädt nichts;
+es zeigt an, was läuft:
 
-## 2. Nächste Aufgabe: DJ-Modus für die YouTube-Musik (Wunsch des Betreibers)
+- Kanal „ON AIR“ = laufender Song, „NEXT“ = nächster Song; bei jedem Songwechsel übernimmt der
+  andere Kanal, der alte läuft in der Blende aus, der Crossfader fährt im Ton-Fenster der Blende.
+- Wellenform (wie die Fotos von Bild 2: stachelige Nadeln), BPM, Taktraster, Tonart (Camelot),
+  Kanal- und Master-Pegel – alles **gemessen** vom Supervisor, nicht live abgegriffen.
+- „Nächste Titel“ = Warteschlange.
 
-Vorgaben des Betreibers:
-- Gesteuert wird mit der **bestehenden YouTube-Musik-Fernbedienung** (`yt-fernbedienung.html`). Dort kommt nur ein **DJ-Modus** dazu.
-- **Der Ton geht immer auf die Anlage.** Er kommt weiter von mpv, wie heute. Das Studio gibt selbst keinen Ton aus.
-- Im DJ-Modus zeigt der TV das DJ Studio, und das **YouTube-Video (mpv) sitzt im kleinen Videofenster** in der Mitte des Studios.
-- **Erst zuhause testen**, dann im City Cafe.
+Schalten: Musik-Fernbedienung → „⚙️ Anzeige & Anlage“ → **🎛 DJ-Modus** / ▭ Normal (nur Chef,
+nur Raum `zuhause`). Am Test-Bildschirm per CDP: `ytmBefehl({was:'dj', id:'x'+Date.now()})`.
 
-### 2.1 Was im Code schon passt
+**Freigeschaltet nur für `raum=zuhause`** (`YTM_DJ_ERLAUBT` in `index.html`). Im Café wird das
+Studio nie geladen.
 
-Grundlage ist die Vollbild-Umschaltung aus YOUTUBE-MUSIK-SETUP.md 6.8:
-- `index.html` meldet die aktive Videofläche in `window.nlMpvFlaeche` (`'nl-player-frame'` oder `'yt-vollbild-video'`), siehe `ytmAnzeigen()` bei ca. Zeile 9041.
-- Der Supervisor misst diese Fläche per CDP und setzt mpv darauf: `FLAECHE` und `RECT_EXPR` in `kiosk/nl-mpv-supervisor.py` (ca. Zeile 304–318), Umschalt-Wächter `umschalt_waechter()` (ca. Zeile 1430). Dabei wird mpv nicht neu gestartet und yt-dlp nicht neu aufgerufen.
-- Befehl vom Handy: `musik('vollbild'|'normal')` in `yt-fernbedienung.html` (Knopf `k-ansicht`, ca. Zeile 958), umgesetzt in `index.html` bei ca. Zeile 8835 (zuerst `nlMpvAusblenden`, 250 ms später umbauen).
-- Status an das Handy: `yt/jetzt` mit `vollbild` (ca. Zeile 8151), beim Neustart wieder gelesen (ca. Zeile 9332).
+## 2. Bausteine
 
-### 2.2 Geplanter Einbau
+| Teil | Wo | Was |
+|---|---|---|
+| Ebene `#ytm-dj` | `index.html` (`ytmDjRahmen`, `ytmDjSenden`) | iframe `dj-studio/?tv` erst beim Einschalten; Daten per `postMessage` jede Sekunde (jetzt, nächster, Schlange, Blende, Lautstärke, Lautheit je Song); Messungen je Song einmal (versionsbewusst). Erst senden, wenn das Studio `ytm-dj-bereit` meldet. |
+| Videofläche | Supervisor `MUSIK_FLAECHE`, `FLAECHE["yt_dj"]` | mpv auf `#yt-dj-video` (Bild-2-Videofenster `[557,85,557,298]` × 1920/1672). |
+| Messung „Studio-Spur“ | Supervisor `spur_messen`, `SPUR_*` | Im DJ-Modus: laufender Song zuerst, dann vorgeladene/nächste. Ein ffmpeg-Lauf (`-readrate 8`, ~25 s/Song): je 5 ms (200/s) Spitze/RMS L+R und Bänder tief/mitte/hoch; BPM (Autokorrelation, Sicherheit = beide Songhälften gleiches Tempo); Tonart (48 Halbton-Bandpässe → Krumhansl → Camelot). Ergebnis gz auf der Platte `~/.cache/citycafe/spuren/` (≤ 600 MB, `SPUR_VERSION` = 3). An die Seite: `window.nlStudioSpuren`. |
+| Lautheit je Song | Supervisor → `window.nlTonGain` | `[gain, limiter]` wie `ton_zustand` für die relevanten Songs; Meter rechnen damit. |
+| Position | Supervisor `window.nlMpvStandZeit` | Messzeitpunkt der mpv-Position; Studio liegt gemessen ±0,05 s bei mpv. |
+| TV-Ansicht | `dj-studio/js/tv.js` | Kanäle, Blende, Position (weich nachziehen, Sprung > 0,8 s), Pegel (Reserve +1 dB, × Lautheit × Lautstärke³ wie mpv), Wellen-Anzeigewert `bildWerte` (50 % Lautheit, 20 % Bass, 30 % Höhen, je Song gespreizt), Taktraster auf der „Eins“ (`taktEins`). |
+| Zeichnen | `js/ui/waveform.js` (`zeichneNadeln`, Kamm `KAMM_*`), `js/ui/meter.js` (`updateTv`), `js/ui/mitte.js` (`saeuleZeichnen`) | Nur bei `body.tv`; die Studio-Demo bleibt wie sie war. |
+| Bild-2-Anpassungen | `js/skin.js` (Flicken, Option `tv`), `css/skin.css` | Kanal-Schriftzug geputzt → „ON AIR/NEXT“ (36 px); Herz/Menü im TV geputzt; Titel 32 px; Play-Taste Kanal 2 (zweiter Strich fehlte in Bild 2); Fader-Licht nur ⅓ unter der Kappe. |
 
-1. **`index.html`:**
-   - neue Ebene `#ytm-dj`, aufgebaut wie `#ytm-vollbild` (`position:absolute; inset:0; z-index:520` im `#dashboard-scaler`).
-   - Darin `<iframe src="dj-studio/?tv">` mit 1920×1080 und darüber ein leeres `<div id="yt-dj-video">` genau auf dem Studio-Videofenster.
-   - Lage des Videofensters: im Bild `[557, 85, 557, 298]` × 1920/1672 = **left 639.6px, top 97.6px, width 639.6px, height 342.2px**. Das Fenster ist nicht 16:9; mpv setzt schmale schwarze Ränder links und rechts.
-   - Zustand `ytmDj`. Befehl `'dj'` schaltet ein (Vollbild aus), `'normal'` und `'vollbild'` schalten aus. Gleiches Muster wie Vollbild (`nlMpvAusblenden`, dann umbauen).
-   - `window.nlMpvFlaeche = 'yt-dj-video'`, wenn `ytmDj`.
-   - `dj: ytmDj` nach `yt/jetzt` schreiben und beim Neustart lesen.
-   - Daten ans Studio per `postMessage`, gleicher Ursprung, bei jeder Änderung und jede Sekunde: jetzt (Titel, Künstler, Genre/Jahr, Dauer, Position, pausiert, Cover `i.ytimg.com/vi/<id>/mqdefault.jpg`), nächster Titel (vorgeladen, kommt auf Kanal 2), die nächsten Titel der Warteschlange.
-   - Die Ebene in `runMasterSequence()` abbauen (STAND.md) und bei Hos'n Obe schließen, wie beim Vollbild.
-2. **Supervisor:**
-   - `FLAECHE["yt_dj"] = ("ytm-dj", "yt-dj-video")`.
-   - Im Umschalt-Wächter und in der Hauptschleife `art = "yt_dj"`, wenn die Fläche `yt-dj-video` ist. Achtung: Die Ebene `#ytm-dj` braucht die Klasse `active` (`RECT_EXPR` prüft das).
-   - **Erst auf dem Test-W1 von Hand prüfen, dann pushen** (YOUTUBE-MUSIK-SETUP.md 2.6).
-3. **Studio, TV-Ansicht `?tv`:**
-   - keine Startkarte, keine Demo-Titel, AudioContext angehalten (`ctx.suspend()`), also kein eigener Ton.
-   - Neues Modul `js/tv.js` liest die Nachrichten und schreibt sie in den Store. Kanal 1 = laufender Song (`spielt` = nicht pausiert, Position hochgerechnet), Kanal 2 = nächster Song, Leiste = Warteschlange.
-   - Im Bildtakt `tv.takt()` statt `engine.takt()` aufrufen.
-   - `artwork.js`: `cover()` gibt `track.coverUrl` zurück, falls vorhanden.
-   - Ehrlich bleiben: BPM, Key, Wellenform und Pegel gibt es bei YouTube nicht. Die Anzeige zeigt dann `---.-`, „YOUTUBE · KEINE WELLENFORM“ und dunkle Meter. DEMO-Schilder in der TV-Ansicht ausblenden, weil dort echte Titel laufen.
-   - Keine Bedienung am TV, nur Anzeige.
-4. **`yt-fernbedienung.html`:**
-   - Knopf „🎛 DJ-Modus / ▭ Normal“ neben Vollbild, nur für Chef-Geräte, sendet `musik('dj')`.
-   - Fassungsnummern hochzählen (GitHub Pages speichert bis 15 min zwischen).
+## 3. Gemessen / geprüft (PC zuhause, 18.10.)
 
-### 2.3 Später möglich (nicht Teil des ersten Schritts)
+- Wellenform passt zum Ton: Mitschnitt am Ausgang korreliert 0,92–0,95 mit der Messung.
+- Position: Studio ±0,05 s bei mpv (vorher 0,3 s hinterher – behoben).
+- BPM: Atemlos 127,7 (128), Macarena 103,2 (103); Songs ohne festen Takt → „~BPM“, kein Raster.
+- Tonart: Akkorde C-Dur/a-Moll richtig; bei Songs **ungefähr** (nicht gegen sichere Werte geprüft).
+- Rot an den Metern: über 11 Songs bei 100 % im Mittel ~5 % der Zeit, bei 80 % nie.
+- Intro/Ausklang/Überblendung/Lautheit unverändert: 54/54 Songs vorher analysiert, 47 Blenden
+  8,5–9,0 s, mpv `volume-gain` = Analysewert.
 
-- **Echte Pegel aus mpv:** Der Supervisor misst je Song schon Pegel mit ffmpeg (alle 0,5 s, für Intro/Ausklang). Diese Messkurve könnte die Übersichts-Wellenform und die Meter speisen. Das wären echte Messwerte, nur nicht live.
-- **Die 9-s-Überblendung zweier mpv** als Crossfader-Bewegung im Studio anzeigen.
+## 4. Test-Aufbau auf diesem PC (EndeavourOS, KDE)
 
-## 3. Grenzen (aus dem Auftrag, nicht aufweichen)
+Dieser PC ist die „Test-Box“ (Benutzer `citycafe` existiert, wird aber **nicht** benutzt).
+Gestartet wird alles als `martin` in einer **sway-Sitzung im Fenster**:
 
-- YouTube wird nicht als ladbare oder analysierbare DJ-Quelle gebaut (kein Download, keine Analyse im Studio). Im DJ-Modus spielt weiter der bestehende TV-Weg (mpv + yt-dlp) und das Studio **zeigt nur an**.
-- Über dem mpv-Video darf kein HTML liegen, es wäre unsichtbar.
+- Server: `cd ~/City-cafe && python -m http.server 8090 --bind 127.0.0.1` (Branch `dj-studio`).
+- sway: Konfiguration und Startskript im Scratchpad der Sitzung (`sway/config`, `sway/kiosk-test.sh`);
+  Chromium mit eigenem Profil, `?kiosk=1&raum=zuhause&chefpin=…` (PIN aus privater Datei, nie im Repo),
+  Supervisor aus dem Repo mit `CITYCAFE_RAUM=zuhause CITYCAFE_URL=http://127.0.0.1:8090/index.html
+  CITYCAFE_BT_AUS=<scratch>/bt-aus CITYCAFE_MIX_COOKIES=0 CITYCAFE_COOKIES=chromium:<profil>
+  CITYCAFE_JS_RUNTIME=deno` (kein Node auf dem PC; die beiden letzten Variablen sind neu, Standard
+  wie bisher).
+- YouTube: Im Test-Profil mit Google/YouTube angemeldet (sonst „Sign in to confirm you're not a bot“).
+- Bluetooth: B03 Pro (70:B3:D5:91:38:62) am PC gekoppelt und vertraut; Wächter aktiv.
+- Bildschirmfoto der sway-Sitzung: `WAYLAND_DISPLAY=wayland-1 grim -o WL-1 datei.png`.
+- **Fallen:** ohne `raum=zuhause` hört ein lokales Dashboard auf die Café-Fernbedienung (Standard
+  `city-cafe`)! Ohne Supervisor spielt der Browser-Player, und der darf die meisten Musikvideos
+  nicht (YouTube-Fehler 150). Die volle Messgeschwindigkeit störte über WLAN den Bluetooth-Ton
+  (gleicher Funkchip) – daher `-readrate 8`.
+
+## 5. main
+
+- Auf `main` (vom Betreiber zu pushen, vorbereitet im Scratchpad `main-wt`): nur
+  `yt-fernbedienung.html` + `yt-fernbedienung-net.js` – gemeinsame Playlists
+  (`djremote/city-cafe/yt/listen` für alle Räume), Playlist-Suche, DJ-Knopf (nur bei `zuhause`
+  sichtbar). Café-TV lädt dadurch nichts neu, W1 bekommt nichts. **Push durch Claude ist in dieser
+  Umgebung gesperrt** (Berechtigungsprüfung „Production Deploy“).
+- Korrektur „Song startete ~47 s nach der Überblendung neu“ (Werbungs-Wächter, `nlWerbungPruefen`)
+  liegt nur auf dem Branch; laut Betreiber trat der Fehler auf `main` nicht auf.
+
+## 6. Offen
+
+1. **Überspringen** (selten, 2× am 18.10.): die Seite schaltet zweimal „Weiter“, der vorgeladene
+   Song gilt als gespielt, der übernächste startet hart („Ueberblendung abgebrochen“). Ursache noch
+   unbekannt; nicht der DJ-Code (der liest nur). Mitschreiber im Test-Bildschirm:
+   `window.__wLog` (Hook auf `ytmWeiter`, nach jedem Neuladen neu setzen).
+2. **W1:** Last/Bildrate messen (60 fps, sonst 30), `CITYCAFE_SPUREN` im Ordner von `citycafe`,
+   nächtliches Vormessen der Playlists (Stufe 2), dann `YTM_DJ_ERLAUBT` für `city-cafe`.
+3. Playlist-Pflege: „Theo, wir fahr'n nach Lodz“ und „Marmor, Stein und Eisen bricht“ (Stereoact)
+   sollen aus Schlager, Après-Ski, Schlager 2024–2026 raus (am Handy, Chef im Café-Raum).
+4. Ideen: Intro/Outro-Marker in der Welle, Countdown bis zum Mix + Taktzähler, Harmonie-Anzeige
+   A/B, BPM/Tonart auf den Karten „Nächste Titel“, Gäste-Wunsch sichtbar, QR im DJ-Modus.
+
+## 7. Grenzen
+
+- YouTube ist keine Studio-Quelle: kein Download, kein Ton im Studio. Gemessen werden nur Zahlen
+  (Wellenform, Pegel, BPM, Tonart) im Supervisor, wie schon Lautheit und Intro/Ausklang.
+- Über dem mpv-Video liegt kein HTML.
 - Kein Push nach `main` und keine Änderung am Live-W1 ohne Test und Freigabe des Betreibers.
-
-## 4. Test-Box zuhause (Kopie des W1) auf Stand bringen
-
-Die Box zuhause ist eine Kopie des W1 und muss zuerst auf den aktuellen Stand. Dabei vier Fallen beachten:
-
-1. **Raum:** In `~/.config/citycafe.env` (Benutzer `citycafe`) muss `CITYCAFE_RAUM=zuhause` stehen, **nicht** `city-cafe`. Sonst hören Café-TV und Test-Box auf dieselbe Fernbedienung und spielen beide los. Ohne Eintrag gilt `zuhause` (`kiosk/citycafe-chromium`). Auf der Fernbedienung oben den Bildschirm-Knopf **„Zuhause“** wählen (Bildschirm-Auswahl in `fernbedienung.html`, gemerkt als `fbRaum`). Die Chef-Anmeldung gilt je Raum (`djremote/<raum>/chef`), also im Raum `zuhause` einmal mit PIN anmelden.
-2. **Nächtliches Update:** `citycafe-update.timer` holt jeden Morgen um 8:30 den Supervisor aus `main` und würde Test-Änderungen überschreiben. Während des Tests in `/etc/citycafe-update.conf` abschalten.
-3. **Dashboard vom Branch statt von GitHub Pages:** Standard ist `https://motte025.github.io/City-cafe/`, also `main`. Für den Test den Repo-Klon auf `dj-studio` lokal ausliefern und `CITYCAFE_URL=http://127.0.0.1:8090/index.html` setzen (im Starter so vorgesehen). Den Supervisor ebenfalls aus dem Klon nehmen.
-4. **Tailscale:** Läuft die Kopie mit derselben Tailscale-Kennung wie „city-cafe-w1“, gibt es zwei Geräte unter einem Namen. Prüfen und die Kopie gegebenenfalls umbenennen oder neu anmelden.
-
-Danach: `pacman -Syu`, yt-dlp aktuell halten, Premium-Cookies und Chef-PIN aus `citycafe.env` übernehmen (Geheimnisse nie ins Repo). Normale Musik einmal ohne DJ-Modus testen, dann den DJ-Modus.
-
-## 5. Zuhause unter EndeavourOS starten
-
-```
-git clone <repo-url> City-cafe   # oder vorhandenen Klon nehmen
-cd City-cafe && git fetch && git checkout dj-studio
-node dj-studio/tools/server.js            # http://localhost:8790/dj-studio/
-npx playwright install chromium           # einmal, für den Test
-node dj-studio/tests/studio.browser.test.js   # ohne PW_CHANNEL = Playwright-Chromium
-```
