@@ -1920,6 +1920,109 @@ def balken_messen(vid, video_url, laenge):
         log(f"Seitenbalken {vid}: Bild {cw}x{h} in {b}x{h}")
 
 
+# DJ-Modus (Wunsch 18.10.2026): das Studio zeigt Wellenform, BPM und Pegel des
+# laufenden Songs. Der Ton laeuft weiter nur ueber mpv; hier wird er einmal ganz
+# gemessen (~2 s Rechenzeit): je 10 ms Spitze/RMS gesamt und RMS in drei Baendern.
+# Gespeichert werden nur diese Zahlen (Bytes, base64), nie der Ton.
+SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
+SPUR_HZ = 100
+SPUR_FILTER = ("aresample=11025,pan=mono|c0=0.5*c0+0.5*c1,asplit=4[v][a][b][c];"
+               "[a]lowpass=f=200[l];[b]highpass=f=200,lowpass=f=2500[m];[c]highpass=f=2500[h];"
+               "[v][l][m][h]amerge=inputs=4,asetnsamples=n=110:p=0,"
+               "astats=metadata=1:reset=1:measure_perchannel=RMS_level+Peak_level:measure_overall=none,"
+               "ametadata=print:file=-")
+
+
+def spur_bpm(tief, voll):
+    """BPM und Taktbeginn aus der Einsatz-Huellkurve (Bass doppelt) per Autokorrelation.
+    Sicherheit: stimmen erste und zweite Songhaelfte im Tempo ueberein (fester Takt)?
+    -> (bpm, versatz_s, sicherheit 0..1) oder (None, 0, 0)."""
+    n = len(tief)
+    if n < SPUR_HZ * 20:
+        return None, 0.0, 0.0
+    ons = [0.0] + [max(0.0, tief[i] - tief[i - 1]) * 2 + max(0.0, voll[i] - voll[i - 1]) for i in range(1, n)]
+    mittel = sum(ons) / n
+    ons = [x - mittel for x in ons]
+
+    def schaetzen(reihe):
+        def ak(lag):
+            return sum(a * b for a, b in zip(reihe, reihe[lag:]))
+        lags = range(int(SPUR_HZ * 60 / 190), int(SPUR_HZ * 60 / 70) + 1)
+        werte = {lag: ak(lag) for lag in lags}
+        best = max(lags, key=lambda lag: werte[lag] + 0.5 * ak(2 * lag))
+        a, b, c = werte.get(best - 1, 0.0), werte[best], werte.get(best + 1, 0.0)
+        teiler = a - 2 * b + c
+        bpm = 60.0 * SPUR_HZ / (best + (0.5 * (a - c) / teiler if teiler else 0.0))
+        while bpm < 85:
+            bpm *= 2
+        while bpm > 175:
+            bpm /= 2
+        return bpm
+    bpm = schaetzen(ons)
+    h1, h2 = schaetzen(ons[:n // 2]), schaetzen(ons[n // 2:])
+    abweichung = max(abs(h1 - bpm), abs(h2 - bpm)) / bpm * 100       # Prozent
+    sicher = max(0.0, 1.0 - abweichung / 3.0)                        # ab 3 % Abweichung: 0
+    # Taktbeginn: Phase, auf der die Einsaetze im Schlagabstand am staerksten sind
+    schlag = 60.0 * SPUR_HZ / bpm
+
+    def gewicht(ph):
+        s, k = 0.0, float(ph)
+        while k < n:
+            s += ons[int(k)]
+            k += schlag
+        return s
+    versatz = max(range(max(1, int(schlag))), key=gewicht) / SPUR_HZ
+    return round(bpm, 1), round(versatz, 3), sicher
+
+
+def spur_messen(vid, audio_url, laenge):
+    """Ganzen Song messen -> SPUREN[vid]. Laeuft im eigenen Faden."""
+    if vid in SPUREN or not audio_url:
+        return
+    SPUREN[vid] = None                      # in Arbeit
+    try:
+        aus = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", audio_url, "-vn",
+                              "-af", SPUR_FILTER, "-f", "null", "-"],
+                             capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        log(f"Studio-Spur {vid}: {type(e).__name__}")
+        SPUREN.pop(vid, None)
+        return
+    rahmen, akt = [], None
+    for zeile in aus.stdout.splitlines():
+        if zeile.startswith("frame:"):
+            akt = [-90.0] * 8
+            rahmen.append(akt)
+        elif akt is not None and zeile.startswith("lavfi.astats."):
+            k, _, w = zeile.partition("=")
+            teile = k.split(".")
+            try:
+                v = float(w)
+            except ValueError:
+                v = -90.0
+            if v != v or v < -90:
+                v = -90.0
+            akt[(int(teile[2]) - 1) * 2 + (0 if teile[3] == "Peak_level" else 1)] = v
+    if len(rahmen) < SPUR_HZ * 5:
+        log(f"Studio-Spur {vid}: zu wenig Ton ({len(rahmen)} Rahmen)")
+        SPUREN.pop(vid, None)
+        return
+    lin = [[10 ** (r[i] / 20) for r in rahmen] for i in range(8)]
+    bpm, versatz, sicher = spur_bpm(lin[3], lin[1])
+
+    def b64(werte, f):
+        return base64.b64encode(bytes(max(0, min(255, round(f(x)))) for x in werte)).decode()
+    db_byte = lambda db: (db + 60) * 255 / 60            # -60..0 dBFS -> 0..255
+    SPUREN[vid] = json.dumps({
+        "videoId": vid, "proSek": SPUR_HZ, "dauer": round(len(rahmen) / SPUR_HZ, 2),
+        "bpm": bpm, "versatz": versatz, "sicher": round(sicher, 2),
+        # Wellenform linear 0..1 (wie dj-studio/js/analysis.js), Pegel in dBFS
+        "spitze": b64(lin[0], lambda x: x * 255), "tief": b64(lin[3], lambda x: x * 255),
+        "mitte": b64(lin[5], lambda x: x * 255), "hoch": b64(lin[7], lambda x: x * 255),
+        "pegelSpitze": b64([r[0] for r in rahmen], db_byte), "pegelRms": b64([r[1] for r in rahmen], db_byte)})
+    log(f"Studio-Spur {vid}: {len(rahmen) / SPUR_HZ:.0f}s, {bpm} BPM (Sicherheit {sicher:.2f})")
+
+
 def seiten_blur_graph(vid):
     """lavfi-Graph fuer den unscharfen Seitenhintergrund, None bei Breitbild."""
     b, h = FORMATE.get(vid, (0, 0))
@@ -2053,6 +2156,7 @@ def main():
     # Handy), Vorladen (Song endet bald), Mix, Playlist.
     neben = None
     analyse_arbeiter = None   # misst Intro/Ausklang/Anhebung der naechsten Songs im Voraus
+    spur_arbeiter = None      # DJ-Modus: misst Wellenform/BPM/Pegel fuer das Studio
     blend_erledigt = None     # id des zuletzt ausgefuehrten "Jetzt ueberblenden"
     laden_seit = None         # seit wann die Seite in readyState "loading" haengt
     laden_pruef = 0.0
@@ -2280,6 +2384,42 @@ def main():
                         failed[vid] = time.time()
                 analyse_arbeiter = threading.Thread(target=analyse_lauf, daemon=True)
                 analyse_arbeiter.start()
+
+        # DJ-Modus: laufenden und vorgeladenen Song fuer das Studio messen und zustellen.
+        if musik and state.get("flaeche") == "yt-dj-video":
+            if not (spur_arbeiter is not None and spur_arbeiter.is_alive()):
+                for key, urls in list(cache.items()):
+                    s_vid = key.split("|", 1)[0]
+                    if key.endswith("|m") and urls and s_vid not in SPUREN:
+                        spur_arbeiter = threading.Thread(target=spur_messen, daemon=True,
+                                                         args=(s_vid, urls[1] or urls[0], urls[2]))
+                        spur_arbeiter.start()
+                        break
+                else:
+                    # sonst schon die naechsten Songs der Warteschlange (Kanal 2 frueh fuellen)
+                    for s_vid in [str(v) for v in (state.get("analyse") or [])[:2]]:
+                        if re.fullmatch(r"[A-Za-z0-9_-]{11}", s_vid) and s_vid not in SPUREN \
+                                and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER:
+                            def spur_vorab(vid=s_vid):
+                                urls = resolve(vid, "bestaudio", "abr")
+                                if urls:
+                                    spur_messen(vid, urls[0], urls[2])
+                            spur_arbeiter = threading.Thread(target=spur_vorab, daemon=True)
+                            spur_arbeiter.start()
+                            break
+            fertig = [v for v, s in list(SPUREN.items()) if s]
+            if fertig and page_id:
+                # Nachsehen, was die Seite schon hat (nach einem Neuladen ist alles weg)
+                try:
+                    da = set(json.loads(cdp_eval(page_id, "JSON.stringify(Object.keys(window.nlStudioSpuren || {}))") or "[]"))
+                except (OSError, ValueError, ConnectionError):
+                    da = set(fertig)
+                for s_vid in fertig:
+                    if s_vid not in da and SPUREN.get(s_vid):
+                        zustellen(page_id, "(window.nlStudioSpuren = window.nlStudioSpuren || {})"
+                                  f"[{json.dumps(s_vid)}] = {SPUREN[s_vid]}; 1", "Studio-Spur")
+            for alt in list(SPUREN)[:-6]:       # nur die letzten paar behalten
+                SPUREN.pop(alt, None)
 
         # Neben-Arbeiter (siehe oben): immer nur eine Aufgabe zur Zeit.
         if not (neben is not None and neben.is_alive()):

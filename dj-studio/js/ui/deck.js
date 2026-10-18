@@ -187,14 +187,15 @@ export function deckBauen(root, id, engine, aktionen) {
     kuenstler.textContent = t ? t.kuenstler : 'Titel aus „Nächste Titel" hierher ziehen';
     metaZeile.innerHTML = '';
     if (t) {
-      const bpm = t.grid ? t.grid.bpm.toFixed(0) + ' BPM' : t.bpmTap ? t.bpmTap + ' BPM (Tap)' : 'BPM offen';
+      const bpm = t.grid ? t.grid.bpm.toFixed(0) + ' BPM' : t.bpmMess ? '~' + Math.round(t.bpmMess) + ' BPM'
+        : t.bpmTap ? t.bpmTap + ' BPM (Tap)' : 'BPM offen';
       metaZeile.append(el('span', '', { text: t.genre || '' }), el('span', 'trenn', { text: '|' }),
         el('span', '', { text: bpm }), el('span', 'trenn', { text: '|' }), el('span', '', { text: t.key || '—' }));
       if (t.quelle === 'DEMO') metaZeile.append(el('span', 'demo-marke', { text: 'DEMO', title: 'Generator-Werte, nicht gemessen' }));
     }
     zeitGes.textContent = '/ ' + zeit(t ? t.dauer : 0);
     keyZahl.textContent = t?.key || '—';
-    bpmQuelle.textContent = t ? (t.grid ? (t.grid.herkunft === 'generator' ? ' GEN' : '') : t.bpmTap ? ' TAP' : ' OFFEN') : '';
+    bpmQuelle.textContent = t ? (t.grid ? (t.grid.herkunft === 'generator' ? ' GEN' : '') : t.bpmMess ? ' ~' : t.bpmTap ? ' TAP' : ' OFFEN') : '';
     root.classList.toggle('hat-track', !!t);
     root.classList.toggle('ohne-grid', !!t && !t.grid);
     tSync.disabled = !!t && !t.grid;
@@ -204,7 +205,7 @@ export function deckBauen(root, id, engine, aktionen) {
   }
   function tempoAnzeigen() {
     const d = s(), t = d.track;
-    const basis = t?.grid?.bpm ?? t?.bpmTap ?? null;
+    const basis = t?.grid?.bpm ?? t?.bpmMess ?? t?.bpmTap ?? null;   // bpmMess: gemessen, aber unsicher (TV)
     bpmZahl.textContent = basis ? (basis * (1 + d.tempo / 100)).toFixed(1) : '---.-';
     tempoZahl.textContent = (d.tempo > 0 ? '+' : d.tempo < 0 ? '' : '±') + d.tempo.toFixed(1) + '%';
     tempoRegler.update(d.tempo);
