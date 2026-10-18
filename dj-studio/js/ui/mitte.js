@@ -2,7 +2,7 @@
 
 import { state, abonnieren } from '../store.js';
 import { el, knopf, regler, taste, an, zeit } from './controls.js';
-import { LedMeter, leinwand, SKALA, SCHWELLEN_MASTER as SCHWELLEN } from './meter.js';
+import { LedMeter, leinwand, SKALA, SCHWELLEN_MASTER as SCHWELLEN, SCHWELLEN_BILD_MASTER } from './meter.js';
 import { einstellungen, matrixTabelle } from './overlays.js';
 import { cover } from '../artwork.js';
 
@@ -63,7 +63,10 @@ export function mitteBauen(root, engine, aktionen) {
 
   // ---- Master --------------------------------------------------------------
   const cMaster = el('canvas', 'master-meter', { 'aria-label': 'Master-Pegel L/R' });
-  const mMeter = new LedMeter(cMaster, { richtung: 'h', kanaele: 2, abstand: 4, palette: 'master', schwellen: SCHWELLEN });
+  const skin = !!root.closest('.skin');
+  const mMeter = skin
+    ? new LedMeter(cMaster, { richtung: 'h', kanaele: 2, zeilen: 2, zeilenLuecke: 2.3, kanalLuecke: 12.6, palette: 'master', stil: 'bild', schwellen: SCHWELLEN_BILD_MASTER })
+    : new LedMeter(cMaster, { richtung: 'h', kanaele: 2, abstand: 4, palette: 'master', schwellen: SCHWELLEN });
   const skala = el('div', 'master-skala', { 'aria-hidden': 'true' },
     SKALA.slice().reverse().map(db => el('span', '', { text: String(db), style: `--pos:${pos(db)}` })));
   const clip = el('span', 'status-led rot', { text: 'CLIP' });
@@ -115,12 +118,13 @@ export function mitteBauen(root, engine, aktionen) {
       ansichten.forEach(b => an(b, b.dataset.w === state.video.ansicht));
       linkAnsicht.hidden = state.video.ansicht !== 'link';
       bildschirm.classList.toggle('link-modus', state.video.ansicht === 'link');
+      bildschirm.dataset.ansicht = state.video.ansicht;
     },
   };
   abonnieren(p => zeigen[p]?.());
   Object.values(zeigen).forEach(f => f());
 
-  const programm = new Programm(cVideo, engine);
+  const programm = new Programm(cVideo, engine, skin);
   const grG = cGr.getContext('2d');
   return {
     frame(t, dt) {
@@ -128,27 +132,42 @@ export function mitteBauen(root, engine, aktionen) {
       tPlay.innerHTML = d.spielt ? ICON.pause : ICON.play;
       tPlay.setAttribute('aria-label', `Kanal ${id === 'A' ? 1 : 2} Play/Pause`);
       quelleLabel.textContent = d.track ? `· KANAL ${id === 'A' ? 1 : 2}` : '';
-      quelleLabel.className = 'video-quelle ' + (id === 'A' ? 'kanal-a' : 'kanal-b');
+      quelleLabel.classList.toggle('kanal-a', id === 'A'); quelleLabel.classList.toggle('kanal-b', id === 'B');
       const dauer = d.track?.dauer || 0;
       zeitL.textContent = zeit(d.pos); zeitR.textContent = '-' + zeit(dauer - d.pos);
       fortschritt.style.setProperty('--anteil', dauer ? d.pos / dauer : 0);
-      fortschritt.className = 'fortschritt ' + (id === 'A' ? 'kanal-a' : 'kanal-b');
+      fortschritt.classList.toggle('kanal-a', id === 'A'); fortschritt.classList.toggle('kanal-b', id === 'B');
       const mp = engine.masterPegel();
       mMeter.update([mp.L, mp.R], t, dt);
       clip.classList.toggle('an', mMeter.clip(t));
       limit.classList.toggle('an', mp.reduktion < -0.3);
       grWert.textContent = mp.reduktion.toFixed(1);
-      const { w, h } = leinwand(cGr);
-      grG.clearRect(0, 0, w, h);
-      const segs = 12, sh = (h - (segs - 1) * 2) / segs;
-      for (let i = 0; i < segs; i++) {
-        const db = -(i + 1);       // oben 1 dB, unten 12 dB Absenkung
-        grG.fillStyle = mp.reduktion <= db + 0.5 ? '#f4c21c' : '#2b2610';
-        grG.fillRect(0, i * (sh + 2), w, sh);
-      }
+      grZeichnen(cGr, grG, mp.reduktion, skin);
       if (state.video.ansicht !== 'link') programm.zeichnen(t, state.video.ansicht);
     },
   };
+}
+
+// Limiter-Absenkung: oben 1 dB, unten 12 dB. Bild-Optik: zwei Spalten runder LEDs mit Schein.
+function grZeichnen(c, g, reduktion, skin) {
+  const { w, h } = leinwand(c);
+  g.clearRect(0, 0, w, h);
+  const segs = skin ? 14 : 12;
+  const dpr = window.devicePixelRatio || 1;
+  const lu = skin ? Math.max(1, h / segs * 0.28) : 2, sh = (h - (segs - 1) * lu) / segs;
+  const spalten = skin ? 2 : 1, ql = 3 * dpr, sw = (w - ql * (spalten - 1)) / spalten;
+  for (let i = 0; i < segs; i++) {
+    const db = -(i + 1) * 12 / segs;
+    const an = reduktion <= db + 0.4;
+    for (let k = 0; k < spalten; k++) {
+      g.beginPath();
+      g.roundRect(k * (sw + ql), i * (sh + lu), sw, sh, skin ? Math.min(sw, sh) * 0.22 : 0);
+      g.fillStyle = an ? '#ffc21c' : skin ? '#1d1a10' : '#2b2610';
+      g.shadowColor = '#ffb000'; g.shadowBlur = an && skin ? 7 * dpr : 0;
+      g.fill();
+    }
+  }
+  g.shadowBlur = 0;
 }
 
 function pos(db) {
@@ -159,8 +178,9 @@ function pos(db) {
 
 // Demo-Programmbild: aus Taktphase und gemessenem Pegel jedes Decks gezeichnet.
 class Programm {
-  constructor(c, engine) {
+  constructor(c, engine, ueberBild = false) {
     this.c = c; this.g = c.getContext('2d'); this.engine = engine;
+    this.ueberBild = ueberBild;   // Bild-2-Modus: nur Licht ueber das Clubfoto legen
     this.spek = new Uint8Array(1024);
     this.kopf = Array.from({ length: 46 }, (_, i) => ({ x: i / 45, r: 0.035 + ((i * 37) % 11) / 300, h: 0.06 + ((i * 53) % 13) / 260 }));
     this.cover = {};
@@ -181,6 +201,7 @@ class Programm {
     const g = this.g;
     g.globalCompositeOperation = 'source-over';
     g.globalAlpha = 1;
+    if (this.ueberBild && ansicht !== 'audio') return this.licht(g, w, h, t);
     g.fillStyle = '#020309'; g.fillRect(0, 0, w, h);
     if (ansicht === 'audio') return this.audio(g, w, h);
     const mix = this.engine.videoMix();
@@ -202,6 +223,37 @@ class Programm {
     const boden = g.createLinearGradient(0, h * 0.8, 0, h);
     boden.addColorStop(0, 'rgba(2,3,9,0)'); boden.addColorStop(1, 'rgba(2,3,9,.9)');
     g.fillStyle = boden; g.fillRect(0, h * 0.8, w, h * 0.2);
+  }
+  // Ueber dem Clubfoto: Scheinwerfer und Beat-Blitz je Deck, additiv (Leinwand: mix-blend screen)
+  licht(g, w, h, t) {
+    g.clearRect(0, 0, w, h);
+    const mix = this.engine.videoMix();
+    for (const [id, alpha] of [['A', 1 - mix], ['B', mix]]) {
+      if (alpha < 0.01 || !state.decks[id].track) continue;
+      const lvl = this.pegel(id), b = this.beat(id);
+      const kick = Math.pow(1 - b.phase, 4) * lvl;
+      const f = id === 'A' ? [40, 170, 255] : [255, 150, 30], f2 = id === 'A' ? [150, 70, 255] : [255, 50, 110];
+      const c = (x, a) => `rgba(${x[0]},${x[1]},${x[2]},${Math.max(0, Math.min(1, a * alpha))})`;
+      g.save();
+      g.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 5; i++) {
+        const x0 = w * (0.12 + i * 0.19);
+        const wink = Math.sin(t * (0.45 + i * 0.07) + i * 1.9 + (id === 'A' ? 0 : 2.2)) * 0.5;
+        const len = h * 1.25, br = 0.09;
+        const grad = g.createLinearGradient(x0, 0, x0 + Math.sin(wink) * len, Math.cos(wink) * len);
+        grad.addColorStop(0, c(i % 2 ? f : f2, 0.1 + lvl * 0.4)); grad.addColorStop(1, c(f, 0));
+        g.fillStyle = grad;
+        g.beginPath(); g.moveTo(x0 - 2, 0); g.lineTo(x0 + 2, 0);
+        g.lineTo(x0 + Math.sin(wink + br) * len, Math.cos(wink + br) * len);
+        g.lineTo(x0 + Math.sin(wink - br) * len, Math.cos(wink - br) * len);
+        g.closePath(); g.fill();
+      }
+      const dunst = g.createRadialGradient(w / 2, h * 0.1, 0, w / 2, h * 0.1, h);
+      dunst.addColorStop(0, c(f, kick * 0.35)); dunst.addColorStop(1, c(f, 0));
+      g.fillStyle = dunst; g.fillRect(0, 0, w, h);
+      if (b.takt === 0 && b.phase < 0.1 && lvl > 0.15) { g.fillStyle = c([255, 255, 255], 0.1 * lvl); g.fillRect(0, 0, w, h); }
+      g.restore();
+    }
   }
   ebene(g, w, h, id, t) {
     const lvl = this.pegel(id), b = this.beat(id);

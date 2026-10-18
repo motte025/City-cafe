@@ -75,6 +75,14 @@ export class DetailWelle {
       const s = spalte(wf, t * wf.proSek, (t + sekProPx * schritt) * wf.proSek);
       if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, schritt);
     }
+    if (this.glanz ??= !!this.c.closest('.skin')) {
+      // Bild-2-Optik: weicher Schein um die Welle (Kopie unscharf darueberlegen)
+      g.save();
+      g.filter = `blur(${Math.round(h * 0.035)}px)`;
+      g.globalAlpha = 0.8;
+      g.drawImage(this.c, 0, 0);
+      g.restore();
+    }
     g.globalCompositeOperation = 'source-over';
     // Taktraster
     if (tr.grid && d.beatgrid) {

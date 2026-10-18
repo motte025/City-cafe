@@ -164,11 +164,11 @@ async function run() {
 
     // --- Titel aus der Leiste auf Kanal 2 ziehen (Kanal 2 laeuft -> gesperrt, dann pausiert -> geladen) ---
     const erster = await ev(() => djStudio.state.queue[0].track.titel);
-    await page.locator('.karte').first().dragTo(page.locator('#deck-b .deck-info'));
+    await page.locator('.karte').first().dragTo(page.locator('#deck-b .deck-titel'));
     await warte(300);
     assert.equal(await ev(() => djStudio.state.decks.B.meldung), 'Läuft gerade – zuerst pausieren');
     await page.click('#deck-b .taste.play');
-    await page.locator('.karte').first().dragTo(page.locator('#deck-b .deck-info'));
+    await page.locator('.karte').first().dragTo(page.locator('#deck-b .deck-titel'));
     await page.waitForFunction(t => djStudio.state.decks.B.track?.titel === t, erster, { timeout: 20000 });
     ok('Ziehen auf laufendes Deck gesperrt, auf stehendes Deck geladen');
 

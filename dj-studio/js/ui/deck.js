@@ -4,7 +4,7 @@
 
 import { state, abonnieren } from '../store.js';
 import { el, knopf, regler, taste, an, zeit } from './controls.js';
-import { LedMeter, SKALA } from './meter.js';
+import { LedMeter, SKALA, SCHWELLEN_BILD_DECK } from './meter.js';
 import { DetailWelle, UebersichtWelle } from './waveform.js';
 import { cover } from '../artwork.js';
 import { menue } from './overlays.js';
@@ -104,7 +104,9 @@ export function deckBauen(root, id, engine, aktionen) {
 
   // ---- Unterteil -----------------------------------------------------------
   const cMeter = el('canvas', 'deck-meter', { 'aria-label': `Pegel Kanal ${nr}` });
-  const meter = new LedMeter(cMeter, { richtung: 'v', kanaele: 2, abstand: 2 });
+  const meter = root.closest('.skin')
+    ? new LedMeter(cMeter, { richtung: 'v', kanaele: 2, stil: 'bild', schwellen: SCHWELLEN_BILD_DECK })
+    : new LedMeter(cMeter, { richtung: 'v', kanaele: 2, abstand: 2 });
   const skala = el('div', 'deck-skala', { 'aria-hidden': 'true' },
     SKALA.map(db => el('span', '', { text: db > 0 ? '+' + db : String(db), style: `--pos:${skalaPos(db)}` })));
   const clipLed = el('span', 'clip-led', { title: 'CLIP (≥ −0,1 dBFS)' });

@@ -11,6 +11,7 @@ import { kopfBauen } from './ui/kopf.js';
 import { leisteBauen } from './ui/leiste.js';
 import { einstellungen, schliessen } from './ui/overlays.js';
 import { texturenLaden } from './texturen.js';
+import { skinAnwenden } from './skin.js';
 
 texturenLaden();
 
@@ -61,6 +62,10 @@ addEventListener('resize', skalieren);
 skalieren();
 
 // ---- Aufbau ----------------------------------------------------------------
+// Bild 2 als Buehne (Standard); ?klassisch zeigt die gezeichnete Oberflaeche.
+// Die Klasse muss vor dem Aufbau stehen, damit Meter und Wellen die Bild-Optik waehlen.
+const SKIN = !new URLSearchParams(location.search).has('klassisch');
+buehne.classList.toggle('skin', SKIN);
 engine.starten(quellen(engine));
 const kopf = kopfBauen(document.getElementById('kopf'), engine);
 const deckA = deckBauen(document.getElementById('deck-a'), 'A', engine, aktionen);
@@ -68,6 +73,7 @@ const deckB = deckBauen(document.getElementById('deck-b'), 'B', engine, aktionen
 const mitte = mitteBauen(document.getElementById('mitte'), engine, aktionen);
 leisteBauen(document.getElementById('leiste'), engine, aktionen);
 const automix = automixBauen(engine, aktionen);
+if (SKIN) skinAnwenden();
 
 // Demo-Titel in die Leiste, die ersten zwei auf die Decks
 (async () => {

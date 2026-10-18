@@ -30,6 +30,11 @@ Bei Widersprüchen gilt der Code: `YOUTUBE-MUSIK-SETUP.md` Abschnitt 5 beschreib
 | Datei | Aufgabe |
 |---|---|
 | `index.html` | Gerüst der 1920×1080-Bühne, Startkarte |
+| `img/bild2.png` | Bild 2 im Original (1672×941), Kopie der Desktop-Vorlage |
+| `img/bild2-2x.webp` | Bild 2 mit KI (ESRGAN thick, UpscalerJS) auf 3344×1882 hochgerechnet; das ist die Bühne |
+| `js/skin.js` | Bild als Bühne: Lage jedes Bedienelements in Bild-Pixeln, „Flicken“ für veränderliche Stellen |
+| `css/haupt.css` | Lädt alle Styles in zwei Ebenen: `alt` (gezeichnete Optik) und `skin` (Bild 2, gewinnt) |
+| `css/skin.css` | Aussehen der Teile über dem Bild (Tasten, LEDs, Knöpfe, Fader, Texte) |
 | `css/tokens.css` | **Alle Design-Werte** (Farben, Maße, Schriften, Raster) |
 | `css/studio.css` | Aussehen der Bauteile (liest nur Tokens) |
 | `js/store.js` | Zustand; nur **bestätigte** Werte, Abonnenten |
@@ -99,6 +104,13 @@ Doppelte Bearbeitung: Im Café regelt mpv Lautheit auf −11 LUFS und begrenzt m
 
 ## 6. Design ändern
 
+**Bild als Bühne (Standard seit 18.10.2026).** Bild 2 liegt als Hintergrund der Bühne. `js/skin.js` legt jedes echte Bedienelement pixelgenau auf seine Stelle im Bild (Maße `[x, y, Breite, Höhe]` in Bild-Pixeln). Alles, was sich ändert (Texte, Wellen, Pegel, LEDs, Faderkappen), wird im Bild beim Start „geputzt“ (Liste `FLICKEN_*`) und live darübergezeichnet. Tasten zeigen ihren eigenen Ausschnitt aus dem Bild und leuchten oder werden grau. Knopf- und Faderkappen sind ebenfalls Bildausschnitte, die sich drehen bzw. verschieben. `?klassisch` in der Adresse zeigt die alte, gezeichnete Oberfläche.
+- Ein Element verschieben: Eintrag in der passenden Tabelle in `js/skin.js` ändern (`DECK_A`, `DECK_B`, `MITTE`, `KOPF`, `LEISTE`).
+- Abweichungen vom Bild: Die Tempo-Bereichstasten heißen ±6/±10/±16 (im Bild −10/+10/+16). INT ist die Tempo-Referenz für SYNC. Das Programmbild ist das Clubfoto aus Bild 2 mit Licht, das live aus Takt und Pegel gezeichnet wird.
+- Die Pegel-Schwellen folgen der gedruckten Skala im Bild: Kanal +6…−24 mit oberster LED = 0 dBFS, Master −24…+9 mit +9 = 0 dBFS (`SCHWELLEN_BILD_*` in `js/ui/meter.js`).
+
+**Gezeichnete Oberfläche (`?klassisch`):**
+
 - **Farben, Schriften, Maße:** nur `css/tokens.css`, zum Beispiel `--a` (Kanal 1), `--b` (Kanal 2), `--deck-w`, `--fs-bpm`.
 - **Anordnung eines Decks:** in `css/studio.css` die Grid-Bereiche bei `.deck-unten`. Die gespiegelte Fassung steht direkt darunter bei `.deck--rev .deck-unten`.
 - **Wellenform-Farben:** `FARBEN` in `js/ui/waveform.js`.
@@ -158,4 +170,4 @@ Messwerte:
 
 ## 10. Bestätigung
 
-Kein Live-Deploy. Keine Änderung am W1, am TV, an Firebase, am Supervisor oder an `index.html`. Kein Push, keine Änderung an `main`: alles liegt nur auf dem lokalen Branch `dj-studio`. Die Desktop-Vorlage ist unverändert und wurde nicht ins Repo kopiert.
+Kein Live-Deploy. Keine Änderung am W1, am TV, an Firebase, am Supervisor oder an `index.html`. Kein Push, keine Änderung an `main`: alles liegt nur auf dem lokalen Branch `dj-studio`. Die Desktop-Vorlage ist unverändert. Eine Kopie liegt als `img/bild2.png` im Ordner, weil sie seit 18.10.2026 die Bühne ist.

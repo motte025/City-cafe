@@ -31,6 +31,7 @@ export function knopf(opts) {
   const W = 135 * Math.PI / 180;
   const root = el('div', 'knopf' + (opts.klein ? ' knopf--klein' : ''), {
     role: 'slider', tabindex: 0, 'aria-label': opts.aria || opts.label, 'aria-valuemin': min, 'aria-valuemax': max,
+    'data-ruhe': ruhe,
   });
   root.style.setProperty('--gr', gr + 'px');
   const svg = document.createElementNS(SVG, 'svg');

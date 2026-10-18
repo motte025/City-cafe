@@ -1,0 +1,8 @@
+/* Einstieg fuer alle Styles. Ebenen: "alt" = bisherige gezeichnete Oberflaeche,
+   "skin" = Bild 2 als Buehne (gewinnt immer gegen "alt", unabhaengig von der Spezifitaet).
+   Mit ?klassisch in der Adresse bleibt die alte Oberflaeche (skin.css greift nur unter .skin). */
+@layer alt, skin;
+@import url(tokens.css);
+@import url(studio.css) layer(alt);
+@import url(material.css) layer(alt);
+@import url(skin.css) layer(skin);
