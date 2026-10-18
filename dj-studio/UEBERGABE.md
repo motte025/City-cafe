@@ -1,8 +1,9 @@
-# Übergabe DJ Studio / DJ-Modus (Stand 18.10.2026, spätabends)
+# Übergabe DJ Studio / DJ-Modus (Stand 19.10.2026, 00:10 – auf `main`)
 
 Für die nächste Claude-Code-Sitzung. Zuerst diese Datei lesen, dann `README.md` in diesem Ordner.
-Gesprächssprache: Deutsch. Alles liegt auf dem Branch **`dj-studio`** (auf GitHub gepusht).
-**Nichts davon ist auf `main` oder im Café**, außer was unten unter „main“ steht.
+Gesprächssprache: Deutsch. Seit 19.10. 00:05 ist alles auf **`main`** (Merge des Branches
+`dj-studio`). Im Café ist der DJ-Modus nicht freigeschaltet; der neue Supervisor kommt dort mit dem
+Update am 19.10. um 8:30.
 
 ## 1. Was der DJ-Modus ist
 
@@ -68,13 +69,13 @@ Gestartet wird alles als `martin` in einer **sway-Sitzung im Fenster**:
 
 ## 5. main
 
-- Auf `main` (vom Betreiber zu pushen, vorbereitet im Scratchpad `main-wt`): nur
-  `yt-fernbedienung.html` + `yt-fernbedienung-net.js` – gemeinsame Playlists
-  (`djremote/city-cafe/yt/listen` für alle Räume), Playlist-Suche, DJ-Knopf (nur bei `zuhause`
-  sichtbar). Café-TV lädt dadurch nichts neu, W1 bekommt nichts. **Push durch Claude ist in dieser
-  Umgebung gesperrt** (Berechtigungsprüfung „Production Deploy“).
+- 19.10. 00:05: Merge `dj-studio` → `main` (Commit `62a29550`), GitHub Pages liefert ihn aus.
+  Vorher am Test-Bildschirm geprüft: Normal-, Vollbild- und DJ-Ansicht; Intro/Ausklang/Blende/
+  Lautheit unverändert (54 Songs).
+- Café-TV lädt die neue Seite, sobald keine Musik läuft; W1 bekommt den Supervisor um 8:30.
+- Push durch Claude: nur nach Freigabe des konkreten Befehls über `/permissions`.
 - Korrektur „Song startete ~47 s nach der Überblendung neu“ (Werbungs-Wächter, `nlWerbungPruefen`)
-  liegt nur auf dem Branch; laut Betreiber trat der Fehler auf `main` nicht auf.
+  ist mit drin; laut Betreiber trat der Fehler vorher auf `main` nicht auf.
 
 ## 6. Offen
 

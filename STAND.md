@@ -25,9 +25,9 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
-## 18.10.2026: DJ-Modus (Branch `dj-studio`, nicht auf `main`)
+## 18./19.10.2026: DJ-Modus (seit 19.10. 00:05 auf `main`)
 
-Ausführlich in **`dj-studio/UEBERGABE.md`** (auf dem Branch `dj-studio`). Kurz:
+Ausführlich in **`dj-studio/UEBERGABE.md`**. Kurz:
 
 - **DJ-Modus der YouTube-Musik**, nur Raum `zuhause`: der TV zeigt das DJ Studio, mpv spielt im
   Studio-Videofenster, Ton weiter über mpv/Bluetooth. Wellenform, BPM, Tonart und Pegel misst der
@@ -36,9 +36,16 @@ Ausführlich in **`dj-studio/UEBERGABE.md`** (auf dem Branch `dj-studio`). Kurz:
   Port 8090 vom Branch, Supervisor aus dem Repo, B03 Pro per Bluetooth gekoppelt. Fallen und Befehle
   in der Übergabe (u. a.: lokales Dashboard immer mit `?raum=zuhause`).
 - **Playlists für alle Räume gemeinsam** (`djremote/city-cafe/yt/listen`) und **Playlist-Suche** in
-  der Musik-Fernbedienung – liegen bereit für `main`, Push durch den Betreiber.
-- Supervisor: `CITYCAFE_COOKIES` und `CITYCAFE_JS_RUNTIME` einstellbar (Standard wie bisher).
-- Offen: seltenes Überspringen eines Songs (doppeltes „Weiter“, Ursache unbekannt), Test auf dem W1.
+  der Musik-Fernbedienung (Listen → 🔎, Chef löscht dort mit ✕).
+- Supervisor: `CITYCAFE_COOKIES` und `CITYCAFE_JS_RUNTIME` einstellbar (Standard wie bisher); im
+  Normalbetrieb misst er nichts zusätzlich. **Kommt am 19.10. um 8:30 per Update auf den W1** –
+  danach kurz prüfen, ob im Café die Musik normal läuft (Protokoll `/var/log/citycafe-update.log`).
+- Werbungs-Wächter prüft nicht mehr, solange mpv die Musik spielt (verhinderte Song-Neustart ~47 s
+  nach einer Überblendung im Test).
+- Offen: seltenes Überspringen eines Songs (doppeltes „Weiter“, Ursache unbekannt), DJ-Modus auf dem
+  W1 messen und für `city-cafe` freischalten, nächtliches Vormessen der Playlists.
+- Push nach `main` durch Claude: über `/permissions` für den konkreten Befehl freigegeben, sonst
+  von der Berechtigungsprüfung gesperrt („Production Deploy“).
 
 ## Was das Projekt ist
 
