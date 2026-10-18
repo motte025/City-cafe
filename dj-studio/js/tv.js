@@ -26,11 +26,11 @@ const XF_TON_FENSTER_SEK = 2.0;
 let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV: 4/6/9 s, kommt mit)
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
-// Pegelanzeige: Kanaele und Master folgen der Lautstaerke der Fernbedienung - rot wird es nur
-// bei 100 % (Wunsch 18.10.2026), und dann nur kurz. Rot sind die obersten 3-4 LEDs (ab ca.
-// -2,5 dBFS). Am Song simuliert: ohne Reserve stand der Balken bei 100 % 54 % der Zeit im Roten,
-// mit 2 dB Reserve und 30 ms Anstieg (meter.js) ~8 %, bei 80 % nie.
-const RESERVE_DB = -2;
+// Pegelanzeige: Kanaele und Master zeigen, was aus der Anlage kommt - Song x Lautheitsanpassung
+// (je Song, wie mpv) x Lautstaerke der Fernbedienung. Rot nur bei 100 % und dann kurz: ueber
+// 11 Songs simuliert (18.10.2026) mit 0 dB Reserve im Mittel 1,3 % der Zeit rot, beim
+// lautesten Song 14 %, bei 80 % nie. Rot sind die obersten 3-4 LEDs (ab ca. -2,5 dBFS).
+const RESERVE_DB = 0;
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
@@ -110,6 +110,7 @@ export function tvBauen(engine) {
       bpmMess: sp && sp.bpm && !sicher ? sp.bpm : null,          // ungefaehr: ohne Taktraster
       grid: sicher ? { bpm: sp.bpm, offset: sp.versatz, herkunft: 'messung' } : null,
       key: sp && sp.camelot ? sp.camelot : null, tonart: sp ? sp.tonart : null,
+      ton: Array.isArray(t.ton) ? t.ton : null,   // [Lautheit dB, Limiter dB] wie mpv sie anwendet
       quelle: 'YOUTUBE', wf: sp ? sp.wf : null,
       wfHinweis: 'YOUTUBE · WELLENFORM WIRD GEMESSEN',
       coverUrl: /^[A-Za-z0-9_-]{11}$/.test(t.videoId) ? `https://i.ytimg.com/vi/${t.videoId}/mqdefault.jpg` : '',
@@ -119,7 +120,8 @@ export function tvBauen(engine) {
   function setzen(id, roh, spielt) {
     const t = track(roh), alt = state.decks[id].track;
     if (!t) { if (alt) bestaetigen(`decks.${id}.track`, null); }
-    else if (!alt || alt.id !== t.id || alt.titel !== t.titel || alt.dauer !== t.dauer || alt.wf !== t.wf) {
+    else if (!alt || alt.id !== t.id || alt.titel !== t.titel || alt.dauer !== t.dauer || alt.wf !== t.wf
+             || String(alt.ton) !== String(t.ton)) {
       bestaetigen(`decks.${id}.track`, t);
     }
     bestaetigen(`decks.${id}.spielt`, spielt);
@@ -196,9 +198,13 @@ export function tvBauen(engine) {
   // Wie am Mischpult: Balken = Lautheit ueber 50 ms (Ballistik in meter.js), Spitze 30 ms, links/rechts.
   const VU_FAECHER = 5, SPITZE_FAECHER = 3, RESERVE = Math.pow(10, RESERVE_DB / 20);
   const STILL = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 } };
+  const LIMIT = 0.891;                  // Limiter-Grenze im Supervisor (-1 dBFS)
   function pegelBei(id) {
     const d = state.decks[id], sp = d.track && spuren.get(d.track.videoId);
     if (!d.spielt || !sp) return STILL;
+    // Lautheitsanpassung des Songs wie in mpv: Gain, mit Limiter zusaetzlich bis 2 dB, Spitzen
+    // dann bei -1 dBFS gekappt (Supervisor ton_zustand).
+    const ton = d.track.ton || [0, 0], f = Math.pow(10, ((ton[0] || 0) + (ton[1] || 0)) / 20), kappe = ton[1] ? LIMIT : Infinity;
     const i = Math.floor(d.pos * sp.wf.proSek);
     if (i < 0 || i >= sp.pegel[0].spitze.length) return STILL;
     const [L, R] = sp.pegel.map(p => {
@@ -206,7 +212,7 @@ export function tvBauen(engine) {
       for (let k = Math.max(0, i - SPITZE_FAECHER + 1); k <= i; k++) s = Math.max(s, p.spitze[k]);
       const von = Math.max(0, i - VU_FAECHER + 1);
       for (let k = von; k <= i; k++) q += p.leistung[k];
-      return { spitze: s > -60 ? Math.pow(10, s / 20) : 0, rms: Math.sqrt(q / (i - von + 1)) };
+      return { spitze: s > -60 ? Math.min(kappe, Math.pow(10, s / 20) * f) : 0, rms: Math.min(kappe, Math.sqrt(q / (i - von + 1)) * f) };
     });
     return { L, R };
   }

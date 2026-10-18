@@ -2997,12 +2997,24 @@ def main():
                 mpv_stand = json.dumps({"videoId": xf["vid"], "pos": round(xp, 1), "aufl": None, "fps": None,
                                         "dauer": stille_ende(xf["vid"], xd) if isinstance(xd, (int, float)) else None,
                                         "pause": pausiert})
+        # DJ-Modus: Lautheitsanpassung je Song (wie ton_zustand) fuers Studio - die Meter zeigen
+        # dann, was wirklich aus der Anlage kommt. [gain dB, Limiter-Anhebung dB]
+        ton_gain = "null"
+        if musik and state.get("flaeche") == "yt-dj-video":
+            vids = {k.split("|", 1)[0] for k in list(cache)} | {str(v) for v in (state.get("analyse") or [])[:3]}
+            if shown and shown.startswith("yt:"):
+                vids.add(shown[3:].split("|", 1)[0])
+            if xf is not None:
+                vids.add(xf["vid"])
+            ton_gain = json.dumps({v: [gain_von(v), ((STILLE.get(v) or {}).get("limiter") or 0.0) if ton_limiter else 0.0]
+                                   for v in vids if v in STILLE})
         if page_id:
             try:
                 cdp_eval(page_id,
                          f"window.nlExternBis = {'Date.now() + 3000' if nl_ok else '0'}; "
                          f"window.djExternBis = {'Date.now() + 3000' if dj_ok else '0'}; "
                          f"window.djExternLaeuft = {'true' if dj_laeuft else 'false'}; "
+                         f"window.nlTonGain = {ton_gain}; "
                          f"window.nlMpvStand = {mpv_stand}; window.nlMpvStandZeit = Date.now(); 1")
             except (OSError, ValueError, ConnectionError):
                 pass
