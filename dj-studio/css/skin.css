@@ -250,3 +250,6 @@
 body.tv .skin .deck-info-icons { display: none; }
 body.tv .skin .deck-titel { font-size: 32px; line-height: 37px; }
 body.tv .skin .deck-kuenstler { font-size: 21px; line-height: 23px; }
+
+/* DJ-Modus: ON AIR / NEXT neben dem groesseren Songtitel mitgewachsen (36 px) */
+body.tv .skin .deck-kanal { font-size: 36px; line-height: 28px; }
