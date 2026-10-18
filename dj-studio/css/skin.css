@@ -236,3 +236,12 @@
 .skin .karte-meta, .skin .karte-dauer { font: 400 17px/18px var(--font); color: #e3e8ee; white-space: pre; overflow: hidden; }
 .skin .karte-menue { color: transparent; border-radius: 4px; }
 .skin .karte-menue > svg { display: none; }
+
+/* Kanal-Schriftzug als echter Text (Bild-Schriftzug ist geputzt): Demo "KANAL 1/2",
+   TV "ON AIR" (Kanalfarbe, pulsiert) / "NEXT" */
+.skin .deck-kanal { font: 600 25px/24px var(--font-schmal); letter-spacing: .05em; color: #e3e9f0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .8); white-space: nowrap; }
+.skin .deck-kanal.on-air { color: #49b8ff; text-shadow: 0 0 8px rgba(35, 168, 255, .8), 0 1px 2px #000; animation: on-air 1.6s ease-in-out infinite; }
+.skin .kanal-b .deck-kanal.on-air { color: #ffb23a; text-shadow: 0 0 8px rgba(255, 154, 26, .8), 0 1px 2px #000; }
+.skin .deck-kanal.next { color: #8b97a6; }
+@keyframes on-air { 50% { opacity: .55; } }

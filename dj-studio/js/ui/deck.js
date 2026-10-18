@@ -32,8 +32,10 @@ export function deckBauen(root, id, engine, aktionen) {
   const tQuant = taste({ text: 'QUANT', klasse: 'klein akzent', titel: 'Cue und Loops auf den Beat setzen', onKlick: () => wunsch('quant', !s().quant) });
   const tZahn = taste({ html: ICON.zahn, klasse: 'icon', aria: `Einstellungen Kanal ${nr}`, onKlick: () => aktionen.einstellungen() });
   const videoLed = el('span', 'led');
+  const kanalText = el('span', 'deck-kanal', { text: `KANAL ${nr}` });
+  const TV = document.body.classList.contains('tv');
   const kopf = el('div', 'deck-kopf', {}, [
-    el('div', 'deck-name', {}, [el('span', 'deck-kanal', { text: `KANAL ${nr}` }), el('span', 'deck-badge', { text: id })]),
+    el('div', 'deck-name', {}, [kanalText, el('span', 'deck-badge', { text: id })]),
     el('div', 'deck-kopf-rest', {}, [
       el('span', 'deck-video', { title: 'Leuchtet, wenn dieses Deck im Programmbild ist' }, [el('span', 'mini-label', { text: 'VIDEO' }), videoLed]),
       tMaster, tSlip, tQuant, tZahn,
@@ -273,6 +275,14 @@ export function deckBauen(root, id, engine, aktionen) {
       const winkel = d.pos * 200;        // 33 1/3 U/min
       jogTeller.style.transform = `rotate(${winkel % 360}deg)`;
       videoLed.classList.toggle('an', imBild);
+      if (TV) {                            // DJ-Modus: welcher Kanal ist zu hoeren?
+        const text = d.track ? (imBild ? 'ON AIR' : 'NEXT') : '';
+        if (kanalText.textContent !== text) {
+          kanalText.textContent = text;
+          kanalText.classList.toggle('on-air', text === 'ON AIR');
+          kanalText.classList.toggle('next', text === 'NEXT');
+        }
+      }
       cueBlink = Math.floor(t * 2) % 2;
       tCue.classList.toggle('blink', !!d.track && !d.spielt && Math.abs(d.pos - d.cue) > 0.02 && cueBlink === 1);
       tCue.classList.toggle('an', !!d.track && !d.spielt && Math.abs(d.pos - d.cue) <= 0.02);

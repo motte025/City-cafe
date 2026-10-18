@@ -20,6 +20,7 @@ const DECK_A = {
   rahmen: [18, 82, 524, 666],
   teile: [
     // Kopfzeile (INT = Tempo-Referenz fuer SYNC, wie die MASTER-Taste)
+    ['.deck-kanal', [36, 91, 120, 24]],
     ['.deck-kopf-rest > .taste:nth-of-type(1)', [320, 90, 49, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(2)', [380, 90, 48, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(3)', [437, 90, 52, 28], { bild: true, an: true }],
@@ -89,6 +90,8 @@ const DECK_A = {
 
 // Geputzte Stellen fuer Kanal 1: ziel <- quelle (gestreckt) oder ziel <- Farbe
 const FLICKEN_A = [
+  // Schriftzug "KANAL 1" weg: das Feld zeigt echten Text (Demo: KANAL 1, TV: ON AIR / NEXT)
+  { ziel: [34, 88, 116, 28], quelle: [150, 88, 8, 28] },
   { ziel: [112, 432, 46, 140], quelle: [112, 572, 46, 60] },      // Faderkappe + blaue Linie
   { ziel: [136, 134, 300, 46], quelle: [440, 134, 4, 46] },       // Titel, Interpret
   { ziel: [136, 179, 396, 22], quelle: [395, 179, 6, 22] },       // Genre/BPM/Key, Zeit
@@ -111,6 +114,7 @@ const FLICKEN_A = [
 const DECK_B = {
   rahmen: [1130, 82, 525, 666],
   teile: [
+    ['.deck-kanal', [1145, 91, 120, 24]],
     ['.deck-kopf-rest > .taste:nth-of-type(1)', [1428, 90, 49, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(2)', [1488, 90, 50, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(3)', [1549, 90, 54, 28], { bild: true, an: true }],
@@ -170,6 +174,8 @@ const DECK_B = {
   ],
 };
 const FLICKEN_B = [
+  // Schriftzug "KANAL 2" weg (siehe FLICKEN_A)
+  { ziel: [1142, 88, 116, 28], quelle: [1258, 88, 8, 28] },
   // Play/Pause: in Bild 2 fehlt bei Kanal 2 der zweite Pause-Strich (nur "▶|") - beide Striche
   // aus dem vorhandenen nachmalen, Abstand wie bei Kanal 1 (18.10.2026)
   { ziel: [1347, 701, 4, 19], quelle: [1348, 701, 2, 19], taste: true },
