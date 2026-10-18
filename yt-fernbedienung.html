@@ -714,7 +714,7 @@
             return { videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
                      dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0, kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', aufrufe: Number(t.aufrufe) || 0 };
         });
-        verb.db.ref('djremote/' + RAUM + '/yt/listen/' + nr).set({
+        verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + nr).set({
             nr: nr, name: String(name).slice(0, 60), platzhalter: false, bearbeitet: true, eigen: true,
             titel: titel, ts: firebase.database.ServerValue.TIMESTAMP
         }).then(function () { melden('📃 Playlist „' + name + '" angelegt' + (titel.length ? ' mit 1 Song' : ''), 'ok'); })
@@ -1253,7 +1253,7 @@
             var wegK = d.querySelector('[data-a=weg]');
             if (wegK) wegK.addEventListener('click', function () {
                 if (wegK.dataset.sicher !== '1') { wegK.dataset.sicher = '1'; wegK.textContent = '🗑️ Wirklich löschen? Nochmal tippen'; return; }
-                var ref = verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr);
+                var ref = verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + p.nr);
                 // Eigene ganz weg; feste (aus dem Repo) nur ausblenden - unten wiederherstellbar.
                 (p.eigen ? ref.remove() : ref.set({ nr: p.nr, name: p.name || '', geloescht: true, ts: firebase.database.ServerValue.TIMESTAMP }))
                     .then(function () { melden('🗑️ Playlist „' + p.name + '" gelöscht', 'ok'); })
@@ -1288,7 +1288,7 @@
                 b.className = 'still';
                 b.textContent = '↺ ' + p.nr + ' ' + p.name;
                 b.addEventListener('click', function () {
-                    verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).remove().then(function () {
+                    verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + p.nr).remove().then(function () {
                         musik('listeOriginal', { nr: p.nr });
                         melden('↺ „' + p.name + '" ist wieder da', 'ok');
                     }).catch(function (err) { melden(err.message, 'nein'); });
@@ -1305,7 +1305,7 @@
     var offeneListen = {};
     function listeSpeichern(p, neu) {
         if (!verb) return;
-        verb.db.ref('djremote/' + RAUM + '/yt/listen/' + p.nr).set({
+        verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + p.nr).set({
             nr: p.nr, name: p.name || '', platzhalter: false, bearbeitet: true, eigen: !!p.eigen, titel: neu,
             ts: firebase.database.ServerValue.TIMESTAMP
         }).catch(function (err) {

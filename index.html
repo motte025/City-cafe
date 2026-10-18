@@ -8330,7 +8330,7 @@
             if (!(masterMusicPool || []).length) { setTimeout(ytmListenLaden, 10000); return; }
             let gespeichert = {};
             try {
-                gespeichert = (await nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/yt/listen').once('value')).val() || {};
+                gespeichert = (await nlFernVerb.db.ref(YT_REMOTE_NET.listenPfad()).once('value')).val() || {};
             } catch (e) {}
             ytmPlaylists.forEach(pl => {
                 const g = gespeichert[pl.nr];
@@ -8382,7 +8382,7 @@
         function ytmListeMelden(pl, titel) {
             ytmListenInhalt[pl.nr] = titel.map(t => ytmAufbereiten(t));
             if (!nlFernVerb) return;
-            nlFernVerb.db.ref('djremote/' + NL_FERN_RAUM + '/yt/listen/' + pl.nr).set({
+            nlFernVerb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + pl.nr).set({
                 nr: pl.nr, name: pl.name || '', platzhalter: !pl.quelle && !Array.isArray(pl.titel),
                 titel: ytmListenInhalt[pl.nr].slice(0, 250).map(t => ({
                     videoId: t.videoId || '', suche: t.suche || '', titel: t.titel || '',

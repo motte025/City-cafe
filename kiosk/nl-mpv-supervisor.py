@@ -48,7 +48,10 @@ def ytdlp_programme():
     return [YTDLP]
 
 
-COOKIES_FROM = "chromium:/home/citycafe/.config/chromium-kiosk"
+# CITYCAFE_COOKIES: anderes Browser-Profil (Test im Fenster auf dem PC)
+COOKIES_FROM = os.environ.get("CITYCAFE_COOKIES", "chromium:/home/citycafe/.config/chromium-kiosk")
+# CITYCAFE_JS_RUNTIME: JavaScript fuer yt-dlp (W1: node; geht auch deno)
+JS_RUNTIME = os.environ.get("CITYCAFE_JS_RUNTIME", "node")
 # Bestes H.264 bis 1080p (der Hardware-Decoder kann kein VP9/AV1 in brauchbarer
 # Form), dazu die m4a-Tonspur. Nicht jedes Video hat 1080p60 (299) - manche
 # nur 1080p30 (137).
@@ -680,7 +683,7 @@ def resolve(video_id, fmt=FORMAT, sortierung=None):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                [programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser", COOKIES_FROM,
                  "-f", fmt, *(["-S", sortierung] if sortierung else []),
                  "--print", "duration",
                  "--print", "QUALI %(format_id)s|%(resolution)s|%(fps)s|%(vcodec)s",
@@ -722,7 +725,7 @@ def suchen(text, anzahl=None):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--flat-playlist", "--print",
+                [programm, "--js-runtimes", JS_RUNTIME, "--flat-playlist", "--print",
                  "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
                  f"ytsearch{anzahl}:{text}"],
                 capture_output=True, text=True, timeout=60)
@@ -749,7 +752,7 @@ def playlists_suchen(text, anzahl=20):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--flat-playlist", "--playlist-end", str(anzahl),
+                [programm, "--js-runtimes", JS_RUNTIME, "--flat-playlist", "--playlist-end", str(anzahl),
                  "--print", "%(id)s\t%(title)s\t%(channel)s\t%(thumbnails.0.url)s", url],
                 capture_output=True, text=True, timeout=60)
         except (subprocess.TimeoutExpired, OSError) as fehler:
@@ -786,7 +789,7 @@ SHORTS_LISTEN = {}       # kanal-URL -> (zeit, treffer)
 def ytdlp_ausgabe(argumente, timeout=60):
     for programm in ytdlp_programme():
         try:
-            out = subprocess.run([programm, "--js-runtimes", "node", "--no-warnings"] + argumente,
+            out = subprocess.run([programm, "--js-runtimes", JS_RUNTIME, "--no-warnings"] + argumente,
                                  capture_output=True, text=True, timeout=timeout)
         except (subprocess.TimeoutExpired, OSError) as fehler:
             log(f"Shorts: {os.path.basename(programm)} {type(fehler).__name__}")
@@ -1028,7 +1031,7 @@ def mix(video_id, anzahl=MIX_ANZAHL):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node",
+                [programm, "--js-runtimes", JS_RUNTIME,
                  *(["--cookies-from-browser", COOKIES_FROM] if MIX_MIT_COOKIES else []),
                  "--flat-playlist", "--playlist-end", str(anzahl + 11), "--print",
                  "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
@@ -1064,7 +1067,7 @@ def aufrufe_ergaenzen(treffer, hoechstens=16):
 
     def holen(ids):
         try:
-            r = subprocess.run(["yt-dlp", "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+            r = subprocess.run(["yt-dlp", "--js-runtimes", JS_RUNTIME, "--cookies-from-browser", COOKIES_FROM,
                                 "--skip-download", "--ignore-errors", "--print", "%(id)s\t%(view_count)s",
                                 *[f"https://www.youtube.com/watch?v={i}" for i in ids]],
                                capture_output=True, text=True, timeout=40)
@@ -1109,7 +1112,7 @@ def playlist_lesen(quelle):
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
-                [programm, "--js-runtimes", "node", "--cookies-from-browser", COOKIES_FROM,
+                [programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser", COOKIES_FROM,
                  "--flat-playlist", "--playlist-end", str(PLAYLIST_MAX), "--print",
                  "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(duration)s\t%(view_count)s",
                  f"https://www.youtube.com/playlist?list={m.group(1)}"],
