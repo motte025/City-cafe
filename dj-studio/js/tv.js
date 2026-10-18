@@ -39,10 +39,11 @@ const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 // Anzeige wie in Bild 2 (Fotos der Vorlage): stachelig - spitze Schlaege, jede Nadel anders hoch,
 // Songteile erkennbar. Die Spitzen taugen dafuer nicht: laut gemasterte Titel stossen in jedem
 // Schlag an dieselbe Decke (flache Bloecke). Die Lautheit je 5 ms schwankt auch darunter.
-// Gewaehlt am echten Song neben den Fotos (Variante F, 18.10.2026): 60 % Lautheit + 40 % Bass,
-// je Song gespreizt (leiseste 5 % = Grundlinie, Exponent 1,8).
-function bildWerte(rms, tief) {
-  const roh = rms.map((r, i) => 0.6 * r + 0.4 * Math.min(1, tief[i] * 1.7));
+// Gewaehlt am echten Song neben den Fotos (18.10.2026): 50 % Lautheit, 20 % Bass, 30 % Hoehen
+// (Bass allein gibt runde Boegen, die Hoehen die feinen Nadeln), je Song gespreizt
+// (leiseste 5 % = Grundlinie, Exponent 1,8).
+function bildWerte(rms, tief, hoch) {
+  const roh = rms.map((r, i) => 0.5 * r + 0.2 * Math.min(1, tief[i] * 1.7) + 0.3 * Math.min(1, hoch[i] * 3));
   const sortiert = Float32Array.from(roh).sort();
   const lo = sortiert[Math.floor(roh.length * 0.05)] || 0, hi = sortiert[Math.floor(roh.length * 0.995)] || 1;
   return roh.map(x => Math.pow(Math.min(1, Math.max(0, (x - lo) / ((hi - lo) || 1))), 1.8));
@@ -77,7 +78,7 @@ function spurLesen(roh) {
     videoId: s.videoId, bpm: s.bpm, sicher: s.sicher || 0,
     versatz: taktEins(tief, s.proSek, s.bpm, s.versatz || 0),   // auf die Eins des Takts
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief, mitte: lin(s.mitte), hoch: lin(s.hoch),
-          bild: bildWerte(rms, tief) },
+          bild: bildWerte(rms, tief, lin(s.hoch)) },
     pegel,   // je Seite: Spitze (dBFS) und Leistung (linear^2) fuer die Meter
   };
 }
