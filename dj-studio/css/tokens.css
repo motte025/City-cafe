@@ -1,0 +1,70 @@
+/*
+ * City Cafe DJ Studio - Design-Tokens.
+ * Alle Farben, Masse und Schriften stehen hier. Wer das Aussehen aendern will,
+ * aendert zuerst diese Datei (siehe dj-studio/README.md, "Design anpassen").
+ */
+:root {
+  /* Buehne: echte 1920 x 1080, wird im Fenster proportional skaliert */
+  --stage-w: 1920px;
+  --stage-h: 1080px;
+
+  /* Raster */
+  --gap: 10px;
+  --rand: 14px;
+  --kopf-h: 74px;
+  --deck-w: 604px;
+  --mitte-w: 664px;
+  --haupt-top: 84px;
+  --haupt-h: 778px;
+  --leiste-top: 872px;
+  --leiste-h: 196px;
+  --radius-panel: 10px;
+  --radius-knopf: 6px;
+
+  /* Kanalfarben */
+  --a: #23a8ff;
+  --a-hell: #8fd6ff;
+  --a-tief: #0a4cff;
+  --a-glow: rgba(35, 168, 255, .55);
+  --b: #ff9a1a;
+  --b-hell: #ffd08a;
+  --b-tief: #ff5200;
+  --b-glow: rgba(255, 154, 26, .55);
+  --gruen: #34e36a;
+  --gruen-glow: rgba(52, 227, 106, .5);
+  --rot: #ff2b2b;
+  --gelb: #f4e21c;
+  --key: #ff3fd0;
+
+  /* Material */
+  --metall-1: #2b2f35;
+  --metall-2: #1a1d22;
+  --metall-3: #101215;
+  --metall-kante: rgba(255, 255, 255, .13);
+  --metall-schatten: rgba(0, 0, 0, .75);
+  --feld: #07090c;
+  --feld-rand: #2a2e34;
+  --knopf-1: #2a2d32;
+  --knopf-2: #15171a;
+  --text: #eef2f6;
+  --text-2: #b8c0c9;
+  --text-3: #7c8691;
+  --aus: #3a3f46;
+
+  /* Schrift */
+  --font: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --font-schmal: "Barlow Condensed", "Arial Narrow", "Segoe UI", sans-serif;
+  --font-zahl: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --fs-klein: 13px;
+  --fs-label: 14px;
+  --fs-knopf: 15px;
+  --fs-text: 18px;
+  --fs-titel: 23px;
+  --fs-kanal: 30px;
+  --fs-bpm: 40px;
+  --fs-zeit: 22px;
+}
+
+/* Kanal-Akzent pro Deck: Deck-Komponente liest nur --akzent-* */
+.kanal-a { --akzent: var(--a); --akzent-hell: var(--a-hell); --akzent-tief: var(--a-tief); --akzent-glow: var(--a-glow); }
+.kanal-b { --akzent: var(--b); --akzent-hell: var(--b-hell); --akzent-tief: var(--b-tief); --akzent-glow: var(--b-glow); }

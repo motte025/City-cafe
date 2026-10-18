@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>City Cafe DJ Studio</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/studio.css">
+</head>
+<body>
+<div id="buehne" class="buehne">
+  <header id="kopf" class="kopf"></header>
+  <section id="deck-a" class="deck kanal-a" aria-label="Kanal 1"></section>
+  <section id="mitte" class="mitte" aria-label="Video und Master"></section>
+  <section id="deck-b" class="deck kanal-b" aria-label="Kanal 2"></section>
+  <section id="leiste" class="leiste" aria-label="Nächste Titel"></section>
+  <div id="ebenen"></div>
+</div>
+<div id="start" class="start" role="dialog" aria-modal="true" aria-labelledby="start-titel">
+  <div class="start-karte">
+    <div class="start-marke">CITY CAFE</div>
+    <h1 id="start-titel">DJ Studio · Prototyp</h1>
+    <p>DEMO-Modus: Die Titel sind im Browser erzeugte Testsignale (eigener Generator, keine fremde Musik).
+       Wellenformen und Pegel werden aus diesem Audio berechnet. Der laufende TV-Betrieb ist nicht verbunden.</p>
+    <button id="start-knopf" class="start-knopf" type="button">Audio starten</button>
+    <p class="start-klein">Der Browser verlangt einen Klick, bevor Ton laufen darf.</p>
+  </div>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
