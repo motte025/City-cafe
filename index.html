@@ -7255,6 +7255,10 @@
         // Ansichtswechsel ueberleben) und haelt die Abdeckung aktuell.
         function nlWerbungPruefen() {
             if (!nlAktiv || (nlLaeuft && nlLaeuft.datei)) { nlWerbungSeit = 0; return; }
+            // Musik ueber mpv: das Embed steht nur angehalten daneben und meldet nach
+            // einer Ueberblendung noch die alte Kennung - das ist keine Werbung. Sonst
+            // beendete der Waechter nach 45 s den Slot und der Song begann von vorn (18.10.2026).
+            if (typeof ytmAktiv === 'function' && ytmAktiv() && nlExtern()) { nlWerbungSeit = 0; return; }
 
             if (!nlWerbungLaeuft()) {
                 nlWerbungSeit = 0;

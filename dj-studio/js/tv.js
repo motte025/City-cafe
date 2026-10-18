@@ -11,7 +11,8 @@
 //     naechster = { videoId, titel, kuenstler, genre, jahr, dauer } | null
 //   { typ: 'ytm-dj-spur', spur }  Messung des Supervisors je Song (Objekt oder JSON-Text):
 //     { videoId, proSek, dauer, bpm, versatz, sicher, spitze, tief, mitte, hoch,
-//       pegelSpitze, pegelRms }  - Reihen als base64-Bytes, siehe spur_messen().
+//       pegelSpitzeL, pegelRmsL, pegelSpitzeR, pegelRmsR }  - Reihen als base64-Bytes,
+//       siehe spur_messen() im Supervisor.
 //
 // Wellenform, BPM und Pegel sind gemessen (vorab, ueber den ganzen Song), nicht
 // live abgegriffen; eine Tonart gibt es nicht.
@@ -20,6 +21,7 @@ import { state, bestaetigen } from './store.js';
 
 let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV: 4/6/9 s, kommt mit)
 const SPRUNG_SEK = 0.8;      // erst ab dieser Abweichung die Position neu setzen
+const WELLE_SKALA = 0.6;     // Wellenform-Hoehe (siehe spurLesen)
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
@@ -28,13 +30,19 @@ const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 // Messung -> Wellenform (wie analysis.js) und Pegelreihen
 function spurLesen(roh) {
   const s = typeof roh === 'string' ? JSON.parse(roh) : roh;
-  const lin = b => Float32Array.from(bytes(b), x => x / 255);
+  // YouTube-Mastering ist laut (Spitzen meist 0,7-0,9): fuer die Anzeige auf ~60 %,
+  // sonst fuellt die Welle das Feld ganz und wirkt grell (Wunsch 18.10.2026)
+  const lin = b => Float32Array.from(bytes(b), x => x / 255 * WELLE_SKALA);
   const db = b => Float32Array.from(bytes(b), x => (x ? x * 60 / 255 - 60 : -Infinity));
   const spitze = lin(s.spitze);
   return {
     videoId: s.videoId, bpm: s.bpm, versatz: s.versatz || 0, sicher: s.sicher || 0,
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief: lin(s.tief), mitte: lin(s.mitte), hoch: lin(s.hoch) },
-    pegelSpitze: db(s.pegelSpitze), pegelRms: db(s.pegelRms),
+    // je Seite: Spitze (dBFS) und Leistung (linear^2) fuer die VU-Mittelung
+    pegel: ['L', 'R'].map(k => ({
+      spitze: db(s['pegelSpitze' + k] || s.pegelSpitze),
+      leistung: Float32Array.from(db(s['pegelRms' + k] || s.pegelRms), x => (isFinite(x) ? Math.pow(10, x / 10) : 0)),
+    })),
   };
 }
 
@@ -126,32 +134,39 @@ export function tvBauen(engine) {
   });
 
   // ---- Pegel aus der Messung statt aus Web Audio ----------------------------
-  const STILL = { spitze: 0, rms: 0 };
+  // Wie am Mischpult: Balken = Lautheit ueber 300 ms (VU), Spitze = 50 ms, links/rechts getrennt.
+  const VU_FAECHER = 30, SPITZE_FAECHER = 5;
+  const STILL = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 } };
   function pegelBei(id) {
     const d = state.decks[id], sp = d.track && spuren.get(d.track.videoId);
     if (!d.spielt || !sp) return STILL;
     const i = Math.floor(d.pos * sp.wf.proSek);
-    if (i < 0 || i >= sp.pegelSpitze.length) return STILL;
-    // Spitze ueber 50 ms (5 Faecher), damit kurze Spitzen nicht verloren gehen
-    let s = -Infinity;
-    for (let k = Math.max(0, i - 4); k <= i; k++) s = Math.max(s, sp.pegelSpitze[k]);
-    const lin = db => (db > -60 ? Math.pow(10, db / 20) : 0);
-    return { spitze: lin(s), rms: lin(sp.pegelRms[i]) };
+    if (i < 0 || i >= sp.pegel[0].spitze.length) return STILL;
+    const [L, R] = sp.pegel.map(p => {
+      let s = -Infinity, q = 0;
+      for (let k = Math.max(0, i - SPITZE_FAECHER + 1); k <= i; k++) s = Math.max(s, p.spitze[k]);
+      const von = Math.max(0, i - VU_FAECHER + 1);
+      for (let k = von; k <= i; k++) q += p.leistung[k];
+      return { spitze: s > -60 ? Math.pow(10, s / 20) : 0, rms: Math.sqrt(q / (i - von + 1)) };
+    });
+    return { L, R };
   }
   for (const id of ['A', 'B']) {
     const de = engine.decks[id];
-    de.pegel = () => { const p = pegelBei(id); return { L: p, R: p }; };
+    de.pegel = () => pegelBei(id);
     de.meterPost.lesen = de.pegel;
     de.meterPre.lesen = de.pegel;
   }
   engine.masterPegel = () => {
-    const m = { spitze: 0, rms: 0 };
+    const m = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 }, reduktion: 0 };
     for (const id of ['A', 'B']) {
       const p = pegelBei(id), g = engine.xfPegel(id);
-      m.spitze = Math.max(m.spitze, p.spitze * g);
-      m.rms = Math.sqrt(m.rms * m.rms + (p.rms * g) ** 2);
+      for (const k of ['L', 'R']) {
+        m[k].spitze = Math.max(m[k].spitze, p[k].spitze * g);
+        m[k].rms = Math.sqrt(m[k].rms ** 2 + (p[k].rms * g) ** 2);
+      }
     }
-    return { L: m, R: m, reduktion: 0 };
+    return m;
   };
 
   return {

@@ -138,8 +138,10 @@ export class LedMeter {
       const haltIdx = isFinite(k.halten) ? S.findLastIndex(s => k.halten >= s) : -1;
       for (let z = 0; z < this.zeilen; z++) {
         const q0 = i * (this.zeilen * breite + (this.zeilen - 1) * zl + kl) + z * (breite + zl);
+        // TV (echte Titel): Balken = Lautheit (VU), darueber nur die gehaltene Spitze
+        const tv = document.body.classList.contains('tv');
         for (let s = 0; s < n; s++) {
-          const an = k.spitze >= S[s] || s === haltIdx;
+          const an = (tv ? k.rms : k.spitze) >= S[s] || s === haltIdx;
           const l0 = v ? h - (s + 1) * teilung + luecke / 2 : s * teilung + luecke / 2;
           const [x, y, sw, sh] = v ? [q0, l0, breite, seg] : [l0, q0, seg, breite];
           const f = farbeRgb(s / (n - 1), this.palette);

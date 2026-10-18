@@ -24,7 +24,7 @@
 
 /* ---------- Ausschnitt aus dem Bild (Tasten) ---------- */
 .skin .sk-bild {
-  background: var(--bild) var(--bx) var(--by) / 1920px auto no-repeat;
+  background: var(--bild-tasten, var(--bild)) var(--bx) var(--by) / 1920px auto no-repeat;   /* --bild-tasten: js/skin.js putzen() */
   color: transparent; border-radius: 4px;
   transition: filter .12s, box-shadow .12s;
 }

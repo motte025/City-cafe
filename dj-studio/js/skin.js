@@ -170,6 +170,10 @@ const DECK_B = {
   ],
 };
 const FLICKEN_B = [
+  // Play/Pause: in Bild 2 fehlt bei Kanal 2 der zweite Pause-Strich (nur "▶|") - beide Striche
+  // aus dem vorhandenen nachmalen, Abstand wie bei Kanal 1 (18.10.2026)
+  { ziel: [1347, 701, 4, 19], quelle: [1348, 701, 2, 19], taste: true },
+  { ziel: [1354, 701, 4, 19], quelle: [1348, 701, 2, 19], taste: true },
   { ziel: [1510, 432, 52, 140], quelle: [1510, 572, 52, 60] },
   { ziel: [1250, 134, 300, 46], quelle: [1560, 134, 4, 46] },
   { ziel: [1250, 179, 390, 22], quelle: [1495, 179, 6, 22] },
@@ -393,4 +397,10 @@ async function putzen(buehne) {
   const blob = await new Promise(r => c.toBlob(r, 'image/png'));
   buehne.style.backgroundImage = `url(${URL.createObjectURL(blob)})`;
   buehne.classList.add('geputzt');
+  // Tasten schneiden ihr Bild aus dem Original; nur die Taste-Flicken dort einsetzen
+  // (das ganz geputzte Bild taugt nicht: darin fehlen z. B. die Faderkappen).
+  g.drawImage(img, 0, 0);
+  for (const f of FLICKEN.filter(f => f.taste)) g.drawImage(img, ...f.quelle.map(v => v * s), ...f.ziel.map(v => v * s));
+  const tasten = await new Promise(r => c.toBlob(r, 'image/png'));
+  buehne.style.setProperty('--bild-tasten', `url(${URL.createObjectURL(tasten)})`);
 }

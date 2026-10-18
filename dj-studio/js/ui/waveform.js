@@ -79,7 +79,7 @@ export class DetailWelle {
       // Bild-2-Optik: weicher Schein um die Welle (Kopie unscharf darueberlegen)
       g.save();
       g.filter = `blur(${Math.round(h * 0.035)}px)`;
-      g.globalAlpha = 0.8;
+      g.globalAlpha = document.body.classList.contains('tv') ? 0.35 : 0.8;   // TV: echte, laute Titel
       g.drawImage(this.c, 0, 0);
       g.restore();
     }

@@ -1922,13 +1922,16 @@ def balken_messen(vid, video_url, laenge):
 
 # DJ-Modus (Wunsch 18.10.2026): das Studio zeigt Wellenform, BPM und Pegel des
 # laufenden Songs. Der Ton laeuft weiter nur ueber mpv; hier wird er einmal ganz
-# gemessen (~2 s Rechenzeit): je 10 ms Spitze/RMS gesamt und RMS in drei Baendern.
+# gemessen (~2 s Rechenzeit): je 10 ms Spitze/RMS links und rechts, RMS in drei Baendern.
 # Gespeichert werden nur diese Zahlen (Bytes, base64), nie der Ton.
 SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
 SPUR_HZ = 100
-SPUR_FILTER = ("aresample=11025,pan=mono|c0=0.5*c0+0.5*c1,asplit=4[v][a][b][c];"
+# Kanaele nach amerge: 1 links, 2 rechts, 3 tief, 4 mitte, 5 hoch (Baender aus der Mono-Summe)
+SPUR_FILTER = ("aresample=11025,aformat=channel_layouts=stereo,asplit=2[st][mo];"
+               "[st]channelsplit=channel_layout=stereo[L][R];"
+               "[mo]pan=mono|c0=0.5*c0+0.5*c1,asplit=3[a][b][c];"
                "[a]lowpass=f=200[l];[b]highpass=f=200,lowpass=f=2500[m];[c]highpass=f=2500[h];"
-               "[v][l][m][h]amerge=inputs=4,asetnsamples=n=110:p=0,"
+               "[L][R][l][m][h]amerge=inputs=5,asetnsamples=n=110:p=0,"
                "astats=metadata=1:reset=1:measure_perchannel=RMS_level+Peak_level:measure_overall=none,"
                "ametadata=print:file=-")
 
@@ -1991,7 +1994,7 @@ def spur_messen(vid, audio_url, laenge):
     rahmen, akt = [], None
     for zeile in aus.stdout.splitlines():
         if zeile.startswith("frame:"):
-            akt = [-90.0] * 8
+            akt = [-90.0] * 10
             rahmen.append(akt)
         elif akt is not None and zeile.startswith("lavfi.astats."):
             k, _, w = zeile.partition("=")
@@ -2007,8 +2010,10 @@ def spur_messen(vid, audio_url, laenge):
         log(f"Studio-Spur {vid}: zu wenig Ton ({len(rahmen)} Rahmen)")
         SPUREN.pop(vid, None)
         return
-    lin = [[10 ** (r[i] / 20) for r in rahmen] for i in range(8)]
-    bpm, versatz, sicher = spur_bpm(lin[3], lin[1])
+    # Spalten: 0/1 links Spitze/RMS, 2/3 rechts, 5 tief RMS, 7 mitte RMS, 9 hoch RMS
+    lin = [[10 ** (r[i] / 20) for r in rahmen] for i in range(10)]
+    voll = [(a + b) / 2 for a, b in zip(lin[1], lin[3])]
+    bpm, versatz, sicher = spur_bpm(lin[5], voll)
 
     def b64(werte, f):
         return base64.b64encode(bytes(max(0, min(255, round(f(x)))) for x in werte)).decode()
@@ -2017,9 +2022,11 @@ def spur_messen(vid, audio_url, laenge):
         "videoId": vid, "proSek": SPUR_HZ, "dauer": round(len(rahmen) / SPUR_HZ, 2),
         "bpm": bpm, "versatz": versatz, "sicher": round(sicher, 2),
         # Wellenform linear 0..1 (wie dj-studio/js/analysis.js), Pegel in dBFS
-        "spitze": b64(lin[0], lambda x: x * 255), "tief": b64(lin[3], lambda x: x * 255),
-        "mitte": b64(lin[5], lambda x: x * 255), "hoch": b64(lin[7], lambda x: x * 255),
-        "pegelSpitze": b64([r[0] for r in rahmen], db_byte), "pegelRms": b64([r[1] for r in rahmen], db_byte)})
+        "spitze": b64([max(a, b) for a, b in zip(lin[0], lin[2])], lambda x: x * 255),
+        "tief": b64(lin[5], lambda x: x * 255), "mitte": b64(lin[7], lambda x: x * 255),
+        "hoch": b64(lin[9], lambda x: x * 255),
+        "pegelSpitzeL": b64([r[0] for r in rahmen], db_byte), "pegelRmsL": b64([r[1] for r in rahmen], db_byte),
+        "pegelSpitzeR": b64([r[2] for r in rahmen], db_byte), "pegelRmsR": b64([r[3] for r in rahmen], db_byte)})
     log(f"Studio-Spur {vid}: {len(rahmen) / SPUR_HZ:.0f}s, {bpm} BPM (Sicherheit {sicher:.2f})")
 
 
