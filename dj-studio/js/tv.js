@@ -34,15 +34,15 @@ const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; so
 const anderer = id => (id === 'A' ? 'B' : 'A');
 const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 
-// Anzeige wie in Bild 2: laut gemasterte Titel haben fast ueberall gleich hohe Spitzen.
-// Je Song spreizen - leiseste 20 % = Grundlinie, lauteste Stellen = volle Hoehe -, damit
-// Intro, Strophe, Refrain und die einzelnen Schlaege klar herausstehen.
-function bildWerte(spitze, tief) {
-  // Spitzen und Bass (5 ms) halb und halb: die Schlaege stehen als Buendel heraus wie in
-  // Bild 2, die feinen Nadeln bleiben (Vergleich am echten Song, 18.10.2026)
-  const roh = spitze.map((s, i) => 0.5 * s + 0.5 * Math.min(1, tief[i] * 1.7));
+// Anzeige wie in Bild 2 (Fotos der Vorlage): stachelig - spitze Schlaege, jede Nadel anders hoch,
+// Songteile erkennbar. Die Spitzen taugen dafuer nicht: laut gemasterte Titel stossen in jedem
+// Schlag an dieselbe Decke (flache Bloecke). Die Lautheit je 5 ms schwankt auch darunter.
+// Gewaehlt am echten Song neben den Fotos (Variante F, 18.10.2026): 60 % Lautheit + 40 % Bass,
+// je Song gespreizt (leiseste 5 % = Grundlinie, Exponent 1,8).
+function bildWerte(rms, tief) {
+  const roh = rms.map((r, i) => 0.6 * r + 0.4 * Math.min(1, tief[i] * 1.7));
   const sortiert = Float32Array.from(roh).sort();
-  const lo = sortiert[Math.floor(sortiert.length * 0.2)] || 0, hi = sortiert[Math.floor(sortiert.length * 0.995)] || 1;
+  const lo = sortiert[Math.floor(roh.length * 0.05)] || 0, hi = sortiert[Math.floor(roh.length * 0.995)] || 1;
   return roh.map(x => Math.pow(Math.min(1, Math.max(0, (x - lo) / ((hi - lo) || 1))), 1.8));
 }
 
@@ -53,15 +53,16 @@ function spurLesen(roh) {
   const lin = b => Float32Array.from(bytes(b), x => x / 255);
   const db = b => Float32Array.from(bytes(b), x => (x ? x * 60 / 255 - 60 : -Infinity));
   const spitze = lin(s.spitze), tief = lin(s.tief);
+  const pegel = ['L', 'R'].map(k => ({
+    spitze: db(s['pegelSpitze' + k] || s.pegelSpitze),
+    leistung: Float32Array.from(db(s['pegelRms' + k] || s.pegelRms), x => (isFinite(x) ? Math.pow(10, x / 10) : 0)),
+  }));
+  const rms = Float32Array.from(pegel[0].leistung, (l, i) => Math.sqrt(Math.max(l, pegel[1].leistung[i])));
   return {
     videoId: s.videoId, bpm: s.bpm, versatz: s.versatz || 0, sicher: s.sicher || 0,
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief, mitte: lin(s.mitte), hoch: lin(s.hoch),
-          bild: bildWerte(spitze, tief) },
-    // je Seite: Spitze (dBFS) und Leistung (linear^2) fuer die VU-Mittelung
-    pegel: ['L', 'R'].map(k => ({
-      spitze: db(s['pegelSpitze' + k] || s.pegelSpitze),
-      leistung: Float32Array.from(db(s['pegelRms' + k] || s.pegelRms), x => (isFinite(x) ? Math.pow(10, x / 10) : 0)),
-    })),
+          bild: bildWerte(rms, tief) },
+    pegel,   // je Seite: Spitze (dBFS) und Leistung (linear^2) fuer die Meter
   };
 }
 

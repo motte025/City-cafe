@@ -57,18 +57,25 @@ function zeichneTv(g, spalten, mitteY, H, farben) {
 
 // Wie Bild 2: einfarbige feine Nadeln (je Pixel), heller Kern zur Mitte, viel Schwarz dazwischen.
 // Hoehe = je Song gespreizter Pegel (tv.js bildWerte), so stehen Schlaege und Songteile heraus.
-const NADEL_HOEHE = 0.8;      // Anteil der Feldhoehe (Wunsch 18.10.2026: etwas kleiner)
+const NADEL_HOEHE = 0.85;     // Anteil der Feldhoehe (Wunsch 18.10.2026: etwas kleiner)
+// Wie die Fotos der Vorlage: ueberall feine Nadeln, von innen weiss gluehend nach aussen in der
+// Kanalfarbe, durchgehende helle Mittellinie, zarter Schein.
 function zeichneNadeln(g, spalten, mitteY, H, farben) {
-  const f = farben.mitte, kern = farben.hoch;
+  const f = farben.mitte, misch = (a, k) => a.map(v => Math.round(v + (255 - v) * k));
+  const f2 = misch(f, 0.45), f3 = misch(f, 0.85);
+  const kernMin = Math.max(0.8, H * 0.012);
   for (let x = 0; x < spalten.length; x++) {
     const s = spalten[x];
     if (!s) continue;
-    const hv = Math.max(0.5, s.bi * H * NADEL_HOEHE);
-    g.fillStyle = `rgba(${f[0]},${f[1]},${f[2]},${0.3 + 0.6 * s.bi})`;
+    const hv = (0.08 + 0.92 * s.bi) * H * NADEL_HOEHE;
+    g.fillStyle = `rgba(${f[0]},${f[1]},${f[2]},0.9)`;
     g.fillRect(x, mitteY - hv, 1, hv * 2);
-    const k = hv * 0.16;
-    g.fillStyle = `rgba(${kern[0]},${kern[1]},${kern[2]},${0.2 + 0.55 * s.bi})`;
-    g.fillRect(x, mitteY - k, 1, k * 2);
+    const h2 = hv * 0.4;
+    g.fillStyle = `rgba(${f2[0]},${f2[1]},${f2[2]},0.9)`;
+    g.fillRect(x, mitteY - h2, 1, h2 * 2);
+    const h3 = Math.max(kernMin, hv * 0.06);   // duenner Kern, waechst mit der Nadel
+    g.fillStyle = `rgba(${f3[0]},${f3[1]},${f3[2]},0.95)`;
+    g.fillRect(x, mitteY - h3, 1, h3 * 2);
   }
 }
 
@@ -174,7 +181,8 @@ export class DetailWelle {
       const s = spalte(wf, t * wf.proSek, (t + sekProPx * schritt) * wf.proSek);
       if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, schritt);
     }
-    // Schein nur fuer die Demo-Titel: im TV fuellte er die Luecken zwischen den Nadeln (Bloecke)
+    // Schein nur fuer die Demo-Titel: im TV fuellt er die Luecken zwischen den Stacheln
+    // und macht sie flach (zweimal am Bildschirm gesehen, 18.10.2026)
     if (!tv && (this.glanz ??= !!this.c.closest('.skin'))) {
       // Bild-2-Optik: weicher Schein um die Welle (Kopie unscharf darueberlegen)
       g.save();
