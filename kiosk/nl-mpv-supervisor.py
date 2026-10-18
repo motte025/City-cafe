@@ -1933,10 +1933,11 @@ SPUR_ORDNER = os.environ.get("CITYCAFE_SPUREN", os.path.expanduser("~/.cache/cit
 SPUR_PLATTE_MB = 600
 SPUR_VERSION = 3           # hochzaehlen, wenn sich Messung/Format aendern (alte werden neu gemessen)
 # Vormessen (Wunsch 19.10.2026): solange keine Musik laeuft, alle Playlist-Songs messen, damit
-# Wellenform & Co. im DJ-Modus sofort da sind. Nur mit CITYCAFE_VORMESSEN=1 (Standard aus).
+# Wellenform & Co. im DJ-Modus sofort da sind.
 # Ein Song nach dem anderen, gebremst (SPUR_LESETEMPO) und mit Pause - viele yt-dlp-Abfragen
 # hintereinander koennen YouTubes Bot-Erkennung ausloesen; nach mehreren Fehlern 1 h Pause.
-VORMESSEN = os.environ.get("CITYCAFE_VORMESSEN", "0") == "1"
+# Standard an (Betreiber 19.10.2026, wichtig fuer den W1); abschalten mit CITYCAFE_VORMESSEN=0.
+VORMESSEN = os.environ.get("CITYCAFE_VORMESSEN", "1") != "0"
 VORMESS_PAUSE = 15
 VORMESS_FEHLER_PAUSE = 3600
 VORMESS_EXPR = """JSON.stringify((() => { try { const ids = new Set();
@@ -2596,6 +2597,7 @@ def main():
                     vormessen["fehler_folge"] = 0
                     spur_messen(vid, urls[0], urls[2])
                     SPUREN.pop(vid, None)          # nur auf die Platte, nicht im Speicher sammeln
+                    vormessen["naechste"] = time.time() + VORMESS_PAUSE   # Pause ab Ende der Messung
                     vormessen["erledigt"] += 1
                     if vormessen["erledigt"] % 10 == 1:
                         log(f"Vormessen: {gesamt - rest + 1} von {gesamt} Playlist-Songs gemessen")
