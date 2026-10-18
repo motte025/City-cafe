@@ -27,8 +27,8 @@ let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV:
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
 // Pegelanzeige wie am Mischpult: YouTube ist bis 0 dBFS gemastert, darum an den Kanaelen
-// 5 dB Reserve (Trim auf 0). Der Master zeigt den Ton nach der Lautstaerke der Fernbedienung.
-const RESERVE_DB = -5;
+// 3 dB Reserve (Trim auf 0). Der Master zeigt den Ton nach der Lautstaerke der Fernbedienung.
+const RESERVE_DB = -3;        // Kanal-Spitzen duerfen bis ca. +3 auf der Skala (Wunsch 18.10.2026)
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
