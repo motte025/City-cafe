@@ -245,3 +245,8 @@
 .skin .kanal-b .deck-kanal.on-air { color: #ffb23a; text-shadow: 0 0 8px rgba(255, 154, 26, .8), 0 1px 2px #000; }
 .skin .deck-kanal.next { color: #8b97a6; }
 @keyframes on-air { 50% { opacity: .55; } }
+
+/* DJ-Modus: ohne Herz/Menue, Titel groesser und breiter (Lage in js/skin.js, Option tv) */
+body.tv .skin .deck-info-icons { display: none; }
+body.tv .skin .deck-titel { font-size: 32px; line-height: 37px; }
+body.tv .skin .deck-kuenstler { font-size: 21px; line-height: 23px; }

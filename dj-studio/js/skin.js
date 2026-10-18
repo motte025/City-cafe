@@ -29,12 +29,12 @@ const DECK_A = {
     // Titel
     ['.deck-cover', [29, 130, 97, 78]],
     // Titel groesser (Wunsch 18.10.2026): 27 px statt 21 px, Kuenstler 20 px
-    ['.deck-titel', [140, 129, 330, 31]],
-    ['.deck-kuenstler', [140, 160, 330, 22]],
-    ['.deck-meta', [140, 182, 270, 18]],
+    ['.deck-titel', [140, 129, 330, 31], { tv: [140, 126, 392, 37] }],
+    ['.deck-kuenstler', [140, 160, 330, 22], { tv: [140, 164, 300, 23] }],
+    ['.deck-meta', [140, 182, 270, 18], { tv: [140, 187, 262, 18] }],
     ['.herz', [479, 138, 22, 21]],
     ['.deck-info-icons > .taste:not(.herz)', [512, 138, 20, 23]],
-    ['.deck-zeit', [404, 179, 124, 22]],
+    ['.deck-zeit', [404, 179, 124, 22], { tv: [404, 185, 124, 22] }],
     ['.deck-meldung', [140, 236, 290, 34]],
     // Wellenformen
     ['.deck-welle', [28, 212, 508, 84]],
@@ -91,6 +91,8 @@ const DECK_A = {
 
 // Geputzte Stellen fuer Kanal 1: ziel <- quelle (gestreckt) oder ziel <- Farbe
 const FLICKEN_A = [
+  // DJ-Modus: Herz und Menue-Punkte aus dem Bild weg (Platz fuer lange Titel)
+  { ziel: [466, 130, 72, 36], quelle: [446, 130, 6, 36], tv: true },
   // Schriftzug "KANAL 1" weg: das Feld zeigt echten Text (Demo: KANAL 1, TV: ON AIR / NEXT)
   { ziel: [34, 88, 116, 28], quelle: [150, 88, 8, 28] },
   { ziel: [112, 432, 46, 140], quelle: [112, 572, 46, 60] },      // Faderkappe + blaue Linie
@@ -122,12 +124,12 @@ const DECK_B = {
     ['.deck-kopf-rest > .taste.icon', [1613, 91, 28, 26]],
     ['.deck-video .led', [1399, 99, 10, 10]],
     ['.deck-cover', [1136, 130, 102, 78]],
-    ['.deck-titel', [1253, 129, 320, 31]],
-    ['.deck-kuenstler', [1253, 160, 320, 22]],
-    ['.deck-meta', [1253, 182, 255, 18]],
+    ['.deck-titel', [1253, 129, 320, 31], { tv: [1253, 126, 390, 37] }],
+    ['.deck-kuenstler', [1253, 160, 320, 22], { tv: [1253, 164, 300, 23] }],
+    ['.deck-meta', [1253, 182, 255, 18], { tv: [1253, 187, 252, 18] }],
     ['.herz', [1590, 138, 22, 21]],
     ['.deck-info-icons > .taste:not(.herz)', [1622, 138, 20, 23]],
-    ['.deck-zeit', [1508, 179, 124, 22]],
+    ['.deck-zeit', [1508, 179, 124, 22], { tv: [1508, 185, 124, 22] }],
     ['.deck-meldung', [1250, 236, 290, 34]],
     ['.deck-welle', [1136, 212, 508, 84]],
     ['.deck-ueber', [1139, 297, 504, 20]],
@@ -175,6 +177,8 @@ const DECK_B = {
   ],
 };
 const FLICKEN_B = [
+  // DJ-Modus: Herz und Menue-Punkte weg (siehe FLICKEN_A)
+  { ziel: [1578, 130, 70, 36], quelle: [1560, 130, 6, 36], tv: true },
   // Schriftzug "KANAL 2" weg (siehe FLICKEN_A)
   { ziel: [1142, 88, 116, 28], quelle: [1258, 88, 8, 28] },
   // Play/Pause: in Bild 2 fehlt bei Kanal 2 der zweite Pause-Strich (nur "▶|") - beide Striche
@@ -334,7 +338,8 @@ function sektionAnwenden(root, t) {
   for (const [sel, r, o = {}] of t.teile) {
     const el = root.querySelector(sel);
     if (!el) { if (!sel.includes('.karte')) console.warn('[Skin] nicht gefunden:', sel); continue; }
-    rects.set(el, { r: o.gross ? groesser(r, o.gross) : r, o });
+    const rr = o.tv && document.body.classList.contains('tv') ? o.tv : r;   // DJ-Modus: eigene Lage
+    rects.set(el, { r: o.gross ? groesser(rr, o.gross) : rr, o });
   }
   const gemappt = [...rects.keys()];
   const enthaeltGemapptes = el => gemappt.some(m => m !== el && el.contains(m));
@@ -392,7 +397,9 @@ async function putzen(buehne) {
   const roh = g.getImageData(0, 0, c.width, c.height).data;
   const s = c.width / BILD_W;      // Masse sind in Original-Pixeln
   const farbe = ([x, y]) => { const i = (Math.round(y * s) * c.width + Math.round(x * s)) * 4; return `rgb(${roh[i]},${roh[i + 1]},${roh[i + 2]})`; };
+  const tv = document.body.classList.contains('tv');
   for (const f of FLICKEN) {
+    if (f.tv && !tv) continue;               // nur im DJ-Modus
     const [x, y, w, h] = f.ziel.map(v => v * s);
     if (f.quelle) g.drawImage(img, ...f.quelle.map(v => v * s), x, y, w, h);
     else if (f.verlauf) {
