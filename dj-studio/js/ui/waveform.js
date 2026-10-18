@@ -34,6 +34,20 @@ function zeichneSpalte(g, x, mitteY, H, s, farben, breite) {
   g.fillStyle = rgba(farben.hoch, 0.6); g.fillRect(x, mitteY - hh * 0.55, breite, hh * 1.1);
 }
 
+// TV-Ansicht (echte, laut gemasterte Titel): Spitzen nur als zarte Huelle, darin
+// Bass/Mitte/Hoehen als abgestufte Schichten - volle Hoehe, aber Struktur statt Block.
+const TV = () => document.body.classList.contains('tv');
+function zeichneSpalteTv(g, x, mitteY, H, s, farben, breite) {
+  const hs = Math.min(1, s.sp) * H;
+  const ht = Math.min(1, s.t * 1.7) * H;
+  const hm = Math.min(1, s.m * 1.9) * H;
+  const hh = Math.min(1, s.h * 3.2) * H;
+  g.fillStyle = rgba(farben.tief, 0.22); g.fillRect(x, mitteY - hs, breite, hs * 2);
+  g.fillStyle = rgba(farben.tief, 0.7); g.fillRect(x, mitteY - ht, breite, ht * 2);
+  g.fillStyle = rgba(farben.mitte, 0.55); g.fillRect(x, mitteY - hm * 0.8, breite, hm * 1.6);
+  g.fillStyle = rgba(farben.hoch, 0.55); g.fillRect(x, mitteY - hh * 0.5, breite, hh);
+}
+
 function hinweis(g, w, h, text) {
   g.fillStyle = 'rgba(255,255,255,.35)';
   g.font = `${Math.round(h * 0.16)}px "Barlow Condensed", sans-serif`;
@@ -44,7 +58,7 @@ function hinweis(g, w, h, text) {
 export class DetailWelle {
   constructor(canvas, deck) {
     this.c = canvas; this.g = canvas.getContext('2d'); this.farben = FARBEN[deck];
-    this.zoom = 8;   // sichtbare Sekunden
+    this.zoom = TV() ? 6 : 8;   // sichtbare Sekunden (TV: enger, mehr Detail)
   }
   zoomen(f) { this.zoom = Math.min(32, Math.max(2, this.zoom * f)); }
 
@@ -68,18 +82,19 @@ export class DetailWelle {
       const x0 = (d.loop.start - t0) / sekProPx;
       g.fillStyle = 'rgba(52,227,106,.7)'; g.fillRect(x0, 0, 2, h);
     }
-    g.globalCompositeOperation = 'lighter';
+    const tv = TV();
+    g.globalCompositeOperation = tv ? 'source-over' : 'lighter';
     for (let x = 0; x < w; x += schritt) {
       const t = t0 + x * sekProPx;
       if (t < 0 || t > wf.dauer) continue;
       const s = spalte(wf, t * wf.proSek, (t + sekProPx * schritt) * wf.proSek);
-      if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, schritt);
+      if (s) (tv ? zeichneSpalteTv : zeichneSpalte)(g, x, mitteY, H, s, this.farben, schritt);
     }
-    if (this.glanz ??= !!this.c.closest('.skin')) {
+    if (!tv && (this.glanz ??= !!this.c.closest('.skin'))) {
       // Bild-2-Optik: weicher Schein um die Welle (Kopie unscharf darueberlegen)
       g.save();
       g.filter = `blur(${Math.round(h * 0.035)}px)`;
-      g.globalAlpha = document.body.classList.contains('tv') ? 0.35 : 0.8;   // TV: echte, laute Titel
+      g.globalAlpha = 0.8;
       g.drawImage(this.c, 0, 0);
       g.restore();
     }
@@ -121,10 +136,11 @@ export class UebersichtWelle {
     off.width = w; off.height = h;
     const g = off.getContext('2d');
     const wf = tr.wf, mitteY = h / 2, H = h * 0.48;
-    g.globalCompositeOperation = 'lighter';
+    const tv = TV();
+    g.globalCompositeOperation = tv ? 'source-over' : 'lighter';
     for (let x = 0; x < w; x++) {
       const s = spalte(wf, x / w * wf.faecher, (x + 1) / w * wf.faecher);
-      if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, 1);
+      if (s) (tv ? zeichneSpalteTv : zeichneSpalte)(g, x, mitteY, H, s, this.farben, 1);
     }
     this.vorlage = off; this.fuer = tr.id + '@' + w + 'x' + h;
   }

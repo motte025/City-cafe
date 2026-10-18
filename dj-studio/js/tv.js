@@ -6,7 +6,8 @@
 //   der alte laeuft waehrend der Blende aus, der Crossfader wandert hinueber.
 //
 // Nachrichten:
-//   { typ: 'ytm-dj', jetzt, naechster, schlange, blende }   blende = Ueberblendung in s
+//   { typ: 'ytm-dj', jetzt, naechster, schlange, blende, vol }
+//     blende = Ueberblendung in s, vol = Lautstaerke am TV 0-100 (Fernbedienung)
 //     jetzt     = { videoId, titel, kuenstler, genre, jahr, dauer, pos, pausiert }
 //     naechster = { videoId, titel, kuenstler, genre, jahr, dauer } | null
 //   { typ: 'ytm-dj-spur', spur }  Messung des Supervisors je Song (Objekt oder JSON-Text):
@@ -21,7 +22,9 @@ import { state, bestaetigen } from './store.js';
 
 let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV: 4/6/9 s, kommt mit)
 const SPRUNG_SEK = 0.8;      // erst ab dieser Abweichung die Position neu setzen
-const WELLE_SKALA = 0.6;     // Wellenform-Hoehe (siehe spurLesen)
+// Pegelanzeige wie am Mischpult: YouTube ist bis 0 dBFS gemastert, darum an den Kanaelen
+// 5 dB Reserve (Trim auf 0). Der Master zeigt den Ton nach der Lautstaerke der Fernbedienung.
+const RESERVE_DB = -5;
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
@@ -30,9 +33,8 @@ const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 // Messung -> Wellenform (wie analysis.js) und Pegelreihen
 function spurLesen(roh) {
   const s = typeof roh === 'string' ? JSON.parse(roh) : roh;
-  // YouTube-Mastering ist laut (Spitzen meist 0,7-0,9): fuer die Anzeige auf ~60 %,
-  // sonst fuellt die Welle das Feld ganz und wirkt grell (Wunsch 18.10.2026)
-  const lin = b => Float32Array.from(bytes(b), x => x / 255 * WELLE_SKALA);
+  // Laute YouTube-Titel: wie sie gezeichnet werden, regelt waveform.js (zeichneSpalteTv)
+  const lin = b => Float32Array.from(bytes(b), x => x / 255);
   const db = b => Float32Array.from(bytes(b), x => (x ? x * 60 / 255 - 60 : -Infinity));
   const spitze = lin(s.spitze);
   return {
@@ -53,6 +55,9 @@ export function tvBauen(engine) {
   let auslauf = null;                // { id, pos, zeit, bis } alter Song in der Blende
   let blende = null;                 // { von, nach, ab }
   let naechster = null;
+  let vol = null;                    // Lautstaerke am TV (0-100)
+  // mpv rechnet die Lautstaerke kubisch: 50 % = 0,125 = -18 dB
+  const lautFaktor = () => (vol === null ? 1 : Math.pow(vol / 100, 3));
   const jetztS = () => performance.now() / 1000;
 
   function track(t) {
@@ -87,6 +92,10 @@ export function tvBauen(engine) {
     const j = d.jetzt && d.jetzt.videoId ? d.jetzt : null;
     naechster = d.naechster || null;
     if ([4, 6, 9].includes(d.blende)) xfSek = d.blende;
+    if (typeof d.vol === 'number' && d.vol !== vol) {
+      vol = Math.max(0, Math.min(100, d.vol));
+      engine.request('master.volume', 0.8 * lautFaktor());   // Knopf: 0,8 = 0 dB
+    }
     const t = jetztS(), pos = Number(j?.pos) || 0, spielt = !!j && !j.pausiert;
     const aktuell = state.decks[luft].track;
     if (j && aktuell && aktuell.videoId !== j.videoId) {
@@ -135,7 +144,7 @@ export function tvBauen(engine) {
 
   // ---- Pegel aus der Messung statt aus Web Audio ----------------------------
   // Wie am Mischpult: Balken = Lautheit ueber 300 ms (VU), Spitze = 50 ms, links/rechts getrennt.
-  const VU_FAECHER = 30, SPITZE_FAECHER = 5;
+  const VU_FAECHER = 30, SPITZE_FAECHER = 5, RESERVE = Math.pow(10, RESERVE_DB / 20);
   const STILL = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 } };
   function pegelBei(id) {
     const d = state.decks[id], sp = d.track && spuren.get(d.track.videoId);
@@ -147,7 +156,7 @@ export function tvBauen(engine) {
       for (let k = Math.max(0, i - SPITZE_FAECHER + 1); k <= i; k++) s = Math.max(s, p.spitze[k]);
       const von = Math.max(0, i - VU_FAECHER + 1);
       for (let k = von; k <= i; k++) q += p.leistung[k];
-      return { spitze: s > -60 ? Math.pow(10, s / 20) : 0, rms: Math.sqrt(q / (i - von + 1)) };
+      return { spitze: s > -60 ? Math.pow(10, s / 20) * RESERVE : 0, rms: Math.sqrt(q / (i - von + 1)) * RESERVE };
     });
     return { L, R };
   }
@@ -159,8 +168,10 @@ export function tvBauen(engine) {
   }
   engine.masterPegel = () => {
     const m = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 }, reduktion: 0 };
+    const laut = lautFaktor();
     for (const id of ['A', 'B']) {
-      const p = pegelBei(id), g = engine.xfPegel(id);
+      // Master-Skala hat eigene Reserve (+9 = 0 dBFS): die Kanal-Reserve wieder heraus
+      const p = pegelBei(id), g = engine.xfPegel(id) * laut / RESERVE;
       for (const k of ['L', 'R']) {
         m[k].spitze = Math.max(m[k].spitze, p[k].spitze * g);
         m[k].rms = Math.sqrt(m[k].rms ** 2 + (p[k].rms * g) ** 2);

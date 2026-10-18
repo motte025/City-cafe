@@ -9170,7 +9170,8 @@
             const jetzt = Object.assign(titel(ytm.jetzt), { dauer: st.dauer, pos: st.pos, pausiert: ytmPausiert });
             try {
                 f.contentWindow.postMessage({ typ: 'ytm-dj', jetzt, naechster: vor[0] ? titel(vor[0]) : null,
-                                              schlange: vor.slice(1).map(titel), blende: Number(nlTon.blende) || 4 },
+                                              schlange: vor.slice(1).map(titel), blende: Number(nlTon.blende) || 4,
+                                              vol: Number(nlTon.vol) || 0 },
                                             location.origin);
                 // Messwerte des Supervisors (Wellenform, BPM, Pegel) je Song einmal weitergeben
                 const spuren = window.nlStudioSpuren || {};
