@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-18T11:52:45Z",
+  "checked_at": "2026-10-18T12:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
       "game": "DJs"
     }
   ]
