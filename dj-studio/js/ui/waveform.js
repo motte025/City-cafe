@@ -181,12 +181,19 @@ export class DetailWelle {
     const tv = TV();
     g.globalCompositeOperation = tv ? 'source-over' : 'lighter';
     if (tv) {
-      const spalten = new Array(Math.ceil(w));
-      for (let x = 0; x < w; x++) {
-        const t = t0 + x * sekProPx;
+      // Spalten fest an der Songzeit (nicht am Bildschirm): sonst fallen beim Scrollen um
+      // Bruchteile eines Pixels jedes Bild andere Messwerte in eine Spalte, der Kamm springt
+      // und die Nadeln zittern. Gezeichnet wird um den Rest-Versatz verschoben.
+      const c0 = Math.floor(t0 / sekProPx), versatz = Math.round(t0 / sekProPx - c0);
+      const n = Math.ceil(w) + 2, spalten = new Array(n);
+      for (let x = 0; x < n; x++) {
+        const t = (c0 + x) * sekProPx;
         spalten[x] = t < 0 || t > wf.dauer ? null : spalteFein(wf, t * wf.proSek, (t + sekProPx) * wf.proSek);
       }
+      g.save();
+      g.translate(-versatz, 0);
       zeichneTv(g, spalten, mitteY, H, this.farben);
+      g.restore();
     } else for (let x = 0; x < w; x += schritt) {
       const t = t0 + x * sekProPx;
       if (t < 0 || t > wf.dauer) continue;
