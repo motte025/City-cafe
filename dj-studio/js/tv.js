@@ -24,7 +24,8 @@ import { state, bestaetigen } from './store.js';
 // der Ton wechselt nur kurz in der Mitte der Blende - genau dann faehrt der Crossfader.
 const XF_TON_FENSTER_SEK = 2.0;
 let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV: 4/6/9 s, kommt mit)
-const SPRUNG_SEK = 0.8;      // erst ab dieser Abweichung die Position neu setzen
+const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
+                             // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
 // Pegelanzeige wie am Mischpult: YouTube ist bis 0 dBFS gemastert, darum an den Kanaelen
 // 5 dB Reserve (Trim auf 0). Der Master zeigt den Ton nach der Lautstaerke der Fernbedienung.
 const RESERVE_DB = -5;
@@ -36,12 +37,13 @@ const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 // Anzeige wie in Bild 2: laut gemasterte Titel haben fast ueberall gleich hohe Spitzen.
 // Je Song spreizen - leiseste 20 % = Grundlinie, lauteste Stellen = volle Hoehe -, damit
 // Intro, Strophe, Refrain und die einzelnen Schlaege klar herausstehen.
-function bildWerte(spitze) {
-  // nur die Spitzen: die Bass-Huellkurve ist traege und machte runde Bloecke statt Nadeln
-  const roh = spitze;
+function bildWerte(spitze, tief) {
+  // Spitzen und Bass (5 ms) halb und halb: die Schlaege stehen als Buendel heraus wie in
+  // Bild 2, die feinen Nadeln bleiben (Vergleich am echten Song, 18.10.2026)
+  const roh = spitze.map((s, i) => 0.5 * s + 0.5 * Math.min(1, tief[i] * 1.7));
   const sortiert = Float32Array.from(roh).sort();
   const lo = sortiert[Math.floor(sortiert.length * 0.2)] || 0, hi = sortiert[Math.floor(sortiert.length * 0.995)] || 1;
-  return roh.map(x => Math.pow(Math.min(1, Math.max(0, (x - lo) / ((hi - lo) || 1))), 2.2));
+  return roh.map(x => Math.pow(Math.min(1, Math.max(0, (x - lo) / ((hi - lo) || 1))), 1.8));
 }
 
 // Messung -> Wellenform (wie analysis.js) und Pegelreihen
@@ -54,7 +56,7 @@ function spurLesen(roh) {
   return {
     videoId: s.videoId, bpm: s.bpm, versatz: s.versatz || 0, sicher: s.sicher || 0,
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief, mitte: lin(s.mitte), hoch: lin(s.hoch),
-          bild: bildWerte(spitze) },
+          bild: bildWerte(spitze, tief) },
     // je Seite: Spitze (dBFS) und Leistung (linear^2) fuer die VU-Mittelung
     pegel: ['L', 'R'].map(k => ({
       spitze: db(s['pegelSpitze' + k] || s.pegelSpitze),
@@ -69,6 +71,7 @@ export function tvBauen(engine) {
   let stand = { pos: 0, zeit: 0, spielt: false };
   let auslauf = null;                // { id, pos, zeit, bis } alter Song in der Blende
   let blende = null;                 // { von, nach, ab }
+  let nachziehen = 0;                // kleine Abweichung zu mpv, wird in takt() abgebaut
   let naechster = null;
   let vol = null;                    // Lautstaerke am TV (0-100)
   // mpv rechnet die Lautstaerke kubisch: 50 % = 0,125 = -18 dB
@@ -119,11 +122,12 @@ export function tvBauen(engine) {
       auslauf = { id: alt, pos: state.decks[alt].pos, zeit: t, bis: t + xfSek };
       luft = anderer(alt);
       blende = { von: state.master.crossfader, nach: luft === 'A' ? -1 : 1, ab: t };
-      stand = { pos, zeit: t, spielt };
+      stand = { pos, zeit: t, spielt }; nachziehen = 0;
     } else {
-      // Gleicher Song: nur bei echtem Sprung (Spulen, Pause) neu setzen - sonst ruckelt der Teller.
+      // Gleicher Song: bei echtem Sprung (Spulen, Pause) neu setzen, sonst weich nachziehen
       const erwartet = stand.pos + (stand.spielt ? t - stand.zeit : 0);
-      if (!j || spielt !== stand.spielt || Math.abs(pos - erwartet) > SPRUNG_SEK) stand = { pos, zeit: t, spielt };
+      if (!j || spielt !== stand.spielt || Math.abs(pos - erwartet) > SPRUNG_SEK) { stand = { pos, zeit: t, spielt }; nachziehen = 0; }
+      else nachziehen = pos - erwartet;
     }
     jetztRoh = j;
     setzen(luft, j, spielt);
@@ -211,6 +215,12 @@ export function tvBauen(engine) {
     takt() {
       const t = jetztS();
       const d = state.decks[luft];
+      if (nachziehen) {                   // in ~0,5 s aufholen
+        const schritt = nachziehen * Math.min(1, (t - (this.letzte || t)) * 3);
+        stand.pos += schritt; nachziehen -= schritt;
+        if (Math.abs(nachziehen) < 0.002) nachziehen = 0;
+      }
+      this.letzte = t;
       if (d.track) {
         const p = stand.pos + (stand.spielt ? t - stand.zeit : 0);
         d.pos = Math.min(d.track.dauer || p, Math.max(0, p));

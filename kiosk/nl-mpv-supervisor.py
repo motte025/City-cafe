@@ -2878,7 +2878,7 @@ def main():
                          f"window.nlExternBis = {'Date.now() + 3000' if nl_ok else '0'}; "
                          f"window.djExternBis = {'Date.now() + 3000' if dj_ok else '0'}; "
                          f"window.djExternLaeuft = {'true' if dj_laeuft else 'false'}; "
-                         f"window.nlMpvStand = {mpv_stand}; 1")
+                         f"window.nlMpvStand = {mpv_stand}; window.nlMpvStandZeit = Date.now(); 1")
             except (OSError, ValueError, ConnectionError):
                 pass
 

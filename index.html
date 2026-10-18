@@ -9167,7 +9167,10 @@
             };
             const st = ytmStand();
             const vor = YTW.vorschau(ytm, 12, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
-            const jetzt = Object.assign(titel(ytm.jetzt), { dauer: st.dauer, pos: st.pos, pausiert: ytmPausiert });
+            // Position zum jetzigen Zeitpunkt: der Supervisor misst sie etwas frueher (nlMpvStandZeit)
+            const ms = window.nlMpvStand, alter = window.nlMpvStandZeit ? (Date.now() - window.nlMpvStandZeit) / 1000 : 0;
+            const pos = st.pos + (ms && ms.videoId === ytm.jetzt.videoId && !ytmPausiert && alter > 0 && alter < 3 ? alter : 0);
+            const jetzt = Object.assign(titel(ytm.jetzt), { dauer: st.dauer, pos, pausiert: ytmPausiert });
             try {
                 f.contentWindow.postMessage({ typ: 'ytm-dj', jetzt, naechster: vor[0] ? titel(vor[0]) : null,
                                               schlange: vor.slice(1).map(titel), blende: Number(nlTon.blende) || 4,

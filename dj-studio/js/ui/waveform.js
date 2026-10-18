@@ -57,15 +57,16 @@ function zeichneTv(g, spalten, mitteY, H, farben) {
 
 // Wie Bild 2: einfarbige feine Nadeln (je Pixel), heller Kern zur Mitte, viel Schwarz dazwischen.
 // Hoehe = je Song gespreizter Pegel (tv.js bildWerte), so stehen Schlaege und Songteile heraus.
+const NADEL_HOEHE = 0.8;      // Anteil der Feldhoehe (Wunsch 18.10.2026: etwas kleiner)
 function zeichneNadeln(g, spalten, mitteY, H, farben) {
   const f = farben.mitte, kern = farben.hoch;
   for (let x = 0; x < spalten.length; x++) {
     const s = spalten[x];
     if (!s) continue;
-    const hv = Math.max(0.6, s.bi * H);
+    const hv = Math.max(0.5, s.bi * H * NADEL_HOEHE);
     g.fillStyle = `rgba(${f[0]},${f[1]},${f[2]},${0.3 + 0.6 * s.bi})`;
     g.fillRect(x, mitteY - hv, 1, hv * 2);
-    const k = hv * 0.22;
+    const k = hv * 0.16;
     g.fillStyle = `rgba(${kern[0]},${kern[1]},${kern[2]},${0.2 + 0.55 * s.bi})`;
     g.fillRect(x, mitteY - k, 1, k * 2);
   }
@@ -173,12 +174,12 @@ export class DetailWelle {
       const s = spalte(wf, t * wf.proSek, (t + sekProPx * schritt) * wf.proSek);
       if (s) zeichneSpalte(g, x, mitteY, H, s, this.farben, schritt);
     }
-    if ((!tv || TV_STIL() === 'bild') && (this.glanz ??= !!this.c.closest('.skin'))) {
+    // Schein nur fuer die Demo-Titel: im TV fuellte er die Luecken zwischen den Nadeln (Bloecke)
+    if (!tv && (this.glanz ??= !!this.c.closest('.skin'))) {
       // Bild-2-Optik: weicher Schein um die Welle (Kopie unscharf darueberlegen)
       g.save();
       g.filter = `blur(${Math.round(h * 0.035)}px)`;
-      g.globalAlpha = tv ? 0.45 : 0.8;
-      g.globalCompositeOperation = 'lighter';     // Schein addieren (im TV wird sonst ueberdeckt)
+      g.globalAlpha = 0.8;
       g.drawImage(this.c, 0, 0);
       g.restore();
     }
