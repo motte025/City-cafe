@@ -27,7 +27,8 @@ und wieder in der Rotation.
 
 ## 18./19.10.2026: DJ-Modus (seit 19.10. 00:05 auf `main`)
 
-Ausführlich in **`dj-studio/UEBERGABE.md`**. Kurz:
+Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (mit `ssh w1`):
+`dj-studio/AUFTRAG-W1.md`** – was nach dem Update am 19.10. um 8:30 auf dem W1 zu prüfen ist. Kurz:
 
 - **DJ-Modus der YouTube-Musik**, nur Raum `zuhause`: der TV zeigt das DJ Studio, mpv spielt im
   Studio-Videofenster, Ton weiter über mpv/Bluetooth. Wellenform, BPM, Tonart und Pegel misst der
