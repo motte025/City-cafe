@@ -48,7 +48,8 @@ export function knopf(opts) {
     ticks.append(l);
   }
   svg.append(ticks, spur, wert);
-  const kappe = el('div', 'knopf-kappe', {}, [el('div', 'knopf-strich')]);
+  const zeiger = el('div', 'knopf-zeiger', {}, [el('div', 'knopf-strich')]);
+  const kappe = el('div', 'knopf-kappe', {}, [zeiger]);
   root.append(svg, kappe);
   let aktuell = ruhe;
   const winkel = v => -W + (v - min) / (max - min) * 2 * W;
@@ -56,7 +57,7 @@ export function knopf(opts) {
     aktuell = v;
     const a = winkel(v), a0 = winkel(ruhe);
     wert.setAttribute('d', Math.abs(a - a0) < 0.01 ? '' : bogen(50, 50, 45, Math.min(a0, a), Math.max(a0, a)));
-    kappe.style.transform = `rotate(${a}rad)`;
+    zeiger.style.transform = `rotate(${a}rad)`;
     root.setAttribute('aria-valuenow', v);
     root.setAttribute('aria-valuetext', format(v));
     root.title = (opts.label || '') + ' ' + format(v);

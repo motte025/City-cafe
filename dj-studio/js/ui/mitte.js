@@ -2,7 +2,7 @@
 
 import { state, abonnieren } from '../store.js';
 import { el, knopf, regler, taste, an, zeit } from './controls.js';
-import { LedMeter, leinwand, SKALA, SCHWELLEN } from './meter.js';
+import { LedMeter, leinwand, SKALA, SCHWELLEN_MASTER as SCHWELLEN } from './meter.js';
 import { einstellungen, matrixTabelle } from './overlays.js';
 import { cover } from '../artwork.js';
 
@@ -63,7 +63,7 @@ export function mitteBauen(root, engine, aktionen) {
 
   // ---- Master --------------------------------------------------------------
   const cMaster = el('canvas', 'master-meter', { 'aria-label': 'Master-Pegel L/R' });
-  const mMeter = new LedMeter(cMaster, { richtung: 'h', kanaele: 2, abstand: 3 });
+  const mMeter = new LedMeter(cMaster, { richtung: 'h', kanaele: 2, abstand: 4, palette: 'master', schwellen: SCHWELLEN });
   const skala = el('div', 'master-skala', { 'aria-hidden': 'true' },
     SKALA.slice().reverse().map(db => el('span', '', { text: String(db), style: `--pos:${pos(db)}` })));
   const clip = el('span', 'status-led rot', { text: 'CLIP' });

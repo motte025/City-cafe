@@ -5,8 +5,8 @@
 import { leinwand } from './meter.js';
 
 const FARBEN = {
-  A: { tief: [10, 70, 255], mitte: [40, 170, 255], hoch: [215, 240, 255] },
-  B: { tief: [255, 70, 0], mitte: [255, 160, 30], hoch: [255, 240, 205] },
+  A: { tief: [0, 55, 235], mitte: [20, 135, 255], hoch: [200, 235, 255] },
+  B: { tief: [235, 70, 0], mitte: [255, 150, 20], hoch: [255, 238, 200] },
 };
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
@@ -28,9 +28,10 @@ function zeichneSpalte(g, x, mitteY, H, s, farben, breite) {
   const ht = Math.min(1, s.t * 2.3) * H;
   const hm = Math.min(1, (s.m * 2.6 + s.h * 1.5)) * H;
   const hh = Math.min(1, s.h * 4.2) * H;
-  g.fillStyle = rgba(farben.tief, 0.85); g.fillRect(x, mitteY - hs, breite, hs * 2);
-  g.fillStyle = rgba(farben.mitte, 0.9); g.fillRect(x, mitteY - Math.max(ht, hm) * 0.9, breite, Math.max(ht, hm) * 1.8);
-  g.fillStyle = rgba(farben.hoch, 0.95); g.fillRect(x, mitteY - hh * 0.7, breite, hh * 1.4);
+  g.fillStyle = rgba(farben.tief, 0.75); g.fillRect(x, mitteY - hs, breite, hs * 2);
+  const hmt = Math.max(ht, hm) * 0.8;
+  g.fillStyle = rgba(farben.mitte, 0.55); g.fillRect(x, mitteY - hmt, breite, hmt * 2);
+  g.fillStyle = rgba(farben.hoch, 0.6); g.fillRect(x, mitteY - hh * 0.55, breite, hh * 1.1);
 }
 
 function hinweis(g, w, h, text) {

@@ -135,9 +135,9 @@ export function deckBauen(root, id, engine, aktionen) {
 
   // Jogwheel
   const jogCover = el('div', 'jog-cover');
-  const jogTeller = el('div', 'jog-teller', {}, [el('div', 'jog-rillen'), el('div', 'jog-marke'), jogCover]);
+  const jogTeller = el('div', 'jog-teller', {}, [jogCover, el('div', 'jog-rillen')]);
   const jog = el('div', 'jog', { role: 'application', tabindex: 0, 'aria-label': `Jogwheel Kanal ${nr}: ziehen = Tempo biegen (läuft) oder Position suchen (steht)` }, [
-    el('div', 'jog-ring'), el('div', 'jog-skala'), jogTeller,
+    el('div', 'jog-rahmen'), el('div', 'jog-ring'), jogTeller, el('div', 'jog-glanz'),
   ]);
   const vinylLed = el('span', 'led');
   const vinylAnz = el('span', 'jog-vinyl', {}, [el('span', 'mini-label', { text: 'VINYL' }), vinylLed]);

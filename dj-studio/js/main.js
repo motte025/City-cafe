@@ -10,6 +10,9 @@ import { mitteBauen } from './ui/mitte.js';
 import { kopfBauen } from './ui/kopf.js';
 import { leisteBauen } from './ui/leiste.js';
 import { einstellungen, schliessen } from './ui/overlays.js';
+import { texturenLaden } from './texturen.js';
+
+texturenLaden();
 
 const engine = new Engine();
 window.djStudio = { engine, state };        // fuer Tests und Fehlersuche

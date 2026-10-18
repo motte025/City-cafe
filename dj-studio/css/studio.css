@@ -158,7 +158,7 @@ button { font: inherit; color: inherit; }
 /* Unterteil: Grid-Bereiche; deck--rev spiegelt die Anordnung (nicht den Inhalt) */
 .deck-unten {
   flex: 1; display: grid; gap: 7px 6px;
-  grid-template-columns: 30px 26px 40px 96px 1fr 34px;
+  grid-template-columns: 30px 26px 40px 104px 1fr 30px;
   grid-template-rows: 86px 1fr 66px;
   grid-template-areas:
     "skala meter fader knoepfe loop tempo"
@@ -166,7 +166,7 @@ button { font: inherit; color: inherit; }
     "anz   anz   cue   cue     play tempo";
 }
 .deck--rev .deck-unten {
-  grid-template-columns: 34px 1fr 96px 40px 26px 30px;
+  grid-template-columns: 30px 1fr 104px 40px 26px 30px;
   grid-template-areas:
     "tempo loop knoepfe fader meter skala"
     "tempo jog  knoepfe fader meter skala"
@@ -193,7 +193,7 @@ button { font: inherit; color: inherit; }
 .abgriff { font: 600 10px/1 var(--font-schmal); color: var(--text-3); letter-spacing: .08em; height: 12px; }
 
 .deck-knoepfe { height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 0; }
-.knopf-box { display: flex; align-items: center; gap: 6px; }
+.knopf-box { display: flex; align-items: center; gap: 13px; }
 .deck--rev .knopf-box { flex-direction: row-reverse; }
 .knopf-label { font: 500 13px/1 var(--font-schmal); letter-spacing: .06em; color: var(--text-2); }
 

@@ -1,0 +1,157 @@
+/*
+ * Materialien nach Bild 2: gebuersteter Stahl, Chrom-Fasen, Schrauben, Glas-Tasten,
+ * Neon-Raender. Texturen kommen aus js/texturen.js (--tex-*). Wird nach studio.css geladen.
+ */
+
+:root {
+  --schraube: radial-gradient(circle at 40% 35%, #ffffff 0, #c3c9d0 18%, #6d737b 45%, #1e2125 70%, transparent 72%);
+  --chrom-kante: 0 0 0 1px #000, 0 0 0 2px rgba(210, 216, 224, .28);
+  --mulde: inset 0 2px 8px rgba(0, 0, 0, .95), inset 0 0 0 1px rgba(0, 0, 0, .9);
+}
+
+/* ---------- Panels: Stahl mit Licht von oben, Fasen, vier Schrauben ---------- */
+.panel, .kopf, .leiste {
+  background:
+    var(--schraube) 6px 6px / 12px 12px no-repeat,
+    var(--schraube) calc(100% - 6px) 6px / 12px 12px no-repeat,
+    var(--schraube) 6px calc(100% - 6px) / 12px 12px no-repeat,
+    var(--schraube) calc(100% - 6px) calc(100% - 6px) / 12px 12px no-repeat,
+    linear-gradient(180deg, rgba(255, 255, 255, .10) 0%, rgba(255, 255, 255, .02) 18%, rgba(0, 0, 0, .18) 60%, rgba(0, 0, 0, .42) 100%),
+    var(--tex-stahl) 0 0 / 1024px 512px,
+    #2a2e33;
+  border: 1px solid #0b0c0e;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .28), inset 1px 0 0 rgba(255, 255, 255, .08), inset -1px 0 0 rgba(0, 0, 0, .5), inset 0 -2px 0 rgba(0, 0, 0, .65),
+    0 0 0 2px #050506, 0 0 0 3px rgba(255, 255, 255, .07), 0 16px 34px rgba(0, 0, 0, .75);
+}
+.kopf { background:
+    linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(0, 0, 0, .35)),
+    var(--tex-stahl-dunkel) 0 0 / 1024px 256px, #17191c; }
+.buehne {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .55)),
+    var(--tex-stahl-dunkel) 0 0 / 1024px 256px, #0c0d0f;
+}
+
+/* Unterteil des Decks: hellere Stahlplatte wie in Bild 2 */
+.deck-unten {
+  margin: 0 -4px -4px; padding: 10px 10px 8px; border-radius: 8px;
+  background:
+    var(--schraube) 4px 4px / 10px 10px no-repeat,
+    var(--schraube) calc(100% - 4px) 4px / 10px 10px no-repeat,
+    var(--schraube) 4px calc(100% - 4px) / 10px 10px no-repeat,
+    var(--schraube) calc(100% - 4px) calc(100% - 4px) / 10px 10px no-repeat,
+    linear-gradient(180deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, .03) 30%, rgba(0, 0, 0, .12) 75%, rgba(0, 0, 0, .3) 100%),
+    var(--tex-stahl-hell) 0 0 / 1024px 512px, #3d4248;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), inset 0 -1px 0 rgba(0, 0, 0, .7), 0 0 0 1px #050607, 0 -1px 0 1px rgba(255, 255, 255, .06), 0 6px 12px rgba(0, 0, 0, .55);
+}
+
+/* Vertiefte Anzeigen mit Chromkante */
+.feld, .deck-welle, .deck-ueber, .tempo-feld, .deck-loop, .master-feld, .bereich-meter, .karte:not(.leer) {
+  background: linear-gradient(180deg, #030405 0%, #0a0c0f 100%);
+  border: 0;
+  box-shadow: var(--mulde), var(--chrom-kante);
+}
+.bereich-meter { border-radius: 5px; padding: 6px 0 4px; }
+.deck-welle { border-radius: 4px; background: #000; }
+.deck-ueber { border-radius: 3px; background: #000; }
+
+/* ---------- Tasten: schwarzes Glas, Neon wenn aktiv ---------- */
+.taste {
+  color: #dfe4ea;
+  background: linear-gradient(180deg, #474c54 0%, #2a2d32 44%, #16181b 52%, #1d2024 100%);
+  border: 1px solid #626973;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .32), inset 0 -1px 0 rgba(0, 0, 0, .65), 0 0 0 1px #000, 0 3px 6px rgba(0, 0, 0, .7);
+}
+.taste:hover:not(:disabled) { border-color: #8a929c; color: #fff; }
+.taste.an.akzent, .taste.an.akzent-weiss, .taste.loop-n.an, .taste.bereich.an {
+  color: #fff;
+  border: 1px solid var(--akzent, #fff);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--akzent, #fff) 30%, #1b1e22) 0%, #0e1013 55%, #121418 100%);
+  box-shadow: 0 0 0 1px var(--akzent, #fff), 0 0 14px var(--akzent-glow, rgba(255, 255, 255, .4)), inset 0 0 14px var(--akzent-glow, rgba(255, 255, 255, .25)), inset 0 1px 0 rgba(255, 255, 255, .3), 0 0 0 2px #000;
+  text-shadow: 0 0 8px var(--akzent, #fff);
+}
+.taste.sync { color: var(--akzent-hell); }
+.taste.loop-aktiv.an { color: #eafff0; background: linear-gradient(180deg, #1d5a33, #0b1a10); border: 1px solid var(--gruen); box-shadow: 0 0 0 1px var(--gruen), 0 0 14px var(--gruen-glow), inset 0 0 12px var(--gruen-glow); text-shadow: 0 0 6px var(--gruen); }
+.taste.icon { background: none; border: 0; box-shadow: none; }
+.taste.anz { background: none; border: 0; box-shadow: none; }
+
+/* CUE: Chrom-Lünette */
+.taste.gross { height: 64px; border-radius: 9px; font: 500 28px/1 var(--font); letter-spacing: .02em; }
+.taste.cue {
+  border: 2px solid #aab1b9;
+  background: linear-gradient(180deg, #34383e 0%, #1c1f23 48%, #0f1113 52%, #181a1e 100%);
+  box-shadow: 0 0 0 2px #0a0b0c, 0 0 0 3px #6d747c, inset 0 1px 0 rgba(255, 255, 255, .35), inset 0 0 10px rgba(0, 0, 0, .8), 0 6px 10px rgba(0, 0, 0, .7);
+}
+.taste.cue.an, .taste.cue.blink { border-color: #ff9a2a; box-shadow: 0 0 0 2px #0a0b0c, 0 0 0 3px #ff9a2a, 0 0 18px rgba(255, 138, 0, .65), inset 0 0 14px rgba(255, 138, 0, .35); color: #ffe0b8; }
+/* PLAY: Neonrahmen */
+.taste.play {
+  border: 3px solid var(--play);
+  background: linear-gradient(180deg, #23272c 0%, #121417 50%, #0b0c0e 100%);
+  box-shadow: 0 0 0 2px #000, 0 0 10px var(--play-glow), inset 0 0 10px var(--play-glow), inset 0 1px 0 rgba(255, 255, 255, .25);
+}
+.taste.play.an, .taste.play.blink { box-shadow: 0 0 0 2px #000, 0 0 26px var(--play-glow), 0 0 8px var(--play), inset 0 0 18px var(--play-glow); }
+.taste.play svg { width: 54px; height: 28px; filter: drop-shadow(0 0 5px var(--play)); }
+
+/* ---------- Drehknöpfe: geraendeltes Chrom, Leuchtring ---------- */
+.knopf-kappe { inset: 0; background: var(--tex-knopf) center / 100% 100% no-repeat; box-shadow: none; }
+.master-knopf .knopf-kappe { background-image: var(--tex-knopf-gross); }
+.knopf-zeiger { position: absolute; inset: 0; }
+.knopf-strich { top: 13%; height: 24%; width: 3px; margin-left: -1.5px; background: #fff; box-shadow: 0 0 5px #fff, 0 0 2px #fff; }
+.knopf-ring { inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); }
+.knopf-spur { stroke: color-mix(in srgb, var(--akzent, #8fd6ff) 55%, #05070a); stroke-width: 5; filter: drop-shadow(0 0 3px var(--akzent-glow, rgba(143, 214, 255, .4))); }
+.knopf-wert { stroke: var(--akzent-hell, #fff); stroke-width: 5; filter: drop-shadow(0 0 5px var(--akzent, #fff)) drop-shadow(0 0 2px var(--akzent, #fff)); }
+.knopf-ticks line { stroke: rgba(255, 255, 255, .45); }
+.knopf.ist-aus .knopf-wert { display: none; }
+.master-knopf .knopf-spur { stroke: #1a1d21; filter: none; }
+.master-knopf .knopf-wert { stroke: #e9eef4; filter: drop-shadow(0 0 4px rgba(255, 255, 255, .7)); }
+
+/* ---------- Fader: Chromkappen, Schlitz mit Leuchtsegmenten ---------- */
+.regler-kappe { background: var(--tex-fader) center / 100% 100% no-repeat !important; border-radius: 4px; box-shadow: 0 5px 9px rgba(0, 0, 0, .9); }
+.regler-linie { display: none; }
+.regler--v .regler-kappe { left: -4px; right: -4px; height: 42px; top: calc((1 - var(--anteil)) * (100% - 42px)); }
+.regler-spur { background: #000; box-shadow: inset 0 1px 3px #000, 0 0 0 1px #000, 0 0 0 2px rgba(210, 216, 224, .2); }
+.kanalfader .regler-spur { width: 12px; margin-left: -6px; background: repeating-linear-gradient(0deg, #071226 0 5px, #000 5px 7px); }
+.kanalfader .regler-fuell { left: 2px; right: 2px; background: repeating-linear-gradient(0deg, var(--akzent) 0 5px, transparent 5px 7px); box-shadow: 0 0 10px var(--akzent-glow); }
+.temporegler .regler-spur { width: 12px; margin-left: -6px; background: repeating-linear-gradient(180deg, #3a2506 0 6px, #000 6px 8px); box-shadow: 0 0 0 1px #000, 0 0 0 2px rgba(210, 216, 224, .2); }
+.temporegler .regler-fuell { top: calc(min(var(--anteil), .5) * 100% - 8px); height: calc(max(var(--anteil) - .5, .5 - var(--anteil)) * 100% + 16px); background: repeating-linear-gradient(180deg, #ffb52a 0 6px, transparent 6px 8px); box-shadow: 0 0 12px var(--b-glow); }
+.temporegler .regler-kappe { height: 22px; left: -2px; right: -2px; top: calc(var(--anteil) * (100% - 22px)); }
+.crossfader .regler-kappe { width: 34px; top: -6px; bottom: -6px; left: calc(var(--anteil) * (100% - 34px)); }
+.crossfader .regler-spur { height: 12px; margin-top: -6px; background: linear-gradient(90deg, var(--a) 0%, #0a1830 18%, #000 35%, #000 65%, #2a1704 82%, var(--b) 100%);
+  box-shadow: 0 0 10px rgba(35, 168, 255, .35), inset 0 1px 3px #000, 0 0 0 1px #000, 0 0 0 3px rgba(210, 216, 224, .25), 0 0 0 4px #000; }
+
+/* ---------- Jogwheel: Chromrahmen, Leuchtring, Rillen-Teller ---------- */
+.jog { width: 252px; height: 252px; }
+.jog-rahmen { position: absolute; inset: 0; border-radius: 50%; background: var(--tex-jog-rahmen) center / 100% 100% no-repeat; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .8)); }
+.jog-ring { position: absolute; inset: 8.4%; border-radius: 50%; background: none;
+  box-shadow: 0 0 0 2px var(--akzent), 0 0 10px 2px var(--akzent), 0 0 26px 6px var(--akzent-glow), inset 0 0 14px var(--akzent-glow); }
+.jog-teller { position: absolute; inset: 9%; border-radius: 50%; background: var(--tex-jog-teller) center / 100% 100% no-repeat; box-shadow: none; }
+.jog-cover { inset: 31%; border-radius: 50%; box-shadow: 0 0 0 2px #000; }
+.jog-rillen { position: absolute; inset: 29.5%; border-radius: 50%; box-shadow: 0 0 0 3px var(--akzent), 0 0 12px 2px var(--akzent), 0 0 26px var(--akzent-glow); }
+.jog-glanz { position: absolute; inset: 9%; border-radius: 50%; background: var(--tex-jog-glanz) center / 100% 100% no-repeat; pointer-events: none; }
+.jog.beruehrt .jog-ring { box-shadow: 0 0 0 2px #fff, 0 0 12px 3px var(--akzent), 0 0 34px 10px var(--akzent-glow); }
+
+/* ---------- Kopf, Mitte, Leiste ---------- */
+.kopf-welle { filter: drop-shadow(0 0 4px #23a8ff); }
+.marke-name, .kopf-name { text-shadow: 0 0 12px rgba(160, 210, 255, .35), 0 1px 0 #000; }
+.bildschirm { box-shadow: 0 0 0 2px #000, 0 0 0 3px rgba(210, 216, 224, .3), 0 0 0 5px #000, inset 0 0 30px rgba(0, 0, 0, .6); border: 0; }
+.master-titel {
+  background:
+    var(--schraube) 10px 50% / 12px 12px no-repeat,
+    var(--schraube) calc(100% - 10px) 50% / 12px 12px no-repeat,
+    linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(0, 0, 0, .25)), var(--tex-stahl-hell) 0 0 / 1024px 512px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(0, 0, 0, .8), 0 1px 0 rgba(255, 255, 255, .06);
+  text-shadow: 0 1px 0 #000, 0 0 10px rgba(255, 255, 255, .25);
+}
+.deck-cover { box-shadow: 0 0 0 2px var(--akzent), 0 0 14px var(--akzent-glow); }
+.karte-cover { box-shadow: 0 0 0 1px rgba(255, 255, 255, .25), 0 4px 10px rgba(0, 0, 0, .7); }
+.taste.xf-seite { background: linear-gradient(180deg, #1e2227, #0b0c0e); border: 2px solid var(--akzent); box-shadow: 0 0 0 1px #000, 0 0 16px var(--akzent-glow), inset 0 0 12px var(--akzent-glow); text-shadow: 0 0 8px var(--akzent); }
+.deck-badge { box-shadow: 0 0 0 1px rgba(255, 255, 255, .5), 0 0 16px var(--akzent-glow), inset 0 1px 0 rgba(255, 255, 255, .5); }
+.led.an { box-shadow: 0 0 10px var(--akzent, var(--a)), 0 0 3px var(--akzent, var(--a)), 0 0 2px #fff inset; }
+
+/* Transport: Tasten in Kaesten wie in Bild 2 */
+.transport .taste.icon { width: 48px; height: 46px; background: linear-gradient(180deg, #474c54 0%, #2a2d32 44%, #16181b 52%, #1d2024 100%); border: 1px solid #626973;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .32), inset 0 -1px 0 rgba(0, 0, 0, .65), 0 0 0 1px #000, 0 3px 6px rgba(0, 0, 0, .7); border-radius: 6px; }
+.transport .taste.icon svg { width: 24px; height: 24px; }
+.reiter-gruppe .taste { height: 44px; }
+.leiste .taste.pfeil { background: linear-gradient(180deg, #474c54 0%, #2a2d32 44%, #16181b 52%, #1d2024 100%); border: 1px solid #626973; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .32), 0 0 0 1px #000; border-radius: 6px; width: 46px; height: 36px; }
