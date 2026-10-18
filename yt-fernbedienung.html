@@ -344,6 +344,9 @@
 <!-- ============================ LISTEN ============================ -->
 <section class="reiter-inhalt" id="reiter-listen">
     <div class="feldname">Playlists</div>
+    <!-- Suche nur in den eigenen Playlists (18.10.2026): Treffer mit Playlist-Namen, ✕ loescht dort -->
+    <input type="search" id="pl-suche" placeholder="🔎 In den Playlists suchen (Song oder Künstler)" enterkeyhint="search" style="margin-bottom:10px">
+    <div id="pl-treffer"></div>
     <div class="zeile2 nur-chef" style="margin-bottom:10px">
         <input type="text" id="neue-pl-name" placeholder="Name der neuen Playlist" maxlength="60">
         <button type="button" id="neue-pl-knopf">➕ Neue Playlist</button>
@@ -1230,6 +1233,7 @@
 
     // ------------------------------------------------------------------ Listen
     function playlistsZeigen() {
+        if (el('pl-suche')) plTrefferZeigen();
         var chips = el('playlist-chips');
         chips.innerHTML = '';
         alleListen().forEach(function (p) {
@@ -1305,6 +1309,40 @@
             box.appendChild(z);
         }
     }
+
+    // --- Suche nur in den Playlists: alle Treffer aus allen Listen, je mit Playlist-Namen.
+    // Gleiche Zeile wie in der Playlist (abspielen ab hier, ✕ loescht dort).
+    function suchNormal(s) {
+        return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/ł/g, 'l').replace(/ß/g, 'ss').replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+    function plTrefferZeigen() {
+        var box = el('pl-treffer'), q = suchNormal(el('pl-suche').value);
+        box.innerHTML = '';
+        if (q.length < 2) return;
+        var woerter = q.split(' '), anzahl = 0;
+        alleListen().forEach(function (p) {
+            var inhalt = listen[p.nr] || {};
+            var titel = Array.isArray(inhalt.titel) ? inhalt.titel : [];
+            titel.forEach(function (tt, i) {
+                var text = suchNormal([tt.songtitel, tt.titel, tt.kuenstler, tt.kanal].join(' '));
+                if (!woerter.every(function (w) { return text.indexOf(w) >= 0; })) return;
+                anzahl++;
+                var schild = document.createElement('div');
+                schild.className = 'hinweis';
+                schild.style.margin = '10px 0 2px';
+                schild.innerHTML = '📃 <b style="color:#00e5ff">' + esc(p.nr) + '</b> ' + esc(p.name) + ' · Platz ' + (i + 1);
+                box.appendChild(schild);
+                box.appendChild(playlistZeile(tt, i, p, titel, box));
+            });
+        });
+        var fuss = document.createElement('div');
+        fuss.className = 'hinweis';
+        fuss.style.margin = '8px 0 14px';
+        fuss.textContent = anzahl ? anzahl + ' Treffer in den Playlists' : 'Kein Treffer in den Playlists.';
+        box.appendChild(fuss);
+    }
+    el('pl-suche').addEventListener('input', plTrefferZeigen);
 
     // --- Playlist am Handy bearbeiten (Chef): Song loeschen, per ☰ verschieben.
     // Gespeichert wird die ganze Liste in yt/listen/<nr> mit "bearbeitet: true";
