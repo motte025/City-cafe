@@ -66,13 +66,18 @@ Ziel: Bevor der DJ-Modus im Café freigeschaltet wird, Last und Bildrate auf dem
   `STAND.md`: Musik im Vollbild ~7 % CPU, GPU ~22 %.
 - Ruckelt das Studio, in `dj-studio/js/main.js` den Bildtakt im TV-Modus auf 30 fps begrenzen.
 
-## Aufgabe 3 – Nächtliches Vormessen der Playlists (Stufe 2, erst wenn Aufgabe 2 erledigt)
+## Aufgabe 3 – Playlists vormessen (eingebaut am 19.10., auf dem W1 einschalten)
 
-Bisher misst der Supervisor nur im DJ-Modus den laufenden und die nächsten Songs. Geplant:
-zwischen 2 und 8 Uhr (keine Musik) die Songs aller Playlists messen und unter
-`~/.cache/citycafe/spuren/` ablegen (`spur_messen`, `spur_von_platte`, gebremst wie bisher,
-höchstens 600 MB). Aufwand grob 25 s und 4 MB Download je Song, ~1450 Playlist-Einträge.
-Nicht laufen lassen, wenn Musik spielt.
+Der Supervisor kann alle Playlist-Songs vormessen, solange **keine Musik läuft** (Liste von der
+TV-Seite, ~700 Songs, ~25 s + 15 s Pause je Song, ~190 MB unter
+`/home/citycafe/.cache/citycafe/spuren/`). Danach sind Wellenform, BPM und Tonart im DJ-Modus sofort
+da. Schon gemessene Songs werden übersprungen; nach 3 yt-dlp-Fehlern in Folge 1 h Pause.
+
+- Einschalten: in `/home/citycafe/.config/citycafe.env` die Zeile `CITYCAFE_VORMESSEN=1`
+  (Standard aus) – **nur mit Freigabe des Betreibers**; wirkt nach dem nächsten Supervisor-Start
+  (Update 8:30 oder Neustart nach Rückfrage).
+- Fortschritt im Log: `grep Vormessen /home/citycafe/nl-mpv-supervisor.log`.
+- Beobachten: keine Häufung von „Sign in to confirm you're not a bot“ (dann ausschalten).
 
 ## Aufgabe 4 – Offene Kleinigkeiten (nur auf Wunsch)
 

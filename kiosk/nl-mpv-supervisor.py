@@ -1932,6 +1932,16 @@ SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
 SPUR_ORDNER = os.environ.get("CITYCAFE_SPUREN", os.path.expanduser("~/.cache/citycafe/spuren"))
 SPUR_PLATTE_MB = 600
 SPUR_VERSION = 3           # hochzaehlen, wenn sich Messung/Format aendern (alte werden neu gemessen)
+# Vormessen (Wunsch 19.10.2026): solange keine Musik laeuft, alle Playlist-Songs messen, damit
+# Wellenform & Co. im DJ-Modus sofort da sind. Nur mit CITYCAFE_VORMESSEN=1 (Standard aus).
+# Ein Song nach dem anderen, gebremst (SPUR_LESETEMPO) und mit Pause - viele yt-dlp-Abfragen
+# hintereinander koennen YouTubes Bot-Erkennung ausloesen; nach mehreren Fehlern 1 h Pause.
+VORMESSEN = os.environ.get("CITYCAFE_VORMESSEN", "0") == "1"
+VORMESS_PAUSE = 15
+VORMESS_FEHLER_PAUSE = 3600
+VORMESS_EXPR = """JSON.stringify((() => { try { const ids = new Set();
+  Object.values(ytmListenInhalt || {}).forEach(l => (l || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
+  return [...ids]; } catch (e) { return []; } })())"""
 SPUR_HZ = 200              # Werte je Sekunde (12000 Hz / 60 Samples: genau, ohne Drift)
 SPUR_LESETEMPO = 8         # ffmpeg liest hoechstens 8x so schnell wie abgespielt
 # Kanaele nach amerge: 1 links, 2 rechts, 3 tief, 4 mitte, 5 hoch (Baender aus der Mono-Summe)
@@ -2285,6 +2295,8 @@ def main():
     neben = None
     analyse_arbeiter = None   # misst Intro/Ausklang/Anhebung der naechsten Songs im Voraus
     spur_arbeiter = None      # DJ-Modus: misst Wellenform/BPM/Pegel fuer das Studio
+    vormessen = {"liste": [], "zeit": 0.0, "naechste": 0.0, "fehler_folge": 0, "erledigt": 0,
+                 "fehl": {}}      # eigene Fehlerliste - "failed" gehoert der Wiedergabe
     blend_erledigt = None     # id des zuletzt ausgefuehrten "Jetzt ueberblenden"
     laden_seit = None         # seit wann die Seite in readyState "loading" haengt
     laden_pruef = 0.0
@@ -2556,6 +2568,39 @@ def main():
                                   f"[{json.dumps(s_vid)}] = {SPUREN[s_vid]}; 1", "Studio-Spur")
             for alt in list(SPUREN)[:-6]:       # nur die letzten paar behalten
                 SPUREN.pop(alt, None)
+
+        # Vormessen der Playlists: nur ohne Musik, ein Song nach dem anderen.
+        if (VORMESSEN and not musik and page_id and time.time() >= vormessen["naechste"]
+                and not (spur_arbeiter is not None and spur_arbeiter.is_alive())):
+            vormessen["naechste"] = time.time() + VORMESS_PAUSE
+            if time.time() - vormessen["zeit"] > 600:          # Liste alle 10 min frisch von der Seite
+                try:
+                    ids = json.loads(cdp_eval(page_id, VORMESS_EXPR) or "[]")
+                    vormessen["liste"] = [str(v) for v in ids if re.fullmatch(r"[A-Za-z0-9_-]{11}", str(v))]
+                    vormessen["zeit"] = time.time()
+                except (OSError, ValueError, ConnectionError):
+                    pass
+            offen = [v for v in vormessen["liste"] if not os.path.exists(spur_datei(v))
+                     and time.time() - vormessen["fehl"].get(v, 0) >= 6 * 3600]
+            if offen:
+                def vormess_lauf(vid=offen[0], rest=len(offen), gesamt=len(vormessen["liste"])):
+                    urls = resolve(vid, "bestaudio", "abr")
+                    if not urls:
+                        vormessen["fehl"][vid] = time.time()
+                        vormessen["fehler_folge"] += 1
+                        if vormessen["fehler_folge"] >= 3:
+                            vormessen["naechste"] = time.time() + VORMESS_FEHLER_PAUSE
+                            vormessen["fehler_folge"] = 0
+                            log("Vormessen: 3 Fehler in Folge - 1 h Pause")
+                        return
+                    vormessen["fehler_folge"] = 0
+                    spur_messen(vid, urls[0], urls[2])
+                    SPUREN.pop(vid, None)          # nur auf die Platte, nicht im Speicher sammeln
+                    vormessen["erledigt"] += 1
+                    if vormessen["erledigt"] % 10 == 1:
+                        log(f"Vormessen: {gesamt - rest + 1} von {gesamt} Playlist-Songs gemessen")
+                spur_arbeiter = threading.Thread(target=vormess_lauf, daemon=True)
+                spur_arbeiter.start()
 
         # Neben-Arbeiter (siehe oben): immer nur eine Aufgabe zur Zeit.
         if not (neben is not None and neben.is_alive()):
