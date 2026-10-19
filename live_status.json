@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-19T14:27:46Z",
+  "checked_at": "2026-10-19T14:42:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Music Only! Short Edition ! (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Music Only! Short Edition ! (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
