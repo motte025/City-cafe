@@ -39,12 +39,27 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
 - **Playlists für alle Räume gemeinsam** (`djremote/city-cafe/yt/listen`) und **Playlist-Suche** in
   der Musik-Fernbedienung (Listen → 🔎, Chef löscht dort mit ✕).
 - Supervisor: `CITYCAFE_COOKIES` und `CITYCAFE_JS_RUNTIME` einstellbar (Standard wie bisher); im
-  Normalbetrieb misst er nichts zusätzlich. **Kommt am 19.10. um 8:30 per Update auf den W1** –
-  danach kurz prüfen, ob im Café die Musik normal läuft (Protokoll `/var/log/citycafe-update.log`).
+  Normalbetrieb misst er nichts zusätzlich. Seit 19.10. 04:22 auf dem W1 (Update von Hand gestartet,
+  Café zu), läuft fehlerfrei.
 - Werbungs-Wächter prüft nicht mehr, solange mpv die Musik spielt (verhinderte Song-Neustart ~47 s
   nach einer Überblendung im Test).
-- Offen: seltenes Überspringen eines Songs (doppeltes „Weiter“, Ursache unbekannt), DJ-Modus auf dem
-  W1 messen und für `city-cafe` freischalten, nächtliches Vormessen der Playlists.
+- **W1 gemessen (19.10. ~04:50, Musik 10 %, je 20–30 s):**
+
+  | | CPU | GPU | Bildrate Seite / Studio | Tctl |
+  |---|---|---|---|---|
+  | ohne Musik | 4 % | 11 % | 60 / – | 37 °C |
+  | Musik normal | 9 % | 24 % | 60 / – | 45 °C |
+  | DJ-Modus | 10–11 % | 12 % | 60 / 60 | 52–58 °C |
+
+  Keine 30-fps-Bremse nötig. Studio-Spur auf dem W1 geht (5 Songs, BPM-Sicherheit meist 0,96–0,99).
+  Temperatur bei längerem DJ-Betrieb noch beobachten. Messskripte: `/tmp/messen.sh`, `/tmp/dj-messung.sh`
+  auf dem W1 (gehen beim Neustart verloren).
+- **Vormessen** läuft auf dem W1 (703 Songs ohne Doppelte, ~40 s je Song, nur ohne Musik). Erster Lauf
+  erst ~10 min nach dem Supervisor-Start (Liste beim Start noch leer, wird alle 10 min neu geholt).
+- **Systemupdate W1 repariert (19.10.):** `pacman -Syu` brach seit mindestens 17.10. ab
+  (`plasma-workspace 6.8` gegen `plasma-x11-session`). `plasma-x11-session` entfernt (Kiosk läuft unter
+  sway), 108 Pakete eingespielt, Kernel 7.2.11, Plasma 6.8. Die Café-Dateien kamen trotzdem jeden Tag.
+- Offen: seltenes Überspringen eines Songs (doppeltes „Weiter“, Ursache unbekannt).
 - Push nach `main` durch Claude: über `/permissions` für den konkreten Befehl freigegeben, sonst
   von der Berechtigungsprüfung gesperrt („Production Deploy“).
 

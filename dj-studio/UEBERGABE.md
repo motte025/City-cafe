@@ -83,8 +83,8 @@ Gestartet wird alles als `martin` in einer **sway-Sitzung im Fenster**:
    Song gilt als gespielt, der übernächste startet hart („Ueberblendung abgebrochen“). Ursache noch
    unbekannt; nicht der DJ-Code (der liest nur). Mitschreiber im Test-Bildschirm:
    `window.__wLog` (Hook auf `ytmWeiter`, nach jedem Neuladen neu setzen).
-2. **W1:** Last/Bildrate messen (60 fps, sonst 30), `CITYCAFE_SPUREN` im Ordner von `citycafe`,
-   nächtliches Vormessen der Playlists (Stufe 2), dann `YTM_DJ_ERLAUBT` für `city-cafe`.
+2. **W1:** erledigt am 19.10. – gemessen (DJ-Modus CPU 10–11 %, GPU 12 %, 60 fps, bis 58 °C),
+   Vormessen läuft, `YTM_DJ_ERLAUBT` gilt auch für `city-cafe` (Werte in `STAND.md`).
 3. Playlist-Pflege: „Theo, wir fahr'n nach Lodz“ und „Marmor, Stein und Eisen bricht“ (Stereoact)
    sollen aus Schlager, Après-Ski, Schlager 2024–2026 raus (am Handy, Chef im Café-Raum).
 4. Ideen: Intro/Outro-Marker in der Welle, Countdown bis zum Mix + Taktzähler, Harmonie-Anzeige
