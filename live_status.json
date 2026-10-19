@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-19T16:57:48Z",
+  "checked_at": "2026-10-19T17:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 MALLE MONTAG !koffer | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
