@@ -2915,8 +2915,8 @@
                     </div>
                 </div>
 
-                <!-- Halloween 2026 (Event 31.10.): zwei 60-s-Videos ohne Ton, im Wechsel
-                     je Durchlauf. Wie der Dartfilm ohne src - die Quelle wird erst im
+                <!-- Halloween 2026 (Event 31.10.): ein 60-s-Video ohne Ton in jedem
+                     Durchlauf. Wie der Dartfilm ohne src - die Quelle wird erst im
                      Slot gesetzt und danach wieder abgegeben; nach dem 31.10. kommt
                      der Slot gar nicht mehr vor. -->
                 <div class="media-inner-view" id="media-view-halloween">
@@ -5926,12 +5926,11 @@
             el.load();   // erst load() ohne src gibt Puffer und Decoder frei
         }
 
-        // Halloween 2026: bis einschliesslich 31.10. im Wechsel Horror-Trailer und
-        // Atmosphaere-Loop (je 60 s, ohne Ton), einer pro Durchlauf. ?halloweenan=1
-        // zeigt den Slot zum Ansehen auch ausserhalb des Zeitfensters.
-        const HALLOWEEN_VIDEOS = ['halloween_horror.mp4', 'halloween_atmosphere.mp4'];
+        // Halloween 2026: bis einschliesslich 31.10. der Horror-Trailer (60 s, ohne
+        // Ton) in jedem Durchlauf. ?halloweenan=1 zeigt den Slot zum Ansehen auch
+        // ausserhalb des Zeitfensters.
+        const HALLOWEEN_VIDEO = 'halloween_horror.mp4';
         const HALLOWEEN_LAENGE_MS = 60000;
-        let halloweenZaehler = 0;
         function halloweenAktiv() {
             if (/(?:^|[?&])halloweenan=1(?:&|$)/.test(location.search)) return true;
             return new Date() < new Date(2026, 10, 1);   // lokal: bis 31.10. 23:59
@@ -5961,7 +5960,7 @@
             later(advance, HALLOWEEN_LAENGE_MS + 8000);
 
             el.muted = true;
-            el.setAttribute('src', HALLOWEEN_VIDEOS[halloweenZaehler++ % HALLOWEEN_VIDEOS.length]);
+            el.setAttribute('src', HALLOWEEN_VIDEO);
             el.load();
             document.getElementById('media-view-halloween').classList.add('active');
             const playPromise = el.play();

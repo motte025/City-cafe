@@ -74,15 +74,16 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
 
 ## 19.10.2026: Halloween-Slot im Medien-Widget (zeitlich begrenzt)
 
-- Event **31.10.2026 ab 18:00**, Live-Musik, Kostüme willkommen. Zwei 60-s-Videos **ohne Ton**
-  (1920×1080, 30 fps, H.264, je ~29 MB): `halloween_horror.mp4` (Trailer) und
-  `halloween_atmosphere.mp4` (Loop). Im Wechsel, **eines je Zyklus**, Slot `HALLOWEEN_SLOT_INDEX`
-  0.7 direkt nach den Plakaten, vor Mittagsteller und DJ (`runHalloweenState`, `<video id="halloween-video">`
-  in `#media-view-halloween` – innerhalb von `.media-inner-view`, braucht also keinen eigenen Abbau).
+- Event **31.10.2026 ab 18:00**, Live-Musik, Kostüme willkommen. Ein 60-s-Video **ohne Ton**
+  (1920×1080, 30 fps, H.264, ~29 MB): `halloween_horror.mp4`, in **jedem Zyklus**, Slot
+  `HALLOWEEN_SLOT_INDEX` 0.7 direkt nach den Plakaten, vor Mittagsteller und DJ (`runHalloweenState`,
+  `<video id="halloween-video">` in `#media-view-halloween` – innerhalb von `.media-inner-view`, braucht
+  also keinen eigenen Abbau). Das zweite Video (Atmosphäre-Loop) hat der Betreiber am 19.10. herausnehmen
+  lassen; es liegt nur noch im Projektordner.
 - Quelle wird erst im Slot gesetzt und danach in `runMasterSequence()` freigegeben
   (`halloweenFreigeben`, wie beim Dartfilm). Nur **bis einschließlich 31.10.2026** (lokale Zeit,
   `halloweenAktiv`); danach springt der Slot sofort weiter. `?halloweenan=1` zeigt ihn zum Ansehen
-  auch außerhalb. **Nach dem Event: Slot, Konstanten und beide MP4s entfernen** (je ~29 MB im Repo).
+  auch außerhalb. **Nach dem Event: Slot, Konstanten und das MP4 entfernen** (~29 MB im Repo).
 - Geprüft nur mit Headless-Chromium (kann kein H.264 → mit kurzen VP9-Ersatzclips: Slot aktiv,
   Wiedergabe, Weiterschalten, Quelle frei). **Auf dem Café-Screen noch nicht angesehen.**
 - Erzeugung (kie.ai Kling, 6 Clips, 2,52 $, Effekte/Schnitt lokal) und Quellen:
