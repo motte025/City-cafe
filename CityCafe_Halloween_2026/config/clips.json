@@ -1,0 +1,51 @@
+{
+  "_hinweis": "6 KI-Clips, je 10s, alle vom selben Mastervorlagen-Plakat (1920x1080) ausgehend. Video-1-Clips sind narrativ (kein Loop-Zwang), Video-2-Clips bekommen tail_image_url = image_url, damit Kling moeglichst nah zum Startbild zurueckkehrt - fuer den finalen nahtlosen Loop wird zusaetzlich lokal ueberblendet.",
+
+  "video1_clips": [
+    {
+      "id": "v1_opening_approach",
+      "verwendung": "Video 1, Sekunde 0-10 (Das Erwachen)",
+      "tail_loop": false,
+      "prompt": "Cinematic horror establishing shot, extremely slow forward camera push toward a cozy European cafe at night under a full moon. Thick ground fog drifts and swirls across the cobblestones in the foreground. Several carved pumpkins begin to glow faintly from within, their light flickering unevenly. Candle lanterns on the outdoor tables flicker irregularly in the wind. A single dark, indistinct humanoid shadow briefly passes behind one of the lit windows and is gone. Moody blue-black night palette with warm orange-red glows from the pumpkins and candles. Photorealistic, atmospheric, subtle film grain, no camera shake, smooth continuous dolly-in motion. Keep the cafe signage, the HALLOWEEN title text, and all existing text completely unchanged and sharp - do not warp, duplicate, or remove any lettering.",
+      "negative_prompt": "cartoon, illustration, low quality, blurry text, warped text, extra text, flashing strobe, fast cuts, camera shake, daylight"
+    },
+    {
+      "id": "v1_ghost_apparition",
+      "verwendung": "Video 1, Sekunde 20-30 (Das Grauen)",
+      "tail_loop": false,
+      "prompt": "Cinematic horror scene, a translucent ghostly female figure slowly materializes within the drifting fog in the middle of the frame, her face only partially visible and indistinct, robes dissolving into mist at the edges. Deep in the background, barely visible in shadow, a second unsettling pale face briefly appears among the trees for less than a second. Faint blood-red handprint marks slowly become visible smeared on the stone wall to the side. Thick grey-white smoke curls up from the glowing pumpkins. Slow, deliberate camera drift, no shake. Dark teal and blood-red color grading, cinematic lighting, photorealistic, unsettling but elegant horror aesthetic. Do not alter any existing text, logos, or signage in the image - keep them sharp and unchanged.",
+      "negative_prompt": "cartoon, illustration, low quality, blurry text, warped text, gore, extreme violence, flashing strobe, daylight, comedic"
+    },
+    {
+      "id": "v1_dread_closeup",
+      "verwendung": "Video 1, Sekunde 40-48 (Die Stille vor dem Schrei)",
+      "tail_loop": false,
+      "prompt": "Extreme tension horror scene, the music and ambience have gone almost silent. An original, unsettling humanoid horror figure emerges slowly from deep shadow in the background and begins a slow, deliberate advance toward the camera, never fully reaching it. Its eyes begin to glow faintly red. The lighting grows darker and more oppressive with every passing second, fog thickening around its feet. Extremely slow, creeping camera push toward the figure, building unbearable dread. Photorealistic, cinematic horror film quality, deep shadows, high contrast, teal-and-red color grading. This is an original creature design, not based on any existing copyrighted horror character or mask. Keep all existing text and signage in the frame sharp and unchanged.",
+      "negative_prompt": "cartoon, illustration, low quality, known movie character, known horror mask, blurry text, warped text, gore, jump cut, flashing strobe"
+    }
+  ],
+
+  "video2_clips": [
+    {
+      "id": "v2_atmosphere_whole",
+      "verwendung": "Video 2, Grundschicht (ganzes Bild, subtile Dauerbewegung)",
+      "tail_loop": true,
+      "prompt": "A hauntingly beautiful living Halloween poster coming subtly to life, camera completely static, locked-off shot. Multiple independent layers of thin fog drift slowly across the scene at different speeds in foreground and background. Moonlight shifts gently as thin clouds pass in front of the full moon. Every carved pumpkin flickers with its own independent warm inner glow. Candle flames flicker naturally and independently. A single bat occasionally flaps across the upper part of the frame. Subtle embers drift upward near the candles. The motion is gentle, continuous, and loopable - the scene should look visually almost identical at the very start and the very end of the clip. Photorealistic, elegant horror atmosphere, deep blue-black and blood-orange color palette. Do not alter, move, warp or blur any of the existing text, titles, or signage - they must stay perfectly sharp throughout.",
+      "negative_prompt": "cartoon, illustration, low quality, blurry text, warped text, camera movement, camera shake, sudden cuts, flashing strobe, daylight"
+    },
+    {
+      "id": "v2_window_shadow",
+      "verwendung": "Video 2, Easter-Egg-Schicht (Fenster-Schatten)",
+      "tail_loop": true,
+      "prompt": "A hauntingly beautiful living Halloween poster, camera completely static, locked-off shot. The scene is mostly calm and still - gentle ambient fog only. The one clear point of motion: inside one of the cafe's lit windows, a faint pale shadow or ghostly hand silently glides past the glass from one side to the other and is gone, as if someone unseen just passed by. This happens once, slowly, subtly, not jarring. Everything else in the frame remains almost completely still. By the end of the clip the scene looks visually near-identical to the start, suitable for a seamless loop. Photorealistic, elegant horror atmosphere, deep blue-black and warm window-light color palette. Do not alter, move, warp or blur any of the existing text, titles, or signage - they must stay perfectly sharp throughout.",
+      "negative_prompt": "cartoon, illustration, low quality, blurry text, warped text, camera movement, camera shake, visible person, jump scare, flashing strobe, daylight"
+    },
+    {
+      "id": "v2_ember_glow",
+      "verwendung": "Video 2, Easter-Egg-Schicht (Kuerbis-Glut/rote Augen)",
+      "tail_loop": true,
+      "prompt": "A hauntingly beautiful living Halloween poster, camera completely static, locked-off shot. The scene is mostly calm with only gentle ambient fog. The clear point of motion: in the foreground, glowing embers and sparks drift slowly upward near the candle lanterns and pumpkins. One of the carved pumpkin's eyes briefly flickers with a slightly brighter, reddish glint, as if something inside stirred for a moment, then settles back to its normal warm glow. The motion is subtle and slow throughout. By the end of the clip the scene looks visually near-identical to the start, suitable for a seamless loop. Photorealistic, elegant horror atmosphere, deep blue-black and blood-orange color palette. Do not alter, move, warp or blur any of the existing text, titles, or signage - they must stay perfectly sharp throughout.",
+      "negative_prompt": "cartoon, illustration, low quality, blurry text, warped text, camera movement, camera shake, fire, explosion, flashing strobe, daylight"
+    }
+  ]
+}

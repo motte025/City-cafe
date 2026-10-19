@@ -1,0 +1,58 @@
+{
+  "event": {
+    "titel": "HALLOWEEN IM CITY CAFE",
+    "ort": "City Cafe Klagenfurt",
+    "datum": "31.10.2026",
+    "uhrzeit_ab": "18:00 UHR",
+    "live_musik": true,
+    "kostueme_willkommen": true,
+    "eintritt_frei": false,
+    "_hinweis_eintritt_frei": "Auf false gestellt, bis bestaetigt - Platzhalter existiert nur als Text-Baustein, erscheint im Video nicht, solange dieses Feld false ist."
+  },
+
+  "video_technik": {
+    "breite": 1920,
+    "hoehe": 1080,
+    "fps": 30,
+    "laenge_sekunden": 60.0,
+    "codec_video": "libx264",
+    "codec_audio": "aac",
+    "audio_samplerate": 48000,
+    "audio_kanaele": 2,
+    "ziel_dateigroesse_mb": 30
+  },
+
+  "horror_einstellungen": {
+    "intensitaet": "18+",
+    "scream_zeitpunkt_sekunden": 48.0,
+    "scream_dauer_sekunden": 3.0,
+    "effektstaerke": 0.8,
+    "nebeldichte": 0.6,
+    "musiklautstaerke_db": -14.0,
+    "scream_lautstaerke_db": -8.0
+  },
+
+  "kie_ai": {
+    "modell": "kling/v2-5-turbo-image-to-video-pro",
+    "api_basis": "https://api.kie.ai/api/v1",
+    "upload_basis": "https://kieai.redpandaai.co/api",
+    "max_budget_usd": 5.0,
+    "max_clips_gesamt": 6,
+    "clip_dauer_sekunden": "10",
+    "credits_pro_10s_clip": 84,
+    "usd_pro_credit": 0.005
+  },
+
+  "ausgabedateien": {
+    "video1": "CITY_CAFE_HALLOWEEN_2026_HORROR_60S.mp4",
+    "video1_mute": "CITY_CAFE_HALLOWEEN_2026_HORROR_60S_MUTE.mp4",
+    "video2": "CITY_CAFE_HALLOWEEN_2026_ATMOSPHERE_60S.mp4",
+    "video2_mute": "CITY_CAFE_HALLOWEEN_2026_ATMOSPHERE_60S_MUTE.mp4"
+  },
+
+  "referenz": {
+    "plakat_datei": "reference/halloween_poster_master.png",
+    "plakat_breite": 1920,
+    "plakat_hoehe": 1080
+  }
+}

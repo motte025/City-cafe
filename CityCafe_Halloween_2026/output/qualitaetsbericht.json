@@ -1,0 +1,30 @@
+{
+  "CITY_CAFE_HALLOWEEN_2026_HORROR_60S.mp4": {
+    "codec": "h264",
+    "aufloesung": "1920x1080",
+    "fps": "30/1",
+    "frames": 1800,
+    "dauer_s": 60.0,
+    "groesse_mb": 28.0,
+    "audio_streams": 0,
+    "schwarzphasen": [],
+    "standbilder": [],
+    "loop_abweichung_0_255": 4.06,
+    "ziel_bitrate_kbit": 3891,
+    "kontaktbogen": "/home/user/City-cafe/CityCafe_Halloween_2026/previews/kontaktbogen_horror.jpg"
+  },
+  "CITY_CAFE_HALLOWEEN_2026_ATMOSPHERE_60S.mp4": {
+    "codec": "h264",
+    "aufloesung": "1920x1080",
+    "fps": "30/1",
+    "frames": 1800,
+    "dauer_s": 60.0,
+    "groesse_mb": 28.2,
+    "audio_streams": 0,
+    "schwarzphasen": [],
+    "standbilder": [],
+    "loop_abweichung_0_255": 3.16,
+    "ziel_bitrate_kbit": 3891,
+    "kontaktbogen": "/home/user/City-cafe/CityCafe_Halloween_2026/previews/kontaktbogen_atmosphere.jpg"
+  }
+}

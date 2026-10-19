@@ -1,0 +1,9 @@
+venv/
+.env
+__pycache__/
+*.pyc
+previews/
+generated/*.mp4
+generated/plakat_url.txt
+effects/frames/
+output/*.mp4
