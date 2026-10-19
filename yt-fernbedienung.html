@@ -768,6 +768,8 @@
         var lq = !an ? '' : jetzt.liste ? (jetzt.liste === 'Radio-Mix' ? '📻 Radio-Mix' : '📃 Playlist: ' + jetzt.liste)
             : jetzt.quelle === 'wunsch' ? '🙋 Gäste-Wunsch' : jetzt.quelle === 'chef' ? '⭐ Vom Chef ausgewählt' : '';
         if (an && jetzt.aufrufe) lq = (lq ? lq + ' · ' : '') + '👁 ' + aufrufeText(jetzt.aufrufe);
+        // DJ-Modus sichtbar machen: der Knopf selbst steckt zugeklappt unter "Anzeige & Anlage"
+        if (istChef && jetzt && jetzt.dj) lq = '🎛 DJ-Modus' + (lq ? ' · ' + lq : '');
         el('jetzt-liste').textContent = lq;
         el('k-pause').textContent = jetzt && jetzt.pausiert ? '▶' : '⏸';
         el('k-ansicht').textContent = jetzt && jetzt.vollbild ? '▭ Normal' : '⛶ Vollbild';
