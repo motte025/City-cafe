@@ -8324,6 +8324,30 @@
         }
         let ytmWeiterRettung = false;
 
+        // Chef ⏮: in den ersten 10 s zum Song davor (wie am CD-Player), sonst
+        // Song von vorn. Der laufende Song kommt dabei ganz vorn in die Schlange.
+        function ytmZurueck() {
+            const j = ytm.jetzt;
+            const gespielt = (ytm.gespielt || []).slice();
+            let i = gespielt.length - 1;
+            while (i >= 0 && (!gespielt[i].videoId || (j && gespielt[i].videoId === j.videoId))) i--;
+            if (!j || ytmStand().pos >= 10 || i < 0) { ytmSpielen(j); return; }
+            const davor = gespielt[i];
+            gespielt.splice(i, 1);
+            if (j.videoId) {
+                const e = Object.assign({}, j, { id: ytmId(), ts: Date.now(),
+                    quelle: j.quelle === 'radio' ? 'playlist' : j.quelle });
+                ytm = YTW.einreihen(ytm, e, 'naechstes');
+                ytm = YTW.verschieben(ytm, e.id, 0);
+                const vorn = ytm.eintraege.find(x => x.id === e.id);
+                if (vorn && nlFernVerb) YT_REMOTE_NET.warteschlangeSetzen(nlFernVerb, NL_FERN_RAUM, vorn.id, vorn).catch(() => {});
+            }
+            ytm = Object.assign({}, ytm, { gespielt });
+            ytmSpielen({ id: ytmId(), videoId: davor.videoId, kuenstler: davor.kuenstler || '',
+                         songtitel: davor.songtitel || '', quelle: 'playlist', ts: Date.now(),
+                         titel: [davor.kuenstler, davor.songtitel].filter(Boolean).join(' - ') });
+        }
+
         // Musik vorbei: zurueck in die Rotation, alles wie vorher.
         function ytmBeenden() {
             ytmDartErlaubt = false;
@@ -8867,7 +8891,7 @@
                 setTimeout(() => { if (window.nlJetztBlenden === meins) window.nlJetztBlenden = null; }, 45000);
                 return;
             }
-            if (was === 'zurueck') { if (ytmAktiv()) ytmSpielen(ytm.jetzt); return; }   // Song von vorn
+            if (was === 'zurueck') { if (ytmAktiv()) ytmZurueck(); return; }
             if (was === 'stopp') { ytmBeenden(); return; }
             if (was === 'pause' || was === 'weiter' || was === 'pauseUm') {
                 if (!ytmAktiv()) return;
