@@ -50,7 +50,7 @@ pro Projekt und werden nicht durch das Einfügen der `.gs`-Datei übernommen.
 3. **Skripteigenschaft hinzufügen** wählen und exakt diese Namen anlegen:
    `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET`, `TWITCH_USER_ACCESS_TOKEN` und
    `TWITCH_USER_REFRESH_TOKEN`. Für den späteren Schreibvorgang muss außerdem
-   `GITHUB_TOKEN` vorhanden sein.
+   `DJ_STATUS_TOKEN` vorhanden sein (seit 19.10.2026, siehe unten).
 4. Werte aus der registrierten Twitch-Anwendung beziehungsweise dem
    Authorization-Code-Flow für `motte025` einsetzen. Der User-Token muss den
    Scope `user:read:follows` besitzen. Client-Secret oder Token niemals hier im
@@ -85,7 +85,7 @@ lesen. Diese Werte müssen als Google-Apps-Script-Properties gesetzt werden:
 
 | Property | Inhalt |
 |---|---|
-| `GITHUB_TOKEN` | PAT mit Schreibrecht auf dieses Repository |
+| `DJ_STATUS_TOKEN` | feingranularer PAT **nur** für `motte025/City-cafe-status`, Contents lesen/schreiben. Seit 19.10.2026 liegt `live_status.json` dort, nicht mehr auf `City-cafe/main`; das Dashboard liest beide und nimmt den frischeren Stand (Übergang). |
 | `TWITCH_CLIENT_ID` | Client-ID der Twitch-Anwendung |
 | `TWITCH_CLIENT_SECRET` | Client-Secret der Twitch-Anwendung |
 | `TWITCH_USER_ID` | optional; wird beim ersten Test automatisch ermittelt und gespeichert |

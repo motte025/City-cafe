@@ -635,11 +635,14 @@ Noch nicht umgesetzt, nach Wichtigkeit:
   Skripteigenschaften (`GITHUB_TOKEN`) eingetragen – DJ-Live schrieb danach
   weiter (15:47). Ob das Dart-Liga-Skript ein eigenes Apps-Script-Projekt mit
   eigenem Token hat, beim nächsten Spieltag an den Auto-Commits prüfen.
-  **Weiter offen:** Der Token darf immer noch das ganze Repo schreiben. Vorschlag: Statusdatei in
-  ein eigenes Mini-Repo (z. B. `City-cafe-status`) mit eigenem, auf dieses Repo
-  beschränktem Token; das Dashboard liest von dort (bis zur Umstellung mit
-  Rückgriff auf `main`). Dann gibt es keine Auto-Commits und Pages-Builds auf
-  `main` mehr. Firebase statt GitHub wäre schneller, taugt aber erst, wenn die
+  **19.10.2026 umgebaut:** Statusdatei im eigenen Repo `motte025/City-cafe-status`
+  (öffentlich, nur `live_status.json`). Checker schreibt dorthin mit eigener
+  Skripteigenschaft `DJ_STATUS_TOKEN` (PAT nur für dieses Repo); das Dashboard liest
+  beide Orte und nimmt den frischeren `checked_at`. **Offen, vom Betreiber:** Token
+  anlegen, im Apps-Script eintragen, neuen Checker-Code einfügen, `djTestLauf`.
+  Danach: alte `live_status.json` auf `main` und `statusAltUrl` entfernen; prüfen, ob
+  der alte `GITHUB_TOKEN` noch gebraucht wird (Dart-Liga, Song-Collector).
+  Firebase statt GitHub wäre schneller, taugt aber erst, wenn die
   Regeln unten dicht sind (sonst ließe sich „DJ live" vortäuschen).
 - **Firebase-Regeln zu offen** (`docs/musik/firebase-regeln.json`): `yt/status`,
   `yt/treffer`, `yt/diagnose` und der Sammelzweig `$sonst` (alles im Raum außer

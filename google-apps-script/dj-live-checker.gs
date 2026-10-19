@@ -3,7 +3,8 @@
  *
  * Prueft im Minutentakt-Trigger, welche Twitch-Musikkanaele, denen
  * der Account motte025 folgt, gerade live senden, und schreibt das Ergebnis als live_status.json
- * zurueck ins GitHub-Repo. Das Dashboard (index.html) liest nur diese eine Datei
+ * ins eigene Repo motte025/City-cafe-status (seit 19.10.2026; vorher direkt auf
+ * City-cafe/main). Das Dashboard (index.html) liest nur diese eine Datei
  * und blendet den DJ-Live-Slot genau dann ein, wenn "live" nicht leer ist.
  *
  * Vollstaendige Einrichtung inkl. aller Zugangsdaten: DJ-LIVESTREAM-SETUP.md
@@ -12,8 +13,8 @@
  * 1. Dieses Skript als neue Datei in ein Apps-Script-Projekt einfuegen. Eigenes
  *    Projekt oder das des Song-Collectors - beides geht.
  * 2. Script Properties anlegen (Projekteinstellungen -> Skripteigenschaften):
- *      GITHUB_TOKEN          = PAT mit Schreibrecht auf das Repo
- *                              (im Song-Collector-Projekt schon vorhanden)
+ *      DJ_STATUS_TOKEN       = feingranularer PAT NUR fuer motte025/City-cafe-status,
+ *                              Contents lesen/schreiben (darf nicht ins Haupt-Repo)
  *      TWITCH_CLIENT_ID      = <Client-ID der Twitch-Anwendung>
  *      TWITCH_CLIENT_SECRET  = <Client-Secret der Twitch-Anwendung>
  *      TWITCH_USER_ID        = optionaler Cache; wird automatisch ermittelt
@@ -29,9 +30,9 @@
  * kollidiert deshalb mit derselben Konstante im Song-Collector, und das Projekt
  * laesst sich gar nicht mehr ausfuehren ("Identifier has already been
  * declared"). Die Praefixe halten den Checker in jedem Projekt vertraeglich.
- * Die Script-Property-SCHLUESSEL (GITHUB_TOKEN & Co.) sind davon nicht
- * betroffen - das sind Strings, keine Bezeichner, und GITHUB_TOKEN wird mit dem
- * Song-Collector bewusst geteilt.
+ * Die Script-Property-SCHLUESSEL sind davon nicht betroffen - das sind Strings,
+ * keine Bezeichner. Bewusst NICHT GITHUB_TOKEN: der darf das ganze Haupt-Repo
+ * schreiben (Song-Collector, Dart-Liga); der Checker bekommt seinen eigenen.
  *
  * Commit-Verhalten: geschrieben wird nur, wenn sich die Live-Liste tatsaechlich
  * aendert - plus ein Herzschlag alle DJ_HEARTBEAT_MINUTEN, solange jemand live ist,
@@ -40,7 +41,7 @@
  * 5-Minuten-Trigger rund 8.600 Commits pro Monat.
  */
 
-const DJ_GITHUB_REPO = 'motte025/City-cafe';
+const DJ_GITHUB_REPO = 'motte025/City-cafe-status';
 const DJ_GITHUB_BRANCH = 'main';
 const DJ_KANAL_DATEI = 'dj_channels.json';
 const DJ_STATUS_DATEI = 'live_status.json';
@@ -61,9 +62,9 @@ const DJ_TRIGGER_MINUTEN = 5; // erlaubt sind 1, 5, 10, 15 oder 30
 
 function djPruefeLiveStatus() {
   const props = PropertiesService.getScriptProperties();
-  const githubToken = props.getProperty('GITHUB_TOKEN');
+  const githubToken = props.getProperty('DJ_STATUS_TOKEN');
   if (!githubToken) {
-    Logger.log('FEHLER: Script Property GITHUB_TOKEN fehlt.');
+    Logger.log('FEHLER: Script Property DJ_STATUS_TOKEN fehlt (PAT nur fuer City-cafe-status).');
     return;
   }
 

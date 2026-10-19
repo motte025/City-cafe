@@ -9658,7 +9658,12 @@
             // raw.githubusercontent.com statt relativem Pfad: GitHub Pages liefert
             // eigene Dateien ueber einen CDN-Cache aus, der laenger haelt als der
             // Checker-Takt - ein gerade gestarteter Stream kaeme dann verspaetet an.
-            statusUrl: 'https://raw.githubusercontent.com/motte025/City-cafe/main/live_status.json',
+            // Seit 19.10.2026 eigenes Repo City-cafe-status: der Checker-Token darf nur
+            // dort schreiben, und main bekommt keine Auto-Commits mehr.
+            statusUrl: 'https://raw.githubusercontent.com/motte025/City-cafe-status/main/live_status.json',
+            // Uebergang: alter Ort auf main. Beide werden gelesen, der frischere
+            // checked_at gewinnt - so faellt der Slot beim Umstellen nicht aus.
+            statusAltUrl: 'https://raw.githubusercontent.com/motte025/City-cafe/main/live_status.json',
             // Notnagel, falls raw nicht erreichbar ist (und fuer lokale Kopien des
             // Dashboards ohne Netz-Zugriff auf GitHub): dieselbe Datei nebenan.
             statusFallbackUrl: 'live_status.json',
@@ -10267,7 +10272,12 @@
         async function loadDjLiveStatus() {
             // Slot aus: dann braucht es auch den regelmaessigen Abruf nicht.
             if (!DJ_SLOT_AN) return;
-            let daten = await djFetchStatus(DJ_LIVE_CONFIG.statusUrl);
+            const zeit = d => (d && Date.parse(d.checked_at)) || 0;
+            const [neu, alt] = await Promise.all([
+                djFetchStatus(DJ_LIVE_CONFIG.statusUrl),
+                DJ_LIVE_CONFIG.statusAltUrl ? djFetchStatus(DJ_LIVE_CONFIG.statusAltUrl) : null
+            ]);
+            let daten = zeit(alt) > zeit(neu) ? alt : (neu || alt);
             if (!daten && DJ_LIVE_CONFIG.statusFallbackUrl) {
                 daten = await djFetchStatus(DJ_LIVE_CONFIG.statusFallbackUrl);
             }
