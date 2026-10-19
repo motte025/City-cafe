@@ -121,6 +121,7 @@ MPV_SOCK_XF = "/tmp/mpv-nl-xf.sock"
 XF_SEK = 4
 XF_ERLAUBT = (4, 6, 9)
 XF_TON_FENSTER_SEK = 2.0   # so lange wechselt der Ton (beide hoerbar laut: ~1/3 davon)
+XF_START_FRIST = 15        # so lange darf der neue mpv bis zum ersten Bild brauchen (vorher 6)
 MPV_APP = {"id": "mpv"}
 # Watchdog: so lange darf mpv bis zum ersten Bild bzw. ohne Fortschritt
 # brauchen, bevor es abgeschossen wird und das YouTube-Embed weiterlaeuft.
@@ -1377,8 +1378,12 @@ def ueberblenden(xf, target, page_id, vol):
     """Faden fuer die Ueberblendung: wartet, bis der neue mpv spielt, legt sein
     (noch unsichtbares) Fenster ueber das alte, sagt dem Dashboard "naechster
     Song" und blendet dann Ton und Bild ueber. xf["fertig"] = True am Ende,
-    xf["fehler"] = True, wenn der neue nicht in Gang kommt."""
-    frist = time.time() + 6
+    xf["fehler"] = Grund (Text), wenn der neue nicht in Gang kommt."""
+    # Frist 15 s (vorher 6): selten braucht der neue Song laenger fuers erste Bild. Mit 6 s
+    # brach die Blende ab, der zweite Versuch startete einen frischen mpv (wieder zu langsam),
+    # und der Song kam nach der Schlussstille hart von 0 s. Der alte spielt solange weiter
+    # (Schlussstille greift nur ohne Blende); kommt der neue spaet, blendet es kurz (>= 2 s).
+    frist = time.time() + XF_START_FRIST
     while time.time() < frist:
         if xf["proc"].poll() is not None:
             break
@@ -1386,11 +1391,14 @@ def ueberblenden(xf, target, page_id, vol):
             break
         time.sleep(0.1)
     else:
-        xf["fehler"] = True
+        xf["fehler"] = f"kein Bild nach {XF_START_FRIST} s"
         return
     if xf["proc"].poll() is not None:
-        xf["fehler"] = True
+        xf["fehler"] = "neuer mpv beendet"
         return
+    gebraucht = time.time() - xf["t0"]
+    if gebraucht > 3:
+        log(f"Ueberblendung: neuer Song spielt erst nach {gebraucht:.1f}s ({xf['vid']})")
     place_mpv(target, xf["app"], sichtbar=False)
     rahmen_setzen(target, sock=MPV_SOCK_XF)
     if xf.get("abbruch"):
@@ -2746,7 +2754,8 @@ def main():
         if xf is not None:
             neu_lebt = xf["proc"].poll() is None
             if xf.get("fehler") or not neu_lebt or (want != shown and want != "yt:" + xf["vid"]):
-                grund = "Fehler" if xf.get("fehler") else ("neuer mpv weg" if not neu_lebt else f"Seite will {want}")
+                grund = (str(xf["fehler"]) if xf.get("fehler")
+                         else ("neuer mpv weg" if not neu_lebt else f"Seite will {want}"))
                 log(f"Ueberblendung abgebrochen ({xf['vid']}): {grund}")
                 # Diagnose Ueberspringen: wer hat auf der Seite zuletzt "weiter" geschaltet?
                 try:
@@ -2759,6 +2768,10 @@ def main():
                 stop(xf["proc"])
                 if mpv is not None and mpv.poll() is None:
                     mpv_befehl("set_property", "volume", ton_vol)
+                    # Alter Song schon am Dateiende (keep-open, siehe Blendenstart): jetzt beenden,
+                    # dann fuehrt das saubere Ende wie gewohnt zum naechsten Song.
+                    if mpv_eigenschaft("eof-reached") is True:
+                        mpv_befehl("quit")
                 xf = None
             elif (xf.get("fertig") or mpv is None or mpv.poll() is not None) and want == "yt:" + xf["vid"]:
                 stop(mpv)
@@ -2906,6 +2919,8 @@ def main():
                     problem = f"mpv ohne erstes Bild nach {erste_frist}s"
                 elif pausiert and art == "yt":
                     last_progress = now          # gewollte Pause, kein Haenger
+                elif xf is not None:
+                    last_progress = now          # Blende laeuft: alter darf am Ende stehen (keep-open)
                 elif last_pos is not None and now - last_progress > (CAM_STALL_TIMEOUT if art == "cam" else STALL_TIMEOUT):
                     problem = f"mpv steht bei {last_pos:.1f}s"
             if problem:
@@ -3009,6 +3024,9 @@ def main():
                     pass
                 proc = subprocess.Popen(xf_args, env={**os.environ, **session_env()},
                                         preexec_fn=mpv_dies_with_us)
+                # Der alte bleibt am Dateiende stehen statt sich zu beenden: braucht der neue
+                # lange (bis XF_START_FRIST), fiele das Ende sonst in "mpv beendet" -> Browser-Player.
+                mpv_befehl("set_property", "keep-open", "yes")
                 xf = {"proc": proc, "vid": n_vid, "app": neu_app, "t0": time.time(), "dauer": rest - 0.3,
                       "ton": ton_zustand(n_vid, ton_limiter),
                       "blur": xf_blur}
