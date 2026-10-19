@@ -261,7 +261,7 @@ Alle in `index.html`, Block `DJ_LIVE_CONFIG`:
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
 | `sekundenProKanal` | `180` | Standzeit des zufällig gewählten Live-DJs |
-| `leerWarteSekunden` | `30` | Wartezeit ohne Live-DJ vor dem Überspringen |
+| `leerWarteSekunden` | `180` | Wartezeit ohne Live-DJ vor dem Überspringen (3 Minuten) |
 | `maxStatusAlterMinuten` | `45` | älterer Stand → Slot aus |
 | `abrufTaktSekunden` | `180` | wie oft `live_status.json` neu geholt wird |
 | `spielerBreite` / `spielerHoehe` | `1920` / `1080` | interne Playergröße, siehe unten |
