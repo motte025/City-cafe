@@ -483,8 +483,8 @@ bleiben alle erhalten und wandern in die neuen Reiter.
 
 | Reiter | Inhalt | Gast | Chef |
 |---|---|---|---|
-| ▶️ Jetzt | Laufender Song (Titel, Künstler, Fortschritt). Knöpfe ⏮ ⏸ ⏭ 🔊 und ⛶ Vollbild/Normal. Darunter die **ganze** Warteschlange, danach „📻 Danach: Radio-Mix“ mit den nächsten 5 Radio-Titeln | sieht alles, kann **eigene** Wünsche mit ✕ zurückziehen | Knöpfe, Ziehen zum Umsortieren, ✕ für jeden Eintrag |
-| 🔍 Suche | Suchfeld, Treffer mit „⏭ Als Nächstes“ und „➕ Ans Ende“ | nur „🙋 Wünschen“ (entspricht Ans Ende) | beide Knöpfe |
+| ▶️ Jetzt | Laufender Song (Titel, Künstler, Fortschritt). Knöpfe ⏮ ⏸ ⏭ 🔊 und ⛶ Vollbild/Normal (⏮: in den ersten 10 s Song davor, sonst Song von vorn). Darunter die **ganze** Warteschlange, danach „📻 Danach: Radio-Mix“ mit den nächsten 5 Radio-Titeln | sieht alles, kann **eigene** Wünsche mit ✕ zurückziehen | Knöpfe, Ziehen zum Umsortieren, ✕ für jeden Eintrag; Radio-Mix: „📥 Mix in die Warteschlange“ (dann verschieb-/löschbar), ⋯ „🗑️ Aus dem Mix entfernen“ |
+| 🔍 Suche | Suchfeld, Treffer mit „⏭ Als Nächstes“ und „➕ Ans Ende“; Reihenfolge: alle Suchwörter im Titel vorn, darin nach Aufrufen (19.10.2026) | nur „🙋 Wünschen“ (entspricht Ans Ende) | beide Knöpfe |
 | ✨ Passt dazu | Radio-Titel zum laufenden Song, je mit ＋ | ＋ = wünschen | ＋ = ans Ende, langes Drücken = als Nächstes |
 | 📋 Listen | Playlists aus `yt_playlists.json` (Nummer, Name, Anzahl), aufklappbar mit allen Titeln; dazu die bestehende Dauerliste | einzelne Titel wünschen | „▶ Ganze Playlist starten“ und „➕ Ganze Playlist anhängen“ |
 | ⚙️ Mehr | Bluetooth, Laufzeit/Auflösung/Bildrate, Ton/Lautheit, Raumwahl, Stopp zurück zur Rotation, **Chef-Anmeldung mit PIN** | nur Chef-Anmeldung und Raumwahl | alles |

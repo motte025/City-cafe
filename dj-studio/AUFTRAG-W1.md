@@ -68,6 +68,8 @@ Ziel: Bevor der DJ-Modus im Café freigeschaltet wird, Last und Bildrate auf dem
 
 ## Aufgabe 3 – Playlists vormessen (eingebaut am 19.10., läuft von selbst)
 
+**Erledigt 19.10. 14:02:** 703 von 703 gemessen, seitdem 707 (neue Songs werden von selbst nachgemessen).
+
 Der Supervisor kann alle Playlist-Songs vormessen, solange **keine Musik läuft** (Liste von der
 TV-Seite, ~700 Songs, ~25 s + 15 s Pause je Song, ~190 MB unter
 `/home/citycafe/.cache/citycafe/spuren/`). Danach sind Wellenform, BPM und Tonart im DJ-Modus sofort

@@ -5,7 +5,10 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 16. Oktober 2026 (Musik: Lautstärke nach LUFS für alle Songs
+Letzte Durchsicht: 19. Oktober 2026 (DJ-Modus im Café freigeschaltet, W1 gemessen und
+Systemupdate repariert, alle Playlist-Songs vorgemessen; Musik-Fernbedienung: Zurück-Taste
+Schritt für Schritt, ⏮ zum Song davor, Radio-Mix löschen/übernehmen, Suche nach Aufrufen,
+DJ-Modus sichtbar – Details in den Abschnitten vom 18./19.10.). Davor, 16. Oktober (Musik: Lautstärke nach LUFS für alle Songs
 gleich, Limiter höchstens 2 dB, Test mit 458 Playlist-Songs; Überblendung 4/6/9 s
 mit DJ-Kurve; Limiter/Blende am Chef-Handy; Neuladen startete alten DJ-Befehl
 und gestoppte Musik neu – behoben und am TV getestet; Dauersuche begrenzt;
@@ -54,8 +57,10 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
   Keine 30-fps-Bremse nötig. Studio-Spur auf dem W1 geht (5 Songs, BPM-Sicherheit meist 0,96–0,99).
   Temperatur bei längerem DJ-Betrieb noch beobachten. Messskripte: `/tmp/messen.sh`, `/tmp/dj-messung.sh`
   auf dem W1 (gehen beim Neustart verloren).
-- **Vormessen** läuft auf dem W1 (703 Songs ohne Doppelte, ~40 s je Song, nur ohne Musik). Erster Lauf
-  erst ~10 min nach dem Supervisor-Start (Liste beim Start noch leer, wird alle 10 min neu geholt).
+- **Vormessen** auf dem W1 **fertig** (19.10. 05:22–14:02, 703 von 703; ~10 Songs in 8 min, nur ohne
+  Musik). Danach 707 Songs (4 neu am Handy hinzugefügt) – alle gemessen, 158 MB. Neue Playlist-Songs
+  misst er von selbst nach: die Liste kommt alle 10 min frisch von der TV-Seite (die übernimmt
+  Änderungen vom Handy sofort). Erster Lauf erst ~10 min nach dem Supervisor-Start.
 - **Systemupdate W1 repariert (19.10.):** `pacman -Syu` brach seit mindestens 17.10. ab
   (`plasma-workspace 6.8` gegen `plasma-x11-session`). `plasma-x11-session` entfernt (Kiosk läuft unter
   sway), 108 Pakete eingespielt, Kernel 7.2.11, Plasma 6.8. Die Café-Dateien kamen trotzdem jeden Tag.
@@ -71,6 +76,32 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
   ließ sich nicht erzeugen – im Log auf „spielt erst nach“ achten.
 - Push nach `main` durch Claude: über `/permissions` für den konkreten Befehl freigegeben, sonst
   von der Berechtigungsprüfung gesperrt („Production Deploy“).
+
+## 19.10.2026 nachmittags: Musik-Fernbedienung und Suche
+
+- **DJ-Modus sichtbar** (acabf76e): läuft er, steht beim Chef oben beim laufenden Song
+  „🎛 DJ-Modus · …“ (aus `jetzt.dj` vom TV). Gäste sehen es nicht.
+- **⏮** (70289e64, `ytmZurueck` in `index.html`): in den ersten 10 s eines Songs zum Song davor
+  (aus `ytm.gespielt`, der wird dort gestrichen – mehrmals drücken geht weiter zurück), der laufende
+  Song kommt ganz vorn in die Schlange. Später im Song oder ohne Vorgänger: Song von vorn. Der
+  zurückgeholte Song hat keine Playlist-Angabe (im Verlauf stehen nur Video, Künstler, Titel).
+  Nur in einer Node-Simulation geprüft.
+- **Zurück-Taste/-Geste am Handy** (a337c45a, `yt-fernbedienung.html`): Schritt für Schritt –
+  offenes ⋯-Menü zu, offene Playlist in der Suche zu, voriger Reiter; erst ganz vorn verlässt sie
+  die Seite (`history.pushState`/`popstate`, Menü als eigener Schritt per `MutationObserver`).
+  Reiter und Menü in Chrome geprüft.
+- **Radio-Mix bearbeiten** (a337c45a): unter „📻 Danach: Radio-Mix“ der Knopf „📥 Mix in die
+  Warteschlange“ (Befehl `radioUebernehmen`: bis 25 Mix-Titel als Playlist-Titel „Radio-Mix“ in die
+  Schlange, dort verschieben/löschen); im ⋯-Menü der Mix-Titel „🗑️ Aus dem Mix entfernen“
+  (`radioEntfernen`). Nicht im Betrieb getestet.
+- **Suche nach Aufrufen** (Supervisor): Treffer mit allen Suchwörtern in Titel/Kanal vorn, darin
+  die meistgesehenen zuerst; Live-/Fan-/Lyric-/Audio-Uploads weiter ans Ende. Reine Sortierung nach
+  Aufrufen brachte bei „Haus am See“ „Alles neu“ (84 Mio.) nach oben. Auf dem W1 getestet
+  („Haus am See“, „Helene Fischer Atemlos“). Grenze: Fan-Uploads mit vielen Aufrufen können vor dem
+  Original stehen; „TV Auftritt“ erkennt `MV_LIVE` nicht.
+- **Supervisor von Hand eingespielt** (19.10. ~15:00, Betreiber-Freigabe, Musik lief nicht):
+  Sicherung `/opt/citycafe/nl-mpv-supervisor.py.vor-suche-2026-10-19`; Neustart per PID mit der
+  Umgebung des alten Prozesses (`/proc/<pid>/environ`), läuft fehlerfrei.
 
 ## 19.10.2026: Halloween-Slot im Medien-Widget (zeitlich begrenzt)
 
@@ -108,7 +139,7 @@ Antwortsprache im Gespräch: Deutsch.
 | --- | --- |
 | `index.html` | Das Dashboard selbst: Rotation, alle Widgets, Verbindung zu den Fernbedienungen |
 | `fernbedienung.html` | Sammel-Fernbedienung: Startseite mit Kacheln (🎵 Musik, DJ, Roulette, Hos'n Obe, Chef: Übersicht), die Steuerung öffnet beim Antippen, „← Start" bzw. die Zurück-Taste führt zurück (seit 16.10.2026); zeigt nur Screens, die sich in den letzten 3 Tagen gemeldet haben |
-| `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef. In „Jetzt" oben nur Steuerung (⏮ ⏸ ⏭ ⇄ Blende) und Lautstärke; Vollbild, Fotos/Shorts rechts, Ambilight, QR, Handy/Screen an die Anlage zugeklappt unter „⚙️ Anzeige & Anlage" (16.10.2026); Limiter und Überblendung unter Mehr → „🔊 Ton" |
+| `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef. In „Jetzt" oben nur Steuerung (⏮ ⏸ ⏭ ⇄ Blende; ⏮ in den ersten 10 s = Song davor) und Lautstärke; Zurück-Taste Schritt für Schritt, Radio-Mix in die Schlange übernehmbar (19.10.2026); Vollbild, Fotos/Shorts rechts, Ambilight, QR, Handy/Screen an die Anlage zugeklappt unter „⚙️ Anzeige & Anlage" (16.10.2026); Limiter und Überblendung unter Mehr → „🔊 Ton" |
 | `yt-fernbedienung-net.js` | Firebase-Pfade der Musik (`yt/…`, `chef/…`) |
 | `yt-warteschlange.js` | Reihenfolge-Logik der Musik (Warteschlange, Radio, Vorschau), Tests in `yt-warteschlange.test.js` |
 | `yt_playlists.json` | Stimmungs-Playlists nach Uhrzeit (1–4 mit festen Titellisten, 5–8 eigene Mixe) |

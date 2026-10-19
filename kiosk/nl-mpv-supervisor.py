@@ -2652,9 +2652,15 @@ def main():
                     else:
                         treffer = suchen(text, anzahl)
                         # Live-/Fan-/Lyric-/Audio-Uploads ans Ende, sonst meistgesehene zuerst
-                        # (Wunsch 19.10.2026: Suche nach den Aufrufen)
-                        treffer = sorted(treffer, key=lambda t: (musikvideo_wertung(t, text) < 0,
-                                                                 -(t.get("aufrufe") or 0)))
+                        # (Wunsch 19.10.2026: Suche nach den Aufrufen). Treffer mit allen
+                        # Suchwoertern im Titel/Kanal vorn - sonst stand bei "Haus am See"
+                        # das meistgesehene "Alles neu" ganz oben.
+                        woerter = re.findall(r"\w+", text.lower())
+                        treffer = sorted(treffer, key=lambda t: (
+                            musikvideo_wertung(t, text) < 0,
+                            not all(w in (str(t.get("titel") or "") + " " + str(t.get("kanal") or "")).lower()
+                                    for w in woerter),
+                            -(t.get("aufrufe") or 0)))
                     if not gemischt and not shorts:
                         log(f"Suche {text!r}: {len(treffer)} Treffer")
                     # art bestaetigt, welche Suche wirklich lief: ein alter Supervisor
