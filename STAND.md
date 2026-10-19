@@ -72,6 +72,25 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
 - Push nach `main` durch Claude: über `/permissions` für den konkreten Befehl freigegeben, sonst
   von der Berechtigungsprüfung gesperrt („Production Deploy“).
 
+## 19.10.2026: Halloween-Slot im Medien-Widget (zeitlich begrenzt)
+
+- Event **31.10.2026 ab 18:00**, Live-Musik, Kostüme willkommen. Zwei 60-s-Videos **ohne Ton**
+  (1920×1080, 30 fps, H.264, je ~29 MB): `halloween_horror.mp4` (Trailer) und
+  `halloween_atmosphere.mp4` (Loop). Im Wechsel, **eines je Zyklus**, Slot `HALLOWEEN_SLOT_INDEX`
+  0.7 direkt nach den Plakaten, vor Mittagsteller und DJ (`runHalloweenState`, `<video id="halloween-video">`
+  in `#media-view-halloween` – innerhalb von `.media-inner-view`, braucht also keinen eigenen Abbau).
+- Quelle wird erst im Slot gesetzt und danach in `runMasterSequence()` freigegeben
+  (`halloweenFreigeben`, wie beim Dartfilm). Nur **bis einschließlich 31.10.2026** (lokale Zeit,
+  `halloweenAktiv`); danach springt der Slot sofort weiter. `?halloweenan=1` zeigt ihn zum Ansehen
+  auch außerhalb. **Nach dem Event: Slot, Konstanten und beide MP4s entfernen** (je ~29 MB im Repo).
+- Geprüft nur mit Headless-Chromium (kann kein H.264 → mit kurzen VP9-Ersatzclips: Slot aktiv,
+  Wiedergabe, Weiterschalten, Quelle frei). **Auf dem Café-Screen noch nicht angesehen.**
+- Erzeugung (kie.ai Kling, 6 Clips, 2,52 $, Effekte/Schnitt lokal) und Quellen:
+  `CityCafe_Halloween_2026/` (README dort). Rohclips und 1080p-Master liegen nicht im Git.
+- Offen: „Eintritt frei" steht in `CityCafe_Halloween_2026/config/config.json` auf aus, bis der
+  Betreiber es bestätigt. Ein Eintrag für das Event in `werbung.json` („Demnächst bei uns") ist
+  noch nicht angelegt.
+
 ## Was das Projekt ist
 
 Digitale Beschilderung für das City Cafe in Klagenfurt-Fischl: ein Dashboard im
