@@ -77,6 +77,30 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
 - Push nach `main` durch Claude: über `/permissions` für den konkreten Befehl freigegeben, sonst
   von der Berechtigungsprüfung gesperrt („Production Deploy“).
 
+## 19.10.2026 abends: Kiosk zuhause (`martin-ser`) auf W1-Stand
+
+- **PC zuhause bootet als Kiosk** (GRUB „City-Cafe Kiosk“, Standard): blieb auf der Konsole
+  stehen, weil `plasmalogin` `Conflicts=getty@tty1` hat – die Condition im Drop-in greift erst
+  nach der Transaktion, getty@tty1 fiel trotzdem raus. Lösung: Kiosk-Eintrag in
+  `/etc/grub.d/09_citycafe` mit `systemd.unit=multi-user.target`. „KDE Plasma“ unverändert.
+- System wie W1: `plasma-x11-session` entfernt, `pacman -Syu` (Kernel 7.2.11, Plasma 6.8),
+  `nodejs` (yt-dlp), Supervisor aus `main`. Update-Timer holt verpasste 8:30-Läufe nach
+  (`citycafe-update.timer.d/nachholen.conf`, nur dort – der PC ist morgens aus).
+- **34"-Monitor 3440×1440 (21:9)** streckte 1920×1080 in die Breite. sway nativ mit
+  `scale 1.333333 position -330 0`, Chromium schwebend 1920×1080 bei 0,0 (mittig, 16:9);
+  `CITYCAFE_OUTPUT=keiner` in der env, damit der Starter nicht 1920×1080 erzwingt. Fensterlagen
+  bleiben logisch wie am W1. **mpv-Overlays (Kontrastrahmen, QR) rechnen in echten Bildpunkten:**
+  Supervisor multipliziert jetzt mit der sway-Skalierung (`ausgabe_skala()`, W1: 1).
+- **Zuhause Chef auch in `city-cafe`:** Playlists liegen unter `city-cafe/yt/listen`, schreiben darf
+  dort nur ein Café-Chef. TV und Handy im Raum zuhause melden sich mit derselben PIN auch dort an.
+- **Bewusst gewählte Fassung wird nicht getauscht** (Betreiber): Songs, die der Chef am Handy zu
+  einer Playlist hinzufügt, tragen `gewaehlt: true`; diese und Chef-Einträge mit videoId
+  (`quelle: 'chef'`) prüft `ytmPlaylistTitelPruefen` nicht mehr. Gäste-Wünsche, Radio-Mix und
+  Repo-Listen werden weiter gegen das offizielle Video getauscht. Ältere, vor dem 19.10. von Hand
+  hinzugefügte Songs haben die Markierung nicht (einmal löschen und neu hinzufügen). Anlass:
+  Madcon „Don't Worry“ (eigene Fassung `HO7uge9UUrA`) wurde gegen `y74UPiaK7u0` getauscht, dessen
+  Intro der Studio-Abgleich nicht fand → keine Intro-Ausblendung.
+
 ## 19.10.2026 nachmittags: Musik-Fernbedienung und Suche
 
 - **DJ-Modus sichtbar** (acabf76e): läuft er, steht beim Chef oben beim laufenden Song

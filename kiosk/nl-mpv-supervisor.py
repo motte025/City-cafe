@@ -669,6 +669,23 @@ def sway(*args):
     return subprocess.run(["swaymsg", *args], env=env, capture_output=True, text=True)
 
 
+_ausgabe_skala = None
+
+
+def ausgabe_skala():
+    """Skalierung der sway-Ausgabe (W1: 1; PC zuhause, 21:9-Monitor: 4/3). Fensterlagen
+    rechnen in logischen Pixeln, mpvs overlay-add in echten Bildpunkten des Fensters."""
+    global _ausgabe_skala
+    if _ausgabe_skala is None:
+        try:
+            aktiv = [o for o in json.loads(sway("-t", "get_outputs").stdout or "[]") if o.get("active")]
+            if aktiv:
+                _ausgabe_skala = float(aktiv[0].get("scale") or 1)
+        except (ValueError, TypeError):
+            pass
+    return _ausgabe_skala or 1.0
+
+
 def mpv_window_rect(app_id=None):
     """Aktuelle Lage des mpv-Fensters laut sway, None solange es nicht da ist."""
     try:
@@ -1295,13 +1312,15 @@ def qr_overlay_setzen(karte, info, target, rect_art):
     """Kaertchen fuer die aktuelle Fenstergroesse setzen. -> Schluessel der Lage."""
     from PIL import Image
     css_breite = QR_CSS_BREITE.get(rect_art, 1200)
-    massstab = target["w"] / float(css_breite)
+    skala = ausgabe_skala()
+    tw, th = target["w"] * skala, target["h"] * skala      # echte Bildpunkte im mpv-Fenster
+    massstab = tw / float(css_breite)
     faktor = float(info.get("faktorVoll") or 1) if rect_art == "yt_voll" else 1.0
     rand = float(info.get("randVoll") or 20) if rect_art == "yt_voll" else float(info.get("rand") or 18)
     w = max(1, round(float(info.get("breite") or 174) * faktor * massstab))
     h = max(1, round(float(info.get("hoehe") or 192) * faktor * massstab))
-    x = round(target["w"] - rand * massstab - w)
-    y = round(target["h"] - rand * massstab - h)
+    x = round(tw - rand * massstab - w)
+    y = round(th - rand * massstab - h)
     bild = karte.resize((w, h), Image.LANCZOS)
     # mpv erwartet vormultiplizierte Alphawerte: Farbe * Alpha.
     schwarz = Image.new("RGB", (w, h), (0, 0, 0))
@@ -2220,7 +2239,8 @@ def rahmen_datei(w, h):
 def rahmen_setzen(ziel, sock=None):
     """Rahmen fuer die Fenstergroesse ziel in den mpv (sock) legen."""
     try:
-        w, h = int(ziel["w"]), int(ziel["h"])
+        skala = ausgabe_skala()                   # Overlay in echten Bildpunkten
+        w, h = round(ziel["w"] * skala), round(ziel["h"] * skala)
         mpv_befehl("overlay-add", RAHMEN_ID, 0, 0, rahmen_datei(w, h), 0, "bgra", w, h, w * 4, sock=sock)
         return (w, h)
     except Exception as e:                        # ohne Pillow o. ae.: einfach kein Rahmen

@@ -445,7 +445,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-19-listen-zuhause';
+    var FASSUNG = '2026-10-19-version-behalten';
     // Schriftgroesse je Geraet (A-/A+ oben): vergroessert die ganze Seite (CSS zoom),
     // gemerkt im Browser des Geraets (Handy und Tablet unabhaengig, Wunsch 05.10.2026).
     (function () {
@@ -679,7 +679,8 @@
                 var song = {
                     videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
                     dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0,
-                    kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', aufrufe: Number(t.aufrufe) || 0
+                    kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', aufrufe: Number(t.aufrufe) || 0,
+                    gewaehlt: true      // bewusst diese Fassung: der TV tauscht sie nicht gegen das offizielle Video
                 };
                 // zweiter Schritt: wohin in der Playlist
                 el('menue-titel').textContent = '📃 ' + p.name + ': wohin?';
@@ -729,7 +730,8 @@
         var nr = alleListen().reduce(function (m, p) { return Math.max(m, Number(p.nr) || 0); }, 100) + 1;
         var titel = (songs || []).filter(function (t) { return t && t.videoId; }).map(function (t) {
             return { videoId: t.videoId, titel: t.titel || '', kanal: t.kanal || '', dauer: t.dauer || '',
-                     dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0, kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', aufrufe: Number(t.aufrufe) || 0 };
+                     dauerSek: Number(t.dauerSek) || W.sekunden(t) || 0, kuenstler: t.kuenstler || '', songtitel: t.songtitel || '', aufrufe: Number(t.aufrufe) || 0,
+                     gewaehlt: true };
         });
         verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + nr).set({
             nr: nr, name: String(name).slice(0, 60), platzhalter: false, bearbeitet: true, eigen: true,
