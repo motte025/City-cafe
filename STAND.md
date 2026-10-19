@@ -65,6 +65,10 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
   Überblendungs-Faden → `nlVideoFertig()`. Zweiter: unbekannt (Kandidaten ⏭ am Handy, Taste
   rechts/Medientaste, Playlist-Suche). Seit 9cbf281e schreibt der Supervisor bei jedem Abbruch
   Grund und die letzten `ytmWeiter`-Aufrufer ins Log (`grep -A1 "abgebrochen"`).
+- **Muster B behoben (5513d554, 19.10.):** Neuer Song brauchte selten > 6 s bis zum ersten Bild →
+  Blende abgebrochen, Song kam hart von 0 s. Jetzt `XF_START_FRIST` = 15 s, alter mpv mit
+  `keep-open`. Auf dem W1 getestet (3 Blenden sauber, 05:24–05:27); der langsame Start selbst
+  ließ sich nicht erzeugen – im Log auf „spielt erst nach“ achten.
 - Push nach `main` durch Claude: über `/permissions` für den konkreten Befehl freigegeben, sonst
   von der Berechtigungsprüfung gesperrt („Production Deploy“).
 
