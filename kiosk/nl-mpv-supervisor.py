@@ -2746,7 +2746,15 @@ def main():
         if xf is not None:
             neu_lebt = xf["proc"].poll() is None
             if xf.get("fehler") or not neu_lebt or (want != shown and want != "yt:" + xf["vid"]):
-                log(f"Ueberblendung abgebrochen ({xf['vid']})")
+                grund = "Fehler" if xf.get("fehler") else ("neuer mpv weg" if not neu_lebt else f"Seite will {want}")
+                log(f"Ueberblendung abgebrochen ({xf['vid']}): {grund}")
+                # Diagnose Ueberspringen: wer hat auf der Seite zuletzt "weiter" geschaltet?
+                try:
+                    log("  ytmWeiter zuletzt (vor s, Aufrufer): " + str(cdp_eval(page_id,
+                        "JSON.stringify((window.nlWeiterLog || []).slice(-3)"
+                        ".map(w => [Math.round((Date.now() - w.t) / 1000), w.s]))")))
+                except (OSError, ValueError, ConnectionError):
+                    pass
                 xf["abbruch"] = True
                 stop(xf["proc"])
                 if mpv is not None and mpv.poll() is None:

@@ -8241,6 +8241,14 @@
 
         // Songende, Ueberspringen, Musikstart: was kommt jetzt?
         function ytmWeiter() {
+            // Diagnose "Ueberspringen" (selten: zweimal Weiter in der Ueberblendung):
+            // Aufrufer merken; der Supervisor schreibt sie bei einem Abbruch ins Log.
+            try {
+                const s = (new Error().stack || '').split('\n').slice(2, 6)
+                    .map(z => z.trim().replace(/^at /, '').replace(/\s*\(.*\)$/, '')).join(' < ');
+                (window.nlWeiterLog = window.nlWeiterLog || []).push({ t: Date.now(), s });
+                if (window.nlWeiterLog.length > 6) window.nlWeiterLog.shift();
+            } catch (e) {}
             const r = YTW.weiter(ytm, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
             ytm = r.state;
             if (r.aktion === 'spielen') {
