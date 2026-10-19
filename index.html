@@ -2508,7 +2508,7 @@
         .ytm-shorts.laedt .ytm-shorts-rahmen > div, .ytm-shorts.laedt .ytm-shorts-rahmen iframe { opacity: 0; }
         .ytm-seite-fuss { margin-top: 12px; font-size: 16px; font-weight: 600; color: #94a3b8; }
 
-        /* DJ-Modus (nur Raum zuhause): das DJ Studio als Ebene, das Video (mpv) im
+        /* DJ-Modus (zuhause und City Cafe): das DJ Studio als Ebene, das Video (mpv) im
            Studio-Videofenster. Lage = Bild 2 [557, 85, 557, 298] * 1920/1672. */
         #ytm-dj { display: none; }
         body.ytm-an.ytm-dj #ytm-dj { display: block; position: absolute; inset: 0; z-index: 520; overflow: hidden; background: #05070d; }
@@ -3309,7 +3309,7 @@
             <div class="ytv-termine" id="ytv-termine"></div>
         </div>
 
-        <!-- DJ-Modus der YouTube-Musik (nur Raum zuhause): das Studio (dj-studio/?tv)
+        <!-- DJ-Modus der YouTube-Musik (zuhause und City Cafe): das Studio (dj-studio/?tv)
              baut ytmDjRahmen() erst beim Einschalten ein; mpv liegt ueber #yt-dj-video. -->
         <div id="ytm-dj"><div id="yt-dj-video"></div></div>
 
@@ -7833,8 +7833,8 @@
                     gespielt: [], letzterWunschTs: 0, seedVonWunsch: false };
         let ytmPausiert = false;
         let ytmVollbild = YT_VOLLBILD_STANDARD;
-        // DJ-Modus: vorerst nur im Raum zuhause (Test), im Cafe nie.
-        const YTM_DJ_ERLAUBT = NL_FERN_RAUM === 'zuhause';
+        // DJ-Modus: zuhause (Test) und im Cafe (freigeschaltet 19.10.2026 vom Betreiber).
+        const YTM_DJ_ERLAUBT = NL_FERN_RAUM === 'zuhause' || NL_FERN_RAUM === 'city-cafe';
         let ytmDj = false;
         // Rechte Karte im Widget: 'songs' = Aehnliche Songs, 'fotos' = Fotos aus der
         // Drive-Galerie, 'shorts' = YouTube Shorts (stumm). Der Chef schaltet am Handy um.

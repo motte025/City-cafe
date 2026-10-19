@@ -277,7 +277,7 @@
                 <button type="button" class="still" id="k-ansicht">⛶ Vollbild</button>
                 <button type="button" class="still" id="k-seite">🖼️ Fotos</button>
             </div>
-            <!-- DJ-Modus: TV zeigt das DJ Studio, Video im Studio-Fenster (vorerst nur zuhause) -->
+            <!-- DJ-Modus: TV zeigt das DJ Studio, Video im Studio-Fenster (zuhause und City Cafe) -->
             <div class="zeile2" id="dj-zeile" hidden>
                 <button type="button" class="still" id="k-dj">🎛 DJ-Modus</button>
             </div>
@@ -964,7 +964,7 @@
     });
     el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⇄ Blende zum nächsten Song …', ''); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
-    el('dj-zeile').hidden = RAUM !== 'zuhause';
+    el('dj-zeile').hidden = RAUM !== 'zuhause' && RAUM !== 'city-cafe';
     el('k-dj').addEventListener('click', function () { musik(jetzt && jetzt.dj ? 'normal' : 'dj'); });
     // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
     el('k-radio').addEventListener('click', function () {

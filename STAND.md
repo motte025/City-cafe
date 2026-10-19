@@ -30,7 +30,7 @@ und wieder in der Rotation.
 Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (mit `ssh w1`):
 `dj-studio/AUFTRAG-W1.md`** – was nach dem Update am 19.10. um 8:30 auf dem W1 zu prüfen ist. Kurz:
 
-- **DJ-Modus der YouTube-Musik**, nur Raum `zuhause`: der TV zeigt das DJ Studio, mpv spielt im
+- **DJ-Modus der YouTube-Musik**, Raum `zuhause` und seit 19.10. 04:45 auch `city-cafe` (Betreiber): der TV zeigt das DJ Studio, mpv spielt im
   Studio-Videofenster, Ton weiter über mpv/Bluetooth. Wellenform, BPM, Tonart und Pegel misst der
   Supervisor je Song (gespeichert unter `~/.cache/citycafe/spuren/`).
 - **Test-Aufbau zuhause = PC `martin-ser`** (EndeavourOS/KDE): sway im Fenster, lokaler Server auf
