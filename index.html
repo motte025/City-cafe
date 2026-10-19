@@ -9509,6 +9509,9 @@
                 if (!verb) return;
                 // Der TV ist selbst ein Chef-Geraet (PIN nur in der Kiosk-Adresse).
                 if (YT_CHEF_PIN) YT_REMOTE_NET.chefAnmelden(verb, NL_FERN_RAUM, YT_CHEF_PIN, 'TV ' + NL_FERN_RAUM).catch(() => {});
+                // Playlists liegen fuer alle Raeume unter city-cafe (yt/listen) - schreiben darf
+                // dort nur ein Chef des Cafes. Bei gleicher PIN ist der TV zuhause es auch.
+                if (YT_CHEF_PIN && NL_FERN_RAUM !== 'city-cafe') YT_REMOTE_NET.chefAnmelden(verb, 'city-cafe', YT_CHEF_PIN, 'TV ' + NL_FERN_RAUM).catch(() => {});
                 const jetzt = await YT_REMOTE_NET.jetztLesen(verb, NL_FERN_RAUM);
                 YT_REMOTE_NET.aufRadioHoeren(verb, NL_FERN_RAUM, r => {
                     if (r && Array.isArray(r.titel) && !ytm.radio.titel.length) ytm.radio = { seed: r.seed || null, titel: r.titel };

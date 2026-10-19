@@ -445,7 +445,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-16-ton2';
+    var FASSUNG = '2026-10-19-listen-zuhause';
     // Schriftgroesse je Geraet (A-/A+ oben): vergroessert die ganze Seite (CSS zoom),
     // gemerkt im Browser des Geraets (Handy und Tablet unabhaengig, Wunsch 05.10.2026).
     (function () {
@@ -1661,6 +1661,9 @@
         var pin = el('pin').value.trim();
         if (!pin || !verb) return;
         YT_REMOTE_NET.chefAnmelden(verb, RAUM, pin, (navigator.userAgent || '').slice(0, 40)).then(function () {
+            // Playlists gibt es nur unter city-cafe (yt/listen): Chef zuhause wird bei
+            // gleicher PIN auch dort Chef, sonst lassen sich Listen nicht bearbeiten.
+            if (RAUM !== 'city-cafe') YT_REMOTE_NET.chefAnmelden(verb, 'city-cafe', pin, (navigator.userAgent || '').slice(0, 40)).catch(function () {});
             el('pin').value = '';
             chefSetzen(true);
             melden('👑 Als Chef angemeldet', 'ok');
