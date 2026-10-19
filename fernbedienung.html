@@ -125,13 +125,13 @@
     'use strict';
 
     var CFG = window.DJ_REMOTE_CONFIG || {};
-    var FASSUNG = '2026-10-16-start1';
+    var FASSUNG = '2026-10-19-djstreams';
     var el = function (id) { return document.getElementById(id); };
     var abfrage = new URLSearchParams(location.search);
 
     var SEITEN = [
         { schluessel: 'yt', sym: '🎵', name: 'Musik', text: '🎵 Musik', datei: 'yt-fernbedienung.html', raumParameter: true },
-        { schluessel: 'dj', sym: '🎧', name: 'DJ', text: '🎧 DJ', datei: 'dj-fernbedienung.html', raumParameter: true },
+        { schluessel: 'dj', sym: '🎧', name: 'DJ-Streams', text: '🎧 DJ-Streams', datei: 'dj-fernbedienung.html', raumParameter: true },
         // Seit 28.09.2026 die neue Roulette-Fernbedienung (Spielmodus, aufgeräumt fürs Handy).
         { schluessel: 'roulette', sym: '🎰', name: 'Roulette', text: '🎰 Roulette', datei: 'roulette-vorschau-spiel/remote.html', raumParameter: true },
         // Das Kartenspiel braucht die Kennung der laufenden Runde - dieselbe,
