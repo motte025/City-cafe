@@ -2915,6 +2915,16 @@
                     </div>
                 </div>
 
+                <!-- Halloween 2026 (Event 31.10.): zwei 60-s-Videos ohne Ton, im Wechsel
+                     je Durchlauf. Wie der Dartfilm ohne src - die Quelle wird erst im
+                     Slot gesetzt und danach wieder abgegeben; nach dem 31.10. kommt
+                     der Slot gar nicht mehr vor. -->
+                <div class="media-inner-view" id="media-view-halloween">
+                    <div style="width: 1280px; height: 815px; position: relative; background: #000; border-radius: 22px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <video id="halloween-video" style="width: 100%; height: 100%; object-fit: contain;" muted playsinline preload="none"></video>
+                    </div>
+                </div>
+
                 <!-- Einzelwertung der ganzen Klasse; die eigenen Leute sind
                      hervorgehoben. Laeuft ueber mehrere Seiten, weil eine Klasse
                      22 bis 29 Spieler hat. -->
@@ -5914,6 +5924,48 @@
             el.removeAttribute('src');
             el.preload = 'none';
             el.load();   // erst load() ohne src gibt Puffer und Decoder frei
+        }
+
+        // Halloween 2026: bis einschliesslich 31.10. im Wechsel Horror-Trailer und
+        // Atmosphaere-Loop (je 60 s, ohne Ton), einer pro Durchlauf. ?halloweenan=1
+        // zeigt den Slot zum Ansehen auch ausserhalb des Zeitfensters.
+        const HALLOWEEN_VIDEOS = ['halloween_horror.mp4', 'halloween_atmosphere.mp4'];
+        const HALLOWEEN_LAENGE_MS = 60000;
+        let halloweenZaehler = 0;
+        function halloweenAktiv() {
+            if (/(?:^|[?&])halloweenan=1(?:&|$)/.test(location.search)) return true;
+            return new Date() < new Date(2026, 10, 1);   // lokal: bis 31.10. 23:59
+        }
+        function halloweenFreigeben() {
+            const el = document.getElementById('halloween-video');
+            if (!el || !el.getAttribute('src')) return;
+            try { el.pause(); } catch (e) {}
+            el.removeAttribute('src');
+            el.preload = 'none';
+            el.load();
+        }
+        function runHalloweenState(nextStateIndex) {
+            if (!halloweenAktiv()) { mediaStateIndex = nextStateIndex; runMasterSequence(); return; }
+            const el = document.getElementById('halloween-video');
+            let weitergeschaltet = false;
+            const advance = () => {
+                if (weitergeschaltet) return;
+                weitergeschaltet = true;
+                el.onended = null;
+                el.onerror = null;
+                mediaStateIndex = nextStateIndex;
+                runMasterSequence();
+            };
+            el.onended = advance;
+            el.onerror = advance;
+            later(advance, HALLOWEEN_LAENGE_MS + 8000);
+
+            el.muted = true;
+            el.setAttribute('src', HALLOWEEN_VIDEOS[halloweenZaehler++ % HALLOWEEN_VIDEOS.length]);
+            el.load();
+            document.getElementById('media-view-halloween').classList.add('active');
+            const playPromise = el.play();
+            if (playPromise && playPromise.catch) playPromise.catch(() => {});
         }
 
         // Ein Bild, das nicht laedt, meldet sich ueber onerror - nur so laesst
@@ -9982,6 +10034,7 @@
         // je Zyklus eines, reihum, direkt nach der grossen Folie. Gleiche Buehne
         // (Rahmen, Ambilight); an/aus, Dauer, Rahmen, Licht, wie oft: Chef-Handy.
         const PLAKAT_SLOT_INDEX = 0.6;
+        const HALLOWEEN_SLOT_INDEX = 0.7;   // hinter den Plakaten, vor dem Mittagsteller
         let plakatNr = 0;
         function runPlakatState() {
             if (werbungWert('plakate', 'an') === false) return false;
@@ -14982,6 +15035,7 @@
             // freigegeben (siehe dartFilmFreigeben) - ausser er ist als
             // Naechstes dran und puffert gerade vor.
             if (mediaStateIndex !== DART_FILM_INDEX) dartFilmFreigeben();
+            if (mediaStateIndex !== HALLOWEEN_SLOT_INDEX) halloweenFreigeben();
 
             // Roulette vom Handy geweckt: kommt vor Anheizer und Dart-Abend.
             // Danach geht es dort weiter, wo die Rotation sonst waere.
@@ -15107,9 +15161,13 @@
 
             } else if (mediaStateIndex === PLAKAT_SLOT_INDEX) {
                 // Plakate (werbung.json); ohne Plakat sofort weiter.
-                mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
+                mediaStateIndex = HALLOWEEN_SLOT_INDEX;
                 if (runPlakatState()) globalMasterTimer = later(runMasterSequence, werbungDauerMs('plakate'));
                 else runMasterSequence();
+
+            } else if (mediaStateIndex === HALLOWEEN_SLOT_INDEX) {
+                // Nur bis zum 31.10.2026; danach springt der Slot sofort weiter.
+                runHalloweenState(MITTAGSTELLER_SLOT_INDEX);
 
             } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {
                 const restzeit = mittagstellerRestzeitMs();
