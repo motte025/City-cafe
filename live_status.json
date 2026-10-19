@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-19T17:17:45Z",
+  "checked_at": "2026-10-19T17:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, HandsUp & Dance - zu Gast @turntable_doc | !tip ✨",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 MALLE MONTAG !koffer | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 MALLE MONTAG !koffer | !bier | !zug | !holy | #werbung",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, HandsUp & Dance - zu Gast @turntable_doc | !tip ✨",
       "game": "DJs"
     },
     {
