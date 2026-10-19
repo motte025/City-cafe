@@ -308,6 +308,7 @@
         <button type="button" class="still nur-chef" id="k-leeren">🧹 Bereinigen</button></div>
     <div id="schlange"></div>
     <div class="radio-hinweis">📻 Danach: Radio-Mix</div>
+    <button type="button" class="still breit nur-chef" id="k-mix-holen" hidden style="margin-top:8px">📥 Mix in die Warteschlange (verschieben / löschen)</button>
     <div id="radio-vorschau"></div>
 </section>
 
@@ -528,7 +529,12 @@
     }
 
     // ------------------------------------------------------------------ Reiter
-    function reiterZeigen(name) {
+    // Zurueck-Taste/-Geste am Handy geht Schritt fuer Schritt zurueck (Menue zu, Playlist zu,
+    // voriger Reiter) statt die Seite zu verlassen (Wunsch 19.10.2026).
+    var aktReiter = 'jetzt', popIgnorieren = false;
+    function reiterZeigen(name, ohneVerlauf) {
+        if (!ohneVerlauf && name !== aktReiter) history.pushState({ reiter: name }, '');
+        aktReiter = name;
         [].forEach.call(document.querySelectorAll('.reiter-inhalt'), function (s) { s.classList.toggle('aktiv', s.id === 'reiter-' + name); });
         [].forEach.call(document.querySelectorAll('nav.reiterleiste button'), function (b) { b.classList.toggle('aktiv', b.dataset.reiter === name); });
         window.scrollTo(0, 0);
@@ -623,7 +629,7 @@
 
     // Chef-Menue zu einem Song. eintrag = schon in der Schlange (dann nur nach vorn holen).
     // abHier: Funktion fuer "Ab hier abspielen" (Playlists, Warteschlange).
-    function menueZeigen(t, eintrag, abHier) {
+    function menueZeigen(t, eintrag, abHier, ausMix) {
         var hg = el('menue-hg'), box = el('menue-knoepfe');
         el('menue-titel').textContent = [t.songtitel || t.titel, t.kuenstler || t.kanal].filter(Boolean).join(' · ');
         box.innerHTML = '';
@@ -644,9 +650,13 @@
         if (t.videoId) knopf('📃 Zu Playlist hinzufügen', true, function () {
             setTimeout(function () { zuPlaylistMenue(t); }, 0);
         });
+        // Radio-Mix (Vorschau unter der Schlange): streichen bzw. ganzen Mix uebernehmen
+        if (ausMix) knopf('🗑️ Aus dem Mix entfernen', true, function () { musik('radioEntfernen', { videoId: t.videoId }); melden('🗑️ Aus dem Mix entfernt', 'ok'); });
+        if (ausMix) knopf('📥 Ganzen Mix in die Warteschlange', true, mixUebernehmen);
         knopf('Abbrechen', true, function () {});
         hg.classList.add('an');
     }
+    function mixUebernehmen() { musik('radioUebernehmen'); melden('📥 Radio-Mix kommt in die Warteschlange – dort verschieben und löschen', 'ok'); }
     // Song ans Ende einer Playlist haengen (Chef): Auswahl der Playlist im selben Menue.
     // Gespeichert wie beim Loeschen/Verschieben (yt/listen/<nr>, "bearbeitet").
     function zuPlaylistMenue(t) {
@@ -748,13 +758,35 @@
         hg.classList.add('an');
     });
     el('menue-hg').addEventListener('click', function (ev) { if (ev.target === el('menue-hg')) el('menue-hg').classList.remove('an'); });
-    function mehrKnopf(t, eintrag, abHier) {
+    // Offenes Menue = eigener Schritt im Verlauf: Zurueck schliesst es. Per Knopf geschlossen
+    // (und nicht gleich wieder geoeffnet, z. B. "Zu Playlist hinzufuegen"): Schritt wieder weg.
+    (function () {
+        var hg = el('menue-hg'), offen = false;
+        new MutationObserver(function () {
+            var an = hg.classList.contains('an');
+            if (an === offen) return;
+            offen = an;
+            if (an) { if (!(history.state && history.state.menue)) history.pushState({ reiter: aktReiter, menue: true }, ''); return; }
+            setTimeout(function () {
+                if (!hg.classList.contains('an') && history.state && history.state.menue) { popIgnorieren = true; history.back(); }
+            }, 60);
+        }).observe(hg, { attributes: true, attributeFilter: ['class'] });
+    })();
+    history.replaceState({ reiter: 'jetzt' }, '');
+    window.addEventListener('popstate', function (ev) {
+        if (popIgnorieren) { popIgnorieren = false; return; }
+        if (el('menue-hg').classList.contains('an')) { el('menue-hg').classList.remove('an'); return; }
+        var st = ev.state || {};
+        if (offenePlaylist && !st.pl) playlistSchliessen();
+        if ((st.reiter || 'jetzt') !== aktReiter) reiterZeigen(st.reiter || 'jetzt', true);
+    });
+    function mehrKnopf(t, eintrag, abHier, ausMix) {
         var b = document.createElement('button');
         b.type = 'button';
         b.className = 'mehrknopf';
         b.setAttribute('aria-label', 'Mehr');
         b.textContent = '⋯';
-        b.addEventListener('click', function (ev) { ev.stopPropagation(); menueZeigen(t, eintrag, abHier); });
+        b.addEventListener('click', function (ev) { ev.stopPropagation(); menueZeigen(t, eintrag, abHier, ausMix); });
         return b;
     }
 
@@ -946,10 +978,12 @@
             return '<div class="eintrag"><span class="nr">♪</span><div class="text"><div class="t">' + esc(t.songtitel || t.titel)
                 + '</div><div class="k">' + esc(t.kuenstler || t.kanal || '') + '</div></div></div>';
         }).join('');
-        if (istChef) radioTitel(5).forEach(function (t, i) { box.children[i].appendChild(mehrKnopf(t, null)); });
+        if (istChef) radioTitel(5).forEach(function (t, i) { box.children[i].appendChild(mehrKnopf(t, null, null, true)); });
+        el('k-mix-holen').hidden = !istChef || !radioTitel(1).length;
         passtZeigen();
     }
 
+    el('k-mix-holen').addEventListener('click', mixUebernehmen);
     el('k-pause').addEventListener('click', function () { musik('pauseUm'); });
     el('k-skip').addEventListener('click', function () { musik('skip'); melden('⏭ Übersprungen', ''); });
     el('k-zurueck').addEventListener('click', function () { musik('zurueck'); });
@@ -1139,6 +1173,7 @@
     // normale Treffer erscheinen (wuenschen / als Naechstes / ...).
     var offenePlaylist = null, playlistTreffer = [], erwarteteArt = '';
     function playlistOeffnen(p) {
+        if (!(history.state && history.state.pl)) history.pushState({ reiter: aktReiter, pl: true }, '');
         offenePlaylist = p;
         suchId = '';
         el('treffer').innerHTML = '';
@@ -1158,15 +1193,20 @@
         [].forEach.call(l.querySelectorAll('[data-a]'), function (b) {
             b.addEventListener('click', function () {
                 if (b.dataset.a === 'zurueck') {
-                    offenePlaylist = null;
-                    el('treffer-kopf').textContent = 'Playlists';
-                    zeigeTreffer(playlistTreffer);
+                    if (history.state && history.state.pl) { history.back(); return; }   // popstate schliesst
+                    playlistSchliessen();
                     return;
                 }
                 playlistSenden(offenePlaylist, b.dataset.a);
             });
         });
         return l;
+    }
+
+    function playlistSchliessen() {
+        offenePlaylist = null;
+        el('treffer-kopf').textContent = 'Playlists';
+        zeigeTreffer(playlistTreffer);
     }
 
     function zeigeTreffer(liste) {

@@ -9015,6 +9015,26 @@
                 ytmMelden();
                 return;
             }
+            if (was === 'radioEntfernen') { // Chef: einen Song aus dem laufenden Radio-Mix streichen
+                const vid = String(b.videoId || '');
+                ytm.radio = Object.assign({}, ytm.radio, { titel: (ytm.radio.titel || []).filter(t => t.videoId !== vid) });
+                ytmRadioMelden();
+                ytmAnzeigen();
+                return;
+            }
+            if (was === 'radioUebernehmen') {   // Chef: Mix in die Warteschlange (dort verschieb- und loeschbar)
+                if (!nlFernVerb) return;
+                const vor = YTW.vorschau(ytm, 25 + ytm.eintraege.length, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN })
+                    .filter(e => e.quelle === 'radio').slice(0, 25)
+                    .map(e => { const k = Object.assign({}, e); delete k.id; delete k.quelle; return k; });
+                if (!vor.length) return;
+                const weg = new Set(vor.map(t => t.videoId));
+                ytm.radio = Object.assign({}, ytm.radio, { titel: (ytm.radio.titel || []).filter(t => !weg.has(t.videoId)) });
+                ytmPlaylistEinreihen(vor, 'anhaengen', null, 'Radio-Mix');
+                ytmRadioMelden();
+                ytmAnzeigen();
+                return;
+            }
             if (was === 'sofort') {         // Chef: Song sofort spielen (Rest der Schlange bleibt)
                 if (!nlFernVerb) return;
                 let id = String(b.eintrag || '');

@@ -2651,8 +2651,10 @@ def main():
                         treffer = vorschlaege()
                     else:
                         treffer = suchen(text, anzahl)
-                        # Live-/Fan-/Lyric-/Audio-Uploads ans Ende, Reihenfolge sonst wie YouTube
-                        treffer = sorted(treffer, key=lambda t: musikvideo_wertung(t, text) < 0)
+                        # Live-/Fan-/Lyric-/Audio-Uploads ans Ende, sonst meistgesehene zuerst
+                        # (Wunsch 19.10.2026: Suche nach den Aufrufen)
+                        treffer = sorted(treffer, key=lambda t: (musikvideo_wertung(t, text) < 0,
+                                                                 -(t.get("aufrufe") or 0)))
                     if not gemischt and not shorts:
                         log(f"Suche {text!r}: {len(treffer)} Treffer")
                     # art bestaetigt, welche Suche wirklich lief: ein alter Supervisor
