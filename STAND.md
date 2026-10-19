@@ -59,7 +59,12 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
 - **Systemupdate W1 repariert (19.10.):** `pacman -Syu` brach seit mindestens 17.10. ab
   (`plasma-workspace 6.8` gegen `plasma-x11-session`). `plasma-x11-session` entfernt (Kiosk läuft unter
   sway), 108 Pakete eingespielt, Kernel 7.2.11, Plasma 6.8. Die Café-Dateien kamen trotzdem jeden Tag.
-- Offen: seltenes Überspringen eines Songs (doppeltes „Weiter“, Ursache unbekannt).
+- Offen: seltenes Überspringen eines Songs. Café-Log: 8 von 2794 Überblendungen abgebrochen (0,3 %).
+  „Weiter“ im Log = neuer Pause-Wunsch, den `ytmSpielen()` bei jedem Songstart setzt; zweimal
+  „Weiter“ in der Überblendung = die Seite hat zweimal einen Song gestartet. Erster Start:
+  Überblendungs-Faden → `nlVideoFertig()`. Zweiter: unbekannt (Kandidaten ⏭ am Handy, Taste
+  rechts/Medientaste, Playlist-Suche). Seit 9cbf281e schreibt der Supervisor bei jedem Abbruch
+  Grund und die letzten `ytmWeiter`-Aufrufer ins Log (`grep -A1 "abgebrochen"`).
 - Push nach `main` durch Claude: über `/permissions` für den konkreten Befehl freigegeben, sonst
   von der Berechtigungsprüfung gesperrt („Production Deploy“).
 
