@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-20T20:52:46Z",
+  "checked_at": "2026-10-20T21:02:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl - Patrik Berg Mensch & Maschine Special",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "colaway",
