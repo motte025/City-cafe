@@ -28,6 +28,19 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 20.10.2026: Berliner-Luft-Angebot im großen Medien-Widget
+
+- Originalmotiv `berliner_luft_3_euro.jpg` (1280×720, 16:9, „Ane aufs Aug“, 3 €).
+- In jedem normalen Rotationszyklus direkt nach Jägermeister/Puntigamer für feste
+  60 Sekunden (`runBerlinerLuftState`). Bei abgeschaltetem Jäger-Plakat läuft der
+  Berliner-Luft-Slot trotzdem. Gemeinsame Rotations-Timer für Pause/Abbruch.
+- Vollständig zentriert im 1280×815-Widget mit `object-fit: contain`, ohne Zoom,
+  Animation oder Beschnitt; oben/unten rund 48 px dunkler Rand, keine Hochskalierung
+  im 1920×1080-Dashboard. Vorlage unverändert übernommen.
+- Lokal geprüft: Chromium-Bildschirmfoto der Widget-Fläche, Bildmaße/contain/keine
+  Animation, JavaScript-Syntax, drei simulierte Zyklen mit je 60 s und Weiterlauf
+  bei abgeschaltetem Jäger-Plakat. Kein Zugriff auf den Café-Bildschirm.
+
 ## 18./19.10.2026: DJ-Modus (seit 19.10. 00:05 auf `main`)
 
 Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (mit `ssh w1`):

@@ -435,6 +435,11 @@
             will-change: transform;
         }
         .poster-image.active { opacity: 1; z-index: 2; }
+        /* Originalmotiv 1280x720: vollstaendig, ohne Zoom oder Beschnitt. */
+        #berlinerLuftImage {
+            width: 100%; height: 100%; object-fit: contain; display: block;
+        }
+        #media-view-berliner-luft { background: #020617; }
         #mittagsteller-fullscreen {
             display: none; position: absolute; inset: 0; z-index: 600;
             background: #21150c;
@@ -2708,6 +2713,11 @@
                     </div>
                 </div>
 
+                <div class="media-inner-view" id="media-view-berliner-luft">
+                    <img id="berlinerLuftImage" src="berliner_luft_3_euro.jpg"
+                         width="1280" height="720" alt="City Cafe: Ane aufs Aug – Berliner Luft um nur 3 €">
+                </div>
+
                 <div class="media-inner-view" id="media-view-musicslides">
                     <div class="poster-container">
                         <img class="poster-image active" id="musicSlide1" src="" alt="Musik-Slide 1">
@@ -3773,6 +3783,7 @@
         const POSTER_NACHT_URL = 'plakat_nacht.webp';
         const JAEGER_PUNTIGAMER_URL = 'jaeger.webp';
         const JAEGER_PUNTIGAMER_SECONDS = 30;
+        const BERLINER_LUFT_SECONDS = 60;
 
         // Musik-Atmosphäre-Slides (5 Bilder, je 6s mit Crossfade, im großen Media-Widget)
         const MUSIC_SLIDES_URLS = [
@@ -5402,12 +5413,12 @@
         }
 
         // Restliche Zykluszeit bis das jeweils ANDERE Trinkspiel drankommt:
-        // Nach V1 (Foto) kommt als nächstes V2: Jäger/Puntigamer(30s)+Tag/Nacht-Plakat(35s)+
-        // Calamari-Event(35s)+Musik(90s)+Getränke(20s) = 210s
+        // Nach V1 (Foto) kommt als nächstes V2: Jäger/Puntigamer(30s)+Berliner Luft(60s)+Tag/Nacht-Plakat(35s)+
+        // Calamari-Event(35s)+Musik(90s)+Getränke(20s) = 270s
         // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Musik(90s)+
         // Veranstaltungen(36s)+Musik-Slides(30s) = 176s, +25s Wetter-Übersicht, aber nur wenn die
         // zwischen 8-18 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
-        const GAP_AFTER_V1_TO_V2 = 210;
+        const GAP_AFTER_V1_TO_V2 = 210 + BERLINER_LUFT_SECONDS;
         const GAP_AFTER_V2_TO_V1_BASE = 176;
         function getGapAfterV2ToV1() {
             return GAP_AFTER_V2_TO_V1_BASE + (isWeatherWidgetHour() ? 25 : 0);
@@ -5419,24 +5430,32 @@
             document.getElementById('media-view-hypereel').classList.remove('active'); // V1 lag sonst noch drüber und verdeckte das Bild
             // Getraenkeplakat: am Chef-Handy abschaltbar, Dauer einstellbar.
             if (werbungWert('getraenke', 'an') === false) {
-                mediaStateIndex = nextStateIndex;
-                runMasterSequence();
+                runBerlinerLuftState(nextStateIndex);
                 return;
             }
             document.getElementById('media-view-jaeger').classList.add('active');
             document.getElementById('jaegerImage').src = JAEGER_PUNTIGAMER_URL;
 
+            later(() => runBerlinerLuftState(nextStateIndex), werbungDauerMs('getraenke'));
+        }
+
+        // In jedem Zyklus direkt nach Jaeger/Puntigamer, feste 60 Sekunden.
+        // Eigene .media-inner-view: bei Unterbrechungen baut der Master sie mit ab;
+        // later() unterstuetzt wie bei den anderen Slots Pause und Abbruch.
+        function runBerlinerLuftState(nextStateIndex) {
+            document.getElementById('media-view-jaeger').classList.remove('active');
+            document.getElementById('media-view-berliner-luft').classList.add('active');
             later(() => {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
-            }, werbungDauerMs('getraenke'));
+            }, BERLINER_LUFT_SECONDS * 1000);
         }
 
         function announcePolaroidHighlight(lastCard, nextStateIndex) {
             lastCard.classList.add('hr-pair-highlight');
 
             later(() => {
-                runJaegerPuntigamerState(nextStateIndex); // -> 30s Jäger/Puntigamer, dann erst wieder Plakat
+                runJaegerPuntigamerState(nextStateIndex); // -> Jäger/Puntigamer, Berliner Luft (60s), dann Plakat
                 startNextTrinkspielCountdown('V2', GAP_AFTER_V1_TO_V2);
             }, 15000);
         }
