@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T19:27:45Z",
+  "checked_at": "2026-10-20T19:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  After Work Stream on Tuesday w/ @alexvaganza from the Cherry Corner  🍒✨💞💋🌈",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Community Show mit @ericssl - Patrik Berg Mensch & Maschine Special",
       "game": "DJs"
     },
     {
@@ -34,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl - Patrik Berg Mensch & Maschine Special",
       "game": "DJs"
     }
   ]
