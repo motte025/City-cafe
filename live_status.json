@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T21:57:45Z",
+  "checked_at": "2026-10-20T22:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "couch potato !bewbs !wishlist !morestreams !ALT",
       "game": "DJs"
     }
   ]
