@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T14:52:45Z",
+  "checked_at": "2026-10-20T15:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🌸 MUTE MARATHON TAG 102 🌸 | Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
