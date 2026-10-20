@@ -11,7 +11,21 @@
 //   im Bild leuchtet die Taste schon (aus = entsaettigt), sonst leuchtet sie per Glow.
 // - Teile ohne Eintrag werden ausgeblendet; dort sieht man nur das Bild.
 
-const BILD = 'img/bild2-2x.webp';
+// Weitere Skins (21.10.2026): gleiche Oberflaeche in anderen Farben, mit Real-ESRGAN auf 4K
+// gerechnet und pixelgenau auf Bild 2 ausgerichtet (alle Masse und Flicken hier gelten fuer alle).
+// Auswahl per ?skin=<kuerzel>; ohne Angabe Bild 2.
+export const SKINS = {
+  'bild2': 'Bild 2 (Original)',
+  'amber-blau': 'Amber-Blau Kristall', 'blau-amber': 'Blau-Amber Kristall', 'tiefglas': 'Blau-Amber Tiefglas',
+  'gold': 'Gold', 'weiss': 'Schneeweiß', 'chrom': 'Chrom', 'ladys-tuerkis': 'Ladys Night Türkis',
+  'elfenbein': 'Elfenbein', 'carbon': 'Carbon', 'ladys-pink': 'Ladys Night Pink', 'onyx': 'Onyx',
+  'champagner': 'Champagner',
+};
+const SKIN_WAHL = (() => {
+  const s = new URLSearchParams(location.search).get('skin');
+  return s && s !== 'bild2' && Object.prototype.hasOwnProperty.call(SKINS, s) ? s : null;
+})();
+const BILD = SKIN_WAHL ? `img/skins/${SKIN_WAHL}.webp` : 'img/bild2-2x.webp';
 const BILD_W = 1672;
 export const F = 1920 / BILD_W;
 
@@ -20,7 +34,7 @@ const DECK_A = {
   rahmen: [18, 82, 524, 666],
   teile: [
     // Kopfzeile (INT = Tempo-Referenz fuer SYNC, wie die MASTER-Taste)
-    ['.deck-kanal', [36, 91, 120, 24]],
+    ['.deck-kanal', [36, 91, 120, 24], { tv: [34, 88, 118, 28] }],
     ['.deck-kopf-rest > .taste:nth-of-type(1)', [320, 90, 49, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(2)', [380, 90, 48, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(3)', [437, 90, 52, 28], { bild: true, an: true }],
@@ -103,7 +117,7 @@ const FLICKEN_A = [
   { ziel: [136, 179, 396, 22], quelle: [395, 179, 6, 22] },       // Genre/BPM/Key, Zeit
   { ziel: [28, 213, 508, 82], farbe: '#05070a' },             // Wellenform
   { ziel: [28, 296, 510, 22], farbe: '#05070a' },                   // Uebersicht + "16"
-  { ziel: [34, 347, 84, 36], quelle: [119, 347, 4, 36] },         // BPM-Zahl
+  { ziel: [34, 347, 84, 36], farbe: '#05080b' },              // BPM-Zahl
   { ziel: [140, 350, 68, 30], quelle: [208, 350, 3, 30] },        // Tempo-Zahl
   { ziel: [392, 354, 34, 26], quelle: [427, 354, 3, 26] },        // Key
   { ziel: [66, 427, 28, 236], farbe: '#06080b' },                 // Pegel-LEDs
@@ -120,7 +134,7 @@ const FLICKEN_A = [
 const DECK_B = {
   rahmen: [1130, 82, 525, 666],
   teile: [
-    ['.deck-kanal', [1145, 91, 120, 24]],
+    ['.deck-kanal', [1145, 91, 120, 24], { tv: [1141, 88, 118, 28] }],
     ['.deck-kopf-rest > .taste:nth-of-type(1)', [1428, 90, 49, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(2)', [1488, 90, 50, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(3)', [1549, 90, 54, 28], { bild: true, an: true }],
@@ -196,7 +210,7 @@ const FLICKEN_B = [
   { ziel: [1250, 179, 390, 22], quelle: [1495, 179, 6, 22] },
   { ziel: [1136, 213, 508, 82], farbe: '#05070a' },
   { ziel: [1134, 296, 512, 22], farbe: '#05070a' },
-  { ziel: [1550, 348, 90, 35], quelle: [1545, 348, 3, 35] },
+  { ziel: [1550, 348, 90, 35], farbe: '#05080b' },   // BPM-Zahl (Display ist in allen Skins dunkel)
   { ziel: [1462, 350, 68, 30], quelle: [1458, 350, 3, 30] },
   { ziel: [1247, 354, 34, 26], quelle: [1282, 354, 3, 26] },
   { ziel: [1579, 427, 29, 236], farbe: '#06080b' },
@@ -326,6 +340,8 @@ function bildAusschnitt(el, r) {
 export function skinAnwenden() {
   const buehne = document.getElementById('buehne');
   buehne.classList.add('skin');
+  // anderer Skin: dasselbe Bild auch fuer Knopf- und Faderkappen (CSS-Variable --bild)
+  if (SKIN_WAHL) { buehne.style.setProperty('--bild', `url(${BILD})`); buehne.dataset.skin = SKIN_WAHL; }
   for (const sek of buehne.children) {
     if (sek.tagName !== 'SECTION' && sek.tagName !== 'HEADER') continue;
     sek.classList.add('sektion');
