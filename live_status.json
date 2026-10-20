@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T15:57:46Z",
+  "checked_at": "2026-10-20T16:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Verstelltretung To The 90s mit @ericssl",
       "game": "DJs"
     }
   ]
