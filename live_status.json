@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-10-20T12:37:45Z",
+  "checked_at": "2026-10-20T12:52:46Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wunderschöner DIENSTAG   <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wunderschöner DIENSTAG   <3 - !dc !peepo !linktree !shop",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
