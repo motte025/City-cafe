@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T17:42:45Z",
+  "checked_at": "2026-10-20T17:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 HARDSTYLE in VALHALLA ☆ !naturtreu 🔴🔴",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 LETZTER STREAM vor Malle! !koffer | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 LETZTER STREAM vor Malle! !koffer | !bier | !zug | !holy | #werbung",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 HARDSTYLE in VALHALLA ☆ !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
