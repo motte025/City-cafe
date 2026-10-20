@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T20:37:46Z",
+  "checked_at": "2026-10-20T20:52:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁BirthdayStream in mein Geburtstag rein,,, – let’s celebrate the start of my new year together! 18+ !StreamerPotion꧂",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁BirthdayStream in mein Geburtstag rein,,, – let’s celebrate the start of my new year together! 18+ !StreamerPotion꧂",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
