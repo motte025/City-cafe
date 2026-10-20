@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T19:22:45Z",
+  "checked_at": "2026-10-20T19:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Community Show mit @ericssl - Patrik Berg Mensch & Maschine Special",
       "game": "DJs"
     }
   ]
