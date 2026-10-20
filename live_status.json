@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T14:32:46Z",
+  "checked_at": "2026-10-20T14:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s vs. 2010s - All In One -Live aus Studio 2",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 HARDSTYLE in VALHALLA ☆ !naturtreu 🔴🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 HARDSTYLE in VALHALLA ☆ !naturtreu 🔴🔴",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s vs. 2010s - All In One -Live aus Studio 2",
       "game": "DJs"
     },
     {
