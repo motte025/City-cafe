@@ -7906,6 +7906,11 @@
         // DJ-Modus: zuhause (Test) und im Cafe (freigeschaltet 19.10.2026 vom Betreiber).
         const YTM_DJ_ERLAUBT = NL_FERN_RAUM === 'zuhause' || NL_FERN_RAUM === 'city-cafe';
         let ytmDj = false;
+        // Skin des DJ Studios (dj-studio/js/skin.js SKINS, 21.10.2026), am Chef-Handy waehlbar
+        const YTM_DJ_SKINS = ['bild2', 'amber-blau', 'blau-amber', 'tiefglas', 'gold', 'weiss', 'chrom',
+                              'ladys-tuerkis', 'elfenbein', 'carbon', 'ladys-pink', 'onyx', 'champagner'];
+        let ytmDjSkin = 'bild2';
+        try { const g = localStorage.getItem('ytm-dj-skin'); if (YTM_DJ_SKINS.includes(g)) ytmDjSkin = g; } catch (e) {}
         // Rechte Karte im Widget: 'songs' = Aehnliche Songs, 'fotos' = Fotos aus der
         // Drive-Galerie, 'shorts' = YouTube Shorts (stumm). Der Chef schaltet am Handy um.
         let ytmSeite = 'songs';
@@ -8238,6 +8243,7 @@
                 pausiert: ytmPausiert,
                 vollbild: ytmVollbild,
                 dj: ytmDj,
+                djSkin: ytmDjSkin,
                 seite: ytmSeite,
                 shorts: ytmSeite === 'shorts' ? ytmShorts.status : '',   // ok | suche | leer (Hinweis am Handy)
                 ambi: ytmAmbi,
@@ -8957,6 +8963,15 @@
                 ytmMelden();
                 return;
             }
+            if (was === 'djSkin') {         // Chef: Skin des DJ Studios; laeuft der DJ-Modus, Studio neu laden
+                const s = String(b.skin || '');
+                if (!YTM_DJ_SKINS.includes(s) || s === ytmDjSkin) return;
+                ytmDjSkin = s;
+                try { localStorage.setItem('ytm-dj-skin', s); } catch (e) {}
+                if (document.querySelector('#ytm-dj iframe')) { ytmDjRahmen(false); ytmDjRahmen(ytmAktiv() && ytmDj && !ytmSpielPause); }
+                ytmMelden();
+                return;
+            }
             if (was === 'vollbild' || was === 'normal' || was === 'dj') {
                 // Erst dem Supervisor "Video ausblenden" sagen, 250 ms spaeter umbauen -
                 // so liegt das mpv-Fenster nie sichtbar an der alten Stelle.
@@ -9277,7 +9292,7 @@
             const rahmen = ebene.querySelector('iframe');
             if (an && !rahmen) {
                 const f = document.createElement('iframe');
-                f.src = 'dj-studio/?tv';
+                f.src = 'dj-studio/?tv' + (ytmDjSkin !== 'bild2' ? '&skin=' + encodeURIComponent(ytmDjSkin) : '');
                 f.setAttribute('tabindex', '-1');
                 ebene.insertBefore(f, ebene.firstChild);
             } else if (!an && rahmen) rahmen.remove();
@@ -9544,6 +9559,7 @@
                 if (jetzt) {
                     ytmVollbild = !!jetzt.vollbild;
                     ytmDj = YTM_DJ_ERLAUBT && !!jetzt.dj;
+                    if (YTM_DJ_SKINS.includes(jetzt.djSkin)) ytmDjSkin = jetzt.djSkin;
                     ytmSeite = (jetzt.seite === 'fotos' || jetzt.seite === 'shorts') ? jetzt.seite : 'songs';
                     ytmAmbi = !!jetzt.ambi;
                     ytm.gespielt = Array.isArray(jetzt.gespielt) ? jetzt.gespielt : [];

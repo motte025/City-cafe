@@ -73,6 +73,8 @@
         width: 100%; min-width: 0; padding: 16px 16px; font-size: 30px; border-radius: 14px;
         border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
     }
+    #dj-skin { width: 100%; padding: 14px 16px; font-size: 26px; border-radius: 14px;
+        border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff; }
     input[type=range] { width: 100%; margin: 6px 0 4px; accent-color: #2f6bff; height: 48px; }
     details { margin-top: 16px; background: #131a33; border: 1px solid #27325c; border-radius: 16px; padding: 14px 16px; }
     summary { font-size: 29px; font-weight: 700; cursor: pointer; padding: 6px 0; }
@@ -280,6 +282,24 @@
             <!-- DJ-Modus: TV zeigt das DJ Studio, Video im Studio-Fenster (zuhause und City Cafe) -->
             <div class="zeile2" id="dj-zeile" hidden>
                 <button type="button" class="still" id="k-dj">🎛 DJ-Modus</button>
+            </div>
+            <!-- Skin des DJ Studios (gilt, sobald der DJ-Modus laeuft; TV merkt ihn sich) -->
+            <div class="zeile2" id="dj-skin-zeile" hidden>
+                <select id="dj-skin" aria-label="Skin des DJ-Modus">
+                    <option value="bild2">🎨 Skin: Original</option>
+                    <option value="amber-blau">🎨 Amber-Blau Kristall</option>
+                    <option value="blau-amber">🎨 Blau-Amber Kristall</option>
+                    <option value="tiefglas">🎨 Blau-Amber Tiefglas</option>
+                    <option value="gold">🎨 Gold</option>
+                    <option value="weiss">🎨 Schneeweiß</option>
+                    <option value="chrom">🎨 Chrom</option>
+                    <option value="ladys-tuerkis">🎨 Ladys Night Türkis</option>
+                    <option value="elfenbein">🎨 Elfenbein</option>
+                    <option value="carbon">🎨 Carbon</option>
+                    <option value="ladys-pink">🎨 Ladys Night Pink</option>
+                    <option value="onyx">🎨 Onyx</option>
+                    <option value="champagner">🎨 Champagner</option>
+                </select>
             </div>
             <div class="zeile2">
                 <button type="button" class="still" id="k-shorts">📱 Shorts rechts</button>
@@ -808,6 +828,7 @@
         el('k-pause').textContent = jetzt && jetzt.pausiert ? '▶' : '⏸';
         el('k-ansicht').textContent = jetzt && jetzt.vollbild ? '▭ Normal' : '⛶ Vollbild';
         el('k-dj').textContent = jetzt && jetzt.dj ? '▭ Normal' : '🎛 DJ-Modus';
+        if (jetzt && jetzt.djSkin && document.activeElement !== el('dj-skin')) el('dj-skin').value = jetzt.djSkin;
         // Rechte Karte im Widget: Fotos aus der Drive-Galerie <-> Aehnliche Songs
         el('k-seite').textContent = jetzt && jetzt.seite === 'fotos' ? '🎶 Songs rechts' : '🖼️ Fotos rechts';
         el('k-shorts').textContent = jetzt && jetzt.seite === 'shorts' ? '📱 Shorts aus' : '📱 Shorts rechts';
@@ -1003,6 +1024,11 @@
     el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⇄ Blende zum nächsten Song …', ''); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
     el('dj-zeile').hidden = RAUM !== 'zuhause' && RAUM !== 'city-cafe';
+    el('dj-skin-zeile').hidden = el('dj-zeile').hidden;
+    el('dj-skin').addEventListener('change', function () {
+        musik('djSkin', { skin: el('dj-skin').value });
+        melden('🎨 Skin: ' + el('dj-skin').selectedOptions[0].textContent.replace('🎨 ', ''), 'ok');
+    });
     el('k-dj').addEventListener('click', function () { musik(jetzt && jetzt.dj ? 'normal' : 'dj'); });
     // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
     el('k-radio').addEventListener('click', function () {
