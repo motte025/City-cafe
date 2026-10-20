@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T16:17:45Z",
+  "checked_at": "2026-10-20T16:27:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wunderschöner DIENSTAG   <3 - !dc !peepo !linktree !shop",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Verstelltretung To The 90s mit @ericssl",
       "game": "DJs"
     },
     {
@@ -20,13 +20,6 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴🔴 HARDSTYLE in VALHALLA ☆ !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Verstelltretung To The 90s mit @ericssl",
       "game": "DJs"
     },
     {
