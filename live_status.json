@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T16:02:45Z",
+  "checked_at": "2026-10-20T16:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s vs. 2010s - All In One -Live aus Studio 2",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Verstelltretung To The 90s mit @ericssl",
       "game": "DJs"
     },
     {
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s vs. 2010s - All In One -Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Verstelltretung To The 90s mit @ericssl",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
