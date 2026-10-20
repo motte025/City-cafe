@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-20T12:52:46Z",
+  "checked_at": "2026-10-20T13:07:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner  🍒✨💞💋🌈",
       "game": "DJs"
     }
   ]
