@@ -8596,6 +8596,13 @@
         function ytmNorm(s) {
             return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ß/g, 'ss').replace(/[^a-z0-9]/g, '');
         }
+        // Tausch nur gegen ein Video desselben Kuenstlers: fuer Ambros "Schifoan" (Fan-Video, 92.000
+        // Aufrufe) kam sonst Metallica live in Wien mit "Schifoan" - Titel passte, Kuenstler nicht (21.10.2026).
+        function ytmKuenstlerPasst(treffer, kuenstler) {
+            const k = ytmNorm(String(kuenstler || '').split(/,|&| feat\.?| ft\.?| x /i)[0]);
+            if (!k) return true;
+            return ytmNorm(treffer.titel).includes(k) || ytmNorm(treffer.kanal).includes(k);
+        }
         function ytmFanUpload(e) {
             const aufrufe = Number(e.aufrufe) || 0;
             if (!aufrufe || aufrufe >= 100000) return false;
@@ -8735,7 +8742,8 @@
                 ytmFindeLaeuft = null;
                 // Treffer zu einem anderen Song (nur bei einem Tausch, nicht bei der freien Suche)
                 // verwerfen: dann bleibt das bisherige Video.
-                if (f.treffer && w.eintrag.videoId && !ytmTitelPasst(f.treffer.titel, w.eintrag.songtitel)) {
+                if (f.treffer && w.eintrag.videoId && (!ytmTitelPasst(f.treffer.titel, w.eintrag.songtitel)
+                        || !ytmKuenstlerPasst(f.treffer, w.eintrag.kuenstler) || ytmKeinMusikvideo(f.treffer))) {
                     console.log('[Musik] gefundenes Video passt nicht zum Song:', f.treffer.titel);
                     if (w.gleichSpielen && ytmAktiv()) ytmSpielen(w.eintrag);
                     return;
