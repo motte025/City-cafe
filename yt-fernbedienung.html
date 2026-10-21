@@ -414,9 +414,6 @@
         <div class="hinweis">Alle Songs bringt der Screen automatisch auf dieselbe Lautstärke (ohne Übersteuern).</div>
         <div class="feldname">Limiter (sehr leise Songs bis 2 dB mehr)</div>
         <div class="zeiten" id="limiter"></div>
-        <div class="feldname">Überblendung zwischen Songs</div>
-        <div class="zeiten" id="blende"></div>
-        <div class="hinweis">Kurz: die Songs überlappen kaum, die Beats stoßen sich nicht.</div>
     </details>
     <details class="nur-chef">
         <summary>⏩ Vor- und zurückspulen</summary>
@@ -1611,11 +1608,8 @@
     }
     reihe('limiter', [{ wert: true, text: 'An' }, { wert: false, text: 'Aus' }], true,
           function (w) { senden({ aktion: 'ton', limiter: w }); });
-    reihe('blende', [{ wert: 4, text: 'Kurz 4 s' }, { wert: 6, text: 'Mittel 6 s' }, { wert: 9, text: 'Lang 9 s' }], 4,
-          function (w) { senden({ aktion: 'ton', blende: w }); });
-    ['limiter', 'blende'].forEach(function (box) {
-        [].forEach.call(el(box).children, function (k, i) { k.dataset.wert = String([[true, false], [4, 6, 9]][box === 'limiter' ? 0 : 1][i]); });
-    });
+    // Ueberblendung: seit 21.10.2026 fest 9 s, genau berechnet (Supervisor) - keine Einstellung mehr.
+    [].forEach.call(el('limiter').children, function (k, i) { k.dataset.wert = String([true, false][i]); });
     // Lautstaerke-Stufen: bis 70 % in 5er-, darueber in 3er-Schritten (70, 73 ... 97, 100).
     var LAUT_STUFEN = [];
     for (var ls = 0; ls < 70; ls += 5) LAUT_STUFEN.push(ls);
@@ -1775,7 +1769,6 @@
                 el('laut-jetzt').textContent = s.lautstaerke + ' %';
             }
             if (typeof s.limiter === 'boolean') tonReiheZeigen('limiter', s.limiter);
-            if (typeof s.blende === 'number') tonReiheZeigen('blende', s.blende);
             if (s.bluetooth && typeof s.bluetooth === 'object') {
                 el('btstatus').textContent = s.bluetooth.text || (s.bluetooth.verbunden ? 'verbunden' : 'nicht verbunden');
             }

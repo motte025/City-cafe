@@ -20,10 +20,11 @@
 
 import { state, bestaetigen } from './store.js';
 
-// Ton-Fenster der Ueberblendung wie im Supervisor (XF_TON_FENSTER_SEK, DJ-Kurve 16.10.2026):
-// der Ton wechselt nur kurz in der Mitte der Blende - genau dann faehrt der Crossfader.
+// Ueberblendung wie im Supervisor (seit 21.10.2026 fest 9 s, genau berechnet): der Ton wechselt
+// in XF_TON_FENSTER_SEK ab dem Musikanfang des neuen Songs (dann endet die Musik des alten) -
+// genau dann faehrt der Crossfader. Der Songwechsel kommt, wenn der neue Song losgeht.
 const XF_TON_FENSTER_SEK = 2.0;
-let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV: 4/6/9 s, kommt mit)
+const xfSek = 9;             // Notbremse: so lange laeuft der alte Song hoechstens aus
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
 // Pegelanzeige: Kanaele und Master zeigen, was aus der Anlage kommt - Song x Lautheitsanpassung
@@ -124,7 +125,8 @@ export function tvBauen(engine) {
       // Marken (Supervisor-Analyse): Musik beginnt, Ueberblendung beginnt (Ende - Blende), Ende
       anfang: Array.isArray(t.ton) && t.ton[2] > 0.3 ? t.ton[2] : null,
       // ohne gefundene Schlussstille blendet der Supervisor vor dem Dateiende (stille_ende)
-      mixAb: Array.isArray(t.ton) && (t.ton[3] || t.dauer) ? Math.max(0, (t.ton[3] || Number(t.dauer)) - xfSek) : null,
+      // MIX = Beginn des Tonwechsels (Musikende - Ton-Fenster), wie im Supervisor
+      mixAb: Array.isArray(t.ton) && (t.ton[3] || t.dauer) ? Math.max(0, (t.ton[3] || Number(t.dauer)) - XF_TON_FENSTER_SEK) : null,
       ende: Array.isArray(t.ton) ? (t.ton[3] || Number(t.dauer) || null) : null,
       quelle: 'YOUTUBE', wf: sp ? sp.wf : null,
       wfHinweis: 'YOUTUBE · WELLENFORM WIRD GEMESSEN',
@@ -146,7 +148,6 @@ export function tvBauen(engine) {
   function empfangen(d) {
     const j = d.jetzt && d.jetzt.videoId ? d.jetzt : null;
     naechster = d.naechster || null;
-    if ([4, 6, 9].includes(d.blende)) xfSek = d.blende;
     if (typeof d.vol === 'number' && d.vol !== vol) {
       vol = Math.max(0, Math.min(100, d.vol));
       engine.request('master.volume', 0.8 * lautFaktor());   // Knopf: 0,8 = 0 dB
@@ -158,7 +159,7 @@ export function tvBauen(engine) {
     if (j && aktuell && aktuell.videoId !== j.videoId) {
       // Songwechsel: der andere Kanal uebernimmt, der alte laeuft in der Blende aus.
       const alt = luft;
-      auslauf = { id: alt, pos: state.decks[alt].pos, zeit: t, bis: t + xfSek };
+      auslauf = { id: alt, pos: state.decks[alt].pos, zeit: t, bis: t + xfSek + 3 };
       luft = anderer(alt);
       blende = { von: state.master.crossfader, nach: luft === 'A' ? -1 : 1, ab: t };
       stand = { pos, zeit: t, spielt }; nachziehen = 0;
@@ -291,11 +292,15 @@ export function tvBauen(engine) {
         }
       }
       if (blende) {
-        const lauf = t - blende.ab, fenster = Math.min(XF_TON_FENSTER_SEK, xfSek * 0.4);
-        const q = Math.min(1, Math.max(0, (lauf - (xfSek - fenster) / 2) / fenster));
+        // Crossfader faehrt, wenn der neue Song (Position!) seinen Musikanfang erreicht
+        const neu = state.decks[luft], anfang = (neu.track && neu.track.anfang) || 0;
+        const q = Math.min(1, Math.max(0, (neu.pos - anfang) / XF_TON_FENSTER_SEK));
         // Crossfader-Kurve 'weich' = gleiche Leistung (cos/sin) wie die Ton-Blende von mpv
         engine.request('master.crossfader', blende.von + (blende.nach - blende.von) * q);
-        if (lauf >= xfSek) blende = null;
+        if (q >= 1 || t - blende.ab >= xfSek + 3) {
+          blende = null;
+          if (auslauf) auslauf.bis = Math.min(auslauf.bis, t + 0.3);   // alter Kanal ist ab hier stumm
+        }
       }
     },
   };

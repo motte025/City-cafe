@@ -7534,8 +7534,9 @@
         // Ton des Nightlife-Videos: Lautstaerke 0-100 und Lautheitsausgleich.
         // Gilt fuer mpv wie fuers Embed und ueberlebt einen Neustart der Seite.
         // limiter: sehr leise Songs bis 2 dB ueber die Spitzen anheben (Supervisor),
-        // blende: Ueberblendung zwischen Songs in Sekunden (4/6/9) - beides 16.10.2026.
-        let nlTon = { vol: 100, lautheit: false, limiter: true, blende: 4 };
+        // blende: Ueberblendung zwischen Songs in Sekunden - seit 21.10.2026 fest 9 s (der
+        // Supervisor rechnet den Punkt genau aus), am Handy nicht mehr einstellbar.
+        let nlTon = { vol: 100, lautheit: false, limiter: true, blende: 9 };
         function nlTonWunschSetzen(id) {
             window.nlTonWunsch = { id, vol: nlTon.vol, lautheit: nlTon.lautheit, limiter: nlTon.limiter, blende: nlTon.blende };
         }
@@ -7552,7 +7553,7 @@
             configurable: true,
             set(v) { nlTonBasis = v; },
             get() {
-                const basis = nlTonBasis || { id: 'standard', vol: 100, lautheit: false, limiter: true, blende: 4 };
+                const basis = nlTonBasis || { id: 'standard', vol: 100, lautheit: false, limiter: true, blende: 9 };
                 let djLaeuft = false;
                 try { djLaeuft = mediaStateIndex === DJ_SLOT_INDEX; } catch (e) {}
                 if (!djStumm || !djLaeuft) return basis;
@@ -7565,7 +7566,6 @@
                 nlTon.vol = Math.max(0, Math.min(100, Number(gespeichert.vol) || 100));
                 nlTon.lautheit = false;   // Ausgleich abgeschafft: leise Songs hebt der Supervisor an
                 if (typeof gespeichert.limiter === 'boolean') nlTon.limiter = gespeichert.limiter;
-                if ([4, 6, 9].includes(gespeichert.blende)) nlTon.blende = gespeichert.blende;
                 nlTonWunschSetzen('gespeichert');
             }
         } catch (e) {}
@@ -7719,7 +7719,6 @@
                 }
                 nlTon.lautheit = false;   // Ausgleich abgeschafft (04.10.2026)
                 if (typeof befehl.limiter === 'boolean') nlTon.limiter = befehl.limiter;
-                if ([4, 6, 9].includes(Number(befehl.blende))) nlTon.blende = Number(befehl.blende);
                 nlTonWunschSetzen(befehl.id);
                 try { nlPlayer.setVolume(nlTon.vol); } catch (e) {}   // Rueckfall im Browser
                 try { localStorage.setItem('cityCafeNlTon', JSON.stringify(nlTon)); } catch (e) {}
@@ -9334,7 +9333,7 @@
             const jetzt = Object.assign(titel(ytm.jetzt), { dauer: st.dauer, pos, pausiert: ytmPausiert });
             try {
                 f.contentWindow.postMessage({ typ: 'ytm-dj', jetzt, naechster: vor[0] ? titel(vor[0]) : null,
-                                              schlange: vor.slice(1).map(titel), blende: Number(nlTon.blende) || 4,
+                                              schlange: vor.slice(1).map(titel), blende: 9,
                                               vol: Number(nlTon.vol) || 0 },
                                             location.origin);
                 // Messwerte des Supervisors (Wellenform, BPM, Pegel) je Song einmal weitergeben

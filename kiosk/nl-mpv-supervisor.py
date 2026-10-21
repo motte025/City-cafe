@@ -115,12 +115,16 @@ MPV_SOCK = "/tmp/mpv-nl.sock"
 # zweite der Haupt-Player: sein Socket wird auf MPV_SOCK umbenannt, und die
 # app_id wechselt zwischen "mpv" und "mpvxf" (MPV_APP["id"] = aktueller).
 MPV_SOCK_XF = "/tmp/mpv-nl-xf.sock"
-# Laenge der Ueberblendung: am Handy einstellbar (Ton: 4/6/9 s). Mit 9 s liefen beide
-# Songs ~4 s fast voll uebereinander und die Beats schlugen sich (16.10.2026) - kurz
-# ist deshalb der Standard.
-XF_SEK = 4
-XF_ERLAUBT = (4, 6, 9)
-XF_TON_FENSTER_SEK = 2.0   # so lange wechselt der Ton (beide hoerbar laut: ~1/3 davon)
+# Ueberblendung fest 9 s (Betreiber 21.10.2026, vorher am Handy 4/6/9 s), genau berechnet:
+# der Ton wechselt in den letzten XF_TON_FENSTER_SEK vor dem Musikende des alten Songs
+# (STILLE "ende"), und genau zu Beginn dieses Fensters ist der neue an seinem Musikanfang
+# (STILLE "anfang"). Davor laeuft der neue ab "anfang - 7 s" stumm im Bild ein. So gibt es
+# weder ein Loch (alter schon leise, neuer noch im Intro) noch zwei Songs uebereinander.
+# Der neue mpv startet XF_VORLAUF_SEK frueher angehalten und wird sekundengenau losgelassen -
+# seine Ladezeit (1-3 s, selten mehr) verschiebt den Punkt nicht mehr.
+XF_SEK = 9
+XF_TON_FENSTER_SEK = 2.0   # so lange wechselt der Ton (equal power, siehe ueberblenden)
+XF_VORLAUF_SEK = 6         # so viel frueher wird der neue Song angehalten geladen
 XF_START_FRIST = 15        # so lange darf der neue mpv bis zum ersten Bild brauchen (vorher 6)
 MPV_APP = {"id": "mpv"}
 # Watchdog: so lange darf mpv bis zum ersten Bild bzw. ohne Fortschritt
@@ -1396,17 +1400,16 @@ def ambi_schleife():
 
 
 def ueberblenden(xf, target, page_id, vol):
-    """Faden fuer die Ueberblendung: wartet, bis der neue mpv spielt, legt sein
-    (noch unsichtbares) Fenster ueber das alte, sagt dem Dashboard "naechster
-    Song" und blendet dann Ton und Bild ueber. xf["fertig"] = True am Ende,
-    xf["fehler"] = Grund (Text), wenn der neue nicht in Gang kommt."""
-    # Frist 15 s (vorher 6): selten braucht der neue Song laenger fuers erste Bild. Mit 6 s
-    # brach die Blende ab, der zweite Versuch startete einen frischen mpv (wieder zu langsam),
-    # und der Song kam nach der Schlussstille hart von 0 s. Der alte spielt solange weiter
-    # (Schlussstille greift nur ohne Blende); kommt der neue spaet, blendet es kurz (>= 2 s).
+    """Faden fuer die Ueberblendung: wartet, bis der neue (angehaltene) mpv geladen ist, legt
+    sein unsichtbares Fenster ueber das alte und laesst ihn genau so los, dass er am Beginn des
+    Ton-Fensters an seinem Musikanfang ist; das Fenster endet am Musikende des alten Songs.
+    Erst beim Loslassen erfaehrt das Dashboard "naechster Song". xf["fertig"] = True am Ende,
+    xf["fehler"] = Grund (Text), wenn der neue nicht in Gang kommt.
+    Zeitplan (Uhrzeit): t_ende = alter erreicht xf["ende"]; t_ton = t_ende - Fenster;
+    t_los = t_ton - (anfang - start) - so lange braucht der neue vom Start bis zur Musik."""
     frist = time.time() + XF_START_FRIST
     while time.time() < frist:
-        if xf["proc"].poll() is not None:
+        if xf["proc"].poll() is not None or xf.get("abbruch"):
             break
         if mpv_eigenschaft("time-pos", sock=MPV_SOCK_XF) is not None and place_mpv(target, xf["app"], sichtbar=False):
             break
@@ -1414,44 +1417,82 @@ def ueberblenden(xf, target, page_id, vol):
     else:
         xf["fehler"] = f"kein Bild nach {XF_START_FRIST} s"
         return
+    if xf.get("abbruch"):
+        return
     if xf["proc"].poll() is not None:
         xf["fehler"] = "neuer mpv beendet"
         return
     gebraucht = time.time() - xf["t0"]
-    if gebraucht > 3:
-        log(f"Ueberblendung: neuer Song spielt erst nach {gebraucht:.1f}s ({xf['vid']})")
+    if gebraucht > XF_VORLAUF_SEK:
+        log(f"Ueberblendung: neuer Song erst nach {gebraucht:.1f}s geladen ({xf['vid']})")
     place_mpv(target, xf["app"], sichtbar=False)
     rahmen_setzen(target, sock=MPV_SOCK_XF)
+
+    def t_ende():
+        """Uhrzeit, zu der der alte Song sein Musikende erreicht (aus seiner Position)."""
+        pos = mpv_eigenschaft("time-pos")
+        if isinstance(pos, (int, float)) and (pos < xf["ende"] or not xf.get("t_ende")):
+            xf["t_ende"] = time.time() + max(0.0, xf["ende"] - pos)   # danach steht der Zeitpunkt fest
+        return xf.get("t_ende") or time.time()
+
+    vorlauf = xf["anfang"] - xf["start"]          # neuer: vom Losgehen bis zum Musikanfang
+    # Warten bis zum Loslassen (alle 0,2 s neu aus der Position des alten gerechnet)
+    while not xf.get("abbruch"):
+        t_los = t_ende() - XF_TON_FENSTER_SEK - vorlauf
+        warte = t_los - time.time()
+        if warte <= 0.25:
+            if warte > 0:
+                time.sleep(warte)
+            break
+        time.sleep(min(0.2, warte - 0.2))
     if xf.get("abbruch"):
         return
+    # Zu spaet geladen: so weit vorspulen, dass der Musikanfang trotzdem am Fenster liegt
+    spaet = time.time() - (t_ende() - XF_TON_FENSTER_SEK - vorlauf)
+    if spaet > 0.3:
+        ziel = min(xf["anfang"], xf["start"] + spaet)
+        mpv_befehl("seek", round(ziel, 2), "absolute", sock=MPV_SOCK_XF)
+        log(f"Ueberblendung: {spaet:.1f}s zu spaet - neuer Song ab {ziel:.1f}s")
+    mpv_befehl("set_property", "pause", False, sock=MPV_SOCK_XF)
+    xf["laeuft"] = True
+    beginn = time.time()
     try:
         cdp_eval(page_id, "(() => { try { return !!nlVideoFertig(); } catch (e) { return false; } })()")
     except (OSError, ValueError, ConnectionError):
         pass
-    dauer = max(2.0, xf["dauer"] - (time.time() - xf["t0"]))
-    beginn = time.time()
+    neu_beginn = None
     while True:
         # Abgebrochen (Ueberspringen, Stopp, ...): sofort aufhoeren - sonst
         # drehte der Faden den inzwischen neu gestarteten Player leise.
         if xf.get("abbruch"):
             return
-        t = time.time() - beginn
-        p = min(1.0, t / dauer)
-        # DJ-Kurve (16.10.2026): der Ton wechselt nur in einem kurzen Fenster um die Mitte
-        # der Blende, wo der neue Song mit seiner Musik einsetzt - davor bleibt der alte
-        # voll, danach ist er weg. Ueber die ganze Blende verteilt liefen beide Songs ein
-        # Drittel der Zeit hoerbar gleichzeitig, und die Beats schlugen sich. Das Bild
-        # blendet weiter ueber die ganze Laenge.
-        # Im Fenster gleiche Gesamtlautstaerke (equal power): Amplituden cos/sin. mpv
-        # rechnet die Lautstaerke kubisch (Amplitude = (v/100)^3), daher die dritte Wurzel.
-        # Linear (v*(1-p) / v*p) brach die Lautstaerke in der Mitte um ~12 dB ein.
-        fenster = min(XF_TON_FENSTER_SEK, dauer * 0.4)
-        q = min(1.0, max(0.0, (t - (dauer - fenster) / 2) / fenster))
+        jetzt = time.time()
+        ende = t_ende()
+        # Ton: equal power (Amplituden cos/sin) im Fenster vor dem Musikende des alten. Der
+        # Fensterbeginn folgt dem neuen Song: er beginnt, sobald der neue am Musikanfang ist
+        # (seine Position zaehlt - nicht die Uhr, falls er nach dem Loslassen kurz puffert).
+        npos = mpv_eigenschaft("time-pos", sock=MPV_SOCK_XF)
+        if neu_beginn is None and isinstance(npos, (int, float)) and npos >= xf["anfang"] - 0.05:
+            neu_beginn = jetzt - (npos - xf["anfang"])
+            apos = mpv_eigenschaft("time-pos")
+            log(f"Tonwechsel {xf['vid']}: neu bei {npos:.2f}s (Musik ab {xf['anfang']:.1f}s), alt bei "
+                + (f"{apos:.2f}s" if isinstance(apos, (int, float)) else "?") + f" (Musikende {xf['ende']:.1f}s)")
+        ton_ab = max(ende - XF_TON_FENSTER_SEK, neu_beginn if neu_beginn is not None else ende)
+        fenster = max(0.5, ende - ton_ab) if neu_beginn is not None else XF_TON_FENSTER_SEK
+        q = 0.0 if neu_beginn is None else min(1.0, max(0.0, (jetzt - ton_ab) / fenster))
         alt_a, neu_a = math.cos(q * math.pi / 2), math.sin(q * math.pi / 2)
+        # mpv rechnet die Lautstaerke kubisch (Amplitude = (v/100)^3), daher die dritte Wurzel.
         mpv_befehl("set_property", "volume", round(vol * max(0.0, alt_a) ** (1 / 3), 1))
         mpv_befehl("set_property", "volume", round(vol * max(0.0, neu_a) ** (1 / 3), 1), sock=MPV_SOCK_XF)
+        # Bild: vom Loslassen bis zum Ende des Ton-Fensters
+        p = min(1.0, max(0.0, (jetzt - beginn) / max(0.5, ton_ab + fenster - beginn)))
         sway(f'[app_id="{xf["app"]}"]', "opacity", f"{p:.2f}")
-        if p >= 1.0:
+        if q >= 1.0 and p >= 1.0:
+            break
+        if jetzt - beginn > XF_SEK + 15:          # Notbremse (alter haengt): Ton sofort ganz rueber
+            mpv_befehl("set_property", "volume", vol, sock=MPV_SOCK_XF)
+            sway(f'[app_id="{xf["app"]}"]', "opacity", "1")
+            log(f"Ueberblendung: Notbremse ({xf['vid']})")
             break
         time.sleep(0.1)
     xf["fertig"] = True
@@ -2377,7 +2418,6 @@ def main():
     ton_vol = 100         # Lautstaerke des Videos in Prozent
     ton_lautheit = False  # Lautheitsausgleich an?
     ton_limiter = True    # Limiter fuer sehr leise Songs (Handy)
-    xf_sek = XF_SEK       # Laenge der Ueberblendung (Handy)
     streamlink_da = os.path.exists(STREAMLINK)
     letzte_antwort = time.time()   # wann der Browser zuletzt geantwortet hat
     letzter_neustart = 0.0
@@ -2479,9 +2519,8 @@ def main():
                         mpv_befehl("af", "clr", "")
             ton_lautheit = neu_lautheit
             ton_limiter = ton.get("limiter") is not False
-            xf_sek = int(ton.get("blende") or XF_SEK) if int(ton.get("blende") or XF_SEK) in XF_ERLAUBT else XF_SEK
             log(f"Ton: {ton_vol} %, Lautheitsausgleich {'an' if ton_lautheit else 'aus'}, "
-                f"Limiter {'an' if ton_limiter else 'aus'}, Blende {xf_sek} s")
+                f"Limiter {'an' if ton_limiter else 'aus'}, Blende {XF_SEK} s (fest)")
 
         # Vor-/Zuruecksprung vom Handy im laufenden Video.
         sprung = state.get("spulen") or {}
@@ -2507,7 +2546,15 @@ def main():
                 mpv_befehl("set_property", "pause", pausiert)
                 # Pause ist kein Stillstand: der Waechter soll nicht eingreifen.
                 last_progress = time.time()
-            if xf is not None and pausiert:
+            if xf is not None and pausiert and not xf.get("laeuft"):
+                # Pause, waehrend der neue Song noch angehalten wartet: Blende verwerfen -
+                # das Dashboard ist noch beim alten Song; nach "Weiter" wird neu vorbereitet.
+                xf["abbruch"] = True
+                stop(xf["proc"])
+                mpv_befehl("set_property", "keep-open", "no")
+                log(f"Ueberblendung verworfen (Pause vor dem Start): {xf['vid']}")
+                xf = None
+            elif xf is not None and pausiert:
                 # Pause mitten in der Ueberblendung: Uebergabe sofort abschliessen,
                 # der neue Song (laut Dashboard schon "jetzt") wird angehalten.
                 mpv_befehl("set_property", "pause", True, sock=MPV_SOCK_XF)
@@ -2805,6 +2852,15 @@ def main():
             resolver.start()
 
         # Ueberblendung abschliessen oder abbrechen
+        if (xf is not None and not xf.get("laeuft")
+                and str((state.get("vorladen") or {}).get("videoId") or "") not in ("", xf["vid"])):
+            # Die Seite hat ihren naechsten Song geaendert (neue Mix-Liste, Wunsch ...), waehrend
+            # der vorbereitete noch angehalten wartet: verwerfen, unten neu vorbereiten.
+            xf["abbruch"] = True
+            stop(xf["proc"])
+            log(f"Ueberblendung neu vorbereiten: Seite will jetzt {(state.get('vorladen') or {}).get('videoId')} "
+                f"statt {xf['vid']}")
+            xf = None
         if xf is not None:
             neu_lebt = xf["proc"].poll() is None
             if xf.get("fehler") or not neu_lebt or (want != shown and want != "yt:" + xf["vid"]):
@@ -3030,24 +3086,33 @@ def main():
             log(f"Schlussstille erreicht ({shown}) - naechster Song")
             mpv_befehl("quit")
 
-        # Ueberblendung starten: XF_SEK vor Songende, wenn der naechste Song schon
-        # vorgeladen ist (Dashboard: nlMusikVorladen, 60 s vor Schluss).
+        # Ueberblendung vorbereiten: XF_SEK + XF_VORLAUF_SEK vor dem Musikende den naechsten
+        # Song angehalten laden (vorgeladen vom Dashboard: nlMusikVorladen, 60 s vor Schluss);
+        # den genauen Zeitpunkt rechnet ueberblenden().
         vor_x = state.get("vorladen") or {}
         n_vid = str(vor_x.get("videoId") or "")
         if (xf is None and musik and n_vid and shown and shown.startswith("yt:") and shown[3:] != n_vid
                 and mpv is not None and mpv.poll() is None and last_pos is not None and not pausiert
                 and mpv_dauer.get(shown) and not state.get("spiel")):
-            rest = stille_ende(shown[3:], mpv_dauer[shown]) - last_pos   # bis zur Schlussstille
+            ende_alt = stille_ende(shown[3:], mpv_dauer[shown])         # Musikende des alten
+            rest = ende_alt - last_pos
             n_key = schluessel_fuer(n_vid, int(vor_x.get("hoehe") or 0), int(vor_x.get("fps") or 0), True)
             # Chef am Handy: "Ueberblenden" mitten im Song - sobald der naechste Song
-            # aufgeloest ist, mit der normalen Blende (XF_SEK) hinueber.
+            # aufgeloest ist, mit der normalen Blende (XF_SEK) hinueber: der Ton wechselt
+            # dann XF_VORLAUF_SEK + XF_SEK - XF_TON_FENSTER_SEK spaeter.
             blend = state.get("blenden") or {}
-            blend_jetzt = bool(blend.get("id")) and blend.get("id") != blend_erledigt and rest > xf_sek
+            blend_jetzt = (bool(blend.get("id")) and blend.get("id") != blend_erledigt
+                           and rest > XF_SEK + XF_VORLAUF_SEK)
             if blend_jetzt and n_key in cache:
                 blend_erledigt = blend.get("id")
-                rest = xf_sek
+                rest = XF_SEK + XF_VORLAUF_SEK
+                ende_alt = last_pos + rest
                 log(f"Ueberblenden auf Wunsch ({shown[3:]} bei {last_pos:.0f}s)")
-            if 2.0 < rest <= xf_sek and n_key in cache:
+            if 2.0 < rest <= XF_SEK + XF_VORLAUF_SEK and n_key in cache:
+                # Neuer Song: angehalten ab "Musikanfang - (XF_SEK - Ton-Fenster)", damit er
+                # 7 s stumm im Bild einlaeuft und am Fensterbeginn genau seine Musik beginnt.
+                n_anfang = float((STILLE.get(n_vid) or {}).get("anfang") or 0.0)
+                n_start = max(0.0, n_anfang - (XF_SEK - XF_TON_FENSTER_SEK))
                 video_url, audio_url, _laenge = cache[n_key]
                 neu_app = "mpvxf" if MPV_APP["id"] == "mpv" else "mpv"
                 xf_args = ["mpv", f"--hwdec={MPV_HWDEC}", "--vo=gpu", f"--profile={MPV_PROFILE}", "--sid=no",
@@ -3060,10 +3125,7 @@ def main():
                            "--really-quiet", f"--input-ipc-server={MPV_SOCK_XF}",
                            "--log-file=/home/citycafe/mpv-xf.log", "--volume=0",
                            "--title=xf-ein", f"--wayland-app-id={neu_app}",
-                           # So frueh starten, dass der Musikbeginn des neuen Songs in die Mitte
-                           # der Ueberblendung faellt: kein Loch (vorher am Ende: bis -10 dB, wenn
-                           # davor eine leise Filmszene lief), Saenger nicht schon mitten im Gesang.
-                           f"--start={max(0.0, ((STILLE.get(n_vid) or {}).get('anfang') or 0) - rest / 2):.2f}"]
+                           "--pause", f"--start={n_start:.2f}"]
                 xf_args += ton_args(n_vid, ton_limiter)   # Lautheit angleichen
                 if ton_lautheit:
                     xf_args.append(f"--af={LAUTHEIT_FILTER}")
@@ -3081,12 +3143,14 @@ def main():
                 # Der alte bleibt am Dateiende stehen statt sich zu beenden: braucht der neue
                 # lange (bis XF_START_FRIST), fiele das Ende sonst in "mpv beendet" -> Browser-Player.
                 mpv_befehl("set_property", "keep-open", "yes")
-                xf = {"proc": proc, "vid": n_vid, "app": neu_app, "t0": time.time(), "dauer": rest - 0.3,
+                xf = {"proc": proc, "vid": n_vid, "app": neu_app, "t0": time.time(),
+                      "ende": ende_alt, "anfang": n_anfang, "start": n_start,
                       "ton": ton_zustand(n_vid, ton_limiter),
                       "blur": xf_blur}
                 threading.Thread(target=ueberblenden, args=(xf, dict(target), page_id, ton_vol),
                                  daemon=True).start()
-                log(f"Ueberblendung: {shown[3:]} -> {n_vid} ({rest:.1f}s)")
+                log(f"Ueberblendung: {shown[3:]} -> {n_vid} (Musikende alt {ende_alt:.1f}s in {rest:.1f}s, "
+                    f"neu ab {n_start:.1f}s, Musik ab {n_anfang:.1f}s)")
 
         # Lebenszeichen ans Dashboard (siehe nlExtern()/djExtern() in index.html):
         # nur wenn mpv spielen kann, startet der Slot seinen Browser-Player nicht.
@@ -3117,7 +3181,7 @@ def main():
                                     "dauer": stille_ende(shown[3:], mpv_dauer.get(shown)), "pause": pausiert})
         # Waehrend der Ueberblendung ist fuers Dashboard schon der neue Song "jetzt":
         # dessen Stand melden - sonst stand der Fortschrittsbalken 9 s auf 0 und sprang.
-        if xf is not None and musik:
+        if xf is not None and xf.get("laeuft") and musik:
             xp = mpv_eigenschaft("time-pos", sock=MPV_SOCK_XF)
             xd = mpv_eigenschaft("duration", sock=MPV_SOCK_XF)
             if isinstance(xp, (int, float)):
