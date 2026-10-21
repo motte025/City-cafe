@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-21T14:02:47Z",
+  "checked_at": "2026-10-21T14:22:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Bergfest mit Techno, (Hard)Trance, EDM | !holy",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wunderschöner Mittwoch   <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Bergfest mit House, Techno, (Hard)Trance, EDM | !holy",
       "game": "DJs"
     },
     {
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Harderstyles Mittwoch <3  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Harderstyles Mittwoch <3  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
