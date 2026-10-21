@@ -4,7 +4,7 @@ Für die nächste Claude-Code-Sitzung. Zuerst diese Datei lesen, dann `README.md
 Gesprächssprache: Deutsch. Seit 19.10. 00:05 ist der DJ-Modus auf **`main`**, seit 19.10. auch im
 Café freigeschaltet (`YTM_DJ_ERLAUBT` für `zuhause` und `city-cafe`).
 
-## 0. Neu am 21.10.2026 (Branch `dj-skins` → `main`)
+## 0. Neu am 21.10.2026 (Branch `dj-skins`, seit 21.10. auf `main`, Merge `4fb5f61b`)
 
 Vollständig mit allen Werten in **`STAND.md`, Abschnitt „21.10.2026“**. Kurz, was ein Nachfolger
 wissen muss:

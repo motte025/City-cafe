@@ -5,7 +5,7 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 21. Oktober 2026 (Branch `dj-skins`, **noch nicht auf `main`**: 13 Skins fürs
+Letzte Durchsicht: 21. Oktober 2026 (seit 21.10. auf **`main`**, Merge `4fb5f61b`: 13 Skins fürs
 DJ Studio mit Auswahl am Handy, Meter/Fader/MIX-Felder pixelgenau, Überblendung fest 9 s genau am
 Musikende, Lautheit −14 LUFS, Taktraster/Welle genau und ruhig, Lyrics-Suche, Handy-Songs werden
 nie getauscht – alles im Abschnitt „21.10.2026“). Davor, 19. Oktober (DJ-Modus im Café freigeschaltet, W1 gemessen und
@@ -31,12 +31,15 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
-## 21.10.2026: DJ-Skins, Überblendung 9 s, Lautheit −14 LUFS, Welle (Branch `dj-skins`)
+## 21.10.2026: DJ-Skins, Überblendung 9 s, Lautheit −14 LUFS, Welle (auf `main`)
 
-**Stand:** alles auf dem Branch `dj-skins` (GitHub), **nicht auf `main`** – im Café ist nichts
-davon. Getestet am Test-Kiosk zuhause (`martin-ser`). Nach `main` nur mit Freigabe des Betreibers
-(Push über `/permissions`). **Beim Merge im Café: Endstufe um ~3 dB lauter** (Lautheit −14 statt
-−11 LUFS, siehe unten) und den Anzeige-Vorlauf der Welle einmal abgleichen (`AUFTRAG-W1.md`).
+**Stand:** entwickelt auf dem Branch `dj-skins`, getestet am Test-Kiosk zuhause (`martin-ser`),
+am 21.10. auf Wunsch des Betreibers nach **`main`** gebracht (Merge `4fb5f61b`, Push 27783599).
+Die TV-Seite im Café lädt sich neu, sobald keine Musik läuft; **der Supervisor kommt erst mit dem
+Update am 22.10. um 8:30** – bis dahin läuft im Café die neue Seite mit dem alten Supervisor
+(alte Überblendung mit 9 s, Lautheit −11 LUFS, Pegelanzeige ~3 dB höher). **Danach im Café:
+Endstufe um ~3 dB lauter** (Lautheit −14 statt −11 LUFS) und den Anzeige-Vorlauf der Welle einmal
+abgleichen – Anleitung für die Windows-Sitzung: `dj-studio/AUFTRAG-W1.md`.
 Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
 
 ### Skins (DJ Studio)
