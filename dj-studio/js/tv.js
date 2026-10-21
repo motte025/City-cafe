@@ -216,6 +216,12 @@ export function tvBauen(engine) {
     const e0 = (d.e || []).find(i => i >= 0 && i < n);
     return { bpm, offset: e0 !== undefined ? zeiten[e0] : zeiten[0], zeiten, eins, herkunft: 'beat_this' };
   }
+  // vom Supervisor (W1 rechnet selbst mit beat_this) - hat Vorrang vor der Datei im Repo
+  function taktNeu(vid, d) {
+    if (!/^[A-Za-z0-9_-]{11}$/.test(vid || '') || !d || !Array.isArray(d.b) || d.b.length <= 8) return;
+    takte.set(vid, taktAus(d));
+    neuZeigen(vid);
+  }
   function taktLaden(vid) {
     if (takte.has(vid) || !/^[A-Za-z0-9_-]{11}$/.test(vid)) return;
     takte.set(vid, 'laedt');
@@ -343,6 +349,7 @@ export function tvBauen(engine) {
     try {
       if (e.data.typ === 'ytm-dj') empfangen(e.data);
       else if (e.data.typ === 'ytm-dj-spur') spurNeu(e.data.spur);
+      else if (e.data.typ === 'ytm-dj-takt') taktNeu(e.data.videoId, e.data.takt);
     } catch (err) { console.error('[DJ Studio TV]', err); }
   });
 

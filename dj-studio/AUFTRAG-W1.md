@@ -60,7 +60,35 @@ iframe, gleicher Ursprung), wirkt nach ≤ 1 s, **ohne Neuladen, ohne Musikunter
   auf dem W1 als citycafe laufen lassen (Skript per `scp`, Pfad zum Socket `/tmp/mpv-nl.sock`).
   Zuhause: Studio − mpv im Mittel −0,02 s (ohne Vorlauf).
 
-## Aufgabe 3 – Skin im Café (nur auf Wunsch)
+## Aufgabe 3 – beat_this auf dem W1 einrichten (Takt und Eins, mit Freigabe, Café zu)
+
+Seit 21.10. rechnet der Supervisor für jeden gemessenen Song Schläge und Takt-Einsen mit
+**beat_this** (CPJKU, frei), wenn es in einer eigenen Python-Umgebung liegt – sonst wie bisher.
+Ergebnis `~/.cache/citycafe/takt/<id>.json`, an die Seite als `window.nlStudioTakte`. Zuhause
+getestet (Takt nach ~40 s, Studio übernimmt ihn). Einrichten als Benutzer `citycafe`:
+
+```sh
+ssh w1
+sudo -u citycafe -H sh -c '
+  python3 -m venv ~/.local/share/citycafe/beat-venv &&
+  ~/.local/share/citycafe/beat-venv/bin/pip install -q torch torchaudio --index-url https://download.pytorch.org/whl/cpu &&
+  ~/.local/share/citycafe/beat-venv/bin/pip install -q numpy soxr soundfile https://github.com/CPJKU/beat_this/archive/main.zip &&
+  ~/.local/share/citycafe/beat-venv/bin/python -c "from beat_this.inference import File2Beats; File2Beats(checkpoint_path=\"final0\", device=\"cpu\"); print(\"beat_this ok\")"'
+```
+(~1 GB; das Modell `final0` lädt beim letzten Befehl nach `~/.cache/torch/hub`. Zuhause:
+torch 2.14.1+cpu, torchaudio 2.11.0+cpu – torchaudio **muss** aus dem CPU-Index kommen, sonst
+„Could not load … _torchaudio.abi3.so“.)
+
+- **Startbestand übernehmen** (spart Stunden Rechnen): die fertigen Dateien aus dem Repo
+  `dj-studio/takt/*.json` nach `/home/citycafe/.cache/citycafe/takt/` kopieren (scp, Besitzer
+  citycafe). Fehlende rechnet das Vormessen nach (nur ohne Musik) bzw. der Supervisor beim Abspielen.
+- Wirkt nach dem nächsten Supervisor-Start (8:30 oder von Hand nach Rückfrage).
+- Prüfen: `grep "Takt " /home/citycafe/nl-mpv-supervisor.log | tail` → `Takt <id>: N Schlaege, M Einsen (…s)`;
+  Fehler: `Takt <id>: nicht gerechnet (Code …)`. Last: `top` – der Rechner läuft mit `nice 19`
+  und 1 Kern (~7 s je Song + Laden). DJ-Modus muss flüssig bleiben (60 fps, siehe Aufgabe 2).
+- Abschalten: Umgebung umbenennen oder `CITYCAFE_TAKT_PYTHON=/nichts` in `citycafe.env`.
+
+## Aufgabe 4 – Skin im Café (nur auf Wunsch)
 
 Chef-Handy → Musik → „⚙️ Anzeige & Anlage“ → Liste unter dem DJ-Knopf. Per CDP:
 `ssh w1 "sudo -u citycafe kiosk-cdp \"ytmBefehl({was:'djSkin', skin:'gold', id:'x'+Date.now()})\""`

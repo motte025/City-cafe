@@ -123,6 +123,38 @@ Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
   bei 100 % darf es ab und zu CLIP zeigen) und `anheben()`: +3 dB bis −12 dBFS, bis −3 dBFS
   auslaufend (rot bleibt selten). Wellenhöhe: unverändert (Änderung war nicht gewünscht).
 
+### Takt und Eins mit beat_this (21.10. nachmittags)
+
+- **Problem:** Die Eins (dicker Takt-Strich) lag oft falsch – das Studio nahm den Schlag mit dem
+  meisten Bass, bei Disco/Funk/Pop Zufall (Payphone, Let's Groove); Girls Like You lag das Raster
+  0,2 s neben den Schlägen; Sugar hatte 159 statt 120 BPM. Klick-Tests („auf die Eins klicken“)
+  sind für Menschen zu ungenau; Akkordwechsel/Songteile aus unseren Messwerten waren nicht sicher.
+- **Lösung:** **beat_this** (Universität Linz, CPJKU 2024, frei) erkennt alle Schläge und
+  Takt-Einsen aus dem Ton (Test 7 Songs: Einsen zu 95–100 % eindeutig, Zeitbasis ±10 ms zu den
+  Bass-Einsätzen der Spur). Format je Song `{"v":1,"b":[Abstände ms],"e":[Index der Einsen]}`.
+- **Woher das Studio die Takt-Daten nimmt** (`tv.js`): 1. vom Supervisor (`window.nlStudioTakte`,
+  index.html reicht sie als `ytm-dj-takt` weiter), 2. sonst `dj-studio/takt/<id>.json` aus dem
+  Repo, 3. sonst das gerechnete Raster (`tempoVerfeinern`, jetzt mit Prüfung der Tempo-Familie
+  ×¾/×4⁄3/×⅔/×1,5 – Sugar 120,04). Raster wird gezeigt, wenn die Bass-Einsätze deutlich auf dem
+  Tempo liegen (`DEUTLICH_MIN` 0,06; vorher Supervisor-Sicherheit ≥ 0,93 – Africa hatte keins).
+- beat_this setzt Schläge auf ein 20-ms-Raster → das Studio glättet je Schlag aus 8 Nachbarn
+  (Median-Abstand, Mittel ohne Ausreißer): Pendeln 1–2 ms statt 6–11 ms. BPM über je 8 Schläge.
+- **Supervisor** (`takt_rechnen`, `TAKT_RECHNER`): rechnet nach jeder Spur-Messung (laufender
+  Song, Vorab, Vormessen) die Takt-Datei, wenn `CITYCAFE_TAKT_PYTHON` (Standard
+  `~/.local/share/citycafe/beat-venv/bin/python`) da ist; `nice 19`, 1 Kern, Ton `-readrate 16`;
+  `~/.cache/citycafe/takt/` (`CITYCAFE_TAKT`). Fehlt beat_this: alles wie bisher. Log `Takt <id>:`.
+  **W1 einrichten:** `AUFTRAG-W1.md` Aufgabe 3 (Umgebung ~1 GB, Startbestand aus dem Repo kopieren).
+- **PC zuhause:** Umgebung `~/.local/share/citycafe-test/beat-venv` (torch 2.14.1+cpu,
+  torchaudio 2.11.0+cpu aus dem CPU-Index, numpy, soxr, soundfile, beat_this von GitHub).
+  `werkzeuge/takt_messen.py ids.txt` (Playlist-Durchlauf, 703 Songs, ~30 s je Song) und
+  `werkzeuge/takt_nachlesen.py` (alle 5 min laufender Song, Schlange, Radio, gespielt – zuhause
+  und im Café über Firebase `djremote/city-cafe/yt/jetzt|radio|warteschlange`). Immer mit
+  `nice -n 19` und höchstens 2 Kernen – mit allen Kernen ruckelte das Studio.
+  Test-Supervisor: `CITYCAFE_TAKT_PYTHON=…/beat-venv/bin/python CITYCAFE_TAKT=…/takt-cache`.
+- Nicht getan (Vorschlag): **allin1** (Songteile Intro/Strophe/Refrain/Outro) für MIX-Punkte,
+  **Essentia** für genauere Tonart. Eine fremde Wellen-Bibliothek (wavesurfer.js, peaks.js) bringt
+  nichts – die Probleme lagen am Abgleich, nicht am Zeichnen.
+
 ### Überblendung fest 9 s, genau berechnet (Supervisor `ueberblenden()`)
 
 - Am Handy keine Einstellung mehr (Kurz/Mittel/Lang entfernt); `index.html` sendet `blende: 9`.

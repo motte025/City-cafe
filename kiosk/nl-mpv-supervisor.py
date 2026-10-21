@@ -2202,9 +2202,83 @@ def spur_speichern(vid, text):
         log(f"Studio-Spur {vid}: nicht gespeichert ({e})")
 
 
+# Takt (21.10.2026): Schlaege und Takt-Einsen mit beat_this (CPJKU 2024) - genauer als das
+# gerechnete Raster (Eins oft falsch, Bands ohne festes Tempo). Laeuft nur, wenn beat_this in
+# einer eigenen Python-Umgebung eingerichtet ist (CITYCAFE_TAKT_PYTHON, Standard
+# ~/.local/share/citycafe/beat-venv/bin/python; Einrichtung: STAND.md / AUFTRAG-W1.md), sonst
+# bleibt alles wie bisher. Je Song ~7 s auf 1 Kern mit niedrigster Prioritaet, Ton gedrosselt
+# (-readrate 16). Ergebnis ~/.cache/citycafe/takt/<id>.json, an die Seite als window.nlStudioTakte.
+# Format wie dj-studio/takt/*.json: {"v":1,"b":[Abstaende ms],"e":[Index der Einsen]}.
+TAKT_PYTHON = os.environ.get("CITYCAFE_TAKT_PYTHON", os.path.expanduser("~/.local/share/citycafe/beat-venv/bin/python"))
+TAKT_ORDNER = os.environ.get("CITYCAFE_TAKT", os.path.expanduser("~/.cache/citycafe/takt"))
+TAKT_FEHL = {}             # videoId -> Zeit des letzten Fehlschlags (6 h Pause)
+TAKT_RECHNER = r"""
+import sys, os, json, subprocess, tempfile
+import torch
+torch.set_num_threads(1)
+from beat_this.inference import File2Beats
+vid, url, ziel = sys.argv[1:4]
+fd, wav = tempfile.mkstemp(suffix='.wav'); os.close(fd)
+try:
+    r = subprocess.run(['ffmpeg', '-nostdin', '-y', '-hide_banner', '-loglevel', 'error', '-readrate', '16',
+                        '-i', url, '-vn', '-ac', '1', '-ar', '22050', wav], capture_output=True, timeout=300)
+    if r.returncode or os.path.getsize(wav) < 100000:
+        sys.exit(2)
+    beats, downs = File2Beats(checkpoint_path='final0', device='cpu', dbn=False)(wav)
+finally:
+    os.remove(wav)
+ms = [round(float(x) * 1000) for x in beats]
+if len(ms) < 16:
+    sys.exit(3)
+eins = []
+for d in downs:
+    i = min(range(len(ms)), key=lambda k: abs(ms[k] - d * 1000))
+    if abs(ms[i] - d * 1000) < 60 and (not eins or eins[-1] != i):
+        eins.append(i)
+tmp = ziel + '.tmp'
+json.dump({'v': 1, 'b': [ms[0]] + [b - a for a, b in zip(ms, ms[1:])], 'e': eins}, open(tmp, 'w'), separators=(',', ':'))
+os.replace(tmp, ziel)
+"""
+
+
+def takt_an():
+    return os.access(TAKT_PYTHON, os.X_OK)
+
+
+def takt_datei(vid):
+    return os.path.join(TAKT_ORDNER, vid + ".json")
+
+
+def takt_rechnen(vid, audio_url):
+    """Takt-Datei fuer den Song rechnen, falls beat_this da ist und sie fehlt (im Spur-Faden)."""
+    if not (takt_an() and audio_url) or os.path.exists(takt_datei(vid)) \
+            or time.time() - TAKT_FEHL.get(vid, 0) < 6 * 3600:
+        return
+    try:
+        os.makedirs(TAKT_ORDNER, exist_ok=True)
+        skript = os.path.join(TAKT_ORDNER, ".takt-rechner.py")
+        if not os.path.exists(skript) or open(skript).read() != TAKT_RECHNER:
+            with open(skript, "w") as f:
+                f.write(TAKT_RECHNER)
+        t0 = time.time()
+        r = subprocess.run(["nice", "-n", "19", TAKT_PYTHON, skript, vid, audio_url, takt_datei(vid)],
+                           capture_output=True, text=True, timeout=600)
+        if r.returncode or not os.path.exists(takt_datei(vid)):
+            TAKT_FEHL[vid] = time.time()
+            log(f"Takt {vid}: nicht gerechnet (Code {r.returncode}) {r.stderr.strip().splitlines()[-1:] }")
+            return
+        d = json.load(open(takt_datei(vid)))
+        log(f"Takt {vid}: {len(d['b'])} Schlaege, {len(d['e'])} Einsen ({time.time() - t0:.0f}s)")
+    except (OSError, ValueError, subprocess.TimeoutExpired) as e:
+        TAKT_FEHL[vid] = time.time()
+        log(f"Takt {vid}: {type(e).__name__}")
+
+
 def spur_messen(vid, audio_url, laenge):
-    """Ganzen Song messen -> SPUREN[vid] (und auf die Platte). Laeuft im eigenen Faden."""
+    """Ganzen Song messen -> SPUREN[vid] (und auf die Platte). Laeuft im eigenen Faden.
+    Danach (oder wenn schon gemessen) die Takt-Datei, falls beat_this eingerichtet ist."""
     if SPUREN.get(vid) or spur_von_platte(vid):
+        takt_rechnen(vid, audio_url)
         return
     if vid in SPUREN or not audio_url:
         return
@@ -2276,6 +2350,7 @@ def spur_messen(vid, audio_url, laenge):
     spur_speichern(vid, text)
     log(f"Studio-Spur {vid}: {len(rahmen) / SPUR_HZ:.0f}s, {bpm} BPM (Sicherheit {sicher:.2f}), "
         f"Tonart {ton[1] + ' ' + ton[0] + ' (' + str(ton[2]) + ')' if ton else '-'}")
+    takt_rechnen(vid, audio_url)
 
 
 def seiten_blur_graph(vid):
@@ -2671,7 +2746,8 @@ def main():
                                 and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER:
                             def spur_vorab(vid=s_vid):
                                 if spur_von_platte(vid):        # schon gemessen: kein yt-dlp noetig
-                                    return
+                                    if not (takt_an() and not os.path.exists(takt_datei(vid))):
+                                        return                  # ... ausser die Takt-Datei fehlt
                                 urls = resolve(vid, "bestaudio", "abr")
                                 if urls:
                                     spur_messen(vid, urls[0], urls[2])
@@ -2691,6 +2767,21 @@ def main():
                     if s_vid not in da and SPUREN.get(s_vid):
                         zustellen(page_id, "(window.nlStudioSpuren = window.nlStudioSpuren || {})"
                                   f"[{json.dumps(s_vid)}] = {SPUREN[s_vid]}; 1", "Studio-Spur")
+                # Takt-Dateien (beat_this) dazu, sobald es sie gibt
+                try:
+                    t_da = set(json.loads(cdp_eval(page_id, "JSON.stringify(Object.keys(window.nlStudioTakte || {}))") or "[]"))
+                except (OSError, ValueError, ConnectionError):
+                    t_da = set(fertig)
+                for s_vid in fertig:
+                    if s_vid not in t_da and os.path.exists(takt_datei(s_vid)):
+                        try:
+                            with open(takt_datei(s_vid)) as f:
+                                t_text = f.read()
+                            json.loads(t_text)
+                        except (OSError, ValueError):
+                            continue
+                        zustellen(page_id, "(window.nlStudioTakte = window.nlStudioTakte || {})"
+                                  f"[{json.dumps(s_vid)}] = {t_text}; 1", "Takt")
             for alt in list(SPUREN)[:-6]:       # nur die letzten paar behalten
                 SPUREN.pop(alt, None)
 
@@ -2705,7 +2796,9 @@ def main():
                     vormessen["zeit"] = time.time()
                 except (OSError, ValueError, ConnectionError):
                     pass
-            offen = [v for v in vormessen["liste"] if not os.path.exists(spur_datei(v))
+            offen = [v for v in vormessen["liste"]
+                     if (not os.path.exists(spur_datei(v)) or (takt_an() and not os.path.exists(takt_datei(v))
+                                                                and time.time() - TAKT_FEHL.get(v, 0) >= 6 * 3600))
                      and time.time() - vormessen["fehl"].get(v, 0) >= 6 * 3600]
             if offen:
                 def vormess_lauf(vid=offen[0], rest=len(offen), gesamt=len(vormessen["liste"])):

@@ -9348,6 +9348,12 @@
                         f.gesendet.add(schl);
                         f.contentWindow.postMessage({ typ: 'ytm-dj-spur', spur: s }, location.origin);
                     }
+                    // Schlaege und Takt-Einsen (beat_this, vom Supervisor gerechnet) ebenfalls einmal
+                    const tk = t && (window.nlStudioTakte || {})[t.videoId];
+                    if (tk && !f.gesendet.has('takt:' + t.videoId)) {
+                        f.gesendet.add('takt:' + t.videoId);
+                        f.contentWindow.postMessage({ typ: 'ytm-dj-takt', videoId: t.videoId, takt: tk }, location.origin);
+                    }
                 });
             } catch (e) {}
         }
