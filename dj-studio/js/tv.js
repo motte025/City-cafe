@@ -46,7 +46,8 @@ function anheben(x) {
   const a = ANHEBEN_DB * Math.min(1, Math.max(0, (ANHEBEN_BIS_DB - db) / (ANHEBEN_BIS_DB - ANHEBEN_VOLL_DB)));
   return x * Math.pow(10, a / 20);
 }
-const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
+const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich (Supervisor)
+const DEUTLICH_MIN = 0.06;   // Bass-Einsaetze auf dem verfeinerten Tempo (0-1); Sugar falsch: 0,011
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
 // Anzeige-Vorlauf (s): gleicht Verzoegerungen zwischen mpv und dem, was man hoert/sieht, aus
@@ -125,7 +126,7 @@ function tempoVerfeinern(tief, proSek, bpm) {
   const n = tief.length, ons = new Float32Array(n);
   let summe = 0;
   for (let i = 1; i < n; i++) { const d = tief[i] - tief[i - 1]; if (d > 0) { ons[i] = d; summe += d; } }
-  if (!summe) return { bpm, versatz: 0 };
+  if (!summe) return { bpm, versatz: 0, deutlich: 0 };
   const fam = FAMILIEN.map(f => {
     const g = feinSuchen(ons, proSek, bpm * f, 15, 1000);          // +-1,5 % in 0,1-%-Schritten
     const wert = Math.max(g.betrag, zeiger(ons, proSek, g.b * 2).betrag, zeiger(ons, proSek, g.b / 2).betrag);
@@ -140,7 +141,7 @@ function tempoVerfeinern(tief, proSek, bpm) {
   const fein = feinSuchen(ons, proSek, best.b, 15, 10000);
   const T = 60 / fein.b;
   const versatz = ((-Math.atan2(fein.zi, fein.zr) / (2 * Math.PI) * T) % T + T) % T;
-  return { bpm: fein.b, versatz };
+  return { bpm: fein.b, versatz, deutlich: fein.betrag / summe };
 }
 
 // Messung -> Wellenform (wie analysis.js) und Pegelreihen
@@ -155,9 +156,9 @@ function spurLesen(roh) {
     leistung: Float32Array.from(db(s['pegelRms' + k] || s.pegelRms), x => (isFinite(x) ? Math.pow(10, x / 10) : 0)),
   }));
   const rms = Float32Array.from(pegel[0].leistung, (l, i) => Math.sqrt(Math.max(l, pegel[1].leistung[i])));
-  const t = s.bpm ? tempoVerfeinern(tief, s.proSek, s.bpm) : { bpm: s.bpm, versatz: s.versatz || 0 };
+  const t = s.bpm ? tempoVerfeinern(tief, s.proSek, s.bpm) : { bpm: s.bpm, versatz: s.versatz || 0, deutlich: 0 };
   return {
-    videoId: s.videoId, bpm: t.bpm, sicher: s.sicher || 0,
+    videoId: s.videoId, bpm: t.bpm, sicher: s.sicher || 0, deutlich: t.deutlich,
     camelot: s.camelot || null, tonart: s.tonart || null,   // gemessen, ungefaehr (Supervisor ton_bestimmen)
     versatz: taktEins(tief, s.proSek, t.bpm, t.versatz),    // auf die Eins des Takts
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief, mitte: lin(s.mitte), hoch: lin(s.hoch),
@@ -228,7 +229,10 @@ export function tvBauen(engine) {
   function track(t) {
     if (!t || !t.videoId) return null;
     const sp = spuren.get(t.videoId);
-    const sicher = sp && sp.bpm && sp.sicher >= SICHER_MIN;
+    // Raster zeigen, wenn die Schlaege deutlich auf dem verfeinerten Tempo liegen - die Sicherheit
+    // des Supervisors (beide Songhaelften gleich schnell) war zu vorsichtig (Africa 0,62, aber
+    // Deutlichkeit 0,22 - mehr als bei den meisten sicheren Songs; 21.10.2026)
+    const sicher = sp && sp.bpm && (sp.deutlich >= DEUTLICH_MIN || (sp.sicher >= SICHER_MIN && sp.deutlich >= DEUTLICH_MIN / 2));
     const tk = takte.get(t.videoId);
     if (tk === undefined) taktLaden(t.videoId);
     const takt = tk && tk.zeiten ? tk : null;
