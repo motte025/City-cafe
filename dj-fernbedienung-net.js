@@ -57,13 +57,8 @@
                 return fertig(null);
             }
 
-            var auth = global.firebase.auth();
-            auth.onAuthStateChanged(function (user) {
-                if (user) fertig({ uid: user.uid, db: global.firebase.database() });
-            });
-            auth.signInAnonymously().catch(function (err) {
-                console.warn('[DJ-Fernbedienung] Anmeldung fehlgeschlagen:', err);
-                fertig(null);
+            anonymAnmelden(global.firebase.auth()).then(function (user) {
+                fertig(user ? { uid: user.uid, db: global.firebase.database() } : null);
             });
 
             // Notbremse: haengt die Anmeldung, laeuft das Dashboard ohne
@@ -71,6 +66,23 @@
             setTimeout(function () { fertig(null); }, 8000);
         });
         return bereitPromise;
+    }
+
+    // Eine einzige anonyme Anmeldung fuer alle Module der Seite (Fernbedienungen, Hos'n Obe):
+    // riefen beide gleichzeitig signInAnonymously(), entstanden auf einem frischen Profil zwei
+    // Benutzer - ein Modul arbeitete mit der alten uid, Firebase lehnte alles ab (21.10.2026).
+    function anonymAnmelden(auth) {
+        if (global.__ccAnmeldung) return global.__ccAnmeldung;
+        global.__ccAnmeldung = new Promise(function (resolve) {
+            var aus = auth.onAuthStateChanged(function (user) {
+                if (user) { if (typeof aus === 'function') aus(); resolve(user); return; }
+                auth.signInAnonymously().catch(function (err) {
+                    console.warn('[Firebase] Anonyme Anmeldung fehlgeschlagen:', err);
+                    resolve(null);
+                });
+            });
+        });
+        return global.__ccAnmeldung;
     }
 
     global.DJ_REMOTE_NET = {
