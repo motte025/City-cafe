@@ -1435,7 +1435,8 @@ def ueberblenden(xf, target, page_id, vol):
             xf["t_ende"] = time.time() + max(0.0, xf["ende"] - pos)   # danach steht der Zeitpunkt fest
         return xf.get("t_ende") or time.time()
 
-    vorlauf = xf["anfang"] - xf["start"]          # neuer: vom Losgehen bis zum Musikanfang
+    einsatz = xf.get("einsatz", xf["anfang"])     # volle Musik des neuen (leises Intro davor)
+    vorlauf = einsatz - xf["start"]               # neuer: vom Losgehen bis zur vollen Musik
     # Warten bis zum Loslassen (alle 0,2 s neu aus der Position des alten gerechnet)
     while not xf.get("abbruch"):
         t_los = t_ende() - XF_TON_FENSTER_SEK - vorlauf
@@ -1450,7 +1451,7 @@ def ueberblenden(xf, target, page_id, vol):
     # Zu spaet geladen: so weit vorspulen, dass der Musikanfang trotzdem am Fenster liegt
     spaet = time.time() - (t_ende() - XF_TON_FENSTER_SEK - vorlauf)
     if spaet > 0.3:
-        ziel = min(xf["anfang"], xf["start"] + spaet)
+        ziel = min(einsatz, xf["start"] + spaet)
         mpv_befehl("seek", round(ziel, 2), "absolute", sock=MPV_SOCK_XF)
         log(f"Ueberblendung: {spaet:.1f}s zu spaet - neuer Song ab {ziel:.1f}s")
     mpv_befehl("set_property", "pause", False, sock=MPV_SOCK_XF)
@@ -1472,15 +1473,19 @@ def ueberblenden(xf, target, page_id, vol):
         # Fensterbeginn folgt dem neuen Song: er beginnt, sobald der neue am Musikanfang ist
         # (seine Position zaehlt - nicht die Uhr, falls er nach dem Loslassen kurz puffert).
         npos = mpv_eigenschaft("time-pos", sock=MPV_SOCK_XF)
-        if neu_beginn is None and isinstance(npos, (int, float)) and npos >= xf["anfang"] - 0.05:
-            neu_beginn = jetzt - (npos - xf["anfang"])
+        if neu_beginn is None and isinstance(npos, (int, float)) and npos >= einsatz - 0.05:
+            neu_beginn = jetzt - (npos - einsatz)
             apos = mpv_eigenschaft("time-pos")
-            log(f"Tonwechsel {xf['vid']}: neu bei {npos:.2f}s (Musik ab {xf['anfang']:.1f}s), alt bei "
+            log(f"Tonwechsel {xf['vid']}: neu bei {npos:.2f}s (volle Musik ab {einsatz:.1f}s), alt bei "
                 + (f"{apos:.2f}s" if isinstance(apos, (int, float)) else "?") + f" (Musikende {xf['ende']:.1f}s)")
         ton_ab = max(ende - XF_TON_FENSTER_SEK, neu_beginn if neu_beginn is not None else ende)
         fenster = max(0.5, ende - ton_ab) if neu_beginn is not None else XF_TON_FENSTER_SEK
         q = 0.0 if neu_beginn is None else min(1.0, max(0.0, (jetzt - ton_ab) / fenster))
         alt_a, neu_a = math.cos(q * math.pi / 2), math.sin(q * math.pi / 2)
+        # Leises Intro (>= 2 s zwischen Songanfang und voller Musik): ab dem Songanfang in 1,5 s
+        # voll einblenden - es laeuft leise unter dem Ende des alten mit, keine Luecke.
+        if einsatz - xf["anfang"] >= 2 and isinstance(npos, (int, float)) and npos >= xf["anfang"]:
+            neu_a = max(neu_a, math.sin(min(1.0, (npos - xf["anfang"]) / 1.5) * math.pi / 2))
         # mpv rechnet die Lautstaerke kubisch (Amplitude = (v/100)^3), daher die dritte Wurzel.
         mpv_befehl("set_property", "volume", round(vol * max(0.0, alt_a) ** (1 / 3), 1))
         mpv_befehl("set_property", "volume", round(vol * max(0.0, neu_a) ** (1 / 3), 1), sock=MPV_SOCK_XF)
@@ -1589,6 +1594,7 @@ INTRO_ABSTAND_DB = 8       # so nah an der normalen Lautstaerke = "Musik laeuft"
 # schon weg sein. Gemessen: Eye of the Tiger 232,5 -> 229,5 s, Wake Me Up 220 -> 217,5 s,
 # Songs mit hartem Schluss (Chantaje, Basket Case) aendern sich um hoechstens 1 s.
 AUSKLANG_ABSTAND_DB = 6
+EINSATZ_MAX_SEK = 20       # so lange darf ein leises Intro nach dem Songanfang dauern
 INTRO_MAX_SEK = 75         # lange Filmszenen vor dem Song (O-Zone: 52 s), hoechstens 30 % des Videos
 INTRO_OHNE_LAENGE_SEK = 35 # wenn die echte Songlaenge unbekannt ist (alte Regel)
 META = {}                  # videoId -> [artist, track, title, channel] laut yt-dlp
@@ -1836,6 +1842,17 @@ def stille_messen(vid, audio_url, laenge):
     abgl = studio_abgleich(vid, audio_url, laenge, song)
     if abgl:
         anfang = abgl["anfang"] if abgl["anfang"] >= 0.4 else 0.0
+    # Einsatz: ab hier volle Musik (2 s fast normal laut). Leise Intros gehoeren zum Song
+    # (Madcon "Don't Worry" Lyric-Video: 7 s bei -30 dB, normal -10 dB) - die Ueberblendung
+    # wechselt erst am Einsatz, das leise Intro laeuft unter dem Ende des alten Songs mit
+    # (21.10.2026: sonst 5-7 s fast Stille). Hoechstens EINSATZ_MAX_SEK nach dem Anfang.
+    einsatz = anfang
+    grenze_e = normal - INTRO_ABSTAND_DB
+    i0 = int(anfang / 0.5)
+    for i in range(i0, min(len(kopf) - 3, i0 + int(EINSATZ_MAX_SEK / 0.5))):
+        if all(w >= grenze_e for w in kopf[i:i + 4]):
+            einsatz = max(anfang, i * 0.5)
+            break
     ende = None
     if schluss:
         grenze = normal - AUSKLANG_ABSTAND_DB
@@ -1879,9 +1896,11 @@ def stille_messen(vid, audio_url, laenge):
         elif s_ende - 10 > bis:
             ende = s_ende - 10
     gain, limiter = anhebung(audio_url)
-    STILLE[vid] = {"anfang": round(anfang, 2), "ende": round(ende, 2) if ende else None, "gain": gain,
+    STILLE[vid] = {"anfang": round(anfang, 2), "einsatz": round(einsatz, 2),
+                   "ende": round(ende, 2) if ende else None, "gain": gain,
                    "limiter": limiter}
     log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s "
+        + (f"(volle Musik ab {einsatz:.1f}s) " if einsatz - anfang >= 1 else "")
         + (f"(Studio-Abgleich, Guete {abgl['guete']:.2f}), " if abgl else f"(erlaubt {erlaubt:.0f}s), ") +
         f"Ende {('%.1fs' % ende) if ende else '-'} (Laenge {laenge:.0f}s)"
         + (f", Lautheit {gain:+.1f} dB" if gain else "") + (f", Limiter +{limiter:.1f} dB" if limiter else ""))
@@ -3116,7 +3135,8 @@ def main():
                 # Neuer Song: angehalten ab "Musikanfang - (XF_SEK - Ton-Fenster)", damit er
                 # 7 s stumm im Bild einlaeuft und am Fensterbeginn genau seine Musik beginnt.
                 n_anfang = float((STILLE.get(n_vid) or {}).get("anfang") or 0.0)
-                n_start = max(0.0, n_anfang - (XF_SEK - XF_TON_FENSTER_SEK))
+                n_einsatz = float((STILLE.get(n_vid) or {}).get("einsatz") or n_anfang)
+                n_start = max(0.0, n_einsatz - (XF_SEK - XF_TON_FENSTER_SEK))
                 video_url, audio_url, _laenge = cache[n_key]
                 neu_app = "mpvxf" if MPV_APP["id"] == "mpv" else "mpv"
                 xf_args = ["mpv", f"--hwdec={MPV_HWDEC}", "--vo=gpu", f"--profile={MPV_PROFILE}", "--sid=no",
@@ -3148,13 +3168,13 @@ def main():
                 # lange (bis XF_START_FRIST), fiele das Ende sonst in "mpv beendet" -> Browser-Player.
                 mpv_befehl("set_property", "keep-open", "yes")
                 xf = {"proc": proc, "vid": n_vid, "app": neu_app, "t0": time.time(),
-                      "ende": ende_alt, "anfang": n_anfang, "start": n_start,
+                      "ende": ende_alt, "anfang": n_anfang, "einsatz": n_einsatz, "start": n_start,
                       "ton": ton_zustand(n_vid, ton_limiter),
                       "blur": xf_blur}
                 threading.Thread(target=ueberblenden, args=(xf, dict(target), page_id, ton_vol),
                                  daemon=True).start()
                 log(f"Ueberblendung: {shown[3:]} -> {n_vid} (Musikende alt {ende_alt:.1f}s in {rest:.1f}s, "
-                    f"neu ab {n_start:.1f}s, Musik ab {n_anfang:.1f}s)")
+                    f"neu ab {n_start:.1f}s, Musik ab {n_anfang:.1f}s, voll ab {n_einsatz:.1f}s)")
 
         # Lebenszeichen ans Dashboard (siehe nlExtern()/djExtern() in index.html):
         # nur wenn mpv spielen kann, startet der Slot seinen Browser-Player nicht.
@@ -3206,7 +3226,8 @@ def main():
             if xf is not None:
                 vids.add(xf["vid"])
             ton_gain = json.dumps({v: [gain_von(v), ((STILLE.get(v) or {}).get("limiter") or 0.0) if ton_limiter else 0.0,
-                                       STILLE[v].get("anfang") or 0.0, STILLE[v].get("ende")]
+                                       STILLE[v].get("anfang") or 0.0, STILLE[v].get("ende"),
+                                       STILLE[v].get("einsatz") or STILLE[v].get("anfang") or 0.0]
                                    for v in vids if v in STILLE})
         if page_id:
             try:

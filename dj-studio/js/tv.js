@@ -296,7 +296,9 @@ export function tvBauen(engine) {
       }
       if (blende) {
         // Crossfader faehrt, wenn der neue Song (Position!) seinen Musikanfang erreicht
-        const neu = state.decks[luft], anfang = (neu.track && neu.track.anfang) || 0;
+        // (am Einsatz der vollen Musik - ton[4] vom Supervisor; leises Intro laeuft davor schon mit)
+        const neu = state.decks[luft], ton = (neu.track && neu.track.ton) || [];
+        const anfang = Number(ton[4]) || (neu.track && neu.track.anfang) || 0;
         const q = Math.min(1, Math.max(0, (neu.pos - anfang) / XF_TON_FENSTER_SEK));
         // Crossfader-Kurve 'weich' = gleiche Leistung (cos/sin) wie die Ton-Blende von mpv
         engine.request('master.crossfader', blende.von + (blende.nach - blende.von) * q);
