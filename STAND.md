@@ -259,6 +259,20 @@ vorerst nicht nötig; der Supervisor-Code dafür bleibt und tut ohne Umgebung ni
 - Werkzeuge zum Messen: `dj-studio/werkzeuge/` (Tipp-Test, Ausgangs-Mitschnitt, Position, Tempo,
   Raster, LUFS, Meter-Lage, Ausrichten).
 
+### Getränke-Angebote unter „Pioneer DJ“, Master-Knopf (21.10. abends)
+
+- **Angebote** (`dj-studio/js/ui/angebote.js`, CSS `.tv-angebot` in `skin.css`): nur Schrift unter
+  dem Pioneer-DJ-Schriftzug, Lage `[544, 763, 576, 40]` (Bild-2-Pixel, 4 links von der Mitte – die
+  Kursive wirkt sonst rechtslastig). Schrift **Saira** 900 kursiv, `font-stretch 125 %`, zusätzlich
+  `scaleX(1.25)`, **38 px** (lange Titel werden verkleinert). **Jede Minute je Angebot 7 s**, dann
+  leer. Liste `djAngebote` in `werbung.json` (jetzt: 5 × Jägermeister 14,00 €, Ane aufs Aug 3,00 €;
+  Puntigamer nur in `aktionen`), alle 10 min neu gelesen. Farbe: helle Skins (Gold, Weiß, Chrom,
+  Elfenbein, Ladys Pink, Champagner) schwarz mit dunkelrotem Preis, sonst hell mit goldenem Preis;
+  Amber-Skins (amber-blau, blau-amber, tiefglas) Preis eisblau `#8fe6ff`. Saira lädt das Skript
+  notfalls selbst.
+- **Master-Level-Knopf:** bleibt wie im Bild gemalt (dreht nicht mehr) – der gedrehte Ausschnitt
+  zeigte Nähte und helle Sicheln (Betreiber: wie im Original).
+
 ### Gespeicherte Daten je Song (was bleibt, wenn Songs aus Playlists gelöscht werden)
 
 | Daten | Ort | Größe | Aufräumen |
