@@ -338,12 +338,12 @@ body.tv .skin .taste.play.an > svg, body.tv .skin .taste.play.blink:not(.an) > s
 .tv-angebot {
   position: absolute; z-index: 5; pointer-events: none; display: flex; align-items: center; justify-content: center;
   white-space: nowrap; overflow: visible;
-  font: italic 900 36px/1 'Saira', var(--font); font-stretch: 125%; letter-spacing: .01em;
+  font: italic 900 38px/1 'Saira', var(--font); font-stretch: 125%; letter-spacing: .01em;
   color: #f2f5f8; text-shadow: 0 1px 0 rgba(0, 0, 0, .9), 0 0 1px #000, 0 0 8px rgba(0, 0, 0, .55), 0 0 14px rgba(255, 255, 255, .18);
   opacity: 0; transition: opacity .6s ease;
 }
 .tv-angebot.an { opacity: 1; }
-.tv-angebot .innen { display: flex; align-items: center; gap: .6em; transform-origin: center; }
+.tv-angebot .innen { display: flex; align-items: center; gap: .45em; transform-origin: center; }
 .tv-angebot .preis { color: #ffd77a; }
 .tv-angebot.dunkel { color: #0b0c0e; text-shadow: 0 1px 0 rgba(255, 255, 255, .55), 0 0 6px rgba(255, 255, 255, .35); }
 .tv-angebot.dunkel .preis { color: #8a1c12; }

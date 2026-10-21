@@ -1,13 +1,13 @@
 // DJ-Modus (TV): Getraenke-Angebote unter dem Pioneer-DJ-Schriftzug, abwechselnd (21.10.2026).
 // Nur Schrift, kein Feld - unter dem Schriftzug zwischen den Tasten A und B (Bild-2-Pixel 560-1110).
 // Schrift: Saira, breit (125 %), 900 kursiv - am naechsten am Pioneer-Schriftzug (verglichen mit
-// Exo 2, Kanit, Russo One, Orbitron). Angebote aus werbung.json (Repo, "aktionen" mit aktiv),
+// Exo 2, Kanit, Russo One, Orbitron). Angebote aus werbung.json (Repo, "djAngebote" mit aktiv),
 // alle 10 min neu gelesen; ohne Angebote bleibt die Stelle leer.
 import { F } from '../skin.js';
 
 // Ganze Breite zwischen den Tasten A und B (Betreiber: groesser, in die Laenge gezogen) -
 // im Crossfader-Feld allein (390) wurde die gestreckte Schrift verkleinert.
-const LAGE = [556, 763, 560, 40];          // x, y, Breite, Hoehe in Bild-2-Pixeln
+const LAGE = [548, 763, 576, 40];          // x, y, Breite, Hoehe in Bild-2-Pixeln
 const STRECKUNG = 1.25;                    // waagrecht gezogen wie der Pioneer-Schriftzug (Betreiber)
 // Skins mit hellem Grund: dort ist der Pioneer-Schriftzug schwarz - die Werbung auch
 // (gemessen am Bild: Median der Schriftzug-Flaeche > 150)
@@ -26,7 +26,9 @@ export function angeboteStarten(buehne) {
     try {
       const r = await fetch('../werbung.json', { cache: 'no-cache' });
       const d = await r.json();
-      liste = (Array.isArray(d.aktionen) ? d.aktionen : [])
+      // eigene Liste fuers DJ Studio (Betreiber 21.10.: Jaegermeister + "Ane aufs Aug", ohne
+      // Puntigamer), sonst die allgemeinen Aktionen
+      liste = (Array.isArray(d.djAngebote) ? d.djAngebote : Array.isArray(d.aktionen) ? d.aktionen : [])
         .filter(a => a && a.aktiv !== false && a.titel)
         .map(a => [String(a.titel), String(a.preis || '')]);
     } catch (e) { /* Netz weg: alte Liste behalten */ }

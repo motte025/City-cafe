@@ -1,9 +1,13 @@
 {
-  "_hinweis": "Hausprogramm des City Cafe fuer die Folie 'Demnaechst im City Cafe' (index.html, runHausprogrammState). datum/ab/bis in Wiener Zeit. Ein Eintrag verschwindet von selbst, sobald 'bis' vorbei ist. Nur echte, vom Betreiber genannte Angaben eintragen.",
+  "_hinweis": "Hausprogramm des City Cafe fuer die Folie 'Demnaechst im City Cafe' (index.html, runHausprogrammState). datum/ab/bis in Wiener Zeit. Ein Eintrag verschwindet von selbst, sobald 'bis' vorbei ist. Nur echte, vom Betreiber genannte Angaben eintragen. 'djAngebote': Schrift unter Pioneer DJ im DJ-Modus (dj-studio/js/ui/angebote.js), abwechselnd, unabhaengig von 'aktionen'.",
   "aktionenBild": "jaeger.webp",
   "plakate": [
     { "id": "jaegermeister-aktion", "aktiv": true, "datei": "jaegermeister_aktion_tv.jpg", "titel": "5 × Jägermeister Aktion" },
     { "id": "spirituosen", "aktiv": true, "datei": "spirituosen_tv.jpg", "titel": "Spirituosen-Karte" }
+  ],
+  "djAngebote": [
+    { "id": "jaegermeister-5er", "aktiv": true, "titel": "5 × Jägermeister", "preis": "14,00 €" },
+    { "id": "ane-aufs-aug", "aktiv": true, "titel": "Ane aufs Aug", "preis": "3,00 €" }
   ],
   "aktionen": [
     { "id": "jaegermeister-5er", "aktiv": true, "titel": "5 × Jägermeister", "preis": "14,00 €" },
