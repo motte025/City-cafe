@@ -318,7 +318,7 @@ const LEISTE = {
   ],
 };
 const FLICKEN_LEISTE = [
-  { ziel: [255, 770, 44, 24], quelle: [303, 770, 3, 24] },          // Anzahl
+  { ziel: [255, 770, 44, 24], quer: true },                          // Anzahl: zeilenweise Verlauf links -> rechts
   ...KARTEN.flatMap(k => [
     { ziel: [k.nr[0] + 4, k.nr[1] + 5, k.nr[2] - 8, k.nr[3] - 10], quelle: [k.nr[0] + 3, k.nr[1] + 5, 1, k.nr[3] - 10] },
     { ziel: k.cover, farbe: '#07090c' },
@@ -434,7 +434,15 @@ async function putzen(buehne) {
   for (const f of FLICKEN) {
     if (f.tv && !tv) continue;               // nur im DJ-Modus
     const [x, y, w, h] = f.ziel.map(v => v * s);
-    if (f.quelle) g.drawImage(img, ...f.quelle.map(v => v * s), x, y, w, h);
+    if (f.quer) {
+      // zeilenweise von der Farbe links des Bereichs zur Farbe rechts davon (fuer Verlaeufe im Hintergrund)
+      for (let yy = Math.floor(y); yy < y + h; yy++) {
+        const pix = xx => { const i = (yy * c.width + Math.round(xx)) * 4; return `rgb(${roh[i]},${roh[i + 1]},${roh[i + 2]})`; };
+        const v = g.createLinearGradient(x, 0, x + w, 0);
+        v.addColorStop(0, pix(x - 2)); v.addColorStop(1, pix(x + w + 1));
+        g.fillStyle = v; g.fillRect(x, yy, w, 1);
+      }
+    } else if (f.quelle) g.drawImage(img, ...f.quelle.map(v => v * s), x, y, w, h);
     else if (f.verlauf) {
       const v = g.createLinearGradient(0, y, 0, y + h);
       v.addColorStop(0, f.verlauf[0]); v.addColorStop(1, f.verlauf[1]);

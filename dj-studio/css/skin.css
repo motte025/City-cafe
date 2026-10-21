@@ -300,3 +300,6 @@ body.tv .skin .kanal-b .deck-kopf-rest > .taste.an:nth-of-type(3)::after {
   font: 600 17px/1 var(--font-schmal); letter-spacing: .02em; color: #fff; text-shadow: 0 1px 2px rgba(80, 30, 0, .8);
   background: linear-gradient(180deg, #ffad2e, #e86f00); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
 }
+
+/* DJ-Modus: keine Zahl hinter NAECHSTE TITEL (zeigte nur die 11 vorab geschickten, Betreiber 21.10.) */
+body.tv .skin .leiste-anzahl { visibility: hidden; }
