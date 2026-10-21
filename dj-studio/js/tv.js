@@ -30,10 +30,10 @@ const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu set
 // (je Song, wie mpv) x Lautstaerke der Fernbedienung. Rot nur bei 100 % und dann "ein bisschen":
 // simuliert ueber 11 Songs (18.10.): +1 dB = 4,7 % der Zeit rot (21.10.: zu viel), 0 dB = 1,3 %
 // (zu wenig) - daher +0,5 dB. Bei 80 % nie rot. Rot = oberste 3-4 LEDs.
-const RESERVE_DB = 0.5;
-// Anzeige etwas hoeher (Betreiber 21.10.): +2 dB im unteren/mittleren Bereich, laeuft bis -4 dBFS
+const RESERVE_DB = 1.5;     // 21.10. abends: Betreiber will mehr - bei 100 % darf es ab und zu ins CLIP
+// Anzeige hoeher (Betreiber 21.10.): +3 dB im unteren/mittleren Bereich, laeuft bis -3 dBFS
 // auf 0 aus - der rote Bereich (oberste LEDs) bleibt so selten wie oben abgestimmt.
-const ANHEBEN_DB = 2, ANHEBEN_BIS_DB = -4, ANHEBEN_VOLL_DB = -12;
+const ANHEBEN_DB = 3, ANHEBEN_BIS_DB = -3, ANHEBEN_VOLL_DB = -12;
 function anheben(x) {
   if (!(x > 0)) return x;
   const db = 20 * Math.log10(x);
