@@ -2,7 +2,7 @@
 // Nur Schrift, kein Feld - unter dem Schriftzug zwischen den Tasten A und B (Bild-2-Pixel 560-1110).
 // Schrift: Saira, breit (125 %), 900 kursiv - am naechsten am Pioneer-Schriftzug (verglichen mit
 // Exo 2, Kanit, Russo One, Orbitron). Angebote aus werbung.json (Repo, "djAngebote" mit aktiv),
-// alle 10 min neu gelesen; ohne Angebote bleibt die Stelle leer.
+// alle 10 min neu gelesen; jede Minute je Angebot 7 s; ohne Angebote bleibt die Stelle leer.
 import { F } from '../skin.js';
 
 // Ganze Breite zwischen den Tasten A und B (Betreiber: groesser, in die Laenge gezogen) -
@@ -12,7 +12,8 @@ const STRECKUNG = 1.25;                    // waagrecht gezogen wie der Pioneer-
 // Skins mit hellem Grund: dort ist der Pioneer-Schriftzug schwarz - die Werbung auch
 // (gemessen am Bild: Median der Schriftzug-Flaeche > 150)
 const DUNKLER_SCHRIFTZUG = ['gold', 'weiss', 'chrom', 'elfenbein', 'ladys-pink', 'champagner'];
-const WECHSEL_MS = 7000, NEU_LESEN_MS = 10 * 60 * 1000;
+// Jede Minute alle Angebote nacheinander je 7 s, dazwischen leer (Betreiber 21.10.)
+const ZEIGEN_MS = 7000, TAKT_MS = 60 * 1000, NEU_LESEN_MS = 10 * 60 * 1000;
 
 const SCHRIFT_URL = 'https://fonts.googleapis.com/css2?family=Saira:ital,wdth,wght@1,125,900&display=swap';
 
@@ -28,7 +29,7 @@ export function angeboteStarten(buehne) {
   const [x, y, w, h] = LAGE.map(v => v * F);
   Object.assign(el.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
   buehne.appendChild(el);
-  let liste = [], i = 0;
+  let liste = [];
 
   async function lesen() {
     try {
@@ -49,9 +50,7 @@ export function angeboteStarten(buehne) {
     let g = parseFloat(getComputedStyle(el).fontSize);
     while (innen.scrollWidth * STRECKUNG > el.clientWidth && g > 10) { g -= 1; el.style.fontSize = g + 'px'; }
   }
-  function zeigen() {
-    if (!liste.length) { el.classList.remove('an'); return; }
-    const [titel, preis] = liste[i++ % liste.length];
+  function zeigen(titel, preis) {
     el.classList.remove('an');
     setTimeout(() => {
       el.textContent = '';
@@ -75,7 +74,11 @@ export function angeboteStarten(buehne) {
     }
   }
   document.fonts.addEventListener('loadingdone', einpassen);
-  Promise.all([lesen(), schrift()]).then(zeigen);
-  setInterval(zeigen, WECHSEL_MS);
+  // ein Durchgang: Angebot fuer Angebot je ZEIGEN_MS, dann ausblenden bis zur naechsten Minute
+  function durchgang() {
+    liste.forEach(([titel, preis], k) => setTimeout(() => zeigen(titel, preis), k * ZEIGEN_MS));
+    setTimeout(() => el.classList.remove('an'), liste.length * ZEIGEN_MS);
+  }
+  Promise.all([lesen(), schrift()]).then(() => { durchgang(); setInterval(durchgang, TAKT_MS); });
   setInterval(lesen, NEU_LESEN_MS);
 }
