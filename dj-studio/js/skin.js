@@ -43,7 +43,7 @@ const DECK_A = {
     // Titel
     ['.deck-cover', [29, 130, 97, 78]],
     // Titel groesser (Wunsch 18.10.2026): 27 px statt 21 px, Kuenstler 20 px
-    ['.deck-titel', [140, 129, 330, 31], { tv: [140, 126, 392, 37] }],
+    ['.deck-titel', [140, 129, 330, 31], { tv: [140, 123, 394, 42] }],
     ['.deck-kuenstler', [140, 160, 330, 22], { tv: [140, 164, 300, 23] }],
     ['.deck-meta', [140, 182, 270, 18], { tv: [140, 187, 262, 18] }],
     ['.herz', [479, 138, 22, 21]],
@@ -115,8 +115,8 @@ const FLICKEN_A = [
   { ziel: [112, 432, 46, 140], quelle: [112, 572, 46, 60] },      // Faderkappe + blaue Linie
   { ziel: [136, 134, 300, 46], quelle: [440, 134, 4, 46] },       // Titel, Interpret
   { ziel: [136, 179, 396, 22], quelle: [395, 179, 6, 22] },       // Genre/BPM/Key, Zeit
-  { ziel: [28, 213, 508, 82], farbe: '#05070a' },             // Wellenform
-  { ziel: [28, 296, 510, 22], farbe: '#05070a' },                   // Uebersicht + "16"
+  { ziel: [25, 210, 514, 86], farbe: '#05070a' },             // Wellenform
+  { ziel: [25, 296, 514, 25], farbe: '#05070a' },                   // Uebersicht + "16"
   { ziel: [34, 347, 84, 36], farbe: '#05080b' },              // BPM-Zahl
   { ziel: [140, 350, 68, 30], quelle: [208, 350, 3, 30] },        // Tempo-Zahl
   { ziel: [392, 354, 34, 26], quelle: [427, 354, 3, 26] },        // Key
@@ -141,7 +141,7 @@ const DECK_B = {
     ['.deck-kopf-rest > .taste.icon', [1613, 91, 28, 26]],
     ['.deck-video .led', [1399, 99, 10, 10]],
     ['.deck-cover', [1136, 130, 102, 78]],
-    ['.deck-titel', [1253, 129, 320, 31], { tv: [1253, 126, 390, 37] }],
+    ['.deck-titel', [1253, 129, 320, 31], { tv: [1253, 123, 392, 42] }],
     ['.deck-kuenstler', [1253, 160, 320, 22], { tv: [1253, 164, 300, 23] }],
     ['.deck-meta', [1253, 182, 255, 18], { tv: [1253, 187, 252, 18] }],
     ['.herz', [1590, 138, 22, 21]],
@@ -208,8 +208,8 @@ const FLICKEN_B = [
   { ziel: [1510, 432, 52, 140], quelle: [1510, 572, 52, 60] },
   { ziel: [1250, 134, 300, 46], quelle: [1560, 134, 4, 46] },
   { ziel: [1250, 179, 390, 22], quelle: [1495, 179, 6, 22] },
-  { ziel: [1136, 213, 508, 82], farbe: '#05070a' },
-  { ziel: [1134, 296, 512, 22], farbe: '#05070a' },
+  { ziel: [1133, 210, 514, 86], farbe: '#05070a' },
+  { ziel: [1131, 296, 517, 25], farbe: '#05070a' },
   { ziel: [1550, 348, 90, 35], farbe: '#05080b' },   // BPM-Zahl (Display ist in allen Skins dunkel)
   { ziel: [1462, 350, 68, 30], quelle: [1458, 350, 3, 30] },
   { ziel: [1247, 354, 34, 26], quelle: [1282, 354, 3, 26] },
@@ -272,8 +272,8 @@ const FLICKEN_MITTE = [
 const KOPF = {
   rahmen: [0, 0, 1672, 78],
   teile: [
-    ['.uhr-zeit', [1488, 9, 104, 32]],
-    ['.uhr-datum', [1488, 43, 124, 17]],
+    ['.uhr-zeit', [1481, 9, 126, 32]],
+    ['.uhr-datum', [1481, 43, 126, 17]],
     ['.kopf-feld.uhr .taste', [1611, 36, 26, 24]],
     ['.demo-badge', [1364, 52, 40, 14]],
   ],
@@ -341,7 +341,8 @@ export function skinAnwenden() {
   const buehne = document.getElementById('buehne');
   buehne.classList.add('skin');
   // anderer Skin: dasselbe Bild auch fuer Knopf- und Faderkappen (CSS-Variable --bild)
-  if (SKIN_WAHL) { buehne.style.setProperty('--bild', `url(${BILD})`); buehne.dataset.skin = SKIN_WAHL; }
+  // absolute Adresse: url() in einer CSS-Variablen gilt relativ zur CSS-Datei (css/), nicht zur Seite
+  if (SKIN_WAHL) { buehne.style.setProperty('--bild', `url(${new URL(BILD, location.href).href})`); buehne.dataset.skin = SKIN_WAHL; }
   for (const sek of buehne.children) {
     if (sek.tagName !== 'SECTION' && sek.tagName !== 'HEADER') continue;
     sek.classList.add('sektion');

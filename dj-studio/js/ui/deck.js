@@ -293,7 +293,8 @@ export function deckBauen(root, id, engine, aktionen) {
       if (TV) {                            // DJ-Modus: welcher Kanal ist zu hoeren?
         const text = d.track ? (imBild ? 'ON AIR' : 'NEXT') : '';
         if (kanalText.textContent !== text) {
-          kanalText.textContent = text;
+          // Schrift in eigenem span: nur sie pulsiert, nicht das ganze Glasfeld
+          kanalText.replaceChildren(Object.assign(document.createElement('span'), { className: 'puls', textContent: text }));
           kanalText.classList.toggle('on-air', text === 'ON AIR');
           kanalText.classList.toggle('next', text === 'NEXT');
         }

@@ -120,7 +120,7 @@
 .skin .kanalfader .regler-fuell {
   /* Wie in Bild 2: Licht direkt unter der Kappe, gut ein Drittel des Schlitzes, laeuft unten aus */
   position: absolute; display: block; left: 50%; width: 5px; margin-left: -2.5px;
-  top: calc((1 - var(--anteil)) * (100% - var(--kh)) + var(--kh) - 2px);
+  top: calc((1 - var(--anteil)) * (100% - var(--kh)) + var(--kh) - 6px);
   height: max(0px, min(34%, calc(var(--anteil) * (100% - var(--kh)) - 8px)));
   -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent); mask-image: linear-gradient(180deg, #000 55%, transparent);
   background: linear-gradient(180deg, #7fdcff, #1a8cff); border-radius: 3px;
@@ -214,8 +214,8 @@
 }
 
 /* ---------- Kopf ---------- */
-.skin .uhr-zeit { font: 500 38px/36px var(--font); color: #f3f6f9; letter-spacing: .01em; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px rgba(180, 210, 255, .25); }
-.skin .uhr-datum { font: 500 18px/19px var(--font); color: #e3e8ee; letter-spacing: .02em; white-space: nowrap; }
+.skin .uhr-zeit { text-align: center; font: 500 38px/36px var(--font); color: #f3f6f9; letter-spacing: .01em; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px rgba(180, 210, 255, .25); }
+.skin .uhr-datum { text-align: center; font: 500 18px/19px var(--font); color: #e3e8ee; letter-spacing: .02em; white-space: nowrap; }
 .skin .kopf-feld.uhr .taste { color: transparent; border-radius: 4px; }
 .skin .kopf-feld.uhr .taste > svg { display: none; }
 .skin .demo-badge { display: flex; align-items: center; justify-content: center; font: 700 10px/1 var(--font-schmal); letter-spacing: .14em;
@@ -242,9 +242,12 @@
 .skin .deck-kanal { font: 600 31px/28px var(--font-schmal);   /* so gross wie der Schriftzug in Bild 2 */ letter-spacing: .05em; color: #e3e9f0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, .8); white-space: nowrap; }
 .skin .deck-kanal.on-air { color: #49b8ff; text-shadow: 0 0 8px rgba(35, 168, 255, .8), 0 1px 2px #000; animation: on-air 1.6s ease-in-out infinite; }
+body.tv .skin .deck-kanal.on-air { animation: none; }
+body.tv .skin .deck-kanal.on-air > .puls { animation: on-air-schrift 1.6s ease-in-out infinite; }
 .skin .kanal-b .deck-kanal.on-air { color: #ffb23a; text-shadow: 0 0 8px rgba(255, 154, 26, .8), 0 1px 2px #000; }
 .skin .deck-kanal.next { color: #8b97a6; }
 @keyframes on-air { 50% { opacity: .55; } }
+@keyframes on-air-schrift { 50% { text-shadow: 0 0 2px rgba(255, 255, 255, .15), 0 1px 2px #000; filter: brightness(.75); } }
 
 /* DJ-Modus: ohne Herz/Menue, Titel groesser und breiter (Lage in js/skin.js, Option tv) */
 body.tv .skin .deck-info-icons { display: none; }
@@ -272,3 +275,7 @@ body.tv .skin .deck-kanal, body.tv .skin .tempo-zahl, body.tv .skin .key-zahl, b
 }
 body.tv .skin .deck-kanal { padding-left: 6px; box-sizing: border-box; line-height: 28px; }
 body.tv .skin .tempo-zahl, body.tv .skin .key-zahl { text-align: center; }
+
+/* DJ-Modus: ON AIR / NEXT senkrecht mittig im Feld, Titel 35 px */
+body.tv .skin .deck-kanal { display: flex; align-items: center; line-height: 1; padding-top: 2px; }
+body.tv .skin .deck-titel { font-size: 35px; line-height: 42px; }

@@ -28,9 +28,9 @@ const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu set
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
 // Pegelanzeige: Kanaele und Master zeigen, was aus der Anlage kommt - Song x Lautheitsanpassung
 // (je Song, wie mpv) x Lautstaerke der Fernbedienung. Rot nur bei 100 % und dann "ein bisschen":
-// ueber 11 Songs simuliert (18.10.2026) mit +1 dB im Mittel 4,7 % der Zeit rot, beim
-// lautesten Song 35 %, bei 80 % nie (0 dB: 1,3 % - war zu wenig). Rot = oberste 3-4 LEDs.
-const RESERVE_DB = 1;
+// simuliert ueber 11 Songs (18.10.): +1 dB = 4,7 % der Zeit rot (21.10.: zu viel), 0 dB = 1,3 %
+// (zu wenig) - daher +0,5 dB. Bei 80 % nie rot. Rot = oberste 3-4 LEDs.
+const RESERVE_DB = 0.5;
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
@@ -140,6 +140,8 @@ export function tvBauen(engine) {
     if (typeof d.vol === 'number' && d.vol !== vol) {
       vol = Math.max(0, Math.min(100, d.vol));
       engine.request('master.volume', 0.8 * lautFaktor());   // Knopf: 0,8 = 0 dB
+      // Kanalfader zeigen die Lautstaerke der Fernbedienung (Wunsch 21.10.2026)
+      for (const id of ['A', 'B']) engine.request(`decks.${id}.fader`, vol / 100);
     }
     const t = jetztS(), pos = Number(j?.pos) || 0, spielt = !!j && !j.pausiert;
     const aktuell = state.decks[luft].track;
