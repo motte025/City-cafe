@@ -73,7 +73,7 @@ const DECK_A = {
     ['.deck-meter', [70.5, 428, 18.3, 234]],   // genau die zwei gemalten LED-Spalten (gemessen 21.10.)
     ['.clip-led', [70.5, 433, 18.3, 5]],
     ['.bereich-fader', [110, 405, 50, 252]],
-    ['.kanalfader', [116, 412, 42, 242], { kappe: [115, 477, 41, 35] }],
+    ['.kanalfader', [116, 412, 42, 242], { kappe: [115.5, 477.5, 43, 35.5] }],   // Kappe wie gemalt (gemessen 21.10.)
     // Knoepfe (Kappe dreht sich, Ruhestellung = Stellung im Bild)
     ['.bereich-knoepfe', [196, 398, 48, 256]],
     ['.knopf[aria-label="TRIM"]', [201, 403, 38, 38], { knopf: true }],
@@ -112,7 +112,11 @@ const FLICKEN_A = [
   { ziel: [466, 130, 72, 36], quelle: [446, 130, 6, 36], tv: true },
   // Schriftzug "KANAL 1" weg: das Feld zeigt echten Text (Demo: KANAL 1, TV: ON AIR / NEXT)
   { ziel: [34, 88, 116, 28], quelle: [150, 88, 8, 28] },
-  { ziel: [112, 432, 46, 140], quelle: [112, 572, 46, 60] },      // Faderkappe + blaue Linie
+  // Faderkappe + blaue Linie: Kappenflaeche und Schlitz spaltenweise von oben nach unten verlaufen
+  // (vorher ein breiter Flicken von unten - beim Glanz der
+  // Skins sichtbar, 21.10.)
+  { ziel: [113, 476, 47, 80], senk: true },   // bis unter den gemalten Kappenschatten
+  { ziel: [125, 434, 22.5, 138], senk: true },                    // Schlitz: Linien laufen durch
   { ziel: [136, 134, 300, 46], quelle: [440, 134, 4, 46] },       // Titel, Interpret
   { ziel: [136, 179, 396, 22], quelle: [395, 179, 6, 22] },       // Genre/BPM/Key, Zeit
   { ziel: [25, 210, 514, 86], farbe: '#05070a' },             // Wellenform
@@ -178,7 +182,7 @@ const DECK_B = {
     ['.knopf[aria-label="LOW"]', [1432, 558, 38, 38], { knopf: true }],
     ['.knopf[aria-label="FILTER"]', [1432, 611, 38, 38], { knopf: true }],
     ['.bereich-fader', [1510, 405, 52, 252]],
-    ['.kanalfader', [1514, 412, 44, 242], { kappe: [1514, 477, 43, 35] }],
+    ['.kanalfader', [1513, 412, 44, 242], { kappe: [1513, 477.5, 44, 35.5] }],
     ['.bereich-meter', [1574, 405, 40, 262]],
     ['.deck-meter', [1582.5, 428, 18.2, 234]],
     ['.clip-led', [1582.5, 433, 18.2, 5]],
@@ -204,7 +208,8 @@ const FLICKEN_B = [
   // aus dem vorhandenen nachmalen, Abstand wie bei Kanal 1 (18.10.2026)
   { ziel: [1347, 701, 4, 19], quelle: [1348, 701, 2, 19], taste: true },
   { ziel: [1354, 701, 4, 19], quelle: [1348, 701, 2, 19], taste: true },
-  { ziel: [1510, 432, 52, 140], quelle: [1510, 572, 52, 60] },
+  { ziel: [1510.5, 476, 48, 80], senk: true },                    // Faderkappe + Linie (siehe FLICKEN_A)
+  { ziel: [1523.5, 434, 22, 138], senk: true },
   { ziel: [1250, 134, 300, 46], quelle: [1560, 134, 4, 46] },
   { ziel: [1250, 179, 390, 22], quelle: [1495, 179, 6, 22] },
   { ziel: [1133, 210, 514, 86], farbe: '#05070a' },
@@ -502,6 +507,14 @@ async function putzen(buehne) {
         const v = g.createLinearGradient(x, 0, x + w, 0);
         v.addColorStop(0, pix(x - 2)); v.addColorStop(1, pix(x + w + 1));
         g.fillStyle = v; g.fillRect(x, yy, w, 1);
+      }
+    } else if (f.senk) {
+      // spaltenweise von der Farbe ueber dem Bereich zur Farbe darunter (Glanz/Verlauf bleibt stimmig)
+      for (let xx = Math.floor(x); xx < x + w; xx++) {
+        const pix = yy => { const i = (Math.round(yy) * c.width + xx) * 4; return `rgb(${roh[i]},${roh[i + 1]},${roh[i + 2]})`; };
+        const v = g.createLinearGradient(0, y, 0, y + h);
+        v.addColorStop(0, pix(y - 2)); v.addColorStop(1, pix(y + h + 1));
+        g.fillStyle = v; g.fillRect(xx, y, 1, h);
       }
     } else if (f.quelle) g.drawImage(img, ...f.quelle.map(v => v * s), x, y, w, h);
     else if (f.verlauf) {

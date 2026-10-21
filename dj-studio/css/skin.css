@@ -128,7 +128,7 @@
 }
 .skin .kanal-b .kanalfader .regler-fuell { background: linear-gradient(180deg, #ffd08a, #ff7a00); box-shadow: 0 0 6px #ff9a1a, 0 0 14px rgba(255, 154, 26, .5); }
 .skin .kanalfader .regler-kappe {
-  position: absolute; display: block; left: 50%; width: var(--kw); height: var(--kh); margin-left: calc(var(--kw) / -2);
+  position: absolute; display: block; border-radius: 3px; left: 50%; width: var(--kw); height: var(--kh); margin-left: calc(var(--kw) / -2);
   top: calc((1 - var(--anteil)) * (100% - var(--kh)));
   background: var(--bild) var(--bx) var(--by) / 1920px auto no-repeat;
   filter: drop-shadow(0 4px 4px rgba(0, 0, 0, .7));
