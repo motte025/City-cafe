@@ -314,7 +314,7 @@ body.tv .skin .taste.play {
   box-shadow: 0 0 0 2px #050608, inset 0 1px 0 rgba(255, 255, 255, .28), inset 0 0 0 1px rgba(255, 255, 255, .07);
 }
 body.tv .skin .taste.play > svg {
-  visibility: visible; position: absolute; left: 50%; top: 50%; width: 46px; height: 23px; margin: -11.5px 0 0 -23px;
+  visibility: visible; position: absolute; left: 50%; top: 50%; width: 40px; height: 20px; margin: -10px 0 0 -20px;
   fill: #f2f4f6;
 }
 body.tv .skin .kanal-a .taste.play.an { box-shadow: 0 0 0 2px #2fe36a, 0 0 16px rgba(47, 227, 106, .6), inset 0 0 12px rgba(47, 227, 106, .25), inset 0 1px 0 rgba(255, 255, 255, .25); }
