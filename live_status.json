@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-21T19:27:46Z",
+  "checked_at": "2026-10-21T19:42:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "HOTLINE BLING",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🌸 MUTE MARATHON TAG 103 🌸 | Raw Only | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -31,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
