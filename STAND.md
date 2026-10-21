@@ -215,8 +215,8 @@ vorerst nicht nötig; der Supervisor-Code dafür bleibt und tut ohne Umgebung ni
   **Regel:** Supervisor/Seite am Test-Kiosk nicht mitten in einer Überblendung neu starten.
 - **Messwerte auf der Platte** (21.10. nachmittags, `stille_von_platte`/`stille_speichern`):
   Anfang, Einsatz, Ende, Lautheit, Limiter je Song in `~/.cache/citycafe/stille/<id>.json`
-  (`CITYCAFE_STILLE`), gültig 30 Tage und nur bei gleicher `STILLE_FASSUNG` und gleichem
-  `LAUT_ZIEL_LUFS`. Anlass: nach einem Supervisor-Neustart lief der Song ~10 s ohne Absenkung
+  (`CITYCAFE_STILLE`), gültig bei gleicher `STILLE_FASSUNG` (2) und gleichem `LAUT_ZIEL_LUFS`;
+  mit gefundener Studiofassung für immer, ohne Abgleich 30 Tage (dann neuer Versuch). Anlass: nach einem Supervisor-Neustart lief der Song ~10 s ohne Absenkung
   (bis 5 dB zu laut), bis er neu gemessen war; jetzt setzt `ton_args` die Lautheit sofort.
 
 - Ziel −14 statt −11 LUFS (wie YouTube/Spotify). Nachgerechnet mit 79 Playlist-Songs (−26,1 bis
@@ -261,8 +261,8 @@ vorerst nicht nötig; der Supervisor-Code dafür bleibt und tut ohne Umgebung ni
 | Daten | Ort | Größe | Aufräumen |
 |---|---|---|---|
 | Takt (beat_this) | Repo `dj-studio/takt/<id>.json` (W1 optional `~/.cache/citycafe/takt/`) | 2–3 KB | bleibt (bei erneutem Spielen sofort da) |
-| Studio-Spur (Welle, Pegel, BPM, Tonart) | W1 `~/.cache/citycafe/spuren/<id>.json.gz` | ~250 KB | automatisch: älteste raus über 600 MB (`SPUR_PLATTE_MB`) |
-| Anfang/Einsatz/Ende/Lautheit/Limiter | W1 `~/.cache/citycafe/stille/<id>.json` | < 1 KB | bleibt; nach 30 Tagen wird bei Bedarf neu gemessen |
+| Studio-Spur (Welle, Pegel, BPM, Tonart) | W1 `~/.cache/citycafe/spuren/<id>.json.gz` | ~225 KB | automatisch: zuletzt benutzte bleiben, älteste raus erst über **3 GB** (`SPUR_PLATTE_MB`, seit 21.10.; vorher 600 MB; `CITYCAFE_SPUR_MB` bei kleiner Platte) |
+| Anfang/Einsatz/Ende/Lautheit/Limiter | W1 `~/.cache/citycafe/stille/<id>.json` | < 1 KB | bleibt; **mit Studio-Abgleich für immer**, ohne Abgleich nach 30 Tagen neu messen (`STILLE_OHNE_ABGLEICH_TAGE`) |
 
 Löschen aus einer Playlist entfernt nur den Eintrag in Firebase (`djremote/city-cafe/yt/listen`).
 Ein Aufräum-Skript (alles zu Songs, die in keiner Playlist mehr sind) gibt es noch nicht – bei

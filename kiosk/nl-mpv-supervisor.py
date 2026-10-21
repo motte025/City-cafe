@@ -1814,7 +1814,10 @@ def studio_ende(vid, audio_url, laenge, ref, ref_titel):
 # nach einem Neustart des Supervisors lief der laufende Song sonst ~10 s ohne Absenkung, bis er
 # neu gemessen war (bis 5 dB zu laut). Gilt nur, solange Fassung und Lautheits-Ziel gleich sind.
 STILLE_ORDNER = os.environ.get("CITYCAFE_STILLE", os.path.expanduser("~/.cache/citycafe/stille"))
-STILLE_FASSUNG = 1         # hochzaehlen, wenn sich die Messung aendert (dann wird neu gemessen)
+STILLE_FASSUNG = 2         # hochzaehlen, wenn sich die Messung aendert (dann wird neu gemessen)
+# Gute Messungen (Studiofassung gefunden) gelten fuer immer; ohne Studio-Abgleich (z. B. iTunes
+# gerade nicht erreichbar) wird nach STILLE_OHNE_ABGLEICH_TAGE neu gemessen, falls es dann klappt.
+STILLE_OHNE_ABGLEICH_TAGE = 30
 
 
 def stille_von_platte(vid):
@@ -1823,15 +1826,16 @@ def stille_von_platte(vid):
         return True
     datei = os.path.join(STILLE_ORDNER, vid + ".json")
     try:
-        if time.time() - os.path.getmtime(datei) > 30 * 86400:   # nach 30 Tagen neu messen
-            return False
         with open(datei) as f:
             d = json.load(f)
+        alter = time.time() - os.path.getmtime(datei)
     except (OSError, ValueError):
         return False
     if d.get("fassung") != STILLE_FASSUNG or d.get("ziel") != LAUT_ZIEL_LUFS:
         return False
-    STILLE[vid] = {k: d.get(k) for k in ("anfang", "einsatz", "ende", "gain", "limiter")}
+    if not d.get("abgleich") and alter > STILLE_OHNE_ABGLEICH_TAGE * 86400:
+        return False
+    STILLE[vid] = {k: d.get(k) for k in ("anfang", "einsatz", "ende", "gain", "limiter", "abgleich")}
     return True
 
 
@@ -1840,7 +1844,8 @@ def stille_speichern(vid):
         os.makedirs(STILLE_ORDNER, exist_ok=True)
         ziel = os.path.join(STILLE_ORDNER, vid + ".json")
         with open(ziel + ".tmp", "w") as f:
-            json.dump({**STILLE[vid], "fassung": STILLE_FASSUNG, "ziel": LAUT_ZIEL_LUFS}, f)
+            json.dump({**STILLE[vid], "fassung": STILLE_FASSUNG, "ziel": LAUT_ZIEL_LUFS,
+                       "abgleich": bool(STILLE[vid].get("abgleich"))}, f)
         os.replace(ziel + ".tmp", ziel)
     except OSError as e:
         log(f"Intro/Ausklang {vid}: nicht gespeichert ({e})")
@@ -1934,7 +1939,7 @@ def stille_messen(vid, audio_url, laenge):
     gain, limiter = anhebung(audio_url)
     STILLE[vid] = {"anfang": round(anfang, 2), "einsatz": round(einsatz, 2),
                    "ende": round(ende, 2) if ende else None, "gain": gain,
-                   "limiter": limiter}
+                   "limiter": limiter, "abgleich": bool(abgl)}
     stille_speichern(vid)
     log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s "
         + (f"(volle Musik ab {einsatz:.1f}s) " if einsatz - anfang >= 1 else "")
@@ -2061,7 +2066,10 @@ SPUREN = {}                # videoId -> JSON-Text fuer window.nlStudioSpuren
 # Gemessenes bleibt auf der Platte (je Song ~250 KB gz): jeder Song wird nur einmal gemessen,
 # auch nach einem Neustart sofort da. Hoechstens SPUR_PLATTE_MB, die aeltesten fliegen raus.
 SPUR_ORDNER = os.environ.get("CITYCAFE_SPUREN", os.path.expanduser("~/.cache/citycafe/spuren"))
-SPUR_PLATTE_MB = 600
+# Obergrenze fuer gespeicherte Spuren (je Song ~225 KB, 707 Songs = 158 MB). 600 MB bis 21.10.,
+# seit 21.10. 3 GB (~13000 Songs) - die aeltesten (zuletzt benutzt) fliegen erst darueber raus.
+# Kleine Platte: CITYCAFE_SPUR_MB in citycafe.env setzen.
+SPUR_PLATTE_MB = int(os.environ.get("CITYCAFE_SPUR_MB", "3000"))
 SPUR_VERSION = 3           # hochzaehlen, wenn sich Messung/Format aendern (alte werden neu gemessen)
 # Vormessen (Wunsch 19.10.2026): solange keine Musik laeuft, alle Playlist-Songs messen, damit
 # Wellenform & Co. im DJ-Modus sofort da sind.

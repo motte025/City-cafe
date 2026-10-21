@@ -34,7 +34,10 @@ Diese Sitzung hat `ssh w1`. Gesprächssprache: Deutsch.
 4. TV-Seite neu: `ssh w1 "sudo -u citycafe kiosk-cdp \"typeof YTM_DJ_SKINS + ' ' + nlTon.blende\""`
    → `object 9`. Steht `undefined`, ist die alte Seite geladen – **nicht von Hand neu laden**
    (unterbricht die Musik), außer der Betreiber will es.
-5. **Dem Betreiber sagen:** Endstufe um ~3 dB lauter stellen (Lautheit −14 LUFS). Er weiß Bescheid
+5. **Platz prüfen:** `ssh w1 "df -h /home; du -sh /home/citycafe/.cache/citycafe/*"` – die Spuren
+   dürfen seit 21.10. bis 3 GB wachsen (vorher 600 MB). Sind auf `/home` weniger als ~10 GB frei,
+   `CITYCAFE_SPUR_MB=600` in `/home/citycafe/.config/citycafe.env` setzen und dem Betreiber melden.
+6. **Dem Betreiber sagen:** Endstufe um ~3 dB lauter stellen (Lautheit −14 LUFS). Er weiß Bescheid
    und hat zugestimmt („Endstufe stark genug“).
 
 ## Aufgabe 2 – Welle im Café auf den Ton abgleichen (mit dem Betreiber vor Ort, DJ-Modus an)
