@@ -9322,10 +9322,12 @@
                 const gj = ytmGenreJahr(t) || {};
                 return { videoId: t.videoId || '', titel: t.songtitel || t.titel || '', kuenstler: t.kuenstler || t.kanal || '',
                          genre: gj.genre || '', jahr: gj.jahr || null, dauer: YTW.sekunden(t) || 0,
-                         ton: tonGain[t.videoId] || null };   // [Lautheit dB, Limiter dB, Anfang s, Ende s] (Supervisor)
+                         ton: tonGain[t.videoId] || null,     // [Lautheit dB, Limiter dB, Anfang s, Ende s] (Supervisor)
+                         kurz: (window.nlStudioKurz || {})[t.videoId] || null };   // [bpm, sicher, camelot] fuer die Karten
             };
             const st = ytmStand();
             const vor = YTW.vorschau(ytm, 12, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
+            window.nlDjSchlange = vor.map(t => t.videoId).filter(Boolean);   // Supervisor liefert BPM/Tonart
             // Position zum jetzigen Zeitpunkt: der Supervisor misst sie etwas frueher (nlMpvStandZeit)
             const ms = window.nlMpvStand, alter = window.nlMpvStandZeit ? (Date.now() - window.nlMpvStandZeit) / 1000 : 0;
             const pos = st.pos + (ms && ms.videoId === ytm.jetzt.videoId && !ytmPausiert && alter > 0 && alter < 3 ? alter : 0);

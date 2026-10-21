@@ -231,6 +231,8 @@ def dashboard_page_id():
 # nlGeladen.schluessel ist bei YouTube-Eintraegen die videoId selbst
 # (nlSchluessel(): video.datei || video.videoId).
 STATE_EXPR = """JSON.stringify({
+  // DJ-Modus: videoIds der Leiste "Naechste Titel" (BPM/Tonart fuer die Karten)
+  djSchlange: Array.isArray(window.nlDjSchlange) ? window.nlDjSchlange.slice(0, 12) : null,
   aktiv: typeof nlAktiv !== 'undefined' ? nlAktiv : false,
   schluessel: (typeof nlGeladen !== 'undefined' && nlGeladen) ? nlGeladen.schluessel : null,
   datei: (typeof nlGeladen !== 'undefined' && nlGeladen) ? !!nlGeladen.datei : false,
@@ -2077,6 +2079,29 @@ def spur_bpm(tief, voll, hz=100):
     return round(bpm, 1), round(versatz, 3), sicher
 
 
+# Kurzwerte je Song fuer die Karten "Naechste Titel": [bpm, sicher, camelot] (aus der Studio-Spur,
+# auch von der Platte - die Playlists sind vorgemessen). None = nicht gemessen.
+KURZ = {}
+
+
+def spur_kurz(vid):
+    if vid in KURZ:
+        return KURZ[vid]
+    text = SPUREN.get(vid)
+    if not text:
+        try:
+            with gzip.open(spur_datei(vid), "rt", encoding="utf-8") as f:
+                text = f.read()
+        except OSError:
+            return None                          # (noch) nicht gemessen - spaeter neu nachsehen
+    try:
+        d = json.loads(text)
+        KURZ[vid] = [d.get("bpm"), d.get("sicher"), d.get("camelot")] if d.get("version") == SPUR_VERSION else None
+    except ValueError:
+        KURZ[vid] = None
+    return KURZ[vid]
+
+
 def spur_datei(vid):
     return os.path.join(SPUR_ORDNER, vid + ".json.gz")
 
@@ -2570,7 +2595,8 @@ def main():
                         break
                 else:
                     # sonst schon die naechsten Songs der Warteschlange (Kanal 2 frueh fuellen)
-                    for s_vid in [laufend] + [str(v) for v in (state.get("analyse") or [])[:2]]:
+                    for s_vid in ([laufend] + [str(v) for v in (state.get("analyse") or [])[:2]]
+                                  + [str(v) for v in (state.get("djSchlange") or [])[:12]]):   # auch die Karten
                         if re.fullmatch(r"[A-Za-z0-9_-]{11}", s_vid) and s_vid not in SPUREN \
                                 and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER:
                             def spur_vorab(vid=s_vid):
@@ -3102,7 +3128,10 @@ def main():
         # Meter zeigen damit, was aus der Anlage kommt (wie ton_zustand), die Wellenform zeigt
         # Anfang/Ende als Marken und den Countdown bis zur Ueberblendung (Ende - Blende).
         ton_gain = "null"
+        dj_kurz = "null"
         if musik and state.get("flaeche") == "yt-dj-video":
+            dj_kurz = json.dumps({v: spur_kurz(v) for v in (state.get("djSchlange") or [])
+                                  if re.fullmatch(r"[A-Za-z0-9_-]{11}", str(v)) and spur_kurz(v)})
             vids = {k.split("|", 1)[0] for k in list(cache)} | {str(v) for v in (state.get("analyse") or [])[:3]}
             if shown and shown.startswith("yt:"):
                 vids.add(shown[3:].split("|", 1)[0])
@@ -3117,7 +3146,7 @@ def main():
                          f"window.nlExternBis = {'Date.now() + 3000' if nl_ok else '0'}; "
                          f"window.djExternBis = {'Date.now() + 3000' if dj_ok else '0'}; "
                          f"window.djExternLaeuft = {'true' if dj_laeuft else 'false'}; "
-                         f"window.nlTonGain = {ton_gain}; "
+                         f"window.nlTonGain = {ton_gain}; window.nlStudioKurz = {dj_kurz}; "
                          f"window.nlMpvStand = {mpv_stand}; window.nlMpvStandZeit = Date.now(); 1")
             except (OSError, ValueError, ConnectionError):
                 pass

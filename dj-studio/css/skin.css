@@ -303,3 +303,10 @@ body.tv .skin .kanal-b .deck-kopf-rest > .taste.an:nth-of-type(3)::after {
 
 /* DJ-Modus: keine Zahl hinter NAECHSTE TITEL (zeigte nur die 11 vorab geschickten, Betreiber 21.10.) */
 body.tv .skin .leiste-anzahl { visibility: hidden; }
+
+/* DJ-Modus: scharfes Play/Pause-Symbol ueber dem weich gemalten der Skins (Betreiber 21.10.) */
+body.tv .skin .taste.play > svg {
+  visibility: visible; position: absolute; left: 50%; top: 50%; width: 42px; height: 21px; margin: -10.5px 0 0 -21px;
+  fill: #f4fff6; filter: drop-shadow(0 0 3px rgba(60, 255, 120, .95)) drop-shadow(0 0 8px rgba(40, 220, 90, .6));
+}
+body.tv .skin .kanal-b .taste.play > svg { fill: #fff8ec; filter: drop-shadow(0 0 3px rgba(255, 170, 40, .95)) drop-shadow(0 0 8px rgba(255, 140, 20, .6)); }

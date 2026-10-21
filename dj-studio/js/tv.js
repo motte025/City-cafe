@@ -106,10 +106,11 @@ export function tvBauen(engine) {
       titel: t.titel || '—', kuenstler: t.kuenstler || '',
       genre: [t.genre, t.jahr].filter(Boolean).join(' · '),
       dauer: Number(t.dauer) || (sp ? sp.wf.dauer : 0),
-      bpm: sp && sp.bpm ? Math.round(sp.bpm) : null,
+      // ohne volle Messung (Karten "Naechste Titel"): Kurzwerte [bpm, sicher, camelot] vom Supervisor
+      bpm: sp && sp.bpm ? Math.round(sp.bpm) : (Array.isArray(t.kurz) && t.kurz[0] ? Math.round(t.kurz[0]) : null),
       bpmMess: sp && sp.bpm && !sicher ? sp.bpm : null,          // ungefaehr: ohne Taktraster
       grid: sicher ? { bpm: sp.bpm, offset: sp.versatz, herkunft: 'messung' } : null,
-      key: sp && sp.camelot ? sp.camelot : null, tonart: sp ? sp.tonart : null,
+      key: sp && sp.camelot ? sp.camelot : (Array.isArray(t.kurz) ? t.kurz[2] || null : null), tonart: sp ? sp.tonart : null,
       ton: Array.isArray(t.ton) ? t.ton : null,   // [Lautheit dB, Limiter dB, Anfang s, Ende s] (Supervisor)
       // Marken (Supervisor-Analyse): Musik beginnt, Ueberblendung beginnt (Ende - Blende), Ende
       anfang: Array.isArray(t.ton) && t.ton[2] > 0.3 ? t.ton[2] : null,
@@ -163,7 +164,7 @@ export function tvBauen(engine) {
     if (!auslauf) setzen(anderer(luft), naechster, false);
     if (!blende) engine.request('master.crossfader', luft === 'A' ? -1 : 1);
     const q = (Array.isArray(d.schlange) ? d.schlange : []).map(track).filter(Boolean);
-    if (q.map(x => x.id).join('|') !== state.queue.map(x => x.id).join('|')) {
+    if (q.map(x => x.id + x.bpm + x.key).join('|') !== state.queue.map(x => x.id + x.track.bpm + x.track.key).join('|')) {
       bestaetigen('queue', q.map(x => ({ id: x.id, track: x })));
     }
   }
