@@ -7,7 +7,7 @@ import { F } from '../skin.js';
 
 // Ganze Breite zwischen den Tasten A und B (Betreiber: groesser, in die Laenge gezogen) -
 // im Crossfader-Feld allein (390) wurde die gestreckte Schrift verkleinert.
-const LAGE = [542, 763, 576, 40];          // x, y, Breite, Hoehe in Bild-2-Pixeln (6 nach links: Kursive wirkt sonst rechtslastig)
+const LAGE = [544, 763, 576, 40];          // x, y, Breite, Hoehe in Bild-2-Pixeln (4 nach links: Kursive wirkt sonst rechtslastig)
 const STRECKUNG = 1.25;                    // waagrecht gezogen wie der Pioneer-Schriftzug (Betreiber)
 // Skins mit hellem Grund: dort ist der Pioneer-Schriftzug schwarz - die Werbung auch
 // (gemessen am Bild: Median der Schriftzug-Flaeche > 150)
