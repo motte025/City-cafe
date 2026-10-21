@@ -96,27 +96,51 @@ function taktEins(tief, proSek, bpm, versatz) {
 // das Tempo, bei dem die Bass-Einsaetze des ganzen Songs am deutlichsten auf dem Raster liegen
 // (Summe der Einsaetze als Zeiger auf dem Taktkreis); daraus auch die Lage der Schlaege.
 // Geprueft an 13 Songs: Deutlichkeit im Mittel x6, Raster bleibt ueber den Song +-30 ms.
+// Zeiger der Bass-Einsaetze auf dem Taktkreis eines Tempos (Betrag = wie deutlich es passt)
+function zeiger(ons, proSek, b) {
+  const w = 2 * Math.PI * b / 60 / proSek, cr = Math.cos(w), sr = -Math.sin(w);
+  let er = 1, ei = 0, zr = 0, zi = 0;
+  for (let i = 0; i < ons.length; i++) {
+    const v = ons[i];
+    if (v) { zr += v * er; zi += v * ei; }
+    const nr = er * cr - ei * sr; ei = er * sr + ei * cr; er = nr;
+  }
+  return { zr, zi, betrag: Math.hypot(zr, zi) };
+}
+function feinSuchen(ons, proSek, bpm, schritte, teil) {
+  let best = null;
+  for (let k = -schritte; k <= schritte; k++) {
+    const b = bpm * (1 + k / teil), z = zeiger(ons, proSek, b);
+    if (!best || z.betrag > best.betrag) best = { b, ...z };
+  }
+  return best;
+}
+// Tempo-Familie (21.10.2026): der Supervisor vertut sich selten im Verhaeltnis 4:3 oder 3:2
+// (Maroon 5 "Sugar": 159 statt 120 BPM - mit 120 passen die Schlaege zehnmal deutlicher).
+// Je Familie grob suchen; gewechselt wird nur, wenn eine andere mindestens doppelt so deutlich
+// passt (auch die doppelte/halbe Fassung zaehlt, Hi-Hats liegen oft auf Achteln). Danach ins
+// Club-Tempo 75-170 BPM bringen.
+const FAMILIEN = [1, 0.75, 4 / 3, 2 / 3, 1.5];
 function tempoVerfeinern(tief, proSek, bpm) {
   const n = tief.length, ons = new Float32Array(n);
   let summe = 0;
   for (let i = 1; i < n; i++) { const d = tief[i] - tief[i - 1]; if (d > 0) { ons[i] = d; summe += d; } }
   if (!summe) return { bpm, versatz: 0 };
-  let best = null;
-  for (let k = -150; k <= 150; k++) {
-    const b = bpm * (1 + k / 10000), w = 2 * Math.PI * b / 60 / proSek;
-    const cr = Math.cos(w), sr = -Math.sin(w);
-    let er = 1, ei = 0, zr = 0, zi = 0;
-    for (let i = 0; i < n; i++) {
-      const v = ons[i];
-      if (v) { zr += v * er; zi += v * ei; }
-      const nr = er * cr - ei * sr; ei = er * sr + ei * cr; er = nr;
-    }
-    const betrag = zr * zr + zi * zi;
-    if (!best || betrag > best.betrag) best = { b, betrag, zr, zi };
-  }
-  const T = 60 / best.b;
-  const versatz = ((-Math.atan2(best.zi, best.zr) / (2 * Math.PI) * T) % T + T) % T;
-  return { bpm: best.b, versatz };
+  const fam = FAMILIEN.map(f => {
+    const g = feinSuchen(ons, proSek, bpm * f, 15, 1000);          // +-1,5 % in 0,1-%-Schritten
+    const wert = Math.max(g.betrag, zeiger(ons, proSek, g.b * 2).betrag, zeiger(ons, proSek, g.b / 2).betrag);
+    return { f, b: g.b, wert };
+  });
+  let wahl = fam[0];
+  for (const x of fam.slice(1)) if (x.wert >= 2 * fam[0].wert && x.wert > wahl.wert) wahl = x;
+  let b = wahl.b;
+  while (b > 170) b /= 2;
+  while (b < 75) b *= 2;
+  const best = feinSuchen(ons, proSek, b, 15, 1000);             // dann fein: +-0,15 % in 0,01 %
+  const fein = feinSuchen(ons, proSek, best.b, 15, 10000);
+  const T = 60 / fein.b;
+  const versatz = ((-Math.atan2(fein.zi, fein.zr) / (2 * Math.PI) * T) % T + T) % T;
+  return { bpm: fein.b, versatz };
 }
 
 // Messung -> Wellenform (wie analysis.js) und Pegelreihen
@@ -155,19 +179,50 @@ export function tvBauen(engine) {
   const lautFaktor = () => (vol === null ? 1 : Math.pow(vol / 100, 3));
   const jetztS = () => performance.now() / 1000;
 
+  // Schlaege und Takt-Einsen von beat_this (am PC vorab gerechnet, dj-studio/takt/<id>.json,
+  // 21.10.2026): jeder einzelne Schlag (folgt auch Bands ohne festes Tempo) und die echte Eins.
+  // Fehlt die Datei (z. B. neuer Wunsch-Song), gilt das gerechnete Raster aus der Messung.
+  const takte = new Map();           // videoId -> Raster | null (keine Datei) | 'laedt'
+  function taktAus(d) {
+    const n = d.b.length, zeiten = new Float64Array(n), eins = new Uint8Array(n);
+    let t = 0;
+    for (let i = 0; i < n; i++) { t += d.b[i]; zeiten[i] = t / 1000; }
+    for (const i of d.e || []) if (i >= 0 && i < n) eins[i] = 1;
+    // Tempo ueber je 8 Schlaege (beat_this setzt Schlaege auf 20-ms-Raster - ein Abstand allein
+    // gab 111,11 statt 110,0), Median gegen Breaks und Tempowechsel
+    const abst = [];
+    for (let i = 0; i + 8 < n; i++) abst.push((zeiten[i + 8] - zeiten[i]) / 8);
+    abst.sort((a, b) => a - b);
+    const bpm = 60 / (abst[abst.length >> 1] || 0.5);
+    const e0 = (d.e || []).find(i => i >= 0 && i < n);
+    return { bpm, offset: e0 !== undefined ? zeiten[e0] : zeiten[0], zeiten, eins, herkunft: 'beat_this' };
+  }
+  function taktLaden(vid) {
+    if (takte.has(vid) || !/^[A-Za-z0-9_-]{11}$/.test(vid)) return;
+    takte.set(vid, 'laedt');
+    fetch(`takt/${vid}.json`).then(r => (r.ok ? r.json() : null)).then(d => {
+      takte.set(vid, d && Array.isArray(d.b) && d.b.length > 8 ? taktAus(d) : null);
+      if (takte.get(vid)) neuZeigen(vid);
+    }).catch(() => takte.set(vid, null));
+    for (const k of [...takte.keys()].slice(0, -40)) takte.delete(k);
+  }
+
   function track(t) {
     if (!t || !t.videoId) return null;
     const sp = spuren.get(t.videoId);
     const sicher = sp && sp.bpm && sp.sicher >= SICHER_MIN;
+    const tk = takte.get(t.videoId);
+    if (tk === undefined) taktLaden(t.videoId);
+    const takt = tk && tk.zeiten ? tk : null;
     return {
       id: 'yt-' + t.videoId, videoId: t.videoId,
       titel: t.titel || '—', kuenstler: t.kuenstler || '',
       genre: [t.genre, t.jahr].filter(Boolean).join(' · '),
       dauer: Number(t.dauer) || (sp ? sp.wf.dauer : 0),
       // ohne volle Messung (Karten "Naechste Titel"): Kurzwerte [bpm, sicher, camelot] vom Supervisor
-      bpm: sp && sp.bpm ? Math.round(sp.bpm) : (Array.isArray(t.kurz) && t.kurz[0] ? Math.round(t.kurz[0]) : null),
+      bpm: takt ? Math.round(takt.bpm) : sp && sp.bpm ? Math.round(sp.bpm) : (Array.isArray(t.kurz) && t.kurz[0] ? Math.round(t.kurz[0]) : null),
       bpmMess: sp && sp.bpm && !sicher ? sp.bpm : null,          // ungefaehr: ohne Taktraster
-      grid: sicher ? { bpm: sp.bpm, offset: sp.versatz, herkunft: 'messung' } : null,
+      grid: takt || (sicher ? { bpm: sp.bpm, offset: sp.versatz, herkunft: 'messung' } : null),
       key: sp && sp.camelot ? sp.camelot : (Array.isArray(t.kurz) ? t.kurz[2] || null : null), tonart: sp ? sp.tonart : null,
       ton: Array.isArray(t.ton) ? t.ton : null,   // [Lautheit dB, Limiter dB, Anfang s, Ende s] (Supervisor)
       // Marken (Supervisor-Analyse): Musik beginnt, Ueberblendung beginnt (Ende - Blende), Ende
@@ -186,7 +241,8 @@ export function tvBauen(engine) {
     const t = track(roh), alt = state.decks[id].track;
     if (!t) { if (alt) bestaetigen(`decks.${id}.track`, null); }
     else if (!alt || alt.id !== t.id || alt.titel !== t.titel || alt.dauer !== t.dauer || alt.wf !== t.wf
-             || String(alt.ton) !== String(t.ton) || alt.mixAb !== t.mixAb) {
+             || String(alt.ton) !== String(t.ton) || alt.mixAb !== t.mixAb
+             || (alt.grid && alt.grid.herkunft) !== (t.grid && t.grid.herkunft)) {
       bestaetigen(`decks.${id}.track`, t);
     }
     bestaetigen(`decks.${id}.spielt`, spielt);
@@ -236,13 +292,16 @@ export function tvBauen(engine) {
     const sp = spurLesen(roh);
     spuren.set(sp.videoId, sp);
     for (const k of [...spuren.keys()].slice(0, -6)) spuren.delete(k);
-    // liegt der Song schon auf einem Kanal oder in der Leiste: mit Messwerten neu zeigen
+    neuZeigen(sp.videoId);
+  }
+  // liegt der Song schon auf einem Kanal oder in der Leiste: mit neuen Werten neu zeigen
+  function neuZeigen(vid) {
     for (const id of ['A', 'B']) {
       const tr = state.decks[id].track;
-      if (tr && tr.videoId === sp.videoId) setzen(id, { ...tr, genre: tr.genre }, state.decks[id].spielt);
+      if (tr && tr.videoId === vid) setzen(id, { ...tr, genre: tr.genre }, state.decks[id].spielt);
     }
-    if (state.queue.some(q => q.track.videoId === sp.videoId)) {
-      bestaetigen('queue', state.queue.map(q => (q.track.videoId === sp.videoId ? { ...q, track: track(q.track) } : q)));
+    if (state.queue.some(q => q.track.videoId === vid)) {
+      bestaetigen('queue', state.queue.map(q => (q.track.videoId === vid ? { ...q, track: track(q.track) } : q)));
     }
   }
 

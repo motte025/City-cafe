@@ -212,15 +212,22 @@ export class DetailWelle {
     }
     g.globalCompositeOperation = 'source-over';
     // Taktraster
-    if (tr.grid && d.beatgrid) {
+    const strich = (x, takt) => {
+      g.fillStyle = takt ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.16)';
+      g.fillRect(Math.round(x), 0, takt ? 2 : 1, h);
+      if (takt) { g.fillStyle = 'rgba(255,255,255,.85)'; g.fillRect(Math.round(x) - 3, 0, 8, 4); }
+    };
+    if (tr.grid && d.beatgrid && tr.grid.zeiten) {
+      // einzelne Schlaege (beat_this): erster sichtbarer per Halbierungssuche
+      const z = tr.grid.zeiten;
+      let lo = 0, hi = z.length;
+      while (lo < hi) { const m = (lo + hi) >> 1; if (z[m] < t0) lo = m + 1; else hi = m; }
+      for (let k = lo; k < z.length && z[k] <= t0 + this.zoom; k++) strich((z[k] - t0) / sekProPx, tr.grid.eins[k] === 1);
+    } else if (tr.grid && d.beatgrid) {
       const b = 60 / tr.grid.bpm;
       const k0 = Math.ceil((t0 - tr.grid.offset) / b), k1 = Math.floor((t0 + this.zoom - tr.grid.offset) / b);
       for (let k = k0; k <= k1; k++) {
-        const x = (tr.grid.offset + k * b - t0) / sekProPx;
-        const takt = k % 4 === 0;
-        g.fillStyle = takt ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.16)';
-        g.fillRect(Math.round(x), 0, takt ? 2 : 1, h);
-        if (takt) { g.fillStyle = 'rgba(255,255,255,.85)'; g.fillRect(Math.round(x) - 3, 0, 8, 4); }
+        strich((tr.grid.offset + k * b - t0) / sekProPx, k % 4 === 0);
       }
     }
     // TV: Marken aus der Analyse - gruen Anfang, orange Ueberblendung, rot Ende

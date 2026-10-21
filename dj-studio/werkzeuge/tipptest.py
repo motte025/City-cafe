@@ -25,11 +25,13 @@ _t = [v / 255 for v in __import__('base64').b64decode(sp['tief'])]
 bpm, vers, _k = vf.verfeinern(vf.ons_von(_t), sp['proSek'], sp['bpm'])   # genaues Raster wie im Studio
 T = 60.0 / bpm
 klicks = []
-ZIEL = 30
+EINS = len(sys.argv) > 3 and sys.argv[3] == 'eins'   # nur auf die Eins klicken
+VERZ = 0.10                                          # Bluetooth-Verzoegerung zuhause (Tipp-Test 21.10.)
+ZIEL = 12 if EINS else 30
 fenster = Gtk.Window(title='Tipp-Test: im Takt klicken')
 fenster.set_default_size(520, 300)
 box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-info = Gtk.Label(label=f'Auf jeden Schlag klicken oder Leertaste ({bpm:.0f} BPM)\n0 von {ZIEL}')
+info = Gtk.Label(label=(f'NUR auf die EINS jedes Takts klicken ({bpm:.0f} BPM)' if EINS else f'Auf jeden Schlag klicken oder Leertaste ({bpm:.0f} BPM)') + f'\n0 von {ZIEL}')
 knopf = Gtk.Button(label='KLICK  im Takt')
 knopf.set_size_request(480, 200)
 box.pack_start(info, False, False, 10); box.pack_start(knopf, True, True, 10)
@@ -42,7 +44,16 @@ def tipp(*a):
     info.set_text(f'Auf jeden Schlag klicken oder Leertaste ({bpm:.0f} BPM)\n{len(klicks)} von {ZIEL}')
     if len(klicks) >= ZIEL: auswerten()
     return True
+def eins_auswerten():
+    # Schlag im 4er-Raster ab versatz, an dem der Klick liegt (Verzoegerung abgezogen)
+    schlaege = [round((p - VERZ - vers) / T) % 4 + 1 for p in klicks[2:]]
+    zaehl = {k: schlaege.count(k) for k in (1, 2, 3, 4)}
+    erg = {'vid': vid, 'bpm': bpm, 'versatz': vers, 'eins_schlag': zaehl, 'klicks': klicks}
+    json.dump(erg, open(S + '/eins.json', 'w'))
+    info.set_text(f"Fertig: Eins auf Raster-Schlag {max(zaehl, key=zaehl.get)} ({zaehl})")
+    GLib.timeout_add(2500, Gtk.main_quit)
 def auswerten():
+    if EINS: return eins_auswerten()
     ph = [((p - vers) % T) for p in klicks[4:]]          # die ersten 4 zum Einfinden weglassen
     # Kreismittel der Phase
     c = sum(math.cos(2 * math.pi * x / T) for x in ph); s_ = sum(math.sin(2 * math.pi * x / T) for x in ph)
