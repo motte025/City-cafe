@@ -48,6 +48,11 @@ Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
 
 ### Als Nächstes (Stand 21.10. nachmittags)
 
+**Entscheidung Betreiber (21.10. nachmittags): die Takt-Dateien werden am PC zuhause fertig
+eingelesen** (Playlist-Durchlauf + Nachlesen auch der Café-Songs) und kommen über das Repo
+(`dj-studio/takt/`) auf den Café-TV. beat_this auf dem W1 (`AUFTRAG-W1.md` Aufgabe 3) ist damit
+vorerst nicht nötig; der Supervisor-Code dafür bleibt und tut ohne Umgebung nichts.
+
 1. **W1 umstellen** (Betreiber, heute): siehe oben; Takt-Dateien aus dem Repo nach
    `/home/citycafe/.cache/citycafe/takt/` kopieren; Prüfungen aus `AUFTRAG-W1.md` Aufgabe 1
    (`grep -E "Tonwechsel|Takt |Lautheit gesetzt" …/nl-mpv-supervisor.log`).
