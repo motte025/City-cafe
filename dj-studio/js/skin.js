@@ -120,7 +120,6 @@ const FLICKEN_A = [
   { ziel: [34, 347, 84, 36], farbe: '#05080b' },              // BPM-Zahl
   { ziel: [140, 350, 68, 30], quelle: [208, 350, 3, 30] },        // Tempo-Zahl
   { ziel: [392, 354, 34, 26], quelle: [427, 354, 3, 26] },        // Key
-  { ziel: [66, 427, 28, 236], farbe: '#06080b' },                 // Pegel-LEDs
   { ziel: [293, 95, 20, 18], quelle: [313, 95, 3, 18] },          // VIDEO-LED
   { ziel: [484, 529, 18, 14], quelle: [480, 529, 3, 14] },        // VINYL-LED am Jog
   { ziel: [57, 719, 14, 14], quelle: [52, 719, 3, 14] },          // VINYL-LED unten
@@ -213,7 +212,6 @@ const FLICKEN_B = [
   { ziel: [1550, 348, 90, 35], farbe: '#05080b' },   // BPM-Zahl (Display ist in allen Skins dunkel)
   { ziel: [1462, 350, 68, 30], quelle: [1458, 350, 3, 30] },
   { ziel: [1247, 354, 34, 26], quelle: [1282, 354, 3, 26] },
-  { ziel: [1579, 427, 29, 236], farbe: '#06080b' },
   { ziel: [1394, 95, 22, 18], quelle: [1418, 95, 3, 18] },
   { ziel: [1166, 529, 18, 14], quelle: [1188, 529, 3, 14] },
   { ziel: [1572, 719, 40, 14], quelle: [1566, 719, 3, 14] },
@@ -263,7 +261,6 @@ const FLICKEN_MITTE = [
   { ziel: [557, 368, 557, 36], farbe: 'rgb(3,4,10)' },
   { ziel: [715, 410, 68, 46], quelle: [781, 410, 68, 46] },         // VIDEO-Reiter-Schein
   { ziel: [588, 554, 250, 58], farbeVon: [586, 562] },              // Master-LEDs
-  { ziel: [962, 538, 24, 108], farbe: '#07090c' },                  // GR-LEDs
   { ziel: [1015, 540, 89, 41], quelle: [1015, 579, 89, 41] },       // VIDEO/AUDIO-Schein
   { ziel: [800, 680, 70, 44], quelle: [700, 680, 70, 44] },         // Crossfader-Kappe: Schiene
   { ziel: [800, 724, 70, 15], quer: true },                          // ... Kappenfuss unter der Schiene (ueber dem Logo)
@@ -367,39 +364,43 @@ function ledLagen() {
 
 // Pegelmeter je Skin (gemessen 21.10. in den Bildern): A/B = Innenkante des schwarzen Kanal-Gehaeuses
 // [links, oben, rechts, unten]; M = gemaltes Master-Raster [x, y, b, h, Zeilenluecke, Kanalluecke,
-// Lueckenanteil] mit 25 Spalten. Das Kanal-Meter deckt das ganze Gehaeuse ab (die gemalten LEDs
+// Lueckenanteil] mit 25 Spalten; G = Gehaeuse der GR-/Pegelsaeule (wie A/B). Das Kanal-Meter deckt das ganze Gehaeuse ab (die gemalten LEDs
 // sind unregelmaessig) und zeichnet seine 30 LEDs genau mittig; der Master liegt auf dem Raster.
 const METER_LAGE = {
-  'bild2': { A: [66.96, 423.61, 92.51, 667.04], B: [1579.24, 423.61, 1604.65, 667.1], M: [591.1, 557.9, 243.11, 51.26, 2.93, 12.89, 0.188] },
-  'amber-blau': { A: [68.28, 424.37, 93.53, 666.76], B: [1577.55, 424.68, 1604.06, 667.73], M: [590.06, 556.71, 246.99, 52.64, 3.98, 12.24, 0.231] },
-  'blau-amber': { A: [66.19, 423.81, 94.2, 666.6], B: [1576.46, 423.17, 1604.95, 667.34], M: [590.45, 556.95, 245.38, 52.96, 2.82, 11.7, 0.192] },
-  'tiefglas': { A: [65.99, 424.22, 93.48, 664.7], B: [1577.32, 423.65, 1604.56, 664.82], M: [590.65, 556.5, 244.28, 53.07, 2.98, 11.0, 0.169] },
-  'gold': { A: [66.7, 424.7, 92.81, 665.42], B: [1578.47, 424.61, 1604.49, 665.78], M: [590.75, 557.47, 244.89, 52.08, 2.62, 11.65, 0.188] },
-  'weiss': { A: [67.3, 424.91, 92.91, 665.34], B: [1578.98, 425.15, 1604.47, 665.57], M: [590.98, 557.43, 244.24, 52.01, 2.84, 11.76, 0.192] },
-  'chrom': { A: [67.14, 424.84, 92.69, 663.65], B: [1576.71, 424.88, 1603.52, 664.05], M: [589.98, 554.64, 245.3, 55.15, 3.01, 11.02, 0.206] },
-  'ladys-tuerkis': { A: [67.04, 424.84, 93.11, 665.56], B: [1578.83, 425.0, 1604.77, 666.01], M: [590.8, 557.25, 244.81, 52.08, 2.65, 11.65, 0.19] },
-  'elfenbein': { A: [67.12, 425.24, 93.04, 665.88], B: [1578.57, 424.75, 1604.4, 665.59], M: [591.02, 557.56, 244.56, 52.04, 2.75, 11.47, 0.202] },
-  'carbon': { A: [65.76, 424.31, 93.18, 667.2], B: [1578.31, 423.83, 1605.15, 666.89], M: [590.58, 557.34, 244.31, 52.28, 2.63, 11.52, 0.169] },
-  'ladys-pink': { A: [66.56, 424.72, 92.78, 666.23], B: [1578.36, 424.64, 1604.28, 666.11], M: [590.74, 557.44, 244.47, 52.15, 2.6, 11.73, 0.18] },
-  'onyx': { A: [68.24, 425.01, 93.09, 667.75], B: [1579.48, 424.97, 1604.31, 667.74], M: [590.38, 557.1, 245.7, 52.08, 2.78, 11.39, 0.199] },
-  'champagner': { A: [66.79, 424.69, 93.04, 665.43], B: [1578.61, 424.64, 1604.47, 665.57], M: [590.64, 557.39, 244.29, 52.16, 2.61, 11.45, 0.155] },
+  'bild2': { A: [66.96, 423.61, 92.51, 667.04], B: [1579.24, 423.61, 1604.65, 667.1], M: [591.1, 557.9, 243.11, 51.26, 2.93, 12.89, 0.188], G: [961.38, 540.0, 984.88, 645.5] },
+  'amber-blau': { A: [68.28, 424.37, 93.53, 666.76], B: [1577.55, 424.68, 1604.06, 667.73], M: [590.06, 556.71, 246.99, 52.64, 3.98, 12.24, 0.231], G: [961.0, 539.18, 983.05, 647.57] },
+  'blau-amber': { A: [66.19, 423.81, 94.2, 666.6], B: [1576.46, 423.17, 1604.95, 667.34], M: [590.45, 556.95, 245.38, 52.96, 2.82, 11.7, 0.192], G: [960.92, 540.6, 984.77, 648.64] },
+  'tiefglas': { A: [65.99, 424.22, 93.48, 664.7], B: [1577.32, 423.65, 1604.56, 664.82], M: [590.65, 556.5, 244.28, 53.07, 2.98, 11.0, 0.169], G: [960.78, 540.49, 985.01, 647.78] },
+  'gold': { A: [66.7, 424.7, 92.81, 665.42], B: [1578.47, 424.61, 1604.49, 665.78], M: [590.75, 557.47, 244.89, 52.08, 2.62, 11.65, 0.188], G: [960.7, 541.19, 983.94, 648.21] },
+  'weiss': { A: [67.3, 424.91, 92.91, 665.34], B: [1578.98, 425.15, 1604.47, 665.57], M: [590.98, 557.43, 244.24, 52.01, 2.84, 11.76, 0.192], G: [960.96, 540.77, 984.35, 647.5] },
+  'chrom': { A: [67.14, 424.84, 92.69, 663.65], B: [1576.71, 424.88, 1603.52, 664.05], M: [589.98, 554.64, 245.3, 55.15, 3.01, 11.02, 0.206], G: [962.22, 541.1, 985.61, 648.59] },
+  'ladys-tuerkis': { A: [67.04, 424.84, 93.11, 665.56], B: [1578.83, 425.0, 1604.77, 666.01], M: [590.8, 557.25, 244.81, 52.08, 2.65, 11.65, 0.19], G: [960.68, 540.79, 984.24, 647.79] },
+  'elfenbein': { A: [67.12, 425.24, 93.04, 665.88], B: [1578.57, 424.75, 1604.4, 665.59], M: [591.02, 557.56, 244.56, 52.04, 2.75, 11.47, 0.202], G: [960.48, 541.1, 984.23, 647.92] },
+  'carbon': { A: [65.76, 424.31, 93.18, 667.2], B: [1578.31, 423.83, 1605.15, 666.89], M: [590.58, 557.34, 244.31, 52.28, 2.63, 11.52, 0.169], G: [960.85, 540.09, 984.33, 648.22] },
+  'ladys-pink': { A: [66.56, 424.72, 92.78, 666.23], B: [1578.36, 424.64, 1604.28, 666.11], M: [590.74, 557.44, 244.47, 52.15, 2.6, 11.73, 0.18], G: [960.86, 541.22, 983.85, 647.99] },
+  'onyx': { A: [68.24, 425.01, 93.09, 667.75], B: [1579.48, 424.97, 1604.31, 667.74], M: [590.38, 557.1, 245.7, 52.08, 2.78, 11.39, 0.199], G: [961.26, 541.22, 983.66, 649.59] },
+  'champagner': { A: [66.79, 424.69, 93.04, 665.43], B: [1578.61, 424.64, 1604.47, 665.57], M: [590.64, 557.39, 244.29, 52.16, 2.61, 11.45, 0.155], G: [960.79, 541.1, 983.95, 647.79] },
 };
-const METER_GRUND = '#060606', LED_BREITE = 18.3, CLIP_H = 3, CLIP_ABSTAND = 1.8;
+const METER_GRUND = '#060606', LED_BREITE = 18.3, GR_BREITE = 16.2, CLIP_H = 3, CLIP_ABSTAND = 1.8;
 const meterDaten = new Map();   // Teil-Tabelle -> data-lage fuer den Canvas
 function meterLagen() {
   const m = METER_LAGE[SKIN_WAHL || 'bild2'];
   for (const [deck, t] of [['A', DECK_A], ['B', DECK_B]]) {
     const [l, o, r, u] = m[deck];
-    // Canvas 0,4 px innerhalb der Gehaeusekante (Rundung bleibt gemalt), LEDs mit gleichem Rand ringsum
-    const x = l + 0.4, y = o + 0.4, b = r - l - 0.8, h = u - o - 0.8, rand = (b - LED_BREITE) / 2;
+    // Canvas 0,6 px innerhalb der Gehaeusekante (Rundung bleibt gemalt), LEDs mit gleichem Rand ringsum
+    const x = l + 0.6, y = o + 0.6, b = r - l - 1.2, h = u - o - 1.2, rand = (b - LED_BREITE) / 2;
     t.teile.find(e => e[0] === '.deck-meter')[1] = [x, y, b, h];
     t.teile.find(e => e[0] === '.clip-led')[1] = [x + rand, y + rand, LED_BREITE, CLIP_H];
-    meterDaten.set(t, { rand: [rand, rand + CLIP_H + CLIP_ABSTAND, rand, rand], grund: METER_GRUND, radius: 2, luecke: 0.2 });
+    meterDaten.set(t, { rand: [rand, rand + CLIP_H + CLIP_ABSTAND, rand, rand], grund: METER_GRUND, radius: 3, luecke: 0.2 });
   }
   const [x, y, b, h, zl, kl, lu] = m.M;
   MITTE.teile.find(e => e[0] === '.master-meter')[1] = [x, y, b, h];
   meterDaten.set(MITTE, { grund: METER_GRUND, zeilenLuecke: zl, kanalLuecke: kl, luecke: lu });
+  const [gl, go, gr, gu] = m.G, gb = gr - gl - 1.2;
+  MITTE.teile.find(e => e[0] === '.gr-meter')[1] = [gl + 0.6, go + 0.6, gb, gu - go - 1.2];
+  grDaten = { rand: (gb - GR_BREITE) / 2, spalte: 2.4, grund: METER_GRUND, radius: 2.5 };
 }
+let grDaten = null;
 
 export function skinAnwenden() {
   ledLagen();
@@ -417,6 +418,8 @@ export function skinAnwenden() {
     sektionAnwenden(sek, t);
     const md = meterDaten.get(t), mc = md && sek.querySelector('.deck-meter, .master-meter');
     if (mc) mc.dataset.lage = JSON.stringify(md);
+    const gc = t === MITTE && grDaten && sek.querySelector('.gr-meter');
+    if (gc) gc.dataset.lage = JSON.stringify(grDaten);
   }
   // Die Karten der Leiste werden bei jeder Aenderung neu gebaut -> neu einpassen
   const karten = document.querySelector('#leiste .leiste-karten');
