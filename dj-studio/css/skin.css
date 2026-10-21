@@ -316,9 +316,10 @@ body.tv .skin .taste.play {
               0 3px 6px rgba(0, 0, 0, .6);
   transition: box-shadow .12s;
 }
-body.tv .skin .kanal-b .taste.play { --neon: #ffb300; --kern: #fff1c4; --sym: #ffd52a; --grund: #090603; }
-/* Pause: beide Tasten blinken gruen (Betreiber 21.10.) */
-body.tv .skin .kanal-b .taste.play:not(.an) { --neon: #2fe36a; --kern: #d2ffdc; --sym: #b8ffc8; --grund: #030805; }
+/* Song laeuft: Licht in der Farbe der eigenen Wellenform (waveform.js FARBEN.mitte: A blau, B orange);
+   Pause: beide blinken gruen (Betreiber 21.10.) */
+body.tv .skin .taste.play.an { --neon: #1487ff; --kern: #d4e8ff; --sym: #9fceff; --grund: #03060b; }
+body.tv .skin .kanal-b .taste.play.an { --neon: #ff9614; --kern: #ffe8c8; --sym: #ffc46a; --grund: #090603; }
 body.tv .skin .taste.play > svg {
   visibility: visible; position: absolute; left: 50%; top: 50%; width: 40px; height: 20px; margin: -10px 0 0 -20px;
   fill: color-mix(in srgb, var(--sym) 55%, #000); transition: fill .12s, filter .12s;
