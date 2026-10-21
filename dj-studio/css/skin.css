@@ -278,4 +278,5 @@ body.tv .skin .tempo-zahl, body.tv .skin .key-zahl { text-align: center; }
 
 /* DJ-Modus: ON AIR / NEXT senkrecht mittig im Feld, Titel 35 px */
 body.tv .skin .deck-kanal { display: flex; align-items: center; line-height: 1; padding-top: 2px; }
-body.tv .skin .deck-titel { font-size: 35px; line-height: 42px; }
+body.tv .skin .deck-titel { font-size: 40px; line-height: 46px; }
+body.tv .skin .deck-kuenstler { font-size: 25px; line-height: 28px; }

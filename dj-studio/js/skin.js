@@ -41,17 +41,17 @@ const DECK_A = {
     ['.deck-kopf-rest > .taste.icon', [505, 91, 28, 26]],
     ['.deck-video .led', [297, 99, 10, 10]],
     // Titel
-    ['.deck-cover', [29, 130, 97, 78]],
+    ['.deck-cover', [29, 130, 97, 78], { tv: [29, 131, 104, 84] }],
     // Titel groesser (Wunsch 18.10.2026): 27 px statt 21 px, Kuenstler 20 px
-    ['.deck-titel', [140, 129, 330, 31], { tv: [140, 123, 394, 42] }],
-    ['.deck-kuenstler', [140, 160, 330, 22], { tv: [140, 164, 300, 23] }],
-    ['.deck-meta', [140, 182, 270, 18], { tv: [140, 187, 262, 18] }],
+    ['.deck-titel', [140, 129, 330, 31], { tv: [146, 127, 390, 46] }],
+    ['.deck-kuenstler', [140, 160, 330, 22], { tv: [146, 173, 300, 28] }],
+    ['.deck-meta', [140, 182, 270, 18], { tv: [146, 201, 255, 18] }],
     ['.herz', [479, 138, 22, 21]],
     ['.deck-info-icons > .taste:not(.herz)', [512, 138, 20, 23]],
-    ['.deck-zeit', [404, 179, 124, 22], { tv: [404, 185, 124, 22] }],
+    ['.deck-zeit', [404, 179, 124, 22], { tv: [404, 198, 128, 22] }],
     ['.deck-meldung', [140, 236, 290, 34]],
     // Wellenformen
-    ['.deck-welle', [28, 212, 508, 84]],
+    ['.deck-welle', [28, 212, 508, 84], { tv: [28, 228, 508, 68] }],
     ['.deck-ueber', [30, 297, 506, 20]],
     ['.welle-ueber', [30, 297, 506, 20]],
     ['.ueber-marke', [498, 299, 20, 16]],
@@ -140,15 +140,15 @@ const DECK_B = {
     ['.deck-kopf-rest > .taste:nth-of-type(3)', [1549, 90, 54, 28], { bild: true, an: true }],
     ['.deck-kopf-rest > .taste.icon', [1613, 91, 28, 26]],
     ['.deck-video .led', [1399, 99, 10, 10]],
-    ['.deck-cover', [1136, 130, 102, 78]],
-    ['.deck-titel', [1253, 129, 320, 31], { tv: [1253, 123, 392, 42] }],
-    ['.deck-kuenstler', [1253, 160, 320, 22], { tv: [1253, 164, 300, 23] }],
-    ['.deck-meta', [1253, 182, 255, 18], { tv: [1253, 187, 252, 18] }],
+    ['.deck-cover', [1136, 130, 102, 78], { tv: [1136, 131, 108, 84] }],
+    ['.deck-titel', [1253, 129, 320, 31], { tv: [1258, 127, 386, 46] }],
+    ['.deck-kuenstler', [1253, 160, 320, 22], { tv: [1258, 173, 300, 28] }],
+    ['.deck-meta', [1253, 182, 255, 18], { tv: [1258, 201, 248, 18] }],
     ['.herz', [1590, 138, 22, 21]],
     ['.deck-info-icons > .taste:not(.herz)', [1622, 138, 20, 23]],
-    ['.deck-zeit', [1508, 179, 124, 22], { tv: [1508, 185, 124, 22] }],
+    ['.deck-zeit', [1508, 179, 124, 22], { tv: [1508, 198, 128, 22] }],
     ['.deck-meldung', [1250, 236, 290, 34]],
-    ['.deck-welle', [1136, 212, 508, 84]],
+    ['.deck-welle', [1136, 212, 508, 84], { tv: [1136, 228, 508, 68] }],
     ['.deck-ueber', [1139, 297, 504, 20]],
     ['.welle-ueber', [1139, 297, 504, 20]],
     ['.ueber-marke', [1585, 299, 22, 16]],
@@ -327,7 +327,15 @@ const FLICKEN_LEISTE = [
 ];
 
 const TABELLE = { 'deck-a': DECK_A, 'deck-b': DECK_B, mitte: MITTE, kopf: KOPF, leiste: LEISTE };
-const FLICKEN = [...FLICKEN_A, ...FLICKEN_B, ...FLICKEN_MITTE, ...FLICKEN_KOPF, ...FLICKEN_LEISTE];
+// DJ-Modus (Betreiber 21.10.2026): Titelfeld groesser, Wellenfeld ~15 % schmaler. Titelfeld dunkel
+// verlaengern, die Trennlinie (Titel-/Wellenrahmen) aus dem Skin 13 px tiefer setzen.
+const FLICKEN_TV_TITEL = [
+  { ziel: [25, 128, 514, 90], farbe: '#05070a', tv: true },
+  { ziel: [25, 217, 514, 10], quelle: [25, 204, 514, 10], tv: true },
+  { ziel: [1131, 128, 517, 90], farbe: '#05070a', tv: true },
+  { ziel: [1131, 217, 517, 10], quelle: [1131, 204, 517, 10], tv: true },
+];
+const FLICKEN = [...FLICKEN_A, ...FLICKEN_B, ...FLICKEN_MITTE, ...FLICKEN_KOPF, ...FLICKEN_LEISTE, ...FLICKEN_TV_TITEL];
 
 const px = v => (v * F).toFixed(2) + 'px';
 const groesser = (r, g) => [r[0] - g, r[1] - g, r[2] + 2 * g, r[3] + 2 * g];
