@@ -5,7 +5,7 @@ Du (Windows-Sitzung) hast `ssh w1`. Gesprächssprache: **Deutsch**, kurz und ver
 Betreiber ist kein Programmierer.
 
 **Zuerst:** `cd C:\Users\motte\City-cafe` → `git pull --rebase origin main` (Stand mindestens
-`0218ec56`). Dann diese Datei ganz lesen. Einzelheiten: `STAND.md` Abschnitt „21.10.2026“,
+`f065dfcd`). Dann diese Datei ganz lesen. Einzelheiten: `STAND.md` Abschnitt „21.10.2026“,
 `dj-studio/AUFTRAG-W1.md` (alle W1-Befehle), `dj-studio/UEBERGABE.md` Abschnitt 0.
 
 ## 1. Was heute passiert ist (alles auf `main`)
@@ -13,11 +13,13 @@ Betreiber ist kein Programmierer.
 | Bereich | Was neu ist | Wirkung im Café |
 |---|---|---|
 | DJ Studio | 13 Skins (Auswahl am Chef-Handy), Meter/Fader/MIX-Felder pixelgenau, Play-Taste in Wellenfarbe, Pause blinkt grün alle 3 s | sofort mit der neuen TV-Seite |
-| Welle/Takt | Tempo genau, Welle läuft ruhig, Takt-Striche und **Eins** aus beat_this-Dateien (`dj-studio/takt/*.json`, ~450+, werden am PC zuhause fertig gerechnet und nachgeladen) | TV-Seite |
+| Welle/Takt | Tempo genau, Welle läuft ruhig, Takt-Striche und **Eins** aus beat_this-Dateien (`dj-studio/takt/*.json`, 800+, werden am PC zuhause fertig gerechnet und nachgeladen) | TV-Seite |
 | Überblendung | **fest 9 s**, Ton wechselt genau am Musikende des alten Songs; leise Intros laufen unter dem Ende mit („Einsatz“); am Handy keine Einstellung mehr | **erst mit neuem Supervisor** |
 | Lautstärke | **−14 statt −11 LUFS**: alle Songs gleich laut (79/79 Songs in ±1,5 dB), insgesamt **3 dB leiser** | **neuer Supervisor → Endstufe +3 dB** |
 | Messwerte | Lautheit/Anfang/Ende je Song auf der Platte (`~/.cache/citycafe/stille/`) – nach einem Neustart startet kein Song mehr zu laut; Spuren bis 3 GB | neuer Supervisor |
 | Fernbedienung | Suche „📝 Lyrics“, Songs vom Handy werden nie gegen ein anderes Video getauscht, Fußzeile „Fassung 2026-10-21-lyrics-skins-9s“ | sofort |
+| DJ-Werbung | unter „Pioneer DJ“ Getränke-Angebote (5 × Jägermeister, Ane aufs Aug; Puntigamer zuschaltbar), **einstellbar am Chef-Handy**: Übersicht → Werbung → „🎛 DJ-Modus: Angebote“ (an/aus, alle 30 s–5 min/immer, je 5–15 s, Größe, welche Angebote) | TV-Seite |
+| Skins-Feinschliff | Master-Level-Knopf wie im Bild (dreht nicht mehr), Chrom: BEAT-GRID/VINYL-LEDs auf den gemalten | TV-Seite |
 | Supervisor | kann beat_this selbst rechnen (`CITYCAFE_TAKT_PYTHON`) – **vorerst nicht einrichten** (Betreiber: am PC zuhause wird fertig eingelesen) | nichts, solange keine Umgebung |
 
 Der PC zuhause wurde heute um 8:30 vom nächtlichen Kiosk-Update neu gestartet (kein Absturz).

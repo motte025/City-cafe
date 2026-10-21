@@ -8,7 +8,8 @@ Stand beschreiben, nicht den von vorgestern.
 **Windows-Sitzung (mit `ssh w1`): zuerst `UEBERGABE-WINDOWS.md` lesen** – was am 21.10. passiert ist
 und was am W1 zu tun ist.
 
-Letzte Durchsicht: 21. Oktober 2026 nachmittags (alles auf **`main`**, letzter Stand `dedb4d52`:
+Letzte Durchsicht: 21. Oktober 2026 abends (alles auf **`main`**, letzter Stand `f065dfcd`; DJ-Werbung
+unter „Pioneer DJ“ am Chef-Handy einstellbar, Master-Knopf wie im Bild, Chrom-LEDs, 804 Takt-Dateien;
 13 Skins fürs DJ Studio mit Auswahl am Handy, Meter/Fader/MIX-Felder pixelgenau, Überblendung fest
 9 s genau am Musikende mit Einsatz nach leisem Intro, Lautheit −14 LUFS, Messwerte je Song auf der
 Platte, Welle ruhig, Tempo genau, **Schläge und Takt-Eins mit beat_this** (446 Takt-Dateien im Repo,
@@ -276,6 +277,9 @@ vorerst nicht nötig; der Supervisor-Code dafür bleibt und tut ohne Umgebung ni
   Klein 32 / Normal 38 / Groß 44 (`groesse`, lange Titel werden kleiner), je Angebot An/Aus
   (`a_<id>`: Jägermeister, Ane aufs Aug, Puntigamer – geht vor `aktiv` in `werbung.json`).
   index.html reicht die Einstellung als `djWerbung` mit `ytm-dj` ans Studio. Getestet zuhause.
+- **Chrom, BEAT GRID/VINYL:** dort sind die LEDs anders gemalt (A 70/723,5, B 1571 und 1595,5/723,5);
+  `ANZ_LAGE` in `skin.js` verschiebt LEDs und Abdeck-Flicken (glatt aufgefüllt). Alle anderen
+  Skins liegen wie Bild 2 (an einer Übersicht aller 13 geprüft).
 - **Master-Level-Knopf:** bleibt wie im Bild gemalt (dreht nicht mehr) – der gedrehte Ausschnitt
   zeigte Nähte und helle Sicheln (Betreiber: wie im Original).
 
