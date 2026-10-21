@@ -302,7 +302,9 @@ export function deckBauen(root, id, engine, aktionen) {
       cueBlink = Math.floor(t * 2) % 2;
       tCue.classList.toggle('blink', !!d.track && !d.spielt && Math.abs(d.pos - d.cue) > 0.02 && cueBlink === 1);
       tCue.classList.toggle('an', !!d.track && !d.spielt && Math.abs(d.pos - d.cue) <= 0.02);
-      tPlay.classList.toggle('blink', !!d.track && !d.spielt && cueBlink === 1);
+      // DJ-Modus: Play in der Pause nur jedes dritte Mal aufblinken (alle 3 s, Betreiber 21.10.)
+      const playBlink = document.body.classList.contains('tv') ? t % 3 < 0.5 : cueBlink === 1;
+      tPlay.classList.toggle('blink', !!d.track && !d.spielt && playBlink);
     },
   };
 }

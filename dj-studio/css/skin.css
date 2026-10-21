@@ -317,6 +317,8 @@ body.tv .skin .taste.play {
   transition: box-shadow .12s;
 }
 body.tv .skin .kanal-b .taste.play { --neon: #ffb300; --kern: #fff1c4; --sym: #ffd52a; --grund: #090603; }
+/* Pause: beide Tasten blinken gruen (Betreiber 21.10.) */
+body.tv .skin .kanal-b .taste.play:not(.an) { --neon: #2fe36a; --kern: #d2ffdc; --sym: #b8ffc8; --grund: #030805; }
 body.tv .skin .taste.play > svg {
   visibility: visible; position: absolute; left: 50%; top: 50%; width: 40px; height: 20px; margin: -10px 0 0 -20px;
   fill: color-mix(in srgb, var(--sym) 55%, #000); transition: fill .12s, filter .12s;
