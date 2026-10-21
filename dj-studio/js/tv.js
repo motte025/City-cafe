@@ -42,15 +42,10 @@ const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 // Gewaehlt am echten Song neben den Fotos (18.10.2026): 50 % Lautheit, 20 % Bass, 30 % Hoehen
 // (Bass allein gibt runde Boegen, die Hoehen die feinen Nadeln), je Song gespreizt
 // (leiseste 5 % = Grundlinie, Exponent 1,8).
-const BILD_P90 = 0.6;
 function bildWerte(rms, tief, hoch) {
   const roh = rms.map((r, i) => 0.5 * r + 0.2 * Math.min(1, tief[i] * 1.7) + 0.3 * Math.min(1, hoch[i] * 3));
   const sortiert = Float32Array.from(roh).sort();
-  // Hoehe je Song angepasst (Betreiber 21.10.): der laute Teil (90 %-Wert) steht bei jedem Song gleich
-  // hoch (0,6 der Feldhoehe); vorher bestimmten die lautesten 0,5 % die Hoehe, Songs mit einzelnen
-  // Spitzen blieben flach. Hoeher als das 99,5-%-Mass wird nicht gespreizt.
-  const lo = sortiert[Math.floor(roh.length * 0.05)] || 0, p90 = sortiert[Math.floor(roh.length * 0.9)] || 1;
-  const hi = Math.min(sortiert[Math.floor(roh.length * 0.995)] || 1, lo + (p90 - lo) / Math.pow(BILD_P90, 1 / 1.8));
+  const lo = sortiert[Math.floor(roh.length * 0.05)] || 0, hi = sortiert[Math.floor(roh.length * 0.995)] || 1;
   return roh.map(x => Math.pow(Math.min(1, Math.max(0, (x - lo) / ((hi - lo) || 1))), 1.8));
 }
 
