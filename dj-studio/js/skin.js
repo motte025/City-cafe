@@ -265,7 +265,8 @@ const FLICKEN_MITTE = [
   { ziel: [588, 554, 250, 58], farbeVon: [586, 562] },              // Master-LEDs
   { ziel: [962, 538, 24, 108], farbe: '#07090c' },                  // GR-LEDs
   { ziel: [1015, 540, 89, 41], quelle: [1015, 579, 89, 41] },       // VIDEO/AUDIO-Schein
-  { ziel: [800, 680, 70, 56], quelle: [700, 680, 70, 56] },         // Crossfader-Kappe
+  { ziel: [800, 680, 70, 44], quelle: [700, 680, 70, 44] },         // Crossfader-Kappe: Schiene
+  { ziel: [800, 724, 70, 15], quer: true },                          // ... Kappenfuss unter der Schiene (ueber dem Logo)
 ];
 
 // ---- Kopfzeile ---------------------------------------------------------------
@@ -347,7 +348,25 @@ function bildAusschnitt(el, r) {
   el.style.setProperty('--by', px(-r[1]));
 }
 
+// VIDEO-LED: Lage der gemalten LED je Skin (Mitte in Bild-Pixeln, gemessen 21.10.2026) -
+// die echte LED sitzt genau darauf. Ohne Eintrag wie Bild 2: A (302, 104), B (1404, 104).
+const LED_LAGE = {
+  'amber-blau': { A: [299.3, 102.8], B: [1398, 103] },
+  'blau-amber': { A: [299.3, 103.7], B: [1399.2, 104] },
+  'chrom': { A: [301, 106.2], B: [1402.5, 106.2] },
+  'tiefglas': { B: [1403, 104] },
+};
+function ledLagen() {
+  const l = LED_LAGE[SKIN_WAHL];
+  if (!l) return;
+  for (const [deck, t] of [['A', DECK_A], ['B', DECK_B]]) {
+    const e = t.teile.find(x => x[0] === '.deck-video .led');
+    if (e && l[deck]) e[1] = [l[deck][0] - 5, l[deck][1] - 5, 10, 10];
+  }
+}
+
 export function skinAnwenden() {
+  ledLagen();
   const buehne = document.getElementById('buehne');
   buehne.classList.add('skin');
   // anderer Skin: dasselbe Bild auch fuer Knopf- und Faderkappen (CSS-Variable --bild)
