@@ -8639,7 +8639,9 @@
             }
             // Bewusst gewaehlte Version (Chef: am Handy zur Playlist hinzugefuegt, eingereiht,
             // sofort gespielt) bleibt - auch Lyric-/Audio-Fassungen (Betreiber, 19.10.2026).
-            if (e.gewaehlt || (e.quelle === 'chef' && e.videoId)) return;
+            // Seit 21.10.2026 auch Wuensche vom Handy (Gaeste oder Chef ohne Anmeldung): was
+            // jemand am Handy hinzufuegt, wird nie ausgetauscht - nur Playlist-/Radio-Titel.
+            if (e.gewaehlt || ((e.quelle === 'chef' || e.quelle === 'wunsch') && e.videoId)) return;
             if (ytmKeinMusikvideo(e)) {
                 console.log('[Musik] suche Musikvideo fuer:', e.titel);
                 ytmFinden(Object.assign({}, e, { suche: '' }), false);

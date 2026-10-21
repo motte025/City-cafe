@@ -337,6 +337,7 @@
     <div class="chips" id="such-art" style="margin-bottom:12px">
         <button type="button" data-art="" class="an">🎵 Songs</button>
         <button type="button" data-art="playlist">📃 Playlists</button>
+        <button type="button" data-art="lyrics">📝 Lyrics</button>
     </div>
     <form class="suche" id="suchform">
         <input type="search" id="suchtext" placeholder="Song, Künstler oder YouTube-Link" enterkeyhint="search">
@@ -1234,11 +1235,19 @@
         zeigeTreffer(playlistTreffer);
     }
 
+    // Lyrics-Suche (21.10.2026): nur Lyric-Videos (Text im Bild) - so ein Song bleibt am TV,
+    // wie er gewaehlt wurde (der TV tauscht bewusst gewaehlte Songs nie gegen das Musikvideo).
+    var LYRICS = /lyric|songtext|letra|paroles|testo/i;
     function zeigeTreffer(liste) {
-        if ((liste || []).length && liste[0].playlistId) playlistTreffer = liste;
+        var roh = liste || [];
+        if (roh.length && roh[0].playlistId) playlistTreffer = roh;
+        if (suchArt === 'lyrics' && suchText && !(roh[0] || {}).playlistId) {
+            liste = roh.filter(function (t) { return LYRICS.test(t.titel || ''); });
+            if (!liste.length && roh.length) el('such-status').textContent = 'Keine Lyrics-Videos dabei - „Mehr laden" oder anders suchen.';
+        }
         listeRendern(el('treffer'), liste || [], function (t, i) { return t.playlistId ? playlistKarte(t) : trefferKarte(t, i); });
-        if (offenePlaylist && !(liste[0] || {}).playlistId) el('treffer').insertBefore(playlistLeiste(), el('treffer').firstChild);
-        el('mehr-laden').hidden = !(suchText && suchArt !== 'playlist' && (liste || []).length >= suchAnzahl && suchAnzahl < 75);
+        if (offenePlaylist && !(roh[0] || {}).playlistId) el('treffer').insertBefore(playlistLeiste(), el('treffer').firstChild);
+        el('mehr-laden').hidden = !(suchText && suchArt !== 'playlist' && roh.length >= suchAnzahl && suchAnzahl < 75);
     }
 
     var suchArt = '';
@@ -1247,7 +1256,8 @@
             suchArt = b.dataset.art;
             offenePlaylist = null;
             [].forEach.call(document.querySelectorAll('#such-art button'), function (x) { x.classList.toggle('an', x === b); });
-            el('suchtext').placeholder = suchArt === 'playlist' ? 'Playlist suchen, z. B. Après Ski' : 'Song, Künstler oder YouTube-Link';
+            el('suchtext').placeholder = suchArt === 'playlist' ? 'Playlist suchen, z. B. Après Ski'
+                : suchArt === 'lyrics' ? 'Song oder Künstler (nur Lyrics-Videos)' : 'Song, Künstler oder YouTube-Link';
             el('treffer').innerHTML = '';
             el('such-status').textContent = '';
             el('mehr-laden').hidden = true;
@@ -1262,7 +1272,9 @@
         el('treffer-kopf').textContent = istVorschlag ? 'Vorschläge' : (suchArt === 'playlist' ? 'Playlists' : 'Treffer');
         if (!anzahl) el('treffer').innerHTML = '';
         ersteTrefferGesehen = true;
-        var befehl = { aktion: 'suche', text: text, vorschlaege: !!istVorschlag, anzahl: suchAnzahl };
+        // Lyrics: YouTube gezielt nach Lyric-Videos fragen, angezeigt werden nur solche (zeigeTreffer)
+        var frage = suchArt === 'lyrics' && !istVorschlag && !LYRICS.test(text) ? text + ' lyrics' : text;
+        var befehl = { aktion: 'suche', text: frage.slice(0, 100), vorschlaege: !!istVorschlag, anzahl: suchAnzahl };
         if (suchArt === 'playlist' && !istVorschlag) befehl.art = 'playlist';
         erwarteteArt = befehl.art || '';
         offenePlaylist = null;
@@ -1787,8 +1799,8 @@
             if (!ersteTrefferGesehen) { ersteTrefferGesehen = true; return; }
             if (suchId && t.id !== suchId && t.id !== letzteFremdId) { letzteFremdId = t.id; return; }
             letzteTreffer = t.liste;
-            zeigeTreffer(t.liste);
             el('such-status').textContent = t.liste.length ? '' : 'Nichts gefunden.';
+            zeigeTreffer(t.liste);   // Lyrics: meldet selbst, wenn keiner der Treffer passt
         });
         jetztZeigen();
     });
