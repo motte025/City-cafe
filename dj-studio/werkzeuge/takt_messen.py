@@ -1,6 +1,6 @@
 # Schlaege und Takt-Einsen je Song mit beat_this (CPJKU, 2024) -> dj-studio/takt/<videoId>.json
 # Laeuft am PC zuhause in eigener Umgebung (nicht auf dem W1):
-#   ~/.local/share/citycafe-test/beat-venv/bin/python dj-studio/werkzeuge/takt_messen.py ids.txt
+#   nice -n 19 ~/.local/share/citycafe-test/beat-venv/bin/python dj-studio/werkzeuge/takt_messen.py ids.txt
 # Einrichtung (einmal): python3 -m venv <venv>; <venv>/bin/pip install torch torchaudio
 #   --index-url https://download.pytorch.org/whl/cpu; <venv>/bin/pip install numpy soxr soundfile
 #   https://github.com/CPJKU/beat_this/archive/main.zip   (Modell 'final0' laedt beim ersten Lauf)
@@ -8,7 +8,11 @@
 # 22,05-kHz-Mono laden, beat_this auf der CPU (~7 s), Datei wieder loeschen.
 # Ausgabe: {"v":1,"b":[Schlag-Zeiten in ms, als Abstaende],"e":[Index der Einsen in b]}
 import sys, os, json, subprocess, tempfile, time
+import torch
 from beat_this.inference import File2Beats
+# Hoechstens 2 Kerne und niedrigste Prioritaet (mit 'nice -n 19' starten): mit allen Kernen
+# nahm beat_this dem DJ Studio die Rechenzeit, die Welle ruckelte (21.10.2026).
+torch.set_num_threads(int(os.environ.get('TAKT_KERNE', '2')))
 ZIEL = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'takt')
 f2b = File2Beats(checkpoint_path="final0", device="cpu", dbn=False)
 ids = [z.strip() for z in open(sys.argv[1]) if z.strip()]

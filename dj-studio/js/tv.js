@@ -186,7 +186,25 @@ export function tvBauen(engine) {
   function taktAus(d) {
     const n = d.b.length, zeiten = new Float64Array(n), eins = new Uint8Array(n);
     let t = 0;
-    for (let i = 0; i < n; i++) { t += d.b[i]; zeiten[i] = t / 1000; }
+    const roh = new Float64Array(n);
+    for (let i = 0; i < n; i++) { t += d.b[i]; roh[i] = t / 1000; }
+    // Glaetten: beat_this setzt Schlaege auf ein 20-ms-Raster - die Striche pendelten 6-11 ms
+    // gegen die gleichmaessig laufende Welle ("schwimmen"). Je Schlag aus den 8 Nachbarn:
+    // Abstand = Median der Nachbar-Abstaende, Lage = Mittel der Nachbarn ohne die 2 aeussersten
+    // je Seite. Tempo-Aenderungen bleiben, Rundungsspruenge und einzelne Ausreisser nicht.
+    for (let i = 0; i < n; i++) {
+      const a = Math.max(0, i - 4), e = Math.min(n - 1, i + 4);
+      if (e - a < 4) { zeiten[i] = roh[i]; continue; }
+      const ab = [];
+      for (let j = a; j < e; j++) ab.push(roh[j + 1] - roh[j]);
+      ab.sort((x, y) => x - y);
+      const P = ab[ab.length >> 1];
+      const anker = [];
+      for (let j = a; j <= e; j++) anker.push(roh[j] - (j - i) * P);
+      anker.sort((x, y) => x - y);
+      const weg = anker.length >= 7 ? 2 : 1, mitte = anker.slice(weg, anker.length - weg);
+      zeiten[i] = mitte.reduce((x, y) => x + y, 0) / mitte.length;
+    }
     for (const i of d.e || []) if (i >= 0 && i < n) eins[i] = 1;
     // Tempo ueber je 8 Schlaege (beat_this setzt Schlaege auf 20-ms-Raster - ein Abstand allein
     // gab 111,11 statt 110,0), Median gegen Breaks und Tempowechsel
