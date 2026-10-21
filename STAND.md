@@ -52,6 +52,16 @@ Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
 
 ### Als Nächstes (Stand 21.10. nachmittags)
 
+**Weiter einlesen (am PC zuhause, Betreiber: „morgen weiter“):** fertige Songs werden übersprungen.
+```sh
+cd ~/City-cafe
+# Playlist-Songs (Liste frisch vom Test-Kiosk holen oder ids.txt mit allen videoIds der Playlists)
+nice -n 19 ~/.local/share/citycafe-test/beat-venv/bin/python dj-studio/werkzeuge/takt_messen.py ids.txt
+# laufend: Radio, Schlange, gespielt - zuhause und Café (braucht den Test-Kiosk mit CDP 9222)
+python3 dj-studio/werkzeuge/takt_nachlesen.py
+# danach: git add dj-studio/takt && git commit && git push (der Café-TV holt sie selbst)
+```
+
 **Entscheidung Betreiber (21.10. nachmittags): die Takt-Dateien werden am PC zuhause fertig
 eingelesen** (Playlist-Durchlauf + Nachlesen auch der Café-Songs) und kommen über das Repo
 (`dj-studio/takt/`) auf den Café-TV. beat_this auf dem W1 (`AUFTRAG-W1.md` Aufgabe 3) ist damit
