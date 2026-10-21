@@ -1896,7 +1896,11 @@ def stille_messen(vid, audio_url, laenge):
 # mit Ziel -11 LUFS sind es 79 %. Rest: leise Songs mit Spitzen nahe 0 dBFS - fuer die
 # darf ein sanfter Limiter hoechstens LIMITER_MAX_DB mehr herausholen (am Handy
 # abschaltbar). Er greift nur an den lautesten Spitzen dieser Songs, sonst nie.
-LAUT_ZIEL_LUFS = -11.0
+# 21.10.2026: Ziel -14 LUFS statt -11 (wie YouTube/Spotify; im Cafe gleicht die Endstufe die
+# 3 dB aus). Nachgerechnet mit 67 Playlist-Songs (-24,2 bis -5,8 LUFS): mit -11 lagen 95,5 %
+# innerhalb +-1,5 dB (leisester -3,0 dB, Limiter bei 24 Songs), mit -14 alle 100 % innerhalb
+# +-0,3 dB, Limiter nur noch bei 3 Songs.
+LAUT_ZIEL_LUFS = -14.0
 LIMITER_MAX_DB = 2.0
 LIMITER_GRENZE = 0.891     # -1 dBFS
 GAIN_MAX_DB = 15.0         # hoechstens so viel anheben ...

@@ -31,7 +31,10 @@ const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu set
 // (je Song, wie mpv) x Lautstaerke der Fernbedienung. Rot nur bei 100 % und dann "ein bisschen":
 // simuliert ueber 11 Songs (18.10.): +1 dB = 4,7 % der Zeit rot (21.10.: zu viel), 0 dB = 1,3 %
 // (zu wenig) - daher +0,5 dB. Bei 80 % nie rot. Rot = oberste 3-4 LEDs.
-const RESERVE_DB = 1.0;     // 21.10.: Betreiber will mehr (1,5), dann 0,5 dB zurueck - bei 100 % ab und zu CLIP
+// 21.10.: Betreiber will mehr (1,5), dann 0,5 dB zurueck (1,0) - bei 100 % ab und zu CLIP.
+// +3 dB, seit der Supervisor auf -14 statt -11 LUFS normiert: die Anzeige bleibt wie vorher
+// (im Cafe holt die Endstufe die 3 dB wieder).
+const RESERVE_DB = 4.0;
 // Anzeige hoeher (Betreiber 21.10.): +3 dB im unteren/mittleren Bereich, laeuft bis -3 dBFS
 // auf 0 aus - der rote Bereich (oberste LEDs) bleibt so selten wie oben abgestimmt.
 const ANHEBEN_DB = 3, ANHEBEN_BIS_DB = -3, ANHEBEN_VOLL_DB = -12;
