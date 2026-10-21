@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-21T12:57:46Z",
+  "checked_at": "2026-10-21T13:17:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wunderschöner Mittwoch   <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Bergfest mit House, Techno, (Hard)Trance, EDM | !holy",
       "game": "DJs"
     },
     {
