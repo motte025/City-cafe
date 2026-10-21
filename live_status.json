@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-21T22:22:45Z",
+  "checked_at": "2026-10-21T22:37:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁BirthdayStream... – let’s celebrate the start of my new year together! 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁BirthdayStream... – let’s celebrate the start of my new year together! 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
