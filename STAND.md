@@ -5,10 +5,12 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 21. Oktober 2026 (seit 21.10. auf **`main`**, Merge `4fb5f61b`: 13 Skins fürs
-DJ Studio mit Auswahl am Handy, Meter/Fader/MIX-Felder pixelgenau, Überblendung fest 9 s genau am
-Musikende, Lautheit −14 LUFS, Taktraster/Welle genau und ruhig, Lyrics-Suche, Handy-Songs werden
-nie getauscht – alles im Abschnitt „21.10.2026“). Davor, 19. Oktober (DJ-Modus im Café freigeschaltet, W1 gemessen und
+Letzte Durchsicht: 21. Oktober 2026 nachmittags (alles auf **`main`**, letzter Stand `dedb4d52`:
+13 Skins fürs DJ Studio mit Auswahl am Handy, Meter/Fader/MIX-Felder pixelgenau, Überblendung fest
+9 s genau am Musikende mit Einsatz nach leisem Intro, Lautheit −14 LUFS, Messwerte je Song auf der
+Platte, Welle ruhig, Tempo genau, **Schläge und Takt-Eins mit beat_this** (446 Takt-Dateien im Repo,
+Supervisor kann selbst rechnen), Lyrics-Suche, Handy-Songs werden nie getauscht – alles im
+Abschnitt „21.10.2026“, nächste Schritte dort unter „Als Nächstes“). Davor, 19. Oktober (DJ-Modus im Café freigeschaltet, W1 gemessen und
 Systemupdate repariert, alle Playlist-Songs vorgemessen; Musik-Fernbedienung: Zurück-Taste
 Schritt für Schritt, ⏮ zum Song davor, Radio-Mix löschen/übernehmen, Suche nach Aufrufen,
 DJ-Modus sichtbar – Details in den Abschnitten vom 18./19.10.). Davor, 16. Oktober (Musik: Lautstärke nach LUFS für alle Songs
@@ -34,13 +36,31 @@ und wieder in der Rotation.
 ## 21.10.2026: DJ-Skins, Überblendung 9 s, Lautheit −14 LUFS, Welle (auf `main`)
 
 **Stand:** entwickelt auf dem Branch `dj-skins`, getestet am Test-Kiosk zuhause (`martin-ser`),
-am 21.10. auf Wunsch des Betreibers nach **`main`** gebracht (Merge `4fb5f61b`, Push 27783599).
-Die TV-Seite im Café lädt sich neu, sobald keine Musik läuft; **der Supervisor kommt erst mit dem
-Update am 22.10. um 8:30** – bis dahin läuft im Café die neue Seite mit dem alten Supervisor
-(alte Überblendung mit 9 s, Lautheit −11 LUFS, Pegelanzeige ~3 dB höher). **Danach im Café:
-Endstufe um ~3 dB lauter** (Lautheit −14 statt −11 LUFS) und den Anzeige-Vorlauf der Welle einmal
-abgleichen – Anleitung für die Windows-Sitzung: `dj-studio/AUFTRAG-W1.md`.
+am 21.10. auf Wunsch des Betreibers nach **`main`** gebracht (Merge `4fb5f61b`), danach direkt auf
+`main` weiter (Takt/beat_this, Messwerte auf der Platte; letzter Stand `dedb4d52`). Die TV-Seite im
+Café lädt sich neu, sobald keine Musik läuft. **Der Supervisor kommt nur mit dem Update** (8:30
+oder von Hand) – ein bloßer Neustart des W1 holt ihn **nicht**. Der Betreiber will den W1 am
+21.10. noch umstellen: Windows-Sitzung → `AUFTRAG-W1.md` (erst Aufgabe 3 beat_this, dann
+`ssh w1 "sudo systemctl start citycafe-update.service"` – startet danach selbst neu – dann
+Aufgabe 1 prüfen). **Danach im Café: Endstufe um ~3 dB lauter** (−14 statt −11 LUFS) und den
+Anzeige-Vorlauf der Welle einmal abgleichen (Aufgabe 2).
 Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
+
+### Als Nächstes (Stand 21.10. nachmittags)
+
+1. **W1 umstellen** (Betreiber, heute): siehe oben; Takt-Dateien aus dem Repo nach
+   `/home/citycafe/.cache/citycafe/takt/` kopieren; Prüfungen aus `AUFTRAG-W1.md` Aufgabe 1
+   (`grep -E "Tonwechsel|Takt |Lautheit gesetzt" …/nl-mpv-supervisor.log`).
+2. **Endstufe +3 dB** im Café, **Welle abgleichen** (`studioVorlauf`, zuhause −0,05 s).
+3. **PC zuhause:** Playlist-Durchlauf (`takt_messen.py`, 703 Songs) und Nachlese-Dienst
+   (`takt_nachlesen.py`, auch Café-Songs über Firebase) laufen im Hintergrund (Logs im Temp-Ordner
+   der Sitzung, gehen bei Neustart verloren – Neustart einfach mit denselben Befehlen, fertige
+   Songs werden übersprungen). Neue Takt-Dateien kommen nur mit einem Commit/Push ins Repo.
+   Sobald der W1 selbst rechnet, sind beide nur noch Startbestand/Rückfall.
+4. Ideen (nicht begonnen): farbige DJ-Welle wie Rekordbox/Serato aus den vorhandenen Bändern;
+   **allin1** für Songteile (Intro/Strophe/Refrain/Outro → MIX-Punkte); **Essentia** für die
+   Tonart; Harmonie-Anzeige KEY; Gäste-Wunsch sichtbar; QR im DJ-Modus.
+5. Offen von früher: seltenes Überspringen eines Songs (Diagnose im Log bei „abgebrochen“).
 
 ### Skins (DJ Studio)
 
@@ -119,6 +139,9 @@ Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
   Ton nur 53 ms neben mpv (Korrelation 0,969) – der PC ist also genau. **Café: eigener Wert**, siehe
   `AUFTRAG-W1.md`. Position prüfen: `werkzeuge/position_pruefen.py` (Studio − mpv).
 - **Wartender Kanal (NEXT)** steht auf dem gemessenen Start (START-Marke) statt 0:00.
+- **Ruckeln während Hintergrund-Rechnen:** solange beat_this am PC lief (alle Kerne), fiel fast
+  jedes dritte Bild aus – deshalb `nice -n 19` und höchstens 2 Kerne (1–2 % Ausfall). Im Café
+  rechnet der W1 nur mit 1 Kern und niedrigster Priorität; dort im DJ-Modus die Bildrate prüfen.
 - **Pegelanzeige:** `RESERVE_DB = 4.0` (1,0 + 3 dB für −14 LUFS, Anzeige wie vorher; Betreiber:
   bei 100 % darf es ab und zu CLIP zeigen) und `anheben()`: +3 dB bis −12 dBFS, bis −3 dBFS
   auslaufend (rot bleibt selten). Wellenhöhe: unverändert (Änderung war nicht gewünscht).
@@ -179,6 +202,12 @@ Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
 
 ### Lautheit −14 LUFS (Supervisor `LAUT_ZIEL_LUFS`)
 
+- **Vorfall 21.10. 13:41 zuhause:** Supervisor-Neustart mitten in einer Überblendung (für einen
+  Test) → Blende abgebrochen, Song neu von 0 s und ~12 s ohne Lautheits-Absenkung (5 dB zu laut).
+  Der Betreiber drehte von 79 auf 73 % (≈ −2 dB, mpv rechnet kubisch); der nächste Song (P!nk
+  „So What“) wirkte danach „extrem leise“ – nachgemessen: Original −8,9 LUFS, Spitze 0 dBFS, um
+  −5,1 dB auf −14 LUFS gebracht wie alle anderen, also richtig. Zuhause für −14 LUFS eher 85–90 %.
+  **Regel:** Supervisor/Seite am Test-Kiosk nicht mitten in einer Überblendung neu starten.
 - **Messwerte auf der Platte** (21.10. nachmittags, `stille_von_platte`/`stille_speichern`):
   Anfang, Einsatz, Ende, Lautheit, Limiter je Song in `~/.cache/citycafe/stille/<id>.json`
   (`CITYCAFE_STILLE`), gültig 30 Tage und nur bei gleicher `STILLE_FASSUNG` und gleichem
@@ -222,7 +251,7 @@ Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
 - Werkzeuge zum Messen: `dj-studio/werkzeuge/` (Tipp-Test, Ausgangs-Mitschnitt, Position, Tempo,
   Raster, LUFS, Meter-Lage, Ausrichten).
 
-### Commits (`dj-skins`, ab 21.10.)
+### Commits (ab 21.10.)
 
 4dce4b07 … 57e600cf (Skins, Play-Taste, Chrom, VIDEO-LED, Meter erste Fassung), c0bf0253 / 296acc59
 (Meter mittig, GR), 1b7ca997 / 280dcc13 (Wellenhöhe – zurückgenommen), a7ad0ade (Play-Farbe),
@@ -232,6 +261,10 @@ Tausch), d6517dd8 / c65d1687 / 1328f482 (Welle ruhig, Tempo genau), dazu diese D
 Außerdem auf dem Branch (auch für `main` wichtig): d8531d21 (Firebase: eine gemeinsame anonyme
 Anmeldung – auf frischem Profil gab es zwei UIDs → PERMISSION_DENIED), 2d3b6f51 (Musik-Tausch nur
 gegen Video desselben Künstlers – Ambros „Schifoan“ kam als Metallica live).
+Auf `main`: 4fb5f61b (Merge dj-skins), 27783599/07c68447 (Doku), 4c417936 (beat_this-Takt im Studio,
+Tempo-Familie), 4bc5681c (Takt geglättet), c71cb964 (Raster nach Deutlichkeit, Nachlesen),
+84c21637 (Nachlesen fürs Café, 263 Takt-Dateien), 887771bb (beat_this im Supervisor), cd5d968a
+(Messwerte auf der Platte), cbfa0ab1/dedb4d52 (Takt-Dateien 412/446).
 
 ## 20.10.2026: Berliner-Luft-Angebot im großen Medien-Widget
 
