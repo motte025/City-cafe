@@ -14,7 +14,15 @@ const STRECKUNG = 1.25;                    // waagrecht gezogen wie der Pioneer-
 const DUNKLER_SCHRIFTZUG = ['gold', 'weiss', 'chrom', 'elfenbein', 'ladys-pink', 'champagner'];
 const WECHSEL_MS = 7000, NEU_LESEN_MS = 10 * 60 * 1000;
 
+const SCHRIFT_URL = 'https://fonts.googleapis.com/css2?family=Saira:ital,wdth,wght@1,125,900&display=swap';
+
 export function angeboteStarten(buehne) {
+  // Schrift selbst laden, falls die Seite (z. B. eine zwischengespeicherte aeltere Fassung) sie
+  // nicht mitbringt - sonst blieb die Ersatzschrift stehen
+  if (![...document.querySelectorAll('link[rel="stylesheet"]')].some(l => /family=Saira/.test(l.href))) {
+    const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = SCHRIFT_URL;
+    document.head.appendChild(l);
+  }
   const el = document.createElement('div');
   el.className = 'tv-angebot' + (DUNKLER_SCHRIFTZUG.includes(buehne.dataset.skin) ? ' dunkel' : '');
   const [x, y, w, h] = LAGE.map(v => v * F);
@@ -58,11 +66,11 @@ export function angeboteStarten(buehne) {
     }, 600);
   }
   // erst zeigen, wenn die Schrift da ist (sonst kurz eine Ersatzschrift, falsch eingepasst):
-  // bis 5 s warten, bis Saira angemeldet und geladen ist; kommt sie spaeter, neu einpassen
+  // bis 10 s warten, bis Saira angemeldet und geladen ist; kommt sie spaeter, neu einpassen
   async function schrift() {
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 50; i++) {                // bis 10 s
       try { await document.fonts.load("italic 900 30px 'Saira'"); } catch (e) {}
-      if (document.fonts.check("italic 900 30px 'Saira'") && [...document.fonts].some(f => f.family.replace(/['"]/g, '') === 'Saira' && f.status === 'loaded')) return;
+      if ([...document.fonts].some(f => f.family.replace(/['"]/g, '') === 'Saira' && f.status === 'loaded')) return;
       await new Promise(r => setTimeout(r, 200));
     }
   }

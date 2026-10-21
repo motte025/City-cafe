@@ -347,3 +347,6 @@ body.tv .skin .taste.play.an > svg, body.tv .skin .taste.play.blink:not(.an) > s
 .tv-angebot .preis { color: #ffd77a; }
 .tv-angebot.dunkel { color: #0b0c0e; text-shadow: 0 1px 0 rgba(255, 255, 255, .55), 0 0 6px rgba(255, 255, 255, .35); }
 .tv-angebot.dunkel .preis { color: #8a1c12; }
+/* Amber-Skins: Gold verschwimmt mit dem Amber-Grund - Preis in hellem Eisblau (Betreiber 21.10.) */
+#buehne[data-skin="amber-blau"] .tv-angebot .preis, #buehne[data-skin="blau-amber"] .tv-angebot .preis,
+#buehne[data-skin="tiefglas"] .tv-angebot .preis { color: #8fe6ff; text-shadow: 0 1px 0 rgba(0, 0, 0, .9), 0 0 1px #000, 0 0 10px rgba(40, 170, 255, .55); }
