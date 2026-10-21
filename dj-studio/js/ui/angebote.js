@@ -2,7 +2,7 @@
 // Nur Schrift, kein Feld - unter dem Schriftzug zwischen den Tasten A und B (Bild-2-Pixel 560-1110).
 // Schrift: Saira, breit (125 %), 900 kursiv - am naechsten am Pioneer-Schriftzug (verglichen mit
 // Exo 2, Kanit, Russo One, Orbitron). Angebote aus werbung.json (Repo, "djAngebote" mit aktiv),
-// alle 10 min neu gelesen; jede Minute je Angebot 7 s; ohne Angebote bleibt die Stelle leer.
+// alle 10 min neu gelesen; Takt/Dauer/Groesse/Auswahl vom Chef-Handy; ohne Angebote bleibt es leer.
 import { F } from '../skin.js';
 
 // Ganze Breite zwischen den Tasten A und B (Betreiber: groesser, in die Laenge gezogen) -
@@ -12,8 +12,11 @@ const STRECKUNG = 1.25;                    // waagrecht gezogen wie der Pioneer-
 // Skins mit hellem Grund: dort ist der Pioneer-Schriftzug schwarz - die Werbung auch
 // (gemessen am Bild: Median der Schriftzug-Flaeche > 150)
 const DUNKLER_SCHRIFTZUG = ['gold', 'weiss', 'chrom', 'elfenbein', 'ladys-pink', 'champagner'];
-// Jede Minute alle Angebote nacheinander je 7 s, dazwischen leer (Betreiber 21.10.)
-const ZEIGEN_MS = 7000, TAKT_MS = 60 * 1000, NEU_LESEN_MS = 10 * 60 * 1000;
+// Vorgabe: jede Minute alle Angebote nacheinander je 7 s, dazwischen leer, 38 px (Betreiber 21.10.).
+// Einstellbar am Chef-Handy (Uebersicht -> Werbung -> "DJ-Modus: Angebote"): an, alleS (0 = immer),
+// dauerS, groesse, a_<id> je Angebot - kommt ueber die TV-Seite mit (djWerbung).
+const VORGABE = { an: true, alleS: 60, dauerS: 7, groesse: 38 };
+const NEU_LESEN_MS = 10 * 60 * 1000;
 
 const SCHRIFT_URL = 'https://fonts.googleapis.com/css2?family=Saira:ital,wdth,wght@1,125,900&display=swap';
 
@@ -29,7 +32,17 @@ export function angeboteStarten(buehne) {
   const [x, y, w, h] = LAGE.map(v => v * F);
   Object.assign(el.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
   buehne.appendChild(el);
-  let liste = [];
+  let alle = [], einst = { ...VORGABE }, einstText = '', laeuft = null;
+  const wert = k => (einst[k] === undefined || einst[k] === null ? VORGABE[k] : einst[k]);
+  // Angebote nach Einstellung: a_<id> am Handy geht vor "aktiv" aus werbung.json
+  const liste = () => alle.filter(a => (einst['a_' + a.id] ?? a.aktiv) !== false).map(a => [a.titel, a.preis]);
+  addEventListener('message', e => {
+    if (e.origin !== location.origin || !e.data || e.data.typ !== 'ytm-dj') return;
+    const t = JSON.stringify(e.data.djWerbung || {});
+    if (t === einstText) return;
+    einstText = t; einst = { ...VORGABE, ...(e.data.djWerbung || {}) };
+    neuStarten();
+  });
 
   async function lesen() {
     try {
@@ -37,17 +50,17 @@ export function angeboteStarten(buehne) {
       const d = await r.json();
       // eigene Liste fuers DJ Studio (Betreiber 21.10.: Jaegermeister + "Ane aufs Aug", ohne
       // Puntigamer), sonst die allgemeinen Aktionen
-      liste = (Array.isArray(d.djAngebote) ? d.djAngebote : Array.isArray(d.aktionen) ? d.aktionen : [])
-        .filter(a => a && a.aktiv !== false && a.titel)
-        .map(a => [String(a.titel), String(a.preis || '')]);
+      alle = (Array.isArray(d.djAngebote) ? d.djAngebote : Array.isArray(d.aktionen) ? d.aktionen : [])
+        .filter(a => a && a.titel)
+        .map(a => ({ id: String(a.id || a.titel), titel: String(a.titel), preis: String(a.preis || ''), aktiv: a.aktiv !== false }));
     } catch (e) { /* Netz weg: alte Liste behalten */ }
   }
   // zu lang (mit Streckung): Schrift verkleinern, bis es in die Breite passt
   function einpassen() {
     const innen = el.firstChild;
     if (!innen) return;
-    el.style.fontSize = '';
-    let g = parseFloat(getComputedStyle(el).fontSize);
+    el.style.fontSize = Math.max(20, Math.min(60, Number(wert('groesse')) || 38)) + 'px';
+    let g = parseFloat(el.style.fontSize);
     while (innen.scrollWidth * STRECKUNG > el.clientWidth && g > 10) { g -= 1; el.style.fontSize = g + 'px'; }
   }
   function zeigen(titel, preis) {
@@ -74,11 +87,26 @@ export function angeboteStarten(buehne) {
     }
   }
   document.fonts.addEventListener('loadingdone', einpassen);
-  // ein Durchgang: Angebot fuer Angebot je ZEIGEN_MS, dann ausblenden bis zur naechsten Minute
+  // ein Durchgang: Angebot fuer Angebot je dauerS, dann ausblenden bis zum naechsten (alleS);
+  // alleS 0 = immer (gleich weiter mit dem naechsten Durchgang)
+  let uhren = [];
   function durchgang() {
-    liste.forEach(([titel, preis], k) => setTimeout(() => zeigen(titel, preis), k * ZEIGEN_MS));
-    setTimeout(() => el.classList.remove('an'), liste.length * ZEIGEN_MS);
+    uhren.forEach(clearTimeout); uhren = [];
+    const l = wert('an') === false ? [] : liste(), d = Math.max(3, Number(wert('dauerS')) || 7) * 1000;
+    l.forEach(([titel, preis], k) => uhren.push(setTimeout(() => zeigen(titel, preis), k * d)));
+    const alleMs = Number(wert('alleS')) * 1000;
+    if (!l.length) { el.classList.remove('an'); return; }
+    if (alleMs > 0) uhren.push(setTimeout(() => el.classList.remove('an'), l.length * d));
   }
-  Promise.all([lesen(), schrift()]).then(() => { durchgang(); setInterval(durchgang, TAKT_MS); });
-  setInterval(lesen, NEU_LESEN_MS);
+  function neuStarten() {
+    if (laeuft === null) return;               // erst nach Schrift und Liste
+    clearInterval(laeuft);
+    const alleMs = Number(wert('alleS')) * 1000;
+    const runde = alleMs > 0 ? Math.max(alleMs, liste().length * Math.max(3, Number(wert('dauerS')) || 7) * 1000)
+      : Math.max(1, liste().length) * Math.max(3, Number(wert('dauerS')) || 7) * 1000;
+    durchgang();
+    laeuft = setInterval(durchgang, runde);
+  }
+  Promise.all([lesen(), schrift()]).then(() => { laeuft = 0; neuStarten(); });
+  setInterval(() => lesen().then(neuStarten), NEU_LESEN_MS);
 }

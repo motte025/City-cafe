@@ -194,7 +194,9 @@
         folie: { an: true, dauerS: 60, rahmen: false, ambi: 'wechsel', jede: 1 },
         plakate: { an: true, dauerS: 20, rahmen: false, ambi: 'wechsel', jede: 1 },
         willkommen: { an: true, dauerS: 35 },
-        getraenke: { an: true, dauerS: 30 }
+        getraenke: { an: true, dauerS: 30 },
+        dj: { an: true, alleS: 60, dauerS: 7, groesse: 38,
+              'a_jaegermeister-5er': true, 'a_ane-aufs-aug': true, 'a_puntigamer-05': false }
     };
     var WB_DAUER = [[20, '20 s'], [30, '30 s'], [45, '45 s'], [60, '1 min'], [90, '1½ min'], [120, '2 min'], [180, '3 min']];
     var WB_JEDE = [[1, 'jede'], [2, 'jede 2.'], [3, 'jede 3.']];
@@ -226,6 +228,16 @@
           reihen: [
             { feld: 'an', werte: [[false, 'Aus'], [true, 'An']] },
             { feld: 'dauerS', etikett: 'Dauer', nurWenn: ['an', true], werte: [[20, '20 s'], [35, '35 s'], [60, '1 min']] }
+          ] },
+        { teil: 'dj', titel: '🎛 DJ-Modus: Angebote unter „Pioneer DJ"', unter: 'Schrift unter dem Schriftzug, ein Angebot nach dem anderen',
+          reihen: [
+            { feld: 'an', werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'alleS', etikett: 'alle', nurWenn: ['an', true], werte: [[30, '30 s'], [60, '1 min'], [120, '2 min'], [300, '5 min'], [0, 'immer']] },
+            { feld: 'dauerS', etikett: 'je', nurWenn: ['an', true], werte: [[5, '5 s'], [7, '7 s'], [10, '10 s'], [15, '15 s']] },
+            { feld: 'groesse', etikett: 'Größe', nurWenn: ['an', true], werte: [[32, 'Klein'], [38, 'Normal'], [44, 'Groß']] },
+            { feld: 'a_jaegermeister-5er', etikett: '5 × Jägermeister', nurWenn: ['an', true], werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'a_ane-aufs-aug', etikett: 'Ane aufs Aug', nurWenn: ['an', true], werte: [[false, 'Aus'], [true, 'An']] },
+            { feld: 'a_puntigamer-05', etikett: 'Puntigamer', nurWenn: ['an', true], werte: [[false, 'Aus'], [true, 'An']] }
           ] },
         { teil: 'getraenke', titel: '🍺 Getränkeplakat', unter: 'Jägermeister & Puntigamer',
           reihen: [

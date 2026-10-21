@@ -7,7 +7,8 @@
   ],
   "djAngebote": [
     { "id": "jaegermeister-5er", "aktiv": true, "titel": "5 × Jägermeister", "preis": "14,00 €" },
-    { "id": "ane-aufs-aug", "aktiv": true, "titel": "Ane aufs Aug", "preis": "3,00 €" }
+    { "id": "ane-aufs-aug", "aktiv": true, "titel": "Ane aufs Aug", "preis": "3,00 €" },
+    { "id": "puntigamer-05", "aktiv": false, "titel": "Puntigamer 0,5 l", "preis": "4,60 €" }
   ],
   "aktionen": [
     { "id": "jaegermeister-5er", "aktiv": true, "titel": "5 × Jägermeister", "preis": "14,00 €" },

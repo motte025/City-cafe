@@ -9336,6 +9336,7 @@
             try {
                 f.contentWindow.postMessage({ typ: 'ytm-dj', jetzt, naechster: vor[0] ? titel(vor[0]) : null,
                                               schlange: vor.slice(1).map(titel), blende: 9,
+                                              djWerbung: (werbungEinst && werbungEinst.dj) || null,   // Chef-Uebersicht
                                               vol: Number(nlTon.vol) || 0 },
                                             location.origin);
                 // Messwerte des Supervisors (Wellenform, BPM, Pegel) je Song einmal weitergeben

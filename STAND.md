@@ -270,6 +270,12 @@ vorerst nicht nötig; der Supervisor-Code dafür bleibt und tut ohne Umgebung ni
   Elfenbein, Ladys Pink, Champagner) schwarz mit dunkelrotem Preis, sonst hell mit goldenem Preis;
   Amber-Skins (amber-blau, blau-amber, tiefglas) Preis eisblau `#8fe6ff`. Saira lädt das Skript
   notfalls selbst.
+- **Am Chef-Handy einstellbar** (Fernbedienung → Übersicht → Werbung → „🎛 DJ-Modus: Angebote
+  unter Pioneer DJ“, Firebase `djremote/<raum>/werbung/einstellung/dj`): An/Aus, **alle** 30 s /
+  1 / 2 / 5 min / immer (`alleS`, 0 = immer), **je** 5 / 7 / 10 / 15 s (`dauerS`), **Größe**
+  Klein 32 / Normal 38 / Groß 44 (`groesse`, lange Titel werden kleiner), je Angebot An/Aus
+  (`a_<id>`: Jägermeister, Ane aufs Aug, Puntigamer – geht vor `aktiv` in `werbung.json`).
+  index.html reicht die Einstellung als `djWerbung` mit `ytm-dj` ans Studio. Getestet zuhause.
 - **Master-Level-Knopf:** bleibt wie im Bild gemalt (dreht nicht mehr) – der gedrehte Ausschnitt
   zeigte Nähte und helle Sicheln (Betreiber: wie im Original).
 
