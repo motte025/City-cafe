@@ -8,13 +8,24 @@ import websocket
 HIER = os.path.dirname(os.path.abspath(__file__))
 TAKT = os.path.join(HIER, '..', 'takt')
 VENV = os.path.expanduser('~/.local/share/citycafe-test/beat-venv/bin/python')
-AUSDRUCK = """JSON.stringify([].concat([ytm.jetzt||{}], ytm.eintraege||[], (ytm.radio&&ytm.radio.titel)||[],
-  (ytm.gespielt||[]).slice(-30)).map(t=>t&&t.videoId).filter(v=>/^[A-Za-z0-9_-]{11}$/.test(v||'')))"""
+# Zuhause (dieser Kiosk) und das Cafe (ueber Firebase: djremote/city-cafe/yt/jetzt, radio,
+# warteschlange) - der W1 soll fuer alles, was dort laeuft, eine Takt-Datei bekommen.
+AUSDRUCK = """(async () => {
+  const ids = t => (t || []).map(x => x && x.videoId);
+  let cafe = [];
+  try {
+    const p = 'djremote/city-cafe/yt/', db = nlFernVerb.db;
+    const [j, r, w] = await Promise.all(['jetzt', 'radio', 'warteschlange'].map(k => db.ref(p + k).once('value').then(s => s.val())));
+    cafe = [].concat([j && j.videoId], ids(j && j.gespielt), ids(r && r.titel), ids(w ? Object.values(w) : []));
+  } catch (e) {}
+  const hier = [].concat([ytm.jetzt && ytm.jetzt.videoId], ids(ytm.eintraege), ids(ytm.radio && ytm.radio.titel), ids((ytm.gespielt || []).slice(-30)));
+  return JSON.stringify(cafe.concat(hier).filter(v => /^[A-Za-z0-9_-]{11}$/.test(v || '')));
+})()"""
 def ids_vom_kiosk():
     tabs = json.load(urllib.request.urlopen('http://127.0.0.1:9222/json/list', timeout=5))
     tab = next(t for t in tabs if t['type'] == 'page' and 'kiosk=1' in t['url'])
     ws = websocket.create_connection(tab['webSocketDebuggerUrl'], suppress_origin=True, timeout=10)
-    ws.send(json.dumps({'id': 1, 'method': 'Runtime.evaluate', 'params': {'expression': AUSDRUCK, 'returnByValue': True}}))
+    ws.send(json.dumps({'id': 1, 'method': 'Runtime.evaluate', 'params': {'expression': AUSDRUCK, 'returnByValue': True, 'awaitPromise': True}}))
     while True:
         r = json.loads(ws.recv())
         if r.get('id') == 1: break
