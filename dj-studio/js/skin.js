@@ -70,8 +70,8 @@ const DECK_A = {
     ['.link-status', [510, 348, 20, 20], { bild: true }],
     // Meter, Kanalfader
     ['.bereich-meter', [60, 405, 40, 262]],
-    ['.deck-meter', [66, 428, 28, 234]],
-    ['.clip-led', [71, 433, 18, 5]],
+    ['.deck-meter', [70.5, 428, 18.3, 234]],   // genau die zwei gemalten LED-Spalten (gemessen 21.10.)
+    ['.clip-led', [70.5, 433, 18.3, 5]],
     ['.bereich-fader', [110, 405, 50, 252]],
     ['.kanalfader', [116, 412, 42, 242], { kappe: [115, 477, 41, 35] }],
     // Knoepfe (Kappe dreht sich, Ruhestellung = Stellung im Bild)
@@ -181,8 +181,8 @@ const DECK_B = {
     ['.bereich-fader', [1510, 405, 52, 252]],
     ['.kanalfader', [1514, 412, 44, 242], { kappe: [1514, 477, 43, 35] }],
     ['.bereich-meter', [1574, 405, 40, 262]],
-    ['.deck-meter', [1580, 428, 27, 234]],
-    ['.clip-led', [1584, 433, 18, 5]],
+    ['.deck-meter', [1582.5, 428, 18.2, 234]],
+    ['.clip-led', [1582.5, 433, 18.2, 5]],
     ['.bereich-jog', [1160, 492, 232, 228]],
     ['.jog', [1171, 493, 224, 224], { jog: { teller: 92, cover: 34 } }],   // Cover sitzt im Bild 7 px rechts der Ringmitte
     ['.jog-vinyl .led', [1172, 530, 10, 10]],
@@ -248,7 +248,7 @@ const MITTE = {
     ['.status-led.rot', [810, 521, 32, 13]],
     ['.master-meter', [590, 557, 245, 51]],
     ['.master-knopf .knopf', [880, 563, 60, 60], { knopf: true }],
-    ['.gr-meter', [963, 541, 22, 103]],
+    ['.gr-meter', [964, 541, 17.3, 103]],
     ['.breit[data-w="video"]', [1021, 546, 77, 29], { bild: true, an: true }],
     ['.breit[data-w="audio"]', [1021, 585, 77, 29], { bild: true }],
     ['.breit[data-w="auto"]', [1021, 623, 77, 28], { bild: true }],

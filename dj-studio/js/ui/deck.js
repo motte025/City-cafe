@@ -110,7 +110,7 @@ export function deckBauen(root, id, engine, aktionen) {
   // ---- Unterteil -----------------------------------------------------------
   const cMeter = el('canvas', 'deck-meter', { 'aria-label': `Pegel Kanal ${nr}` });
   const meter = root.closest('.skin')
-    ? new LedMeter(cMeter, { richtung: 'v', kanaele: 2, stil: 'bild', schwellen: SCHWELLEN_BILD_DECK })
+    ? new LedMeter(cMeter, { richtung: 'v', kanaele: 2, stil: 'bild', schwellen: SCHWELLEN_BILD_DECK, kanalLuecke: 3.9 })   // Luecke wie gemalt
     : new LedMeter(cMeter, { richtung: 'v', kanaele: 2, abstand: 2 });
   const skala = el('div', 'deck-skala', { 'aria-hidden': 'true' },
     SKALA.map(db => el('span', '', { text: db > 0 ? '+' + db : String(db), style: `--pos:${skalaPos(db)}` })));
