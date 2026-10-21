@@ -141,7 +141,7 @@ function frame(raf) {
   if (tv && bildAbstand < 1 / 75 && (ungerade = !ungerade)) return;
   const t = performance.now() / 1000, dt = Math.min(0.1, t - letzte);
   letzte = t;
-  if (tv) sicher('tv', () => tv.takt());
+  if (tv) sicher('tv', () => tv.takt(raf / 1000));
   else {
     sicher('engine', () => engine.takt());
     sicher('automix', () => automix.takt());

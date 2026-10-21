@@ -27,6 +27,8 @@ const XF_TON_FENSTER_SEK = 2.0;
 const xfSek = 9;             // Notbremse: so lange laeuft der alte Song hoechstens aus
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
+const NACHZIEHEN_AB_SEK = 0.02;   // kleinere Abweichungen zu mpv: nicht korrigieren
+const NACHZIEHEN_TEMPO = 0.03;    // groessere: mit hoechstens 3 % Tempo-Aenderung aufholen
 // Pegelanzeige: Kanaele und Master zeigen, was aus der Anlage kommt - Song x Lautheitsanpassung
 // (je Song, wie mpv) x Lautstaerke der Fernbedienung. Rot nur bei 100 % und dann "ein bisschen":
 // simuliert ueber 11 Songs (18.10.): +1 dB = 4,7 % der Zeit rot (21.10.: zu viel), 0 dB = 1,3 %
@@ -213,7 +215,12 @@ export function tvBauen(engine) {
       // Gleicher Song: bei echtem Sprung (Spulen, Pause) neu setzen, sonst weich nachziehen
       const erwartet = stand.pos + (stand.spielt ? t - stand.zeit : 0);
       if (!j || spielt !== stand.spielt || Math.abs(pos - erwartet) > SPRUNG_SEK) { stand = { pos, zeit: t, spielt }; nachziehen = 0; }
-      else nachziehen = pos - erwartet;
+      else {
+        // Die gemeldete Position ist auf Videobilder gerundet und leicht verzoegert (+-40 ms):
+        // kleine Abweichungen ignorieren, groessere sanft aufholen (siehe takt).
+        const abw = pos - erwartet;
+        nachziehen = Math.abs(abw) < NACHZIEHEN_AB_SEK ? 0 : abw;
+      }
     }
     jetztRoh = j;
     setzen(luft, j, spielt);
@@ -311,13 +318,16 @@ export function tvBauen(engine) {
 
   return {
     // je Frame statt engine.takt(): Positionen hochrechnen, Blende fahren
-    takt() {
-      const t = jetztS();
+    // bildZeit: Zeitpunkt des Bildes (requestAnimationFrame) - so laeuft die Welle gleichmaessig;
+    // mit der Uhr beim Rechnen schwankte das Tempo von Bild zu Bild um bis zu 25 %.
+    takt(bildZeit) {
+      const t = bildZeit || jetztS();
       const d = state.decks[luft];
-      if (nachziehen) {                   // in ~0,5 s aufholen
-        const schritt = nachziehen * Math.min(1, (t - (this.letzte || t)) * 3);
+      if (nachziehen) {                   // sanft aufholen: hoechstens 3 % schneller/langsamer
+        const dt = Math.max(0, Math.min(0.1, t - (this.letzte || t)));
+        const schritt = Math.sign(nachziehen) * Math.min(Math.abs(nachziehen), NACHZIEHEN_TEMPO * dt);
         stand.pos += schritt; nachziehen -= schritt;
-        if (Math.abs(nachziehen) < 0.002) nachziehen = 0;
+        if (Math.abs(nachziehen) < 0.001) nachziehen = 0;
       }
       this.letzte = t;
       if (d.track) {
