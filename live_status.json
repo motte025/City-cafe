@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-21T16:07:45Z",
+  "checked_at": "2026-10-21T16:22:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,13 +17,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴🔴 HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ HYPER, HYPER - Neo Rave, Hard Dance, Hyper Techno & more | !tip ✨",
@@ -31,16 +24,23 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Harderstyles Mittwoch <3  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wir geben Vollgas ganz schnell in Richtung Wochenende! Bergfest...  <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wir geben Vollgas ganz schnell in Richtung Wochenende! Bergfest...  <3  !release @just_jenny_official @two_crazy_girls",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴🔴 HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Harderstyles Mittwoch <3  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
