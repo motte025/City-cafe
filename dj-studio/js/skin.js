@@ -328,12 +328,11 @@ const FLICKEN_LEISTE = [
 
 const TABELLE = { 'deck-a': DECK_A, 'deck-b': DECK_B, mitte: MITTE, kopf: KOPF, leiste: LEISTE };
 // DJ-Modus (Betreiber 21.10.2026): Titelfeld groesser, Wellenfeld ~15 % schmaler. Titelfeld dunkel
-// verlaengern, die Trennlinie (Titel-/Wellenrahmen) aus dem Skin 13 px tiefer setzen.
+// verlaengern bis an die Welle; feine Trennlinie per CSS (skin.css).
 const FLICKEN_TV_TITEL = [
-  { ziel: [25, 128, 514, 90], farbe: '#05070a', tv: true },
-  { ziel: [25, 217, 514, 10], quelle: [25, 204, 514, 10], tv: true },
-  { ziel: [1131, 128, 517, 90], farbe: '#05070a', tv: true },
-  { ziel: [1131, 217, 517, 10], quelle: [1131, 204, 517, 10], tv: true },
+  // durchgehend dunkel bis zur Welle (die versetzte Trennlinie wirkte wie eine Luecke, 21.10.)
+  { ziel: [25, 128, 514, 100], farbe: '#05070a', tv: true },
+  { ziel: [1131, 128, 517, 100], farbe: '#05070a', tv: true },
 ];
 const FLICKEN = [...FLICKEN_A, ...FLICKEN_B, ...FLICKEN_MITTE, ...FLICKEN_KOPF, ...FLICKEN_LEISTE, ...FLICKEN_TV_TITEL];
 

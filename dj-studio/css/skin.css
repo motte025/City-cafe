@@ -280,3 +280,4 @@ body.tv .skin .tempo-zahl, body.tv .skin .key-zahl { text-align: center; }
 body.tv .skin .deck-kanal { display: flex; align-items: center; line-height: 1; padding-top: 2px; }
 body.tv .skin .deck-titel { font-size: 40px; line-height: 46px; }
 body.tv .skin .deck-kuenstler { font-size: 25px; line-height: 28px; }
+body.tv .skin .deck-welle { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14); }   /* feine Trennlinie zum Titelfeld */
