@@ -362,7 +362,33 @@ const LED_LAGE = {
   'chrom': { A: [301, 106.2], B: [1402.5, 106.2] },
   'tiefglas': { B: [1403, 104] },
 };
+// BEAT GRID / VINYL: in Chrom sind die LEDs anders gemalt (gemessen 21.10.2026: A 70/723,5,
+// B 1571 und 1595,5/723,5 statt 64/726 bzw. 1579,5 und 1603,5/726) - LEDs und Abdeck-Flicken
+// dorthin. Alle anderen Skins liegen wie Bild 2 (Abweichung unter 1,5 Punkte).
+const ANZ_LAGE = {
+  'chrom': { A: [6, -2.5], B: [-8.25, -2.5], fA: [62, 715.5, 16, 16], fB: [1561, 715, 45, 17] },
+};
+function anzLagen() {
+  const l = ANZ_LAGE[SKIN_WAHL];
+  if (!l) return;
+  for (const [deck, t, nur] of [['A', DECK_A, '.anz:nth-of-type(2)'], ['B', DECK_B, null]]) {
+    const [dx, dy] = l[deck];
+    for (const e of t.teile) {
+      if (!e[0].startsWith('.anz') || (nur && e[0] !== nur)) continue;
+      e[1] = [e[1][0] + dx, e[1][1] + dy, e[1][2], e[1][3]];
+      if (e[2] && e[2].led) e[2] = { ...e[2], led: [e[2].led[0] + dx, e[2].led[1] + dy] };
+    }
+  }
+  for (const [f, alt] of [[l.fA, FLICKEN_A.find(x => x.ziel[0] === 57 && x.ziel[1] === 719)],
+                          [l.fB, FLICKEN_B.find(x => x.ziel[0] === 1572 && x.ziel[1] === 719)]]) {
+    if (!alt) continue;
+    alt.ziel = f.slice(0, 4);
+    delete alt.quelle;                 // glatt auffuellen statt Streifen strecken (sonst Kasten)
+    alt.fuellen = true;
+  }
+}
 function ledLagen() {
+  anzLagen();
   const l = LED_LAGE[SKIN_WAHL];
   if (!l) return;
   for (const [deck, t] of [['A', DECK_A], ['B', DECK_B]]) {
