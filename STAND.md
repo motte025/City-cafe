@@ -5,7 +5,10 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
-Letzte Durchsicht: 19. Oktober 2026 (DJ-Modus im Café freigeschaltet, W1 gemessen und
+Letzte Durchsicht: 21. Oktober 2026 (Branch `dj-skins`, **noch nicht auf `main`**: 13 Skins fürs
+DJ Studio mit Auswahl am Handy, Meter/Fader/MIX-Felder pixelgenau, Überblendung fest 9 s genau am
+Musikende, Lautheit −14 LUFS, Taktraster/Welle genau und ruhig, Lyrics-Suche, Handy-Songs werden
+nie getauscht – alles im Abschnitt „21.10.2026“). Davor, 19. Oktober (DJ-Modus im Café freigeschaltet, W1 gemessen und
 Systemupdate repariert, alle Playlist-Songs vorgemessen; Musik-Fernbedienung: Zurück-Taste
 Schritt für Schritt, ⏮ zum Song davor, Radio-Mix löschen/übernehmen, Suche nach Aufrufen,
 DJ-Modus sichtbar – Details in den Abschnitten vom 18./19.10.). Davor, 16. Oktober (Musik: Lautstärke nach LUFS für alle Songs
@@ -27,6 +30,167 @@ Davor, 5.–7. Oktober: DJ-Übergänge per Studio-Abgleich, offizielle Videos
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
+
+## 21.10.2026: DJ-Skins, Überblendung 9 s, Lautheit −14 LUFS, Welle (Branch `dj-skins`)
+
+**Stand:** alles auf dem Branch `dj-skins` (GitHub), **nicht auf `main`** – im Café ist nichts
+davon. Getestet am Test-Kiosk zuhause (`martin-ser`). Nach `main` nur mit Freigabe des Betreibers
+(Push über `/permissions`). **Beim Merge im Café: Endstufe um ~3 dB lauter** (Lautheit −14 statt
+−11 LUFS, siehe unten) und den Anzeige-Vorlauf der Welle einmal abgleichen (`AUFTRAG-W1.md`).
+Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
+
+### Skins (DJ Studio)
+
+- 12 Vorlagen vom Betreiber (`~/Schreibtisch/skin dj/`, Originale `file_….png`, `01_…_FHD.png`)
+  + Bild 2 = 13 Skins. Im Player `dj-studio/img/skins/<kürzel>.webp` (3840×2160, WebP q92, je
+  1–3 MB). Kürzel → Name (Reihenfolge = Nummer im Ordner `4K/` bzw. `FHD/`):
+  01 `amber-blau` Amber-Blau Kristall, 02 `blau-amber`, 03 `tiefglas` Blau-Amber Tiefglas,
+  04 `gold`, 05 `weiss` Schneeweiß, 06 `chrom`, 07 `ladys-tuerkis`, 08 `elfenbein`, 09 `carbon`,
+  10 `ladys-pink`, 11 `onyx`, 12 `champagner`; `bild2` = Original (`img/bild2-2x.webp`).
+- **Herstellung eines neuen Skins** (genau so gemacht, Werkzeuge in `dj-studio/werkzeuge/`):
+  1. Vorlage muss dieselbe Oberfläche wie Bild 2 zeigen (gleiche Lage aller Teile, 16:9).
+  2. Hochrechnen: Real-ESRGAN ncnn-vulkan (GitHub-Release v0.2.5.0,
+     `realesrgan-ncnn-vulkan-20220424-ubuntu.zip`), Modell `realesrgan-x4plus`:
+     `realesrgan-ncnn-vulkan -i vorlage.png -o x4.png -n realesrgan-x4plus -m models`, dann mit
+     PIL LANCZOS auf 3840×2160 (`…_4K.png`) und 1920×1080 (`…_FHD.png`). Originale nie überschreiben.
+  3. Ausrichten auf Bild 2: `python -I werkzeuge/ausrichten.py dj-studio/img/bild2.png <4K.png>
+     <ziel.png>` (affin, Ausreißer raus; Ziel: fast alle Stellen ≤ 1 px). Nur wenn nötig örtlich:
+     `entzerren.py … SIGMA` – **kleine SIGMA verbeulen Glanzflächen** (Chrom hatte Beulen); bei
+     Chrom: affin, dann SIGMA 180 und noch einmal 100. Im Ordner des Betreibers bleibt das Bild
+     unverzerrt.
+  4. Prüfen: Play-Symbol Kanal 2 (in Bild 2 fehlt der zweite Strich – Flicken `taste: true`),
+     „+9“ der Master-Skala (bei Chrom aus Blau-Amber eingesetzt), VIDEO-LED-Lage (`LED_LAGE`).
+  5. WebP: `im.save('dj-studio/img/skins/<kürzel>.webp', 'WEBP', quality=92, method=6)`.
+  6. In `js/skin.js`: `SKINS` (Name), `LED_LAGE` falls die VIDEO-LED anders sitzt, `METER_LAGE`
+     (Messung unten), in `index.html` `YTM_DJ_SKINS`, in `yt-fernbedienung.html` die Auswahlliste.
+  7. Meter-Lage messen: `python3 werkzeuge/meter_messen.py mm.json && python3
+     werkzeuge/meter_tabelle.py mm.json` (Kanal-Gehäuse A/B, Master-Raster) und
+     `python3 werkzeuge/gr_messen.py` (GR-Säule) → Zeilen in `METER_LAGE`. Helle Leiste über der
+     GR-Säule: Oberkante von Hand prüfen (Elfenbein/Blau-Amber/Champagner ≈ 541).
+  8. Am Test-Kiosk jeden Skin mit Bildschirmfoto (CDP `Page.captureScreenshot` mit `scale`)
+     an Metern, Fadern, MIX-Feldern, Play-Tasten, Crossfader prüfen.
+- **Auswahl:** Chef-Handy, Musik-Fernbedienung → „⚙️ Anzeige & Anlage“ → Liste unter dem
+  DJ-Knopf (Befehl `djSkin`), TV merkt ihn (`ytmDjSkin`, `localStorage ytm-dj-skin`, `yt/jetzt.djSkin`).
+  Test direkt: `dj-studio/?tv&skin=gold`.
+- **Meter (skin.js `METER_LAGE`, meter.js):** Kanal-Meter decken das ganze schwarze Gehäuse ab
+  (Canvas 0,6 px innerhalb der Kante, Grund `#060606`, Radius 3) und zeichnen **30 LEDs** mit
+  gleichem Rand ringsum (LED-Block 18,3 px breit, Lücke 20 %), Clip-LED 3 px darüber
+  (`CLIP_ABSTAND` 1,8). Die gemalten LEDs sind unregelmäßig (im Gelb 6,1 statt 7,4 px Teilung),
+  deshalb abdecken statt treffen. **Master: 25 Spalten** (Bild 2 und alle Skins; vorher 26) genau
+  auf dem gemalten Raster, je Skin gemessen. **GR-Säule:** Gehäuse je Skin (`G`), 14 LEDs, Rand
+  `(Breite − 16,2)/2`, Spaltenlücke 2,4. Schwellen (`SCHWELLEN_BILD_DECK`/`_MASTER`) auf 30/25
+  umgerechnet. Alte Abdeck-Flicken aus Bild 2 unter Kanal-Metern und GR entfernt (B ragte 3,5 px
+  rechts übers Gehäuse = „Meter zu weit links“).
+- **Kanalfader:** Kappe = genauer Ausschnitt der gemalten Kappe (A `[115.5, 477.5, 43, 35.5]`,
+  B `[1513, 477.5, 44, 35.5]`, Radius 3 px). Die gemalte Kappe wird nur dort entfernt, wo sie
+  war: Schlitz `senk` (spaltenweise Verlauf oben→unten, A `[122,474,27,98]`, B `[1521,474,26,98]`),
+  daneben `fuellen` (Laplace aus oben/unten/außen, Schlitzseite zählt nicht: A `[112.5,475,9.5,85]`
+  'r', `[149,475,13.5,85]` 'l'; B `[1508.5,475,12.5,85]` 'r', `[1547,475,12.5,85]` 'l').
+  `STREIFEN_SKINS = bild2, chrom, carbon`: dort statt `fuellen` senkrecht (Streifen laufen durch).
+- **MIX IN/OUT:** die gemalten Tasten ±10/16 werden aus der Mulde `fuellen` (A `[223,340.5,155,38.5]`,
+  B `[1293.5,340.5,156,38.5]`, nur DJ-Modus); Feld A `[226,337,148,44]`, B `[1298,337,148,44]`
+  (Mulde gemessen: A 214,5–385, B 1287–1457).
+- **Play-Taste (DJ-Modus):** spielt = Neon in der Farbe der eigenen Welle (A `#1487ff` blau,
+  B `#ff9614` orange); Pause = beide grün `#2fe36a`, blinken alle 3 s 0,5 s (deck.js `t % 3 < 0.5`).
+- Flicken-Typen in `putzen()` (skin.js): `quelle` (Bildstück), `farbe`, `farbeVon`, `verlauf`,
+  `quer` (zeilenweise links→rechts), **`senk`** (spaltenweise oben→unten), **`fuellen`** (Laplace,
+  `'l'`/`'r'` = diese Seite kein Rand), `taste` (nur ins Tastenbild), `tv` (nur DJ-Modus).
+
+### Welle, Taktraster, Pegel (DJ Studio, `js/tv.js`, `js/main.js`)
+
+- **Tempo genau** (`tempoVerfeinern`): die BPM-Messung des Supervisors lag bis 0,8 BPM daneben →
+  Raster lief über den Song weg (Dancing Queen 100,1 statt 100,55: nach 100 s einen halben Schlag).
+  Jetzt ±1,5 % um den Messwert in 0,01-%-Schritten das Tempo, bei dem die Bass-Einsätze des ganzen
+  Songs am deutlichsten auf dem Raster liegen; daraus auch die Lage der Schläge. 13 Songs geprüft
+  (z. B. 127,7 → 128,01; Uptown Funk 115,00), Raster meist ±30 ms. ~70 ms je Song im Browser.
+  Prüfen: `werkzeuge/tempo_verfeinern.py <id>`, `werkzeuge/raster_pruefen.py <id> [bpm versatz]`.
+- **Ruhiger Lauf:** Position nach der Bildzeit (`requestAnimationFrame`), Abweichungen zu mpv
+  < 20 ms ignoriert (`NACHZIEHEN_AB_SEK`), größere mit höchstens 3 % Tempo (`NACHZIEHEN_TEMPO`);
+  vorher schwankte das Tempo 72–124 %. Ab 75 Hz zeichnet das Studio jedes zweite Bild
+  (am 100-Hz-Monitor gleichmäßig 50 fps statt 10/20-ms-Wechsel), bei 60 Hz wie bisher.
+- **Anzeige-Vorlauf** (`localStorage 'studioVorlauf'`, Sekunden, ±1, Standard
+  `STUDIO_VORLAUF_SEK = 0`): gleicht die Verzögerung bis zum Ohr/Auge aus (Bluetooth meldet sie
+  nicht). Positiv = Welle früher. Gesetzt wird er im Kiosk-Profil (Ursprung der TV-Seite), wirkt
+  nach ≤ 1 s, ohne Neuladen. **Zuhause gemessen: −0,05 s** (Tipp-Test: Klick ~90–110 ms nach mpv =
+  Bluetooth/B03; Bild ~50–60 ms verzögert durch sway im KDE). Am Ausgang vor Bluetooth liegt der
+  Ton nur 53 ms neben mpv (Korrelation 0,969) – der PC ist also genau. **Café: eigener Wert**, siehe
+  `AUFTRAG-W1.md`. Position prüfen: `werkzeuge/position_pruefen.py` (Studio − mpv).
+- **Wartender Kanal (NEXT)** steht auf dem gemessenen Start (START-Marke) statt 0:00.
+- **Pegelanzeige:** `RESERVE_DB = 4.0` (1,0 + 3 dB für −14 LUFS, Anzeige wie vorher; Betreiber:
+  bei 100 % darf es ab und zu CLIP zeigen) und `anheben()`: +3 dB bis −12 dBFS, bis −3 dBFS
+  auslaufend (rot bleibt selten). Wellenhöhe: unverändert (Änderung war nicht gewünscht).
+
+### Überblendung fest 9 s, genau berechnet (Supervisor `ueberblenden()`)
+
+- Am Handy keine Einstellung mehr (Kurz/Mittel/Lang entfernt); `index.html` sendet `blende: 9`.
+- Ablauf: `XF_SEK + XF_VORLAUF_SEK` = 15 s vor dem **Musikende des alten** (`STILLE.ende`) wird der
+  neue Song **angehalten** geladen (`--pause --start=einsatz−7`). Der Faden rechnet aus der
+  Position des alten fortlaufend den Zeitpunkt des Musikendes und lässt den neuen genau so los,
+  dass er am Beginn des 2-s-Tonfensters (`XF_TON_FENSTER_SEK`) an seinem **Einsatz** ist. Der Ton
+  wechselt equal power (cos/sin, mpv-Lautstärke ∛) und ist **genau am Musikende des alten** fertig.
+  Bild blendet vom Loslassen bis dahin (bis 9 s). Zu spät geladen → neuer wird passend vorgespult.
+- **Einsatz** (neu, `STILLE.einsatz`): ab hier volle Musik (2 s fast normal laut, ≤ 20 s nach dem
+  Anfang, `EINSATZ_MAX_SEK`). Leises Intro (z. B. Madcon „Don't Worry“ Lyric-Video: 7 s bei −30 dB)
+  wird ab dem Songanfang in 1,5 s eingeblendet und läuft unter dem Ende des alten mit – vorher
+  5–7 s fast Stille. DJ Studio fährt den Crossfader am Einsatz (`ton[4]`).
+- Seite ändert ihren nächsten Song vor dem Loslassen (neue Mix-Liste) → Vorbereitung verworfen,
+  neu mit dem neuen Song. Pause vor dem Loslassen → verworfen. Dashboard erfährt den Songwechsel
+  (`nlVideoFertig`) erst beim Loslassen.
+- Log: `Ueberblendung: alt -> neu (Musikende alt …s in …s, neu ab …s, Musik ab …s, voll ab …s)`,
+  **`Tonwechsel <id>: neu bei …s (volle Musik ab …s), alt bei …s (Musikende …s)`**, `Ueberblendung
+  fertig`. Gemessen zuhause: neu 8,58 (Ziel 8,6) / alt 231,61 (231,5); neu 29,03 / alt 204,38;
+  neu 0,53 / alt 227,15 – also ±0,2 s. Prüfen: `grep Tonwechsel …supervisor.out`.
+- DJ Studio: MIX-Marke = Beginn des Tonwechsels (Ende − 2 s); ON AIR folgt dem Crossfader.
+
+### Lautheit −14 LUFS (Supervisor `LAUT_ZIEL_LUFS`)
+
+- Ziel −14 statt −11 LUFS (wie YouTube/Spotify). Nachgerechnet mit 79 Playlist-Songs (−26,1 bis
+  −5,8 LUFS, `werkzeuge/lufs_messen.sh` + `lufs_auswerten.py`): −11 → 94,9 % innerhalb ±1,5 dB
+  (leisester −4,1 dB, Limiter 28×); **−14 → alle innerhalb ±1,5 dB, 74 innerhalb ±0,3 dB, Limiter
+  4×**, leisester: September (EWF) −1,1 dB. Laute Songs werden im Mittel 5,2 dB, höchstens 8,2 dB
+  abgesenkt (Irgendwann Irgendwo −8,2; Christin Stark „Barcelona“ −8,1) – nur leiser gestellt,
+  nicht komprimiert. **Insgesamt 3 dB leiser → im Café Endstufe +3 dB** (Betreiber: stark genug).
+- Limiter weiter höchstens 2 dB, Gain höchstens ±15 dB, 1 dB Reserve zu den Spitzen.
+
+### Musik-Fernbedienung
+
+- **Suche „📝 Lyrics“** (neben Songs/Playlists): fragt YouTube mit „… lyrics“ und zeigt nur Treffer
+  mit lyric/songtext/letra/paroles/testo im Titel („Helene Fischer Atemlos“: 8 von 25).
+- **Songs vom Handy werden nie getauscht:** neben `gewaehlt` und Chef-Einträgen jetzt auch Wünsche
+  (`quelle: 'wunsch'`). Getauscht (gegen das offizielle Musikvideo) werden nur noch Playlist- und
+  Radio-Titel. Vor dem 19.10. in Playlists gelegte Songs ohne Markierung: löschen und neu hinzufügen.
+- Skin-Auswahl (s. o.); Überblendungs-Einstellung entfernt. Test-Link (Branch):
+  `https://raw.githack.com/motte025/City-cafe/dj-skins/fernbedienung.html?raum=zuhause`.
+
+### Test-Aufbau zuhause (neu seit 21.10., übersteht einen Neustart)
+
+- Alles unter **`~/.local/share/citycafe-test/`** (700, nicht im Repo): `kiosk-test.sh` (Chromium,
+  Profil `chromium-kiosk/`, `?kiosk=1&raum=zuhause&boxname=Zuhause-Test` + PIN aus `chefpin`, 600),
+  `sway.conf` (verschachteltes sway 1920×1080), `supervisor-neu.sh` (beendet **alle** Python-
+  Supervisoren und startet genau einen im sway – vorher liefen versehentlich zwei),
+  `supervisor.out/.err`.
+- Start: lokaler Server `cd ~/City-cafe && python -m http.server 8090 --bind 127.0.0.1`, dann
+  `CITYCAFE_RAUM=zuhause … sway -c ~/.local/share/citycafe-test/sway.conf` (env wie in
+  `supervisor-neu.sh`), Bluetooth: `bluetoothctl power on; bluetoothctl connect 70:B3:D5:91:38:62`.
+  DJ-Modus per CDP: `ytmBefehl({was:'dj', id:'x'+Date.now()})`; Skin: `{was:'djSkin', skin:'gold'}`.
+- PIN eingeben (nie lesen/ins Repo): Dialog `yad --entry --hide-text … > chefpin`.
+- **Der PC zuhause hat das nächtliche Kiosk-Update** (`citycafe-update.timer`, 8:30): heute
+  `pacman -Syu` (Chromium, Firefox …) und danach **automatischer Neustart** um 08:30:55 – das war
+  der „Absturz“; `/tmp` war danach leer. Abschalten nur auf Wunsch:
+  `sudo systemctl disable --now citycafe-update.timer`.
+- Werkzeuge zum Messen: `dj-studio/werkzeuge/` (Tipp-Test, Ausgangs-Mitschnitt, Position, Tempo,
+  Raster, LUFS, Meter-Lage, Ausrichten).
+
+### Commits (`dj-skins`, ab 21.10.)
+
+4dce4b07 … 57e600cf (Skins, Play-Taste, Chrom, VIDEO-LED, Meter erste Fassung), c0bf0253 / 296acc59
+(Meter mittig, GR), 1b7ca997 / 280dcc13 (Wellenhöhe – zurückgenommen), a7ad0ade (Play-Farbe),
+44c01341 / e4c864d4 (Fader), 036ec98b (MIX), 77655d9d / 5a7b0662 / 6b263daa / f945530a (Pegel,
+Start-Marke, −14 LUFS), 92fce580 / 74de6a7e (Überblendung 9 s, Einsatz), 5a71bec4 (Lyrics, kein
+Tausch), d6517dd8 / c65d1687 / 1328f482 (Welle ruhig, Tempo genau), dazu diese Doku.
+Außerdem auf dem Branch (auch für `main` wichtig): d8531d21 (Firebase: eine gemeinsame anonyme
+Anmeldung – auf frischem Profil gab es zwei UIDs → PERMISSION_DENIED), 2d3b6f51 (Musik-Tausch nur
+gegen Video desselben Künstlers – Ambros „Schifoan“ kam als Metallica live).
 
 ## 20.10.2026: Berliner-Luft-Angebot im großen Medien-Widget
 
@@ -176,7 +340,7 @@ Antwortsprache im Gespräch: Deutsch.
 | --- | --- |
 | `index.html` | Das Dashboard selbst: Rotation, alle Widgets, Verbindung zu den Fernbedienungen |
 | `fernbedienung.html` | Sammel-Fernbedienung: Startseite mit Kacheln (🎵 Musik, DJ, Roulette, Hos'n Obe, Chef: Übersicht), die Steuerung öffnet beim Antippen, „← Start" bzw. die Zurück-Taste führt zurück (seit 16.10.2026); zeigt nur Screens, die sich in den letzten 3 Tagen gemeldet haben |
-| `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef. In „Jetzt" oben nur Steuerung (⏮ ⏸ ⏭ ⇄ Blende; ⏮ in den ersten 10 s = Song davor) und Lautstärke; Zurück-Taste Schritt für Schritt, Radio-Mix in die Schlange übernehmbar (19.10.2026); Vollbild, Fotos/Shorts rechts, Ambilight, QR, Handy/Screen an die Anlage zugeklappt unter „⚙️ Anzeige & Anlage" (16.10.2026); Limiter und Überblendung unter Mehr → „🔊 Ton" |
+| `yt-fernbedienung.html` | Musik-Fernbedienung: Jetzt, Suche (Songs/Playlists), Ähnliche, Listen, Mehr; Gast/Chef. In „Jetzt" oben nur Steuerung (⏮ ⏸ ⏭ ⇄ Blende; ⏮ in den ersten 10 s = Song davor) und Lautstärke; Zurück-Taste Schritt für Schritt, Radio-Mix in die Schlange übernehmbar (19.10.2026); Vollbild, Fotos/Shorts rechts, Ambilight, QR, Handy/Screen an die Anlage zugeklappt unter „⚙️ Anzeige & Anlage" (16.10.2026); Limiter unter Mehr → „🔊 Ton" (Überblendung seit 21.10.2026 fest 9 s, keine Einstellung mehr); Suche 🎵 Songs / 📃 Playlists / 📝 Lyrics (21.10.); DJ-Skin-Auswahl unter „⚙️ Anzeige & Anlage" (Chef, 21.10.); Fassung in der Fußzeile (`FASSUNG`) |
 | `yt-fernbedienung-net.js` | Firebase-Pfade der Musik (`yt/…`, `chef/…`) |
 | `yt-warteschlange.js` | Reihenfolge-Logik der Musik (Warteschlange, Radio, Vorschau), Tests in `yt-warteschlange.test.js` |
 | `yt_playlists.json` | Stimmungs-Playlists nach Uhrzeit (1–4 mit festen Titellisten, 5–8 eigene Mixe) |
@@ -401,7 +565,10 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     Titel. Die Vorschau („Als Nächstes", „Danach") rechnet wie `weiter()`
     und zeigt damit die echte Reihenfolge. Hos'n Obe ist während der Musik
     gesperrt; der Dart-Abend beendet sie, außer der Chef startet sie dabei.
-  - **DJ-Funktionen (Supervisor):** echte Überblendung (4/6/9 s am Handy, zweiter mpv,
+  - **DJ-Funktionen (Supervisor):** ⚠️ seit 21.10.2026 (Branch `dj-skins`): Überblendung **fest
+    9 s**, Tonwechsel genau am Musikende des alten / am Einsatz des neuen – Details im Abschnitt
+    „21.10.2026“ oben; der folgende Absatz beschreibt die Fassung bis dahin.
+    Echte Überblendung (4/6/9 s am Handy, zweiter mpv,
     gleichbleibende Gesamtlautstärke, Bild per sway-Opacity; Pause/Skip/Stopp
     mittendrin sauber). Der Musikbeginn des neuen Songs fällt in die **Mitte**
     der Blende (kein Lautstärkeloch, höchstens −3 dB). Chef kann am Handy mit
@@ -424,7 +591,8 @@ auch das Roulette, im Café ist es nicht eingeblendet.
       Schlussteil bleibt, höchstens 10 s vor dem Studio-Ende.
     - Grenze: Video mit anderer Abmischung als jede Studiofassung (Hallo
       kleine Maus) → nur Pegel-Regel.
-  - **Lautstärke (seit 16.10.2026):** jeder Song wird auf dieselbe
+  - **Lautstärke (seit 16.10.2026; Ziel seit 21.10. auf `dj-skins` −14 statt −11 LUFS, alle 79
+    nachgemessenen Songs innerhalb ±1,5 dB – Abschnitt „21.10.2026“):** jeder Song wird auf dieselbe
     Hörlautstärke gebracht – gemessen als Lautheit nach EBU R128 (ffmpeg
     `ebur128`, ganzer Song), Ziel **−11 LUFS** (`LAUT_ZIEL_LUFS`), über mpv
     `volume-gain`: laute Songs werden abgesenkt, leise angehoben (je bis
@@ -444,7 +612,8 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     und (2) die gestoppte Playlist, weil ihre Titel beim Stopp in der Schlange
     bleiben – jetzt starten beim Laden nur echte Wünsche nach dem Stopp. Getestet
     am TV: Playlist starten, stoppen, neu laden → bleibt aus.
-  - **Überblendung am Handy einstellbar (16.10.2026):** kurz 4 s (Standard),
+  - **Überblendung am Handy einstellbar (16.10.2026; seit 21.10. auf `dj-skins` entfernt – fest 9 s,
+    genau berechnet):** kurz 4 s (Standard),
     mittel 6 s, lang 9 s. Mit den bisherigen festen 9 s liefen beide Songs
     rund 4 s fast voll übereinander und die Beats schlugen sich.
     Dazu DJ-Kurve: der Ton wechselt nur in einem 2-s-Fenster um den

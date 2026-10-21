@@ -1,9 +1,30 @@
-# Übergabe DJ Studio / DJ-Modus (Stand 19.10.2026, 00:10 – auf `main`)
+# Übergabe DJ Studio / DJ-Modus (Stand 21.10.2026)
 
 Für die nächste Claude-Code-Sitzung. Zuerst diese Datei lesen, dann `README.md` in diesem Ordner.
-Gesprächssprache: Deutsch. Seit 19.10. 00:05 ist alles auf **`main`** (Merge des Branches
-`dj-studio`). Im Café ist der DJ-Modus nicht freigeschaltet; der neue Supervisor kommt dort mit dem
-Update am 19.10. um 8:30.
+Gesprächssprache: Deutsch. Seit 19.10. 00:05 ist der DJ-Modus auf **`main`**, seit 19.10. auch im
+Café freigeschaltet (`YTM_DJ_ERLAUBT` für `zuhause` und `city-cafe`).
+
+## 0. Neu am 21.10.2026 (Branch `dj-skins` → `main`)
+
+Vollständig mit allen Werten in **`STAND.md`, Abschnitt „21.10.2026“**. Kurz, was ein Nachfolger
+wissen muss:
+
+| Thema | Wo | Einstellung / Wert |
+|---|---|---|
+| 13 Skins | `img/skins/<kürzel>.webp`, `js/skin.js` (`SKINS`, `METER_LAGE`, `LED_LAGE`, Flicken), `index.html` `YTM_DJ_SKINS`, Fernbedienung | Auswahl am Chef-Handy, Test `?tv&skin=gold`; Herstellung neuer Skins: `werkzeuge/README.md` |
+| Kanal-Meter | `skin.js` `meterLagen()`, `ui/meter.js` `lage()` (data-lage am Canvas) | Gehäuse je Skin abgedeckt, 30 LEDs mittig, Clip-LED darüber |
+| Master-Meter | dito | 25 Spalten auf dem gemalten Raster (je Skin gemessen) |
+| GR-Säule | `skin.js` (`G`), `ui/mitte.js` `grFlaeche()` | 14 LEDs, gleicher Rand |
+| Fader, MIX-Felder | Flicken `senk`/`fuellen` in `putzen()`, `STREIFEN_SKINS` | gemalte Kappe/Tasten weg, Kappe genau ausgeschnitten |
+| Play-Taste | `css/skin.css`, `ui/deck.js` | spielt: Wellenfarbe (A blau, B orange); Pause: grün, blinkt alle 3 s |
+| Tempo/Raster | `tv.js` `tempoVerfeinern()` | Tempo aus allen Bass-Einsätzen, Raster ±30 ms über den Song |
+| Welle ruhig | `main.js` (jedes 2. Bild ab 75 Hz), `tv.js` `takt(bildZeit)`, `NACHZIEHEN_AB_SEK` 0,02, `NACHZIEHEN_TEMPO` 0,03 | Tempo 0,97–1,03 statt 0,72–1,24 |
+| Anzeige-Vorlauf | `tv.js` `vorlauf()`, `localStorage 'studioVorlauf'` (s) | zuhause −0,05; Café: abgleichen (`AUFTRAG-W1.md`) |
+| Pegel | `tv.js` `RESERVE_DB` 4,0, `anheben()` +3 dB bis −12 dBFS → 0 bei −3 dBFS | Anzeige wie vor −14 LUFS |
+| Überblendung | Supervisor `ueberblenden()`, `XF_SEK` 9, `XF_VORLAUF_SEK` 6, `XF_TON_FENSTER_SEK` 2, `STILLE.einsatz` | Tonwechsel genau am Musikende (Log „Tonwechsel“) |
+| Studio-Daten Ton | Supervisor → `window.nlTonGain[vid]` = `[gain, limiter, anfang, ende, einsatz]` | `ton[4]` neu |
+| NEXT-Kanal | `tv.js` `takt()` | steht auf der START-Marke |
+| Werkzeuge | `dj-studio/werkzeuge/` | Messen, Ausrichten, Tipp-Test |
 
 ## 1. Was der DJ-Modus ist
 
@@ -35,7 +56,7 @@ Studio nie geladen.
 | Position | Supervisor `window.nlMpvStandZeit` | Messzeitpunkt der mpv-Position; Studio liegt gemessen ±0,05 s bei mpv. |
 | TV-Ansicht | `dj-studio/js/tv.js` | Kanäle, Blende, Position (weich nachziehen, Sprung > 0,8 s), Pegel (Reserve +1 dB, × Lautheit × Lautstärke³ wie mpv), Wellen-Anzeigewert `bildWerte` (50 % Lautheit, 20 % Bass, 30 % Höhen, je Song gespreizt), Taktraster auf der „Eins“ (`taktEins`). |
 | Zeichnen | `js/ui/waveform.js` (`zeichneNadeln`, Kamm `KAMM_*`), `js/ui/meter.js` (`updateTv`), `js/ui/mitte.js` (`saeuleZeichnen`) | Nur bei `body.tv`; die Studio-Demo bleibt wie sie war. |
-| Bild-2-Anpassungen | `js/skin.js` (Flicken, Option `tv`), `css/skin.css` | Kanal-Schriftzug geputzt → „ON AIR/NEXT“ (36 px); Herz/Menü im TV geputzt; Titel 32 px; Play-Taste Kanal 2 (zweiter Strich fehlte in Bild 2); Fader-Licht nur ⅓ unter der Kappe. |
+| Bild-2-Anpassungen | `js/skin.js` (Flicken, Option `tv`), `css/skin.css` | Kanal-Schriftzug geputzt → „ON AIR/NEXT“; Herz/Menü im TV geputzt; Titel 40 px, Künstler 30 px (21.10.); Play-Taste Kanal 2 (zweiter Strich fehlte in Bild 2); Fader-Licht nur ⅓ unter der Kappe; seit 21.10. Meter/Fader/MIX wie in Abschnitt 0. |
 
 ## 3. Gemessen / geprüft (PC zuhause, 18.10.)
 
@@ -61,7 +82,10 @@ Gestartet wird alles als `martin` in einer **sway-Sitzung im Fenster**:
   wie bisher).
 - YouTube: Im Test-Profil mit Google/YouTube angemeldet (sonst „Sign in to confirm you're not a bot“).
 - Bluetooth: B03 Pro (70:B3:D5:91:38:62) am PC gekoppelt und vertraut; Wächter aktiv.
-- Bildschirmfoto der sway-Sitzung: `WAYLAND_DISPLAY=wayland-1 grim -o WL-1 datei.png`.
+- Bildschirmfoto der sway-Sitzung: `WAYLAND_DISPLAY=wayland-2 grim -o WL-1 datei.png` (Nummer je
+  nach Start; seit 21.10. liegt der ganze Test-Aufbau fest unter `~/.local/share/citycafe-test/`,
+  siehe STAND.md). Genauer: CDP `Page.captureScreenshot` mit `clip` und `scale` (Bühnen-Koordinaten
+  × Faktor aus `#buehne`-Rechteck).
 - **Fallen:** ohne `raum=zuhause` hört ein lokales Dashboard auf die Café-Fernbedienung (Standard
   `city-cafe`)! Ohne Supervisor spielt der Browser-Player, und der darf die meisten Musikvideos
   nicht (YouTube-Fehler 150). Die volle Messgeschwindigkeit störte über WLAN den Bluetooth-Ton
