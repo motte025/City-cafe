@@ -134,7 +134,7 @@ const FLICKEN_A = [
 const DECK_B = {
   rahmen: [1130, 82, 525, 666],
   teile: [
-    ['.deck-kanal', [1145, 91, 120, 24], { tv: [1141, 86, 118, 28] }],   // rechts 2 px hoeher (Betreiber 21.10.)
+    ['.deck-kanal', [1145, 91, 120, 24], { tv: [1141, 86, 118, 30] }],   // Feld bis zum alten Rand, Schrift mittig etwas hoeher (Betreiber 21.10.)
     ['.deck-kopf-rest > .taste:nth-of-type(1)', [1428, 90, 49, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(2)', [1488, 90, 50, 28], { bild: true }],
     ['.deck-kopf-rest > .taste:nth-of-type(3)', [1549, 90, 54, 28], { bild: true, an: true }],
