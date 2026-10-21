@@ -333,6 +333,9 @@ const FLICKEN_TV_TITEL = [
   // durchgehend dunkel bis zur Welle (die versetzte Trennlinie wirkte wie eine Luecke, 21.10.)
   { ziel: [25, 128, 514, 100], farbe: '#05070a', tv: true },
   { ziel: [1131, 128, 517, 100], farbe: '#05070a', tv: true },
+  // VIDEO-LED: eckigen Flicken wieder aufheben - die runde Fassung (skin.css) deckt die gemalte LED ab
+  { ziel: [293, 95, 20, 18], quelle: [293, 95, 20, 18], tv: true },
+  { ziel: [1394, 95, 22, 18], quelle: [1394, 95, 22, 18], tv: true },
 ];
 const FLICKEN = [...FLICKEN_A, ...FLICKEN_B, ...FLICKEN_MITTE, ...FLICKEN_KOPF, ...FLICKEN_LEISTE, ...FLICKEN_TV_TITEL];
 
