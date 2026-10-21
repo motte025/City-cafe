@@ -251,7 +251,10 @@ const MITTE = {
     ['.status-led.gelb', [770, 521, 36, 13]],
     ['.status-led.rot', [810, 521, 32, 13]],
     ['.master-meter', [590, 557, 245, 51]],
-    ['.master-knopf .knopf', [880, 563, 60, 60], { knopf: true }],
+    // Master-Knopf (21.10.2026, Betreiber): bleibt wie im Bild gemalt, dreht sich nicht (css
+    // .master-knopf). Vorher drehte ein Bildausschnitt [880, 563, 60, 60] - 3 Punkte zu tief, mit
+    // schwarzem Ring und Glanzlichtern: helle Sicheln, versetzter Rand, Naht.
+    ['.master-knopf .knopf', [883.5, 564, 52, 52], { knopf: true }],
     ['.gr-meter', [964, 541, 17.3, 103]],
     ['.breit[data-w="video"]', [1021, 546, 77, 29], { bild: true, an: true }],
     ['.breit[data-w="audio"]', [1021, 585, 77, 29], { bild: true }],

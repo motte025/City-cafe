@@ -350,3 +350,9 @@ body.tv .skin .taste.play.an > svg, body.tv .skin .taste.play.blink:not(.an) > s
 /* Amber-Skins: Gold verschwimmt mit dem Amber-Grund - Preis in hellem Eisblau (Betreiber 21.10.) */
 #buehne[data-skin="amber-blau"] .tv-angebot .preis, #buehne[data-skin="blau-amber"] .tv-angebot .preis,
 #buehne[data-skin="tiefglas"] .tv-angebot .preis { color: #8fe6ff; text-shadow: 0 1px 0 rgba(0, 0, 0, .9), 0 0 1px #000, 0 0 10px rgba(40, 170, 255, .55); }
+
+/* Master-Knopf (21.10.2026, Betreiber): bleibt wie im Bild gemalt - kein gedrehter Ausschnitt,
+   kein Zeiger (der gedrehte Ausschnitt zeigte Nahte und Sicheln) */
+.skin .master-knopf .knopf-kappe { transform: none !important; }
+.skin .master-knopf .knopf-zeiger { background: none; transform: none !important; }
+.skin .master-knopf .knopf-strich { display: none; }
