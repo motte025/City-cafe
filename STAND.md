@@ -256,6 +256,18 @@ vorerst nicht nötig; der Supervisor-Code dafür bleibt und tut ohne Umgebung ni
 - Werkzeuge zum Messen: `dj-studio/werkzeuge/` (Tipp-Test, Ausgangs-Mitschnitt, Position, Tempo,
   Raster, LUFS, Meter-Lage, Ausrichten).
 
+### Gespeicherte Daten je Song (was bleibt, wenn Songs aus Playlists gelöscht werden)
+
+| Daten | Ort | Größe | Aufräumen |
+|---|---|---|---|
+| Takt (beat_this) | Repo `dj-studio/takt/<id>.json` (W1 optional `~/.cache/citycafe/takt/`) | 2–3 KB | bleibt (bei erneutem Spielen sofort da) |
+| Studio-Spur (Welle, Pegel, BPM, Tonart) | W1 `~/.cache/citycafe/spuren/<id>.json.gz` | ~250 KB | automatisch: älteste raus über 600 MB (`SPUR_PLATTE_MB`) |
+| Anfang/Einsatz/Ende/Lautheit/Limiter | W1 `~/.cache/citycafe/stille/<id>.json` | < 1 KB | bleibt; nach 30 Tagen wird bei Bedarf neu gemessen |
+
+Löschen aus einer Playlist entfernt nur den Eintrag in Firebase (`djremote/city-cafe/yt/listen`).
+Ein Aufräum-Skript (alles zu Songs, die in keiner Playlist mehr sind) gibt es noch nicht – bei
+Bedarf bauen.
+
 ### Commits (ab 21.10.)
 
 4dce4b07 … 57e600cf (Skins, Play-Taste, Chrom, VIDEO-LED, Meter erste Fassung), c0bf0253 / 296acc59
