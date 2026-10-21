@@ -130,11 +130,18 @@ const gemeldet = new Set();
 function sicher(name, f) {
   try { f(); } catch (e) { if (!gemeldet.has(name)) { gemeldet.add(name); console.error('[DJ Studio] ' + name + ':', e); } }
 }
-function frame() {
+// TV: schnelle Bildschirme (ueber 75 Hz, z. B. 100 Hz) nur jedes zweite Bild zeichnen - der Browser
+// schaffte dort nicht jedes Bild, die Abstaende wechselten 10/20 ms und die Welle ruckelte
+// (21.10.2026). Gleichmaessige 50 Bilder/s wirken ruhiger als unregelmaessige 90.
+let bildAbstand = 1 / 60, ungerade = false, letzterRaf = 0;
+function frame(raf) {
+  requestAnimationFrame(frame);       // zuerst: ein Fehler unten stoppt die Anzeige nicht
+  if (letzterRaf && raf - letzterRaf < 50) bildAbstand += ((raf - letzterRaf) / 1000 - bildAbstand) * 0.05;
+  letzterRaf = raf;
+  if (tv && bildAbstand < 1 / 75 && (ungerade = !ungerade)) return;
   const t = performance.now() / 1000, dt = Math.min(0.1, t - letzte);
   letzte = t;
-  requestAnimationFrame(frame);       // zuerst: ein Fehler unten stoppt die Anzeige nicht
-  if (tv) sicher('tv', () => tv.takt());
+  if (tv) sicher('tv', () => tv.takt(raf / 1000));
   else {
     sicher('engine', () => engine.takt());
     sicher('automix', () => automix.takt());

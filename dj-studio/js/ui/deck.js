@@ -110,7 +110,7 @@ export function deckBauen(root, id, engine, aktionen) {
   // ---- Unterteil -----------------------------------------------------------
   const cMeter = el('canvas', 'deck-meter', { 'aria-label': `Pegel Kanal ${nr}` });
   const meter = root.closest('.skin')
-    ? new LedMeter(cMeter, { richtung: 'v', kanaele: 2, stil: 'bild', schwellen: SCHWELLEN_BILD_DECK })
+    ? new LedMeter(cMeter, { richtung: 'v', kanaele: 2, stil: 'bild', schwellen: SCHWELLEN_BILD_DECK, kanalLuecke: 3.9 })   // Luecke wie gemalt
     : new LedMeter(cMeter, { richtung: 'v', kanaele: 2, abstand: 2 });
   const skala = el('div', 'deck-skala', { 'aria-hidden': 'true' },
     SKALA.map(db => el('span', '', { text: db > 0 ? '+' + db : String(db), style: `--pos:${skalaPos(db)}` })));
@@ -293,7 +293,8 @@ export function deckBauen(root, id, engine, aktionen) {
       if (TV) {                            // DJ-Modus: welcher Kanal ist zu hoeren?
         const text = d.track ? (imBild ? 'ON AIR' : 'NEXT') : '';
         if (kanalText.textContent !== text) {
-          kanalText.textContent = text;
+          // Schrift in eigenem span: nur sie pulsiert, nicht das ganze Glasfeld
+          kanalText.replaceChildren(Object.assign(document.createElement('span'), { className: 'puls', textContent: text }));
           kanalText.classList.toggle('on-air', text === 'ON AIR');
           kanalText.classList.toggle('next', text === 'NEXT');
         }
@@ -301,7 +302,9 @@ export function deckBauen(root, id, engine, aktionen) {
       cueBlink = Math.floor(t * 2) % 2;
       tCue.classList.toggle('blink', !!d.track && !d.spielt && Math.abs(d.pos - d.cue) > 0.02 && cueBlink === 1);
       tCue.classList.toggle('an', !!d.track && !d.spielt && Math.abs(d.pos - d.cue) <= 0.02);
-      tPlay.classList.toggle('blink', !!d.track && !d.spielt && cueBlink === 1);
+      // DJ-Modus: Play in der Pause nur jedes dritte Mal aufblinken (alle 3 s, Betreiber 21.10.)
+      const playBlink = document.body.classList.contains('tv') ? t % 3 < 0.5 : cueBlink === 1;
+      tPlay.classList.toggle('blink', !!d.track && !d.spielt && playBlink);
     },
   };
 }

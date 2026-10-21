@@ -20,20 +20,48 @@
 
 import { state, bestaetigen } from './store.js';
 
-// Ton-Fenster der Ueberblendung wie im Supervisor (XF_TON_FENSTER_SEK, DJ-Kurve 16.10.2026):
-// der Ton wechselt nur kurz in der Mitte der Blende - genau dann faehrt der Crossfader.
+// Ueberblendung wie im Supervisor (seit 21.10.2026 fest 9 s, genau berechnet): der Ton wechselt
+// in XF_TON_FENSTER_SEK ab dem Musikanfang des neuen Songs (dann endet die Musik des alten) -
+// genau dann faehrt der Crossfader. Der Songwechsel kommt, wenn der neue Song losgeht.
 const XF_TON_FENSTER_SEK = 2.0;
-let xfSek = 4;               // so lange laeuft der alte Song aus (Blende am TV: 4/6/9 s, kommt mit)
+const xfSek = 9;             // Notbremse: so lange laeuft der alte Song hoechstens aus
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)
+const NACHZIEHEN_AB_SEK = 0.02;   // kleinere Abweichungen zu mpv: nicht korrigieren
+const NACHZIEHEN_TEMPO = 0.03;    // groessere: mit hoechstens 3 % Tempo-Aenderung aufholen
 // Pegelanzeige: Kanaele und Master zeigen, was aus der Anlage kommt - Song x Lautheitsanpassung
 // (je Song, wie mpv) x Lautstaerke der Fernbedienung. Rot nur bei 100 % und dann "ein bisschen":
-// ueber 11 Songs simuliert (18.10.2026) mit +1 dB im Mittel 4,7 % der Zeit rot, beim
-// lautesten Song 35 %, bei 80 % nie (0 dB: 1,3 % - war zu wenig). Rot = oberste 3-4 LEDs.
-const RESERVE_DB = 1;
+// simuliert ueber 11 Songs (18.10.): +1 dB = 4,7 % der Zeit rot (21.10.: zu viel), 0 dB = 1,3 %
+// (zu wenig) - daher +0,5 dB. Bei 80 % nie rot. Rot = oberste 3-4 LEDs.
+// 21.10.: Betreiber will mehr (1,5), dann 0,5 dB zurueck (1,0) - bei 100 % ab und zu CLIP.
+// +3 dB, seit der Supervisor auf -14 statt -11 LUFS normiert: die Anzeige bleibt wie vorher
+// (im Cafe holt die Endstufe die 3 dB wieder).
+const RESERVE_DB = 4.0;
+// Anzeige hoeher (Betreiber 21.10.): +3 dB im unteren/mittleren Bereich, laeuft bis -3 dBFS
+// auf 0 aus - der rote Bereich (oberste LEDs) bleibt so selten wie oben abgestimmt.
+const ANHEBEN_DB = 3, ANHEBEN_BIS_DB = -3, ANHEBEN_VOLL_DB = -12;
+function anheben(x) {
+  if (!(x > 0)) return x;
+  const db = 20 * Math.log10(x);
+  const a = ANHEBEN_DB * Math.min(1, Math.max(0, (ANHEBEN_BIS_DB - db) / (ANHEBEN_BIS_DB - ANHEBEN_VOLL_DB)));
+  return x * Math.pow(10, a / 20);
+}
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
+// Anzeige-Vorlauf (s): gleicht Verzoegerungen zwischen mpv und dem, was man hoert/sieht, aus
+// (Bluetooth meldet seine Verzoegerung nicht). Positiv = Welle/Meter frueher. Einstellbar per
+// localStorage 'studioVorlauf' (Test: per CDP), Standard STUDIO_VORLAUF_SEK.
+const STUDIO_VORLAUF_SEK = 0;
+let vorlaufWert = STUDIO_VORLAUF_SEK, vorlaufGelesen = 0;
+function vorlauf() {
+  const t = performance.now();
+  if (t - vorlaufGelesen > 1000) {
+    vorlaufGelesen = t;
+    try { const v = parseFloat(localStorage.getItem('studioVorlauf')); vorlaufWert = isFinite(v) ? Math.max(-1, Math.min(1, v)) : STUDIO_VORLAUF_SEK; } catch (e) {}
+  }
+  return vorlaufWert;
+}
 const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 
 // Anzeige wie in Bild 2 (Fotos der Vorlage): stachelig - spitze Schlaege, jede Nadel anders hoch,
@@ -62,6 +90,35 @@ function taktEins(tief, proSek, bpm, versatz) {
   return versatz + summen.indexOf(Math.max(...summen)) * schlag;
 }
 
+// Tempo genau (21.10.2026): die Messung im Supervisor liegt bis 0,8 BPM daneben - das Taktraster
+// lief dadurch ueber den Song weg (Dancing Queen: 100,1 statt 100,55 BPM, nach 100 s einen
+// halben Schlag hinter der Musik). Gesucht wird +-1,5 % um den Messwert in 0,01-%-Schritten
+// das Tempo, bei dem die Bass-Einsaetze des ganzen Songs am deutlichsten auf dem Raster liegen
+// (Summe der Einsaetze als Zeiger auf dem Taktkreis); daraus auch die Lage der Schlaege.
+// Geprueft an 13 Songs: Deutlichkeit im Mittel x6, Raster bleibt ueber den Song +-30 ms.
+function tempoVerfeinern(tief, proSek, bpm) {
+  const n = tief.length, ons = new Float32Array(n);
+  let summe = 0;
+  for (let i = 1; i < n; i++) { const d = tief[i] - tief[i - 1]; if (d > 0) { ons[i] = d; summe += d; } }
+  if (!summe) return { bpm, versatz: 0 };
+  let best = null;
+  for (let k = -150; k <= 150; k++) {
+    const b = bpm * (1 + k / 10000), w = 2 * Math.PI * b / 60 / proSek;
+    const cr = Math.cos(w), sr = -Math.sin(w);
+    let er = 1, ei = 0, zr = 0, zi = 0;
+    for (let i = 0; i < n; i++) {
+      const v = ons[i];
+      if (v) { zr += v * er; zi += v * ei; }
+      const nr = er * cr - ei * sr; ei = er * sr + ei * cr; er = nr;
+    }
+    const betrag = zr * zr + zi * zi;
+    if (!best || betrag > best.betrag) best = { b, betrag, zr, zi };
+  }
+  const T = 60 / best.b;
+  const versatz = ((-Math.atan2(best.zi, best.zr) / (2 * Math.PI) * T) % T + T) % T;
+  return { bpm: best.b, versatz };
+}
+
 // Messung -> Wellenform (wie analysis.js) und Pegelreihen
 function spurLesen(roh) {
   const s = typeof roh === 'string' ? JSON.parse(roh) : roh;
@@ -74,10 +131,11 @@ function spurLesen(roh) {
     leistung: Float32Array.from(db(s['pegelRms' + k] || s.pegelRms), x => (isFinite(x) ? Math.pow(10, x / 10) : 0)),
   }));
   const rms = Float32Array.from(pegel[0].leistung, (l, i) => Math.sqrt(Math.max(l, pegel[1].leistung[i])));
+  const t = s.bpm ? tempoVerfeinern(tief, s.proSek, s.bpm) : { bpm: s.bpm, versatz: s.versatz || 0 };
   return {
-    videoId: s.videoId, bpm: s.bpm, sicher: s.sicher || 0,
+    videoId: s.videoId, bpm: t.bpm, sicher: s.sicher || 0,
     camelot: s.camelot || null, tonart: s.tonart || null,   // gemessen, ungefaehr (Supervisor ton_bestimmen)
-    versatz: taktEins(tief, s.proSek, s.bpm, s.versatz || 0),   // auf die Eins des Takts
+    versatz: taktEins(tief, s.proSek, t.bpm, t.versatz),    // auf die Eins des Takts
     wf: { faecher: spitze.length, proSek: s.proSek, dauer: s.dauer, spitze, tief, mitte: lin(s.mitte), hoch: lin(s.hoch),
           bild: bildWerte(rms, tief, lin(s.hoch)) },
     pegel,   // je Seite: Spitze (dBFS) und Leistung (linear^2) fuer die Meter
@@ -106,15 +164,17 @@ export function tvBauen(engine) {
       titel: t.titel || '—', kuenstler: t.kuenstler || '',
       genre: [t.genre, t.jahr].filter(Boolean).join(' · '),
       dauer: Number(t.dauer) || (sp ? sp.wf.dauer : 0),
-      bpm: sp && sp.bpm ? Math.round(sp.bpm) : null,
+      // ohne volle Messung (Karten "Naechste Titel"): Kurzwerte [bpm, sicher, camelot] vom Supervisor
+      bpm: sp && sp.bpm ? Math.round(sp.bpm) : (Array.isArray(t.kurz) && t.kurz[0] ? Math.round(t.kurz[0]) : null),
       bpmMess: sp && sp.bpm && !sicher ? sp.bpm : null,          // ungefaehr: ohne Taktraster
       grid: sicher ? { bpm: sp.bpm, offset: sp.versatz, herkunft: 'messung' } : null,
-      key: sp && sp.camelot ? sp.camelot : null, tonart: sp ? sp.tonart : null,
+      key: sp && sp.camelot ? sp.camelot : (Array.isArray(t.kurz) ? t.kurz[2] || null : null), tonart: sp ? sp.tonart : null,
       ton: Array.isArray(t.ton) ? t.ton : null,   // [Lautheit dB, Limiter dB, Anfang s, Ende s] (Supervisor)
       // Marken (Supervisor-Analyse): Musik beginnt, Ueberblendung beginnt (Ende - Blende), Ende
       anfang: Array.isArray(t.ton) && t.ton[2] > 0.3 ? t.ton[2] : null,
       // ohne gefundene Schlussstille blendet der Supervisor vor dem Dateiende (stille_ende)
-      mixAb: Array.isArray(t.ton) && (t.ton[3] || t.dauer) ? Math.max(0, (t.ton[3] || Number(t.dauer)) - xfSek) : null,
+      // MIX = Beginn des Tonwechsels (Musikende - Ton-Fenster), wie im Supervisor
+      mixAb: Array.isArray(t.ton) && (t.ton[3] || t.dauer) ? Math.max(0, (t.ton[3] || Number(t.dauer)) - XF_TON_FENSTER_SEK) : null,
       ende: Array.isArray(t.ton) ? (t.ton[3] || Number(t.dauer) || null) : null,
       quelle: 'YOUTUBE', wf: sp ? sp.wf : null,
       wfHinweis: 'YOUTUBE · WELLENFORM WIRD GEMESSEN',
@@ -136,17 +196,18 @@ export function tvBauen(engine) {
   function empfangen(d) {
     const j = d.jetzt && d.jetzt.videoId ? d.jetzt : null;
     naechster = d.naechster || null;
-    if ([4, 6, 9].includes(d.blende)) xfSek = d.blende;
     if (typeof d.vol === 'number' && d.vol !== vol) {
       vol = Math.max(0, Math.min(100, d.vol));
       engine.request('master.volume', 0.8 * lautFaktor());   // Knopf: 0,8 = 0 dB
+      // Kanalfader zeigen die Lautstaerke der Fernbedienung (Wunsch 21.10.2026)
+      for (const id of ['A', 'B']) engine.request(`decks.${id}.fader`, vol / 100);
     }
     const t = jetztS(), pos = Number(j?.pos) || 0, spielt = !!j && !j.pausiert;
     const aktuell = state.decks[luft].track;
     if (j && aktuell && aktuell.videoId !== j.videoId) {
       // Songwechsel: der andere Kanal uebernimmt, der alte laeuft in der Blende aus.
       const alt = luft;
-      auslauf = { id: alt, pos: state.decks[alt].pos, zeit: t, bis: t + xfSek };
+      auslauf = { id: alt, pos: state.decks[alt].pos, zeit: t, bis: t + xfSek + 3 };
       luft = anderer(alt);
       blende = { von: state.master.crossfader, nach: luft === 'A' ? -1 : 1, ab: t };
       stand = { pos, zeit: t, spielt }; nachziehen = 0;
@@ -154,14 +215,19 @@ export function tvBauen(engine) {
       // Gleicher Song: bei echtem Sprung (Spulen, Pause) neu setzen, sonst weich nachziehen
       const erwartet = stand.pos + (stand.spielt ? t - stand.zeit : 0);
       if (!j || spielt !== stand.spielt || Math.abs(pos - erwartet) > SPRUNG_SEK) { stand = { pos, zeit: t, spielt }; nachziehen = 0; }
-      else nachziehen = pos - erwartet;
+      else {
+        // Die gemeldete Position ist auf Videobilder gerundet und leicht verzoegert (+-40 ms):
+        // kleine Abweichungen ignorieren, groessere sanft aufholen (siehe takt).
+        const abw = pos - erwartet;
+        nachziehen = Math.abs(abw) < NACHZIEHEN_AB_SEK ? 0 : abw;
+      }
     }
     jetztRoh = j;
     setzen(luft, j, spielt);
     if (!auslauf) setzen(anderer(luft), naechster, false);
     if (!blende) engine.request('master.crossfader', luft === 'A' ? -1 : 1);
     const q = (Array.isArray(d.schlange) ? d.schlange : []).map(track).filter(Boolean);
-    if (q.map(x => x.id).join('|') !== state.queue.map(x => x.id).join('|')) {
+    if (q.map(x => x.id + x.bpm + x.key).join('|') !== state.queue.map(x => x.id + x.track.bpm + x.track.key).join('|')) {
       bestaetigen('queue', q.map(x => ({ id: x.id, track: x })));
     }
   }
@@ -224,7 +290,7 @@ export function tvBauen(engine) {
   // Kanal-Meter: gemessener Pegel x Reserve x Lautstaerke am TV
   function kanalPegel(id) {
     const p = pegelBei(id), f = RESERVE * lautFaktor();
-    return { L: { spitze: p.L.spitze * f, rms: p.L.rms * f }, R: { spitze: p.R.spitze * f, rms: p.R.rms * f } };
+    return { L: { spitze: anheben(p.L.spitze * f), rms: anheben(p.L.rms * f) }, R: { spitze: anheben(p.R.spitze * f), rms: anheben(p.R.rms * f) } };
   }
   for (const id of ['A', 'B']) {
     const de = engine.decks[id];
@@ -242,6 +308,7 @@ export function tvBauen(engine) {
         m[k].rms = Math.sqrt(m[k].rms ** 2 + (p[k].rms * g) ** 2);
       }
     }
+    for (const k of ['L', 'R']) { m[k].spitze = anheben(m[k].spitze); m[k].rms = anheben(m[k].rms); }
     return m;
   };
 
@@ -251,19 +318,25 @@ export function tvBauen(engine) {
 
   return {
     // je Frame statt engine.takt(): Positionen hochrechnen, Blende fahren
-    takt() {
-      const t = jetztS();
+    // bildZeit: Zeitpunkt des Bildes (requestAnimationFrame) - so laeuft die Welle gleichmaessig;
+    // mit der Uhr beim Rechnen schwankte das Tempo von Bild zu Bild um bis zu 25 %.
+    takt(bildZeit) {
+      const t = bildZeit || jetztS();
       const d = state.decks[luft];
-      if (nachziehen) {                   // in ~0,5 s aufholen
-        const schritt = nachziehen * Math.min(1, (t - (this.letzte || t)) * 3);
+      if (nachziehen) {                   // sanft aufholen: hoechstens 3 % schneller/langsamer
+        const dt = Math.max(0, Math.min(0.1, t - (this.letzte || t)));
+        const schritt = Math.sign(nachziehen) * Math.min(Math.abs(nachziehen), NACHZIEHEN_TEMPO * dt);
         stand.pos += schritt; nachziehen -= schritt;
-        if (Math.abs(nachziehen) < 0.002) nachziehen = 0;
+        if (Math.abs(nachziehen) < 0.001) nachziehen = 0;
       }
       this.letzte = t;
       if (d.track) {
-        const p = stand.pos + (stand.spielt ? t - stand.zeit : 0);
+        const p = stand.pos + (stand.spielt ? t - stand.zeit + vorlauf() : 0);
         d.pos = Math.min(d.track.dauer || p, Math.max(0, p));
       }
+      // Wartender Kanal steht beim Laden auf dem gemessenen Start (Betreiber 21.10.)
+      const w = anderer(luft), dw = state.decks[w];
+      if (dw.track && !dw.spielt && (!auslauf || auslauf.id !== w)) dw.pos = dw.track.anfang || 0;
       if (auslauf) {
         const a = state.decks[auslauf.id];
         if (a.track) a.pos = Math.min(a.track.dauer || Infinity, auslauf.pos + (t - auslauf.zeit));
@@ -275,11 +348,17 @@ export function tvBauen(engine) {
         }
       }
       if (blende) {
-        const lauf = t - blende.ab, fenster = Math.min(XF_TON_FENSTER_SEK, xfSek * 0.4);
-        const q = Math.min(1, Math.max(0, (lauf - (xfSek - fenster) / 2) / fenster));
+        // Crossfader faehrt, wenn der neue Song (Position!) seinen Musikanfang erreicht
+        // (am Einsatz der vollen Musik - ton[4] vom Supervisor; leises Intro laeuft davor schon mit)
+        const neu = state.decks[luft], ton = (neu.track && neu.track.ton) || [];
+        const anfang = Number(ton[4]) || (neu.track && neu.track.anfang) || 0;
+        const q = Math.min(1, Math.max(0, (neu.pos - anfang) / XF_TON_FENSTER_SEK));
         // Crossfader-Kurve 'weich' = gleiche Leistung (cos/sin) wie die Ton-Blende von mpv
         engine.request('master.crossfader', blende.von + (blende.nach - blende.von) * q);
-        if (lauf >= xfSek) blende = null;
+        if (q >= 1 || t - blende.ab >= xfSek + 3) {
+          blende = null;
+          if (auslauf) auslauf.bis = Math.min(auslauf.bis, t + 0.3);   // alter Kanal ist ab hier stumm
+        }
       }
     },
   };

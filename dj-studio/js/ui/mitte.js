@@ -154,19 +154,30 @@ export function mitteBauen(root, engine, aktionen) {
 }
 
 // Limiter-Absenkung: oben 1 dB, unten 12 dB. Bild-Optik: zwei Spalten runder LEDs mit Schein.
-function grZeichnen(c, g, reduktion, skin) {
-  const { w, h } = leinwand(c);
+// Lage je Skin (skin.js, data-lage): Gehaeuse abdecken, LEDs mit gleichem Rand ringsum
+function grFlaeche(c, g) {
+  const { w, h, f } = leinwand(c);
   g.clearRect(0, 0, w, h);
+  let L = null;
+  try { L = c.dataset.lage ? JSON.parse(c.dataset.lage) : null; } catch (e) {}
+  if (!L) return { ox: 0, oy: 0, w, h, ql: 3 * (window.devicePixelRatio || 1) };
+  g.fillStyle = L.grund; g.beginPath(); g.roundRect(0, 0, w, h, L.radius * f); g.fill();
+  const r = L.rand * f;
+  return { ox: r, oy: r, w: w - 2 * r, h: h - 2 * r, ql: L.spalte * f };
+}
+
+function grZeichnen(c, g, reduktion, skin) {
+  const { ox, oy, w, h, ql } = grFlaeche(c, g);
   const segs = skin ? 14 : 12;
   const dpr = window.devicePixelRatio || 1;
   const lu = skin ? Math.max(1, h / segs * 0.28) : 2, sh = (h - (segs - 1) * lu) / segs;
-  const spalten = skin ? 2 : 1, ql = 3 * dpr, sw = (w - ql * (spalten - 1)) / spalten;
+  const spalten = skin ? 2 : 1, sw = (w - ql * (spalten - 1)) / spalten;
   for (let i = 0; i < segs; i++) {
     const db = -(i + 1) * 12 / segs;
     const an = reduktion <= db + 0.4;
     for (let k = 0; k < spalten; k++) {
       g.beginPath();
-      g.roundRect(k * (sw + ql), i * (sh + lu), sw, sh, skin ? Math.min(sw, sh) * 0.22 : 0);
+      g.roundRect(ox + k * (sw + ql), oy + i * (sh + lu), sw, sh, skin ? Math.min(sw, sh) * 0.22 : 0);
       g.fillStyle = an ? '#ffc21c' : skin ? '#1d1a10' : '#2b2610';
       g.shadowColor = '#ffb000'; g.shadowBlur = an && skin ? 7 * dpr : 0;
       g.fill();
@@ -177,20 +188,19 @@ function grZeichnen(c, g, reduktion, skin) {
 
 // Master-Pegel als Saeule (TV): unten -30 dBFS, oben 0 dBFS, gehaltene Spitze als einzelne LED.
 function saeuleZeichnen(c, g, db, spitze, skin) {
-  const { w, h } = leinwand(c);
-  g.clearRect(0, 0, w, h);
+  const { ox, oy, w, h, ql } = grFlaeche(c, g);
   const segs = skin ? 14 : 12, dpr = window.devicePixelRatio || 1;
   const lu = skin ? Math.max(1, h / segs * 0.28) : 2, sh = (h - (segs - 1) * lu) / segs;
-  const spalten = skin ? 2 : 1, ql = 3 * dpr, sw = (w - ql * (spalten - 1)) / spalten;
+  const spalten = skin ? 2 : 1, sw = (w - ql * (spalten - 1)) / spalten;
   const schwelle = i => -30 + 30 * (i + 1) / segs;           // i = 0 unten
   const spitzeI = isFinite(spitze) ? Math.floor((spitze + 30) / 30 * segs) - 1 : -1;
   for (let i = 0; i < segs; i++) {
     const an = db >= schwelle(i) - 30 / segs || i === spitzeI;
     const farbe = i >= segs - 2 ? '#ff3b2f' : i >= segs - 5 ? '#ffc21c' : '#3be06a';
-    const y = h - (i + 1) * sh - i * lu;
+    const y = oy + h - (i + 1) * sh - i * lu;
     for (let k = 0; k < spalten; k++) {
       g.beginPath();
-      g.roundRect(k * (sw + ql), y, sw, sh, skin ? Math.min(sw, sh) * 0.22 : 0);
+      g.roundRect(ox + k * (sw + ql), y, sw, sh, skin ? Math.min(sw, sh) * 0.22 : 0);
       g.fillStyle = an ? farbe : skin ? '#1d1a10' : '#2b2610';
       g.shadowColor = farbe; g.shadowBlur = an && skin ? 7 * dpr : 0;
       g.fill();

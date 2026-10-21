@@ -41,13 +41,8 @@
                 return finish(null);
             }
 
-            var auth = global.firebase.auth();
-            auth.onAuthStateChanged(function (user) {
-                if (user) finish({ uid: user.uid, db: global.firebase.database() });
-            });
-            auth.signInAnonymously().catch(function (err) {
-                console.warn('[Hos’n Obe] Anonyme Anmeldung fehlgeschlagen:', err);
-                finish(null);
+            anonymAnmelden(global.firebase.auth()).then(function (user) {
+                finish(user ? { uid: user.uid, db: global.firebase.database() } : null);
             });
 
             setTimeout(function () {
@@ -57,6 +52,23 @@
         });
 
         return readyPromise;
+    }
+
+    // Eine einzige anonyme Anmeldung fuer alle Module der Seite (Fernbedienungen, Hos'n Obe):
+    // riefen beide gleichzeitig signInAnonymously(), entstanden auf einem frischen Profil zwei
+    // Benutzer - ein Modul arbeitete mit der alten uid, Firebase lehnte alles ab (21.10.2026).
+    function anonymAnmelden(auth) {
+        if (global.__ccAnmeldung) return global.__ccAnmeldung;
+        global.__ccAnmeldung = new Promise(function (resolve) {
+            var aus = auth.onAuthStateChanged(function (user) {
+                if (user) { if (typeof aus === 'function') aus(); resolve(user); return; }
+                auth.signInAnonymously().catch(function (err) {
+                    console.warn('[Firebase] Anonyme Anmeldung fehlgeschlagen:', err);
+                    resolve(null);
+                });
+            });
+        });
+        return global.__ccAnmeldung;
     }
 
     function publicRef(db, sessionId, child) {

@@ -73,6 +73,8 @@
         width: 100%; min-width: 0; padding: 16px 16px; font-size: 30px; border-radius: 14px;
         border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff;
     }
+    #dj-skin { width: 100%; padding: 14px 16px; font-size: 26px; border-radius: 14px;
+        border: 1px solid #2c3866; background: #0f1630; color: #f2f5ff; }
     input[type=range] { width: 100%; margin: 6px 0 4px; accent-color: #2f6bff; height: 48px; }
     details { margin-top: 16px; background: #131a33; border: 1px solid #27325c; border-radius: 16px; padding: 14px 16px; }
     summary { font-size: 29px; font-weight: 700; cursor: pointer; padding: 6px 0; }
@@ -281,6 +283,24 @@
             <div class="zeile2" id="dj-zeile" hidden>
                 <button type="button" class="still" id="k-dj">🎛 DJ-Modus</button>
             </div>
+            <!-- Skin des DJ Studios (gilt, sobald der DJ-Modus laeuft; TV merkt ihn sich) -->
+            <div class="zeile2" id="dj-skin-zeile" hidden>
+                <select id="dj-skin" aria-label="Skin des DJ-Modus">
+                    <option value="bild2">🎨 Skin: Original</option>
+                    <option value="amber-blau">🎨 Amber-Blau Kristall</option>
+                    <option value="blau-amber">🎨 Blau-Amber Kristall</option>
+                    <option value="tiefglas">🎨 Blau-Amber Tiefglas</option>
+                    <option value="gold">🎨 Gold</option>
+                    <option value="weiss">🎨 Schneeweiß</option>
+                    <option value="chrom">🎨 Chrom</option>
+                    <option value="ladys-tuerkis">🎨 Ladys Night Türkis</option>
+                    <option value="elfenbein">🎨 Elfenbein</option>
+                    <option value="carbon">🎨 Carbon</option>
+                    <option value="ladys-pink">🎨 Ladys Night Pink</option>
+                    <option value="onyx">🎨 Onyx</option>
+                    <option value="champagner">🎨 Champagner</option>
+                </select>
+            </div>
             <div class="zeile2">
                 <button type="button" class="still" id="k-shorts">📱 Shorts rechts</button>
             </div>
@@ -317,6 +337,7 @@
     <div class="chips" id="such-art" style="margin-bottom:12px">
         <button type="button" data-art="" class="an">🎵 Songs</button>
         <button type="button" data-art="playlist">📃 Playlists</button>
+        <button type="button" data-art="lyrics">📝 Lyrics</button>
     </div>
     <form class="suche" id="suchform">
         <input type="search" id="suchtext" placeholder="Song, Künstler oder YouTube-Link" enterkeyhint="search">
@@ -394,9 +415,6 @@
         <div class="hinweis">Alle Songs bringt der Screen automatisch auf dieselbe Lautstärke (ohne Übersteuern).</div>
         <div class="feldname">Limiter (sehr leise Songs bis 2 dB mehr)</div>
         <div class="zeiten" id="limiter"></div>
-        <div class="feldname">Überblendung zwischen Songs</div>
-        <div class="zeiten" id="blende"></div>
-        <div class="hinweis">Kurz: die Songs überlappen kaum, die Beats stoßen sich nicht.</div>
     </details>
     <details class="nur-chef">
         <summary>⏩ Vor- und zurückspulen</summary>
@@ -445,7 +463,7 @@
 (function () {
     'use strict';
 
-    var FASSUNG = '2026-10-19-version-behalten';
+    var FASSUNG = '2026-10-21-lyrics-skins-9s';
     // Schriftgroesse je Geraet (A-/A+ oben): vergroessert die ganze Seite (CSS zoom),
     // gemerkt im Browser des Geraets (Handy und Tablet unabhaengig, Wunsch 05.10.2026).
     (function () {
@@ -808,6 +826,7 @@
         el('k-pause').textContent = jetzt && jetzt.pausiert ? '▶' : '⏸';
         el('k-ansicht').textContent = jetzt && jetzt.vollbild ? '▭ Normal' : '⛶ Vollbild';
         el('k-dj').textContent = jetzt && jetzt.dj ? '▭ Normal' : '🎛 DJ-Modus';
+        if (jetzt && jetzt.djSkin && document.activeElement !== el('dj-skin')) el('dj-skin').value = jetzt.djSkin;
         // Rechte Karte im Widget: Fotos aus der Drive-Galerie <-> Aehnliche Songs
         el('k-seite').textContent = jetzt && jetzt.seite === 'fotos' ? '🎶 Songs rechts' : '🖼️ Fotos rechts';
         el('k-shorts').textContent = jetzt && jetzt.seite === 'shorts' ? '📱 Shorts aus' : '📱 Shorts rechts';
@@ -1003,6 +1022,11 @@
     el('k-blend').addEventListener('click', function () { musik('blenden'); melden('⇄ Blende zum nächsten Song …', ''); });
     el('k-ansicht').addEventListener('click', function () { musik(jetzt && jetzt.vollbild ? 'normal' : 'vollbild'); });
     el('dj-zeile').hidden = RAUM !== 'zuhause' && RAUM !== 'city-cafe';
+    el('dj-skin-zeile').hidden = el('dj-zeile').hidden;
+    el('dj-skin').addEventListener('change', function () {
+        musik('djSkin', { skin: el('dj-skin').value });
+        melden('🎨 Skin: ' + el('dj-skin').selectedOptions[0].textContent.replace('🎨 ', ''), 'ok');
+    });
     el('k-dj').addEventListener('click', function () { musik(jetzt && jetzt.dj ? 'normal' : 'dj'); });
     // Radio-Mix zum laufenden Song: der Song laeuft weiter, darunter kommt der Mix.
     el('k-radio').addEventListener('click', function () {
@@ -1211,11 +1235,19 @@
         zeigeTreffer(playlistTreffer);
     }
 
+    // Lyrics-Suche (21.10.2026): nur Lyric-Videos (Text im Bild) - so ein Song bleibt am TV,
+    // wie er gewaehlt wurde (der TV tauscht bewusst gewaehlte Songs nie gegen das Musikvideo).
+    var LYRICS = /lyric|songtext|letra|paroles|testo/i;
     function zeigeTreffer(liste) {
-        if ((liste || []).length && liste[0].playlistId) playlistTreffer = liste;
+        var roh = liste || [];
+        if (roh.length && roh[0].playlistId) playlistTreffer = roh;
+        if (suchArt === 'lyrics' && suchText && !(roh[0] || {}).playlistId) {
+            liste = roh.filter(function (t) { return LYRICS.test(t.titel || ''); });
+            if (!liste.length && roh.length) el('such-status').textContent = 'Keine Lyrics-Videos dabei - „Mehr laden" oder anders suchen.';
+        }
         listeRendern(el('treffer'), liste || [], function (t, i) { return t.playlistId ? playlistKarte(t) : trefferKarte(t, i); });
-        if (offenePlaylist && !(liste[0] || {}).playlistId) el('treffer').insertBefore(playlistLeiste(), el('treffer').firstChild);
-        el('mehr-laden').hidden = !(suchText && suchArt !== 'playlist' && (liste || []).length >= suchAnzahl && suchAnzahl < 75);
+        if (offenePlaylist && !(roh[0] || {}).playlistId) el('treffer').insertBefore(playlistLeiste(), el('treffer').firstChild);
+        el('mehr-laden').hidden = !(suchText && suchArt !== 'playlist' && roh.length >= suchAnzahl && suchAnzahl < 75);
     }
 
     var suchArt = '';
@@ -1224,7 +1256,8 @@
             suchArt = b.dataset.art;
             offenePlaylist = null;
             [].forEach.call(document.querySelectorAll('#such-art button'), function (x) { x.classList.toggle('an', x === b); });
-            el('suchtext').placeholder = suchArt === 'playlist' ? 'Playlist suchen, z. B. Après Ski' : 'Song, Künstler oder YouTube-Link';
+            el('suchtext').placeholder = suchArt === 'playlist' ? 'Playlist suchen, z. B. Après Ski'
+                : suchArt === 'lyrics' ? 'Song oder Künstler (nur Lyrics-Videos)' : 'Song, Künstler oder YouTube-Link';
             el('treffer').innerHTML = '';
             el('such-status').textContent = '';
             el('mehr-laden').hidden = true;
@@ -1239,7 +1272,9 @@
         el('treffer-kopf').textContent = istVorschlag ? 'Vorschläge' : (suchArt === 'playlist' ? 'Playlists' : 'Treffer');
         if (!anzahl) el('treffer').innerHTML = '';
         ersteTrefferGesehen = true;
-        var befehl = { aktion: 'suche', text: text, vorschlaege: !!istVorschlag, anzahl: suchAnzahl };
+        // Lyrics: YouTube gezielt nach Lyric-Videos fragen, angezeigt werden nur solche (zeigeTreffer)
+        var frage = suchArt === 'lyrics' && !istVorschlag && !LYRICS.test(text) ? text + ' lyrics' : text;
+        var befehl = { aktion: 'suche', text: frage.slice(0, 100), vorschlaege: !!istVorschlag, anzahl: suchAnzahl };
         if (suchArt === 'playlist' && !istVorschlag) befehl.art = 'playlist';
         erwarteteArt = befehl.art || '';
         offenePlaylist = null;
@@ -1585,11 +1620,8 @@
     }
     reihe('limiter', [{ wert: true, text: 'An' }, { wert: false, text: 'Aus' }], true,
           function (w) { senden({ aktion: 'ton', limiter: w }); });
-    reihe('blende', [{ wert: 4, text: 'Kurz 4 s' }, { wert: 6, text: 'Mittel 6 s' }, { wert: 9, text: 'Lang 9 s' }], 4,
-          function (w) { senden({ aktion: 'ton', blende: w }); });
-    ['limiter', 'blende'].forEach(function (box) {
-        [].forEach.call(el(box).children, function (k, i) { k.dataset.wert = String([[true, false], [4, 6, 9]][box === 'limiter' ? 0 : 1][i]); });
-    });
+    // Ueberblendung: seit 21.10.2026 fest 9 s, genau berechnet (Supervisor) - keine Einstellung mehr.
+    [].forEach.call(el('limiter').children, function (k, i) { k.dataset.wert = String([true, false][i]); });
     // Lautstaerke-Stufen: bis 70 % in 5er-, darueber in 3er-Schritten (70, 73 ... 97, 100).
     var LAUT_STUFEN = [];
     for (var ls = 0; ls < 70; ls += 5) LAUT_STUFEN.push(ls);
@@ -1749,7 +1781,6 @@
                 el('laut-jetzt').textContent = s.lautstaerke + ' %';
             }
             if (typeof s.limiter === 'boolean') tonReiheZeigen('limiter', s.limiter);
-            if (typeof s.blende === 'number') tonReiheZeigen('blende', s.blende);
             if (s.bluetooth && typeof s.bluetooth === 'object') {
                 el('btstatus').textContent = s.bluetooth.text || (s.bluetooth.verbunden ? 'verbunden' : 'nicht verbunden');
             }
@@ -1768,8 +1799,8 @@
             if (!ersteTrefferGesehen) { ersteTrefferGesehen = true; return; }
             if (suchId && t.id !== suchId && t.id !== letzteFremdId) { letzteFremdId = t.id; return; }
             letzteTreffer = t.liste;
-            zeigeTreffer(t.liste);
             el('such-status').textContent = t.liste.length ? '' : 'Nichts gefunden.';
+            zeigeTreffer(t.liste);   // Lyrics: meldet selbst, wenn keiner der Treffer passt
         });
         jetztZeigen();
     });

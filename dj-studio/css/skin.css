@@ -76,7 +76,7 @@
   box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--led) 40%, #000), 0 0 5px 1px var(--led), 0 0 14px 3px color-mix(in srgb, var(--led) 55%, transparent), 0 0 26px 6px color-mix(in srgb, var(--led) 22%, transparent);
 }
 .skin .kanal-b .led { --led: #ffc21c; }   /* Kanal 2 im Bild: gelb-orange */
-.skin .clip-led { border-radius: 2px; background: linear-gradient(180deg, #2a1012, #160809); box-shadow: 0 0 0 1px #000; }
+.skin .clip-led { z-index: 1; border-radius: 2px; background: linear-gradient(180deg, #2a1012, #160809); box-shadow: 0 0 0 1px #000; }
 .skin .clip-led.an { background: linear-gradient(180deg, #ff6a5a, #ff1d1d); box-shadow: 0 0 0 1px #400, 0 0 8px #ff2b2b, 0 0 16px rgba(255, 43, 43, .5); }
 .skin .anz > span:not(.led) { display: none; }
 .skin .anz > .led { position: absolute; display: block; }
@@ -120,7 +120,7 @@
 .skin .kanalfader .regler-fuell {
   /* Wie in Bild 2: Licht direkt unter der Kappe, gut ein Drittel des Schlitzes, laeuft unten aus */
   position: absolute; display: block; left: 50%; width: 5px; margin-left: -2.5px;
-  top: calc((1 - var(--anteil)) * (100% - var(--kh)) + var(--kh) - 2px);
+  top: calc((1 - var(--anteil)) * (100% - var(--kh)) + var(--kh) - 6px);
   height: max(0px, min(34%, calc(var(--anteil) * (100% - var(--kh)) - 8px)));
   -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent); mask-image: linear-gradient(180deg, #000 55%, transparent);
   background: linear-gradient(180deg, #7fdcff, #1a8cff); border-radius: 3px;
@@ -128,7 +128,7 @@
 }
 .skin .kanal-b .kanalfader .regler-fuell { background: linear-gradient(180deg, #ffd08a, #ff7a00); box-shadow: 0 0 6px #ff9a1a, 0 0 14px rgba(255, 154, 26, .5); }
 .skin .kanalfader .regler-kappe {
-  position: absolute; display: block; left: 50%; width: var(--kw); height: var(--kh); margin-left: calc(var(--kw) / -2);
+  position: absolute; display: block; border-radius: 3px; left: 50%; width: var(--kw); height: var(--kh); margin-left: calc(var(--kw) / -2);
   top: calc((1 - var(--anteil)) * (100% - var(--kh)));
   background: var(--bild) var(--bx) var(--by) / 1920px auto no-repeat;
   filter: drop-shadow(0 4px 4px rgba(0, 0, 0, .7));
@@ -214,8 +214,8 @@
 }
 
 /* ---------- Kopf ---------- */
-.skin .uhr-zeit { font: 500 38px/36px var(--font); color: #f3f6f9; letter-spacing: .01em; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px rgba(180, 210, 255, .25); }
-.skin .uhr-datum { font: 500 18px/19px var(--font); color: #e3e8ee; letter-spacing: .02em; white-space: nowrap; }
+.skin .uhr-zeit { text-align: center; font: 500 38px/36px var(--font); color: #f3f6f9; letter-spacing: .01em; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px rgba(180, 210, 255, .25); }
+.skin .uhr-datum { text-align: center; font: 500 18px/19px var(--font); color: #e3e8ee; letter-spacing: .02em; white-space: nowrap; }
 .skin .kopf-feld.uhr .taste { color: transparent; border-radius: 4px; }
 .skin .kopf-feld.uhr .taste > svg { display: none; }
 .skin .demo-badge { display: flex; align-items: center; justify-content: center; font: 700 10px/1 var(--font-schmal); letter-spacing: .14em;
@@ -242,9 +242,12 @@
 .skin .deck-kanal { font: 600 31px/28px var(--font-schmal);   /* so gross wie der Schriftzug in Bild 2 */ letter-spacing: .05em; color: #e3e9f0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, .8); white-space: nowrap; }
 .skin .deck-kanal.on-air { color: #49b8ff; text-shadow: 0 0 8px rgba(35, 168, 255, .8), 0 1px 2px #000; animation: on-air 1.6s ease-in-out infinite; }
+body.tv .skin .deck-kanal.on-air { animation: none; }
+body.tv .skin .deck-kanal.on-air > .puls { animation: on-air-schrift 1.6s ease-in-out infinite; }
 .skin .kanal-b .deck-kanal.on-air { color: #ffb23a; text-shadow: 0 0 8px rgba(255, 154, 26, .8), 0 1px 2px #000; }
 .skin .deck-kanal.next { color: #8b97a6; }
 @keyframes on-air { 50% { opacity: .55; } }
+@keyframes on-air-schrift { 50% { text-shadow: 0 0 2px rgba(255, 255, 255, .15), 0 1px 2px #000; filter: brightness(.75); } }
 
 /* DJ-Modus: ohne Herz/Menue, Titel groesser und breiter (Lage in js/skin.js, Option tv) */
 body.tv .skin .deck-info-icons { display: none; }
@@ -263,3 +266,69 @@ body.tv .skin .tv-mix { align-items: center; }
 body.tv .skin .tv-mix .tv-label { margin: 0; }
 body.tv .skin .tv-mix .tv-wert { font: 700 26px/28px var(--font); color: #fff; font-variant-numeric: tabular-nums; }
 body.tv .skin .tv-mix.bald .tv-wert { color: #ffa53a; text-shadow: 0 0 10px rgba(255, 150, 30, .8); animation: on-air 1s ease-in-out infinite; }
+
+/* DJ-Modus, alle Skins: Live-Anzeigen auf dunklem Glas - auf hellen Skins (Gold, Pink, Weiss ...)
+   liegen diese Stellen sonst auf hellem Metall und sind kaum lesbar (21.10.2026) */
+body.tv .skin .deck-kanal, body.tv .skin .tempo-zahl, body.tv .skin .key-zahl, body.tv .skin .tv-mix {
+  background: linear-gradient(180deg, rgba(12, 16, 22, .92), rgba(4, 6, 10, .92));
+  border-radius: 4px; box-shadow: inset 0 1px 3px #000, 0 0 0 1px rgba(255, 255, 255, .07);
+}
+body.tv .skin .deck-kanal { padding-left: 6px; box-sizing: border-box; line-height: 28px; }
+body.tv .skin .tempo-zahl, body.tv .skin .key-zahl { text-align: center; }
+
+/* DJ-Modus: ON AIR / NEXT senkrecht mittig im Feld, Titel 35 px */
+body.tv .skin .deck-kanal { display: flex; align-items: center; line-height: 1; padding-top: 2px; }
+body.tv .skin .deck-titel { font-size: 40px; line-height: 46px; }
+body.tv .skin .deck-kuenstler { font-size: 30px; line-height: 34px; }   /* 30 px, waechst nach oben (21.10.) */
+body.tv .skin .deck-welle { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14); }   /* feine Trennlinie zum Titelfeld */
+
+/* DJ-Modus: VIDEO-LED in dunkler runder Fassung - die Skins haben die LED leuchtend gemalt, ihr
+   Schein (bei Kanal 2 orange) lag sonst um die echte LED herum (Betreiber 21.10.) */
+body.tv .skin .deck-video .led::before {
+  content: ''; position: absolute; inset: -5px; border-radius: 50%; z-index: -1;   /* schmal: nur die gemalte LED */
+  background: radial-gradient(circle, #07090c 0 58%, rgba(7, 9, 12, .85) 72%, rgba(7, 9, 12, 0) 100%);
+}
+
+/* DJ-Modus: QUANT an Kanal 2 leuchtet wie an Kanal 1 - in den Skins ist sie dort nur umrandet
+   gemalt, an Kanal 1 gefuellt (Betreiber 21.10.) */
+body.tv .skin .kanal-b .deck-kopf-rest > .taste.an:nth-of-type(3) {
+  box-shadow: 0 0 8px rgba(255, 160, 30, .85), 0 0 18px rgba(255, 140, 20, .45);
+}
+body.tv .skin .kanal-b .deck-kopf-rest > .taste.an:nth-of-type(3)::after {
+  content: 'QUANT'; position: absolute; inset: 3px; border-radius: 3px; pointer-events: none;
+  display: flex; align-items: center; justify-content: center; visibility: visible;
+  font: 600 17px/1 var(--font-schmal); letter-spacing: .02em; color: #fff; text-shadow: 0 1px 2px rgba(80, 30, 0, .8);
+  background: linear-gradient(180deg, #ffad2e, #e86f00); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+/* DJ-Modus: keine Zahl hinter NAECHSTE TITEL (zeigte nur die 11 vorab geschickten, Betreiber 21.10.) */
+body.tv .skin .leiste-anzahl { visibility: hidden; }
+
+/* DJ-Modus, Play-Taste nach dem Vorbild der Skins (Betreiber 21.10.): fast schwarz, Neon-Rand mit
+   hellem Kern und farbigem Schein, leuchtendes Symbol, Glimmen nach innen. A gruen, B gelb-orange.
+   Laeuft = volles Neon; Pause = Neon blinkt (Takt aus deck.js, .blink); dazwischen gedimmt.
+   Groesse wie gemalt (nur Rand/Schatten, kein transform). */
+body.tv .skin .taste.play {
+  --neon: #2fe36a; --kern: #d2ffdc; --sym: #b8ffc8; --grund: #030805;
+  background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--neon) 10%, var(--grund)) 0, var(--grund) 70%);
+  border-radius: 8px; filter: none !important; overflow: visible;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--neon) 45%, #000), inset 0 0 6px color-mix(in srgb, var(--neon) 20%, transparent),
+              0 3px 6px rgba(0, 0, 0, .6);
+  transition: box-shadow .12s;
+}
+/* Song laeuft: Licht in der Farbe der eigenen Wellenform (waveform.js FARBEN.mitte: A blau, B orange);
+   Pause: beide blinken gruen (Betreiber 21.10.) */
+body.tv .skin .taste.play.an { --neon: #1487ff; --kern: #d4e8ff; --sym: #9fceff; --grund: #03060b; }
+body.tv .skin .kanal-b .taste.play.an { --neon: #ff9614; --kern: #ffe8c8; --sym: #ffc46a; --grund: #090603; }
+body.tv .skin .taste.play > svg {
+  visibility: visible; position: absolute; left: 50%; top: 50%; width: 40px; height: 20px; margin: -10px 0 0 -20px;
+  fill: color-mix(in srgb, var(--sym) 55%, #000); transition: fill .12s, filter .12s;
+}
+body.tv .skin .taste.play.an, body.tv .skin .taste.play.blink:not(.an) {
+  box-shadow: 0 0 0 1.5px var(--kern), 0 0 0 3px var(--neon), 0 0 10px 1px var(--neon),
+              0 0 22px color-mix(in srgb, var(--neon) 55%, transparent),
+              inset 0 0 10px color-mix(in srgb, var(--neon) 55%, transparent), inset 0 0 22px color-mix(in srgb, var(--neon) 18%, transparent);
+}
+body.tv .skin .taste.play.an > svg, body.tv .skin .taste.play.blink:not(.an) > svg {
+  fill: var(--sym); filter: drop-shadow(0 0 3px var(--neon)) drop-shadow(0 0 7px var(--neon));
+}

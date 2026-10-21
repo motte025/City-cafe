@@ -25,9 +25,11 @@ function ausSkala(punkte, n, versatz) {
   return Array.from({ length: n }, (_, s) => Math.min(wert(s) - versatz, CLIP - (n - 1 - s) * 0.05));
 }
 // Kanal-Meter in Bild 2: Skala +6 ... -24, oberste LED = 0 dBFS
-export const SCHWELLEN_BILD_DECK = ausSkala([[-0.7, -24], [3.3, -18], [6.2, -12], [10.7, -6], [13.8, -3], [16.9, 0], [19.6, 3], [22.6, 6]], 24, 6);
+// 30 LEDs wie in den Skins gemalt (Skalenpunkte von den frueheren 24 umgerechnet)
+export const SCHWELLEN_BILD_DECK = ausSkala([[-0.75, -24], [4.25, -18], [7.88, -12], [13.5, -6], [17.38, -3], [21.25, 0], [24.62, 3], [28.38, 6]], 30, 6);
 // Master in Bild 2: Skala -24 ... +9, +9 = 0 dBFS
-export const SCHWELLEN_BILD_MASTER = ausSkala([[0, -24], [3.4, -18], [7, -12], [10.2, -6], [13.4, -3], [16.5, 0], [19.4, 3], [22.4, 6], [25.3, 9]], 26, 9);
+// 25 Spalten wie gemalt (gezaehlt 21.10. in Bild 2 und allen Skins)
+export const SCHWELLEN_BILD_MASTER = ausSkala([[-0.09, -24], [3.19, -18], [6.65, -12], [9.73, -6], [12.8, -3], [15.79, 0], [18.58, 3], [21.46, 6], [24.25, 9]], 25, 9);
 
 export function leinwand(c) {
   const r = c.getBoundingClientRect();
@@ -141,16 +143,28 @@ export class LedMeter {
   }
 
   // Bild-2-Optik: einzelne abgerundete LEDs mit Glanz und Schein, dunkle LEDs leicht getoent
+  // Lage je Skin (skin.js, data-lage am Canvas): rand [l,o,r,u] und Luecken in Buehnen-Pixeln,
+  // luecke = Anteil der Teilung, grund = Gehaeusefarbe (deckt die gemalten LEDs ab)
+  lage() {
+    const d = this.c.dataset.lage || '';
+    if (d !== this._lageText) { this._lageText = d; try { this._lage = d ? JSON.parse(d) : null; } catch (e) { this._lage = null; } }
+    return this._lage;
+  }
+
   zeichnenBild() {
-    const { w, h, f: pxF } = leinwand(this.c);
+    const { w: cw, h: ch, f: pxF } = leinwand(this.c);
     const g = this.g;
-    g.clearRect(0, 0, w, h);
+    g.clearRect(0, 0, cw, ch);
+    const L = this.lage() || {};
+    let ox = 0, oy = 0, w = cw, h = ch;
+    if (L.grund) { g.fillStyle = L.grund; g.beginPath(); g.roundRect(0, 0, cw, ch, (L.radius || 0) * pxF); g.fill(); }
+    if (L.rand) { const [l, o, r, u] = L.rand.map(x => x * pxF); ox = l; oy = o; w = cw - l - r; h = ch - o - u; }
     const S = this.schwellen, n = S.length, dpr = window.devicePixelRatio || 1;
     const v = this.richtung === 'v';
     const lang = v ? h : w, quer = v ? w : h;
-    const teilung = lang / n, luecke = Math.max(1, teilung * 0.26), seg = teilung - luecke;
+    const teilung = lang / n, luecke = Math.max(1, teilung * (L.luecke ?? 0.26)), seg = teilung - luecke;
     // Luecken in Buehnen-Pixeln (pxF = Leinwand-Pixel je Buehnen-Pixel)
-    const zl = this.zeilenLuecke * pxF, kl = this.kanalLuecke * pxF;
+    const zl = (L.zeilenLuecke ?? this.zeilenLuecke) * pxF, kl = (L.kanalLuecke ?? this.kanalLuecke) * pxF;
     const breite = (quer - kl * (this.kanaele - 1) - zl * (this.zeilen - 1) * this.kanaele) / (this.kanaele * this.zeilen);
     const r = Math.min(seg, breite) * 0.22;
     for (let i = 0; i < this.kanaele; i++) {
@@ -161,7 +175,7 @@ export class LedMeter {
         for (let s = 0; s < n; s++) {
           const an = k.spitze >= S[s] || s === haltIdx;
           const l0 = v ? h - (s + 1) * teilung + luecke / 2 : s * teilung + luecke / 2;
-          const [x, y, sw, sh] = v ? [q0, l0, breite, seg] : [l0, q0, seg, breite];
+          const [x, y, sw, sh] = v ? [ox + q0, oy + l0, breite, seg] : [ox + l0, oy + q0, seg, breite];
           const f = farbeRgb(s / (n - 1), this.palette);
           g.beginPath(); g.roundRect(x, y, sw, sh, r);
           if (!an) {
