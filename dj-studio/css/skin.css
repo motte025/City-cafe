@@ -319,3 +319,28 @@ body.tv .skin .taste.play > svg {
 }
 body.tv .skin .kanal-a .taste.play.an { box-shadow: 0 0 0 2px #2fe36a, 0 0 16px rgba(47, 227, 106, .6), inset 0 0 12px rgba(47, 227, 106, .25), inset 0 1px 0 rgba(255, 255, 255, .25); }
 body.tv .skin .kanal-b .taste.play.an { box-shadow: 0 0 0 2px #ff9a1a, 0 0 16px rgba(255, 154, 26, .6), inset 0 0 12px rgba(255, 154, 26, .25), inset 0 1px 0 rgba(255, 255, 255, .25); }
+
+/* DJ-Modus, Play-Taste: leichter 3D-Effekt (Licht oben, Schatten unten, Glanzstreifen) ohne
+   Groessenaenderung; bei Pause blinkt der Rand gruen (Takt aus deck.js, Klasse .blink) */
+body.tv .skin .taste.play {
+  background: linear-gradient(180deg, #3a414b 0%, #1b2027 38%, #0b0e12 62%, #05070a 100%);
+  box-shadow: 0 0 0 2px #050608, inset 0 2px 1px rgba(255, 255, 255, .30), inset 0 -3px 4px rgba(0, 0, 0, .75),
+              inset 0 0 0 1px rgba(255, 255, 255, .08), 0 3px 6px rgba(0, 0, 0, .6);
+  overflow: hidden;
+}
+body.tv .skin .taste.play::before {      /* Glanzstreifen oben */
+  content: ''; position: absolute; left: 6%; right: 6%; top: 3px; height: 38%; border-radius: 5px 5px 40% 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0)); pointer-events: none;
+}
+body.tv .skin .taste.play > svg { filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .9)); }
+body.tv .skin .kanal-a .taste.play.an { box-shadow: 0 0 0 2px #2fe36a, 0 0 16px rgba(47, 227, 106, .6), inset 0 0 12px rgba(47, 227, 106, .25),
+  inset 0 2px 1px rgba(255, 255, 255, .30), inset 0 -3px 4px rgba(0, 0, 0, .75), 0 3px 6px rgba(0, 0, 0, .6); }
+body.tv .skin .kanal-b .taste.play.an { box-shadow: 0 0 0 2px #ff9a1a, 0 0 16px rgba(255, 154, 26, .6), inset 0 0 12px rgba(255, 154, 26, .25),
+  inset 0 2px 1px rgba(255, 255, 255, .30), inset 0 -3px 4px rgba(0, 0, 0, .75), 0 3px 6px rgba(0, 0, 0, .6); }
+body.tv .skin .taste.play.an > svg { filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .9)) drop-shadow(0 0 4px rgba(255, 255, 255, .45)); }
+/* Pause: gruen blinken */
+body.tv .skin .taste.play.blink:not(.an) {
+  box-shadow: 0 0 0 2px #2fe36a, 0 0 14px rgba(47, 227, 106, .7), inset 0 0 10px rgba(47, 227, 106, .3),
+              inset 0 2px 1px rgba(255, 255, 255, .30), inset 0 -3px 4px rgba(0, 0, 0, .75), 0 3px 6px rgba(0, 0, 0, .6);
+}
+body.tv .skin .taste.play.blink:not(.an) > svg { fill: #c9ffd9; }
