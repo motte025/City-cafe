@@ -13,6 +13,7 @@ import { einstellungen, schliessen } from './ui/overlays.js';
 import { texturenLaden } from './texturen.js';
 import { skinAnwenden } from './skin.js';
 import { tvBauen } from './tv.js';
+import { angeboteStarten } from './ui/angebote.js';
 
 // ?tv: DJ-Modus der YouTube-Musik am Fernseher (eingebettet in index.html).
 // Nur Anzeige - kein eigener Ton, keine Demo-Titel, keine Bedienung.
@@ -81,6 +82,7 @@ leisteBauen(document.getElementById('leiste'), engine, aktionen);
 const automix = automixBauen(engine, aktionen);
 if (SKIN) skinAnwenden();
 const tv = TV ? tvBauen(engine) : null;
+if (TV && SKIN) angeboteStarten(document.getElementById('buehne'));
 if (TV) engine.ctx.suspend();
 
 // Demo-Titel in die Leiste, die ersten zwei auf die Decks
