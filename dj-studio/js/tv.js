@@ -47,6 +47,19 @@ function anheben(x) {
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
+// Anzeige-Vorlauf (s): gleicht Verzoegerungen zwischen mpv und dem, was man hoert/sieht, aus
+// (Bluetooth meldet seine Verzoegerung nicht). Positiv = Welle/Meter frueher. Einstellbar per
+// localStorage 'studioVorlauf' (Test: per CDP), Standard STUDIO_VORLAUF_SEK.
+const STUDIO_VORLAUF_SEK = 0;
+let vorlaufWert = STUDIO_VORLAUF_SEK, vorlaufGelesen = 0;
+function vorlauf() {
+  const t = performance.now();
+  if (t - vorlaufGelesen > 1000) {
+    vorlaufGelesen = t;
+    try { const v = parseFloat(localStorage.getItem('studioVorlauf')); vorlaufWert = isFinite(v) ? Math.max(-1, Math.min(1, v)) : STUDIO_VORLAUF_SEK; } catch (e) {}
+  }
+  return vorlaufWert;
+}
 const bytes = b64 => Uint8Array.from(atob(b64 || ''), c => c.charCodeAt(0));
 
 // Anzeige wie in Bild 2 (Fotos der Vorlage): stachelig - spitze Schlaege, jede Nadel anders hoch,
@@ -278,7 +291,7 @@ export function tvBauen(engine) {
       }
       this.letzte = t;
       if (d.track) {
-        const p = stand.pos + (stand.spielt ? t - stand.zeit : 0);
+        const p = stand.pos + (stand.spielt ? t - stand.zeit + vorlauf() : 0);
         d.pos = Math.min(d.track.dauer || p, Math.max(0, p));
       }
       // Wartender Kanal steht beim Laden auf dem gemessenen Start (Betreiber 21.10.)
