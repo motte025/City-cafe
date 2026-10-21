@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-21T17:42:59Z",
+  "checked_at": "2026-10-21T18:02:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🌸 MUTE MARATHON TAG 103 🌸 | Raw Only | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "HOTLINE BLING",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🌸 MUTE MARATHON TAG 103 🌸 | Raw Only | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -31,13 +31,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ HYPER, HYPER - Neo Rave, Hard Dance, Hyper Techno & more | !tip ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -48,6 +41,13 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | NEON GRAVEYARD",
       "game": "DJs"
     }
   ]
