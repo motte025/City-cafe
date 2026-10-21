@@ -31,6 +31,15 @@ const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu set
 // simuliert ueber 11 Songs (18.10.): +1 dB = 4,7 % der Zeit rot (21.10.: zu viel), 0 dB = 1,3 %
 // (zu wenig) - daher +0,5 dB. Bei 80 % nie rot. Rot = oberste 3-4 LEDs.
 const RESERVE_DB = 0.5;
+// Anzeige etwas hoeher (Betreiber 21.10.): +2 dB im unteren/mittleren Bereich, laeuft bis -4 dBFS
+// auf 0 aus - der rote Bereich (oberste LEDs) bleibt so selten wie oben abgestimmt.
+const ANHEBEN_DB = 2, ANHEBEN_BIS_DB = -4, ANHEBEN_VOLL_DB = -12;
+function anheben(x) {
+  if (!(x > 0)) return x;
+  const db = 20 * Math.log10(x);
+  const a = ANHEBEN_DB * Math.min(1, Math.max(0, (ANHEBEN_BIS_DB - db) / (ANHEBEN_BIS_DB - ANHEBEN_VOLL_DB)));
+  return x * Math.pow(10, a / 20);
+}
 const SICHER_MIN = 0.93;     // Tempo beider Songhaelften gleich: Taktraster; sonst BPM nur ungefaehr
 
 const anderer = id => (id === 'A' ? 'B' : 'A');
@@ -227,7 +236,7 @@ export function tvBauen(engine) {
   // Kanal-Meter: gemessener Pegel x Reserve x Lautstaerke am TV
   function kanalPegel(id) {
     const p = pegelBei(id), f = RESERVE * lautFaktor();
-    return { L: { spitze: p.L.spitze * f, rms: p.L.rms * f }, R: { spitze: p.R.spitze * f, rms: p.R.rms * f } };
+    return { L: { spitze: anheben(p.L.spitze * f), rms: anheben(p.L.rms * f) }, R: { spitze: anheben(p.R.spitze * f), rms: anheben(p.R.rms * f) } };
   }
   for (const id of ['A', 'B']) {
     const de = engine.decks[id];
@@ -245,6 +254,7 @@ export function tvBauen(engine) {
         m[k].rms = Math.sqrt(m[k].rms ** 2 + (p[k].rms * g) ** 2);
       }
     }
+    for (const k of ['L', 'R']) { m[k].spitze = anheben(m[k].spitze); m[k].rms = anheben(m[k].rms); }
     return m;
   };
 
@@ -267,6 +277,9 @@ export function tvBauen(engine) {
         const p = stand.pos + (stand.spielt ? t - stand.zeit : 0);
         d.pos = Math.min(d.track.dauer || p, Math.max(0, p));
       }
+      // Wartender Kanal steht beim Laden auf dem gemessenen Start (Betreiber 21.10.)
+      const w = anderer(luft), dw = state.decks[w];
+      if (dw.track && !dw.spielt && (!auslauf || auslauf.id !== w)) dw.pos = dw.track.anfang || 0;
       if (auslauf) {
         const a = state.decks[auslauf.id];
         if (a.track) a.pos = Math.min(a.track.dauer || Infinity, auslauf.pos + (t - auslauf.zeit));
