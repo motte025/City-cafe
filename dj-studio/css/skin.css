@@ -76,7 +76,7 @@
   box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--led) 40%, #000), 0 0 5px 1px var(--led), 0 0 14px 3px color-mix(in srgb, var(--led) 55%, transparent), 0 0 26px 6px color-mix(in srgb, var(--led) 22%, transparent);
 }
 .skin .kanal-b .led { --led: #ffc21c; }   /* Kanal 2 im Bild: gelb-orange */
-.skin .clip-led { border-radius: 2px; background: linear-gradient(180deg, #2a1012, #160809); box-shadow: 0 0 0 1px #000; }
+.skin .clip-led { z-index: 1; border-radius: 2px; background: linear-gradient(180deg, #2a1012, #160809); box-shadow: 0 0 0 1px #000; }
 .skin .clip-led.an { background: linear-gradient(180deg, #ff6a5a, #ff1d1d); box-shadow: 0 0 0 1px #400, 0 0 8px #ff2b2b, 0 0 16px rgba(255, 43, 43, .5); }
 .skin .anz > span:not(.led) { display: none; }
 .skin .anz > .led { position: absolute; display: block; }
