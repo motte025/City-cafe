@@ -100,7 +100,7 @@ const DECK_A = {
     ['.anz:nth-of-type(1)', [40, 703, 64, 14], { led: [44, 710] }],
     ['.anz:nth-of-type(2)', [56, 719, 56, 14], { led: [64, 726] }],
     ['.taste.cue', [146, 671, 114, 65], { bild: true }],
-    ['.taste.play', [272, 684, 110, 52], { bild: true, an: true, gross: 5 }],
+    ['.taste.play', [272, 684, 110, 52], { bild: true, an: true, gross: 5, tv: [275, 676, 106, 55] }],   // TV: wie CUE
   ],
 };
 
@@ -190,7 +190,7 @@ const DECK_B = {
     ['.temporegler', [1144, 558, 17, 104]],
     ['.anz:nth-of-type(1)', [1566, 704, 48, 28], { led: [1579.5, 726] }],
     ['.anz:nth-of-type(2)', [1597, 719, 13, 14], { led: [1603.5, 726] }],
-    ['.taste.play', [1288, 684, 108, 52], { bild: true, an: true, gross: 5 }],
+    ['.taste.play', [1288, 684, 108, 52], { bild: true, an: true, gross: 5, tv: [1291, 676, 104, 55] }],
     ['.taste.cue', [1411, 671, 116, 65], { bild: true }],
   ],
 };
