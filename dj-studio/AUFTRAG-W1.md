@@ -70,8 +70,8 @@ gold, weiss, chrom, ladys-tuerkis, elfenbein, carbon, ladys-pink, onyx, champagn
 ## Bei Problemen
 
 - Lücken/harte Wechsel: Log-Zeilen aus Aufgabe 1.3 an den Betreiber/die nächste Sitzung. Rückfall
-  auf die alte Überblendung: `git show 9cde067d:kiosk/nl-mpv-supervisor.py` war der Stand vor
-  dem 21.10. (mit Freigabe per `scp` nach `/opt/citycafe/`, CRLF entfernen, Supervisor neu wie in
+  auf die alte Überblendung: `git show 4fb5f61b^1:kiosk/nl-mpv-supervisor.py` ist `main` direkt
+  vor dem Merge vom 21.10. (mit Freigabe per `scp` nach `/opt/citycafe/`, CRLF entfernen, Supervisor neu wie in
   `KIOSK-SUPERVISOR.md`).
 - Zu leise: Endstufe. Nicht `LAUT_ZIEL_LUFS` zurückdrehen ohne Rücksprache.
 
