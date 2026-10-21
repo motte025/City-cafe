@@ -5,6 +5,9 @@ nächste Arbeitssitzung und lässt sich auch als Ganzes in ein neues Gespräch
 kopieren. Wer hier etwas Größeres ändert, hält sie nach — sie soll den heutigen
 Stand beschreiben, nicht den von vorgestern.
 
+**Windows-Sitzung (mit `ssh w1`): zuerst `UEBERGABE-WINDOWS.md` lesen** – was am 21.10. passiert ist
+und was am W1 zu tun ist.
+
 Letzte Durchsicht: 21. Oktober 2026 nachmittags (alles auf **`main`**, letzter Stand `dedb4d52`:
 13 Skins fürs DJ Studio mit Auswahl am Handy, Meter/Fader/MIX-Felder pixelgenau, Überblendung fest
 9 s genau am Musikende mit Einsatz nach leisem Intro, Lautheit −14 LUFS, Messwerte je Song auf der
