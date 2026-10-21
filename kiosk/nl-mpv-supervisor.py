@@ -1810,8 +1810,44 @@ def studio_ende(vid, audio_url, laenge, ref, ref_titel):
     return ende
 
 
+# Gemessenes (Anfang, Einsatz, Ende, Lautheit, Limiter) bleibt auf der Platte (21.10.2026):
+# nach einem Neustart des Supervisors lief der laufende Song sonst ~10 s ohne Absenkung, bis er
+# neu gemessen war (bis 5 dB zu laut). Gilt nur, solange Fassung und Lautheits-Ziel gleich sind.
+STILLE_ORDNER = os.environ.get("CITYCAFE_STILLE", os.path.expanduser("~/.cache/citycafe/stille"))
+STILLE_FASSUNG = 1         # hochzaehlen, wenn sich die Messung aendert (dann wird neu gemessen)
+
+
+def stille_von_platte(vid):
+    """Schon gemessen? Dann STILLE[vid] von der Platte setzen. -> True"""
+    if vid in STILLE and "gain" in STILLE[vid]:
+        return True
+    datei = os.path.join(STILLE_ORDNER, vid + ".json")
+    try:
+        if time.time() - os.path.getmtime(datei) > 30 * 86400:   # nach 30 Tagen neu messen
+            return False
+        with open(datei) as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        return False
+    if d.get("fassung") != STILLE_FASSUNG or d.get("ziel") != LAUT_ZIEL_LUFS:
+        return False
+    STILLE[vid] = {k: d.get(k) for k in ("anfang", "einsatz", "ende", "gain", "limiter")}
+    return True
+
+
+def stille_speichern(vid):
+    try:
+        os.makedirs(STILLE_ORDNER, exist_ok=True)
+        ziel = os.path.join(STILLE_ORDNER, vid + ".json")
+        with open(ziel + ".tmp", "w") as f:
+            json.dump({**STILLE[vid], "fassung": STILLE_FASSUNG, "ziel": LAUT_ZIEL_LUFS}, f)
+        os.replace(ziel + ".tmp", ziel)
+    except OSError as e:
+        log(f"Intro/Ausklang {vid}: nicht gespeichert ({e})")
+
+
 def stille_messen(vid, audio_url, laenge):
-    if vid in STILLE or not audio_url:
+    if vid in STILLE or not audio_url or stille_von_platte(vid):
         return
     STILLE[vid] = {"anfang": 0.0, "ende": None}
     laenge = float(laenge or 0)
@@ -1899,6 +1935,7 @@ def stille_messen(vid, audio_url, laenge):
     STILLE[vid] = {"anfang": round(anfang, 2), "einsatz": round(einsatz, 2),
                    "ende": round(ende, 2) if ende else None, "gain": gain,
                    "limiter": limiter}
+    stille_speichern(vid)
     log(f"Intro/Ausklang {vid}: normal {normal:.0f} dB, Start {anfang:.1f}s "
         + (f"(volle Musik ab {einsatz:.1f}s) " if einsatz - anfang >= 1 else "")
         + (f"(Studio-Abgleich, Guete {abgl['guete']:.2f}), " if abgl else f"(erlaubt {erlaubt:.0f}s), ") +
@@ -1970,6 +2007,7 @@ def ton_zustand(vid, limiter_an):
 
 
 def ton_args(vid, limiter_an):
+    stille_von_platte(vid)                 # nach einem Neustart: Lautheit sofort von der Platte
     g, af = ton_zustand(vid, limiter_an)
     return [f"--volume-gain={g}"] + ([f"--af={af}"] if af else [])
 

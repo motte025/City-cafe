@@ -179,6 +179,12 @@ Mess- und Bildwerkzeuge: **`dj-studio/werkzeuge/`** (README dort).
 
 ### Lautheit −14 LUFS (Supervisor `LAUT_ZIEL_LUFS`)
 
+- **Messwerte auf der Platte** (21.10. nachmittags, `stille_von_platte`/`stille_speichern`):
+  Anfang, Einsatz, Ende, Lautheit, Limiter je Song in `~/.cache/citycafe/stille/<id>.json`
+  (`CITYCAFE_STILLE`), gültig 30 Tage und nur bei gleicher `STILLE_FASSUNG` und gleichem
+  `LAUT_ZIEL_LUFS`. Anlass: nach einem Supervisor-Neustart lief der Song ~10 s ohne Absenkung
+  (bis 5 dB zu laut), bis er neu gemessen war; jetzt setzt `ton_args` die Lautheit sofort.
+
 - Ziel −14 statt −11 LUFS (wie YouTube/Spotify). Nachgerechnet mit 79 Playlist-Songs (−26,1 bis
   −5,8 LUFS, `werkzeuge/lufs_messen.sh` + `lufs_auswerten.py`): −11 → 94,9 % innerhalb ±1,5 dB
   (leisester −4,1 dB, Limiter 28×); **−14 → alle innerhalb ±1,5 dB, 74 innerhalb ±0,3 dB, Limiter
