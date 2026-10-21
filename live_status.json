@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-21T20:52:45Z",
+  "checked_at": "2026-10-21T21:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁BirthdayStream... – let’s celebrate the start of my new year together! 18+ !StreamerPotion꧂",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁BirthdayStream... – let’s celebrate the start of my new year together! 18+ !StreamerPotion꧂",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
