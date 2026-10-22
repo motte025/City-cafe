@@ -1,6 +1,9 @@
 # City-cafe
 City
 
+> © 2026 Martin Comploier. **Alle Rechte vorbehalten.** Kein Kopieren, Verändern oder
+> Weiterverwenden ohne schriftliche Erlaubnis – siehe [`LICENSE`](LICENSE).
+
 ## Wo steht was
 
 | Datei | Inhalt |
