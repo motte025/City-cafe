@@ -61,7 +61,10 @@ JS_RUNTIME = os.environ.get("CITYCAFE_JS_RUNTIME", "node")
 # statt 161 % eines Kerns) - Ausweichweg, falls es eng wird.
 # Seit dem W1 (Radeon 780M, VA-API fuer VP9/AV1) kein H.264-Zwang mehr:
 # yt-dlp nimmt bei gleicher Aufloesung den besseren Codec (AV1/VP9).
-FORMAT = "bestvideo[height<=1080]+bestaudio/best[height<=1080]"
+# Nie HDR (22.10.2026): der TV laeuft ohne HDR (wirkt blass), und die HDR-Fassung ist 3-4x so gross
+# (475 MB fuer 10 min) - sie kam nicht in Gang. [dynamic_range=?SDR]: SDR oder ohne Angabe.
+SDR = "[dynamic_range=?SDR]"
+FORMAT = f"bestvideo[height<=1080]{SDR}+bestaudio/bestvideo[height<=1080]+bestaudio/best[height<=1080]"
 
 
 def format_waehlen(hoehe=0, fps=0):
@@ -75,7 +78,8 @@ def format_waehlen(hoehe=0, fps=0):
     takt = "[fps>50]" if fps == 60 else ("[fps<=31]" if fps == 30 else "")
     stufen = []
     if takt:
-        stufen.append(f"bestvideo{grund}{takt}+bestaudio[ext=m4a]")
+        stufen.append(f"bestvideo{grund}{SDR}{takt}+bestaudio[ext=m4a]")
+    stufen.append(f"bestvideo{grund}{SDR}+bestaudio[ext=m4a]")
     stufen.append(f"bestvideo{grund}+bestaudio[ext=m4a]")
     stufen.append(f"bestvideo{grund}+bestaudio")
     stufen.append(f"best{grund}")
@@ -101,8 +105,8 @@ def musik_format(hoehe=0, fps=0):
     # eine Obergrenze (schwaches WLAN), darum dann vorne ein hartes Filter.
     takt = "[fps<=31]" if f == 30 else ""
     codec = "[vcodec^=avc1]" if MUSIK_NUR_H264 else ""
-    stufen = [f"bv*{codec}{takt}+ba[ext=m4a]", f"bv*{codec}{takt}+ba"] if takt else []
-    stufen += [f"bv*{codec}+ba[ext=m4a]", f"bv*{codec}+ba", f"b{codec}", "b"]
+    stufen = [f"bv*{codec}{SDR}{takt}+ba[ext=m4a]", f"bv*{codec}{SDR}{takt}+ba"] if takt else []
+    stufen += [f"bv*{codec}{SDR}+ba[ext=m4a]", f"bv*{codec}{SDR}+ba", f"bv*{codec}+ba[ext=m4a]", f"bv*{codec}+ba", f"b{codec}", "b"]
     sortierung = f"res:{h},fps:{f}" + (",vcodec:avc1" if MUSIK_NUR_H264 else "") + ",acodec:m4a"
     return "/".join(stufen), sortierung
 RETRY_FAILED_AFTER = 600   # Sekunden, bis ein fehlgeschlagenes Video neu versucht wird
