@@ -2080,10 +2080,14 @@ VORMESSEN = os.environ.get("CITYCAFE_VORMESSEN", "1") != "0"
 VORMESS_PAUSE = 15
 VORMESS_PAUSE_MUSIK = 45   # bei Musik: Pause zwischen zwei Songs
 VORMESS_FEHLER_PAUSE = 3600
-# Reihenfolge (Betreiber 22.10.2026): zuerst die Warteschlange (die laufende Playlist), dann die
-# Schlager-Playlists, dann der Rest.
+# Reihenfolge (Betreiber 22.10.2026): zuerst die Warteschlange, dann die ganze laufende Playlist
+# (die Schlange hat nur noch die kommenden Songs), dann die Schlager-Playlists, dann der Rest.
 VORMESS_EXPR = """JSON.stringify((() => { try { const ids = new Set();
-  ((typeof ytm !== 'undefined' && ytm && ytm.eintraege) || []).forEach(e => e && e.videoId && ids.add(e.videoId));
+  const schlange = (typeof ytm !== 'undefined' && ytm && ytm.eintraege) || [];
+  schlange.forEach(e => e && e.videoId && ids.add(e.videoId));
+  const laufend = new Set([ytm && ytm.jetzt && ytm.jetzt.liste, ...schlange.map(e => e && e.liste)].filter(Boolean));
+  (ytmPlaylists || []).filter(p => laufend.has(p.name)).forEach(p =>
+    (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
   (ytmPlaylists || []).filter(p => /schlager/i.test(p.name || '')).forEach(p =>
     (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
   Object.values(ytmListenInhalt || {}).forEach(l => (l || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
@@ -2324,13 +2328,13 @@ def takt_datei(vid):
 
 # Messdaten ins Repo (22.10.2026, Betreiber: "der W1 kuemmert sich selbst um seine Daten, der PC
 # zuhause macht nichts"). Takt -> dj-studio/takt/, Lautheit/Intro/Ende -> dj-studio/messwerte/.
-# Nur ohne Musik, hoechstens alle 6 h. Schreiben mit eigenem Deploy-Key (~/.ssh/citycafe-repo,
+# Einmal am Tag ab REPO_AB (nach dem Update um 8:30). Schreiben mit eigenem Deploy-Key (~/.ssh/citycafe-repo,
 # im Repo unter Settings -> Deploy keys mit Schreibrecht); ohne Key passiert nichts.
 REPO_KEY = os.path.expanduser("~/.ssh/citycafe-repo")
 REPO_ORDNER = os.path.expanduser("~/.cache/citycafe/repo")
 REPO_URL = "git@github.com:motte025/City-cafe.git"
-REPO_ALLE_SEK = 6 * 3600
-REPO_STAND = {"zeit": 0.0, "thread": None}
+REPO_AB = "08:30"          # einmal am Tag, ab dieser Uhrzeit (nach dem naechtlichen Update)
+REPO_STAND = {"tag": "", "zeit": 0.0, "thread": None}
 
 
 def git(*args, pruefen=True):
@@ -2355,18 +2359,19 @@ def daten_ins_repo():
             git("clone", "--depth", "1", "--filter=blob:none", "--sparse", REPO_URL, REPO_ORDNER)
             git("sparse-checkout", "set", "dj-studio/takt", "dj-studio/messwerte")
         for versuch in range(3):
-            fertig = repo_runde(versuch)
-            if fertig:
-                return
-        raise RuntimeError("push dreimal abgelehnt")
+            if repo_runde(versuch):
+                break
+        else:
+            raise RuntimeError("push dreimal abgelehnt")
     except (OSError, RuntimeError, subprocess.SubprocessError) as e:
         log(f"Repo-Daten: nicht hochgeladen ({e})")
-        REPO_STAND["zeit"] = time.time() - REPO_ALLE_SEK + 900   # z. B. Netz nach dem Start noch nicht da: in 15 min
+        return
+    REPO_STAND["tag"] = time.strftime("%Y-%m-%d")             # geschafft (oder nichts Neues): heute fertig
 
 
 def repo_runde(versuch):
     """Eine Runde: main holen, abgleichen, committen, pushen. -> True, wenn nichts mehr zu tun ist."""
-    if True:
+    if True:   # (Einrueckung wie vorher in daten_ins_repo)
         git("fetch", "--depth", "1", "origin", "main")
         git("reset", "-q", "--hard", "FETCH_HEAD")
         ziel_takt = os.path.join(REPO_ORDNER, "dj-studio", "takt")
@@ -2951,10 +2956,13 @@ def main():
             for alt in list(SPUREN)[:-24]:
                 SPUREN.pop(alt, None)
 
-        # Messdaten ins Repo: nur ohne Musik, hoechstens alle 6 h, eigener Thread (git braucht Sekunden).
-        if (not musik and os.path.exists(REPO_KEY) and time.time() - REPO_STAND["zeit"] >= REPO_ALLE_SEK
+        # Messdaten ins Repo: einmal am Tag, morgens nach dem Update (ab 8:30, Betreiber 22.10.2026),
+        # eigener Thread (git braucht Sekunden). Fehlschlag (Netz noch nicht da): in 15 min wieder.
+        heute = time.strftime("%Y-%m-%d")
+        if (os.path.exists(REPO_KEY) and REPO_STAND["tag"] != heute and time.strftime("%H:%M") >= REPO_AB
+                and time.time() >= REPO_STAND["zeit"]
                 and not (REPO_STAND["thread"] is not None and REPO_STAND["thread"].is_alive())):
-            REPO_STAND["zeit"] = time.time()
+            REPO_STAND["zeit"] = time.time() + 900
             REPO_STAND["thread"] = threading.Thread(target=daten_ins_repo, daemon=True)
             REPO_STAND["thread"].start()
 
