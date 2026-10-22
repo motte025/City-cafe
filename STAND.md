@@ -62,6 +62,24 @@ Im Log vom Abend standen drei Fehler:
 
 Kommt mit dem Update am 23.10. um 8:30 auf den W1.
 
+### Hänger: Ursache gefunden, Ton jetzt von der Platte (22.10. abends)
+
+Um 20:52 gab es wieder einen Hänger (`uvIuAHsfNdc` bei 12,8 s). Im gesicherten mpv-Log stand diesmal
+die Ursache: **YouTube liefert manche Ströme zeitweise zu langsam** ("Enter buffering 100% -> 0%",
+auch schon beim Song davor 7 s Stillstand). mpv hält dann Bild und Ton an. Die Absicherung
+(Neustart an derselben Stelle) griff, aber erst nach ~30 s, weil die Position in Häppchen weiterkroch.
+Am Handy passiert das nie, weil die YouTube-App anders lädt.
+- **Ton von der Platte** (`ton_laden`/`ton_quelle`): Der Ton jedes Musik-Songs (3–6 MB) wird mit yt-dlp
+  vorab ganz geladen, nach `~/.cache/citycafe/ton/` (die letzten 40 Songs). Das passiert für die
+  nächsten zwei der Schlange, schon beim Vormessen und spätestens beim Vorladen. mpv spielt ihn als
+  `--audio-file`. Dauer je Song 4–80 s, je nachdem, wie YouTube liefert.
+- **`--cache-pause=no`** für Musik: Kommt das Bild nicht nach, steht kurz das Bild, die Musik läuft weiter.
+- **Stocken erkennen**: Wer in 8 s weniger als 3 s spielt, gilt als hängend (vorher erst nach 10 s
+  ohne jeden Fortschritt).
+- Die mpv-Logs heißen jetzt je Player anders (`mpv-xf-mpv.log`/`mpv-xf-mpvxf.log`), vorher schrieben
+  beide in dieselbe Datei.
+- Getestet auf dem W1: Download (5,9 MB in 4–78 s) und Wiedergabe von lokalem Ton plus Bild aus dem Netz.
+
 ### Wetter-Widgets bei Gewitter (22.10. abends)
 
 Großes Wetter-Widget (Rotation) und kleines (rechts oben) zeigen bei Gewitter (Open-Meteo-Code 95/96/99)

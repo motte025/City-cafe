@@ -936,6 +936,65 @@ def resolve(video_id, fmt=FORMAT, sortierung=None):
     return None
 
 
+# Ton von der Platte (22.10.2026): YouTube liefert manche Stroeme zeitweise zu langsam (Log 20:48/20:52:
+# "Enter buffering 100% -> 0%", Song blieb bei 12,8 s stehen). mpv haelt dann Bild UND Ton an. Deshalb
+# den Ton jedes Musik-Songs (3-5 MB) vorab ganz laden - yt-dlp laedt in Stuecken und umgeht so die
+# Drosselung - und mpv spielt ihn von hier; dazu --cache-pause=no: kommt das Bild nicht nach, steht
+# kurz das Bild, die Musik laeuft weiter.
+TON_ORDNER = os.path.expanduser("~/.cache/citycafe/ton")
+TON_LAEDT = set()
+
+
+def ton_datei(vid):
+    """Fertig geladener Ton eines Songs oder None."""
+    for p in glob.glob(os.path.join(TON_ORDNER, vid + ".*")):
+        if not p.endswith((".part", ".ytdl", ".tmp")) and os.path.getsize(p) > 100_000:
+            return p
+    return None
+
+
+def ton_laden(vid, audio_url):
+    """Ton (dasselbe Format wie die Wiedergabe) im Hintergrund auf die Platte holen."""
+    if not audio_url or vid in TON_LAEDT or ton_datei(vid):
+        return
+    m = re.search(r"[?&]itag=(\d+)", audio_url)
+    TON_LAEDT.add(vid)
+
+    def lauf():
+        t0 = time.time()
+        try:
+            os.makedirs(TON_ORDNER, exist_ok=True)
+            for programm in ytdlp_programme():
+                try:
+                    r = subprocess.run(
+                        ["nice", "-n", "10", programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser",
+                         COOKIES_FROM, "-f", m.group(1) if m else "bestaudio", "--no-progress", "-q",
+                         "--no-playlist", "-o", os.path.join(TON_ORDNER, vid + ".%(ext)s"),
+                         f"https://www.youtube.com/watch?v={vid}"],
+                        capture_output=True, text=True, timeout=240)
+                except (subprocess.TimeoutExpired, OSError) as e:
+                    log(f"Ton {vid}: nicht geladen ({type(e).__name__})")
+                    continue
+                if ton_datei(vid):
+                    log(f"Ton {vid}: auf der Platte ({time.time() - t0:.0f} s)")
+                    break
+                log(f"Ton {vid}: nicht geladen (Code {r.returncode}: {(r.stderr or r.stdout).strip()[-160:]})")
+            dateien = sorted(glob.glob(os.path.join(TON_ORDNER, "*")), key=os.path.getmtime)
+            for alt in dateien[:-40]:                 # die letzten 40 Songs behalten
+                os.remove(alt)
+        except OSError:
+            pass
+        finally:
+            TON_LAEDT.discard(vid)
+
+    threading.Thread(target=lauf, daemon=True).start()
+
+
+def ton_quelle(vid, audio_url):
+    """Fuer mpv --audio-file: der geladene Ton, sonst wie bisher der Strom."""
+    return ton_datei(vid) or audio_url
+
+
 def suchen(text, anzahl=None):
     """YouTube-Suche fuer die Handy-Fernbedienung. -> Liste von Treffern."""
     anzahl = anzahl or SUCH_TREFFER
@@ -2416,9 +2475,9 @@ def haenger_sichern():
     stempel = time.strftime("%m%d-%H%M%S")
     try:
         os.makedirs(ordner, exist_ok=True)
-        for name in ("nl", "xf"):
-            quelle = f"/home/citycafe/mpv-{name}.log"
-            if os.path.exists(quelle) and time.time() - os.path.getmtime(quelle) < 600:
+        for quelle in glob.glob("/home/citycafe/mpv-*.log"):    # mpv-nl, mpv-xf-mpv, mpv-xf-mpvxf
+            name = os.path.basename(quelle)[4:-4]
+            if time.time() - os.path.getmtime(quelle) < 600:
                 with open(quelle, "rb") as f:
                     daten = f.read()[-2_000_000:]
                 with open(os.path.join(ordner, f"{stempel}-{name}.log"), "wb") as f:
@@ -2980,6 +3039,8 @@ def main():
     threading.Thread(target=lambda: (time.sleep(120), seite_aktualisieren()), daemon=True).start()   # Netz abwarten
     seite_pruefung = 0.0  # wann zuletzt nachgesehen wurde, ob die Notfall-Kopie laeuft
     ueberw_zeit = {"tv": 0.0, "system": 0.0}
+    stocken = {}          # Musik: {"t", "pos"} - Messfenster, ob in 8 s genug gespielt wurde
+    ton_vorab = {"naechste": 0.0}
 
     def blocked(key):
         frist = CAM_RETRY_AFTER if key.startswith("cam:") else RETRY_FAILED_AFTER
@@ -3153,6 +3214,7 @@ def main():
         def in_cache(key, urls):
             cache[key] = urls
             if key.endswith("|m"):                  # Musik: Intro/Ausklang und Seitenbalken messen
+                ton_laden(key.split("|", 1)[0], urls[1])     # und den Ton auf die Platte (Stocken)
                 threading.Thread(target=stille_messen, daemon=True,
                                  args=(key.split("|", 1)[0], urls[1] or urls[0], urls[2])).start()
                 threading.Thread(target=balken_messen, daemon=True,
@@ -3178,11 +3240,29 @@ def main():
                 def analyse_lauf(vid=offen[0]):
                     urls = resolve(vid, "bestaudio", "abr")
                     if urls:
+                        ton_laden(vid, urls[0])        # Ton schon Minuten vorher auf die Platte
                         stille_messen(vid, urls[0], urls[2])
                     else:
                         failed[vid] = time.time()
                 analyse_arbeiter = threading.Thread(target=analyse_lauf, daemon=True)
                 analyse_arbeiter.start()
+
+        # Ton von der Platte: die naechsten zwei Songs der Schlange schon jetzt laden (auch wenn sie
+        # schon gemessen sind - dann laeuft analyse_lauf nicht). Ein Song zur Zeit.
+        if musik and not TON_LAEDT and time.time() >= ton_vorab["naechste"]:
+            for t_vid in [str(v) for v in (state.get("analyse") or [])[:2]]:
+                if re.fullmatch(r"[A-Za-z0-9_-]{11}", t_vid) and not ton_datei(t_vid) \
+                        and time.time() - failed.get(t_vid, 0) >= RETRY_FAILED_AFTER:
+                    ton_vorab["naechste"] = time.time() + 20
+                    TON_LAEDT.add(t_vid)          # Platz halten, bis resolve fertig ist
+
+                    def ton_vorab_lauf(vid=t_vid):
+                        urls = resolve(vid, "bestaudio", "abr")
+                        TON_LAEDT.discard(vid)
+                        if urls:
+                            ton_laden(vid, urls[0])
+                    threading.Thread(target=ton_vorab_lauf, daemon=True).start()
+                    break
 
         # DJ-Modus: laufenden und vorgeladenen Song fuer das Studio messen und zustellen.
         if musik and state.get("flaeche") == "yt-dj-video":
@@ -3652,6 +3732,16 @@ def main():
                     last_progress = now          # Blende laeuft: alter darf am Ende stehen (keep-open)
                 elif last_pos is not None and now - last_progress > (CAM_STALL_TIMEOUT if art == "cam" else STALL_TIMEOUT):
                     problem = f"mpv steht bei {last_pos:.1f}s"
+                # Musik stockt (22.10.2026, 20:52: die Position kroch in Haeppchen weiter, "steht" griff
+                # erst nach 32 s): in 8 s weniger als 3 s gespielt -> wie ein Haenger behandeln.
+                if not musik or art != "yt" or pausiert or xf is not None or last_pos is None:
+                    stocken.clear()
+                elif not stocken:
+                    stocken.update(t=now, pos=last_pos)
+                elif now - stocken["t"] >= 8:
+                    if not problem and last_pos - stocken["pos"] < 3:
+                        problem = f"mpv steht bei {last_pos:.1f}s (stockt: {last_pos - stocken['pos']:.1f} s in 8 s)"
+                    stocken.update(t=now, pos=last_pos)
             if problem and art == "yt":
                 haenger_sichern()           # mpv-Logs werden beim naechsten Start ueberschrieben
             if (problem and problem.startswith("mpv steht") and musik and art == "yt"
@@ -3758,7 +3848,7 @@ def main():
                            # nach dem Platzieren selbst ans Video-Seitenverhaeltnis an (1200x837 statt 675).
                            "--keepaspect-window=no", "--auto-window-resize=no",
                            "--really-quiet", f"--input-ipc-server={MPV_SOCK_XF}",
-                           "--log-file=/home/citycafe/mpv-xf.log", "--volume=0",
+                           f"--log-file=/home/citycafe/mpv-xf-{neu_app}.log", "--volume=0",
                            "--title=xf-ein", f"--wayland-app-id={neu_app}",
                            "--pause", f"--start={n_start:.2f}"]
                 xf_args += ton_args(n_vid, ton_limiter)   # Lautheit angleichen
@@ -3767,7 +3857,8 @@ def main():
                 xf_args += seiten_blur_args(n_vid)
                 xf_blur = bool(seiten_blur_args(n_vid))
                 if audio_url:
-                    xf_args.append(f"--audio-file={audio_url}")
+                    xf_args.append(f"--audio-file={ton_quelle(n_vid, audio_url)}")
+                xf_args.append("--cache-pause=no")     # Bild stockt -> Musik laeuft weiter
                 xf_args.append(video_url)
                 try:
                     os.remove(MPV_SOCK_XF)
@@ -3906,7 +3997,9 @@ def main():
                     args += seiten_blur_args(schluessel)   # 4:3/Hochformat: Seiten fuellen
                     blur_an = "yt:" + schluessel
                 if audio_url:
-                    args.append(f"--audio-file={audio_url}")
+                    args.append(f"--audio-file={ton_quelle(schluessel, audio_url) if musik else audio_url}")
+                if musik:
+                    args.append("--cache-pause=no")     # Bild stockt -> Musik laeuft weiter
                 args.append(video_url)
                 mpv = subprocess.Popen(args, env=env, preexec_fn=mpv_dies_with_us)
                 log(f"Auftritt: {schluessel} ab {start}s"
