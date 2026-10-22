@@ -53,7 +53,9 @@ Im Log vom Abend standen drei Fehler:
   Neustart der Playlist. Die Ursache steht nicht im Log, im Systemlog gibt es nichts
   (vermutlich ein YouTube-Strom). **Jetzt startet der Supervisor mpv bei Musik einmal an
   derselben Stelle neu** (`fortsetzen`, höchstens 1× je Song in 5 min). Erst ein zweiter Hänger
-  fällt auf den Browser-Player zurück.
+  fällt auf den Browser-Player zurück. Den Grund der Hänger sagt nur das mpv-Log, und das wird bei jedem
+  Start überschrieben. **Bei jedem Hänger werden jetzt `mpv-nl.log`/`mpv-xf.log` nach
+  `/home/citycafe/mpv-haenger/` gesichert** (die letzten 20; Supervisor-Log: „mpv-Logs gesichert“).
 - **DJ-Modus lud die Studio-Spuren im Dauerlauf** (2× je Sekunde von der Platte, 7000 Logzeilen
   pro Stunde): Gebraucht werden bis zu 15 Spuren, behalten wurden nur 6. **Jetzt werden 24
   behalten.**

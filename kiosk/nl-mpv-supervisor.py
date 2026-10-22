@@ -2212,6 +2212,27 @@ def spur_kurz(vid):
     return KURZ[vid]
 
 
+def haenger_sichern():
+    """Bei einem Haenger die mpv-Logs aufheben (je Start ueberschrieben) - dort steht der Grund
+    (Netz, YouTube kappt den Strom, Decoder). ~/mpv-haenger/<Zeit>-nl.log, die letzten 20."""
+    ordner = os.path.expanduser("~/mpv-haenger")
+    stempel = time.strftime("%m%d-%H%M%S")
+    try:
+        os.makedirs(ordner, exist_ok=True)
+        for name in ("nl", "xf"):
+            quelle = f"/home/citycafe/mpv-{name}.log"
+            if os.path.exists(quelle) and time.time() - os.path.getmtime(quelle) < 600:
+                with open(quelle, "rb") as f:
+                    daten = f.read()[-2_000_000:]
+                with open(os.path.join(ordner, f"{stempel}-{name}.log"), "wb") as f:
+                    f.write(daten)
+        for alt in sorted(glob.glob(os.path.join(ordner, "*.log")))[:-20]:
+            os.remove(alt)
+        log(f"mpv-Logs gesichert: {ordner}/{stempel}-*.log")
+    except OSError as e:
+        log(f"mpv-Logs nicht gesichert ({e})")
+
+
 def spur_datei(vid):
     return os.path.join(SPUR_ORDNER, vid + ".json.gz")
 
@@ -3199,6 +3220,8 @@ def main():
                     last_progress = now          # Blende laeuft: alter darf am Ende stehen (keep-open)
                 elif last_pos is not None and now - last_progress > (CAM_STALL_TIMEOUT if art == "cam" else STALL_TIMEOUT):
                     problem = f"mpv steht bei {last_pos:.1f}s"
+            if problem and art == "yt":
+                haenger_sichern()           # mpv-Logs werden beim naechsten Start ueberschrieben
             if (problem and problem.startswith("mpv steht") and musik and art == "yt"
                     and time.time() - fortsetzen.get("versucht", {}).get(shown, 0) > 300):
                 # Musik: einmal mpv an derselben Stelle neu starten (21.10.2026: zweimal hing
