@@ -8424,12 +8424,23 @@
         }
 
         // --- Playlists (yt_playlists.json) --------------------------------------
+        // Schlaegt das Laden fehl (22.10.2026: nach dem Neustart um 18:20 war das Netz noch nicht da,
+        // die Seite blieb den ganzen Abend ohne Playlists - kein Vormessen, leere "Listen"), alle
+        // 30 s neu versuchen; danach die Inhalte nachholen, falls ytmListenLaden schon dran war.
         function ytmPlaylistsLaden() {
             return fetch('yt_playlists.json?v=' + Date.now(), { cache: 'no-store' })
                 .then(r => r.json())
-                .then(l => { ytmPlaylists = Array.isArray(l) ? l : []; ytmPlaylistsRepo = ytmPlaylists.slice(); })
-                .catch(() => { ytmPlaylists = []; });
+                .then(l => {
+                    ytmPlaylists = Array.isArray(l) ? l : [];
+                    ytmPlaylistsRepo = ytmPlaylists.slice();
+                    if (ytmPlaylists.length && ytmBereit && !ytmListenGeladen) ytmListenLaden();
+                })
+                .catch(() => {
+                    ytmPlaylists = [];
+                    setTimeout(ytmPlaylistsLaden, 30000);
+                });
         }
+        let ytmListenGeladen = false;
 
         // Platzhalter, bis echte Links eingetragen sind: Titel aus der Songs-
         // Datenbank (Kategorien laut yt_playlists.json), videoId erst beim Abspielen.
@@ -8474,8 +8485,9 @@
         // "bearbeitet: true" in yt/listen/<nr> und gehen der Fassung aus dem Repo
         // vor - bis der Chef "Original wiederherstellen" drueckt.
         async function ytmListenLaden() {
-            if (!nlFernVerb || !ytmPlaylists.length) return;
+            if (!nlFernVerb || !ytmPlaylists.length || ytmListenGeladen) return;
             if (!(masterMusicPool || []).length) { setTimeout(ytmListenLaden, 10000); return; }
+            ytmListenGeladen = true;
             let gespeichert = {};
             try {
                 gespeichert = (await nlFernVerb.db.ref(YT_REMOTE_NET.listenPfad()).once('value')).val() || {};
