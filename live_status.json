@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-22T14:42:47Z",
+  "checked_at": "2026-10-22T15:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -28,6 +28,13 @@
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #698 with Super8 & Tab",
+      "game": "Music"
     }
   ]
 }
