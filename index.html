@@ -16,6 +16,24 @@
     <link rel="apple-touch-icon" href="icon-192.png">
 
     <script>
+        // Ueberwachung (22.10.2026): Fehler der Seite und des DJ-Studios sammeln. Der Supervisor holt
+        // window.nlFehler alle 30 s ab (Problem-Protokoll, Tagesbericht). Gleiche Meldungen werden
+        // nur gezaehlt, hoechstens 30 verschiedene bis zum Abholen.
+        window.nlFehler = [];
+        window.nlFehlerMelden = function (quelle, text) {
+            try {
+                text = String(text || '').slice(0, 200);
+                const da = window.nlFehler.find(f => f.quelle === quelle && f.text === text);
+                if (da) da.n++;
+                else if (window.nlFehler.length < 30) window.nlFehler.push({ quelle: String(quelle), text, n: 1 });
+            } catch (e) {}
+        };
+        window.addEventListener('error', e => window.nlFehlerMelden('TV-Seite',
+            (e.message || 'Fehler') + (e.filename ? ' @ ' + e.filename.split('/').pop() + ':' + e.lineno : '')));
+        window.addEventListener('unhandledrejection', e => window.nlFehlerMelden('TV-Seite',
+            'Promise: ' + ((e.reason && (e.reason.message || e.reason.code)) || e.reason)));
+    </script>
+    <script>
         // Steht bewusst hier oben und nicht unten im Hauptskript: ob die Effekte
         // an sind, muss vor dem ersten Bildaufbau feststehen, sonst blitzt kurz
         // die falsche Fassung auf. Seit der ODROID weg ist (05.10.2026) sind sie
@@ -7624,7 +7642,10 @@
                 // Dieser Screen ist der Chef-TV (PIN in der Kiosk-Adresse). Ein
                 // zweiter, alter Screen im selben Raum meldet das nicht - die
                 // Handys hoeren dann nur auf diesen (sonst "zuckt" die Fernbedienung).
-                chefTv: !!(new URLSearchParams(location.search).get('chefpin') || '').trim()
+                chefTv: !!(new URLSearchParams(location.search).get('chefpin') || '').trim(),
+                // Ernstes Problem vom Supervisor (Haenger, Abbruch, Hitze ...): { text, ts }
+                // in Sekunden - das Chef-Handy zeigt es oben als Warnung (22.10.2026).
+                warnung: window.nlWarnung || null
             };
             const sig = JSON.stringify(daten);
             if (sig === nlStatusSig && Date.now() - nlStatusZeit < 60000) return;

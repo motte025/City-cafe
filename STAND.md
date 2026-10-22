@@ -62,6 +62,25 @@ Im Log vom Abend standen drei Fehler:
 
 Kommt mit dem Update am 23.10. um 8:30 auf den W1.
 
+### Überwachung (22.10. abends, Betreiber: „Fehler sofort fixen können“)
+
+- **Problem-Protokoll** `/home/citycafe/citycafe-probleme.log` (mit Datum, nur Probleme):
+  - Der Supervisor erkennt sie in seinem eigenen Log (`PROBLEM_MUSTER`). Das sind Hänger,
+    Startfehler, abgebrochene oder zu späte Blenden, Notbremse, eine hängende Seite, Neustarts,
+    Fehler beim Upload, bei Takt und beim Vormessen sowie die Notfall-Kopie.
+  - Dazu kommen jede Minute Temperatur (k10temp/amdgpu, ab 90 °C), freier Speicher (unter
+    1500 MB) und neue Zeilen in `nl-mpv-supervisor.err`.
+  - Alle 30 s holt er **Fehler der TV-Seite und des DJ-Studios** ab: `window.nlFehler` in
+    `index.html` (error/unhandledrejection, Duplikate werden gezählt). Das DJ-Studio meldet über
+    `parent.nlFehlerMelden` auch **Ruckeln** (unter 40 Bilder/s).
+- **Statistik je Betriebstag** (8:30 bis 8:30) in `~/.cache/citycafe/tage/<tag>.json`: Songs,
+  Blenden, Probleme, höchste Temperatur, wenigster Speicher.
+- **Tagesbericht** `berichte/W1-<tag>.md` geht mit dem Upload um 8:30 ins Repo. **Bei Problemen
+  im Café zuerst dort nachsehen.**
+- **Warnung am Chef-Handy**: Ernste Probleme gehen über `window.nlWarnung` in den Status
+  (`warnung`). Die Fernbedienung zeigt sie oben rot mit Uhrzeit (nur dem Chef, höchstens 6 h alt),
+  bis „OK“ gedrückt wird.
+
 ### Notfall-Kopie der TV-Seite auf dem W1 (22.10. abends)
 
 Bisher kam die ganze TV-Seite aus dem Internet (GitHub Pages). Ein Neustart ohne Internet hätte einen

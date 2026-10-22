@@ -155,6 +155,193 @@ def log(msg):
             f.write(line + "\n")
     except OSError:
         pass
+    ueberwachung_pruefen(msg)
+
+
+# ---------- Ueberwachung (22.10.2026, Betreiber: "Fehler sofort fixen koennen") ----------
+# Probleme aus dem eigenen Log, der TV-Seite (window.nlFehler) und dem System kommen
+# 1. mit Datum ins Problem-Protokoll (PROBLEM_LOG; das Hauptlog hat nur Uhrzeiten),
+# 2. in die Statistik des Betriebstags (8:30 bis 8:30, TAGE_ORDNER/<tag>.json) - daraus wird
+#    morgens der Tagesbericht im Repo (berichte/W1-<tag>.md, mit dem Messdaten-Upload),
+# 3. ernste sofort als Warnung ans Chef-Handy (window.nlWarnung -> Status -> Fernbedienung).
+PROBLEM_LOG = "/home/citycafe/citycafe-probleme.log"
+TAGE_ORDNER = os.path.expanduser("~/.cache/citycafe/tage")
+# (Muster, Art, ernst)
+PROBLEM_MUSTER = [
+    (r"mpv steht bei", "Haenger", True),
+    (r"mpv ohne erstes Bild", "Startfehler", True),
+    (r"Ueberblendung abgebrochen", "Blende abgebrochen", True),
+    (r"Notbremse", "Notbremse", True),
+    (r"zu spaet|spielt erst", "Blende zu spaet", False),
+    (r"neuer Song erst nach", "Laden langsam", False),
+    (r"Seite haengt beim Laden", "Seite hing", True),
+    (r"nicht zustellbar", "TV nicht erreichbar", False),
+    (r"Supervisor gestartet", "Neustart", False),
+    (r"Repo-Daten: nicht hochgeladen|Notfall-Kopie nicht aufgefrischt", "Upload", False),
+    (r"Takt \S+: nicht gerechnet", "Takt", False),
+    (r"Vormessen: 3 Fehler", "Vormessen", False),
+    (r"Notfall-Kopie laeuft", "Notfall-Kopie", True),
+]
+ZAEHL_MUSTER = [(r"^Ueberblendung: ", "blenden"), (r"^Ueberblendung fertig", "blenden_fertig"),
+                (r"^Auftritt: .*\(Musik\)", "songs_gestartet")]
+WARNUNG = {}               # {"text", "ts"} - zuletzt ernstes Problem, fuer das Chef-Handy
+UEBERW = {"tag": None, "daten": None, "gespeichert": 0.0, "lock": threading.Lock()}
+
+
+def betriebstag(t=None):
+    return time.strftime("%Y-%m-%d", time.localtime((t or time.time()) - 8.5 * 3600))
+
+
+def tag_daten():
+    """Statistik des laufenden Betriebstags (beim Tageswechsel die alte speichern)."""
+    tag = betriebstag()
+    if UEBERW["tag"] != tag:
+        if UEBERW["daten"] is not None:
+            tag_speichern()
+        try:
+            with open(os.path.join(TAGE_ORDNER, tag + ".json")) as f:
+                daten = json.load(f)
+        except (OSError, ValueError):
+            daten = {"tag": tag, "zaehler": {}, "probleme": [], "max": {}, "min": {}}
+        UEBERW["tag"], UEBERW["daten"] = tag, daten
+    return UEBERW["daten"]
+
+
+def tag_speichern():
+    d = UEBERW["daten"]
+    if d is None:
+        return
+    try:
+        os.makedirs(TAGE_ORDNER, exist_ok=True)
+        ziel = os.path.join(TAGE_ORDNER, d["tag"] + ".json")
+        with open(ziel + ".tmp", "w") as f:
+            json.dump(d, f)
+        os.replace(ziel + ".tmp", ziel)
+        for alt in sorted(glob.glob(os.path.join(TAGE_ORDNER, "*.json")))[:-30]:
+            os.remove(alt)
+    except OSError:
+        pass
+    UEBERW["gespeichert"] = time.time()
+
+
+def problem(art, text, ernst=False):
+    """Ein Problem festhalten (nie log() aufrufen - log() ruft hierher)."""
+    jetzt = time.time()
+    with UEBERW["lock"]:
+        d = tag_daten()
+        d["zaehler"][art] = d["zaehler"].get(art, 0) + 1
+        if len(d["probleme"]) < 300:
+            d["probleme"].append([time.strftime("%H:%M:%S", time.localtime(jetzt)), art, str(text)[:200]])
+        if ernst:
+            WARNUNG.update(text=f"{art}: {str(text)[:120]}", ts=int(jetzt))
+        if jetzt - UEBERW["gespeichert"] > 60:
+            tag_speichern()
+    try:
+        with open(PROBLEM_LOG, "a") as f:
+            f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(jetzt))} [{art}] {text}\n")
+    except OSError:
+        pass
+
+
+def ueberwachung_pruefen(msg):
+    try:
+        for muster, art, ernst in PROBLEM_MUSTER:
+            if re.search(muster, msg):
+                problem(art, msg, ernst)
+                return
+        for muster, name in ZAEHL_MUSTER:
+            if re.search(muster, msg):
+                with UEBERW["lock"]:
+                    z = tag_daten()["zaehler"]
+                    z[name] = z.get(name, 0) + 1
+                    if time.time() - UEBERW["gespeichert"] > 60:
+                        tag_speichern()
+                return
+    except Exception:
+        pass                   # die Ueberwachung darf den Supervisor nie stoeren
+
+
+def hwmon_temp(name):
+    for p in glob.glob("/sys/class/hwmon/hwmon*/name"):
+        try:
+            with open(p) as f:
+                if f.read().strip() != name:
+                    continue
+            with open(os.path.join(os.path.dirname(p), "temp1_input")) as f:
+                return int(f.read()) / 1000
+        except (OSError, ValueError):
+            continue
+    return None
+
+
+def system_pruefen():
+    """Temperatur und Speicher: Hoechst-/Tiefstwerte des Tages, Warnung bei Hitze/Speichermangel."""
+    cpu, gpu = hwmon_temp("k10temp"), hwmon_temp("amdgpu")
+    frei = None
+    try:
+        with open("/proc/meminfo") as f:
+            frei = next(int(z.split()[1]) // 1024 for z in f if z.startswith("MemAvailable"))
+    except (OSError, StopIteration, ValueError):
+        pass
+    with UEBERW["lock"]:
+        d = tag_daten()
+        for k, v in (("cpu_c", cpu), ("gpu_c", gpu)):
+            if v is not None and v > d["max"].get(k, -1):
+                d["max"][k] = round(v)
+        if frei is not None and frei < d["min"].get("frei_mb", 10 ** 9):
+            d["min"]["frei_mb"] = frei
+    jetzt = time.time()
+    if cpu is not None and cpu >= 90 and jetzt - UEBERW.get("hitze", 0) > 1800:
+        UEBERW["hitze"] = jetzt
+        problem("Hitze", f"CPU {cpu:.0f} Grad" + (f", GPU {gpu:.0f} Grad" if gpu else ""), True)
+    if frei is not None and frei < 1500 and jetzt - UEBERW.get("speicher", 0) > 1800:
+        UEBERW["speicher"] = jetzt
+        problem("Speicher", f"nur noch {frei} MB frei", True)
+    # Python-Fehler des Supervisors (stderr-Datei waechst)
+    try:
+        groesse = os.path.getsize("/home/citycafe/nl-mpv-supervisor.err")
+        alt = UEBERW.setdefault("err_groesse", groesse)
+        if groesse > alt:
+            with open("/home/citycafe/nl-mpv-supervisor.err", errors="replace") as f:
+                f.seek(alt)
+                zeilen = [z.strip() for z in f.read().splitlines() if z.strip()]
+            problem("Python-Fehler", zeilen[-1] if zeilen else "?", True)
+        UEBERW["err_groesse"] = groesse
+    except OSError:
+        pass
+
+
+def tv_fehler_holen(page_id):
+    """Fehler der TV-Seite und des DJ-Studios abholen (window.nlFehler, index.html)."""
+    try:
+        fehler = json.loads(cdp_eval(page_id, "JSON.stringify((window.nlFehler || []).splice(0))") or "[]")
+    except (OSError, ValueError, ConnectionError):
+        return
+    for f in fehler:
+        quelle = str(f.get("quelle") or "TV-Seite")
+        n = int(f.get("n") or 1)
+        problem(quelle, f"{f.get('text', '')}" + (f" ({n}x)" if n > 1 else ""), False)
+
+
+def bericht_text(d):
+    """Tagesbericht (Markdown) aus der Statistik eines Betriebstags."""
+    z, mx, mn = d.get("zaehler", {}), d.get("max", {}), d.get("min", {})
+    tag = time.strftime("%d.%m.%Y", time.strptime(d["tag"], "%Y-%m-%d"))
+    probleme = d.get("probleme", [])
+    arten = {k: v for k, v in z.items() if k not in ("blenden", "blenden_fertig", "songs_gestartet")}
+    zeilen = [f"# W1 Café – Betriebstag {tag} (8:30 bis 8:30)", "",
+              f"- Musik-Songs gestartet: {z.get('songs_gestartet', 0)}",
+              f"- Überblendungen: {z.get('blenden', 0)} begonnen, {z.get('blenden_fertig', 0)} fertig",
+              f"- Höchste Temperatur: CPU {mx.get('cpu_c', '?')} °C, GPU {mx.get('gpu_c', '?')} °C; "
+              f"wenigster freier Speicher: {mn.get('frei_mb', '?')} MB",
+              "- Probleme: " + (", ".join(f"{k} {v}×" for k, v in sorted(arten.items(), key=lambda kv: -kv[1]))
+                                 if arten else "keine"), ""]
+    if probleme:
+        zeilen += ["| Zeit | Art | Meldung |", "|---|---|---|"]
+        zeilen += [f"| {t} | {a} | {m.replace('|', '/')} |" for t, a, m in probleme]
+    else:
+        zeilen.append("Keine Probleme.")
+    return "\n".join(zeilen) + "\n"
 
 
 # ---------- minimaler CDP-Client (kein externes Paket noetig) ----------
@@ -2372,6 +2559,7 @@ def daten_ins_repo():
 def repo_runde(versuch):
     """Eine Runde: main holen, abgleichen, committen, pushen. -> True, wenn nichts mehr zu tun ist."""
     if True:   # (Einrueckung wie vorher in daten_ins_repo)
+        git("sparse-checkout", "set", "dj-studio/takt", "dj-studio/messwerte", "berichte")
         git("fetch", "--depth", "1", "origin", "main")
         git("reset", "-q", "--hard", "FETCH_HEAD")
         ziel_takt = os.path.join(REPO_ORDNER, "dj-studio", "takt")
@@ -2404,15 +2592,38 @@ def repo_runde(versuch):
                     n_takt += 1
                 else:
                     n_mess += 1
+        # Tagesberichte (Ueberwachung): jeder abgeschlossene Betriebstag als berichte/W1-<tag>.md
+        n_bericht = 0
+        ziel_bericht = os.path.join(REPO_ORDNER, "berichte")
+        os.makedirs(ziel_bericht, exist_ok=True)
+        for pfad in glob.glob(os.path.join(TAGE_ORDNER, "*.json")):
+            tag = os.path.basename(pfad)[:-5]
+            if tag >= betriebstag():
+                continue                                   # laufender Tag: erst morgen
+            try:
+                with open(pfad) as f:
+                    text = bericht_text(json.load(f))
+            except (OSError, ValueError, KeyError):
+                continue
+            dort = os.path.join(ziel_bericht, f"W1-{tag}.md")
+            try:
+                with open(dort, encoding="utf-8") as f:
+                    if f.read() == text:
+                        continue
+            except OSError:
+                pass
+            with open(dort, "w", encoding="utf-8") as f:
+                f.write(text)
+            n_bericht += 1
         if geholt and versuch == 0:
             log(f"Repo-Daten: {geholt} Takt-Dateien aus dem Repo geholt")
-        if not (n_takt or n_mess):
+        if not (n_takt or n_mess or n_bericht):
             return True
-        git("add", "-A", "dj-studio/takt", "dj-studio/messwerte")
-        git("commit", "-q", "-m", f"Auto: W1-Messdaten ({n_takt} Takt, {n_mess} Messwerte)")
+        git("add", "-A", "dj-studio/takt", "dj-studio/messwerte", "berichte")
+        git("commit", "-q", "-m", f"Auto: W1-Messdaten ({n_takt} Takt, {n_mess} Messwerte, {n_bericht} Bericht)")
         if git("push", "-q", "origin", "HEAD:main", pruefen=False).returncode != 0:
             return False
-        log(f"Repo-Daten: {n_takt} Takt-Dateien, {n_mess} Messwerte hochgeladen")
+        log(f"Repo-Daten: {n_takt} Takt-Dateien, {n_mess} Messwerte, {n_bericht} Tagesbericht hochgeladen")
         return True
 
 
@@ -2480,7 +2691,12 @@ def seite_zurueck(page_id):
             url = next((t.get("url", "") for t in json.load(r) if t.get("id") == page_id), "")
     except (OSError, ValueError):
         return
-    if not url.startswith(SEITE_LOKAL) or not pages_erreichbar():
+    if not url.startswith(SEITE_LOKAL):
+        return
+    if not pages_erreichbar():
+        if time.time() - UEBERW.get("notfall", 0) > 3600:      # Ueberwachung: hoechstens 1x je Stunde
+            UEBERW["notfall"] = time.time()
+            log("Notfall-Kopie laeuft (GitHub Pages nicht erreichbar)")
         return
     abfrage = re.sub(r"([?&])_t=\d+", r"\1", url.split("?", 1)[1] if "?" in url else "").strip("&")
     neu = SEITE_PAGES + "?" + abfrage + ("&" if abfrage else "") + f"_t={int(time.time())}"
@@ -2763,6 +2979,7 @@ def main():
     threading.Thread(target=seite_server, daemon=True).start()        # Notfall-Kopie ausliefern
     threading.Thread(target=seite_aktualisieren, daemon=True).start()
     seite_pruefung = 0.0  # wann zuletzt nachgesehen wurde, ob die Notfall-Kopie laeuft
+    ueberw_zeit = {"tv": 0.0, "system": 0.0}
 
     def blocked(key):
         frist = CAM_RETRY_AFTER if key.startswith("cam:") else RETRY_FAILED_AFTER
@@ -3030,6 +3247,15 @@ def main():
             # ~15 Spuren von der Platte und schrieb 7000 Logzeilen pro Stunde.
             for alt in list(SPUREN)[:-24]:
                 SPUREN.pop(alt, None)
+
+        # Ueberwachung: Fehler der TV-Seite alle 30 s abholen, System jede Minute pruefen.
+        if time.time() - ueberw_zeit["tv"] >= 30:
+            ueberw_zeit["tv"] = time.time()
+            if page_id:
+                tv_fehler_holen(page_id)
+        if time.time() - ueberw_zeit["system"] >= 60:
+            ueberw_zeit["system"] = time.time()
+            system_pruefen()
 
         # Notfall-Kopie aktiv? Alle 2 min, ohne Musik: ist GitHub Pages wieder da, dorthin wechseln.
         if page_id and not musik and time.time() - seite_pruefung >= 120:
@@ -3621,7 +3847,8 @@ def main():
                          f"window.djExternBis = {'Date.now() + 3000' if dj_ok else '0'}; "
                          f"window.djExternLaeuft = {'true' if dj_laeuft else 'false'}; "
                          f"window.nlTonGain = {ton_gain}; window.nlStudioKurz = {dj_kurz}; "
-                         f"window.nlMpvStand = {mpv_stand}; window.nlMpvStandZeit = Date.now(); 1")
+                         f"window.nlMpvStand = {mpv_stand}; window.nlMpvStandZeit = Date.now(); "
+                         f"window.nlWarnung = {json.dumps(WARNUNG) if WARNUNG else 'null'}; 1")
             except (OSError, ValueError, ConnectionError):
                 pass
 

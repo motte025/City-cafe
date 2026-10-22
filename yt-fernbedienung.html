@@ -242,6 +242,12 @@
     #menue-knoepfe { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
     .menue button { width: 100%; margin-top: 0; font-size: 21px; padding: 14px 8px; line-height: 1.2; }
     .menue button.still { background: #1d2647; }
+    /* Warnung vom W1 (Ueberwachung, 22.10.2026): nur fuer den Chef */
+    .warnung { display: none; align-items: center; gap: 10px; margin: 0 0 12px; padding: 12px 14px;
+               background: #4a1d14; border: 1px solid #c2502f; border-radius: 14px; font-size: 19px; }
+    body.ist-chef .warnung.an { display: flex; }
+    .warnung span { flex: 1; }
+    .warnung button { flex: none; width: auto; margin: 0; padding: 8px 14px; font-size: 18px; background: #7a2e1c; }
 </style>
 </head>
 <body>
@@ -249,6 +255,7 @@
 <div class="kopf"><h1>🎵 Musik</h1><span class="chef-abzeichen">👑 Chef</span>
     <span class="schrift-knoepfe"><button type="button" id="schrift-klein" aria-label="Schrift kleiner">A−</button><button type="button" id="schrift-gross" aria-label="Schrift größer">A+</button></span></div>
 <div class="raum" id="raum">City Cafe</div>
+<div class="warnung" id="warnung" role="alert"><span id="warnung-text"></span><button type="button" id="warnung-ok">OK</button></div>
 
 <!-- ============================ JETZT ============================ -->
 <section class="reiter-inhalt aktiv" id="reiter-jetzt">
@@ -1680,6 +1687,23 @@
     });
     el('stoppknopf').addEventListener('click', function () { musik('stopp'); senden({ aktion: 'stop' }); melden('■ Zurück zur Rotation', ''); });
 
+    // Warnung vom W1 (Ueberwachung): { text, ts } in Sekunden. Sichtbar nur fuer den Chef
+    // (CSS), hoechstens 6 h alt, bis "OK" gedrueckt wird (je Warnung, im Geraet gemerkt).
+    function warnungZeigen(w) {
+        var gesehen = 0;
+        try { gesehen = Number(localStorage.getItem('ytWarnungOk:' + RAUM)) || 0; } catch (e) {}
+        var an = !!(w && w.text && w.ts > gesehen && Date.now() / 1000 - w.ts < 6 * 3600);
+        el('warnung').classList.toggle('an', an);
+        if (!an) return;
+        var d = new Date(w.ts * 1000);
+        el('warnung-text').textContent = '⚠️ ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ' ' + w.text;
+        el('warnung').dataset.ts = w.ts;
+    }
+    el('warnung-ok').addEventListener('click', function () {
+        try { localStorage.setItem('ytWarnungOk:' + RAUM, el('warnung').dataset.ts || ''); } catch (e) {}
+        el('warnung').classList.remove('an');
+    });
+
     // Chef-Anmeldung: die PIN prueft Firebase selbst (Regeln, chef/pin ist
     // fuer niemanden lesbar). Klappt das Schreiben, ist das Geraet Chef.
     function chefSetzen(an) {
@@ -1781,6 +1805,7 @@
                 el('laut-jetzt').textContent = s.lautstaerke + ' %';
             }
             if (typeof s.limiter === 'boolean') tonReiheZeigen('limiter', s.limiter);
+            warnungZeigen(s.warnung);
             if (s.bluetooth && typeof s.bluetooth === 'object') {
                 el('btstatus').textContent = s.bluetooth.text || (s.bluetooth.verbunden ? 'verbunden' : 'nicht verbunden');
             }

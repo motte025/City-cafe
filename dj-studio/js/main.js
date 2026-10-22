@@ -129,8 +129,27 @@ addEventListener('keyup', e => {
 // ---- Bildtakt --------------------------------------------------------------
 let letzte = performance.now() / 1000;
 const gemeldet = new Set();
+// Ueberwachung (22.10.2026): Fehler und Ruckeln an die TV-Seite melden (nlFehlerMelden in index.html,
+// der Supervisor holt sie ab). Ausserhalb der TV-Seite (Studio allein) gibt es den Melder nicht.
+function melden(quelle, text) {
+  try { if (parent !== window && parent.nlFehlerMelden) parent.nlFehlerMelden(quelle, text); } catch (e) {}
+}
+addEventListener('error', e => melden('DJ-Studio', (e.message || 'Fehler') + (e.filename ? ' @ ' + e.filename.split('/').pop() + ':' + e.lineno : '')));
+addEventListener('unhandledrejection', e => melden('DJ-Studio', 'Promise: ' + ((e.reason && e.reason.message) || e.reason)));
 function sicher(name, f) {
-  try { f(); } catch (e) { if (!gemeldet.has(name)) { gemeldet.add(name); console.error('[DJ Studio] ' + name + ':', e); } }
+  try { f(); } catch (e) {
+    if (!gemeldet.has(name)) { gemeldet.add(name); console.error('[DJ Studio] ' + name + ':', e); }
+    melden('DJ-Studio', name + ': ' + (e && e.message || e));
+  }
+}
+// Bilder pro Sekunde je 10 s; sichtbar und unter 40 -> "Ruckeln" (normal 50-60).
+let fpsBilder = 0, fpsSeit = performance.now();
+function fpsZaehlen(raf) {
+  fpsBilder++;
+  if (raf - fpsSeit < 10000) return;
+  const fps = fpsBilder * 1000 / (raf - fpsSeit);
+  fpsBilder = 0; fpsSeit = raf;
+  if (tv && document.visibilityState === 'visible' && fps < 40) melden('Ruckeln', 'DJ-Studio unter 40 Bilder/s');
 }
 // TV: schnelle Bildschirme (ueber 75 Hz, z. B. 100 Hz) nur jedes zweite Bild zeichnen - der Browser
 // schaffte dort nicht jedes Bild, die Abstaende wechselten 10/20 ms und die Welle ruckelte
@@ -138,6 +157,7 @@ function sicher(name, f) {
 let bildAbstand = 1 / 60, ungerade = false, letzterRaf = 0;
 function frame(raf) {
   requestAnimationFrame(frame);       // zuerst: ein Fehler unten stoppt die Anzeige nicht
+  fpsZaehlen(raf);
   if (letzterRaf && raf - letzterRaf < 50) bildAbstand += ((raf - letzterRaf) / 1000 - bildAbstand) * 0.05;
   letzterRaf = raf;
   if (tv && bildAbstand < 1 / 75 && (ungerade = !ungerade)) return;
