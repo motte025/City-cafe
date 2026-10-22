@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-22T09:52:47Z",
+  "checked_at": "2026-10-22T10:07:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🎪 CLOWN DJ QUEEN LIVE🔥 PP 69/100 2nd month!🎶!youtube  !huambo |  !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
