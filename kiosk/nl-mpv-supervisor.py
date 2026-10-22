@@ -998,9 +998,143 @@ def ton_laden(vid, audio_url):
     threading.Thread(target=lauf, daemon=True).start()
 
 
+# Zwischenhaendler fuer YouTube-Stroeme (22.10.2026): YouTube drosselt einzelne Verbindungen zeitweise
+# auf ~100 KB/s (yt-dlp meldet ein "GVS PO Token"-Experiment fuer web_creator; seit wann es uns trifft,
+# ist nicht belegt - die Haenger haeuften sich ab 21.10.) - mpv/ffmpeg
+# lesen den Strom in einem Stueck und bekamen zu wenig (Haenger). Kurze Bereichsanfragen sind schnell
+# (yt-dlp laedt so mit >2,8 MB/s). mpv bekommt deshalb http://127.0.0.1:8092/s/<n>; hier wird der
+# Strom in 512-KB-Stuecken geholt, 8 gleichzeitig im Voraus.
+# Bereichsanfragen von mpv (Springen, Start mitten im Video) werden durchgereicht.
+STROM_PORT = 8092
+STROM_STUECK = 512 * 1024
+STROM_PARALLEL = 8         # so viele Stuecke gleichzeitig unterwegs (gemessen 22.10.: gedrosselt
+                           # direkt 0,11-0,13 MB/s, so 1,5-3,8 MB/s; 1080p braucht ~0,5-0,75)
+STROEME = {}               # Nummer -> (url, Laenge oder None)
+STROM_ZAEHLER = [0]
+STROM_UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0 Safari/537.36"
+
+
+def ueber_zwischenhaendler(url):
+    """googlevideo-Adresse -> Adresse beim Zwischenhaendler (andere Adressen/Dateien unveraendert)."""
+    if not url or "googlevideo.com/" not in url:
+        return url
+    m = re.search(r"[?&]clen=(\d+)", url)
+    STROM_ZAEHLER[0] += 1
+    nr = str(STROM_ZAEHLER[0])
+    STROEME[nr] = (url, int(m.group(1)) if m else None)
+    for alt in list(STROEME)[:-60]:
+        STROEME.pop(alt, None)
+    return f"http://127.0.0.1:{STROM_PORT}/s/{nr}"
+
+
+def strom_stueck(url, von, bis):
+    """Ein Stueck bei YouTube holen -> (bytes, Gesamtlaenge oder None)."""
+    req = urllib.request.Request(url, headers={"Range": f"bytes={von}-{bis}", "User-Agent": STROM_UA})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        daten = r.read()
+        m = re.search(r"/(\d+)$", r.headers.get("Content-Range") or "")
+        return daten, (int(m.group(1)) if m else None)
+
+
+def strom_server():
+    import http.server
+
+    class Strom(http.server.BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
+        def log_message(self, *a):
+            pass
+
+        def do_HEAD(self):
+            self.antworten(nur_kopf=True)
+
+        def do_GET(self):
+            self.antworten(nur_kopf=False)
+
+        def antworten(self, nur_kopf):
+            eintrag = STROEME.get(self.path.rsplit("/", 1)[-1])
+            if not eintrag:
+                self.send_error(404)
+                return
+            url, gesamt = eintrag
+            von, bis = 0, None
+            m = re.match(r"bytes=(\d*)-(\d*)", self.headers.get("Range") or "")
+            if m and m.group(1):
+                von = int(m.group(1))
+                bis = int(m.group(2)) if m.group(2) else None
+            try:
+                if gesamt is None:                      # Laenge unbekannt: mit dem ersten Stueck holen
+                    erstes, gesamt = strom_stueck(url, von, von + STROM_STUECK - 1)
+                else:
+                    erstes = None
+            except (OSError, ValueError) as e:
+                log(f"Zwischenhaendler: YouTube antwortet nicht ({e})")
+                self.send_error(502)
+                return
+            if gesamt is None or von >= gesamt:
+                self.send_error(416)
+                return
+            bis = gesamt - 1 if bis is None or bis >= gesamt else bis
+            self.send_response(206 if m else 200)
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Content-Type", "application/octet-stream")
+            self.send_header("Content-Length", str(bis - von + 1))
+            if m:
+                self.send_header("Content-Range", f"bytes {von}-{bis}/{gesamt}")
+            self.end_headers()
+            if nur_kopf:
+                return
+            # Stuecke (1 MB) holen, STROM_PARALLEL gleichzeitig im Voraus - ein gebremstes Stueck haelt
+            # die anderen nicht auf - und der Reihe nach ausliefern.
+            def holen(a):
+                b = min(a + STROM_STUECK - 1, bis)
+                ergebnis = {"von": a}
+
+                def lauf():
+                    for _ in range(3):
+                        try:
+                            ergebnis["daten"] = strom_stueck(url, a, b)[0]
+                            return
+                        except (OSError, ValueError) as e:
+                            ergebnis["fehler"] = e
+                ergebnis["faden"] = threading.Thread(target=lauf, daemon=True)
+                ergebnis["faden"].start()
+                return ergebnis
+
+            schlange, naechstes = [], von
+            if erstes is not None:
+                schlange.append({"von": von, "daten": erstes[:bis - von + 1]})
+                naechstes = von + len(schlange[0]["daten"])
+            pos = von
+            try:
+                while pos <= bis:
+                    while len(schlange) < STROM_PARALLEL and naechstes <= bis:
+                        schlange.append(holen(naechstes))
+                        naechstes = min(naechstes + STROM_STUECK, bis + 1)
+                    jetzt = schlange.pop(0)
+                    if "faden" in jetzt:
+                        jetzt["faden"].join()
+                    daten = jetzt.get("daten")
+                    if not daten:
+                        log(f"Zwischenhaendler: Stueck ab {pos} fehlt ({jetzt.get('fehler')})")
+                        return
+                    self.wfile.write(daten)
+                    pos += len(daten)
+            except (BrokenPipeError, ConnectionResetError):
+                pass                                    # mpv springt oder ist fertig: normal
+
+    try:
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", STROM_PORT), Strom)
+    except OSError as e:
+        log(f"Zwischenhaendler: Port {STROM_PORT} nicht frei ({e})")
+        return
+    server.daemon_threads = True
+    server.serve_forever()
+
+
 def ton_quelle(vid, audio_url):
-    """Fuer mpv --audio-file: der geladene Ton, sonst wie bisher der Strom."""
-    return ton_datei(vid) or audio_url
+    """Fuer mpv --audio-file: der geladene Ton, sonst der Strom (ueber den Zwischenhaendler)."""
+    return ton_datei(vid) or ueber_zwischenhaendler(audio_url)
 
 
 def suchen(text, anzahl=None):
@@ -3056,6 +3190,7 @@ def main():
     naechste_tmp_pruefung = 0.0
     fortsetzen = {}       # nach einem Haenger: {"key", "pos"} fuer den Neustart, "versucht": {key: Zeit}
     threading.Thread(target=seite_server, daemon=True).start()        # Notfall-Kopie ausliefern
+    threading.Thread(target=strom_server, daemon=True).start()        # Zwischenhaendler fuer YouTube
     # (Notfall-Kopie: frischt der taegliche Repo-Schritt auf, 2 min nach dem Start - nicht doppelt hier)
     seite_pruefung = 0.0  # wann zuletzt nachgesehen wurde, ob die Notfall-Kopie laeuft
     ueberw_zeit = {"tv": 0.0, "system": 0.0}
@@ -3879,7 +4014,7 @@ def main():
                 if audio_url:
                     xf_args.append(f"--audio-file={ton_quelle(n_vid, audio_url)}")
                 xf_args.append("--cache-pause=no")     # Bild stockt -> Musik laeuft weiter
-                xf_args.append(video_url)
+                xf_args.append(ueber_zwischenhaendler(video_url))
                 try:
                     os.remove(MPV_SOCK_XF)
                 except OSError:
@@ -4017,10 +4152,10 @@ def main():
                     args += seiten_blur_args(schluessel)   # 4:3/Hochformat: Seiten fuellen
                     blur_an = "yt:" + schluessel
                 if audio_url:
-                    args.append(f"--audio-file={ton_quelle(schluessel, audio_url) if musik else audio_url}")
+                    args.append(f"--audio-file={ton_quelle(schluessel, audio_url) if musik else ueber_zwischenhaendler(audio_url)}")
                 if musik:
                     args.append("--cache-pause=no")     # Bild stockt -> Musik laeuft weiter
-                args.append(video_url)
+                args.append(ueber_zwischenhaendler(video_url))
                 mpv = subprocess.Popen(args, env=env, preexec_fn=mpv_dies_with_us)
                 log(f"Auftritt: {schluessel} ab {start}s"
                     + (" (Musik)" if musik else "")

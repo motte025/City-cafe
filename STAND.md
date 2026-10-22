@@ -62,6 +62,21 @@ Im Log vom Abend standen drei Fehler:
 
 Kommt mit dem Update am 23.10. um 8:30 auf den W1.
 
+### Zwischenhändler für YouTube-Ströme (22.10. spät)
+
+Gemessen am W1: Die Internetleitung schafft ~30 MB/s, YouTube liefert eine einzelne Verbindung aber
+zeitweise nur mit ~0,1 MB/s (1080p braucht 0,5–0,75 MB/s). Das wechselt je Verbindung und Zeitpunkt:
+dasselbe Video kam mal mit 8 MB/s, mal mit 0,11 MB/s. yt-dlp meldet dazu "Detected experiment to bind
+GVS PO Token to video ID for web_creator client". Laut yt-dlp-Wiki gibt es das Experiment seit ca.
+Oktober 2025. Dass es die Hänger ab 21.10. verursacht, ist **nicht belegt**, nur wahrscheinlich.
+- **`strom_server`** (127.0.0.1:8092): mpv bekommt statt der googlevideo-Adresse
+  `http://127.0.0.1:8092/s/<n>` (`ueber_zwischenhaendler`). Der Supervisor holt in 512-KB-Stücken, 8
+  gleichzeitig, mit Range-Header und reicht Sprünge von mpv durch. Gemessen im gedrosselten Fall:
+  direkt 0,11–0,13 MB/s, so 1,5–3,8 MB/s. mpv spielt damit auch ab einer Stelle mitten im Video.
+- Gilt für Musik und Rotation, Bild und Ton (der Ton kommt bei Musik meist ohnehin von der Platte).
+- Langfristig sauberer wäre ein PO-Token-Anbieter (bgutil-ytdlp-pot-provider), der ist aber ein
+  fremdes Programm.
+
 ### Hänger: Ursache gefunden, Ton jetzt von der Platte (22.10. abends)
 
 Um 20:52 gab es wieder einen Hänger (`uvIuAHsfNdc` bei 12,8 s). Im gesicherten mpv-Log stand diesmal
