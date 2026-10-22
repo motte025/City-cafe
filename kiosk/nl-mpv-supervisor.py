@@ -2356,6 +2356,7 @@ def daten_ins_repo():
         raise RuntimeError("push dreimal abgelehnt")
     except (OSError, RuntimeError, subprocess.SubprocessError) as e:
         log(f"Repo-Daten: nicht hochgeladen ({e})")
+        REPO_STAND["zeit"] = time.time() - REPO_ALLE_SEK + 900   # z. B. Netz nach dem Start noch nicht da: in 15 min
 
 
 def repo_runde(versuch):
