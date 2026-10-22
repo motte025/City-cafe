@@ -2961,7 +2961,8 @@ def main():
                 and not (musik and (xf is not None or (analyse_arbeiter is not None and analyse_arbeiter.is_alive())))
                 and not (spur_arbeiter is not None and spur_arbeiter.is_alive())):
             vormessen["naechste"] = time.time() + pause
-            if time.time() - vormessen["zeit"] > 600:          # Liste alle 10 min frisch von der Seite
+            # Liste alle 10 min frisch von der Seite - leer (Seite nach dem Start noch nicht so weit): gleich wieder
+            if not vormessen["liste"] or time.time() - vormessen["zeit"] > 600:
                 try:
                     ids = json.loads(cdp_eval(page_id, VORMESS_EXPR) or "[]")
                     vormessen["liste"] = [str(v) for v in ids if re.fullmatch(r"[A-Za-z0-9_-]{11}", str(v))]
