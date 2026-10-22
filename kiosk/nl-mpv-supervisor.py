@@ -952,7 +952,11 @@ TON_LAEDT = set()
 def ton_datei(vid):
     """Fertig geladener Ton eines Songs oder None."""
     for p in glob.glob(os.path.join(TON_ORDNER, vid + ".*")):
-        if not p.endswith((".part", ".ytdl", ".tmp")) and os.path.getsize(p) > 100_000:
+        # nur die fertige Datei: nicht .part (Download) und nicht .temp.* (yt-dlp korrigiert den
+        # Container danach noch in eine Zwischendatei)
+        name = os.path.basename(p)
+        if (not name.endswith((".part", ".ytdl", ".tmp")) and ".temp." not in name and ".part-" not in name
+                and os.path.getsize(p) > 100_000):
             return p
     return None
 
