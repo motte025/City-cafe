@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-22T15:27:45Z",
+  "checked_at": "2026-10-22T15:42:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -28,13 +28,6 @@
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #616 with Igor Garanin (Live at Explorations)",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
     }
   ]
 }
