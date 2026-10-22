@@ -2078,6 +2078,7 @@ SPUR_VERSION = 3           # hochzaehlen, wenn sich Messung/Format aendern (alte
 # Standard an (Betreiber 19.10.2026, wichtig fuer den W1); abschalten mit CITYCAFE_VORMESSEN=0.
 VORMESSEN = os.environ.get("CITYCAFE_VORMESSEN", "1") != "0"
 VORMESS_PAUSE = 15
+VORMESS_PAUSE_MUSIK = 45   # bei Musik: Pause zwischen zwei Songs
 VORMESS_FEHLER_PAUSE = 3600
 VORMESS_EXPR = """JSON.stringify((() => { try { const ids = new Set();
   Object.values(ytmListenInhalt || {}).forEach(l => (l || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
@@ -2952,9 +2953,13 @@ def main():
             REPO_STAND["thread"].start()
 
         # Vormessen der Playlists: nur ohne Musik, ein Song nach dem anderen.
-        if (VORMESSEN and not musik and page_id and time.time() >= vormessen["naechste"]
+        # Seit 22.10.2026 auch bei Musik (Betreiber), dann langsamer, nie waehrend einer Blende und erst,
+        # wenn die naechsten Songs der Schlange gemessen sind (Analyse-Arbeiter frei).
+        pause = VORMESS_PAUSE_MUSIK if musik else VORMESS_PAUSE
+        if (VORMESSEN and page_id and time.time() >= vormessen["naechste"]
+                and not (musik and (xf is not None or (analyse_arbeiter is not None and analyse_arbeiter.is_alive())))
                 and not (spur_arbeiter is not None and spur_arbeiter.is_alive())):
-            vormessen["naechste"] = time.time() + VORMESS_PAUSE
+            vormessen["naechste"] = time.time() + pause
             if time.time() - vormessen["zeit"] > 600:          # Liste alle 10 min frisch von der Seite
                 try:
                     ids = json.loads(cdp_eval(page_id, VORMESS_EXPR) or "[]")
@@ -2990,7 +2995,7 @@ def main():
                         stille_messen(vid, urls[0], urls[2])
                         if not stille_von_platte(vid):
                             vormessen["fehl"][vid] = time.time()   # in 6 h noch einmal
-                    vormessen["naechste"] = time.time() + VORMESS_PAUSE   # Pause ab Ende der Messung
+                    vormessen["naechste"] = time.time() + pause   # Pause ab Ende der Messung
                     vormessen["erledigt"] += 1
                     if vormessen["erledigt"] % 10 == 1:
                         log(f"Vormessen: {gesamt - rest + 1} von {gesamt} Playlist-Songs gemessen")

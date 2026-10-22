@@ -72,7 +72,9 @@ ins Repo hoch:
   `~/modell-holen.sh` versucht es alle 5 min, höchstens 12 h lang; das Ergebnis steht in
   `~/beat-modell.log`.
 - **Vormessen misst jetzt auch Lautheit, Intro und Ende** (`stille_messen`), nicht nur
-  Welle/BPM/Takt, und zwar für alle Playlist-Songs, nur ohne Musik. Vorher waren nur 65 von 701
+  Welle/BPM/Takt, und zwar für alle Playlist-Songs. Seit 22.10. abends auch während Musik (Betreiber):
+  dann 45 s Pause zwischen zwei Songs, nie während einer Blende und erst, wenn die nächsten Songs
+  der Schlange gemessen sind. Vorher waren nur 65 von 701
   gemessen, der Rest erst kurz vor dem Abspielen. Am 21.10. kam die Messung zweimal zu spät, und
   der Song startete mit falscher Lautstärke.
 - **Upload ins Repo** (`daten_ins_repo`, nur ohne Musik, höchstens alle 6 h):
