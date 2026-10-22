@@ -2521,7 +2521,7 @@ REPO_KEY = os.path.expanduser("~/.ssh/citycafe-repo")
 REPO_ORDNER = os.path.expanduser("~/.cache/citycafe/repo")
 REPO_URL = "git@github.com:motte025/City-cafe.git"
 REPO_AB = "08:30"          # einmal am Tag, ab dieser Uhrzeit (nach dem naechtlichen Update)
-REPO_STAND = {"tag": "", "zeit": 0.0, "thread": None}
+REPO_STAND = {"tag": "", "zeit": time.time() + 120, "thread": None}   # nach dem Start erst Netz abwarten
 
 
 def git(*args, pruefen=True, ordner=REPO_ORDNER):
@@ -2977,7 +2977,7 @@ def main():
     naechste_tmp_pruefung = 0.0
     fortsetzen = {}       # nach einem Haenger: {"key", "pos"} fuer den Neustart, "versucht": {key: Zeit}
     threading.Thread(target=seite_server, daemon=True).start()        # Notfall-Kopie ausliefern
-    threading.Thread(target=seite_aktualisieren, daemon=True).start()
+    threading.Thread(target=lambda: (time.sleep(120), seite_aktualisieren()), daemon=True).start()   # Netz abwarten
     seite_pruefung = 0.0  # wann zuletzt nachgesehen wurde, ob die Notfall-Kopie laeuft
     ueberw_zeit = {"tv": 0.0, "system": 0.0}
 
