@@ -2608,6 +2608,7 @@ def daten_ins_repo():
     Push abgelehnt (jemand war schneller): alles noch einmal auf dem neuen Stand von main."""
     if not os.path.exists(REPO_KEY):
         return
+    git_sperren_weg(REPO_ORDNER)
     try:
         if not os.path.isdir(os.path.join(REPO_ORDNER, ".git")):
             git("clone", "--depth", "1", "--filter=blob:none", "--sparse", REPO_URL, REPO_ORDNER)
@@ -2705,7 +2706,18 @@ SEITE_LOKAL = f"http://127.0.0.1:{SEITE_PORT}/"
 SEITE_PAGES = "https://motte025.github.io/City-cafe/"
 
 
+def git_sperren_weg(ordner):
+    """Liegengebliebene git-Sperren (W1 mitten im fetch neu gestartet) entfernen, wenn aelter als 10 min."""
+    for p in glob.glob(os.path.join(ordner, ".git", "*.lock")):
+        try:
+            if time.time() - os.path.getmtime(p) > 600:
+                os.remove(p)
+        except OSError:
+            pass
+
+
 def seite_aktualisieren():
+    git_sperren_weg(SEITE_ORDNER)
     try:
         if not os.path.isdir(os.path.join(SEITE_ORDNER, ".git")):
             git("clone", "-q", "--depth", "1", SEITE_URL, SEITE_ORDNER)
@@ -3044,7 +3056,7 @@ def main():
     naechste_tmp_pruefung = 0.0
     fortsetzen = {}       # nach einem Haenger: {"key", "pos"} fuer den Neustart, "versucht": {key: Zeit}
     threading.Thread(target=seite_server, daemon=True).start()        # Notfall-Kopie ausliefern
-    threading.Thread(target=lambda: (time.sleep(120), seite_aktualisieren()), daemon=True).start()   # Netz abwarten
+    # (Notfall-Kopie: frischt der taegliche Repo-Schritt auf, 2 min nach dem Start - nicht doppelt hier)
     seite_pruefung = 0.0  # wann zuletzt nachgesehen wurde, ob die Notfall-Kopie laeuft
     ueberw_zeit = {"tv": 0.0, "system": 0.0}
     stocken = {}          # Musik: {"t", "pos"} - Messfenster, ob in 8 s genug gespielt wurde
