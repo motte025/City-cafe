@@ -1,4 +1,12 @@
 {
-  "checked_at": "2026-10-22T08:32:45Z",
-  "live": []
+  "checked_at": "2026-10-22T08:52:46Z",
+  "live": [
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    }
+  ]
 }
