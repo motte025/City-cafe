@@ -23,7 +23,7 @@ import { state, bestaetigen } from './store.js';
 // Ueberblendung wie im Supervisor (seit 21.10.2026 fest 9 s, genau berechnet): der Ton wechselt
 // in XF_TON_FENSTER_SEK ab dem Musikanfang des neuen Songs (dann endet die Musik des alten) -
 // genau dann faehrt der Crossfader. Der Songwechsel kommt, wenn der neue Song losgeht.
-const XF_TON_FENSTER_SEK = 2.0;
+const XF_TON_FENSTER_SEK = 0.5;     // wie im Supervisor (22.10.2026: 0,5 statt 2 s)
 const xfSek = 9;             // Notbremse: so lange laeuft der alte Song hoechstens aus
 const SPRUNG_SEK = 0.8;      // ab dieser Abweichung die Position sofort neu setzen,
                              // kleinere holt takt() weich auf (Jogwheel ruckelt nicht)

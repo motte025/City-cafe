@@ -62,6 +62,14 @@ Im Log vom Abend standen drei Fehler:
 
 Kommt mit dem Update am 23.10. um 8:30 auf den W1.
 
+### Ton-Fenster der Überblendung 0,5 statt 2 s (22.10. spät, Betreiber)
+
+Der Betreiber hörte den neuen Song 1,5–2 s zu früh. Das lag am Design: `XF_TON_FENSTER_SEK = 2.0`, der neue
+Song hatte also 2 s vor dem Musikende des alten schon seine volle Musik (equal power, nach 0,5 s schon
+~40 % laut), und die letzten Töne des alten gingen unter. Im Log zu sehen als `alt bei 241.16s
+(Musikende 243.0s)`. Jetzt **0,5 s** in `kiosk/nl-mpv-supervisor.py` und `dj-studio/js/tv.js`
+(Crossfader-Anzeige). Das Bild blendet weiter über 9 s.
+
 ### Zwischenhändler für YouTube-Ströme (22.10. spät)
 
 Gemessen am W1: Die Internetleitung schafft ~30 MB/s, YouTube liefert eine einzelne Verbindung aber

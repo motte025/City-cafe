@@ -127,7 +127,9 @@ MPV_SOCK_XF = "/tmp/mpv-nl-xf.sock"
 # Der neue mpv startet XF_VORLAUF_SEK frueher angehalten und wird sekundengenau losgelassen -
 # seine Ladezeit (1-3 s, selten mehr) verschiebt den Punkt nicht mehr.
 XF_SEK = 9
-XF_TON_FENSTER_SEK = 2.0   # so lange wechselt der Ton (equal power, siehe ueberblenden)
+# 0,5 statt 2 s (Betreiber 22.10.2026): mit 2 s war der neue Song 1,5-2 s vor dem Ende des alten
+# deutlich zu hoeren, die letzten Toene des alten gingen im Ausblenden unter.
+XF_TON_FENSTER_SEK = 0.5   # so lange wechselt der Ton (equal power, siehe ueberblenden)
 XF_VORLAUF_SEK = 6         # so viel frueher wird der neue Song angehalten geladen
 XF_START_FRIST = 15        # so lange darf der neue mpv bis zum ersten Bild brauchen (vorher 6)
 MPV_APP = {"id": "mpv"}
