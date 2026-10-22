@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-22T19:07:45Z",
+  "checked_at": "2026-10-22T19:13:04Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "roice",
       "name": "roice",
       "title": "officer roice, reporting for tunies 🚔🚨  !bewbs !wishlist !morestreams !ALT",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
