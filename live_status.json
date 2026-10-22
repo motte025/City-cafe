@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-22T15:22:46Z",
+  "checked_at": "2026-10-22T15:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -26,8 +26,15 @@
       "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
-      "title": "Above & Beyond Group Therapy #698 with Super8 & Tab",
+      "title": "The Anjunadeep Edition #616 with Igor Garanin (Live at Explorations)",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
     }
   ]
 }
