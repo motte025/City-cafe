@@ -44,9 +44,10 @@ Die Überblendungen am Abend waren sauber (Tonwechsel ≤ 0,15 s neben dem Musik
 die Endstufe +3 dB und der Abgleich der Welle (Aufgabe 2).
 
 Im Log vom Abend standen drei Fehler:
-- **Songs „im Kreis“:** Die Playlist wurde 4× gestartet (16:03, 16:13, 18:13, 21:25) und kam jedes
-  Mal ab Nr. 1 in derselben Reihenfolge. **Jetzt wird beim Start gemischt**
-  (`ytmPlaylistEinreihen`, nur `art === 'start'` ohne „Ab hier“; Anhängen bleibt in Reihenfolge).
+- **Songs „im Kreis“:** Der Betreiber hat die Playlist 4× gestartet (16:03, 16:13, 18:13, 21:25),
+  und sie kam jedes Mal ab Nr. 1 in derselben Reihenfolge. **So gewollt, nicht automatisch
+  mischen.** Der Betreiber ordnet die Playlists selbst, gemischt wird nur mit der Taste in der
+  Fernbedienung. (Das Mischen beim Start aus 8104b818 ist wieder raus.)
 - **mpv hing zweimal** (20:57 bei 61 s, 21:21 bei 27 s). Danach kam der Browser-Player, ~30 s
   Stille und ein Sprung zum nächsten Song; um 21:21 folgte am Handy ein Durcheinander bis zum
   Neustart der Playlist. Die Ursache steht nicht im Log, im Systemlog gibt es nichts
