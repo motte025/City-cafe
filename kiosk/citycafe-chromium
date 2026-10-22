@@ -39,6 +39,26 @@ EXT=""
 for e in /opt/citycafe/twitch-autostart /opt/citycafe/h264-force /opt/citycafe/youtube-kiosk-ui; do
   if [ -d "$e" ]; then EXT="${EXT:+$EXT,}$e"; fi
 done
+# Notfall-Kopie (22.10.2026): ist GitHub Pages beim Start ~30 s lang nicht erreichbar (Internet
+# im Cafe weg, GitHub gestoert), die Kopie der Seite nehmen, die der Supervisor auf dem W1 selbst
+# ausliefert (~/.cache/citycafe/seite auf 127.0.0.1:8090). Kommt das Netz wieder, wechselt der
+# Supervisor ohne Musik von selbst zurueck. Nicht bei einer eigenen CITYCAFE_URL.
+BASIS="${CITYCAFE_URL:-https://motte025.github.io/City-cafe/}"
+if [ -z "${CITYCAFE_URL:-}" ] && [ -f /home/citycafe/.cache/citycafe/seite/index.html ]; then
+  n=0
+  until curl -fsI --max-time 5 https://motte025.github.io/City-cafe/ >/dev/null 2>&1; do
+    n=$((n + 1))
+    if [ "$n" -ge 5 ]; then
+      i=0
+      until curl -fsI --max-time 2 http://127.0.0.1:8090/ >/dev/null 2>&1 || [ "$i" -ge 15 ]; do
+        i=$((i + 1)); sleep 2
+      done
+      BASIS="http://127.0.0.1:8090/"
+      break
+    fi
+    sleep 3
+  done
+fi
 # Ein 4K-Desktop macht Browser-Video ohne Hardware-Decoder unnoetig teuer.
 wlr-randr --output "$OUTPUT" --mode 1920x1080@60Hz || true
 # shellcheck disable=SC2086
@@ -46,7 +66,7 @@ exec chromium \
   ${CITYCAFE_CHROMIUM_EXTRA:-} \
   --ozone-platform=wayland \
   ${EXT:+--load-extension=$EXT} \
-  --app="${CITYCAFE_URL:-https://motte025.github.io/City-cafe/}?kiosk=1&raum=${RAUM}${BOXNAME:+&boxname=$BOXNAME}${CITYCAFE_URL_EXTRA:-}&_t=${CACHEBUST}" \
+  --app="${BASIS}?kiosk=1&raum=${RAUM}${BOXNAME:+&boxname=$BOXNAME}${CITYCAFE_URL_EXTRA:-}&_t=${CACHEBUST}" \
   --disable-features=Translate,MediaRouter,OptimizationHints,AutofillServerCommunication,BackForwardCache \
   --disable-background-networking \
   --disable-sync \

@@ -62,6 +62,25 @@ Im Log vom Abend standen drei Fehler:
 
 Kommt mit dem Update am 23.10. um 8:30 auf den W1.
 
+### Notfall-Kopie der TV-Seite auf dem W1 (22.10. abends)
+
+Bisher kam die ganze TV-Seite aus dem Internet (GitHub Pages). Ein Neustart ohne Internet hätte einen
+leeren Bildschirm gebracht. Jetzt gibt es eine Notfall-Kopie:
+- Der Supervisor hält **das ganze Repo als Kopie** in `~/.cache/citycafe/seite` (~210 MB, depth 1,
+  öffentlich ohne Key). Er frischt sie beim Start und einmal am Tag ab 8:30 auf, zusammen mit dem
+  Messdaten-Upload, und liefert sie auf **127.0.0.1:8090** aus (`seite_server`, nur lokal).
+- `kiosk/citycafe-chromium` prüft beim Start bis zu ~30 s, ob GitHub Pages erreichbar ist. Wenn nicht
+  und die Kopie da ist, startet er `http://127.0.0.1:8090/?kiosk=1…`. Mit eigener `CITYCAFE_URL` passiert
+  das nie.
+- Läuft die Kopie und ist GitHub Pages wieder erreichbar, wechselt der Supervisor ohne Musik von selbst
+  zurück (`seite_zurueck`, Prüfung alle 2 min). Im Log steht dann „Notfall-Kopie: GitHub Pages wieder
+  erreichbar“.
+- Getestet am 22.10.: die Kopie auf dem W1 angelegt (5 s) und ausgeliefert (Seite, Skin, Playlists).
+  Die Seite aus einer lokalen Kopie startet fehlerfrei. Musik von YouTube braucht natürlich trotzdem
+  Internet.
+- Einstellungen im Browser-Speicher (localStorage, z. B. `studioVorlauf`) gelten je Adresse. In der
+  Kopie gelten also die Standardwerte.
+
 ### Der W1 kümmert sich selbst um seine Daten (22.10. nachmittags, Betreiber)
 
 **Der PC zuhause rechnet nichts mehr für das Café.** Der W1 misst alles selbst und lädt es nebenbei

@@ -2337,12 +2337,12 @@ REPO_AB = "08:30"          # einmal am Tag, ab dieser Uhrzeit (nach dem naechtli
 REPO_STAND = {"tag": "", "zeit": 0.0, "thread": None}
 
 
-def git(*args, pruefen=True):
+def git(*args, pruefen=True, ordner=REPO_ORDNER):
     env = {**os.environ, "GIT_SSH_COMMAND": f"ssh -i {REPO_KEY} -o IdentitiesOnly=yes "
                                              "-o StrictHostKeyChecking=accept-new -o BatchMode=yes",
            "GIT_AUTHOR_NAME": "City-Cafe W1", "GIT_AUTHOR_EMAIL": "w1@city-cafe.invalid",
            "GIT_COMMITTER_NAME": "City-Cafe W1", "GIT_COMMITTER_EMAIL": "w1@city-cafe.invalid"}
-    r = subprocess.run(["git", "-C", REPO_ORDNER, *args] if os.path.isdir(REPO_ORDNER) and args[0] != "clone"
+    r = subprocess.run(["git", "-C", ordner, *args] if os.path.isdir(ordner) and args[0] != "clone"
                        else ["git", *args], env=env, capture_output=True, text=True, timeout=600)
     if pruefen and r.returncode != 0:
         raise RuntimeError(f"git {args[0]}: {(r.stderr or r.stdout).strip()[-300:]}")
@@ -2414,6 +2414,78 @@ def repo_runde(versuch):
             return False
         log(f"Repo-Daten: {n_takt} Takt-Dateien, {n_mess} Messwerte hochgeladen")
         return True
+
+
+# Notfall-Kopie der TV-Seite (22.10.2026, Betreiber): ganzes Repo als Kopie auf dem W1, hier auf
+# 127.0.0.1:8090 ausgeliefert. Der Chromium-Starter nimmt sie, wenn GitHub Pages beim Start nicht
+# erreichbar ist; kommt das Netz wieder, schaltet seite_zurueck() ohne Musik auf GitHub Pages.
+# Aufgefrischt beim Start und einmal am Tag mit den Messdaten (oeffentliches Repo, ohne Key).
+SEITE_ORDNER = os.path.expanduser("~/.cache/citycafe/seite")
+SEITE_URL = "https://github.com/motte025/City-cafe.git"
+SEITE_PORT = 8090
+SEITE_LOKAL = f"http://127.0.0.1:{SEITE_PORT}/"
+SEITE_PAGES = "https://motte025.github.io/City-cafe/"
+
+
+def seite_aktualisieren():
+    try:
+        if not os.path.isdir(os.path.join(SEITE_ORDNER, ".git")):
+            git("clone", "-q", "--depth", "1", SEITE_URL, SEITE_ORDNER)
+            log(f"Notfall-Kopie angelegt ({SEITE_ORDNER})")
+            return True
+        git("fetch", "-q", "--depth", "1", "origin", "main", ordner=SEITE_ORDNER)
+        git("reset", "-q", "--hard", "FETCH_HEAD", ordner=SEITE_ORDNER)
+        return True
+    except (OSError, RuntimeError, subprocess.SubprocessError) as e:
+        log(f"Notfall-Kopie nicht aufgefrischt ({e})")
+        return False
+
+
+def seite_server():
+    """Notfall-Kopie auf 127.0.0.1 ausliefern (eigener Thread, laeuft immer)."""
+    import functools
+    import http.server
+
+    class Leise(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+
+        def end_headers(self):
+            self.send_header("Cache-Control", "no-store")
+            super().end_headers()
+
+    os.makedirs(SEITE_ORDNER, exist_ok=True)
+    try:
+        server = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", SEITE_PORT), functools.partial(Leise, directory=SEITE_ORDNER))
+    except OSError as e:
+        log(f"Notfall-Kopie: Port {SEITE_PORT} nicht frei ({e})")
+        return
+    server.daemon_threads = True
+    server.serve_forever()
+
+
+def pages_erreichbar():
+    try:
+        with urllib.request.urlopen(urllib.request.Request(SEITE_PAGES, method="HEAD"), timeout=5) as r:
+            return r.status == 200
+    except (OSError, ValueError):
+        return False
+
+
+def seite_zurueck(page_id):
+    """Laeuft die Notfall-Kopie und ist GitHub Pages wieder da: auf die normale Seite wechseln."""
+    try:
+        with urllib.request.urlopen(f"http://{CDP_HOST}:{CDP_PORT}/json", timeout=5) as r:
+            url = next((t.get("url", "") for t in json.load(r) if t.get("id") == page_id), "")
+    except (OSError, ValueError):
+        return
+    if not url.startswith(SEITE_LOKAL) or not pages_erreichbar():
+        return
+    abfrage = re.sub(r"([?&])_t=\d+", r"\1", url.split("?", 1)[1] if "?" in url else "").strip("&")
+    neu = SEITE_PAGES + "?" + abfrage + ("&" if abfrage else "") + f"_t={int(time.time())}"
+    log("Notfall-Kopie: GitHub Pages wieder erreichbar - zurueck auf die normale Seite")
+    cdp_eval(page_id, f"location.href = {json.dumps(neu)}; 1")
 
 
 def takt_rechnen(vid, audio_url):
@@ -2688,6 +2760,9 @@ def main():
     letzter_neustart = 0.0
     naechste_tmp_pruefung = 0.0
     fortsetzen = {}       # nach einem Haenger: {"key", "pos"} fuer den Neustart, "versucht": {key: Zeit}
+    threading.Thread(target=seite_server, daemon=True).start()        # Notfall-Kopie ausliefern
+    threading.Thread(target=seite_aktualisieren, daemon=True).start()
+    seite_pruefung = 0.0  # wann zuletzt nachgesehen wurde, ob die Notfall-Kopie laeuft
 
     def blocked(key):
         frist = CAM_RETRY_AFTER if key.startswith("cam:") else RETRY_FAILED_AFTER
@@ -2956,6 +3031,11 @@ def main():
             for alt in list(SPUREN)[:-24]:
                 SPUREN.pop(alt, None)
 
+        # Notfall-Kopie aktiv? Alle 2 min, ohne Musik: ist GitHub Pages wieder da, dorthin wechseln.
+        if page_id and not musik and time.time() - seite_pruefung >= 120:
+            seite_pruefung = time.time()
+            threading.Thread(target=seite_zurueck, args=(page_id,), daemon=True).start()
+
         # Messdaten ins Repo: einmal am Tag, morgens nach dem Update (ab 8:30, Betreiber 22.10.2026),
         # eigener Thread (git braucht Sekunden). Fehlschlag (Netz noch nicht da): in 15 min wieder.
         heute = time.strftime("%Y-%m-%d")
@@ -2963,7 +3043,8 @@ def main():
                 and time.time() >= REPO_STAND["zeit"]
                 and not (REPO_STAND["thread"] is not None and REPO_STAND["thread"].is_alive())):
             REPO_STAND["zeit"] = time.time() + 900
-            REPO_STAND["thread"] = threading.Thread(target=daten_ins_repo, daemon=True)
+            REPO_STAND["thread"] = threading.Thread(target=lambda: (seite_aktualisieren(), daten_ins_repo()),
+                                                    daemon=True)
             REPO_STAND["thread"].start()
 
         # Vormessen der Playlists: nur ohne Musik, ein Song nach dem anderen.
