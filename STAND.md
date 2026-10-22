@@ -62,6 +62,15 @@ Im Log vom Abend standen drei Fehler:
 
 Kommt mit dem Update am 23.10. um 8:30 auf den W1.
 
+### Wetter-Widgets bei Gewitter (22.10. abends)
+
+Großes Wetter-Widget (Rotation) und kleines (rechts oben) zeigen bei Gewitter (Open-Meteo-Code 95/96/99)
+ziehende, blaugraue Gewitterwolken mit verästelten Blitzen, die die Wolken aufleuchten lassen.
+Vorbild war ein Gewitter-Visual im Anyma-Stil, das Bild entsteht aber komplett im Code
+(`js/gewitter.js`, Canvas, `gewitterStarten(container)`). Der Regen fällt davor wie bisher.
+Test ohne Gewitter: `?wetter=gewitter` an die TV-Adresse hängen (oder einen Code, z. B. `?wetter=61`).
+Vorschau mit Skin-Ideen fürs DJ-Studio: `gewitter-vorschau.html` (nicht im Repo, nur lokal).
+
 ### Überwachung (22.10. abends, Betreiber: „Fehler sofort fixen können“)
 
 - **Problem-Protokoll** `/home/citycafe/citycafe-probleme.log` (mit Datum, nur Probleme):

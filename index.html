@@ -3461,6 +3461,7 @@
             }
         })();
     </script>
+    <script src="js/gewitter.js"></script>
     <script src="hosn-obe-engine.js"></script>
     <script src="yt-warteschlange.js?v=2026-10-09-mischen"></script>
     <script src="hosn-obe-sound.js"></script>
@@ -15468,6 +15469,14 @@
             return dirs[Math.round(deg / 45) % 8];
         }
 
+        // Test: ?wetter=gewitter (oder ein Open-Meteo-Code, z. B. ?wetter=61) zeigt dieses Wetter
+        // statt des echten - zum Ansehen der Effekte, ohne auf ein Gewitter zu warten.
+        function wetterCodeTest(code) {
+            const w = new URLSearchParams(location.search).get('wetter');
+            if (!w) return code;
+            return w === 'gewitter' ? 95 : (isFinite(Number(w)) ? Number(w) : code);
+        }
+
         // Hintergrund + Partikel-Effekte passend zum aktuellen Wettercode
         function applyWeatherOverviewTheme(code) {
             const card = document.getElementById('wo-card');
@@ -15482,6 +15491,9 @@
 
             if (isStormy) {
                 card.style.background = 'linear-gradient(160deg, #1c1030 0%, #0a0a18 100%)';
+                // Ziehende Gewitterwolken mit verästelten Blitzen (js/gewitter.js, 22.10.2026),
+                // statt des alten Flackerns; der Regen faellt davor.
+                if (window.gewitterStarten) gewitterStarten(effects, { blitzAlle: [3, 8] });
                 for (let i = 0; i < 35; i++) {
                     const d = document.createElement('div');
                     d.className = 'wo-raindrop';
@@ -15490,9 +15502,11 @@
                     d.style.animationDelay = Math.random() * 1 + 's';
                     effects.appendChild(d);
                 }
-                const flash = document.createElement('div');
-                flash.className = 'wo-stormflash';
-                effects.appendChild(flash);
+                if (!window.gewitterStarten) {
+                    const flash = document.createElement('div');
+                    flash.className = 'wo-stormflash';
+                    effects.appendChild(flash);
+                }
             } else if (isSnowy) {
                 card.style.background = 'linear-gradient(160deg, #3a4a5f 0%, #1c2836 100%)';
                 for (let i = 0; i < 40; i++) {
@@ -15534,7 +15548,7 @@
                     + '&timezone=Europe%2FVienna&forecast_days=6';
                 const res = await fetch(url);
                 const data = await res.json();
-                applyWeatherOverviewTheme(data.current.weather_code);
+                applyWeatherOverviewTheme(wetterCodeTest(data.current.weather_code));
 
                 // Aktuelle Bedingungen
                 document.getElementById('wo-current-temp').textContent = Math.round(data.current.temperature_2m) + '°';
@@ -15596,7 +15610,7 @@
                 const data = await response.json(); 
                 latestWeatherData = data;
                 const temp = Math.round(data.current.temperature_2m);
-                const code = data.current.weather_code;
+                const code = wetterCodeTest(data.current.weather_code);
                 document.getElementById('weather-temp-text').textContent = `${temp}°C`;
                 renderHourlyRain(data.hourly);
                 renderDailyForecast(data.daily);
@@ -15613,6 +15627,8 @@
                 if (isStormy) {
                     weatherWidget.className = "card widget-weather w-stormy";
                     statusText.textContent = "Gewitter";
+                    // Gewitterwolken und Blitze (js/gewitter.js), Regen davor
+                    if (window.gewitterStarten) gewitterStarten(effectsContainer, { blitzAlle: [3, 8] });
                     for (let i = 0; i < 20; i++) {
                         const drop = document.createElement('div');
                         drop.className = 'raindrop';
@@ -15621,10 +15637,12 @@
                         drop.style.animationDelay = `${Math.random() * 0.8}s`;
                         effectsContainer.appendChild(drop);
                     }
-                    const flash = document.createElement('div');
-                    flash.className = 'stormflash';
-                    flash.style.animationDelay = `${Math.random() * 2}s`;
-                    effectsContainer.appendChild(flash);
+                    if (!window.gewitterStarten) {
+                        const flash = document.createElement('div');
+                        flash.className = 'stormflash';
+                        flash.style.animationDelay = `${Math.random() * 2}s`;
+                        effectsContainer.appendChild(flash);
+                    }
                 } else if (isSnowy) {
                     weatherWidget.className = "card widget-weather w-snowy";
                     statusText.textContent = "Schneefall";
