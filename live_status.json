@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-22T16:12:45Z",
+  "checked_at": "2026-10-22T16:27:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "officer roice, reporting for tunies 🚔🚨  !bewbs !wishlist !morestreams !ALT",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #616 with Igor Garanin (Live at Explorations)",
@@ -24,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "officer roice, reporting for tunies 🚔🚨  !bewbs !wishlist !morestreams !ALT",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
