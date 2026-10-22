@@ -2080,9 +2080,12 @@ VORMESSEN = os.environ.get("CITYCAFE_VORMESSEN", "1") != "0"
 VORMESS_PAUSE = 15
 VORMESS_PAUSE_MUSIK = 45   # bei Musik: Pause zwischen zwei Songs
 VORMESS_FEHLER_PAUSE = 3600
-# Reihenfolge (Betreiber 22.10.2026): zuerst die Warteschlange (die laufende Playlist), dann der Rest.
+# Reihenfolge (Betreiber 22.10.2026): zuerst die Warteschlange (die laufende Playlist), dann die
+# Schlager-Playlists, dann der Rest.
 VORMESS_EXPR = """JSON.stringify((() => { try { const ids = new Set();
   ((typeof ytm !== 'undefined' && ytm && ytm.eintraege) || []).forEach(e => e && e.videoId && ids.add(e.videoId));
+  (ytmPlaylists || []).filter(p => /schlager/i.test(p.name || '')).forEach(p =>
+    (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
   Object.values(ytmListenInhalt || {}).forEach(l => (l || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
   return [...ids]; } catch (e) { return []; } })())"""
 SPUR_HZ = 200              # Werte je Sekunde (12000 Hz / 60 Samples: genau, ohne Drift)
