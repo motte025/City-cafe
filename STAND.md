@@ -37,6 +37,28 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 22.10.2026: Fehler vom Café-Abend 21.10. behoben (Windows-Sitzung)
+
+**W1-Update 21.10. 15:58 lief durch:** `XF_SEK = 9`, `LAUT_ZIEL_LUFS = -14.0`, TV-Seite `object 9`.
+Die Überblendungen am Abend waren sauber (Tonwechsel ≤ 0,15 s neben dem Musikende). Offen bleiben
+die Endstufe +3 dB und der Abgleich der Welle (Aufgabe 2).
+
+Im Log vom Abend standen drei Fehler:
+- **Songs „im Kreis“:** Die Playlist wurde 4× gestartet (16:03, 16:13, 18:13, 21:25) und kam jedes
+  Mal ab Nr. 1 in derselben Reihenfolge. **Jetzt wird beim Start gemischt**
+  (`ytmPlaylistEinreihen`, nur `art === 'start'` ohne „Ab hier“; Anhängen bleibt in Reihenfolge).
+- **mpv hing zweimal** (20:57 bei 61 s, 21:21 bei 27 s). Danach kam der Browser-Player, ~30 s
+  Stille und ein Sprung zum nächsten Song; um 21:21 folgte am Handy ein Durcheinander bis zum
+  Neustart der Playlist. Die Ursache steht nicht im Log, im Systemlog gibt es nichts
+  (vermutlich ein YouTube-Strom). **Jetzt startet der Supervisor mpv bei Musik einmal an
+  derselben Stelle neu** (`fortsetzen`, höchstens 1× je Song in 5 min). Erst ein zweiter Hänger
+  fällt auf den Browser-Player zurück.
+- **DJ-Modus lud die Studio-Spuren im Dauerlauf** (2× je Sekunde von der Platte, 7000 Logzeilen
+  pro Stunde): Gebraucht werden bis zu 15 Spuren, behalten wurden nur 6. **Jetzt werden 24
+  behalten.**
+
+Kommt mit dem Update am 23.10. um 8:30 auf den W1.
+
 ## 21.10.2026: DJ-Skins, Überblendung 9 s, Lautheit −14 LUFS, Welle (auf `main`)
 
 **Stand:** entwickelt auf dem Branch `dj-skins`, getestet am Test-Kiosk zuhause (`martin-ser`),

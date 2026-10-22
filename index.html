@@ -8535,6 +8535,10 @@
                 }
                 titel = titel.slice(Math.max(0, i));
                 art = 'start';
+            } else if (art === 'start') {
+                // Playlist starten = gemischt (21.10.2026: 4x gestartet, jedes Mal dieselben
+                // Songs ab Nr. 1 - im Cafe klang das wie eine Schleife)
+                titel = shuffleArray(titel.slice());
             }
             if (!titel.length || !nlFernVerb) return;
             const neu = titel.map(t => ytmAufbereiten(Object.assign({}, t, {

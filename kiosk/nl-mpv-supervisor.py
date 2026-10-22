@@ -2566,6 +2566,7 @@ def main():
     letzte_antwort = time.time()   # wann der Browser zuletzt geantwortet hat
     letzter_neustart = 0.0
     naechste_tmp_pruefung = 0.0
+    fortsetzen = {}       # nach einem Haenger: {"key", "pos"} fuer den Neustart, "versucht": {key: Zeit}
 
     def blocked(key):
         frist = CAM_RETRY_AFTER if key.startswith("cam:") else RETRY_FAILED_AFTER
@@ -2828,7 +2829,10 @@ def main():
                             continue
                         zustellen(page_id, "(window.nlStudioTakte = window.nlStudioTakte || {})"
                                   f"[{json.dumps(s_vid)}] = {t_text}; 1", "Takt")
-            for alt in list(SPUREN)[:-6]:       # nur die letzten paar behalten
+            # Nur die letzten behalten - aber mehr, als oben vorab geholt werden (laufend + 2 +
+            # 12 Karten): mit 6 lud er am 21.10.2026 jeden Abend 2x je Sekunde dieselben
+            # ~15 Spuren von der Platte und schrieb 7000 Logzeilen pro Stunde.
+            for alt in list(SPUREN)[:-24]:
                 SPUREN.pop(alt, None)
 
         # Vormessen der Playlists: nur ohne Musik, ein Song nach dem anderen.
@@ -3195,6 +3199,19 @@ def main():
                     last_progress = now          # Blende laeuft: alter darf am Ende stehen (keep-open)
                 elif last_pos is not None and now - last_progress > (CAM_STALL_TIMEOUT if art == "cam" else STALL_TIMEOUT):
                     problem = f"mpv steht bei {last_pos:.1f}s"
+            if (problem and problem.startswith("mpv steht") and musik and art == "yt"
+                    and time.time() - fortsetzen.get("versucht", {}).get(shown, 0) > 300):
+                # Musik: einmal mpv an derselben Stelle neu starten (21.10.2026: zweimal hing
+                # der Strom, der Browser-Player sprang danach ~30 s spaeter zum naechsten Song).
+                log(f"{problem} ({shown}) - starte mpv an derselben Stelle neu")
+                fortsetzen.setdefault("versucht", {})[shown] = now
+                fortsetzen["key"], fortsetzen["pos"] = shown, max(0.0, last_pos - 1.0)
+                if mpv.poll() is None:
+                    mpv.kill()
+                    mpv.wait()
+                stop_all()
+                shown, embed_paused = None, False
+                problem = None
             if problem:
                 log(f"{problem} ({shown}) - zurueck zum Browser-Player")
                 if mpv.poll() is None:
@@ -3408,6 +3425,9 @@ def main():
             if want.startswith("yt:") and nl_ok:
                 video_url, audio_url, laenge = cache[cache_key]
                 start = state.get("start") or 0
+                if fortsetzen.get("key") == want:   # nach einem Haenger: an der alten Stelle weiter
+                    start = round(fortsetzen["pos"], 1)
+                fortsetzen.pop("key", None)
                 if musik and not start:             # Stille am Songanfang ueberspringen
                     start = (STILLE.get(schluessel) or {}).get("anfang") or 0
                 # Beim ersten Auftritt kennt das Dashboard die Laenge noch nicht
