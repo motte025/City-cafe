@@ -65,10 +65,9 @@ iframe, gleicher Ursprung), wirkt nach ≤ 1 s, **ohne Neuladen, ohne Musikunter
 
 ## Aufgabe 3 – beat_this auf dem W1 einrichten (Takt und Eins, mit Freigabe, Café zu)
 
-**Vorerst nicht nötig (Betreiber 21.10.):** die Takt-Dateien werden am PC zuhause eingelesen und
-kommen über das Repo (`dj-studio/takt/`) auf den Café-TV. Für das Update heute also direkt
-`ssh w1 "sudo systemctl start citycafe-update.service"` und Aufgabe 1. Die folgende Anleitung
-gilt nur, falls der W1 später doch selbst rechnen soll.
+**Erledigt am 22.10.** Der Betreiber hat festgelegt: Der W1 kümmert sich selbst um alle seine Daten,
+der PC zuhause rechnet nichts mehr. Eingerichtet wie unten beschrieben, mit Startbestand. Die
+Messdaten gehen vom W1 selbst ins Repo (siehe STAND.md, 22.10.).
 
 Seit 21.10. rechnet der Supervisor für jeden gemessenen Song Schläge und Takt-Einsen mit
 **beat_this** (CPJKU, frei), wenn es in einer eigenen Python-Umgebung liegt – sonst wie bisher.

@@ -62,6 +62,30 @@ Im Log vom Abend standen drei Fehler:
 
 Kommt mit dem Update am 23.10. um 8:30 auf den W1.
 
+### Der W1 kümmert sich selbst um seine Daten (22.10. nachmittags, Betreiber)
+
+**Der PC zuhause rechnet nichts mehr für das Café.** Der W1 misst alles selbst und lädt es nebenbei
+ins Repo hoch:
+- **beat_this auf dem W1 eingerichtet**: `~/.local/share/citycafe/beat-venv`, torch 2.14.1+cpu,
+  ~1 GB. Die 816 Takt-Dateien aus dem Repo liegen als Startbestand in `~/.cache/citycafe/takt/`.
+  Das Modell `final0` war um 16 Uhr nicht ladbar, weil der JKU-Server 503 meldete.
+  `~/modell-holen.sh` versucht es alle 5 min, höchstens 12 h lang; das Ergebnis steht in
+  `~/beat-modell.log`.
+- **Vormessen misst jetzt auch Lautheit, Intro und Ende** (`stille_messen`), nicht nur
+  Welle/BPM/Takt, und zwar für alle Playlist-Songs, nur ohne Musik. Vorher waren nur 65 von 701
+  gemessen, der Rest erst kurz vor dem Abspielen. Am 21.10. kam die Messung zweimal zu spät, und
+  der Song startete mit falscher Lautstärke.
+- **Upload ins Repo** (`daten_ins_repo`, nur ohne Musik, höchstens alle 6 h):
+  - Takt-Dateien gehen nach `dj-studio/takt/`, Messwerte nach `dj-studio/messwerte/<id>.json`.
+    Commit „Auto: W1-Messdaten (…)“ direkt nach `main`, so vom Betreiber gewollt.
+  - Fehlende Takt-Dateien holt der W1 umgekehrt aus dem Repo.
+  - Zugang über den Deploy-Key „City-Cafe W1 Messdaten“ (Schreibrecht, nur dieses Repo), der
+    Schlüssel liegt in `/home/citycafe/.ssh/citycafe-repo`. Die Arbeitskopie liegt in
+    `~/.cache/citycafe/repo` (sparse, depth 1).
+  - Erster Lauf von Hand: Commit `1127f47` mit 75 Messwerten. Die Wellen-Spuren (~200 MB)
+    bleiben nur auf dem W1.
+  - Abschalten: den Key umbenennen.
+
 ## 21.10.2026: DJ-Skins, Überblendung 9 s, Lautheit −14 LUFS, Welle (auf `main`)
 
 **Stand:** entwickelt auf dem Branch `dj-skins`, getestet am Test-Kiosk zuhause (`martin-ser`),

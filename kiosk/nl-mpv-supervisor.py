@@ -2316,6 +2316,94 @@ def takt_datei(vid):
     return os.path.join(TAKT_ORDNER, vid + ".json")
 
 
+# Messdaten ins Repo (22.10.2026, Betreiber: "der W1 kuemmert sich selbst um seine Daten, der PC
+# zuhause macht nichts"). Takt -> dj-studio/takt/, Lautheit/Intro/Ende -> dj-studio/messwerte/.
+# Nur ohne Musik, hoechstens alle 6 h. Schreiben mit eigenem Deploy-Key (~/.ssh/citycafe-repo,
+# im Repo unter Settings -> Deploy keys mit Schreibrecht); ohne Key passiert nichts.
+REPO_KEY = os.path.expanduser("~/.ssh/citycafe-repo")
+REPO_ORDNER = os.path.expanduser("~/.cache/citycafe/repo")
+REPO_URL = "git@github.com:motte025/City-cafe.git"
+REPO_ALLE_SEK = 6 * 3600
+REPO_STAND = {"zeit": 0.0, "thread": None}
+
+
+def git(*args, pruefen=True):
+    env = {**os.environ, "GIT_SSH_COMMAND": f"ssh -i {REPO_KEY} -o IdentitiesOnly=yes "
+                                             "-o StrictHostKeyChecking=accept-new -o BatchMode=yes",
+           "GIT_AUTHOR_NAME": "City-Cafe W1", "GIT_AUTHOR_EMAIL": "w1@city-cafe.invalid",
+           "GIT_COMMITTER_NAME": "City-Cafe W1", "GIT_COMMITTER_EMAIL": "w1@city-cafe.invalid"}
+    r = subprocess.run(["git", "-C", REPO_ORDNER, *args] if os.path.isdir(REPO_ORDNER) and args[0] != "clone"
+                       else ["git", *args], env=env, capture_output=True, text=True, timeout=600)
+    if pruefen and r.returncode != 0:
+        raise RuntimeError(f"git {args[0]}: {(r.stderr or r.stdout).strip()[-300:]}")
+    return r
+
+
+def daten_ins_repo():
+    """Neue Takt-Dateien und Messwerte des W1 ins Repo; fehlende Takt-Dateien aus dem Repo holen.
+    Push abgelehnt (jemand war schneller): alles noch einmal auf dem neuen Stand von main."""
+    if not os.path.exists(REPO_KEY):
+        return
+    try:
+        if not os.path.isdir(os.path.join(REPO_ORDNER, ".git")):
+            git("clone", "--depth", "1", "--filter=blob:none", "--sparse", REPO_URL, REPO_ORDNER)
+            git("sparse-checkout", "set", "dj-studio/takt", "dj-studio/messwerte")
+        for versuch in range(3):
+            fertig = repo_runde(versuch)
+            if fertig:
+                return
+        raise RuntimeError("push dreimal abgelehnt")
+    except (OSError, RuntimeError, subprocess.SubprocessError) as e:
+        log(f"Repo-Daten: nicht hochgeladen ({e})")
+
+
+def repo_runde(versuch):
+    """Eine Runde: main holen, abgleichen, committen, pushen. -> True, wenn nichts mehr zu tun ist."""
+    if True:
+        git("fetch", "--depth", "1", "origin", "main")
+        git("reset", "-q", "--hard", "FETCH_HEAD")
+        ziel_takt = os.path.join(REPO_ORDNER, "dj-studio", "takt")
+        ziel_mess = os.path.join(REPO_ORDNER, "dj-studio", "messwerte")
+        os.makedirs(ziel_takt, exist_ok=True)
+        os.makedirs(ziel_mess, exist_ok=True)
+        os.makedirs(TAKT_ORDNER, exist_ok=True)
+        geholt = 0
+        for pfad in glob.glob(os.path.join(ziel_takt, "*.json")):     # Repo -> W1 (nur fehlende)
+            hier = os.path.join(TAKT_ORDNER, os.path.basename(pfad))
+            if not os.path.exists(hier):
+                with open(pfad, "rb") as a, open(hier, "wb") as b:
+                    b.write(a.read())
+                geholt += 1
+        n_takt = n_mess = 0
+        for quelle, ziel in ((TAKT_ORDNER, ziel_takt), (STILLE_ORDNER, ziel_mess)):
+            for pfad in glob.glob(os.path.join(quelle, "*.json")):     # W1 -> Repo (neu oder geaendert)
+                with open(pfad, "rb") as f:
+                    daten = f.read()
+                dort = os.path.join(ziel, os.path.basename(pfad))
+                try:
+                    with open(dort, "rb") as f:
+                        if f.read() == daten:
+                            continue
+                except OSError:
+                    pass
+                with open(dort, "wb") as f:
+                    f.write(daten)
+                if ziel == ziel_takt:
+                    n_takt += 1
+                else:
+                    n_mess += 1
+        if geholt and versuch == 0:
+            log(f"Repo-Daten: {geholt} Takt-Dateien aus dem Repo geholt")
+        if not (n_takt or n_mess):
+            return True
+        git("add", "-A", "dj-studio/takt", "dj-studio/messwerte")
+        git("commit", "-q", "-m", f"Auto: W1-Messdaten ({n_takt} Takt, {n_mess} Messwerte)")
+        if git("push", "-q", "origin", "HEAD:main", pruefen=False).returncode != 0:
+            return False
+        log(f"Repo-Daten: {n_takt} Takt-Dateien, {n_mess} Messwerte hochgeladen")
+        return True
+
+
 def takt_rechnen(vid, audio_url):
     """Takt-Datei fuer den Song rechnen, falls beat_this da ist und sie fehlt (im Spur-Faden)."""
     if not (takt_an() and audio_url) or os.path.exists(takt_datei(vid)) \
@@ -2856,6 +2944,13 @@ def main():
             for alt in list(SPUREN)[:-24]:
                 SPUREN.pop(alt, None)
 
+        # Messdaten ins Repo: nur ohne Musik, hoechstens alle 6 h, eigener Thread (git braucht Sekunden).
+        if (not musik and os.path.exists(REPO_KEY) and time.time() - REPO_STAND["zeit"] >= REPO_ALLE_SEK
+                and not (REPO_STAND["thread"] is not None and REPO_STAND["thread"].is_alive())):
+            REPO_STAND["zeit"] = time.time()
+            REPO_STAND["thread"] = threading.Thread(target=daten_ins_repo, daemon=True)
+            REPO_STAND["thread"].start()
+
         # Vormessen der Playlists: nur ohne Musik, ein Song nach dem anderen.
         if (VORMESSEN and not musik and page_id and time.time() >= vormessen["naechste"]
                 and not (spur_arbeiter is not None and spur_arbeiter.is_alive())):
@@ -2867,9 +2962,12 @@ def main():
                     vormessen["zeit"] = time.time()
                 except (OSError, ValueError, ConnectionError):
                     pass
+            # Offen: Spur (Welle/BPM), Takt (beat_this) oder - seit 22.10.2026 - Lautheit/Intro/Ende
+            # fehlen. Der W1 kuemmert sich selbst um alle Daten, nichts kommt mehr vom PC zuhause.
             offen = [v for v in vormessen["liste"]
                      if (not os.path.exists(spur_datei(v)) or (takt_an() and not os.path.exists(takt_datei(v))
-                                                                and time.time() - TAKT_FEHL.get(v, 0) >= 6 * 3600))
+                                                                and time.time() - TAKT_FEHL.get(v, 0) >= 6 * 3600)
+                         or not stille_von_platte(v))
                      and time.time() - vormessen["fehl"].get(v, 0) >= 6 * 3600]
             if offen:
                 def vormess_lauf(vid=offen[0], rest=len(offen), gesamt=len(vormessen["liste"])):
@@ -2883,8 +2981,15 @@ def main():
                             log("Vormessen: 3 Fehler in Folge - 1 h Pause")
                         return
                     vormessen["fehler_folge"] = 0
-                    spur_messen(vid, urls[0], urls[2])
-                    SPUREN.pop(vid, None)          # nur auf die Platte, nicht im Speicher sammeln
+                    if not os.path.exists(spur_datei(vid)) or (takt_an() and not os.path.exists(takt_datei(vid))):
+                        spur_messen(vid, urls[0], urls[2])
+                        SPUREN.pop(vid, None)      # nur auf die Platte, nicht im Speicher sammeln
+                    if not stille_von_platte(vid):
+                        if "gain" not in (STILLE.get(vid) or {}):
+                            STILLE.pop(vid, None)  # halbe Messung (Platzhalter) verwerfen
+                        stille_messen(vid, urls[0], urls[2])
+                        if not stille_von_platte(vid):
+                            vormessen["fehl"][vid] = time.time()   # in 6 h noch einmal
                     vormessen["naechste"] = time.time() + VORMESS_PAUSE   # Pause ab Ende der Messung
                     vormessen["erledigt"] += 1
                     if vormessen["erledigt"] % 10 == 1:
