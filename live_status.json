@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-23T13:22:45Z",
+  "checked_at": "2026-10-23T13:37:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wunderschöner Freitag <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Abfahrt ins Wochenende mit Bass | Maybe heute etwas kürzer wegen Kreislauf | !holy",
       "game": "DJs"
     },
     {
