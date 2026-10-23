@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T19:42:45Z",
+  "checked_at": "2026-10-23T19:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,13 +45,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "Above & Beyond Group Therapy #699 with Lørean",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "Warm Up x Groovers w You&Na & Padsingers b2b Filburt",
@@ -59,16 +52,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Symmetry next: @KFoxxyP  💫 !charity",
-      "game": "DJs"
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #699 with Lørean",
+      "game": "Music"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Symmetry next: @KFoxxyP  💫 !charity",
       "game": "DJs"
     }
   ]
