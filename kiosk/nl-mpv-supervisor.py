@@ -588,6 +588,35 @@ def bt_cmd(*args, timeout=20):
         return f"FEHLER {type(e).__name__}"
 
 
+# Bluetooth-Codec (23.10.2026, Betreiber: "soll dann immer so laufen"): der Ton geht per Bluetooth an den
+# Empfaenger B03 Pro am Verstaerker. Mit LDAC (Standard, hoechste Prioritaet) kam der Ton ~150-250 ms nach
+# dem Bild - DJ-Studio, Blitze und Videos liefen vor. aptX Low Latency (~40 ms) kann der B03 auch. Nur ohne
+# Musik umstellen (der Ton setzt dabei kurz aus).
+BT_CODEC = "aptx_ll"
+BT_CODEC_NAME = "aptX-LL"
+
+
+def bt_codec_pruefen():
+    try:
+        r = subprocess.run(["pactl", "list", "sinks"], capture_output=True, text=True, timeout=10)
+        for block in r.stdout.split("Sink #"):
+            name = re.search(r"Name: bluez_output\.([0-9A-F_]+)\.", block)
+            codec = re.search(r'api\.bluez5\.codec = "([^"]+)"', block)
+            if not name or not codec or codec.group(1) == BT_CODEC:
+                continue
+            karte = "bluez_card." + name.group(1)
+            liste = subprocess.run(["pactl", "send-message", f"/card/{karte}/bluez", "list-codecs"],
+                                   capture_output=True, text=True, timeout=10).stdout
+            nr = next((c["name"] for c in json.loads(liste or "[]") if c.get("description") == BT_CODEC_NAME), None)
+            if nr is None:
+                continue                      # Geraet kann kein aptX-LL: so lassen
+            subprocess.run(["pactl", "send-message", f"/card/{karte}/bluez", "switch-codec", str(nr)],
+                           capture_output=True, text=True, timeout=10)
+            log(f"Bluetooth: {karte} von {codec.group(1)} auf {BT_CODEC_NAME} umgestellt (weniger Verzoegerung)")
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        log(f"Bluetooth: Codec nicht geprueft ({type(e).__name__})")
+
+
 def bt_geraete():
     """Alle gekoppelten Empfaenger -> [(adresse, name), ...]. Es koennen
     mehrere sein (zuhause und im Cafe je ein B03 Pro) - welcher in Reichweite
@@ -3508,6 +3537,10 @@ def main():
         if time.time() - ueberw_zeit["system"] >= 60:
             ueberw_zeit["system"] = time.time()
             system_pruefen()
+        # Bluetooth-Codec alle 5 min pruefen, nur ohne Musik (Umstellen unterbricht den Ton kurz)
+        if not musik and time.time() - ueberw_zeit.get("codec", 0) >= 300:
+            ueberw_zeit["codec"] = time.time()
+            threading.Thread(target=bt_codec_pruefen, daemon=True).start()
 
         # Notfall-Kopie aktiv? Alle 2 min, ohne Musik: ist GitHub Pages wieder da, dorthin wechseln.
         if page_id and not musik and time.time() - seite_pruefung >= 120:
