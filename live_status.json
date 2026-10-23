@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T18:02:45Z",
+  "checked_at": "2026-10-23T18:07:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -52,9 +52,23 @@
     },
     {
       "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Warm Up x Groovers w You&Na & Padsingers b2b Filburt",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
-      "title": "💫 Symmetry next: @delta__dj 💫 !charity",
+      "title": "💫 Symmetry next: @KFoxxyP  💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
