@@ -2679,6 +2679,11 @@ def spur_speichern(vid, text):
 TAKT_PYTHON = os.environ.get("CITYCAFE_TAKT_PYTHON", os.path.expanduser("~/.local/share/citycafe/beat-venv/bin/python"))
 TAKT_ORDNER = os.environ.get("CITYCAFE_TAKT", os.path.expanduser("~/.cache/citycafe/takt"))
 TAKT_FEHL = {}             # videoId -> Zeit des letzten Fehlschlags (6 h Pause)
+# Fehlt das Modell 'final0' (Uni-Server JKU seit 22.10.2026 mit 503 down), scheitert jeder Song gleich -
+# dann nur noch einmal pro Stunde probieren statt bei jedem Song (Betreiber 23.10.2026). Die Songs
+# werden dabei nicht als fehlgeschlagen gemerkt, damit sie nachgerechnet werden, sobald es das Modell gibt.
+TAKT_MODELL = {"fehlt_seit": 0.0, "zuletzt": 0.0}
+TAKT_MODELL_PAUSE = 3600
 TAKT_RECHNER = r"""
 import sys, os, json, subprocess, tempfile
 import torch
@@ -2922,7 +2927,8 @@ def seite_zurueck(page_id):
 def takt_rechnen(vid, audio_url):
     """Takt-Datei fuer den Song rechnen, falls beat_this da ist und sie fehlt (im Spur-Faden)."""
     if not (takt_an() and audio_url) or os.path.exists(takt_datei(vid)) \
-            or time.time() - TAKT_FEHL.get(vid, 0) < 6 * 3600:
+            or time.time() - TAKT_FEHL.get(vid, 0) < 6 * 3600 \
+            or time.time() - TAKT_MODELL["zuletzt"] < TAKT_MODELL_PAUSE:
         return
     try:
         os.makedirs(TAKT_ORDNER, exist_ok=True)
@@ -2933,10 +2939,19 @@ def takt_rechnen(vid, audio_url):
         t0 = time.time()
         r = subprocess.run(["nice", "-n", "19", TAKT_PYTHON, skript, vid, audio_url, takt_datei(vid)],
                            capture_output=True, text=True, timeout=600)
+        if r.returncode and "Could not load the checkpoint" in r.stderr:
+            if not TAKT_MODELL["fehlt_seit"]:
+                TAKT_MODELL["fehlt_seit"] = time.time()
+                log("Takt: Modell 'final0' fehlt (Uni-Server nicht erreichbar) - neuer Versuch einmal pro Stunde")
+            TAKT_MODELL["zuletzt"] = time.time()
+            return
         if r.returncode or not os.path.exists(takt_datei(vid)):
             TAKT_FEHL[vid] = time.time()
             log(f"Takt {vid}: nicht gerechnet (Code {r.returncode}) {r.stderr.strip().splitlines()[-1:] }")
             return
+        if TAKT_MODELL["fehlt_seit"]:
+            log(f"Takt: Modell 'final0' wieder da (nach {(time.time() - TAKT_MODELL['fehlt_seit']) / 3600:.1f} h) - fehlende Takte werden nachgerechnet")
+            TAKT_MODELL["fehlt_seit"] = 0.0
         d = json.load(open(takt_datei(vid)))
         log(f"Takt {vid}: {len(d['b'])} Schlaege, {len(d['e'])} Einsen ({time.time() - t0:.0f}s)")
     except (OSError, ValueError, subprocess.TimeoutExpired) as e:
@@ -3530,7 +3545,8 @@ def main():
             # fehlen. Der W1 kuemmert sich selbst um alle Daten, nichts kommt mehr vom PC zuhause.
             offen = [v for v in vormessen["liste"]
                      if (not os.path.exists(spur_datei(v)) or (takt_an() and not os.path.exists(takt_datei(v))
-                                                                and time.time() - TAKT_FEHL.get(v, 0) >= 6 * 3600)
+                                                                and time.time() - TAKT_FEHL.get(v, 0) >= 6 * 3600
+                                                                and time.time() - TAKT_MODELL["zuletzt"] >= TAKT_MODELL_PAUSE)
                          or not stille_von_platte(v))
                      and time.time() - vormessen["fehl"].get(v, 0) >= 6 * 3600]
             if offen:
