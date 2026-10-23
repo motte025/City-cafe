@@ -2501,16 +2501,21 @@ VORMESS_PAUSE_MUSIK = 45   # bei Musik: Pause zwischen zwei Songs
 VORMESS_FEHLER_PAUSE = 3600
 # Reihenfolge (Betreiber 22.10.2026): zuerst die Warteschlange, dann die ganze laufende Playlist
 # (die Schlange hat nur noch die kommenden Songs), dann die Schlager-Playlists, dann der Rest.
+# Zuerst vermessen (nach der Warteschlange): Betreiber 23.10.2026 "wir fangen mit der Playlist Mix 2 an"
+VORMESS_ZUERST = ["Mix 04.10.2026 (2)"]
 VORMESS_EXPR = """JSON.stringify((() => { try { const ids = new Set();
   const schlange = (typeof ytm !== 'undefined' && ytm && ytm.eintraege) || [];
   schlange.forEach(e => e && e.videoId && ids.add(e.videoId));
+  const zuerst = __ZUERST__;
+  (ytmPlaylists || []).filter(p => zuerst.includes(p.name)).forEach(p =>
+    (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
   const laufend = new Set([ytm && ytm.jetzt && ytm.jetzt.liste, ...schlange.map(e => e && e.liste)].filter(Boolean));
   (ytmPlaylists || []).filter(p => laufend.has(p.name)).forEach(p =>
     (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
   (ytmPlaylists || []).filter(p => /schlager/i.test(p.name || '')).forEach(p =>
     (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
   Object.values(ytmListenInhalt || {}).forEach(l => (l || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
-  return [...ids]; } catch (e) { return []; } })())"""
+  return [...ids]; } catch (e) { return []; } })())""".replace("__ZUERST__", json.dumps(VORMESS_ZUERST))
 SPUR_HZ = 200              # Werte je Sekunde (12000 Hz / 60 Samples: genau, ohne Drift)
 SPUR_LESETEMPO = 8         # ffmpeg liest hoechstens 8x so schnell wie abgespielt
 # Kanaele nach amerge: 1 links, 2 rechts, 3 tief, 4 mitte, 5 hoch (Baender aus der Mono-Summe)
@@ -2751,6 +2756,49 @@ def takt_datei(vid):
     return os.path.join(TAKT_ORDNER, vid + ".json")
 
 
+# Ersatz, solange das beat_this-Modell fehlt (23.10.2026, Betreiber: "gibts keine andere app"): madmom
+# (CPJKU, Vorgaenger von beat_this; die Modelle stecken im Paket, kein Uni-Server noetig), in eigener
+# Umgebung ~/.local/share/citycafe/madmom-venv (pip install git+https://github.com/CPJKU/madmom.git).
+# Etwas ungenauer als beat_this; Dateien bekommen "m": "madmom" und koennen spaeter nachgemessen werden.
+MADMOM_PYTHON = os.environ.get("CITYCAFE_MADMOM_PYTHON", os.path.expanduser("~/.local/share/citycafe/madmom-venv/bin/python"))
+MADMOM_RECHNER = r"""
+import sys, os, json, subprocess, tempfile
+from madmom.features.downbeats import RNNDownBeatProcessor, DBNDownBeatTrackingProcessor
+vid, url, ziel = sys.argv[1:4]
+fd, wav = tempfile.mkstemp(suffix='.wav'); os.close(fd)
+try:
+    r = subprocess.run(['ffmpeg', '-nostdin', '-y', '-hide_banner', '-loglevel', 'error', '-readrate', '16',
+                        '-i', url, '-vn', '-ac', '1', '-ar', '44100', wav], capture_output=True, timeout=300)
+    if r.returncode or os.path.getsize(wav) < 100000:
+        sys.exit(2)
+    akt = RNNDownBeatProcessor(num_threads=1)(wav)
+    erg = DBNDownBeatTrackingProcessor(beats_per_bar=[3, 4], fps=100)(akt)
+finally:
+    os.remove(wav)
+ms = [round(float(t) * 1000) for t, _ in erg]
+if len(ms) < 16:
+    sys.exit(3)
+eins = [i for i, (_, nr) in enumerate(erg) if int(nr) == 1]
+tmp = ziel + '.tmp'
+json.dump({'v': 1, 'b': [ms[0]] + [b - a for a, b in zip(ms, ms[1:])], 'e': eins, 'm': 'madmom'}, open(tmp, 'w'), separators=(',', ':'))
+os.replace(tmp, ziel)
+"""
+
+
+def madmom_an():
+    return os.access(MADMOM_PYTHON, os.X_OK)
+
+
+def beat_this_pausiert():
+    """Das beat_this-Modell fehlte beim letzten Versuch (Stunden-Pause laeuft)."""
+    return time.time() - TAKT_MODELL["zuletzt"] < TAKT_MODELL_PAUSE
+
+
+def takt_moeglich():
+    """Kann gerade ein Takt gerechnet werden (beat_this oder Ersatz madmom)?"""
+    return (takt_an() and not beat_this_pausiert()) or madmom_an()
+
+
 # Messdaten ins Repo (22.10.2026, Betreiber: "der W1 kuemmert sich selbst um seine Daten, der PC
 # zuhause macht nichts"). Takt -> dj-studio/takt/, Lautheit/Intro/Ende -> dj-studio/messwerte/.
 # Einmal am Tag ab REPO_AB (nach dem Update um 8:30). Schreiben mit eigenem Deploy-Key (~/.ssh/citycafe-repo,
@@ -2955,35 +3003,44 @@ def seite_zurueck(page_id):
 
 
 def takt_rechnen(vid, audio_url):
-    """Takt-Datei fuer den Song rechnen, falls beat_this da ist und sie fehlt (im Spur-Faden)."""
-    if not (takt_an() and audio_url) or os.path.exists(takt_datei(vid)) \
-            or time.time() - TAKT_FEHL.get(vid, 0) < 6 * 3600 \
-            or time.time() - TAKT_MODELL["zuletzt"] < TAKT_MODELL_PAUSE:
+    """Takt-Datei fuer den Song rechnen, falls sie fehlt (im Spur-Faden): mit beat_this, solange dessen
+    Modell fehlt mit madmom. Der Ton kommt von der Platte bzw. ueber den Zwischenhaendler - direkt bei
+    googlevideo lehnte YouTube ffmpeg mit 403 ab (Code 2, seit 23.10.2026)."""
+    if not audio_url or os.path.exists(takt_datei(vid)) or time.time() - TAKT_FEHL.get(vid, 0) < 6 * 3600:
         return
+    mit_madmom = not takt_an() or beat_this_pausiert()
+    if mit_madmom and not madmom_an():
+        return
+    quelle = ton_quelle(vid, audio_url)
     try:
         os.makedirs(TAKT_ORDNER, exist_ok=True)
-        skript = os.path.join(TAKT_ORDNER, ".takt-rechner.py")
-        if not os.path.exists(skript) or open(skript).read() != TAKT_RECHNER:
+        python, text, name = ((MADMOM_PYTHON, MADMOM_RECHNER, ".takt-madmom.py") if mit_madmom
+                              else (TAKT_PYTHON, TAKT_RECHNER, ".takt-rechner.py"))
+        skript = os.path.join(TAKT_ORDNER, name)
+        if not os.path.exists(skript) or open(skript).read() != text:
             with open(skript, "w") as f:
-                f.write(TAKT_RECHNER)
+                f.write(text)
         t0 = time.time()
-        r = subprocess.run(["nice", "-n", "19", TAKT_PYTHON, skript, vid, audio_url, takt_datei(vid)],
-                           capture_output=True, text=True, timeout=600)
-        if r.returncode and "Could not load the checkpoint" in r.stderr:
+        r = subprocess.run(["nice", "-n", "19", python, skript, vid, quelle, takt_datei(vid)],
+                           capture_output=True, text=True, timeout=900)
+        if not mit_madmom and r.returncode and "Could not load the checkpoint" in r.stderr:
             if not TAKT_MODELL["fehlt_seit"]:
                 TAKT_MODELL["fehlt_seit"] = time.time()
-                log("Takt: Modell 'final0' fehlt (Uni-Server nicht erreichbar) - neuer Versuch einmal pro Stunde")
+                log("Takt: Modell 'final0' fehlt (Uni-Server nicht erreichbar) - neuer Versuch einmal pro Stunde"
+                    + (", bis dahin misst madmom" if madmom_an() else ""))
             TAKT_MODELL["zuletzt"] = time.time()
+            if madmom_an():
+                takt_rechnen(vid, audio_url)          # gleich mit madmom
             return
         if r.returncode or not os.path.exists(takt_datei(vid)):
             TAKT_FEHL[vid] = time.time()
-            log(f"Takt {vid}: nicht gerechnet (Code {r.returncode}) {r.stderr.strip().splitlines()[-1:] }")
+            log(f"Takt {vid}: nicht gerechnet{' (madmom)' if mit_madmom else ''} (Code {r.returncode}) {r.stderr.strip().splitlines()[-1:] }")
             return
-        if TAKT_MODELL["fehlt_seit"]:
+        if not mit_madmom and TAKT_MODELL["fehlt_seit"]:
             log(f"Takt: Modell 'final0' wieder da (nach {(time.time() - TAKT_MODELL['fehlt_seit']) / 3600:.1f} h) - fehlende Takte werden nachgerechnet")
             TAKT_MODELL["fehlt_seit"] = 0.0
         d = json.load(open(takt_datei(vid)))
-        log(f"Takt {vid}: {len(d['b'])} Schlaege, {len(d['e'])} Einsen ({time.time() - t0:.0f}s)")
+        log(f"Takt {vid}: {len(d['b'])} Schlaege, {len(d['e'])} Einsen ({time.time() - t0:.0f}s{', madmom' if mit_madmom else ''})")
     except (OSError, ValueError, subprocess.TimeoutExpired) as e:
         TAKT_FEHL[vid] = time.time()
         log(f"Takt {vid}: {type(e).__name__}")
@@ -3488,7 +3545,7 @@ def main():
                                 and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER:
                             def spur_vorab(vid=s_vid):
                                 if spur_von_platte(vid):        # schon gemessen: kein yt-dlp noetig
-                                    if not (takt_an() and not os.path.exists(takt_datei(vid))):
+                                    if not (takt_moeglich() and not os.path.exists(takt_datei(vid))):
                                         return                  # ... ausser die Takt-Datei fehlt
                                 urls = resolve(vid, "bestaudio", "abr")
                                 if urls:
@@ -3578,9 +3635,8 @@ def main():
             # Offen: Spur (Welle/BPM), Takt (beat_this) oder - seit 22.10.2026 - Lautheit/Intro/Ende
             # fehlen. Der W1 kuemmert sich selbst um alle Daten, nichts kommt mehr vom PC zuhause.
             offen = [v for v in vormessen["liste"]
-                     if (not os.path.exists(spur_datei(v)) or (takt_an() and not os.path.exists(takt_datei(v))
-                                                                and time.time() - TAKT_FEHL.get(v, 0) >= 6 * 3600
-                                                                and time.time() - TAKT_MODELL["zuletzt"] >= TAKT_MODELL_PAUSE)
+                     if (not os.path.exists(spur_datei(v)) or (takt_moeglich() and not os.path.exists(takt_datei(v))
+                                                                and time.time() - TAKT_FEHL.get(v, 0) >= 6 * 3600)
                          or not stille_von_platte(v))
                      and time.time() - vormessen["fehl"].get(v, 0) >= 6 * 3600]
             if offen:
@@ -3595,7 +3651,7 @@ def main():
                             log("Vormessen: 3 Fehler in Folge - 1 h Pause")
                         return
                     vormessen["fehler_folge"] = 0
-                    if not os.path.exists(spur_datei(vid)) or (takt_an() and not os.path.exists(takt_datei(vid))):
+                    if not os.path.exists(spur_datei(vid)) or (takt_moeglich() and not os.path.exists(takt_datei(vid))):
                         spur_messen(vid, urls[0], urls[2])
                         SPUREN.pop(vid, None)      # nur auf die Platte, nicht im Speicher sammeln
                     if not stille_von_platte(vid):
