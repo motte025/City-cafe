@@ -979,6 +979,38 @@ def resolve(video_id, fmt=FORMAT, sortierung=None):
 # kurz das Bild, die Musik laeuft weiter.
 TON_ORDNER = os.path.expanduser("~/.cache/citycafe/ton")
 TON_LAEDT = set()
+# Ton aller Playlist-Songs behalten (23.10.2026, Betreiber "ja, Ton behalten"): ~6 MB je Song, ~7 GB fuer
+# alle Playlists. Gespielt wird dann immer von der Platte, gemessen ohne zweiten Download. Weg kommt,
+# was in keiner Playlist mehr steht und aelter als 7 Tage ist (die letzten 40 bleiben immer).
+TON_PLAYLIST_IDS = set()        # alle videoIds der Playlists (vom Vormessen, alle 10 min frisch)
+TON_MIN_FREI_GB = 10            # darunter nichts mehr dauerhaft ablegen
+
+
+def ton_platz_frei():
+    try:
+        st = os.statvfs(os.path.expanduser("~"))
+        return st.f_bavail * st.f_frsize / 1e9 >= TON_MIN_FREI_GB
+    except OSError:
+        return False
+
+
+def ton_aufraeumen():
+    if not TON_PLAYLIST_IDS and ton_platz_frei():
+        return                          # Playlists noch nicht bekannt (gleich nach dem Start): nichts loeschen
+    try:
+        dateien = sorted(glob.glob(os.path.join(TON_ORDNER, "*")), key=os.path.getmtime)
+    except OSError:
+        return
+    for alt in dateien[:-40]:
+        vid = os.path.basename(alt).split(".")[0]
+        if vid in TON_PLAYLIST_IDS and ton_platz_frei():
+            continue
+        try:
+            if vid not in TON_PLAYLIST_IDS and time.time() - os.path.getmtime(alt) < 7 * 86400:
+                continue
+            os.remove(alt)
+        except OSError:
+            pass
 
 
 def ton_datei(vid):
@@ -1019,9 +1051,7 @@ def ton_laden(vid, audio_url):
                     log(f"Ton {vid}: auf der Platte ({time.time() - t0:.0f} s)")
                     break
                 log(f"Ton {vid}: nicht geladen (Code {r.returncode}: {(r.stderr or r.stdout).strip()[-160:]})")
-            dateien = sorted(glob.glob(os.path.join(TON_ORDNER, "*")), key=os.path.getmtime)
-            for alt in dateien[:-40]:                 # die letzten 40 Songs behalten
-                os.remove(alt)
+            ton_aufraeumen()
         except OSError:
             pass
         finally:
@@ -1172,19 +1202,29 @@ def mess_ton(vid, audio_url):
     datei = ton_datei(vid)
     if datei:
         return datei, None
-    ordner = tempfile.mkdtemp(prefix="citycafe-messen-")
+    # dauerhaft in den Ton-Ordner (Betreiber 23.10.: Ton behalten), sonst nur in einen Zwischenordner
+    dauerhaft = ton_platz_frei()
+    itag = re.search(r"[?&]itag=(\d+)", audio_url or "")     # dasselbe Format wie beim Abspielen
+    ordner = TON_ORDNER if dauerhaft else tempfile.mkdtemp(prefix="citycafe-messen-")
+    os.makedirs(ordner, exist_ok=True)
     for programm in ytdlp_programme():
         try:
             subprocess.run(["nice", "-n", "19", programm, "-q", "--no-warnings", "--js-runtimes", JS_RUNTIME,
-                            "--cookies-from-browser", COOKIES_FROM, "-f", "bestaudio", "-S", "abr",
+                            "--cookies-from-browser", COOKIES_FROM, "-f", itag.group(1) if itag else "bestaudio",
+                            "-S", "abr", "--no-playlist",
                             "-o", os.path.join(ordner, vid + ".%(ext)s"), f"https://www.youtube.com/watch?v={vid}"],
                            capture_output=True, timeout=300)
         except (OSError, subprocess.TimeoutExpired):
             continue
+        if dauerhaft:
+            if ton_datei(vid):
+                return ton_datei(vid), None
+            continue
         fertig = [p for p in glob.glob(os.path.join(ordner, vid + ".*")) if not p.endswith((".part", ".ytdl"))]
         if fertig:
             return fertig[0], ordner
-    shutil.rmtree(ordner, ignore_errors=True)
+    if not dauerhaft:
+        shutil.rmtree(ordner, ignore_errors=True)
     return audio_url, None
 
 
@@ -3664,6 +3704,9 @@ def main():
                 try:
                     ids = json.loads(cdp_eval(page_id, VORMESS_EXPR) or "[]")
                     vormessen["liste"] = [str(v) for v in ids if re.fullmatch(r"[A-Za-z0-9_-]{11}", str(v))]
+                    if len(vormessen["liste"]) > 100:          # erst, wenn die Playlists geladen sind
+                        TON_PLAYLIST_IDS.clear()
+                        TON_PLAYLIST_IDS.update(vormessen["liste"])
                     vormessen["zeit"] = time.time()
                 except (OSError, ValueError, ConnectionError):
                     pass
