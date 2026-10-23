@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T13:57:45Z",
+  "checked_at": "2026-10-23T14:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,9 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴LETS ROCK 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴 not much talking today 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 MUTE MARATHON TAG 104 😈 | Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
