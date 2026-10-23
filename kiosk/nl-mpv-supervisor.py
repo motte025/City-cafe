@@ -2566,14 +2566,15 @@ VORMESS_PAUSE_MUSIK = 45   # bei Musik: Pause zwischen zwei Songs
 VORMESS_FEHLER_PAUSE = 3600
 # Reihenfolge (Betreiber 22.10.2026): zuerst die Warteschlange, dann die ganze laufende Playlist
 # (die Schlange hat nur noch die kommenden Songs), dann die Schlager-Playlists, dann der Rest.
-# Zuerst vermessen (nach der Warteschlange): Betreiber 23.10.2026 "wir fangen mit der Playlist Mix 2 an"
-VORMESS_ZUERST = ["Mix 04.10.2026 (2)"]
+# Zuerst vermessen (nach der Warteschlange), in dieser Reihenfolge: Betreiber 23.10.2026 "zuerst die
+# Playlist Mix 2 und danach Schlager 24 bis 26"
+VORMESS_ZUERST = ["Mix 04.10.2026 (2)", "Schlager 2024–2026"]
 VORMESS_EXPR = """JSON.stringify((() => { try { const ids = new Set();
   const schlange = (typeof ytm !== 'undefined' && ytm && ytm.eintraege) || [];
   schlange.forEach(e => e && e.videoId && ids.add(e.videoId));
   const zuerst = __ZUERST__;
-  (ytmPlaylists || []).filter(p => zuerst.includes(p.name)).forEach(p =>
-    (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
+  zuerst.forEach(name => (ytmPlaylists || []).filter(p => p.name === name).forEach(p =>
+    (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId))));
   const laufend = new Set([ytm && ytm.jetzt && ytm.jetzt.liste, ...schlange.map(e => e && e.liste)].filter(Boolean));
   (ytmPlaylists || []).filter(p => laufend.has(p.name)).forEach(p =>
     (ytmListenInhalt[p.nr] || []).forEach(t => t && t.videoId && ids.add(t.videoId)));
