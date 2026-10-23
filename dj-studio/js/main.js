@@ -82,6 +82,72 @@ leisteBauen(document.getElementById('leiste'), engine, aktionen);
 const automix = automixBauen(engine, aktionen);
 if (SKIN) skinAnwenden();
 const tv = TV ? tvBauen(engine) : null;
+
+// Skin "Thunderstorm" (skin=gewitter, 23.10.2026): Wolken und Blitze nach der Musik (js/gewitter.js
+// gewitterBuehne; wie es funktioniert: STAND.md "Thunderstorm"). Variante 2 (mittel); gewitter-1/3 waren
+// Vorschauen (dezent/kraeftig) und sind nicht im Repo.
+const gewitter = { buehne: null };
+window.djStudio.gewitter = gewitter;       // Tests: djStudio.gewitter.buehne.blitz()
+const GEWITTER = (new URLSearchParams(location.search).get('skin') || '').match(/^gewitter-?(\d)?/);
+if (SKIN && GEWITTER) {
+  const s = document.createElement('script');
+  s.src = '../js/gewitter.js';
+  s.onload = () => {
+    const e = document.createElement('div');
+    e.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:49;';   // Ebenen mischen selbst
+    document.getElementById('buehne').appendChild(e);
+    // Master-Pegel (linear) -> 0..1: -36 dBFS still, -6 dBFS voll
+    const pegel = () => {
+      const m = engine.masterPegel ? engine.masterPegel() : null;
+      const r = m ? Math.max(m.L.rms || 0, m.R.rms || 0) : 0;
+      return r > 0 ? Math.min(1, Math.max(0, (20 * Math.log10(r) + 36) / 30)) : 0;
+    };
+    // Bass 0..1: am TV aus der Messung des Songs (tv.js bassPegel), in der Vorschau aus dem Spektrum
+    const spektrum = new Uint8Array(1024);
+    const bass = () => {
+      if (engine.bassPegel) return engine.bassPegel();
+      if (!engine.masterMeter || !engine.masterMeter.spektrum) return 0;
+      engine.masterMeter.spektrum(spektrum);
+      let s = 0;
+      for (let i = 1; i <= 6; i++) s += spektrum[i];          // ~25-150 Hz
+      return s / (6 * 255);
+    };
+    // Melodie 0..1: am TV aus der Messung (tv.js melodiePegel), in der Vorschau aus dem Spektrum ~500 Hz-4 kHz
+    const melodie = () => {
+      if (engine.melodiePegel) return engine.melodiePegel();
+      if (!engine.masterMeter || !engine.masterMeter.spektrum) return 0;
+      engine.masterMeter.spektrum(spektrum);
+      let s = 0;
+      for (let i = 20; i <= 170; i++) s += spektrum[i];
+      return s / (151 * 255);
+    };
+    // Takt des hoerbaren Decks: Schlag (fortlaufend, ganze Zahl = Schlag) und Tempo
+    const takt = () => {
+      const id = engine.videoMix() < 0.5 ? 'A' : 'B', d = state.decks[id], g = d.track && d.track.grid;
+      if (!d.spielt || !g || !g.bpm) return null;
+      // gemessene Schlaege (Taktmessung): genau zwischen den echten Schlaegen statt hochgerechnet aus dem
+      // Durchschnittstempo - das lief bei leichten Tempo-Schwankungen bis zu einem halben Schlag weg (Testlauf 23.10.)
+      const z = g.zeiten;
+      if (z && z.length > 1 && d.pos >= z[0] && d.pos < z[z.length - 1]) {
+        let lo = 0, hi = z.length - 1;
+        while (hi - lo > 1) { const m = (lo + hi) >> 1; if (z[m] <= d.pos) lo = m; else hi = m; }
+        return { schlag: lo + (d.pos - z[lo]) / (z[lo + 1] - z[lo]), bpm: g.bpm };
+      }
+      return { schlag: (d.pos - (g.offset || 0)) / (60 / g.bpm), bpm: g.bpm };
+    };
+    // Videofenster bleibt frei (Bild-2-Pixel, mit Bedienleiste); Wolken und Blitze gehen ueber die
+    // Pegel und ueber das Kopffeld, dort aber keine eigenen Wolken mehr (Betreiber 23.10.)
+    const frei = [[550, 80, 574, 385]];
+    const wolkenFrei = [[388, 4, 896, 66]];      // Kopffeld "CITY CAFE": keine Wolken
+    // echte Wolkenbilder (vom Betreiber mit ChatGPT erstellt, auf Schwarz, freigestellt - img/wolken/)
+    const wolkenBilder = [1, 2, 3, 4, 5, 6, 7, 8].map(n => `img/wolken/w${n}.webp`);
+    gewitter.buehne = gewitterBuehne(e, { variante: Number(GEWITTER[1]) || 2, pegel, bass, melodie, takt, frei,
+        spannung: () => (engine.spannung ? engine.spannung(4) : null),
+        drops: () => (engine.drops ? engine.drops() : null), wolkenFrei, wolkenBilder,
+        blitzBilder: [1, 2, 3, 4, 5, 6, 7].map(n => `img/blitze/n${n}.webp`) });
+  };
+  document.head.appendChild(s);
+}
 if (TV && SKIN) angeboteStarten(document.getElementById('buehne'));
 if (TV) engine.ctx.suspend();
 

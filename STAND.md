@@ -8,7 +8,10 @@ Stand beschreiben, nicht den von vorgestern.
 **Windows-Sitzung (mit `ssh w1`): zuerst `UEBERGABE-WINDOWS.md` lesen** – was am 21.10. passiert ist
 und was am W1 zu tun ist.
 
-Letzte Durchsicht: 21. Oktober 2026 abends (alles auf **`main`**, letzter Stand `f065dfcd`; DJ-Werbung
+Letzte Durchsicht: 23. Oktober 2026 mittags (DJ-Skin **Thunderstorm** mit Wolken und Blitzen nach der
+Musik; W1: Takt mit madmom, solange beat_this fehlt, Bluetooth aptX Low Latency, Ton aller
+Playlist-Songs bleibt auf der Platte, Messen trotz YouTube-403 – alles im Abschnitt „23.10.2026“).
+Davor, 21. Oktober 2026 abends (alles auf **`main`**, letzter Stand `f065dfcd`; DJ-Werbung
 unter „Pioneer DJ“ am Chef-Handy einstellbar, Master-Knopf wie im Bild, Chrom-LEDs, 804 Takt-Dateien;
 13 Skins fürs DJ Studio mit Auswahl am Handy, Meter/Fader/MIX-Felder pixelgenau, Überblendung fest
 9 s genau am Musikende mit Einsatz nach leisem Intro, Lautheit −14 LUFS, Messwerte je Song auf der
@@ -36,6 +39,142 @@ Davor, 5.–7. Oktober: DJ-Übergänge per Studio-Abgleich, offizielle Videos
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
+
+## 23.10.2026: Skin „Thunderstorm“, Takt mit madmom, Bluetooth aptX LL, Ton behalten (Windows-Sitzung)
+
+Alles auf `main`. Neuer DJ-Skin **Thunderstorm** (`skin=gewitter`): Wolken und Blitze laufen nach der
+Musik. Am W1 misst madmom den Takt, solange das beat_this-Modell fehlt. Zum Messen lädt yt-dlp den Ton
+in eine Datei, denn direkte Ton-Adressen lehnt YouTube seit heute mit 403 ab. Der Ton aller
+Playlist-Songs bleibt auf der Platte, und der Bluetooth-Empfänger läuft mit aptX Low Latency.
+
+### Thunderstorm: was wo liegt
+
+- **Skin:** `dj-studio/img/skins/gewitter.webp` (Bild „Gewitter 2“ vom Betreiber, mit Real-ESRGAN auf
+  4K gerechnet und mit `ausrichten.py` auf Bild 2 ausgerichtet). In `skin.js` heißt er `'gewitter': 'Thunderstorm'`,
+  `METER_LAGE` wie Onyx. Am Chef-Handy steht er als „⛈️ Thunderstorm“, auf der TV-Seite in `YTM_DJ_SKINS`.
+  Die Vorschauen Gewitter 1 (dezent) und 3 (kräftig) sind nicht im Repo.
+- **Effekt:** `js/gewitter.js` → `gewitterBuehne(container, optionen)`. Dieselbe Datei hat auch
+  `gewitterStarten` für die Wetter-Widgets, und das läuft unverändert. `dj-studio/js/main.js` lädt
+  sie nur bei `skin=gewitter…` und gibt ihr die Messwerte (siehe unten).
+- **Bilder:** Wolken `dj-studio/img/wolken/w1–8.webp` (vom Betreiber mit ChatGPT, auf Schwarz,
+  freigestellt, 1280 px breit). Foto-Blitze `dj-studio/img/blitze/n1–7.webp` (ChatGPT, Vorgabe „ohne
+  Leuchten“, 941×1672, **exakt freigestellt**: Deckkraft = hellster Kanal, Farbe = Bild/Deckkraft,
+  **nicht** hochskaliert).
+- **Messwerte aus der Spur** (`dj-studio/js/tv.js`, nur am TV): `engine.bassPegel()` (Tiefen),
+  `engine.melodiePegel()` (Mitten/Höhen), `engine.spannung(4)` (Lautheit jetzt und in den nächsten
+  4 s, im Verhältnis zu den lauten Teilen des Songs), `engine.drops()` (Drops und Refrains, vorab aus
+  der ganzen Spur berechnet). In der Vorschau ohne Spur kommen Bass und Melodie aus dem Spektrum.
+- **Takt:** `main.js` `takt()` gibt den Schlag des hörbaren Decks. Mit Taktmessung kommt er **aus den
+  gemessenen Schlägen** (`grid.zeiten`, Binärsuche). Ohne Taktmessung kommt er aus Tempo und Startpunkt
+  der Spur, der kann bei manchen Songs einen halben Schlag daneben liegen.
+
+### Thunderstorm: wie Wolken und Blitze funktionieren
+
+Alles läuft in `gewitterBuehne` in jedem Bild (`requestAnimationFrame`) auf zwei Canvas-Ebenen über
+dem Pult: **Wolken** normal deckend, **Licht und Blitze** mit `mix-blend-mode: screen`, also wird nur
+heller gemacht. Das Videofenster (`frei`) bleibt immer frei, das Kopffeld „CITY CAFE“ ist frei von
+Wolken (`wolkenFrei`).
+
+**Phasen** (`modus`):
+- `ruhig`: nur kleine Melodie-Blitze und selten Wetterleuchten (alle 12–20 s).
+- `mittel` (8 Takte nach einem Klangwechsel ohne Bass, also Aufbau): mittlere Blitze, alle 2 Takte ein
+  mittlerer auf der Eins.
+- `voll` (8 Takte nach Drop, Refrain oder sehr kräftigem Bassschlag): Blitze auf den Schlägen (große
+  bevorzugt auf 1 und 3), alle 2 Takte ein großer auf der Eins.
+
+Der Bass zählt **im Verhältnis zum Song** (`bassMax`, ~50 s Gedächtnis). Mit festen Grenzen kamen leise
+Bass-Songs nie in `voll`, andere lösten bei jedem Schlag einen Drop aus.
+
+**Blitzarten:**
+- **klein** (Melodie): eine neue Note in Mitten oder Höhen (relativ zum Song) → ein kurzer, schwacher Ast
+  aus einer Wolke. Höchstens alle 2,5 Schläge.
+- **mittel/groß** (gezeichnet, `blitzBaum`): Sie kommen aus einer sichtbaren Wolke, meist nach unten,
+  manchmal quer.
+  - Große höchstens 1 pro Takt (zu viele fallen weg).
+  - Mittlere höchstens alle 2 Schläge.
+  - 0,3 s voll, dann lösen sie sich in 1,4 s von oben nach unten auf (dünner, blauer).
+- **Foto-Blitz** (nur bei Drop und Refrain):
+  - **Drop:** Er kommt genau zum vorab berechneten Zeitpunkt. Drop = Bass setzt nach mindestens 4 s
+    fast ohne Bass kräftig ein. In 7 von 10 Fällen kommen 2 Blitze, einer links und einer rechts vom
+    Videofenster.
+  - **Refrain:** Der Song wird deutlich lauter (4 s davor unter 80 %, 4 s danach über 95 % seiner
+    lauten Teile). Höchstens 1 pro Minute, nicht näher als 20 s an einem Drop, in 4 von 10 Fällen zwei.
+  - **Ablauf:** 0,8 s stehen (zweimal flackern, nur dasselbe Bild), dann in 1,15 s weich von oben nach
+    unten wegwischen.
+  - **Lage:**
+    - Er kommt aus einer **eigens gesetzten Wolke**. Der Startpunkt im Bild wird beim Laden gesucht
+      (`obenX`), und die Wolke bleibt voll sichtbar, bis der Blitz weg ist.
+    - **Gedreht** um den Startpunkt, von senkrecht bis liegend, immer zur Bildmitte hin; zufällig gespiegelt.
+    - Liegende setzen am Bildrand unter dem Videofenster an.
+    - Größe: Pixel für Pixel wie das Foto, nur verkleinert (Bildhöhe 1080, höchstens 60 % Breite),
+      vorab beim Laden in Halbschritten mit hoher Qualität.
+  - **Licht:**
+    - Hinter dem Blitz ein schmaler dunkler Saum (die Blitzform verwischt).
+    - Die Wolke am Blitz leuchtet am stärksten auf, alle anderen Wolken etwas, bei 2 Blitzen anteilig.
+    - Das Pult wird kurz heller (ganzes Bild etwas, rund um den Blitz deutlich), im Takt mit dem Flackern.
+
+**Wolken:**
+- 13 Stück (Variante 2), echte Wolkenbilder, ziehen von links nach rechts, verschieden groß, schnell
+  und zufällig gespiegelt.
+- **Menge und Deckkraft nach der Spannung:** Maßgeblich ist der höhere von zwei Werten: Lautheit jetzt
+  oder in den nächsten 4 s.
+  - Ruhig: ~70 % der Wolken bei 30 % Deckkraft (blass, aber immer da für die kleinen Blitze).
+  - Spitzt sich der Song zu: kräftig, im vollen Teil +30 %.
+  - Kommt in < 4,5 s ein Drop oder Refrain: sicher voll.
+  - Neue Wolken blenden in 1,5 s ein, überzählige blenden aus.
+
+**Testen:**
+- Lokale Testseite `gewitter-test/` (nicht im Repo, mit 24 Songs, Ton und Messdaten).
+- `djStudio.gewitter.buehne` hat `zustand()` (Phase, Zähler, Dichte, Schlag), `fotoBlitz(nr)`,
+  `zeitlupe(5)` und `halten(ms)` (Standbild).
+- Testläufe im unsichtbaren Chrome (24 Songs × 2 min): Drops alle mit Foto-Blitz, Wolken 3,5–4 s vorher
+  voll, 1 Foto-Blitz ohne Anlass in 48 min, große Blitze 13–25 je Minute im vollen Teil.
+- **Schläge** (gegen die gemessenen Schläge): mit Taktmessung 76 % unter 50 ms neben dem Schlag
+  (Median 30 ms); ohne Taktmessung je nach Song gut oder ~½ Schlag daneben.
+- Auf dem W1 (unsichtbarer Chromium, GPU): **60 Bilder/s, 0 Ruckler** im vollen Teil mit Foto-Blitz.
+  Der Kiosk-Chromium nutzt die GPU (Radeon 780M). Testdateien liegen in `~/gewittertest` (41 MB, löschbar).
+- Der Café-TV ist **1080p** (Samsung meldet nur 1920×1080), Hochskalieren bringt nichts.
+
+### W1 am 23.10.
+
+- **Bluetooth:** Der Ton geht per Bluetooth an den Empfänger **B03 Pro** am Verstärker (nicht über HDMI).
+  - Mit LDAC kam er ~150–250 ms nach dem Bild; jetzt **aptX Low Latency** (~40 ms).
+  - `bt_codec_pruefen` prüft alle 5 min ohne Musik und stellt bei Bedarf um. WirePlumber merkt sich
+    den Codec auch über einen Neustart.
+  - Von Hand: `pactl send-message /card/bluez_card.70_B3_D5_91_30_7A/bluez list-codecs` /
+    `switch-codec <nr>`.
+- **Takt:**
+  - Das Modell `final0` (Uni-Server JKU) fehlt weiter (503). Probiert wird nur noch einmal pro Stunde,
+    vorher bei jedem Song.
+  - Bis dahin misst **madmom** (CPJKU, Modelle im Paket) in eigener Umgebung
+    `~/.local/share/citycafe/madmom-venv` (aus dem offiziellen GitHub). Dateien haben `"m": "madmom"`.
+  - An „Animals“ verglichen: Schläge im Mittel 20 ms neben beat_this, Eins in 96 von 114 Takten gleich.
+    ~30 s je Song.
+- **403 bei Ton-Adressen:**
+  - Seit 23.10. lehnt YouTube die googlevideo-Adressen für Ton allein (Client TVHTML5) außerhalb von
+    yt-dlp mit 403 ab, auch über den Zwischenhändler. Damit scheiterten Wellenform, Lautheit und Takt
+    neuer Songs (Takt „Code 2“).
+  - Jetzt `mess_ton()`: der geladene Ton, sonst lädt yt-dlp ihn. Abspielen war nicht betroffen.
+- **Ton behalten** (Betreiber):
+  - Beim Messen bleibt der Ton im Ton-Ordner, ~6 MB je Song, ~4 GB für alle 701 Playlist-Songs.
+  - Weg kommt, was in keiner Playlist mehr steht und älter als 7 Tage ist (die letzten 40 bleiben).
+  - Unter 10 GB frei: nur ein Zwischenordner.
+  - Ton für schon gemessene Songs lädt er **noch nicht** nach. Auf Ansage des Betreibers einbauen:
+    Vormessen auch bei fehlendem Ton, Mix 2 und Schlager 2024–2026 zuerst.
+- **Vormessen-Reihenfolge:** Warteschlange, dann **Mix 04.10.2026 (2)**, dann **Schlager 2024–2026**
+  (`VORMESS_ZUERST`), dann laufende Playlist, Schlager, Rest.
+- **Playlists:**
+  - 8 Listen, 1437 Einträge, **701 verschiedene Songs**; 654 haben Takt aus beat_this, der Rest
+    kommt mit madmom.
+  - Mix 04.10.2026 (2) bekam 16 Testsongs dazu (jetzt 211). Sie wurden über die Datenbank angehängt
+    wie vom Chef-Handy, und gleich eingelesen.
+  - Sicherung der Liste davor: Desktop `dj gewitter/mix2-sicherung-vor-testsongs.json`.
+- **Erster Tagesbericht** `berichte/W1-2026-10-22.md`: 55/55 Blenden, CPU höchstens 76 °C,
+  4 Hänger vor dem Zwischenhändler, 2 git-Sperren in der Notfall-Kopie. Die Sperren entstanden bei
+  Neustarts mitten im Abruf und lösen sich nach 10 min selbst.
+- Commits: `bf1e2bf1`, `be17776c`, `67cd3c33`, `debfaf62`, `775562d2`, `e5fcceae`, `7279d922`.
+  Jedes Update startet den W1 neu (nur ohne Musik). raw.githubusercontent liefert einige Minuten lang
+  noch die alte Datei, dann das Update wiederholen.
 
 ## 22.10.2026: Fehler vom Café-Abend 21.10. behoben (Windows-Sitzung)
 

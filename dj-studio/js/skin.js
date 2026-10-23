@@ -20,6 +20,7 @@ export const SKINS = {
   'gold': 'Gold', 'weiss': 'Schneeweiß', 'chrom': 'Chrom', 'ladys-tuerkis': 'Ladys Night Türkis',
   'elfenbein': 'Elfenbein', 'carbon': 'Carbon', 'ladys-pink': 'Ladys Night Pink', 'onyx': 'Onyx',
   'champagner': 'Champagner',
+  'gewitter': 'Thunderstorm',   // mit Wolken und Blitzen nach der Musik (js/gewitter.js gewitterBuehne)
 };
 const SKIN_WAHL = (() => {
   const s = new URLSearchParams(location.search).get('skin');
@@ -414,6 +415,7 @@ const METER_LAGE = {
   'carbon': { A: [65.76, 424.31, 93.18, 667.2], B: [1578.31, 423.83, 1605.15, 666.89], M: [590.58, 557.34, 244.31, 52.28, 2.63, 11.52, 0.169], G: [960.85, 540.09, 984.33, 648.22] },
   'ladys-pink': { A: [66.56, 424.72, 92.78, 666.23], B: [1578.36, 424.64, 1604.28, 666.11], M: [590.74, 557.44, 244.47, 52.15, 2.6, 11.73, 0.18], G: [960.86, 541.22, 983.85, 647.99] },
   'onyx': { A: [68.24, 425.01, 93.09, 667.75], B: [1579.48, 424.97, 1604.31, 667.74], M: [590.38, 557.1, 245.7, 52.08, 2.78, 11.39, 0.199], G: [961.26, 541.22, 983.66, 649.59] },
+  'gewitter': { A: [68.24, 425.01, 93.09, 667.75], B: [1579.48, 424.97, 1604.31, 667.74], M: [590.38, 557.1, 245.7, 52.08, 2.78, 11.39, 0.199], G: [961.26, 541.22, 983.66, 649.59] },  // Bild auf Bild 2 ausgerichtet (Real-ESRGAN 4K), Lage wie Onyx
   'champagner': { A: [66.79, 424.69, 93.04, 665.43], B: [1578.61, 424.64, 1604.47, 665.57], M: [590.64, 557.39, 244.29, 52.16, 2.61, 11.45, 0.155], G: [960.79, 541.1, 983.95, 647.79] },
 };
 const METER_GRUND = '#060606', LED_BREITE = 18.3, GR_BREITE = 16.2, CLIP_H = 3, CLIP_ABSTAND = 1.8;

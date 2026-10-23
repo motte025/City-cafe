@@ -386,6 +386,85 @@ export function tvBauen(engine) {
     de.meterPost.lesen = de.pegel;
     de.meterPre.lesen = de.pegel;
   }
+  // Bassanteil (0..1) dessen, was gerade aus der Anlage kommt - aus der gemessenen Tiefen-Reihe
+  // (Gewitter-Skins: Bass setzt ein = Gewitter geht voll mit)
+  engine.bassPegel = () => {
+    let m = 0;
+    for (const id of ['A', 'B']) {
+      const d = state.decks[id], sp = d.track && spuren.get(d.track.videoId);
+      if (!d.spielt || !sp) continue;
+      const i = Math.floor(d.pos * sp.wf.proSek);
+      m = Math.max(m, (sp.wf.tief[i] || 0) * engine.xfPegel(id));
+    }
+    return m;
+  };
+  // Melodie (0..1): Mitten und Hoehen der gemessenen Spur - Gewitter: kleine Blitze bei Melodien
+  engine.melodiePegel = () => {
+    let m = 0;
+    for (const id of ['A', 'B']) {
+      const d = state.decks[id], sp = d.track && spuren.get(d.track.videoId);
+      if (!d.spielt || !sp) continue;
+      const i = Math.floor(d.pos * sp.wf.proSek);
+      m = Math.max(m, Math.max(sp.wf.mitte[i] || 0, sp.wf.hoch[i] || 0) * engine.xfPegel(id));
+    }
+    return m;
+  };
+  // Spannung (Gewitter): wie laut der Song gerade ist und in den naechsten Sekunden wird, relativ zu
+  // seinen lauten Teilen (0 = ganz ruhig, 1 = voll) - aus der gemessenen Spur, damit die Wolken vor
+  // dem Drop schon da sind (Betreiber 23.10.: "rechtzeitig zurueck")
+  engine.spannung = (vorausSek) => {
+    let jetzt = 0, voraus = 0, da = false;
+    for (const id of ['A', 'B']) {
+      const d = state.decks[id], sp = d.track && spuren.get(d.track.videoId);
+      if (!d.spielt || !sp) continue;
+      const w = sp.wf, n = w.spitze.length, ps = w.proSek;
+      if (!w.laut) { const s = Array.from(w.spitze).sort((x, y) => x - y); w.laut = Math.max(0.05, s[Math.floor(s.length * 0.9)]); }
+      const schnitt = (von, bis) => { let t = 0, k = 0; for (let i = Math.max(0, von); i < Math.min(n, bis); i++) { t += w.spitze[i]; k++; } return k ? t / k : 0; };
+      const i = Math.floor(d.pos * ps), x = engine.xfPegel(id);
+      jetzt = Math.max(jetzt, schnitt(i - ps, i) / w.laut * x);
+      for (let a = i; a < i + (vorausSek || 6) * ps; a += ps / 2) voraus = Math.max(voraus, schnitt(a, a + ps / 2) / w.laut * x);
+      da = true;
+    }
+    return da ? { jetzt: Math.min(1.2, jetzt), voraus: Math.min(1.2, voraus) } : null;
+  };
+  // Drops des hoerbaren Songs aus der gemessenen Bass-Reihe (Gewitter: Foto-Blitz genau auf den Drop,
+  // Testlauf 23.10.: im laufenden Song geraten war zu unsicher). Drop = Bass setzt nach >= 4 s fast ohne
+  // Bass kraeftig ein; hoechstens alle 8 s. Liefert die Position und die Drop-Zeiten (s).
+  engine.drops = () => {
+    const id = engine.videoMix() < 0.5 ? 'A' : 'B', d = state.decks[id], sp = d.track && spuren.get(d.track.videoId);
+    if (!d.spielt || !sp) return null;
+    const w = sp.wf;
+    if (!w.drops) {
+      const ps = w.proSek, sek = Math.floor(w.tief.length / ps), bass = [];
+      for (let i = 0; i < sek; i++) { let t = 0; for (let k = i * ps; k < (i + 1) * ps; k++) t += w.tief[k]; bass.push(t / ps); }
+      const ref = [...bass].sort((x, y) => x - y)[Math.floor(bass.length * 0.9)] || 1;
+      w.drops = [];
+      for (let i = 4; i < sek; i++) {
+        if (Math.max(...bass.slice(i - 4, i)) / ref < 0.35 && bass[i] / ref > 0.6
+            && (!w.drops.length || i - w.drops[w.drops.length - 1] > 8)) {
+          // genauer Einsatz: erstes Fach in dieser Sekunde mit kraeftigem Bass
+          let k = i * ps; while (k < (i + 1) * ps && w.tief[k] / ref < 0.6) k++;
+          w.drops.push(k / ps);
+        }
+      }
+    }
+    if (!w.refrains) {
+      // Refrain-Einsatz (Betreiber 23.10.: "einmal pro Minute beim Refrain auch Foto-Blitz"): der Song
+      // wird deutlich lauter - 4 s davor unter 80 %, 4 s danach ueber 95 % seiner lauten Teile.
+      // Hoechstens einer pro Minute und nicht naeher als 20 s an einem Drop.
+      const ps = w.proSek, sek = Math.floor(w.spitze.length / ps), laut = [];
+      for (let i = 0; i < sek; i++) { let t = 0; for (let k = i * ps; k < (i + 1) * ps; k++) t += w.spitze[k]; laut.push(t / ps); }
+      const ref = [...laut].sort((x, y) => x - y)[Math.floor(laut.length * 0.9)] || 1;
+      const schnitt = (a, b) => laut.slice(a, b).reduce((x, y) => x + y, 0) / Math.max(1, b - a) / ref;
+      w.refrains = [];
+      for (let i = 4; i < sek - 4; i++) {
+        if (schnitt(i - 4, i) < 0.8 && schnitt(i, i + 4) > 0.95
+            && (!w.refrains.length || i - w.refrains[w.refrains.length - 1] >= 60)
+            && !w.drops.some(t => Math.abs(t - i) < 20)) w.refrains.push(i);
+      }
+    }
+    return { pos: d.pos, drops: w.drops, refrains: w.refrains };
+  };
   engine.masterPegel = () => {
     const m = { L: { spitze: 0, rms: 0 }, R: { spitze: 0, rms: 0 }, reduktion: 0 };
     const laut = lautFaktor();
