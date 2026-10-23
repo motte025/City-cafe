@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T18:42:45Z",
+  "checked_at": "2026-10-23T18:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -59,16 +59,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Symmetry next: @KFoxxyP  💫 !charity",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Symmetry next: @KFoxxyP  💫 !charity",
       "game": "DJs"
     }
   ]
