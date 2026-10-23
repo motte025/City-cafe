@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-23T19:02:45Z",
+  "checked_at": "2026-10-23T19:17:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 MUTE MARATHON TAG 104 😈 | Harder Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "ACE OF SPADES",
       "game": "DJs"
     },
     {
@@ -62,13 +69,6 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Symmetry next: @KFoxxyP  💫 !charity",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "ACE OF SPADES",
       "game": "DJs"
     }
   ]
