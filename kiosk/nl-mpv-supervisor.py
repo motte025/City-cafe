@@ -2719,13 +2719,14 @@ import torch
 torch.set_num_threads(1)
 from beat_this.inference import File2Beats
 vid, url, ziel = sys.argv[1:4]
+f2b = File2Beats(checkpoint_path='final0', device='cpu', dbn=False)   # zuerst: fehlt das Modell, gleich abbrechen
 fd, wav = tempfile.mkstemp(suffix='.wav'); os.close(fd)
 try:
     r = subprocess.run(['ffmpeg', '-nostdin', '-y', '-hide_banner', '-loglevel', 'error', '-readrate', '16',
                         '-i', url, '-vn', '-ac', '1', '-ar', '22050', wav], capture_output=True, timeout=300)
     if r.returncode or os.path.getsize(wav) < 100000:
         sys.exit(2)
-    beats, downs = File2Beats(checkpoint_path='final0', device='cpu', dbn=False)(wav)
+    beats, downs = f2b(wav)
 finally:
     os.remove(wav)
 ms = [round(float(x) * 1000) for x in beats]
