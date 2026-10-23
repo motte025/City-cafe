@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T19:17:45Z",
+  "checked_at": "2026-10-23T19:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -69,6 +69,13 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Symmetry next: @KFoxxyP  💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
