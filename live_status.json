@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T17:57:45Z",
+  "checked_at": "2026-10-23T18:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,10 +45,10 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "MIX MISSION TV | PIXIE DUST",
-      "game": "DJs"
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #699 with Lørean",
+      "game": "Music"
     },
     {
       "platform": "twitch",
