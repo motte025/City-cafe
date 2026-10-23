@@ -21,6 +21,7 @@ import math
 import os
 import random
 import re
+import shutil
 import signal
 import socket
 import struct
@@ -1161,6 +1162,30 @@ def strom_server():
         return
     server.daemon_threads = True
     server.serve_forever()
+
+
+def mess_ton(vid, audio_url):
+    """Ton zum Messen als Datei -> (Pfad, Zwischenordner|None). Direkte googlevideo-Adressen fuer Ton
+    allein lehnt YouTube seit 23.10.2026 ausserhalb von yt-dlp mit 403 ab (Wellenform, Lautheit und Takt
+    neuer Songs scheiterten) - also: der schon geladene Ton, sonst laedt yt-dlp ihn in einen
+    Zwischenordner (danach wegraeumen). Klappt beides nicht: die Adresse wie bisher."""
+    datei = ton_datei(vid)
+    if datei:
+        return datei, None
+    ordner = tempfile.mkdtemp(prefix="citycafe-messen-")
+    for programm in ytdlp_programme():
+        try:
+            subprocess.run(["nice", "-n", "19", programm, "-q", "--no-warnings", "--js-runtimes", JS_RUNTIME,
+                            "--cookies-from-browser", COOKIES_FROM, "-f", "bestaudio", "-S", "abr",
+                            "-o", os.path.join(ordner, vid + ".%(ext)s"), f"https://www.youtube.com/watch?v={vid}"],
+                           capture_output=True, timeout=300)
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        fertig = [p for p in glob.glob(os.path.join(ordner, vid + ".*")) if not p.endswith((".part", ".ytdl"))]
+        if fertig:
+            return fertig[0], ordner
+    shutil.rmtree(ordner, ignore_errors=True)
+    return audio_url, None
 
 
 def ton_quelle(vid, audio_url):
@@ -3500,7 +3525,12 @@ def main():
                     urls = resolve(vid, "bestaudio", "abr")
                     if urls:
                         ton_laden(vid, urls[0])        # Ton schon Minuten vorher auf die Platte
-                        stille_messen(vid, urls[0], urls[2])
+                        quelle, ordner = mess_ton(vid, urls[0])
+                        try:
+                            stille_messen(vid, quelle, urls[2])
+                        finally:
+                            if ordner:
+                                shutil.rmtree(ordner, ignore_errors=True)
                     else:
                         failed[vid] = time.time()
                 analyse_arbeiter = threading.Thread(target=analyse_lauf, daemon=True)
@@ -3549,7 +3579,12 @@ def main():
                                         return                  # ... ausser die Takt-Datei fehlt
                                 urls = resolve(vid, "bestaudio", "abr")
                                 if urls:
-                                    spur_messen(vid, urls[0], urls[2])
+                                    quelle, ordner = mess_ton(vid, urls[0])
+                                    try:
+                                        spur_messen(vid, quelle, urls[2])
+                                    finally:
+                                        if ordner:
+                                            shutil.rmtree(ordner, ignore_errors=True)
                             spur_arbeiter = threading.Thread(target=spur_vorab, daemon=True)
                             spur_arbeiter.start()
                             break
@@ -3651,15 +3686,20 @@ def main():
                             log("Vormessen: 3 Fehler in Folge - 1 h Pause")
                         return
                     vormessen["fehler_folge"] = 0
-                    if not os.path.exists(spur_datei(vid)) or (takt_moeglich() and not os.path.exists(takt_datei(vid))):
-                        spur_messen(vid, urls[0], urls[2])
-                        SPUREN.pop(vid, None)      # nur auf die Platte, nicht im Speicher sammeln
-                    if not stille_von_platte(vid):
-                        if "gain" not in (STILLE.get(vid) or {}):
-                            STILLE.pop(vid, None)  # halbe Messung (Platzhalter) verwerfen
-                        stille_messen(vid, urls[0], urls[2])
+                    quelle, ordner = mess_ton(vid, urls[0])
+                    try:
+                        if not os.path.exists(spur_datei(vid)) or (takt_moeglich() and not os.path.exists(takt_datei(vid))):
+                            spur_messen(vid, quelle, urls[2])
+                            SPUREN.pop(vid, None)      # nur auf die Platte, nicht im Speicher sammeln
                         if not stille_von_platte(vid):
-                            vormessen["fehl"][vid] = time.time()   # in 6 h noch einmal
+                            if "gain" not in (STILLE.get(vid) or {}):
+                                STILLE.pop(vid, None)  # halbe Messung (Platzhalter) verwerfen
+                            stille_messen(vid, quelle, urls[2])
+                            if not stille_von_platte(vid):
+                                vormessen["fehl"][vid] = time.time()   # in 6 h noch einmal
+                    finally:
+                        if ordner:
+                            shutil.rmtree(ordner, ignore_errors=True)
                     vormessen["naechste"] = time.time() + pause   # Pause ab Ende der Messung
                     vormessen["erledigt"] += 1
                     if vormessen["erledigt"] % 10 == 1:
