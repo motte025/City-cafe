@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T16:02:45Z",
+  "checked_at": "2026-10-23T16:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wir starten gemeinsam ins Wochenende!  <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
