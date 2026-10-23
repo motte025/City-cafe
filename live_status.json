@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-23T07:27:46Z",
+  "checked_at": "2026-10-23T07:37:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ RAVE INTO THE WEEKEND ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
