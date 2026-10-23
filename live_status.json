@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-23T16:52:46Z",
+  "checked_at": "2026-10-23T17:02:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 MUTE MARATHON TAG 104 😈 | Harder Styles | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Abfahrt ins Wochenende mit Bass | Maybe heute etwas kürzer wegen Kreislauf | !holy",
       "game": "DJs"
     },
     {
@@ -48,6 +41,20 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  CHILL TRANCE CLASSICS - COMMUNITY CHALLENGE 2.0 w/ @AlexVaganza 🍒✨💞💋🌈",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "MIX MISSION TV | PIXIE DUST",
       "game": "DJs"
     }
   ]
