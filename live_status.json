@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T18:07:48Z",
+  "checked_at": "2026-10-23T18:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,17 +45,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "Above & Beyond Group Therapy #699 with Lørean",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "Warm Up x Groovers w You&Na & Padsingers b2b Filburt",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #699 with Lørean",
+      "game": "Music"
     },
     {
       "platform": "twitch",
