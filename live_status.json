@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-23T20:07:45Z",
+  "checked_at": "2026-10-23T20:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ 90's EURO DANCE SPECIAL | !tip | !goals ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
