@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-24T13:17:47Z",
+  "checked_at": "2026-10-24T13:22:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Samstagsmusik mit vielen Genres und Bass | !holy",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
