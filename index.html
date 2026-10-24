@@ -10171,6 +10171,7 @@
         // je Zyklus eines, reihum, direkt nach der grossen Folie. Gleiche Buehne
         // (Rahmen, Ambilight); an/aus, Dauer, Rahmen, Licht, wie oft: Chef-Handy.
         const PLAKAT_SLOT_INDEX = 0.6;
+        const HALLOWEEN_PLAKAT_SLOT_INDEX = 0.65; // Bild in jeder Runde fuer 60 Sekunden
         const HALLOWEEN_SLOT_INDEX = 0.7;   // hinter den Plakaten, vor dem Mittagsteller
         let plakatNr = 0;
         function runPlakatState() {
@@ -10190,6 +10191,29 @@
             bild.alt = pl.titel || '';
             buehneEinstellen('plakat-fullscreen', 'plakate');
             document.getElementById('plakat-fullscreen').classList.add('active');
+            return true;
+        }
+
+        // Halloween-Party-Plakat: immer genau 1 Minute pro Dashboard-Durchlauf,
+        // eigenstaendig von der wechselnden Plakatliste in werbung.json.
+        // Wie der bestehende Halloween-Trailer nur bis einschl. 31.10.2026.
+        const HALLOWEEN_PLAKAT_DATEI = 'halloween_party_2026_fhd.webp';
+        const HALLOWEEN_PLAKAT_DAUER_MS = 60000;
+        function runHalloweenPlakatState() {
+            if (!halloweenAktiv()) return false;
+            const bild = document.getElementById('plakat-bild');
+            bild.onerror = () => {
+                bild.onerror = null;
+                if (document.getElementById('plakat-fullscreen').classList.contains('active')) {
+                    cancelSequenceTimers();
+                    runMasterSequence();
+                }
+            };
+            bild.src = HALLOWEEN_PLAKAT_DATEI;
+            bild.alt = 'Halloween Party mit 2ND FLOOR DUO am 31.10., Live-Musik ab 18:00 Uhr';
+            // Fuer dieses FHD-Motiv den ganzen 16:9-Bildschirm ohne Rand nutzen.
+            buehneEinstellen('plakat-fullscreen', 'plakate');
+            document.getElementById('plakat-fullscreen').classList.add('rahmen-aus', 'active');
             return true;
         }
 
@@ -15298,9 +15322,16 @@
 
             } else if (mediaStateIndex === PLAKAT_SLOT_INDEX) {
                 // Plakate (werbung.json); ohne Plakat sofort weiter.
-                mediaStateIndex = HALLOWEEN_SLOT_INDEX;
+                mediaStateIndex = HALLOWEEN_PLAKAT_SLOT_INDEX;
                 if (runPlakatState()) globalMasterTimer = later(runMasterSequence, werbungDauerMs('plakate'));
                 else runMasterSequence();
+
+            } else if (mediaStateIndex === HALLOWEEN_PLAKAT_SLOT_INDEX) {
+                // Halloween-Plakat in jeder Runde: 60 s, danach Horror-Trailer.
+                mediaStateIndex = HALLOWEEN_SLOT_INDEX;
+                if (runHalloweenPlakatState()) {
+                    globalMasterTimer = later(runMasterSequence, HALLOWEEN_PLAKAT_DAUER_MS);
+                } else runMasterSequence();
 
             } else if (mediaStateIndex === HALLOWEEN_SLOT_INDEX) {
                 // Nur bis zum 31.10.2026; danach springt der Slot sofort weiter.
