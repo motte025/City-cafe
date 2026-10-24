@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-24T14:42:50Z",
+  "checked_at": "2026-10-24T14:57:50Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "gerd merrrrrnin !bewbs !merch !wishlist !morestreams !ALT",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "gerd merrrrrnin !bewbs !merch !wishlist !morestreams !ALT",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
