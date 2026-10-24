@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-24T10:37:45Z",
+  "checked_at": "2026-10-24T10:52:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Classics mit @djfalk",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 MUTE MARATHON TAG 105 😈 | Mixed Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Classics mit @djfalk",
       "game": "DJs"
     },
     {
