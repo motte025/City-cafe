@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-24T18:52:45Z",
+  "checked_at": "2026-10-24T19:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Back to the 90s - Heute etwas anders! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "BAD TO THE BONE",
       "game": "DJs"
     }
   ]
