@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-24T14:37:45Z",
+  "checked_at": "2026-10-24T14:42:50Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "gerd merrrrrnin !bewbs !merch !wishlist !morestreams !ALT",
       "game": "DJs"
     }
   ]
