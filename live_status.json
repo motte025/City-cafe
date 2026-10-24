@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-24T05:22:46Z",
+  "checked_at": "2026-10-24T05:27:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "CLOWNIN' AROUND🤡 !patreon",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
