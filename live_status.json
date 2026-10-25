@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-25T10:42:46Z",
+  "checked_at": "2026-10-25T11:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
       "game": "DJs"
     }
   ]
