@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-25T20:32:47Z",
+  "checked_at": "2026-10-25T20:42:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Dance Classics - Heute etwas anders! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
