@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-25T11:47:45Z",
+  "checked_at": "2026-10-25T11:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 MUTE MARATHON TAG 106 vs. KOCHEN 😈 | Mixed Styles Quicky | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
@@ -24,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 MUTE MARATHON TAG 106 vs. KOCHEN 😈 | Mixed Styles Quicky | !insta !holy !SF #Werbung",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 VnF Pink October Vol. 7 for Breast Cancer Now 💫 !charity",
       "game": "DJs"
     }
   ]
