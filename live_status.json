@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-25T13:12:45Z",
+  "checked_at": "2026-10-25T13:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 VnF Pink October Vol. 7 for Breast Cancer Now 💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "wittie_bln",
+      "name": "Wittie_BLN",
+      "title": "🍒✨💋🌈  Relaxed Sunday vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈",
       "game": "DJs"
     }
   ]
