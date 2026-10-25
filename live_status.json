@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-25T17:57:47Z",
+  "checked_at": "2026-10-25T18:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
       "title": "🍒✨💋🌈  Relaxed Sunday vibes (and a little bit rowing) w/ @AlexVaganza 🍒✨💞💋🌈 | TY Raiders: @dj_nodrogs, @multimodalmusic",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Dance Classics - Heute etwas anders! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
