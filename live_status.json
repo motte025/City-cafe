@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-25T13:47:45Z",
+  "checked_at": "2026-10-25T13:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -48,6 +48,13 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 VnF Pink October Vol. 7 for Breast Cancer Now 💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
