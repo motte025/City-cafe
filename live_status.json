@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-25T12:17:47Z",
+  "checked_at": "2026-10-25T12:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wunderschöner Sonntag <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wunderschöner Sonntag <3 - !dc !peepo !linktree !shop",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
       "game": "DJs"
     },
     {
