@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-25T11:57:45Z",
+  "checked_at": "2026-10-25T12:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 VnF Pink October Vol. 7 for Breast Cancer Now 💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wunderschöner Sonntag <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
