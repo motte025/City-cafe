@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-25T12:02:45Z",
+  "checked_at": "2026-10-25T12:17:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "l4uchm3ld3r",
       "name": "L4uchm3ld3r",
       "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
       "game": "DJs"
     },
     {
@@ -24,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 VnF Pink October Vol. 7 for Breast Cancer Now 💫 !charity",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wunderschöner Sonntag <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wunderschöner Sonntag <3 - !dc !peepo !linktree !shop",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 VnF Pink October Vol. 7 for Breast Cancer Now 💫 !charity",
       "game": "DJs"
     }
   ]
