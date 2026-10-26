@@ -40,6 +40,34 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 26.10.2026: Dart-Abend (verschoben) und Dartcam ohne Ruckeln (Windows-Sitzung)
+
+- **Dart-Modus von Hand:** Das Spiel wurde auf heute verschoben. Die Liga-Seite (KEDSV) trägt
+  Verschiebungen nicht ein, also kennen weder `dart_liga.json` noch das Apps-Script den Termin.
+  - Angenommen: Runde 4 Chaoten – DC Fighting Penguins „Waddling Arrows“ (eigentlich 31.10.).
+  - Eingeschaltet mit `?dartabend=1` an der TV-Adresse (per CDP). Das bleibt bis zum nächsten Neuladen
+    ohne den Parameter, und es endet **nicht** von selbst.
+  - Das Apps-Script läuft einwandfrei (Testlauf vom Betreiber, „Keine Aenderung“). Live-Ergebnisse gibt es
+    erst, wenn das Spiel auf der Liga-Seite eingetragen ist.
+  - Idee für später: Knopf „Dart-Abend heute“ am Chef-Handy für Fernseher und Skript.
+- **Dartcam stand alle paar Minuten** (heute 3× in 25 min, am 10.10. 15×) **und ruckelte:**
+  - Ursache sind die Zeitstempel der TP-Link: In 20 s springen sie ~20× um bis 0,45 s, 18× rückwärts.
+    mpv hielt bei jedem Sprung an. Das Netz ist es nicht (Ping 5 ms, 0 Verlust).
+  - Jetzt `--correct-pts=no --container-fps-override=25`: feste Bildrate aus dem Puffer.
+  - Das Tempo läuft nach dem Puffer mit (`cam_tempo`: 0,98/1,02 bei unter 60 % bzw. über 140 %), denn
+    die Kamera liefert ~24,8 Bilder/s.
+  - Standbild-Erkennung 20 → 8 s.
+- **Puffer 3 → 1,5 s** (`CITYCAFE_CAM_CACHE_SECS` in `citycafe.env` auf 1.5 gesetzt). Die Verzögerung
+  des Bildes ist damit halbiert.
+- **Hauptstrom** `stream1` (2688×1520, 25 Bilder/s, über die GPU mit vaapi, mpv ~10 % CPU) statt `stream2`
+  (1280×720). Betreiber: scharf am 1080p-TV.
+- **Gemessen:**
+  - Unsichtbare Vergleiche auf dem W1: fest 25 Bilder/s 0 Stocker gegen 2 mit Kamera-Zeit, 1 s Puffer
+    2 min ohne Stocker.
+  - Im Betrieb seit 14:59 über 25 min: 0 Stocker, 0 verlorene Bilder, kein Aussetzer.
+- Eingespielt ohne W1-Neustart: Supervisor per PID beendet und mit der Umgebung von sway neu gestartet.
+  Ein Neustart des W1 hätte `?dartabend=1` verloren. Commits `fdecb477`, `27d7d537`, `8370c720`, `aae9de28`.
+
 ## 23.10.2026: Skin „Thunderstorm“, Takt mit madmom, Bluetooth aptX LL, Ton behalten (Windows-Sitzung)
 
 Alles auf `main`. Neuer DJ-Skin **Thunderstorm** (`skin=gewitter`): Wolken und Blitze laufen nach der
