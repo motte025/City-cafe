@@ -65,7 +65,13 @@ JS_RUNTIME = os.environ.get("CITYCAFE_JS_RUNTIME", "node")
 # Nie HDR (22.10.2026): der TV laeuft ohne HDR (wirkt blass), und die HDR-Fassung ist 3-4x so gross
 # (475 MB fuer 10 min) - sie kam nicht in Gang. [dynamic_range=?SDR]: SDR oder ohne Angabe.
 SDR = "[dynamic_range=?SDR]"
-FORMAT = f"bestvideo[height<=1080]{SDR}+bestaudio/bestvideo[height<=1080]+bestaudio/best[height<=1080]"
+# HLS zuerst (26.10.2026): seit 23.10. ~22 Uhr lehnt YouTube die einzelnen https-Stroeme (DASH, c=TVHTML5)
+# ausserhalb von yt-dlp mit 403 ab - mpv bekam kein Bild ("mpv ohne erstes Bild nach 20s", Ueberblendungen
+# abgebrochen). Die HLS-Fassung (m3u8 von manifest.googlevideo.com) spielt mpv direkt in 1080p, gemessen an
+# 6 betroffenen Songs. Bild und Ton beide als HLS, sonst haengt der Ton (ohne Datei) wieder am 403.
+HLS = "[protocol^=m3u8]"
+FORMAT = (f"bestvideo[height<=1080]{HLS}{SDR}+bestaudio{HLS}/"
+          f"bestvideo[height<=1080]{SDR}+bestaudio/bestvideo[height<=1080]+bestaudio/best[height<=1080]")
 
 
 def format_waehlen(hoehe=0, fps=0):
@@ -78,6 +84,9 @@ def format_waehlen(hoehe=0, fps=0):
     grund = ("[vcodec^=avc1]" if MUSIK_NUR_H264 else "") + f"[height<={h}]"
     takt = "[fps>50]" if fps == 60 else ("[fps<=31]" if fps == 30 else "")
     stufen = []
+    if takt:
+        stufen.append(f"bestvideo{grund}{HLS}{SDR}{takt}+bestaudio{HLS}")
+    stufen.append(f"bestvideo{grund}{HLS}{SDR}+bestaudio{HLS}")
     if takt:
         stufen.append(f"bestvideo{grund}{SDR}{takt}+bestaudio[ext=m4a]")
     stufen.append(f"bestvideo{grund}{SDR}+bestaudio[ext=m4a]")
@@ -106,7 +115,9 @@ def musik_format(hoehe=0, fps=0):
     # eine Obergrenze (schwaches WLAN), darum dann vorne ein hartes Filter.
     takt = "[fps<=31]" if f == 30 else ""
     codec = "[vcodec^=avc1]" if MUSIK_NUR_H264 else ""
-    stufen = [f"bv*{codec}{SDR}{takt}+ba[ext=m4a]", f"bv*{codec}{SDR}{takt}+ba"] if takt else []
+    stufen = [f"bv*{codec}{HLS}{SDR}{takt}+ba{HLS}"] if takt else []
+    stufen += [f"bv*{codec}{HLS}{SDR}+ba{HLS}"]
+    stufen += [f"bv*{codec}{SDR}{takt}+ba[ext=m4a]", f"bv*{codec}{SDR}{takt}+ba"] if takt else []
     stufen += [f"bv*{codec}{SDR}+ba[ext=m4a]", f"bv*{codec}{SDR}+ba", f"bv*{codec}+ba[ext=m4a]", f"bv*{codec}+ba", f"b{codec}", "b"]
     sortierung = f"res:{h},fps:{f}" + (",vcodec:avc1" if MUSIK_NUR_H264 else "") + ",acodec:m4a"
     return "/".join(stufen), sortierung
@@ -1079,6 +1090,10 @@ STROM_UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Geck
 def ueber_zwischenhaendler(url):
     """googlevideo-Adresse -> Adresse beim Zwischenhaendler (andere Adressen/Dateien unveraendert)."""
     if not url or "googlevideo.com/" not in url:
+        return url
+    # HLS (m3u8) direkt an mpv: ueber den Zwischenhaendler fehlt die Endung .m3u8, ffmpeg erkennt die Liste
+    # dann nicht ("Not detecting m3u8/hls with non standard extension") und die Stuecke scheitern (24.10.).
+    if "manifest.googlevideo.com" in url or "m3u8" in url:
         return url
     m = re.search(r"[?&]clen=(\d+)", url)
     STROM_ZAEHLER[0] += 1

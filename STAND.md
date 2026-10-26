@@ -40,6 +40,28 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 26.10.2026: DJ-Modus ohne Bild seit 23.10. ~22 Uhr – Videos jetzt als HLS (Windows-Sitzung)
+
+**Fehlerbild** (Tagesberichte 23./24.10.): 83 bzw. 103× „mpv ohne erstes Bild nach 20s“,
+47/45 Überblendungen abgebrochen („kein Bild nach 15 s“), Musik fiel auf den Browser-Player
+zurück. Erster Fehler 23.10. 21:58:54.
+
+**Ursache** (mpv-Log `~/mpv-haenger/1024-202315-nl.log`):
+- Die einzelnen https-Ströme (DASH, `c=TVHTML5`) lehnt YouTube außerhalb von yt-dlp mit **403** ab
+  – für curl, mpv und den Zwischenhändler, auch mit yt-dlp-Kopfzeilen.
+- Bei anderen Songs wählte yt-dlp schon HLS (m3u8 von `manifest.googlevideo.com`), aber der
+  Zwischenhändler (`ueber_zwischenhaendler`) reicht die Liste ohne Endung `.m3u8` weiter → ffmpeg:
+  „Not detecting m3u8/hls with non standard extension“, die Stücke scheitern.
+
+**Lösung** (`kiosk/nl-mpv-supervisor.py`):
+- `HLS = "[protocol^=m3u8]"`: `FORMAT`, `format_waehlen()` und `musik_format()` nehmen zuerst Bild **und**
+  Ton als HLS, danach die alten Stufen.
+- `ueber_zwischenhaendler()` gibt HLS-Adressen unverändert an mpv.
+- Getestet auf W1 an 7 betroffenen Songs: alle spielen direkt, 960–1080p, Ton aac.
+- Der Ton kommt bei Musik weiter von der Platte (`--audio-file`), wenn er schon geladen ist.
+
+**Noch offen:** Supervisor auf W1 neu starten (nur ohne Musik), danach Überblendungen im Betrieb prüfen.
+
 ## 26.10.2026: Dart-Abend (verschoben) und Dartcam ohne Ruckeln (Windows-Sitzung)
 
 - **Dart-Modus von Hand:** Das Spiel wurde auf heute verschoben. Die Liga-Seite (KEDSV) trägt
