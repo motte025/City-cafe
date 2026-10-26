@@ -16,6 +16,10 @@
     Vollbild). Der Screen hoert darauf (werbungEinstellungHoeren in index.html).
     Schreiben duerfen laut Firebase-Regel nur Chef-Geraete.
 
+    Zweite Schreibstelle (26.10.2026): Dart-Abend an/aus unter djremote/<raum>/dartabend
+    ({ modus: 'an' | 'aus', tag }), "Automatisch" loescht den Eintrag. Gilt nur fuer den
+    Dart-Tag (bis 04:00), danach wieder nach Spielplan (dartErzwungen in index.html).
+
     Quellen (alle schreibt der Screen ohnehin, hier entsteht keine neue Abfrage
     am Screen):
       djremote/<raum>/yt/status    Herzschlag alle 60 s, Hos'n Obe, Wunschvideo
@@ -133,6 +137,10 @@
 <h2>📢 Werbung am Screen</h2>
 <div id="werbung"></div>
 <div id="wb-meldung"></div>
+
+<h2>🎯 Dart-Abend</h2>
+<div id="dart"></div>
+<div id="dart-meldung"></div>
 
 <h2>Steuern</h2>
 <div class="knoepfe">
@@ -305,6 +313,58 @@
     }
     wbZeichnen();
 
+    // --- Dart-Abend an/aus (26.10.2026) ---------------------------------------
+    // Fuer verschobene Spiele: die Liga-Seite traegt Verschiebungen nicht ein, der Screen
+    // kennt den Termin dann nicht. Der Schalter gilt nur fuer den Dart-Tag (vor 04:00 noch
+    // der Vortag, wie am Screen), danach wieder automatisch nach Spielplan ab 18:30.
+    var dartWert = null;
+    function dartTag() {
+        var n = new Date();
+        if (n.getHours() < 4) n = new Date(n.getFullYear(), n.getMonth(), n.getDate() - 1);
+        var z = function (x) { return String(x).padStart(2, '0'); };
+        return n.getFullYear() + '-' + z(n.getMonth() + 1) + '-' + z(n.getDate());
+    }
+    function dartModus() {
+        return dartWert && dartWert.tag === dartTag() && (dartWert.modus === 'an' || dartWert.modus === 'aus')
+            ? dartWert.modus : 'auto';
+    }
+    function dartZeichnen() {
+        var box = el('dart');
+        box.innerHTML = '';
+        var block = document.createElement('div');
+        block.className = 'wb-block';
+        var kopf = document.createElement('div');
+        kopf.className = 'titel';
+        kopf.textContent = 'Dartcam und Spielstand am Screen';
+        var unter = document.createElement('small');
+        unter.textContent = 'Für verschobene Spiele. Gilt bis 4 Uhr früh, danach wieder automatisch (Spielplan, ab 18:30).';
+        kopf.appendChild(unter);
+        block.appendChild(kopf);
+        var zeile = document.createElement('div');
+        zeile.className = 'wahl';
+        [['an', '🎯 An'], ['aus', 'Aus'], ['auto', 'Automatisch']].forEach(function (w) {
+            var k = document.createElement('button');
+            k.type = 'button';
+            k.textContent = w[1];
+            k.className = (dartModus() === w[0] ? 'aktiv' : '') + (w[0] === 'aus' ? ' aus' : '');
+            k.addEventListener('click', function () { dartSetzen(w[0]); });
+            zeile.appendChild(k);
+        });
+        block.appendChild(zeile);
+        box.appendChild(block);
+    }
+    function dartSetzen(modus) {
+        if (!wbVerb) { el('dart-meldung').textContent = 'Keine Verbindung'; return; }
+        var neu = modus === 'auto' ? null : { modus: modus, tag: dartTag(), ts: { '.sv': 'timestamp' } };
+        dartWert = neu ? { modus: modus, tag: dartTag() } : null;
+        dartZeichnen();
+        el('dart-meldung').textContent = 'Wird gespeichert …';
+        wbVerb.db.ref('djremote/' + raum + '/dartabend').set(neu)
+            .then(function () { el('dart-meldung').textContent = '✓ Gespeichert – der Screen schaltet sofort um'; })
+            .catch(function () { el('dart-meldung').textContent = 'Nicht gespeichert – nur Chef-Geräte dürfen das ändern'; });
+    }
+    dartZeichnen();
+
     // --- Steuer-Knoepfe -------------------------------------------------------
     [].forEach.call(document.querySelectorAll('[data-teil]'), function (a) {
         var teil = a.getAttribute('data-teil');
@@ -476,6 +536,10 @@
         verb.db.ref(basis + '/werbung/einstellung').on('value', function (s) {
             wbEinst = s.val() || {};
             wbZeichnen();
+        });
+        verb.db.ref(basis + '/dartabend').on('value', function (s) {
+            dartWert = s.val() || null;
+            dartZeichnen();
         });
     });
 

@@ -71,6 +71,10 @@
           ".read": "auth != null",
           ".write": "auth != null && root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists()"
         },
+        "dartabend": {
+          ".read": "auth != null",
+          ".write": "auth != null && root.child('djremote/' + $raum + '/chef/geraete/' + auth.uid).exists()"
+        },
         "$sonst": {
           ".read": "auth != null",
           ".write": "auth != null"

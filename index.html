@@ -7888,6 +7888,7 @@
                 try { rouletteWeckerStarten(); } catch (e) {}
                 try { rouletteStandHoeren(); } catch (e) {}
                 try { werbungEinstellungHoeren(verb); } catch (e) {}
+                try { dartSchalterHoeren(verb); } catch (e) {}
             }).catch(() => {});
         }
         nlFernStarten();
@@ -14782,6 +14783,24 @@
             } catch (e) { return null; }
         })();
 
+        // Dart-Abend vom Chef-Handy (26.10.2026, Chef-Zentrale "🎯 Dart-Abend"): djremote/<raum>/dartabend
+        // = { modus: 'an' | 'aus', tag: 'yyyy-mm-dd' }. Gilt nur fuer diesen Dart-Tag (bis 04:00), danach
+        // wieder nach Spielplan. Fuer verschobene Spiele - die Liga-Seite traegt Verschiebungen nicht ein.
+        // ?dartabend=1/0 in der Adresse hat Vorrang (Tests).
+        let dartFernSchalter = null;
+        function dartErzwungen() {
+            if (DART_ABEND_ERZWUNGEN !== null) return DART_ABEND_ERZWUNGEN;
+            const s = dartFernSchalter;
+            if (!s || s.tag !== dartTagesSchluessel(dartAbendTag())) return null;
+            return s.modus === 'an' ? true : (s.modus === 'aus' ? false : null);
+        }
+        function dartSchalterHoeren(verb) {
+            verb.db.ref('djremote/' + NL_FERN_RAUM + '/dartabend').on('value', snap => {
+                dartFernSchalter = snap.val() || null;
+                try { dartAnsichtAuffrischen(); } catch (e) {}
+            }, () => {});
+        }
+
         // Uebernimmt die Termine laut KEDSV-Seite (Verschiebungen!) in
         // DART_CLUB / DART_SPIELE / DART_SPIELTAGE. Ohne "spielplan" in der
         // Datei bleibt der fest eingetragene Spielplan stehen.
@@ -14827,7 +14846,7 @@
                 return s && s.istHeim;
             });
             // ?dartabend=1 an einem Tag ohne Heimspiel: die Chaoten zeigen.
-            return (!heim.length && DART_ABEND_ERZWUNGEN) ? ['chaoten'] : heim;
+            return (!heim.length && dartErzwungen()) ? ['chaoten'] : heim;
         }
 
         // Spielen wir heute ueberhaupt (auch auswaerts)? Steuert den Abruftakt.
@@ -14846,7 +14865,7 @@
         // Bevorzugt aus "spieltag" (ab 18:30); aeltere Scraper-Fassungen
         // liefern nur "letztes_spiel" - das reicht, sobald es die heutige Runde ist.
         function dartAbendEigenesSpiel(teamKey) {
-            const heute = dartAbendHeute(teamKey) || (DART_ABEND_ERZWUNGEN ? dartNaechstesSpiel(teamKey) : null);
+            const heute = dartAbendHeute(teamKey) || (dartErzwungen() ? dartNaechstesSpiel(teamKey) : null);
             const team = dartLigaTeam(teamKey);
             if (!team) return null;
             const eigen = dartNameKey(DART_CLUB[teamKey].name);
@@ -14913,7 +14932,8 @@
         }
 
         function dartAbendAktiv(jetzt) {
-            if (DART_ABEND_ERZWUNGEN !== null) return DART_ABEND_ERZWUNGEN;
+            const erzwungen = dartErzwungen();
+            if (erzwungen !== null) return erzwungen;
             const n = jetzt || new Date();
             if (!dartAbendHeimtag(n)) return false;
             const tag = dartAbendTag(n);
@@ -15099,7 +15119,7 @@
 
         function dartAnheizerAktiv(jetzt) {
             if (DART_ANHEIZER_ERZWUNGEN) return true;
-            if (DART_ABEND_ERZWUNGEN !== null) return false;
+            if (dartErzwungen() !== null) return false;
             const n = jetzt || new Date();
             if (n.getHours() < DART_ABEND_SCHLUSS_STUNDE || !dartAbendHeimtag(n)) return false;
             const min = n.getHours() * 60 + n.getMinutes();
