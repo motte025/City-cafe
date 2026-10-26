@@ -4224,6 +4224,10 @@ def main():
                     stocken.clear()
                 elif not stocken:
                     stocken.update(t=now, pos=last_pos)
+                elif last_pos < stocken["pos"] - 1:
+                    # zurueckgesprungen (neuer Song, Zurueck am Handy) - kein Haenger. 26.10. 21:01 meldete
+                    # das "stockt: -188.3 s", weil der Merker noch vom vorigen Song stammte.
+                    stocken.update(t=now, pos=last_pos)
                 elif now - stocken["t"] >= 8:
                     if not problem and last_pos - stocken["pos"] < 3:
                         problem = f"mpv steht bei {last_pos:.1f}s (stockt: {last_pos - stocken['pos']:.1f} s in 8 s)"
