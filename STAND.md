@@ -49,7 +49,15 @@ und wieder in der Rotation.
     ohne den Parameter, und es endet **nicht** von selbst.
   - Das Apps-Script läuft einwandfrei (Testlauf vom Betreiber, „Keine Aenderung“). Live-Ergebnisse gibt es
     erst, wenn das Spiel auf der Liga-Seite eingetragen ist.
-  - Idee für später: Knopf „Dart-Abend heute“ am Chef-Handy für Fernseher und Skript.
+  - **Schalter am Chef-Handy** (Commit `859619c8`): In der Chef-Zentrale „🎯 Dart-Abend“ gibt es An / Aus /
+    Automatisch, gespeichert in `djremote/<raum>/dartabend` als `{ modus, tag }`.
+    - Der Screen hört darauf (`dartSchalterHoeren`, `dartErzwungen`) und schaltet ohne Neuladen um.
+    - Gilt nur für den Dart-Tag bis 04:00. `?dartabend=1/0` hat Vorrang.
+    - Am 26.10. auf „An“ gesetzt und die TV-Seite ohne `?dartabend` neu geladen: Der Dart-Modus blieb an.
+    - **Firebase-Regel** `dartabend` (nur Chef-Geräte) steht in `docs/musik/firebase-regeln.json`, muss aber
+      noch in der Firebase-Konsole eingetragen werden. Bis dahin greift `$sonst`, dann dürften alle
+      Angemeldeten schreiben.
+    - Das Apps-Script kennt den Schalter noch nicht, Live-Takt dort also nur an Spieltagen laut Liga-Seite.
 - **Dartcam stand alle paar Minuten** (heute 3× in 25 min, am 10.10. 15×) **und ruckelte:**
   - Ursache sind die Zeitstempel der TP-Link: In 20 s springen sie ~20× um bis 0,45 s, 18× rückwärts.
     mpv hielt bei jedem Sprung an. Das Netz ist es nicht (Ping 5 ms, 0 Verlust).
