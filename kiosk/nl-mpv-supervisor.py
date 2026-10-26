@@ -151,7 +151,7 @@ MPV_DEMUXER_MIB = os.environ.get("CITYCAFE_DEMUXER_MIB", "48")
 MPV_DEMUXER_BACK_MIB = os.environ.get("CITYCAFE_DEMUXER_BACK_MIB", "8")
 MPV_PROFILE = os.environ.get("CITYCAFE_MPV_PROFILE", "fast")
 #   CITYCAFE_CAM_CACHE_SECS=8   (Dartcam-Puffer in Sekunden, Standard 3)
-CAM_CACHE_SECS = os.environ.get("CITYCAFE_CAM_CACHE_SECS", "3")
+CAM_CACHE_SECS = float(os.environ.get("CITYCAFE_CAM_CACHE_SECS", "1.5"))   # 26.10.2026: 3 -> 1,5 s (feste Bildrate + Tempo nach Puffer; mit 1 s 2 min ohne Stocker, Puffer aber bis 0,44 s)
 
 
 def log(msg):
@@ -4052,13 +4052,13 @@ def main():
                 pos = mpv_time_pos()
                 # Dartcam (26.10.2026): fest 25 Bilder/s (Zeitstempel der Kamera taugen nicht), die
                 # Kamera liefert aber ~24,8 - der Puffer lief in 5 min von 3 auf 1 s leer. Tempo daher
-                # unmerklich nachfuehren: Puffer unter 2 s -> 2 % langsamer, ueber 4 s -> 2 % schneller.
+                # unmerklich nachfuehren: Puffer unter 60 % -> 2 % langsamer, ueber 140 % -> 2 % schneller.
                 if art == "cam" and window_seen and now >= cam_tempo["naechste"]:
                     cam_tempo["naechste"] = now + 2
                     puffer = mpv_eigenschaft("demuxer-cache-duration")
                     if isinstance(puffer, (int, float)):
-                        ziel = 0.98 if puffer < 2.0 else 1.02 if puffer > 4.0 else (
-                            1.0 if 2.6 <= puffer <= 3.4 else cam_tempo["speed"])
+                        ziel = 0.98 if puffer < 0.6 * CAM_CACHE_SECS else 1.02 if puffer > 1.4 * CAM_CACHE_SECS else (
+                            1.0 if 0.85 * CAM_CACHE_SECS <= puffer <= 1.15 * CAM_CACHE_SECS else cam_tempo["speed"])
                         if ziel != cam_tempo["speed"]:
                             mpv_befehl("set_property", "speed", ziel)
                             cam_tempo["speed"] = ziel
