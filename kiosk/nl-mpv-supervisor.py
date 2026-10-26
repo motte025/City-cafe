@@ -535,7 +535,7 @@ CAM_RETRY_AFTER = 5
 NL_SLOT_SEKUNDEN = 240
 # Mit Puffer darf die Kamera kurz haengen, ohne gleich neu verbunden zu werden -
 # ein Neuverbinden selbst kostet mehrere Sekunden Schwarzbild.
-CAM_STALL_TIMEOUT = 20
+CAM_STALL_TIMEOUT = 8          # 26.10.2026: 20 s Standbild waren am Dart-Abend zu lang
 
 STREAMLINK = "/usr/bin/streamlink"
 # Twitch: streamlink filtert Werbesegmente selbst heraus (seit 6.x immer, siehe
@@ -4368,9 +4368,14 @@ def main():
                 # ruckelte das Bild am 26.09. bei jeder Netzschwankung - ein
                 # paar Sekunden Verzoegerung stoeren beim Dart nicht.
                 # framedrop=vo: lieber ein Bild auslassen als hinterherhinken.
+                # Zeitstempel der Kamera ignorieren, fest 25 Bilder/s aus dem Puffer (26.10.2026): die
+                # TP-Link springt in 20 s ~20x um bis zu 0,45 s, 18x rueckwaerts - mpv hielt dabei jedes
+                # Mal an (Ruckeln) und blieb bei grossen Spruengen ganz stehen. Unsichtbar auf dem W1
+                # verglichen (40 s): so 0 Stocker und 0 verlorene Bilder, mit Kamera-Zeit 2 Stocker.
                 mpv = subprocess.Popen(args + ["--rtsp-transport=tcp", "--no-audio",
                                                "--cache=yes", f"--cache-secs={CAM_CACHE_SECS}",
                                                f"--demuxer-readahead-secs={CAM_CACHE_SECS}",
+                                               "--correct-pts=no", "--container-fps-override=25",
                                                "--framedrop=vo", want[4:]],
                                        env=env, preexec_fn=mpv_dies_with_us)
                 log("Auftritt: Dartcam")
