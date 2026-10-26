@@ -3365,6 +3365,7 @@ def main():
     seite_pruefung = 0.0  # wann zuletzt nachgesehen wurde, ob die Notfall-Kopie laeuft
     ueberw_zeit = {"tv": 0.0, "system": 0.0}
     stocken = {}          # Musik: {"t", "pos"} - Messfenster, ob in 8 s genug gespielt wurde
+    cam_tempo = {"naechste": 0.0, "speed": 1.0}   # Dartcam: Tempo nach Puffer
     ton_vorab = {"naechste": 0.0}
 
     def blocked(key):
@@ -3944,6 +3945,7 @@ def main():
                 if xf.get("blur"):
                     blur_an = shown
                 started, last_pos, last_progress, embed_paused = time.time(), None, None, False
+                cam_tempo.update(naechste=0.0, speed=1.0)
                 next_place_check, window_seen = 0, True
                 if pausiert:
                     mpv_befehl("set_property", "pause", True)
@@ -4048,6 +4050,18 @@ def main():
                         and window_seen):
                     ambi_lage.update(ts=now, target=dict(target), page=page_id)
                 pos = mpv_time_pos()
+                # Dartcam (26.10.2026): fest 25 Bilder/s (Zeitstempel der Kamera taugen nicht), die
+                # Kamera liefert aber ~24,8 - der Puffer lief in 5 min von 3 auf 1 s leer. Tempo daher
+                # unmerklich nachfuehren: Puffer unter 2 s -> 2 % langsamer, ueber 4 s -> 2 % schneller.
+                if art == "cam" and window_seen and now >= cam_tempo["naechste"]:
+                    cam_tempo["naechste"] = now + 2
+                    puffer = mpv_eigenschaft("demuxer-cache-duration")
+                    if isinstance(puffer, (int, float)):
+                        ziel = 0.98 if puffer < 2.0 else 1.02 if puffer > 4.0 else (
+                            1.0 if 2.6 <= puffer <= 3.4 else cam_tempo["speed"])
+                        if ziel != cam_tempo["speed"]:
+                            mpv_befehl("set_property", "speed", ziel)
+                            cam_tempo["speed"] = ziel
                 if pos is not None and (last_pos is None or pos > last_pos + 0.05):
                     if last_pos is not None and window_seen and art == "yt" and not embed_paused:
                         # Fenster sitzt und die Position waechst = mpv spielt
