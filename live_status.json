@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-26T16:32:48Z",
+  "checked_at": "2026-10-26T16:52:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 MUTE MARATHON TAG 107 😈 | HHC/DNB | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip | !goals ✨",
       "game": "DJs"
     },
     {
@@ -17,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip | !goals ✨",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Geiler Montagsquicky! (Harderstyles)  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
