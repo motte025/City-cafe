@@ -3092,7 +3092,9 @@ def takt_rechnen(vid, audio_url):
     mit_madmom = not takt_an() or beat_this_pausiert()
     if mit_madmom and not madmom_an():
         return
-    quelle = ton_quelle(vid, audio_url)
+    # Ton als Datei (26.10.2026): ueber den Zwischenhaendler kam bei Songs ohne geladenen Ton auch nur 403
+    # (Tagesberichte 23.-25.10.: "Takt ...: nicht gerechnet (Code 2/3)").
+    quelle, zwischen = mess_ton(vid, audio_url)
     try:
         os.makedirs(TAKT_ORDNER, exist_ok=True)
         python, text, name = ((MADMOM_PYTHON, MADMOM_RECHNER, ".takt-madmom.py") if mit_madmom
@@ -3125,6 +3127,9 @@ def takt_rechnen(vid, audio_url):
     except (OSError, ValueError, subprocess.TimeoutExpired) as e:
         TAKT_FEHL[vid] = time.time()
         log(f"Takt {vid}: {type(e).__name__}")
+    finally:
+        if zwischen:
+            shutil.rmtree(zwischen, ignore_errors=True)
 
 
 def spur_messen(vid, audio_url, laenge):

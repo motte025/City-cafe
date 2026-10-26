@@ -60,7 +60,14 @@ zurück. Erster Fehler 23.10. 21:58:54.
 - Getestet auf W1 an 7 betroffenen Songs: alle spielen direkt, 960–1080p, Ton aac.
 - Der Ton kommt bei Musik weiter von der Platte (`--audio-file`), wenn er schon geladen ist.
 
-**Noch offen:** Supervisor auf W1 neu starten (nur ohne Musik), danach Überblendungen im Betrieb prüfen.
+- Takt (`takt_rechnen`) holt den Ton jetzt über `mess_ton()` als Datei. Vorher kam er bei Songs ohne
+  geladenen Ton über den Zwischenhändler, mit 403 („Takt …: nicht gerechnet (Code 2/3)“, 23.–25.10.).
+- Die Notbremse am 24.10. (LQ7R9zHeDy8, 2×) und die Hänger („stockt 0.0 s in 8 s“) kamen in derselben
+  Zeit – vermutlich dieselbe Ursache, im Betrieb beobachten.
+- Songs aus der Suche (nicht vorgemessen, kein Ton auf der Platte) laufen genauso: Bild und Ton als HLS direkt.
+
+Supervisor auf W1 am 26.10. um 16:03 und 16:05 ohne Rechner-Neustart ersetzt (Dart-Modus lief, keine Musik).
+**Noch offen:** Überblendungen im nächsten Musikbetrieb prüfen (`citycafe-probleme.log`, Tagesbericht 27.10.).
 
 ## 26.10.2026: Dart-Abend (verschoben) und Dartcam ohne Ruckeln (Windows-Sitzung)
 
