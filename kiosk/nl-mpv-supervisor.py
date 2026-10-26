@@ -3473,6 +3473,7 @@ def main():
     stocken = {}          # Musik: {"t", "pos"} - Messfenster, ob in 8 s genug gespielt wurde
     cam_tempo = {"naechste": 0.0, "speed": 1.0}   # Dartcam: Tempo nach Puffer
     ton_vorab = {"naechste": 0.0}
+    bild_vorab = {"naechste": 0.0}
 
     def blocked(key):
         frist = CAM_RETRY_AFTER if key.startswith("cam:") else RETRY_FAILED_AFTER
@@ -3699,6 +3700,23 @@ def main():
                         if urls:
                             ton_laden(vid, urls[0])
                     threading.Thread(target=ton_vorab_lauf, daemon=True).start()
+                    break
+
+        # Bild von der Platte: das Bild des naechsten Songs schon Minuten vorher laden - "Naechster Song
+        # vorgeladen" kommt erst 40 s vor Schluss, der Download braucht bis ~90 s. Ein Song zur Zeit.
+        if musik and not BILD_LAEDT and time.time() >= bild_vorab["naechste"]:
+            for b_vid in [str(v) for v in (state.get("analyse") or [])[:2]]:
+                if re.fullmatch(r"[A-Za-z0-9_-]{11}", b_vid) and not bild_datei(b_vid) \
+                        and time.time() - failed.get(b_vid, 0) >= RETRY_FAILED_AFTER:
+                    bild_vorab["naechste"] = time.time() + 30
+                    BILD_LAEDT.add(b_vid)         # Platz halten, bis resolve fertig ist
+
+                    def bild_vorab_lauf(vid=b_vid):
+                        urls = resolve(vid, *musik_format(w_hoehe, w_fps))
+                        BILD_LAEDT.discard(vid)
+                        if urls:
+                            bild_laden(vid, urls[0])
+                    threading.Thread(target=bild_vorab_lauf, daemon=True).start()
                     break
 
         # DJ-Modus: laufenden und vorgeladenen Song fuer das Studio messen und zustellen.
