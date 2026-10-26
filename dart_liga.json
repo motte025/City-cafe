@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-11T10:59:33Z",
+  "aktualisiert": "2026-10-26T14:18:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -92,7 +92,7 @@
         },
         "4": {
           "heim": 0,
-          "auswaerts": 0,
+          "auswaerts": 2,
           "id": 109587
         },
         "5": {
@@ -194,6 +194,16 @@
         },
         {
           "rang": 6,
+          "spieler": "JAHN Corinna",
+          "spiele": 6,
+          "siege": 4,
+          "niederlagen": 2,
+          "legs_plus": 16,
+          "legs_minus": 8,
+          "punkte": 16
+        },
+        {
+          "rang": 7,
           "spieler": "JAMMER Fabian",
           "spiele": 8,
           "siege": 5,
@@ -203,7 +213,7 @@
           "punkte": 16
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "ELEZOSKI Serif",
           "spiele": 6,
           "siege": 4,
@@ -213,7 +223,7 @@
           "punkte": 14
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -221,16 +231,6 @@
           "legs_plus": 14,
           "legs_minus": 6,
           "punkte": 14
-        },
-        {
-          "rang": 9,
-          "spieler": "JAHN Corinna",
-          "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
-          "legs_plus": 13,
-          "legs_minus": 7,
-          "punkte": 13
         },
         {
           "rang": 10,
@@ -324,6 +324,16 @@
         },
         {
           "rang": 19,
+          "spieler": "SCHNEIDER Thomas",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 9,
+          "legs_minus": 4,
+          "punkte": 9
+        },
+        {
+          "rang": 20,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 4,
           "siege": 2,
@@ -333,7 +343,7 @@
           "punkte": 8
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 6,
           "siege": 2,
@@ -343,7 +353,7 @@
           "punkte": 8
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "SATZ Klemens",
           "spiele": 3,
           "siege": 2,
@@ -353,7 +363,7 @@
           "punkte": 7
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "BRUNNER Jürgen",
           "spiele": 3,
           "siege": 2,
@@ -363,7 +373,7 @@
           "punkte": 7
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "HOCHEGGER Martin",
           "spiele": 6,
           "siege": 2,
@@ -371,16 +381,6 @@
           "legs_plus": 7,
           "legs_minus": 11,
           "punkte": 7
-        },
-        {
-          "rang": 24,
-          "spieler": "SCHNEIDER Thomas",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 6,
-          "legs_minus": 4,
-          "punkte": 6
         },
         {
           "rang": 25,
@@ -474,6 +474,16 @@
         },
         {
           "rang": 34,
+          "spieler": "GORICNIK Cornelia",
+          "spiele": 4,
+          "siege": 0,
+          "niederlagen": 4,
+          "legs_plus": 4,
+          "legs_minus": 11,
+          "punkte": 4
+        },
+        {
+          "rang": 35,
           "spieler": "JESENKO Julia",
           "spiele": 2,
           "siege": 1,
@@ -483,18 +493,8 @@
           "punkte": 3
         },
         {
-          "rang": 35,
-          "spieler": "ROSSMANN Christoph",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
-          "legs_plus": 3,
-          "legs_minus": 8,
-          "punkte": 3
-        },
-        {
           "rang": 36,
-          "spieler": "GORICNIK Cornelia",
+          "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -535,11 +535,11 @@
         {
           "rang": 40,
           "spieler": "JAHN Christian",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 1,
-          "legs_minus": 8,
+          "legs_minus": 11,
           "punkte": 1
         },
         {
@@ -622,79 +622,37 @@
         "KOGLER Sabine"
       ],
       "letztes_spiel": {
-        "runde": 2,
-        "heim": 2,
-        "auswaerts": 8,
+        "runde": 4,
+        "heim": 0,
+        "auswaerts": 2,
         "paarungen": [
           {
             "art": "DE",
             "spieler1": "GORICNIK Cornelia",
-            "spieler2": "HOCHEGGER Andrea",
+            "spieler2": "JAHN Corinna",
             "legs1": 1,
             "legs2": 3
           },
           {
             "art": "HE",
+            "spieler1": "JAHN Christian",
+            "spieler2": "SCHNEIDER Thomas",
+            "legs1": 0,
+            "legs2": 3
+          },
+          {
+            "art": "OE",
             "spieler1": "GORICNIK Michael",
-            "spieler2": "URANK Romeo",
-            "legs1": 1,
-            "legs2": 3
-          },
-          {
-            "art": "OE",
-            "spieler1": "JAHN Christian",
-            "spieler2": "HOCHEGGER Martin",
-            "legs1": 1,
-            "legs2": 3
+            "spieler2": "JAMMER Fabian",
+            "legs1": 0,
+            "legs2": 0
           },
           {
             "art": "OE",
             "spieler1": "JAHN Andreas",
-            "spieler2": "REGENFELDNER Rene",
-            "legs1": 3,
-            "legs2": 1
-          },
-          {
-            "art": "MD",
-            "spieler1": "KOGLER Sabine / JAHN Andreas",
-            "spieler2": "HOCHEGGER Andrea / HOCHEGGER Martin",
-            "legs1": 2,
-            "legs2": 1
-          },
-          {
-            "art": "OD",
-            "spieler1": "GORICNIK Michael / JAHN Herbert",
-            "spieler2": "URANK Romeo / REGENFELDNER Rene",
+            "spieler2": "SCHNEIDER Hermann",
             "legs1": 0,
-            "legs2": 2
-          },
-          {
-            "art": "HE",
-            "spieler1": "JAHN Christian",
-            "spieler2": "HOCHEGGER Martin",
-            "legs1": 0,
-            "legs2": 3
-          },
-          {
-            "art": "DE",
-            "spieler1": "KOGLER Sabine",
-            "spieler2": "HOCHEGGER Andrea",
-            "legs1": 0,
-            "legs2": 3
-          },
-          {
-            "art": "OE",
-            "spieler1": "JAHN Herbert",
-            "spieler2": "REGENFELDNER Rene",
-            "legs1": 0,
-            "legs2": 3
-          },
-          {
-            "art": "OE",
-            "spieler1": "JAHN Andreas",
-            "spieler2": "URANK Romeo",
-            "legs1": 2,
-            "legs2": 3
+            "legs2": 0
           }
         ]
       },
