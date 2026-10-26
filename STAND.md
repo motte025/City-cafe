@@ -66,6 +66,13 @@ zurück. Erster Fehler 23.10. 21:58:54.
   Zeit – vermutlich dieselbe Ursache, im Betrieb beobachten.
 - Songs aus der Suche (nicht vorgemessen, kein Ton auf der Platte) laufen genauso: Bild und Ton als HLS direkt.
 
+- **Bild von der Platte** (`bild_laden`, `bild_datei`, `bild_quelle`, `bild_aufraeumen`, Ordner
+  `~/.cache/citycafe/bild`, die letzten 30 bleiben): Auch HLS liefert YouTube zeitweise zu langsam. Am 26.10.
+  abends gab es 2 Hänger („stockt“, einmal zurück zum Browser-Player), und eine Überblendung wartete 8,9 s.
+  Beim „Naechster Song vorgeladen“ lädt yt-dlp jetzt das Bild (dasselbe itag, `-N 4`) ganz herunter, mpv
+  spielt es von dort. Ist es nicht fertig, läuft es wie vorher über den Strom.
+  Gemessen: 28 MB 1080p in 88 s. Noch nicht live getestet.
+
 Supervisor auf W1 am 26.10. um 16:03 und 16:05 ohne Rechner-Neustart ersetzt (Dart-Modus lief, keine Musik).
 **Noch offen:** Überblendungen im nächsten Musikbetrieb prüfen (`citycafe-probleme.log`, Tagesbericht 27.10.).
 

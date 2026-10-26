@@ -1248,6 +1248,92 @@ def ton_quelle(vid, audio_url):
     return ton_datei(vid) or ueber_zwischenhaendler(audio_url)
 
 
+# Bild von der Platte (26.10.2026): auch HLS liefert YouTube zeitweise zu langsam - am 26.10. abends blieb
+# mpv bei 18,9 s und 55,5 s stehen ("stockt"), eine Ueberblendung wartete 8,9 s auf den neuen Song. Darum
+# laedt yt-dlp das Bild des naechsten Songs (dasselbe Format) waehrend des laufenden ganz auf die Platte
+# (gemessen 28 MB 1080p in 88 s); mpv spielt es von dort. Fertig ist es nicht -> wie bisher der Strom.
+BILD_ORDNER = os.path.expanduser("~/.cache/citycafe/bild")
+BILD_LAEDT = set()
+BILD_BEHALTEN = 30              # so viele Videos bleiben liegen (~30-80 MB je Song)
+
+
+def bild_datei(vid):
+    """Fertig geladenes Bild eines Songs oder None."""
+    for p in glob.glob(os.path.join(BILD_ORDNER, vid + ".*")):
+        name = os.path.basename(p)
+        if (not name.endswith((".part", ".ytdl", ".tmp")) and ".temp." not in name and ".part-" not in name
+                and os.path.getsize(p) > 1_000_000):
+            return p
+    return None
+
+
+def bild_aufraeumen():
+    try:
+        dateien = sorted(glob.glob(os.path.join(BILD_ORDNER, "*")), key=os.path.getmtime)
+    except OSError:
+        return
+    fertig = [p for p in dateien if bild_datei(os.path.basename(p).split(".")[0]) == p]
+    for alt in fertig[:-BILD_BEHALTEN]:
+        try:
+            os.remove(alt)              # laeuft es gerade in mpv, liest mpv die offene Datei weiter
+        except OSError:
+            pass
+    for rest in set(dateien) - set(fertig):   # abgebrochene Downloads
+        try:
+            if time.time() - os.path.getmtime(rest) > 3600:
+                os.remove(rest)
+        except OSError:
+            pass
+
+
+def bild_laden(vid, video_url):
+    """Bild (dasselbe Format wie die Wiedergabe) im Hintergrund auf die Platte holen."""
+    m = re.search(r"[/?&]itag[=/](\d+)", video_url or "")
+    if not m or vid in BILD_LAEDT or bild_datei(vid) or not ton_platz_frei():
+        return
+    BILD_LAEDT.add(vid)
+
+    def lauf():
+        t0 = time.time()
+        try:
+            os.makedirs(BILD_ORDNER, exist_ok=True)
+            for programm in ytdlp_programme():
+                try:
+                    r = subprocess.run(
+                        ["nice", "-n", "10", programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser",
+                         COOKIES_FROM, "-f", m.group(1), "-N", "4", "--no-progress", "-q", "--no-warnings",
+                         "--no-playlist", "-o", os.path.join(BILD_ORDNER, vid + ".%(ext)s"),
+                         f"https://www.youtube.com/watch?v={vid}"],
+                        capture_output=True, text=True, timeout=600)
+                except (subprocess.TimeoutExpired, OSError) as e:
+                    log(f"Bild {vid}: nicht geladen ({type(e).__name__})")
+                    continue
+                datei = bild_datei(vid)
+                if datei:
+                    log(f"Bild {vid}: auf der Platte ({os.path.getsize(datei) / 1e6:.0f} MB, {time.time() - t0:.0f} s)")
+                    break
+                log(f"Bild {vid}: nicht geladen (Code {r.returncode}: {(r.stderr or r.stdout).strip()[-160:]})")
+            bild_aufraeumen()
+        except OSError:
+            pass
+        finally:
+            BILD_LAEDT.discard(vid)
+
+    threading.Thread(target=lauf, daemon=True).start()
+
+
+def bild_quelle(vid, video_url):
+    """Fuer mpv (Musik): das geladene Bild, sonst der Strom (HLS direkt, sonst ueber den Zwischenhaendler)."""
+    datei = bild_datei(vid)
+    if datei:
+        try:
+            os.utime(datei)             # zuletzt gespielt -> bleibt beim Aufraeumen
+        except OSError:
+            pass
+        return datei
+    return ueber_zwischenhaendler(video_url)
+
+
 def suchen(text, anzahl=None):
     """YouTube-Suche fuer die Handy-Fernbedienung. -> Liste von Treffern."""
     anzahl = anzahl or SUCH_TREFFER
@@ -3839,6 +3925,7 @@ def main():
                     if urls:
                         in_cache(key, urls)
                         log(f"Naechster Song vorgeladen: {key}")
+                        bild_laden(vid, urls[0])     # Bild schon waehrend des laufenden Songs auf die Platte
                     else:
                         failed[vid] = time.time()
             elif (state.get("finde") or {}).get("id") and state["finde"]["id"] != finde_id:
@@ -4240,7 +4327,7 @@ def main():
                 if audio_url:
                     xf_args.append(f"--audio-file={ton_quelle(n_vid, audio_url)}")
                 xf_args.append("--cache-pause=no")     # Bild stockt -> Musik laeuft weiter
-                xf_args.append(ueber_zwischenhaendler(video_url))
+                xf_args.append(bild_quelle(n_vid, video_url))
                 try:
                     os.remove(MPV_SOCK_XF)
                 except OSError:
@@ -4381,7 +4468,7 @@ def main():
                     args.append(f"--audio-file={ton_quelle(schluessel, audio_url) if musik else ueber_zwischenhaendler(audio_url)}")
                 if musik:
                     args.append("--cache-pause=no")     # Bild stockt -> Musik laeuft weiter
-                args.append(ueber_zwischenhaendler(video_url))
+                args.append(bild_quelle(schluessel, video_url) if musik else ueber_zwischenhaendler(video_url))
                 mpv = subprocess.Popen(args, env=env, preexec_fn=mpv_dies_with_us)
                 log(f"Auftritt: {schluessel} ab {start}s"
                     + (" (Musik)" if musik else "")
