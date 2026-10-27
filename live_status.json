@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-27T13:52:48Z",
+  "checked_at": "2026-10-27T14:12:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wilder Dienstag <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "musikinfection",
@@ -13,13 +20,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wilder Dienstag <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
