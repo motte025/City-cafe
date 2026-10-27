@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-27T14:42:47Z",
+  "checked_at": "2026-10-27T15:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,20 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "LIVE AUS MANNHEIM",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 HARDSTYLE 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴 not much talking today 🔴",
       "game": "DJs"
     }
   ]
