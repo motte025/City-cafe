@@ -72,10 +72,15 @@ zurück. Erster Fehler 23.10. 21:58:54.
   Schon Minuten vorher (Liste `analyse` der Seite, die nächsten 2 Songs, `bild_vorab`) und spätestens beim
   „Naechster Song vorgeladen“ (kommt erst 40 s vor Schluss) lädt yt-dlp jetzt das Bild (dasselbe itag, `-N 4`) ganz herunter, mpv
   spielt es von dort. Ist es nicht fertig, läuft es wie vorher über den Strom.
-  Gemessen: 28 MB 1080p in 88 s. Noch nicht live getestet.
+  Gemessen: 28 MB 1080p in 88 s (26.10. abends), 99–164 MB in 7–10 s (27.10. morgens).
+  **Live seit Update 27.10. 08:31**: Überblendung 08:35 spielte `~/.cache/citycafe/bild/Iy-9YFqNS_w.mp4`.
+- Hänger-Erkennung: Rücksprung (neuer Song, Zurück am Handy) gilt nicht mehr als „stockt“
+  (Fehlalarm 26.10. 21:01, „stockt: -188.3 s“).
+- Abend 26.10. (vor dem Bild-Vorladen): 19:00–21:01 waren es 10 Hänger, 1 Notbremse und mehrere „Laden langsam“,
+  von 21:01 bis 08:30 dann nur 1 Notbremse (07:08). Dartcam: 6 kurze Hänger (WLAN-Aussetzer, Ping bis 1 s).
 
 Supervisor auf W1 am 26.10. um 16:03 und 16:05 ohne Rechner-Neustart ersetzt (Dart-Modus lief, keine Musik).
-**Noch offen:** Überblendungen im nächsten Musikbetrieb prüfen (`citycafe-probleme.log`, Tagesbericht 27.10.).
+**Noch offen:** Tagesbericht 27.10. ansehen (Hänger/Notbremse mit Bild von der Platte).
 
 ## 26.10.2026: Dart-Abend (verschoben) und Dartcam ohne Ruckeln (Windows-Sitzung)
 
