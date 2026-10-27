@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-27T20:32:46Z",
+  "checked_at": "2026-10-27T20:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 WIEDER DA <3 | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 WIEDER DA <3 | !bier | !zug | !holy | #werbung",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Community Show mit @ericssl",
       "game": "DJs"
     },
     {
