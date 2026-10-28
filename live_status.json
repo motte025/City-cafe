@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-28T16:57:48Z",
+  "checked_at": "2026-10-28T17:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "DJs after work mit @felixkroecher & @dj_falk",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "CIRCUS CIRCUS",
       "game": "DJs"
     },
     {
