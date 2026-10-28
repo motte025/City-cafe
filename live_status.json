@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-28T17:07:45Z",
+  "checked_at": "2026-10-28T17:22:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -26,14 +26,7 @@
       "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
-      "title": "✨ TRANCE MUSIC - MUTE the DJ | !tip | !goals ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "title": "✨ TRANCE MUSIC - VINYL SET AUFNAHME | !tip | !goals ✨",
       "game": "DJs"
     },
     {
@@ -41,6 +34,13 @@
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Auf in die neue Woche! <3  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
