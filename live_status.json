@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-28T18:47:46Z",
+  "checked_at": "2026-10-28T19:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | THE BELGIAN STALLION",
       "game": "DJs"
     }
   ]
