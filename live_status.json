@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-28T17:02:45Z",
+  "checked_at": "2026-10-28T17:07:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "CIRCUS CIRCUS",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "tschessy",
@@ -17,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "CIRCUS CIRCUS",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ TRANCE MUSIC - MUTE the DJ | !tip | !goals ✨",
@@ -34,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Auf in die neue Woche! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
