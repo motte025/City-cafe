@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-28T15:07:46Z",
+  "checked_at": "2026-10-28T15:22:50Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ TRANCE MUSIC - MUTE the DJ | !tip | !goals ✨",
       "game": "DJs"
     },
     {
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ TRANCE MUSIC - MUTE the DJ | !tip | !goals ✨",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
