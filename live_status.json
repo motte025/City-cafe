@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-28T15:52:45Z",
+  "checked_at": "2026-10-28T16:07:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Bergfest mit Bass | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 HARDTECHNO RAVE WITCHERS🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 HARDTECHNO RAVE WITCHERS🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     }
   ]
