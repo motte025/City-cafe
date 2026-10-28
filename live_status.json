@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-28T15:02:45Z",
+  "checked_at": "2026-10-28T15:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "DJs after work mit @felixkroecher & @dj_falk",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ TRANCE MUSIC - MUTE the DJ | !tip | !goals ✨",
       "game": "DJs"
     }
   ]
