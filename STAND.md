@@ -8,7 +8,10 @@ Stand beschreiben, nicht den von vorgestern.
 **Windows-Sitzung (mit `ssh w1`): zuerst `UEBERGABE-WINDOWS.md` lesen** – was am 21.10. passiert ist
 und was am W1 zu tun ist.
 
-Letzte Durchsicht: 23. Oktober 2026 mittags (DJ-Skin **Thunderstorm** mit Wolken und Blitzen nach der
+Letzte Durchsicht: 28. Oktober 2026 (DJ-Modus: Videos als HLS und vorab auf der Platte, seit 27.10. 08:31
+live; am 27.10. fielen ab 08:40 alle Überblendungen aus – Ursache war ein Prüfbefehl der Windows-Sitzung,
+seit dem Neustart 28.10. 08:30 behoben – alles im Abschnitt „27./28.10.2026“ und „26.10.2026“).
+Davor, 23. Oktober 2026 mittags (DJ-Skin **Thunderstorm** mit Wolken und Blitzen nach der
 Musik; W1: Takt mit madmom, solange beat_this fehlt, Bluetooth aptX Low Latency, Ton aller
 Playlist-Songs bleibt auf der Platte, Messen trotz YouTube-403 – alles im Abschnitt „23.10.2026“).
 Davor, 21. Oktober 2026 abends (alles auf **`main`**, letzter Stand `f065dfcd`; DJ-Werbung
@@ -39,6 +42,34 @@ Davor, 5.–7. Oktober: DJ-Übergänge per Studio-Abgleich, offizielle Videos
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
+
+## 27./28.10.2026: Überblendungen am 27.10. ausgefallen – Ursache ein Prüfbefehl (Windows-Sitzung)
+
+**Fehlerbild** (Tagesbericht 27.10.): 102 Überblendungen begonnen, nur 1 fertig (08:35). Ab 08:40 jedes Mal
+„Ueberblendung abgebrochen …: kein Bild nach 15 s“ bis Betriebsschluss. Die Musik lief weiter, aber ohne
+Überblendung: Der alte Song spielte bis zum Ende, dann startete der nächste neu.
+
+**Ursache:** Nach der Überblendung um 08:35 hat die Windows-Sitzung zum Prüfen
+`sudo socat - /tmp/mpv-nl-xf.sock` aufgerufen. Der Socket war nach dem Wechsel schon auf `/tmp/mpv-nl.sock`
+umbenannt. socat legt einen fehlenden Pfad als **normale Datei** an, hier mit sudo also **root**. In `/tmp`
+(Sticky-Bit) können weder der Supervisor (`os.remove`) noch mpv diese Datei als `citycafe` löschen. Jeder
+neue Überblendungs-mpv meldete deshalb „Could not bind IPC socket“ (`~/mpv-xf-mpv.log`), der Supervisor
+bekam keine Antwort, und nach 15 s brach er ab. Das Bild von der Platte war nicht schuld: mpv zeigte das
+erste Bild nach 0,2 s.
+
+**Behoben** durch den Neustart beim Update 28.10. 08:30, weil `/tmp` dabei geleert wird. Am Code ist nichts
+falsch. Neue feste Regel unten: mpv-Sockets nur mit `UNIX-CONNECT:` ansprechen.
+
+**Sonst am 27.10.:** 3 Hänger (19:58, 20:39, 21:59, jeweils zurück zum Browser-Player), Takt 2× nicht
+gerechnet (09:04/09:07, Code 2/3), keine Notbremse, höchstens CPU 69 °C. Das Bild-Vorladen lief: 30 Videos
+(6–91 MB) lagen in `~/.cache/citycafe/bild`.
+
+**28.10. bis 14:50:** Kein Musikbetrieb, nur die Rotation (Twitch und YouTube-Auftritte), keine Fehler.
+
+**Noch offen:**
+- Beim nächsten DJ-Abend den Tagesbericht ansehen: Überblendungen sollten wieder fast alle „fertig“ sein,
+  Hänger und Notbremse mit Bild von der Platte zählen.
+- Die 2 Takt-Fehler vom 27.10. (ExgfgiW-BJI, DN-b7JDfDBE) prüfen, falls sie wiederkommen.
 
 ## 26.10.2026: DJ-Modus ohne Bild seit 23.10. ~22 Uhr – Videos jetzt als HLS (Windows-Sitzung)
 
@@ -80,7 +111,7 @@ zurück. Erster Fehler 23.10. 21:58:54.
   von 21:01 bis 08:30 dann nur 1 Notbremse (07:08). Dartcam: 6 kurze Hänger (WLAN-Aussetzer, Ping bis 1 s).
 
 Supervisor auf W1 am 26.10. um 16:03 und 16:05 ohne Rechner-Neustart ersetzt (Dart-Modus lief, keine Musik).
-**Noch offen:** Tagesbericht 27.10. ansehen (Hänger/Notbremse mit Bild von der Platte).
+Tagesbericht 27.10.: siehe Abschnitt „27./28.10.2026“ (Überblendungen fielen aus, nicht wegen dieser Änderung).
 
 ## 26.10.2026: Dart-Abend (verschoben) und Dartcam ohne Ruckeln (Windows-Sitzung)
 
@@ -1491,6 +1522,9 @@ wieder live gerechnet.
   beim nächsten Slotwechsel (Selbst-Aktualisierung, siehe oben); Supervisor und
   Chromium-Starter kommen mit dem täglichen Update 8:30. **Ein Push von
   `index.html` geht also ohne weiteren Schritt am TV live** – vorher prüfen.
+- mpv-Sockets auf W1 nur so abfragen: `sudo -u citycafe socat - UNIX-CONNECT:/tmp/mpv-nl.sock`. Nie
+  `sudo socat - /tmp/…sock` mit nacktem Pfad: Fehlt der Socket gerade, legt socat eine root-Datei an, und
+  alle Überblendungen fallen bis zum nächsten Neustart aus (passiert am 27.10.2026).
 
 ## Arbeitsweisen, die sich bewährt haben
 
