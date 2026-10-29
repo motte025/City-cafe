@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T14:07:46Z",
+  "checked_at": "2026-10-29T14:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Skellette schleichen ums Haus... gib mir süsses sonst spookt der Bass!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
