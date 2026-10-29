@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T14:57:50Z",
+  "checked_at": "2026-10-29T15:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Skellette schleichen ums Haus... gib mir süsses sonst spookt der Bass!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 HARDSTYLE/HARDTECHNO🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     }
   ]
