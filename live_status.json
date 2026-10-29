@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T21:52:45Z",
+  "checked_at": "2026-10-29T21:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,13 +27,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Late-Night Mixed Music - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
