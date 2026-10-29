@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-29T08:32:45Z",
+  "checked_at": "2026-10-29T08:47:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Live October 29",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "musikinfection",
