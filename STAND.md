@@ -66,9 +66,14 @@ gerechnet (09:04/09:07, Code 2/3), keine Notbremse, höchstens CPU 69 °C. Das B
 
 **28.10. bis 14:50:** Kein Musikbetrieb, nur die Rotation (Twitch und YouTube-Auftritte), keine Fehler.
 
+**Test 28.10. nachmittags:** `ueberblenden()` aus dem installierten Supervisor mit zwei echten mpv ohne Fenster
+und Ton (eigene Sockets) – neuer Song sofort geladen, Ton übergeben, „fertig“, kein Fehler.
+
+**Musikabend 28.10. ab 18:40 (überwacht bis 29.10. 02:04):** 131 Überblendungen, **alle fertig**, 0 abgebrochen,
+0 Hänger, 0 Notbremse. 189 Videos vorab auf die Platte geladen, 1× nicht (YouTube-Bremse „rate limit“ 20:53,
+lief dann aus dem Strom, Überblendung trotzdem fertig). Damit sind HLS und Bild-Vorladen bestätigt.
+
 **Noch offen:**
-- Beim nächsten DJ-Abend den Tagesbericht ansehen: Überblendungen sollten wieder fast alle „fertig“ sein,
-  Hänger und Notbremse mit Bild von der Platte zählen.
 - Die 2 Takt-Fehler vom 27.10. (ExgfgiW-BJI, DN-b7JDfDBE) prüfen, falls sie wiederkommen.
 
 ## 26.10.2026: DJ-Modus ohne Bild seit 23.10. ~22 Uhr – Videos jetzt als HLS (Windows-Sitzung)
