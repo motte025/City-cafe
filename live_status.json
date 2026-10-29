@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T15:47:46Z",
+  "checked_at": "2026-10-29T16:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Skellette schleichen ums Haus... gib mir süsses sonst spookt der Bass!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Frenchcore/Uptempo Ballern <3   !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Frenchcore/Uptempo Ballern <3   !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Skellette schleichen ums Haus... gib mir süsses sonst spookt der Bass!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     },
     {
@@ -49,6 +49,13 @@
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "The Anjunadeep Edition #617 with PALLADIAN",
+      "game": "Music"
     }
   ]
 }
