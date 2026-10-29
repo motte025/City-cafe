@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T15:22:46Z",
+  "checked_at": "2026-10-29T15:37:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "scooby snacks anyone? !bewbs !merch !wishlist !plus !alt !design",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "scooby snacks anyone? !bewbs !merch !wishlist !plus !alt !design",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
