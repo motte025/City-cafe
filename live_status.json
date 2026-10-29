@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T15:02:45Z",
+  "checked_at": "2026-10-29T15:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴 HARDSTYLE/HARDTECHNO🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "scooby snacks anyone? !bewbs !merch !wishlist !plus !alt !design",
       "game": "DJs"
     }
   ]
