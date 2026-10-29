@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T04:42:45Z",
+  "checked_at": "2026-10-29T04:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨 dopamine boost",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨| !tip | !spawn | !checkin | !patreon | !youtube | HAPPY CHAZZYWEEN",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨| !tip | !spawn | !checkin | !patreon | !youtube | HAPPY CHAZZYWEEN",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨 dopamine boost",
       "game": "DJs"
     }
   ]
