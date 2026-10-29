@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-29T07:42:46Z",
+  "checked_at": "2026-10-29T08:02:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "Live October 29",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨| !tip | !spawn | !checkin | !patreon | !youtube | HAPPY CHAZZYWEEN",
       "game": "DJs"
     },
     {
@@ -20,13 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨| !tip | !spawn | !checkin | !patreon | !youtube | HAPPY CHAZZYWEEN",
       "game": "DJs"
     }
   ]
