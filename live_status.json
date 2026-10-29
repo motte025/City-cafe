@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T07:27:46Z",
+  "checked_at": "2026-10-29T07:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨| !tip | !spawn | !checkin | !patreon | !youtube | HAPPY CHAZZYWEEN",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨| !tip | !spawn | !checkin | !patreon | !youtube | HAPPY CHAZZYWEEN",
       "game": "DJs"
     }
   ]
