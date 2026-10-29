@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-29T16:32:47Z",
+  "checked_at": "2026-10-29T16:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,24 +38,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Skellette schleichen ums Haus... gib mir süsses sonst spookt der Bass!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #617 with PALLADIAN",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
     }
   ]
 }
