@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-29T04:57:45Z",
+  "checked_at": "2026-10-29T05:12:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "🖖To Boldly Rave Where No One Has Raved Before 🖖",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨 dopamine boost",
       "game": "DJs"
     },
     {
@@ -20,13 +27,6 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨| !tip | !spawn | !checkin | !patreon | !youtube | HAPPY CHAZZYWEEN",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "🐈‍⬛🖤🐱  BOOTS N CATS ARE ILLEGAL GO DIRECTLY TO JAIL DO NO PASS GO 🚓🚨 dopamine boost",
       "game": "DJs"
     }
   ]
