@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T18:47:45Z",
+  "checked_at": "2026-10-30T18:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "👻HALLOWEEN🎃SPECIAL☠️ | !bier | !zug | !holy | #werbung",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎃 HALLOWEEN SPECIAL feat. DJane Daggi 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎃 HALLOWEEN SPECIAL feat. DJane Daggi 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "👻HALLOWEEN🎃SPECIAL☠️ | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -62,13 +62,6 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Best of the Best - 80s, 90s, 2000s & 2010s Music | !tip | !goals ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "MIX MISSION TV | MCR-T",
       "game": "DJs"
     },
     {
