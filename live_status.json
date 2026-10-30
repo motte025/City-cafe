@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T12:37:46Z",
+  "checked_at": "2026-10-30T12:52:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,6 +7,13 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Live: Doja Cat",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
     },
     {
       "platform": "twitch",
@@ -20,13 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
