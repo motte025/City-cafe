@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T14:32:45Z",
+  "checked_at": "2026-10-30T14:47:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,6 +38,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Freitag <3 (HandsUp/Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -52,9 +59,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freitag <3 (HandsUp/Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ Best of the Best - 80s, 90s, 2000s & 2010s Music | !tip | !goals ✨",
       "game": "DJs"
     }
   ]
