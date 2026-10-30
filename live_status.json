@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T03:57:45Z",
+  "checked_at": "2026-10-30T04:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -14,6 +14,13 @@
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live: Doja Cat",
+      "game": "Music"
     }
   ]
 }
