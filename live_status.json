@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T11:52:47Z",
+  "checked_at": "2026-10-30T12:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,13 +7,6 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Live: Doja Cat",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SLIDE INTO THE WEEKEND! ♥ !socials !kofi ♥ (🇩🇪/🇬🇧) !more",
-      "game": "DJs"
     },
     {
       "platform": "twitch",
