@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T21:22:45Z",
+  "checked_at": "2026-10-30T21:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,17 +17,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music Live: Doja Cat",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🎃 HALLOWEEN SPECIAL feat. DJane Daggi 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live: Doja Cat",
+      "game": "Music"
     },
     {
       "platform": "twitch",
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Special Squad mit @ericssl",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Mit Vollgas ins Wochenende! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Mit Vollgas ins Wochenende! <3  !release @just_jenny_official @two_crazy_girls",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Special Squad mit @ericssl",
       "game": "DJs"
     },
     {
