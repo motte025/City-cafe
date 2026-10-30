@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T14:02:46Z",
+  "checked_at": "2026-10-30T14:12:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -40,7 +40,14 @@
       "platform": "twitch",
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
-      "title": "꧁Skellette schleichen ums Haus... gib mir süsses sonst spookt der Bass!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "title": "꧁Wozu ins Irrenhaus,wenn es zu mir kürzer ist??? Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Freitag <3 (HandsUp/Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
