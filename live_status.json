@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T11:22:45Z",
+  "checked_at": "2026-10-30T11:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥ADDAMS FAMILY VIBES 🎃PP 96/100 2nd month!🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥ADDAMS FAMILY VIBES 🎃PP 96/100 2nd month!🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
