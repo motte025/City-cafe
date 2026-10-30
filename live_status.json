@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T17:07:45Z",
+  "checked_at": "2026-10-30T17:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,6 +31,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Mit Vollgas ins Wochenende! <3  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Freitag <3 (HandsUp/Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
@@ -48,13 +55,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Mit Vollgas ins Wochenende! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
