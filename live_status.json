@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-10-30T20:27:46Z",
+  "checked_at": "2026-10-30T20:47:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music Live: Doja Cat",
-      "game": "Music"
-    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "HONEY, I'M HOME",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live: Doja Cat",
+      "game": "Music"
     },
     {
       "platform": "twitch",
