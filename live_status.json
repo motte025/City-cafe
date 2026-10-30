@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T15:17:49Z",
+  "checked_at": "2026-10-30T15:37:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 ROCK FRIDAY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
@@ -45,13 +52,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Best of the Best - 80s, 90s, 2000s & 2010s Music | !tip | !goals ✨",
@@ -59,16 +59,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Wozu ins Irrenhaus,wenn es zu mir kürzer ist??? Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 ROCK FRIDAY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Wozu ins Irrenhaus,wenn es zu mir kürzer ist??? Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
