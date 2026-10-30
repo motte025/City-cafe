@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T04:57:46Z",
+  "checked_at": "2026-10-30T05:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Live October 30",
       "game": "DJs"
     }
   ]
