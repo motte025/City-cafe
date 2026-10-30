@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T02:07:45Z",
+  "checked_at": "2026-10-30T02:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ A VERY GOOFY HALLOWEEN UNIVERSAL PRE SHOW PURRRRRR 🔥 !mods !mercy !tip",
       "game": "DJs"
     }
   ]
