@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-30T22:02:46Z",
+  "checked_at": "2026-10-30T22:22:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live: Doja Cat",
+      "game": "Music"
+    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
@@ -21,13 +28,6 @@
       "name": "DirkNeuenfels",
       "title": "🎃 HALLOWEEN SPECIAL feat. DJane Daggi 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music Live: Doja Cat",
-      "game": "Music"
     },
     {
       "platform": "twitch",
