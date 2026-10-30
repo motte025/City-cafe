@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T15:12:45Z",
+  "checked_at": "2026-10-30T15:17:49Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Abfahrt ins Wochenende | Bass auf die Ohren | !holy",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Abfahrt ins Wochenende | Bass auf die Ohren | !holy",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -62,6 +62,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Wozu ins Irrenhaus,wenn es zu mir kürzer ist??? Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 ROCK FRIDAY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     }
   ]
