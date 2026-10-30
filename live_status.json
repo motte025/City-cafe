@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T16:27:49Z",
+  "checked_at": "2026-10-30T16:47:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Abfahrt ins Wochenende | Bass auf die Ohren | !holy",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -45,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥ADDAMS FAMILY VIBES 🎃PP 96/100 2nd month!🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ Best of the Best - 80s, 90s, 2000s & 2010s Music | !tip | !goals ✨",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ Best of the Best - 80s, 90s, 2000s & 2010s Music | !tip | !goals ✨",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥ADDAMS FAMILY VIBES 🎃PP 96/100 2nd month!🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
