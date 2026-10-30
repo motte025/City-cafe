@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T18:22:45Z",
+  "checked_at": "2026-10-30T18:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -59,13 +59,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freitag <3 (HandsUp/Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "MIX MISSION TV | MCR-T",
@@ -76,6 +69,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎃 HALLOWEEN SPECIAL feat. DJane Daggi 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
