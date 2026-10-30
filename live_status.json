@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T14:47:48Z",
+  "checked_at": "2026-10-30T15:02:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -62,6 +62,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Best of the Best - 80s, 90s, 2000s & 2010s Music | !tip | !goals ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 ROCK FRIDAY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     }
   ]
