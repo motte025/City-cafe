@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T17:22:45Z",
+  "checked_at": "2026-10-30T17:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Wir wollen es hart! | Bass auf die Ohren | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Mit Vollgas ins Wochenende! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -31,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Mit Vollgas ins Wochenende! <3  !release @just_jenny_official @two_crazy_girls",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ Best of the Best - 80s, 90s, 2000s & 2010s Music | !tip | !goals ✨",
       "game": "DJs"
     },
     {
@@ -45,16 +52,23 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ Best of the Best - 80s, 90s, 2000s & 2010s Music | !tip | !goals ✨",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "👻HALLOWEEN🎃SPECIAL☠️ | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 MUTE MARATHON TAG 109 😈 | Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
