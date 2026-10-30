@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T14:12:48Z",
+  "checked_at": "2026-10-30T14:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥ADDAMS FAMILY VIBES 🎃PP 96/100 2nd month!🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Abfahrt ins Wochenende | Bass auf die Ohren | !holy",
       "game": "DJs"
     },
     {
@@ -27,6 +27,13 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥ADDAMS FAMILY VIBES 🎃PP 96/100 2nd month!🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
