@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-31T14:52:45Z",
+  "checked_at": "2026-10-31T15:02:50Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "ICH MUTIERE ZUR ZOMBIE - SCHÜLERIN | Pädagogisch wertlos, aber bissig! 🧟 | !holy",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
@@ -10,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "ICH MUTIERE ZUR ZOMBIE - SCHÜLERIN | Pädagogisch wertlos, aber bissig! 🧟 | !holy",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
@@ -24,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "👻🕯️ HAPPY HALLOWEEN 🕯️👻 | Mixed Styles mit @bruebie @e_one uvm. | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
