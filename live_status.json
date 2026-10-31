@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-10-31T20:52:45Z",
+  "checked_at": "2026-10-31T21:07:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "👻🕯️ HAPPY HALLOWEEN 🕯️👻 | Mixed Styles mit @bruebie @e_one uvm. | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎃 HALLOWEEN 2026 I PRIESTER vs MACHETENBLAST 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -27,6 +20,13 @@
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "COME AT ME BILL",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎃 HALLOWEEN 2026 I PRIESTER vs MACHETENBLAST 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
