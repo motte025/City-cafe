@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:42:35Z",
+  "aktualisiert": "2026-10-31T19:57:48Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -145,21 +145,21 @@
         {
           "rang": 1,
           "spieler": "KLEINHAPPEL Ernestine",
-          "spiele": 10,
+          "spiele": 11,
           "siege": 9,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 26,
-          "legs_minus": 8,
+          "legs_minus": 10,
           "punkte": 26
         },
         {
           "rang": 2,
           "spieler": "RAINER Gerald",
-          "spiele": 10,
+          "spiele": 11,
           "siege": 9,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 25,
-          "legs_minus": 7,
+          "legs_minus": 9,
           "punkte": 25
         },
         {
@@ -234,6 +234,16 @@
         },
         {
           "rang": 10,
+          "spieler": "REINISCH Jessica",
+          "spiele": 8,
+          "siege": 6,
+          "niederlagen": 2,
+          "legs_plus": 15,
+          "legs_minus": 12,
+          "punkte": 15
+        },
+        {
+          "rang": 11,
           "spieler": "FELLNER Johann",
           "spiele": 8,
           "siege": 4,
@@ -243,7 +253,7 @@
           "punkte": 15
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "JAHN Andreas",
           "spiele": 9,
           "siege": 4,
@@ -253,7 +263,7 @@
           "punkte": 15
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -263,7 +273,7 @@
           "punkte": 14
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 7,
           "siege": 4,
@@ -273,23 +283,13 @@
           "punkte": 14
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 6,
           "siege": 4,
           "niederlagen": 2,
           "legs_plus": 13,
           "legs_minus": 6,
-          "punkte": 13
-        },
-        {
-          "rang": 15,
-          "spieler": "REINISCH Jessica",
-          "spiele": 7,
-          "siege": 5,
-          "niederlagen": 2,
-          "legs_plus": 13,
-          "legs_minus": 12,
           "punkte": 13
         },
         {
@@ -414,6 +414,16 @@
         },
         {
           "rang": 28,
+          "spieler": "LUBE Mario",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 6,
+          "legs_minus": 8,
+          "punkte": 6
+        },
+        {
+          "rang": 29,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 4,
           "siege": 1,
@@ -423,7 +433,7 @@
           "punkte": 6
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "BÄCKER Josephine",
           "spiele": 4,
           "siege": 0,
@@ -433,7 +443,7 @@
           "punkte": 6
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "GORICNIK Cornelia",
           "spiele": 5,
           "siege": 1,
@@ -443,7 +453,7 @@
           "punkte": 6
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "POLZER Hannah",
           "spiele": 4,
           "siege": 2,
@@ -453,7 +463,7 @@
           "punkte": 5
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "KOGLER Sabine",
           "spiele": 4,
           "siege": 1,
@@ -463,7 +473,7 @@
           "punkte": 5
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "SCHADER Andreas",
           "spiele": 2,
           "siege": 1,
@@ -473,23 +483,13 @@
           "punkte": 4
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
           "legs_plus": 4,
           "legs_minus": 4,
-          "punkte": 4
-        },
-        {
-          "rang": 35,
-          "spieler": "LUBE Mario",
-          "spiele": 3,
-          "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 4,
-          "legs_minus": 8,
           "punkte": 4
         },
         {
@@ -708,7 +708,7 @@
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 3,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109565,
             "paarungen": [
               {
@@ -744,7 +744,7 @@
                 "spieler1": "KLEINHAPPEL Ernestine / RAINER Gerald",
                 "spieler2": "REINISCH Jessica / LUBE Mario",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               },
               {
                 "art": "OD",
