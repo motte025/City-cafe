@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-10-31T01:07:45Z",
+  "checked_at": "2026-10-31T01:22:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music Live: Doja Cat",
-      "game": "Music"
-    },
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🎃 HALLOWEEN SPECIAL feat. DJane Daggi 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live: Doja Cat",
+      "game": "Music"
     },
     {
       "platform": "twitch",
