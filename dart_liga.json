@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T22:02:36Z",
+  "aktualisiert": "2026-10-31T22:03:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -294,6 +294,16 @@
         },
         {
           "rang": 16,
+          "spieler": "FRIEßNEGGER Sarah",
+          "spiele": 6,
+          "siege": 4,
+          "niederlagen": 2,
+          "legs_plus": 13,
+          "legs_minus": 8,
+          "punkte": 13
+        },
+        {
+          "rang": 17,
           "spieler": "KOLLER Elias",
           "spiele": 9,
           "siege": 4,
@@ -303,7 +313,7 @@
           "punkte": 13
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 9,
           "siege": 3,
@@ -313,7 +323,7 @@
           "punkte": 13
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "SCHECK Guenther",
           "spiele": 5,
           "siege": 5,
@@ -323,7 +333,7 @@
           "punkte": 11
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "ASPRIAN Johann",
           "spiele": 6,
           "siege": 3,
@@ -331,16 +341,6 @@
           "legs_plus": 11,
           "legs_minus": 9,
           "punkte": 11
-        },
-        {
-          "rang": 20,
-          "spieler": "FRIEßNEGGER Sarah",
-          "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
-          "legs_plus": 10,
-          "legs_minus": 8,
-          "punkte": 10
         },
         {
           "rang": 21,
@@ -384,20 +384,20 @@
         },
         {
           "rang": 25,
-          "spieler": "JESENKO Julia",
-          "spiele": 4,
+          "spieler": "SATZ Klemens",
+          "spiele": 3,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 1,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
         },
         {
           "rang": 26,
-          "spieler": "SATZ Klemens",
-          "spiele": 3,
+          "spieler": "JESENKO Julia",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
@@ -585,16 +585,16 @@
         {
           "rang": 45,
           "spieler": "APOVNIK Gabriele",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 0,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 1,
-          "legs_minus": 13,
+          "legs_minus": 16,
           "punkte": 1
         },
         {
           "rang": 46,
-          "spieler": "HOBEL Walter",
+          "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -604,7 +604,7 @@
         },
         {
           "rang": 47,
-          "spieler": "KREUZER Hanna",
+          "spieler": "HOBEL Walter",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -808,7 +808,7 @@
             "datum": "2026-10-31",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 5,
+            "erg_heim": 6,
             "erg_auswaerts": 1,
             "id": 109576,
             "paarungen": [
@@ -865,7 +865,7 @@
                 "art": "DE",
                 "spieler1": "FRIEßNEGGER Sarah",
                 "spieler2": "APOVNIK Gabriele",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
