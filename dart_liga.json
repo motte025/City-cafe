@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:57:48Z",
+  "aktualisiert": "2026-10-31T20:00:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1095,7 +1095,7 @@
           "id": 108938
         },
         "4": {
-          "heim": 5,
+          "heim": 6,
           "auswaerts": 0,
           "id": 108960
         },
@@ -1248,6 +1248,16 @@
         },
         {
           "rang": 11,
+          "spieler": "FRADL Ingemar",
+          "spiele": 11,
+          "siege": 5,
+          "niederlagen": 6,
+          "legs_plus": 15,
+          "legs_minus": 20,
+          "punkte": 15
+        },
+        {
+          "rang": 12,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 7,
           "siege": 5,
@@ -1257,7 +1267,7 @@
           "punkte": 14
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "ANWALD Guenther",
           "spiele": 8,
           "siege": 4,
@@ -1267,24 +1277,14 @@
           "punkte": 14
         },
         {
-          "rang": 13,
-          "spieler": "FRADL Ingemar",
-          "spiele": 10,
-          "siege": 4,
-          "niederlagen": 6,
-          "legs_plus": 13,
-          "legs_minus": 19,
-          "punkte": 13
-        },
-        {
           "rang": 14,
           "spieler": "GRAFSCHAFTER Bastian",
-          "spiele": 7,
-          "siege": 3,
+          "spiele": 8,
+          "siege": 4,
           "niederlagen": 4,
-          "legs_plus": 12,
-          "legs_minus": 12,
-          "punkte": 12
+          "legs_plus": 14,
+          "legs_minus": 13,
+          "punkte": 14
         },
         {
           "rang": 15,
@@ -1358,6 +1358,16 @@
         },
         {
           "rang": 22,
+          "spieler": "PINTER Michele",
+          "spiele": 6,
+          "siege": 1,
+          "niederlagen": 5,
+          "legs_plus": 9,
+          "legs_minus": 15,
+          "punkte": 9
+        },
+        {
+          "rang": 23,
           "spieler": "SONNBERGER Harald",
           "spiele": 8,
           "siege": 2,
@@ -1367,7 +1377,7 @@
           "punkte": 9
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "GRAF Franz",
           "spiele": 3,
           "siege": 3,
@@ -1377,18 +1387,8 @@
           "punkte": 8
         },
         {
-          "rang": 24,
-          "spieler": "GREINIG Petra",
-          "spiele": 5,
-          "siege": 1,
-          "niederlagen": 4,
-          "legs_plus": 8,
-          "legs_minus": 13,
-          "punkte": 8
-        },
-        {
           "rang": 25,
-          "spieler": "PINTER Michele",
+          "spieler": "GREINIG Petra",
           "spiele": 5,
           "siege": 1,
           "niederlagen": 4,
@@ -1518,6 +1518,16 @@
         },
         {
           "rang": 38,
+          "spieler": "POSCHINGER Franz",
+          "spiele": 5,
+          "siege": 0,
+          "niederlagen": 5,
+          "legs_plus": 3,
+          "legs_minus": 12,
+          "punkte": 3
+        },
+        {
+          "rang": 39,
           "spieler": "STEINER Lydia",
           "spiele": 6,
           "siege": 1,
@@ -1527,7 +1537,7 @@
           "punkte": 3
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "SCHMID Thomas",
           "spiele": 1,
           "siege": 1,
@@ -1537,7 +1547,7 @@
           "punkte": 2
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "PETSCHAR Phillip",
           "spiele": 2,
           "siege": 0,
@@ -1547,23 +1557,13 @@
           "punkte": 2
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "RUS Kerstin",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
           "legs_plus": 2,
           "legs_minus": 7,
-          "punkte": 2
-        },
-        {
-          "rang": 42,
-          "spieler": "POSCHINGER Franz",
-          "spiele": 4,
-          "siege": 0,
-          "niederlagen": 4,
-          "legs_plus": 2,
-          "legs_minus": 10,
           "punkte": 2
         },
         {
@@ -1607,7 +1607,7 @@
       ],
       "letztes_spiel": {
         "runde": 4,
-        "heim": 5,
+        "heim": 6,
         "auswaerts": 0,
         "paarungen": [
           {
@@ -1649,6 +1649,34 @@
             "art": "OD",
             "spieler1": "FRADL Ingemar / GRAFSCHAFTER Bastian",
             "spieler2": "POSCHINGER Franz / PINTER Michele",
+            "legs1": 2,
+            "legs2": 1
+          },
+          {
+            "art": "HE",
+            "spieler1": "MARKTL (J) Maximilian",
+            "spieler2": "SONNBERGER Harald",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "DE",
+            "spieler1": "GUN Conny",
+            "spieler2": "PINTER Michele",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OE",
+            "spieler1": "GRAFSCHAFTER Bastian",
+            "spieler2": "POSCHINGER Franz",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OE",
+            "spieler1": "MARKTL Werner",
+            "spieler2": "FRÜSTÜCK Kerstin",
             "legs1": 0,
             "legs2": 0
           }
@@ -1663,7 +1691,7 @@
             "datum": "2026-10-31",
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 5,
+            "erg_heim": 6,
             "erg_auswaerts": 0,
             "id": 108960,
             "paarungen": [
@@ -1706,6 +1734,34 @@
                 "art": "OD",
                 "spieler1": "FRADL Ingemar / GRAFSCHAFTER Bastian",
                 "spieler2": "POSCHINGER Franz / PINTER Michele",
+                "legs1": 2,
+                "legs2": 1
+              },
+              {
+                "art": "HE",
+                "spieler1": "MARKTL (J) Maximilian",
+                "spieler2": "SONNBERGER Harald",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "GUN Conny",
+                "spieler2": "PINTER Michele",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "GRAFSCHAFTER Bastian",
+                "spieler2": "POSCHINGER Franz",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "MARKTL Werner",
+                "spieler2": "FRÜSTÜCK Kerstin",
                 "legs1": 0,
                 "legs2": 0
               }
