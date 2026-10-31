@@ -122,6 +122,10 @@ def musik_format(hoehe=0, fps=0):
     sortierung = f"res:{h},fps:{f}" + (",vcodec:avc1" if MUSIK_NUR_H264 else "") + ",acodec:m4a"
     return "/".join(stufen), sortierung
 RETRY_FAILED_AFTER = 600   # Sekunden, bis ein fehlgeschlagenes Video neu versucht wird
+# Aufgeloeste Adressen laufen bei YouTube nach etwa 6 h ab (403). Bei Livestreams, die immer
+# wieder drankommen (Halloween 31.10.2026: 23:06 "mpv beendet (Code 2)"), blieb die alte
+# Adresse im Cache - deshalb nach 3 h neu holen.
+CACHE_HOECHSTENS = 3 * 3600
 POLL_SECONDS = 0.5
 LOG = "/home/citycafe/nl-mpv-supervisor.log"
 MPV_SOCK = "/tmp/mpv-nl.sock"
@@ -3404,6 +3408,7 @@ def main():
     mpv = None
     feeder = None         # streamlink-Prozess, der mpv bei Twitch fuettert
     cache = {}            # videoId -> (video_url, audio_url)
+    cache_zeit = {}       # Schluessel -> wann aufgeloest (CACHE_HOECHSTENS)
     failed = {}           # videoId -> Zeitpunkt des letzten yt-dlp-Fehlschlags
     mpv_bad = {}          # Schluessel -> Zeitpunkt, an dem mpv damit scheiterte
     started = last_pos = last_progress = None
@@ -3646,6 +3651,7 @@ def main():
 
         def in_cache(key, urls):
             cache[key] = urls
+            cache_zeit[key] = time.time()
             if key.endswith("|m"):                  # Musik: Intro/Ausklang und Seitenbalken messen
                 ton_laden(key.split("|", 1)[0], urls[1])     # und den Ton auf die Platte (Stocken)
                 threading.Thread(target=stille_messen, daemon=True,
@@ -4010,6 +4016,9 @@ def main():
             fmt, sortierung = format_waehlen(w_hoehe, w_fps), None
         cache_key = schluessel_fuer(schluessel, w_hoehe, w_fps, musik)
 
+        for alt_key in [k for k in cache if time.time() - cache_zeit.get(k, 0) > CACHE_HOECHSTENS]:
+            if not (shown and shown.endswith(":" + alt_key.split("|", 1)[0])):   # laufendes nicht anfassen
+                cache.pop(alt_key, None)
         recently_failed = time.time() - failed.get(schluessel, 0) < RETRY_FAILED_AFTER
         busy = resolver is not None and resolver.is_alive()
         if youtube and cache_key not in cache and not recently_failed and not busy:
@@ -4255,6 +4264,9 @@ def main():
                 stop_all()
                 give_back(page_id, shown)
                 mpv_bad[shown] = now
+                # Adresse vergessen: war sie abgelaufen, holt der naechste Versuch eine neue.
+                for alt_key in [k for k in cache if shown.endswith(":" + k.split("|", 1)[0])]:
+                    cache.pop(alt_key, None)
                 shown, embed_paused = None, False
 
         # Seitenhintergrund nachtraeglich zuschalten, wenn die Balken-Messung erst
