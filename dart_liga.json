@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:04:38Z",
+  "aktualisiert": "2026-10-31T18:08:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1656,7 +1656,36 @@
             "erg_heim": 0,
             "erg_auswaerts": 0,
             "id": 108971,
-            "paarungen": []
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "STEINER Lydia",
+                "spieler2": "JANESCH Christine",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "OBERZAN Lukas",
+                "spieler2": "NIKOLIC Dennis",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "STEINER Sandro Emmanuel",
+                "spieler2": "ANWALD Guenther",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "GRAF Franz",
+                "spieler2": "WIESER (J) David",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
           },
           {
             "runde": 4,
