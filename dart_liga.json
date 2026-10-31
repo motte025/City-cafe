@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:29:37Z",
+  "aktualisiert": "2026-10-31T18:30:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1250,6 +1250,16 @@
         },
         {
           "rang": 14,
+          "spieler": "UNTERDORFER Heimo",
+          "spiele": 7,
+          "siege": 3,
+          "niederlagen": 4,
+          "legs_plus": 11,
+          "legs_minus": 14,
+          "punkte": 11
+        },
+        {
+          "rang": 15,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1259,7 +1269,7 @@
           "punkte": 10
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "FRADL Ingemar",
           "spiele": 9,
           "siege": 3,
@@ -1269,7 +1279,7 @@
           "punkte": 10
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "STINGLER Engelbert",
           "spiele": 6,
           "siege": 3,
@@ -1279,7 +1289,7 @@
           "punkte": 9
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 7,
           "siege": 3,
@@ -1289,7 +1299,7 @@
           "punkte": 9
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "ETTL Theresa",
           "spiele": 6,
           "siege": 3,
@@ -1299,7 +1309,7 @@
           "punkte": 9
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "LANG Melanie",
           "spiele": 7,
           "siege": 3,
@@ -1309,7 +1319,7 @@
           "punkte": 9
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "SONNBERGER Harald",
           "spiele": 7,
           "siege": 2,
@@ -1317,16 +1327,6 @@
           "legs_plus": 9,
           "legs_minus": 15,
           "punkte": 9
-        },
-        {
-          "rang": 21,
-          "spieler": "UNTERDORFER Heimo",
-          "spiele": 6,
-          "siege": 2,
-          "niederlagen": 4,
-          "legs_plus": 8,
-          "legs_minus": 12,
-          "punkte": 8
         },
         {
           "rang": 22,
@@ -1500,6 +1500,16 @@
         },
         {
           "rang": 39,
+          "spieler": "PETSCHAR Phillip",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 2,
+          "legs_minus": 3,
+          "punkte": 2
+        },
+        {
+          "rang": 40,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 2,
           "siege": 0,
@@ -1509,7 +1519,7 @@
           "punkte": 2
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "RUS Kerstin",
           "spiele": 2,
           "siege": 0,
@@ -1519,7 +1529,7 @@
           "punkte": 2
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "POSCHINGER Franz",
           "spiele": 3,
           "siege": 0,
@@ -1529,7 +1539,7 @@
           "punkte": 2
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "KRUSCHITZ Harald",
           "spiele": 3,
           "siege": 0,
@@ -1539,7 +1549,7 @@
           "punkte": 1
         },
         {
-          "rang": 43,
+          "rang": 44,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1549,7 +1559,7 @@
           "punkte": 0
         },
         {
-          "rang": 44,
+          "rang": 45,
           "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
@@ -1690,7 +1700,7 @@
             "heim": "DC O3tz 1.0",
             "auswaerts": "DC Drautal Dart Vipers",
             "erg_heim": 0,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 108982,
             "paarungen": [
               {
@@ -1704,8 +1714,8 @@
                 "art": "HE",
                 "spieler1": "PETSCHAR Phillip",
                 "spieler2": "UNTERDORFER Heimo",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
