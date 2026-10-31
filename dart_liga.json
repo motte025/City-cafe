@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:09:37Z",
+  "aktualisiert": "2026-10-31T19:11:46Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -154,6 +154,16 @@
         },
         {
           "rang": 2,
+          "spieler": "RAINER Gerald",
+          "spiele": 10,
+          "siege": 9,
+          "niederlagen": 1,
+          "legs_plus": 25,
+          "legs_minus": 7,
+          "punkte": 25
+        },
+        {
+          "rang": 3,
           "spieler": "DOUJAK Siegfried",
           "spiele": 9,
           "siege": 9,
@@ -163,7 +173,7 @@
           "punkte": 24
         },
         {
-          "rang": 3,
+          "rang": 4,
           "spieler": "JAMMER Fabian",
           "spiele": 11,
           "siege": 8,
@@ -171,16 +181,6 @@
           "legs_plus": 24,
           "legs_minus": 18,
           "punkte": 24
-        },
-        {
-          "rang": 4,
-          "spieler": "RAINER Gerald",
-          "spiele": 9,
-          "siege": 8,
-          "niederlagen": 1,
-          "legs_plus": 22,
-          "legs_minus": 6,
-          "punkte": 22
         },
         {
           "rang": 5,
@@ -224,20 +224,20 @@
         },
         {
           "rang": 9,
-          "spieler": "ELEZOSKI Serif",
+          "spieler": "REGENFELDNER Rene",
           "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
+          "siege": 5,
+          "niederlagen": 1,
           "legs_plus": 14,
           "legs_minus": 6,
           "punkte": 14
         },
         {
           "rang": 10,
-          "spieler": "REGENFELDNER Rene",
+          "spieler": "ELEZOSKI Serif",
           "spiele": 6,
-          "siege": 5,
-          "niederlagen": 1,
+          "siege": 4,
+          "niederlagen": 2,
           "legs_plus": 14,
           "legs_minus": 6,
           "punkte": 14
@@ -344,6 +344,16 @@
         },
         {
           "rang": 21,
+          "spieler": "BRUNNER Jürgen",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 8,
+          "legs_minus": 8,
+          "punkte": 8
+        },
+        {
+          "rang": 22,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 6,
           "siege": 2,
@@ -353,7 +363,7 @@
           "punkte": 8
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "JESENKO Julia",
           "spiele": 4,
           "siege": 2,
@@ -363,7 +373,7 @@
           "punkte": 7
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "SATZ Klemens",
           "spiele": 3,
           "siege": 2,
@@ -373,31 +383,21 @@
           "punkte": 7
         },
         {
-          "rang": 24,
-          "spieler": "BRUNNER Jürgen",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 7,
-          "legs_minus": 5,
-          "punkte": 7
-        },
-        {
           "rang": 25,
-          "spieler": "KERNSTOCK Michael",
+          "spieler": "SCHNEIDER Hermann",
           "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
+          "siege": 1,
+          "niederlagen": 3,
           "legs_plus": 7,
           "legs_minus": 9,
           "punkte": 7
         },
         {
           "rang": 26,
-          "spieler": "SCHNEIDER Hermann",
+          "spieler": "KERNSTOCK Michael",
           "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
+          "siege": 2,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 9,
           "punkte": 7
@@ -707,7 +707,7 @@
             "datum": "2026-10-31",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 1,
             "id": 109565,
             "paarungen": [
@@ -729,8 +729,8 @@
                 "art": "OE",
                 "spieler1": "RAINER Gerald",
                 "spieler2": "BRUNNER Jürgen",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "OE",
