@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:30:34Z",
+  "aktualisiert": "2026-10-31T18:39:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -145,12 +145,12 @@
         {
           "rang": 1,
           "spieler": "KLEINHAPPEL Ernestine",
-          "spiele": 9,
+          "spiele": 10,
           "siege": 9,
-          "niederlagen": 0,
-          "legs_plus": 24,
-          "legs_minus": 5,
-          "punkte": 24
+          "niederlagen": 1,
+          "legs_plus": 26,
+          "legs_minus": 8,
+          "punkte": 26
         },
         {
           "rang": 2,
@@ -274,6 +274,16 @@
         },
         {
           "rang": 14,
+          "spieler": "REINISCH Jessica",
+          "spiele": 7,
+          "siege": 5,
+          "niederlagen": 2,
+          "legs_plus": 13,
+          "legs_minus": 12,
+          "punkte": 13
+        },
+        {
+          "rang": 15,
           "spieler": "KOLLER Elias",
           "spiele": 9,
           "siege": 4,
@@ -283,7 +293,7 @@
           "punkte": 13
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 5,
           "siege": 4,
@@ -293,7 +303,7 @@
           "punkte": 12
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 6,
           "siege": 3,
@@ -303,7 +313,7 @@
           "punkte": 12
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "ASPRIAN Johann",
           "spiele": 6,
           "siege": 3,
@@ -311,16 +321,6 @@
           "legs_plus": 11,
           "legs_minus": 9,
           "punkte": 11
-        },
-        {
-          "rang": 18,
-          "spieler": "REINISCH Jessica",
-          "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
-          "legs_plus": 10,
-          "legs_minus": 10,
-          "punkte": 10
         },
         {
           "rang": 19,
@@ -354,20 +354,20 @@
         },
         {
           "rang": 22,
-          "spieler": "SATZ Klemens",
-          "spiele": 3,
+          "spieler": "JESENKO Julia",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
         },
         {
           "rang": 23,
-          "spieler": "JESENKO Julia",
-          "spiele": 4,
+          "spieler": "SATZ Klemens",
+          "spiele": 3,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 1,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
@@ -414,9 +414,9 @@
         },
         {
           "rang": 28,
-          "spieler": "GORICNIK Cornelia",
-          "spiele": 5,
-          "siege": 1,
+          "spieler": "BÄCKER Josephine",
+          "spiele": 4,
+          "siege": 0,
           "niederlagen": 4,
           "legs_plus": 6,
           "legs_minus": 12,
@@ -424,9 +424,9 @@
         },
         {
           "rang": 29,
-          "spieler": "BÄCKER Josephine",
-          "spiele": 4,
-          "siege": 0,
+          "spieler": "GORICNIK Cornelia",
+          "spiele": 5,
+          "siege": 1,
           "niederlagen": 4,
           "legs_plus": 6,
           "legs_minus": 12,
@@ -708,15 +708,15 @@
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 0,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109565,
             "paarungen": [
               {
                 "art": "DE",
                 "spieler1": "KLEINHAPPEL Ernestine",
                 "spieler2": "REINISCH Jessica",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "HE",
