@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:26:38Z",
+  "aktualisiert": "2026-10-31T19:33:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -194,6 +194,16 @@
         },
         {
           "rang": 6,
+          "spieler": "ELEZOSKI Serif",
+          "spiele": 7,
+          "siege": 5,
+          "niederlagen": 2,
+          "legs_plus": 17,
+          "legs_minus": 6,
+          "punkte": 17
+        },
+        {
+          "rang": 7,
           "spieler": "BERGLER Benjamin",
           "spiele": 9,
           "siege": 5,
@@ -203,7 +213,7 @@
           "punkte": 17
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "JAHN Corinna",
           "spiele": 7,
           "siege": 4,
@@ -213,7 +223,7 @@
           "punkte": 16
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "JAHN Andreas",
           "spiele": 9,
           "siege": 4,
@@ -223,21 +233,11 @@
           "punkte": 15
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
           "niederlagen": 1,
-          "legs_plus": 14,
-          "legs_minus": 6,
-          "punkte": 14
-        },
-        {
-          "rang": 10,
-          "spieler": "ELEZOSKI Serif",
-          "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
           "legs_plus": 14,
           "legs_minus": 6,
           "punkte": 14
@@ -305,11 +305,11 @@
         {
           "rang": 17,
           "spieler": "SIMONITSCH Erhard",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 3,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 12,
-          "legs_minus": 11,
+          "legs_minus": 14,
           "punkte": 12
         },
         {
@@ -707,7 +707,7 @@
             "datum": "2026-10-31",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 1,
             "id": 109565,
             "paarungen": [
@@ -736,7 +736,7 @@
                 "art": "OE",
                 "spieler1": "ELEZOSKI Serif",
                 "spieler2": "SIMONITSCH Erhard",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
