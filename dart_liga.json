@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:17:41Z",
+  "aktualisiert": "2026-10-31T21:18:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1106,6 +1106,15 @@
         },
         {
           "rang": 3,
+          "team": "DC Drautal Dart Vipers",
+          "spiele": 5,
+          "siege": 2,
+          "unentschieden": 2,
+          "niederlagen": 1,
+          "punkte": 6
+        },
+        {
+          "rang": 4,
           "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
           "spiele": 3,
           "siege": 2,
@@ -1114,7 +1123,7 @@
           "punkte": 5
         },
         {
-          "rang": 4,
+          "rang": 5,
           "team": "DC Garzern",
           "spiele": 4,
           "siege": 2,
@@ -1123,17 +1132,8 @@
           "punkte": 5
         },
         {
-          "rang": 5,
-          "team": "DC Drautal Dart Vipers",
-          "spiele": 4,
-          "siege": 1,
-          "unentschieden": 2,
-          "niederlagen": 1,
-          "punkte": 4
-        },
-        {
           "rang": 6,
-          "team": "DC O3tz 1.0",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1142,11 +1142,11 @@
         },
         {
           "rang": 7,
-          "team": "City-Flyers \"Fraggles\"",
-          "spiele": 3,
+          "team": "DC O3tz 1.0",
+          "spiele": 4,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "punkte": 2
         },
         {
@@ -1264,6 +1264,16 @@
         },
         {
           "rang": 5,
+          "spieler": "WIMMER Leon",
+          "spiele": 8,
+          "siege": 7,
+          "niederlagen": 1,
+          "legs_plus": 19,
+          "legs_minus": 8,
+          "punkte": 19
+        },
+        {
+          "rang": 6,
           "spieler": "GÖSCHL Mario",
           "spiele": 9,
           "siege": 7,
@@ -1273,7 +1283,7 @@
           "punkte": 19
         },
         {
-          "rang": 6,
+          "rang": 7,
           "spieler": "OBERZAN Lukas",
           "spiele": 8,
           "siege": 6,
@@ -1283,23 +1293,13 @@
           "punkte": 17
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 9,
           "siege": 6,
           "niederlagen": 3,
           "legs_plus": 17,
           "legs_minus": 10,
-          "punkte": 17
-        },
-        {
-          "rang": 8,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 9,
-          "siege": 6,
-          "niederlagen": 3,
-          "legs_plus": 17,
-          "legs_minus": 13,
           "punkte": 17
         },
         {
@@ -1314,6 +1314,16 @@
         },
         {
           "rang": 10,
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 9,
+          "siege": 6,
+          "niederlagen": 3,
+          "legs_plus": 17,
+          "legs_minus": 13,
+          "punkte": 17
+        },
+        {
+          "rang": 11,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
@@ -1321,16 +1331,6 @@
           "legs_plus": 17,
           "legs_minus": 14,
           "punkte": 17
-        },
-        {
-          "rang": 11,
-          "spieler": "WIMMER Leon",
-          "spiele": 7,
-          "siege": 6,
-          "niederlagen": 1,
-          "legs_plus": 16,
-          "legs_minus": 7,
-          "punkte": 16
         },
         {
           "rang": 12,
@@ -1394,6 +1394,16 @@
         },
         {
           "rang": 18,
+          "spieler": "SPANRING Andreas",
+          "spiele": 6,
+          "siege": 4,
+          "niederlagen": 2,
+          "legs_plus": 12,
+          "legs_minus": 12,
+          "punkte": 12
+        },
+        {
+          "rang": 19,
           "spieler": "SONNBERGER Harald",
           "spiele": 9,
           "siege": 3,
@@ -1401,16 +1411,6 @@
           "legs_plus": 12,
           "legs_minus": 19,
           "punkte": 12
-        },
-        {
-          "rang": 19,
-          "spieler": "SPANRING Andreas",
-          "spiele": 5,
-          "siege": 4,
-          "niederlagen": 1,
-          "legs_plus": 11,
-          "legs_minus": 9,
-          "punkte": 11
         },
         {
           "rang": 20,
@@ -1930,7 +1930,7 @@
             "heim": "DC O3tz 1.0",
             "auswaerts": "DC Drautal Dart Vipers",
             "erg_heim": 3,
-            "erg_auswaerts": 6,
+            "erg_auswaerts": 7,
             "id": 108982,
             "paarungen": [
               {
@@ -2000,8 +2000,8 @@
                 "art": "OE",
                 "spieler1": "SPANRING Andreas",
                 "spieler2": "WIMMER Leon",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               }
             ]
           }
