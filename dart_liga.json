@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:07:38Z",
+  "aktualisiert": "2026-10-31T21:13:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -144,22 +144,22 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "KLEINHAPPEL Ernestine",
+          "spiele": 12,
+          "siege": 10,
+          "niederlagen": 2,
+          "legs_plus": 29,
+          "legs_minus": 12,
+          "punkte": 29
+        },
+        {
+          "rang": 2,
           "spieler": "DOUJAK Siegfried",
           "spiele": 10,
           "siege": 10,
           "niederlagen": 0,
           "legs_plus": 26,
           "legs_minus": 4,
-          "punkte": 26
-        },
-        {
-          "rang": 2,
-          "spieler": "KLEINHAPPEL Ernestine",
-          "spiele": 11,
-          "siege": 9,
-          "niederlagen": 2,
-          "legs_plus": 26,
-          "legs_minus": 10,
           "punkte": 26
         },
         {
@@ -214,6 +214,16 @@
         },
         {
           "rang": 8,
+          "spieler": "REINISCH Jessica",
+          "spiele": 9,
+          "siege": 6,
+          "niederlagen": 3,
+          "legs_plus": 17,
+          "legs_minus": 15,
+          "punkte": 17
+        },
+        {
+          "rang": 9,
           "spieler": "BERGLER Benjamin",
           "spiele": 9,
           "siege": 5,
@@ -223,7 +233,7 @@
           "punkte": 17
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "JAHN Corinna",
           "spiele": 7,
           "siege": 4,
@@ -233,7 +243,7 @@
           "punkte": 16
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "FELLNER Johann",
           "spiele": 9,
           "siege": 4,
@@ -241,16 +251,6 @@
           "legs_plus": 16,
           "legs_minus": 16,
           "punkte": 16
-        },
-        {
-          "rang": 11,
-          "spieler": "REINISCH Jessica",
-          "spiele": 8,
-          "siege": 6,
-          "niederlagen": 2,
-          "legs_plus": 15,
-          "legs_minus": 12,
-          "punkte": 15
         },
         {
           "rang": 12,
@@ -727,7 +727,7 @@
             "datum": "2026-10-31",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 5,
+            "erg_heim": 6,
             "erg_auswaerts": 2,
             "id": 109565,
             "paarungen": [
@@ -784,8 +784,8 @@
                 "art": "DE",
                 "spieler1": "KLEINHAPPEL Ernestine",
                 "spieler2": "REINISCH Jessica",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               },
               {
                 "art": "OE",
