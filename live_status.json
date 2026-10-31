@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-31T12:07:45Z",
+  "checked_at": "2026-10-31T12:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Halloween <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Halloween <3 - !dc !peepo !linktree !shop",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
