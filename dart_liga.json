@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:13:36Z",
+  "aktualisiert": "2026-10-31T21:17:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1334,6 +1334,16 @@
         },
         {
           "rang": 12,
+          "spieler": "STINGLER Engelbert",
+          "spiele": 9,
+          "siege": 5,
+          "niederlagen": 4,
+          "legs_plus": 16,
+          "legs_minus": 16,
+          "punkte": 16
+        },
+        {
+          "rang": 13,
           "spieler": "ANWALD Guenther",
           "spiele": 9,
           "siege": 4,
@@ -1343,7 +1353,7 @@
           "punkte": 15
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "MARKTL Werner",
           "spiele": 9,
           "siege": 5,
@@ -1353,7 +1363,7 @@
           "punkte": 15
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "FRADL Ingemar",
           "spiele": 11,
           "siege": 5,
@@ -1363,7 +1373,7 @@
           "punkte": 15
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "ETTL Theresa",
           "spiele": 8,
           "siege": 5,
@@ -1373,24 +1383,14 @@
           "punkte": 14
         },
         {
-          "rang": 16,
-          "spieler": "STINGLER Engelbert",
-          "spiele": 8,
-          "siege": 4,
-          "niederlagen": 4,
-          "legs_plus": 13,
-          "legs_minus": 14,
-          "punkte": 13
-        },
-        {
           "rang": 17,
           "spieler": "UNTERDORFER Heimo",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 3,
-          "niederlagen": 5,
-          "legs_plus": 12,
-          "legs_minus": 16,
-          "punkte": 12
+          "niederlagen": 6,
+          "legs_plus": 14,
+          "legs_minus": 19,
+          "punkte": 14
         },
         {
           "rang": 18,
@@ -1929,7 +1929,7 @@
             "datum": "2026-10-31",
             "heim": "DC O3tz 1.0",
             "auswaerts": "DC Drautal Dart Vipers",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 6,
             "id": 108982,
             "paarungen": [
@@ -1993,8 +1993,8 @@
                 "art": "OE",
                 "spieler1": "STINGLER Engelbert",
                 "spieler2": "UNTERDORFER Heimo",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               },
               {
                 "art": "OE",
