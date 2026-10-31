@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:07:37Z",
+  "aktualisiert": "2026-10-31T19:08:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1029,7 +1029,7 @@
         },
         {
           "rang": 6,
-          "team": "City-Flyers \"Fraggles\"",
+          "team": "DC O3tz 1.0",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1038,7 +1038,7 @@
         },
         {
           "rang": 7,
-          "team": "DC O3tz 1.0",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1067,7 +1067,7 @@
           "id": 108938
         },
         "4": {
-          "heim": 3,
+          "heim": 4,
           "auswaerts": 0,
           "id": 108960
         },
@@ -1240,6 +1240,16 @@
         },
         {
           "rang": 13,
+          "spieler": "FRADL Ingemar",
+          "spiele": 10,
+          "siege": 4,
+          "niederlagen": 6,
+          "legs_plus": 13,
+          "legs_minus": 19,
+          "punkte": 13
+        },
+        {
+          "rang": 14,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 7,
           "siege": 3,
@@ -1249,7 +1259,7 @@
           "punkte": 12
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "STINGLER Engelbert",
           "spiele": 7,
           "siege": 3,
@@ -1259,7 +1269,7 @@
           "punkte": 11
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 7,
           "siege": 3,
@@ -1269,23 +1279,13 @@
           "punkte": 11
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
           "niederlagen": 2,
           "legs_plus": 10,
           "legs_minus": 10,
-          "punkte": 10
-        },
-        {
-          "rang": 17,
-          "spieler": "FRADL Ingemar",
-          "spiele": 9,
-          "siege": 3,
-          "niederlagen": 6,
-          "legs_plus": 10,
-          "legs_minus": 19,
           "punkte": 10
         },
         {
@@ -1531,11 +1531,11 @@
         {
           "rang": 42,
           "spieler": "POSCHINGER Franz",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 2,
-          "legs_minus": 7,
+          "legs_minus": 10,
           "punkte": 2
         },
         {
@@ -1579,7 +1579,7 @@
       ],
       "letztes_spiel": {
         "runde": 4,
-        "heim": 3,
+        "heim": 4,
         "auswaerts": 0,
         "paarungen": [
           {
@@ -1607,7 +1607,7 @@
             "art": "OE",
             "spieler1": "FRADL Ingemar",
             "spieler2": "POSCHINGER Franz",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -1635,7 +1635,7 @@
             "datum": "2026-10-31",
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 0,
             "id": 108960,
             "paarungen": [
@@ -1664,7 +1664,7 @@
                 "art": "OE",
                 "spieler1": "FRADL Ingemar",
                 "spieler2": "POSCHINGER Franz",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
