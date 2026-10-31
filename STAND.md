@@ -46,7 +46,8 @@ und wieder in der Rotation.
 ## 31.10.2026: Halloween-Modus (heute 18:00 – 01.11. 02:00)
 
 - Am Chef-Handy (Übersicht, ganz oben „🎃 Halloween-Modus“): Automatisch (ab 18:00) / Jetzt an / Aus, Video 2–5 min
-  (Vorgabe 3), Angebot 30/45/60 s (Vorgabe 45), bis zu 3 YouTube-Links. Gespeichert unter
+  (Vorgabe 3), Angebot 30/45/60 s (Vorgabe 45), Videos/Angebote je Normal oder Vollbild (`videoVoll`, `plakatVoll`;
+  Video: `body.hw-video-voll` legt #nl-player-frame über 1920×1080, mpv folgt), bis zu 3 YouTube-Links. Gespeichert unter
   `djremote/<raum>/werbung/einstellung/halloween` (bestehende Werbe-Regel, keine neue Firebase-Regel).
 - Am Screen (`hwAktiv`, `hwPruefen`, `runHwAngebotState` in `index.html`): nur Halloween-Video (Nightlife-Slot mit mpv, Start 0)
   → Berliner Luft → 5× Jägermeister (`jaegermeister_aktion_tv.jpg`) → nächstes Video. Oben Halloween-Band statt Bundesliga,
