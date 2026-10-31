@@ -16,6 +16,10 @@
     Vollbild). Der Screen hoert darauf (werbungEinstellungHoeren in index.html).
     Schreiben duerfen laut Firebase-Regel nur Chef-Geraete.
 
+    Halloween-Modus (31.10.2026): djremote/<raum>/werbung/einstellung/halloween
+    { modus: auto|an|aus, videos (Links), videoS, angebotS } - gleiche Firebase-Regel wie die
+    Werbe-Schalter. Der Screen endet damit fest am 01.11.2026 um 02:00 (hwAktiv in index.html).
+
     Zweite Schreibstelle (26.10.2026): Dart-Abend an/aus unter djremote/<raum>/dartabend
     ({ modus: 'an' | 'aus', tag }), "Automatisch" loescht den Eintrag. Gilt nur fuer den
     Dart-Tag (bis 04:00), danach wieder nach Spielplan (dartErzwungen in index.html).
@@ -97,6 +101,11 @@
     .kopf { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 8px; }
     .kopf button { font: inherit; font-size: 22px; font-weight: 800; border: 0; border-radius: 12px;
                    padding: 6px 16px; background: #1d2647; color: #cfe0ff; cursor: pointer; }
+    #hw-videos { width: 100%; box-sizing: border-box; font: inherit; font-size: 17px; border-radius: 12px; border: 1px solid #27325c;
+                 background: #0d1430; color: #f2f5ff; padding: 10px; resize: vertical; }
+    #hw-speichern { margin-top: 8px; width: 100%; font: inherit; font-size: 20px; font-weight: 700; border: 0; border-radius: 12px;
+                    padding: 14px 6px; background: #c2410c; color: #fff; cursor: pointer; }
+    #hw-meldung { font-size: 17px; color: #8ea0c8; text-align: center; min-height: 22px; margin-top: 4px; }
     #wb-meldung { font-size: 17px; color: #8ea0c8; text-align: center; min-height: 22px; margin-top: 4px; }
     @media (min-width: 700px) {
         body { font-size: 18px; max-width: 900px; margin: 0 auto; padding: 16px; }
@@ -133,6 +142,15 @@
     <div class="kachel"><div class="titel">🃏 Hos’n Obe</div><div class="wert aus" id="k-spiel">–</div><div class="zusatz" id="k-spiel-z"></div></div>
     <div class="kachel"><div class="titel">🖥️ Video über mpv</div><div class="wert aus" id="k-mpv">–</div><div class="zusatz" id="k-mpv-z"></div></div>
 </div>
+
+<h2>🎃 Halloween-Modus (heute 18:00 – 02:00)</h2>
+<div id="hw"></div>
+<div class="wb-block">
+    <div class="titel">Halloween-Videos<small>YouTube-Links, einer pro Zeile (bis zu 3). Sie laufen der Reihe nach.</small></div>
+    <textarea id="hw-videos" rows="3" spellcheck="false"></textarea>
+    <button type="button" id="hw-speichern">Videos speichern</button>
+</div>
+<div id="hw-meldung"></div>
 
 <h2>📢 Werbung am Screen</h2>
 <div id="werbung"></div>
@@ -203,6 +221,7 @@
         plakate: { an: true, dauerS: 20, rahmen: false, ambi: 'wechsel', jede: 1 },
         willkommen: { an: true, dauerS: 35 },
         getraenke: { an: true, dauerS: 30 },
+        halloween: { modus: 'auto', videos: 'W1dFFpXpxKM q0Gn6s-7nFk', videoS: 180, angebotS: 45 },
         dj: { an: true, alleS: 60, dauerS: 7, groesse: 38,
               'a_jaegermeister-5er': true, 'a_ane-aufs-aug': true, 'a_puntigamer-05': false }
     };
@@ -312,6 +331,78 @@
             .catch(function () { el('wb-meldung').textContent = 'Nicht gespeichert – nur Chef-Geräte dürfen das ändern'; });
     }
     wbZeichnen();
+
+    // --- Halloween-Modus (31.10.2026) ---------------------------------------
+    var HW_REIHEN = [
+        { feld: 'modus', werte: [['auto', 'Automatisch'], ['an', '🎃 Jetzt an'], ['aus', 'Aus']] },
+        { feld: 'videoS', etikett: 'Video', werte: [[120, '2 min'], [180, '3 min'], [240, '4 min'], [300, '5 min']] },
+        { feld: 'angebotS', etikett: 'Angebot', werte: [[30, '30 s'], [45, '45 s'], [60, '1 min']] }
+    ];
+    function hwZeichnen() {
+        var box = el('hw');
+        box.innerHTML = '';
+        var block = document.createElement('div');
+        block.className = 'wb-block';
+        var kopf = document.createElement('div');
+        kopf.className = 'titel';
+        kopf.textContent = 'Nur Halloween-Videos, Berliner Luft und Jägermeister';
+        var unter = document.createElement('small');
+        unter.textContent = 'Automatisch = ab 18:00. Endet immer um 2 Uhr früh. Oben Halloween statt Bundesliga, rechts nur Fotos.';
+        kopf.appendChild(unter);
+        block.appendChild(kopf);
+        HW_REIHEN.forEach(function (r) {
+            var zeile = document.createElement('div');
+            zeile.className = 'wahl' + (r.werte.length >= 4 ? ' viele' : '');
+            if (r.etikett) {
+                var et = document.createElement('span');
+                et.className = 'etikett';
+                et.textContent = r.etikett;
+                zeile.appendChild(et);
+            }
+            r.werte.forEach(function (w) {
+                var k = document.createElement('button');
+                k.type = 'button';
+                k.textContent = w[1];
+                k.className = (wbWert('halloween', r.feld) === w[0] ? 'aktiv' : '') + (w[0] === 'aus' ? ' aus' : '');
+                k.addEventListener('click', function () { hwSetzen(r.feld, w[0]); });
+                zeile.appendChild(k);
+            });
+            block.appendChild(zeile);
+        });
+        box.appendChild(block);
+        var feldEl = el('hw-videos');
+        if (document.activeElement !== feldEl && !feldEl.dataset.geaendert) {
+            feldEl.value = String(wbWert('halloween', 'videos') || '').split(/[\s,;]+/).filter(Boolean).map(function (id) {
+                return /^[A-Za-z0-9_-]{11}$/.test(id) ? 'https://www.youtube.com/watch?v=' + id : id;
+            }).join('\n');
+        }
+    }
+    function hwSetzen(feld, wert) {
+        if (!wbVerb) { el('hw-meldung').textContent = 'Keine Verbindung'; return; }
+        wbEinst.halloween = Object.assign({}, wbEinst.halloween || {});
+        wbEinst.halloween[feld] = wert;
+        hwZeichnen();
+        var neu = {};
+        neu['halloween/' + feld] = wert;
+        neu.ts = { '.sv': 'timestamp' };
+        el('hw-meldung').textContent = 'Wird gespeichert …';
+        return wbVerb.db.ref('djremote/' + raum + '/werbung/einstellung').update(neu)
+            .then(function () { el('hw-meldung').textContent = '✓ Gespeichert – der Screen übernimmt es in ein paar Sekunden'; })
+            .catch(function () { el('hw-meldung').textContent = 'Nicht gespeichert – nur Chef-Geräte dürfen das ändern'; });
+    }
+    el('hw-videos').addEventListener('input', function () { this.dataset.geaendert = '1'; });
+    el('hw-speichern').addEventListener('click', function () {
+        var ids = [];
+        el('hw-videos').value.split(/[\s,;]+/).forEach(function (teil) {
+            var m = teil.match(/(?:v=|youtu\.be\/|\/live\/|\/shorts\/|\/embed\/)([A-Za-z0-9_-]{11})/) || teil.match(/^([A-Za-z0-9_-]{11})$/);
+            if (m && ids.indexOf(m[1]) < 0) ids.push(m[1]);
+        });
+        if (!ids.length) { el('hw-meldung').textContent = 'Kein YouTube-Link erkannt'; return; }
+        ids = ids.slice(0, 3);
+        var p = hwSetzen('videos', ids.join(' '));
+        if (p) p.then(function () { delete el('hw-videos').dataset.geaendert; hwZeichnen(); });
+    });
+    hwZeichnen();
 
     // --- Dart-Abend an/aus (26.10.2026) ---------------------------------------
     // Fuer verschobene Spiele: die Liga-Seite traegt Verschiebungen nicht ein, der Screen
@@ -536,6 +627,7 @@
         verb.db.ref(basis + '/werbung/einstellung').on('value', function (s) {
             wbEinst = s.val() || {};
             wbZeichnen();
+            hwZeichnen();
         });
         verb.db.ref(basis + '/dartabend').on('value', function (s) {
             dartWert = s.val() || null;

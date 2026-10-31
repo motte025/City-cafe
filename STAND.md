@@ -43,6 +43,19 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 31.10.2026: Halloween-Modus (heute 18:00 – 01.11. 02:00)
+
+- Am Chef-Handy (Übersicht, ganz oben „🎃 Halloween-Modus“): Automatisch (ab 18:00) / Jetzt an / Aus, Video 2–5 min
+  (Vorgabe 3), Angebot 30/45/60 s (Vorgabe 45), bis zu 3 YouTube-Links. Gespeichert unter
+  `djremote/<raum>/werbung/einstellung/halloween` (bestehende Werbe-Regel, keine neue Firebase-Regel).
+- Am Screen (`hwAktiv`, `hwPruefen`, `runHwAngebotState` in `index.html`): nur Halloween-Video (Nightlife-Slot mit mpv, Start 0)
+  → Berliner Luft → 5× Jägermeister (`jaegermeister_aktion_tv.jpg`) → nächstes Video. Oben Halloween-Band statt Bundesliga,
+  rechts nur Drive-Fotos, unten Halloween-Meldungen, Hintergrund lila. Endet fest am 01.11.2026 02:00.
+  `?halloweenmodus=1` zeigt ihn zum Ansehen.
+- Videos: W1dFFpXpxKM (Haunted Pirate Harbor), q0Gn6s-7nFk (Witches’ Halloween Night), beide 24/7-Livestreams; auf W1
+  getestet: HLS 1080p, Bild nach 2 s. Der dritte Link fehlte noch.
+- **Nach dem Event entfernen** (zusammen mit dem alten Halloween-Slot vom 19.10.).
+
 ## 27./28.10.2026: Überblendungen am 27.10. ausgefallen – Ursache ein Prüfbefehl (Windows-Sitzung)
 
 **Fehlerbild** (Tagesbericht 27.10.): 102 Überblendungen begonnen, nur 1 fertig (08:35). Ab 08:40 jedes Mal
