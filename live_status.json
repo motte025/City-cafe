@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-30T23:57:45Z",
+  "checked_at": "2026-10-31T00:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "👻HALLOWEEN🎃SPECIAL☠️ | !bier | !zug | !holy | #werbung",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ A VERY GOOFY HALLOWEEN WEEKEND 🔥 !mods !mercy !tip",
       "game": "DJs"
     },
     {
@@ -34,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ A VERY GOOFY HALLOWEEN WEEKEND 🔥 !mods !mercy !tip",
       "game": "DJs"
     }
   ]
