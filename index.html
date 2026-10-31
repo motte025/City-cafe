@@ -15423,10 +15423,16 @@
 
             // Roulette vom Handy geweckt: kommt vor Anheizer und Dart-Abend.
             // Danach geht es dort weiter, wo die Rotation sonst waere.
+            // Anheizer-Vollbild (Dart-Countdown) bei jedem Wechsel abbauen -
+            // runDartAnheizerState setzt es wieder, solange er dran ist. Frueher
+            // geschah das erst hinter dem Halloween-Zweig: am 31.10.2026 blieb der
+            // Countdown im Halloween-Modus eingefroren stehen, trotz Dart-Schalter "Aus".
+            const anheizer = document.getElementById('dart-anheizer');
+            if (anheizer) anheizer.classList.remove('aktiv');
+            if (mediaStateIndex === DART_ANHEIZER_INDEX && !dartAnheizerAktiv()) mediaStateIndex = QR_SLOT_INDEX;
+
             if (rouletteVorrang && mediaStateIndex === ROULETTE_SLOT_INDEX) {
                 rouletteVorrang = false;
-                const anh = document.getElementById('dart-anheizer');
-                if (anh) anh.classList.remove('aktiv');
                 runRouletteState(10);
                 return;
             }
@@ -15446,14 +15452,11 @@
             if (mediaStateIndex === HW_BERLINER_INDEX || mediaStateIndex === HW_JAEGER_INDEX) mediaStateIndex = QR_SLOT_INDEX;
 
             // Anheizer (17:00-18:30 an Heimspieltagen): Vollbild, sonst nichts.
-            const anheizer = document.getElementById('dart-anheizer');
             if (dartAnheizerAktiv()) {
                 mediaStateIndex = DART_ANHEIZER_INDEX;
                 runDartAnheizerState();
                 return;
             }
-            if (anheizer) anheizer.classList.remove('aktiv');
-            if (mediaStateIndex === DART_ANHEIZER_INDEX) mediaStateIndex = QR_SLOT_INDEX;
 
             // Dart-Abend-Modus: solange er laeuft, gibt es nur Kamera und
             // Ergebnisse. Danach geht es am gewohnten Zyklusanfang weiter.
