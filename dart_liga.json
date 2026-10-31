@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:36:40Z",
+  "aktualisiert": "2026-10-31T19:38:54Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -224,6 +224,26 @@
         },
         {
           "rang": 9,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 6,
+          "siege": 5,
+          "niederlagen": 1,
+          "legs_plus": 15,
+          "legs_minus": 9,
+          "punkte": 15
+        },
+        {
+          "rang": 10,
+          "spieler": "FELLNER Johann",
+          "spiele": 8,
+          "siege": 4,
+          "niederlagen": 4,
+          "legs_plus": 15,
+          "legs_minus": 14,
+          "punkte": 15
+        },
+        {
+          "rang": 11,
           "spieler": "JAHN Andreas",
           "spiele": 9,
           "siege": 4,
@@ -233,7 +253,7 @@
           "punkte": 15
         },
         {
-          "rang": 10,
+          "rang": 12,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -243,7 +263,7 @@
           "punkte": 14
         },
         {
-          "rang": 11,
+          "rang": 13,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 7,
           "siege": 4,
@@ -253,7 +273,7 @@
           "punkte": 14
         },
         {
-          "rang": 12,
+          "rang": 14,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 6,
           "siege": 4,
@@ -263,17 +283,7 @@
           "punkte": 13
         },
         {
-          "rang": 13,
-          "spieler": "FELLNER Johann",
-          "spiele": 7,
-          "siege": 4,
-          "niederlagen": 3,
-          "legs_plus": 13,
-          "legs_minus": 11,
-          "punkte": 13
-        },
-        {
-          "rang": 14,
+          "rang": 15,
           "spieler": "REINISCH Jessica",
           "spiele": 7,
           "siege": 5,
@@ -283,7 +293,7 @@
           "punkte": 13
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "KOLLER Elias",
           "spiele": 9,
           "siege": 4,
@@ -291,16 +301,6 @@
           "legs_plus": 13,
           "legs_minus": 16,
           "punkte": 13
-        },
-        {
-          "rang": 16,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 5,
-          "siege": 4,
-          "niederlagen": 1,
-          "legs_plus": 12,
-          "legs_minus": 7,
-          "punkte": 12
         },
         {
           "rang": 17,
@@ -760,7 +760,7 @@
             "datum": "2026-10-31",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 0,
             "id": 109576,
             "paarungen": [
@@ -789,8 +789,8 @@
                 "art": "OE",
                 "spieler1": "HOPFGARTNER Joachim",
                 "spieler2": "FELLNER Johann",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               }
             ]
           },
