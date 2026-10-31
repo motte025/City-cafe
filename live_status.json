@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-31T02:17:46Z",
+  "checked_at": "2026-10-31T02:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,17 +10,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Amazon Music Live: Doja Cat",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "👻ENTER THE SPIRIT REALM🎭 !patreon",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Amazon Music Live: Doja Cat",
+      "game": "Music"
     },
     {
       "platform": "twitch",
