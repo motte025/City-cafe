@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-10-31T07:07:46Z",
+  "checked_at": "2026-10-31T07:27:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Der frühe Irgendwas oder so (Harderstyles/RAW) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
