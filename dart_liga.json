@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:12:34Z",
+  "aktualisiert": "2026-10-31T18:24:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1029,7 +1029,7 @@
         },
         {
           "rang": 6,
-          "team": "City-Flyers \"Fraggles\"",
+          "team": "DC O3tz 1.0",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1038,7 +1038,7 @@
         },
         {
           "rang": 7,
-          "team": "DC O3tz 1.0",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1067,7 +1067,7 @@
           "id": 108938
         },
         "4": {
-          "heim": 1,
+          "heim": 2,
           "auswaerts": 0,
           "id": 108960
         },
@@ -1220,6 +1220,16 @@
         },
         {
           "rang": 11,
+          "spieler": "GRAFSCHAFTER Bastian",
+          "spiele": 7,
+          "siege": 3,
+          "niederlagen": 4,
+          "legs_plus": 12,
+          "legs_minus": 12,
+          "punkte": 12
+        },
+        {
+          "rang": 12,
           "spieler": "WIMMER Leon",
           "spiele": 5,
           "siege": 4,
@@ -1229,7 +1239,7 @@
           "punkte": 11
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "ANWALD Guenther",
           "spiele": 7,
           "siege": 3,
@@ -1239,7 +1249,7 @@
           "punkte": 11
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1249,7 +1259,7 @@
           "punkte": 10
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "FRADL Ingemar",
           "spiele": 9,
           "siege": 3,
@@ -1259,7 +1269,7 @@
           "punkte": 10
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "STINGLER Engelbert",
           "spiele": 6,
           "siege": 3,
@@ -1269,27 +1279,7 @@
           "punkte": 9
         },
         {
-          "rang": 16,
-          "spieler": "GRAFSCHAFTER Bastian",
-          "spiele": 6,
-          "siege": 2,
-          "niederlagen": 4,
-          "legs_plus": 9,
-          "legs_minus": 12,
-          "punkte": 9
-        },
-        {
           "rang": 17,
-          "spieler": "SONNBERGER Harald",
-          "spiele": 6,
-          "siege": 2,
-          "niederlagen": 4,
-          "legs_plus": 9,
-          "legs_minus": 12,
-          "punkte": 9
-        },
-        {
-          "rang": 18,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 7,
           "siege": 3,
@@ -1299,13 +1289,23 @@
           "punkte": 9
         },
         {
-          "rang": 19,
+          "rang": 18,
           "spieler": "LANG Melanie",
           "spiele": 7,
           "siege": 3,
           "niederlagen": 4,
           "legs_plus": 9,
           "legs_minus": 14,
+          "punkte": 9
+        },
+        {
+          "rang": 19,
+          "spieler": "SONNBERGER Harald",
+          "spiele": 7,
+          "siege": 2,
+          "niederlagen": 5,
+          "legs_plus": 9,
+          "legs_minus": 15,
           "punkte": 9
         },
         {
@@ -1569,7 +1569,7 @@
       ],
       "letztes_spiel": {
         "runde": 4,
-        "heim": 1,
+        "heim": 2,
         "auswaerts": 0,
         "paarungen": [
           {
@@ -1583,7 +1583,7 @@
             "art": "HE",
             "spieler1": "GRAFSCHAFTER Bastian",
             "spieler2": "SONNBERGER Harald",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -1611,7 +1611,7 @@
             "datum": "2026-10-31",
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 0,
             "id": 108960,
             "paarungen": [
@@ -1626,7 +1626,7 @@
                 "art": "HE",
                 "spieler1": "GRAFSCHAFTER Bastian",
                 "spieler2": "SONNBERGER Harald",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
