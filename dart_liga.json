@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T20:47:36Z",
+  "aktualisiert": "2026-10-31T20:48:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1095,7 +1095,7 @@
         },
         {
           "rang": 6,
-          "team": "City-Flyers \"Fraggles\"",
+          "team": "DC O3tz 1.0",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1104,7 +1104,7 @@
         },
         {
           "rang": 7,
-          "team": "DC O3tz 1.0",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1133,7 +1133,7 @@
           "id": 108938
         },
         "4": {
-          "heim": 6,
+          "heim": 7,
           "auswaerts": 1,
           "id": 108960
         },
@@ -1417,15 +1417,25 @@
         {
           "rang": 24,
           "spieler": "PINTER Michele",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 1,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 9,
-          "legs_minus": 15,
+          "legs_minus": 18,
           "punkte": 9
         },
         {
           "rang": 25,
+          "spieler": "GUN Conny",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 1,
+          "punkte": 8
+        },
+        {
+          "rang": 26,
           "spieler": "GRAF Franz",
           "spiele": 4,
           "siege": 3,
@@ -1435,7 +1445,7 @@
           "punkte": 8
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 4,
           "siege": 1,
@@ -1445,7 +1455,7 @@
           "punkte": 7
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "KRENN Klaus",
           "spiele": 5,
           "siege": 1,
@@ -1455,7 +1465,7 @@
           "punkte": 7
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 8,
           "siege": 1,
@@ -1465,7 +1475,7 @@
           "punkte": 7
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1475,7 +1485,7 @@
           "punkte": 6
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 5,
           "siege": 2,
@@ -1485,23 +1495,13 @@
           "punkte": 6
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
           "legs_plus": 5,
           "legs_minus": 0,
-          "punkte": 5
-        },
-        {
-          "rang": 32,
-          "spieler": "GUN Conny",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 5,
-          "legs_minus": 1,
           "punkte": 5
         },
         {
@@ -1516,7 +1516,7 @@
         },
         {
           "rang": 34,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1526,7 +1526,7 @@
         },
         {
           "rang": 35,
-          "spieler": "OSTRY Samantha-Lee",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1645,7 +1645,7 @@
       ],
       "letztes_spiel": {
         "runde": 4,
-        "heim": 6,
+        "heim": 7,
         "auswaerts": 1,
         "paarungen": [
           {
@@ -1701,7 +1701,7 @@
             "art": "DE",
             "spieler1": "GUN Conny",
             "spieler2": "PINTER Michele",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -1729,7 +1729,7 @@
             "datum": "2026-10-31",
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 6,
+            "erg_heim": 7,
             "erg_auswaerts": 1,
             "id": 108960,
             "paarungen": [
@@ -1786,7 +1786,7 @@
                 "art": "DE",
                 "spieler1": "GUN Conny",
                 "spieler2": "PINTER Michele",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
