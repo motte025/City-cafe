@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T20:32:34Z",
+  "aktualisiert": "2026-10-31T20:33:45Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -204,6 +204,16 @@
         },
         {
           "rang": 7,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 7,
+          "siege": 6,
+          "niederlagen": 1,
+          "legs_plus": 17,
+          "legs_minus": 10,
+          "punkte": 17
+        },
+        {
+          "rang": 8,
           "spieler": "BERGLER Benjamin",
           "spiele": 9,
           "siege": 5,
@@ -213,7 +223,7 @@
           "punkte": 17
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "JAHN Corinna",
           "spiele": 7,
           "siege": 4,
@@ -223,33 +233,23 @@
           "punkte": 16
         },
         {
-          "rang": 9,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 6,
-          "siege": 5,
-          "niederlagen": 1,
-          "legs_plus": 15,
-          "legs_minus": 9,
-          "punkte": 15
+          "rang": 10,
+          "spieler": "FELLNER Johann",
+          "spiele": 9,
+          "siege": 4,
+          "niederlagen": 5,
+          "legs_plus": 16,
+          "legs_minus": 16,
+          "punkte": 16
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "REINISCH Jessica",
           "spiele": 8,
           "siege": 6,
           "niederlagen": 2,
           "legs_plus": 15,
           "legs_minus": 12,
-          "punkte": 15
-        },
-        {
-          "rang": 11,
-          "spieler": "FELLNER Johann",
-          "spiele": 8,
-          "siege": 4,
-          "niederlagen": 4,
-          "legs_plus": 15,
-          "legs_minus": 14,
           "punkte": 15
         },
         {
@@ -334,6 +334,16 @@
         },
         {
           "rang": 20,
+          "spieler": "FRIEßNEGGER Sarah",
+          "spiele": 5,
+          "siege": 3,
+          "niederlagen": 2,
+          "legs_plus": 10,
+          "legs_minus": 8,
+          "punkte": 10
+        },
+        {
+          "rang": 21,
           "spieler": "BRUNNER Jürgen",
           "spiele": 5,
           "siege": 2,
@@ -341,16 +351,6 @@
           "legs_plus": 9,
           "legs_minus": 10,
           "punkte": 9
-        },
-        {
-          "rang": 21,
-          "spieler": "FRIEßNEGGER Sarah",
-          "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
-          "legs_plus": 8,
-          "legs_minus": 7,
-          "punkte": 8
         },
         {
           "rang": 22,
@@ -364,20 +364,20 @@
         },
         {
           "rang": 23,
-          "spieler": "SATZ Klemens",
-          "spiele": 3,
+          "spieler": "JESENKO Julia",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
         },
         {
           "rang": 24,
-          "spieler": "JESENKO Julia",
-          "spiele": 4,
+          "spieler": "SATZ Klemens",
+          "spiele": 3,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 1,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
@@ -574,6 +574,16 @@
         },
         {
           "rang": 44,
+          "spieler": "APOVNIK Gabriele",
+          "spiele": 5,
+          "siege": 0,
+          "niederlagen": 5,
+          "legs_plus": 1,
+          "legs_minus": 13,
+          "punkte": 1
+        },
+        {
+          "rang": 45,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -583,7 +593,7 @@
           "punkte": 0
         },
         {
-          "rang": 45,
+          "rang": 46,
           "spieler": "PROVNIK Gabriele",
           "spiele": 2,
           "siege": 0,
@@ -593,23 +603,13 @@
           "punkte": 0
         },
         {
-          "rang": 46,
+          "rang": 47,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
           "legs_plus": 0,
           "legs_minus": 5,
-          "punkte": 0
-        },
-        {
-          "rang": 47,
-          "spieler": "APOVNIK Gabriele",
-          "spiele": 4,
-          "siege": 0,
-          "niederlagen": 4,
-          "legs_plus": 0,
-          "legs_minus": 11,
           "punkte": 0
         }
       ],
@@ -788,7 +788,7 @@
             "datum": "2026-10-31",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 0,
             "id": 109576,
             "paarungen": [
@@ -824,8 +824,8 @@
                 "art": "MD",
                 "spieler1": "HOPFGARTNER Joachim / FRIEßNEGGER Sarah",
                 "spieler2": "APOVNIK Gabriele / FELLNER Johann",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 1
               },
               {
                 "art": "OD",
