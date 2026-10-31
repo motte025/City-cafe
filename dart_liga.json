@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:08:37Z",
+  "aktualisiert": "2026-10-31T19:09:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -384,6 +384,16 @@
         },
         {
           "rang": 25,
+          "spieler": "KERNSTOCK Michael",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 7,
+          "legs_minus": 9,
+          "punkte": 7
+        },
+        {
+          "rang": 26,
           "spieler": "SCHNEIDER Hermann",
           "spiele": 4,
           "siege": 1,
@@ -393,7 +403,7 @@
           "punkte": 7
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "HOCHEGGER Martin",
           "spiele": 6,
           "siege": 2,
@@ -403,7 +413,7 @@
           "punkte": 7
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 4,
           "siege": 1,
@@ -413,7 +423,7 @@
           "punkte": 6
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "BÄCKER Josephine",
           "spiele": 4,
           "siege": 0,
@@ -423,7 +433,7 @@
           "punkte": 6
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "GORICNIK Cornelia",
           "spiele": 5,
           "siege": 1,
@@ -433,7 +443,7 @@
           "punkte": 6
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "POLZER Hannah",
           "spiele": 4,
           "siege": 2,
@@ -443,7 +453,7 @@
           "punkte": 5
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "KOGLER Sabine",
           "spiele": 4,
           "siege": 1,
@@ -453,7 +463,7 @@
           "punkte": 5
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "SCHADER Andreas",
           "spiele": 2,
           "siege": 1,
@@ -463,23 +473,13 @@
           "punkte": 4
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "KREUZER Silvia",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
           "legs_plus": 4,
           "legs_minus": 4,
-          "punkte": 4
-        },
-        {
-          "rang": 34,
-          "spieler": "KERNSTOCK Michael",
-          "spiele": 3,
-          "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 4,
-          "legs_minus": 8,
           "punkte": 4
         },
         {
@@ -514,6 +514,16 @@
         },
         {
           "rang": 38,
+          "spieler": "AMBROS Thomas",
+          "spiele": 4,
+          "siege": 0,
+          "niederlagen": 4,
+          "legs_plus": 3,
+          "legs_minus": 11,
+          "punkte": 3
+        },
+        {
+          "rang": 39,
           "spieler": "JAHN Herbert",
           "spiele": 6,
           "siege": 1,
@@ -523,7 +533,7 @@
           "punkte": 3
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "JAHN Christian",
           "spiele": 6,
           "siege": 1,
@@ -533,7 +543,7 @@
           "punkte": 3
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "SCHERWITZEL Manuel",
           "spiele": 3,
           "siege": 1,
@@ -543,18 +553,8 @@
           "punkte": 2
         },
         {
-          "rang": 41,
-          "spieler": "BERCHTOLD Alex",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
-          "legs_plus": 2,
-          "legs_minus": 8,
-          "punkte": 2
-        },
-        {
           "rang": 42,
-          "spieler": "AMBROS Thomas",
+          "spieler": "BERCHTOLD Alex",
           "spiele": 3,
           "siege": 0,
           "niederlagen": 3,
@@ -746,7 +746,7 @@
             "datum": "2026-10-31",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 0,
             "id": 109576,
             "paarungen": [
@@ -768,8 +768,8 @@
                 "art": "OE",
                 "spieler1": "KERNSTOCK Michael",
                 "spieler2": "AMBROS Thomas",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "OE",
