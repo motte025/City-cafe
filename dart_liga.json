@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:40:36Z",
+  "aktualisiert": "2026-10-31T21:42:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -9,11 +9,11 @@
         {
           "rang": 1,
           "team": "Askö DC Sonne 2",
-          "spiele": 4,
-          "siege": 4,
+          "spiele": 5,
+          "siege": 5,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 8
+          "punkte": 10
         },
         {
           "rang": 2,
@@ -54,10 +54,10 @@
         {
           "rang": 6,
           "team": "DC Cafe Seven",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "punkte": 2
         },
         {
@@ -144,6 +144,16 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "DOUJAK Siegfried",
+          "spiele": 11,
+          "siege": 11,
+          "niederlagen": 0,
+          "legs_plus": 29,
+          "legs_minus": 4,
+          "punkte": 29
+        },
+        {
+          "rang": 2,
           "spieler": "KLEINHAPPEL Ernestine",
           "spiele": 12,
           "siege": 10,
@@ -153,7 +163,7 @@
           "punkte": 29
         },
         {
-          "rang": 2,
+          "rang": 3,
           "spieler": "RAINER Gerald",
           "spiele": 12,
           "siege": 10,
@@ -161,16 +171,6 @@
           "legs_plus": 28,
           "legs_minus": 9,
           "punkte": 28
-        },
-        {
-          "rang": 3,
-          "spieler": "DOUJAK Siegfried",
-          "spiele": 10,
-          "siege": 10,
-          "niederlagen": 0,
-          "legs_plus": 26,
-          "legs_minus": 4,
-          "punkte": 26
         },
         {
           "rang": 4,
@@ -365,11 +365,11 @@
         {
           "rang": 23,
           "spieler": "BRUNNER Jürgen",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 2,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 9,
-          "legs_minus": 10,
+          "legs_minus": 13,
           "punkte": 9
         },
         {
@@ -727,7 +727,7 @@
             "datum": "2026-10-31",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 7,
+            "erg_heim": 8,
             "erg_auswaerts": 2,
             "id": 109565,
             "paarungen": [
@@ -798,7 +798,7 @@
                 "art": "OE",
                 "spieler1": "DOUJAK Siegfried",
                 "spieler2": "BRUNNER Jürgen",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
