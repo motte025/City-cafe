@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:29:37Z",
+  "aktualisiert": "2026-10-31T21:33:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1225,12 +1225,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 11,
-          "siege": 11,
+          "spiele": 12,
+          "siege": 12,
           "niederlagen": 0,
-          "legs_plus": 29,
+          "legs_plus": 32,
           "legs_minus": 4,
-          "punkte": 29
+          "punkte": 32
         },
         {
           "rang": 2,
@@ -1294,22 +1294,22 @@
         },
         {
           "rang": 8,
-          "spieler": "OBERZAN Lukas",
-          "spiele": 8,
-          "siege": 6,
-          "niederlagen": 2,
-          "legs_plus": 17,
-          "legs_minus": 8,
-          "punkte": 17
-        },
-        {
-          "rang": 9,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 9,
           "siege": 6,
           "niederlagen": 3,
           "legs_plus": 17,
           "legs_minus": 10,
+          "punkte": 17
+        },
+        {
+          "rang": 9,
+          "spieler": "OBERZAN Lukas",
+          "spiele": 9,
+          "siege": 6,
+          "niederlagen": 3,
+          "legs_plus": 17,
+          "legs_minus": 11,
           "punkte": 17
         },
         {
@@ -1849,7 +1849,7 @@
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 2,
-            "erg_auswaerts": 6,
+            "erg_auswaerts": 7,
             "id": 108971,
             "paarungen": [
               {
@@ -1913,7 +1913,7 @@
                 "spieler1": "OBERZAN Lukas",
                 "spieler2": "NIKOLIC Dennis",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "OE",
