@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T17:51:33Z",
+  "aktualisiert": "2026-10-31T18:04:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -720,7 +720,36 @@
             "erg_heim": 0,
             "erg_auswaerts": 0,
             "id": 109576,
-            "paarungen": []
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "FRIEßNEGGER Manuela",
+                "spieler2": "APOVNIK Gabriele",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "FRIEßNEGGER Gerhard",
+                "spieler2": "STÜCKLER Manuel",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "KERNSTOCK Michael",
+                "spieler2": "AMBROS Thomas",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "HOPFGARTNER Joachim",
+                "spieler2": "FELLNER Johann",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
           },
           {
             "runde": 4,
