@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:38:54Z",
+  "aktualisiert": "2026-10-31T19:42:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -791,6 +791,20 @@
                 "spieler2": "FELLNER Johann",
                 "legs1": 3,
                 "legs2": 2
+              },
+              {
+                "art": "MD",
+                "spieler1": "HOPFGARTNER Joachim / FRIEßNEGGER Sarah",
+                "spieler2": "APOVNIK Gabriele / FELLNER Johann",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "KERNSTOCK Michael / FRIEßNEGGER Gerhard",
+                "spieler2": "AMBROS Thomas / STÜCKLER Manuel",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           },
