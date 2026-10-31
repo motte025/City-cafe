@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:22:37Z",
+  "aktualisiert": "2026-10-31T21:29:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -154,6 +154,16 @@
         },
         {
           "rang": 2,
+          "spieler": "RAINER Gerald",
+          "spiele": 12,
+          "siege": 10,
+          "niederlagen": 2,
+          "legs_plus": 28,
+          "legs_minus": 9,
+          "punkte": 28
+        },
+        {
+          "rang": 3,
           "spieler": "DOUJAK Siegfried",
           "spiele": 10,
           "siege": 10,
@@ -161,16 +171,6 @@
           "legs_plus": 26,
           "legs_minus": 4,
           "punkte": 26
-        },
-        {
-          "rang": 3,
-          "spieler": "RAINER Gerald",
-          "spiele": 11,
-          "siege": 9,
-          "niederlagen": 2,
-          "legs_plus": 25,
-          "legs_minus": 9,
-          "punkte": 25
         },
         {
           "rang": 4,
@@ -305,11 +305,11 @@
         {
           "rang": 17,
           "spieler": "SIMONITSCH Erhard",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 3,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 13,
-          "legs_minus": 16,
+          "legs_minus": 19,
           "punkte": 13
         },
         {
@@ -344,20 +344,20 @@
         },
         {
           "rang": 21,
-          "spieler": "BRUNNER Jürgen",
+          "spieler": "KERNSTOCK Michael",
           "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
+          "siege": 3,
+          "niederlagen": 2,
           "legs_plus": 9,
           "legs_minus": 10,
           "punkte": 9
         },
         {
           "rang": 22,
-          "spieler": "KERNSTOCK Michael",
+          "spieler": "BRUNNER Jürgen",
           "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
+          "siege": 2,
+          "niederlagen": 3,
           "legs_plus": 9,
           "legs_minus": 10,
           "punkte": 9
@@ -384,20 +384,20 @@
         },
         {
           "rang": 25,
-          "spieler": "SATZ Klemens",
-          "spiele": 3,
+          "spieler": "JESENKO Julia",
+          "spiele": 4,
           "siege": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
         },
         {
           "rang": 26,
-          "spieler": "JESENKO Julia",
-          "spiele": 4,
+          "spieler": "SATZ Klemens",
+          "spiele": 3,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 1,
           "legs_plus": 7,
           "legs_minus": 5,
           "punkte": 7
@@ -594,7 +594,7 @@
         },
         {
           "rang": 46,
-          "spieler": "KREUZER Hanna",
+          "spieler": "HOBEL Walter",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -604,7 +604,7 @@
         },
         {
           "rang": 47,
-          "spieler": "HOBEL Walter",
+          "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -727,7 +727,7 @@
             "datum": "2026-10-31",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 6,
+            "erg_heim": 7,
             "erg_auswaerts": 2,
             "id": 109565,
             "paarungen": [
@@ -791,7 +791,7 @@
                 "art": "OE",
                 "spieler1": "RAINER Gerald",
                 "spieler2": "SIMONITSCH Erhard",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
