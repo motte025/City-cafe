@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-31T18:27:45Z",
+  "checked_at": "2026-10-31T18:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Helloween - 80s / 90s / 2000s - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎃 HALLOWEEN 2027 I PRIESTER vs MACHETENBLAST 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
