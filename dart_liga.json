@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T20:38:56Z",
+  "aktualisiert": "2026-10-31T20:46:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -757,7 +757,7 @@
                 "art": "HE",
                 "spieler1": "ELEZOSKI Serif",
                 "spieler2": "HOBEL Walter",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
