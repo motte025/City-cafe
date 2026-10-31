@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-10-31T11:57:46Z",
+  "checked_at": "2026-10-31T12:07:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Classics mit @ericssl",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
@@ -34,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Halloween <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
