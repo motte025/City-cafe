@@ -2740,6 +2740,21 @@
         body.hw-modus .ticker-label-left { background: linear-gradient(135deg, #ff7a00 0%, #7b2cbf 100%) !important; color: #fff !important; }
         body.hw-modus #view-event-gallery .gallery-event-badge { background: #ff7a00 !important; color: #1a0526 !important; }
         /* Hintergrund (Tropfenglas) in Halloween-Lila statt Blau */
+        /* Halloween-Video im Vollbild (Chef-Handy): die Videoflaeche deckt den ganzen Screen,
+           mpv folgt ihr (der Supervisor misst #nl-player-frame). */
+        /* transform: none, sonst waere die Ansicht der Bezugsrahmen fuer position: fixed;
+           so ist es #dashboard-scaler (1920 x 1080, wie der Screen). */
+        body.hw-video-voll #media-view-nightlife { transform: none !important; }
+        /* Waehrend das Video im Vollbild laeuft, liegt nichts darueber (fuer den Fall, dass
+           statt mpv das YouTube-Bild im Browser spielt). */
+        body.hw-video-voll:has(#media-view-nightlife.active) .sidebar,
+        body.hw-video-voll:has(#media-view-nightlife.active) #card-ticker,
+        body.hw-video-voll:has(#media-view-nightlife.active) #card-top-custom,
+        body.hw-video-voll:has(#media-view-nightlife.active) #build-tag { visibility: hidden; }
+        body.hw-video-voll #nl-player-frame {
+            position: fixed !important; left: 0 !important; top: 0 !important; width: 1920px !important; height: 1080px !important;
+            transform: none !important; z-index: 60; border-radius: 0 !important; margin: 0 !important;
+        }
         body.hw-modus .fixed-bg-bricks { filter: hue-rotate(75deg) saturate(1.25) brightness(0.6); }
     </style>
 </head>
@@ -10135,7 +10150,7 @@
             willkommen: { an: true, dauerS: 35 },
             getraenke: { an: true, dauerS: 30 },
             // Halloween-Modus (31.10.2026): modus 'auto' = 18:00-02:00, 'an' = sofort bis 02:00, 'aus'
-            halloween: { modus: 'auto', videos: 'W1dFFpXpxKM q0Gn6s-7nFk', videoS: 180, angebotS: 45 }
+            halloween: { modus: 'auto', videos: 'W1dFFpXpxKM q0Gn6s-7nFk', videoS: 180, angebotS: 45, videoVoll: false, plakatVoll: false }
         };
         let werbungEinst = {};
         function werbungWert(teil, feld) {
@@ -10234,8 +10249,19 @@
         }
         // Angebot (Berliner Luft / Jaegermeister) fuer die eingestellte Zeit.
         function runHwAngebotState(ansicht, naechster) {
-            if (ansicht === 'media-view-jaeger') document.getElementById('jaegerImage').src = HW_JAEGER_BILD;
-            document.getElementById(ansicht).classList.add('active');
+            const jaeger = ansicht === 'media-view-jaeger';
+            if (werbungWert('halloween', 'plakatVoll') === true) {
+                // Vollbild: dieselbe Buehne wie die Plakate, randlos
+                const bild = document.getElementById('plakat-bild');
+                bild.onerror = null;
+                bild.src = jaeger ? HW_JAEGER_BILD : 'berliner_luft_3_euro.jpg';
+                bild.alt = jaeger ? '5x Jägermeister um 14 Euro' : 'Ane aufs Aug – Berliner Luft um 3 Euro';
+                buehneEinstellen('plakat-fullscreen', 'plakate');
+                document.getElementById('plakat-fullscreen').classList.add('rahmen-aus', 'active');
+            } else {
+                if (jaeger) document.getElementById('jaegerImage').src = HW_JAEGER_BILD;
+                document.getElementById(ansicht).classList.add('active');
+            }
             later(() => {
                 mediaStateIndex = naechster;
                 runMasterSequence();
@@ -10248,9 +10274,13 @@
             const soll = an ? '🎃 HALLOWEEN' : '☕ CITY CAFE';
             if (lab.textContent !== soll) lab.textContent = soll;
         }
+        function hwKlassen(an) {
+            document.body.classList.toggle('hw-modus', an);
+            document.body.classList.toggle('hw-video-voll', an && werbungWert('halloween', 'videoVoll') === true);
+        }
         function hwPruefen() {
             const an = hwAktiv();
-            document.body.classList.toggle('hw-modus', an);
+            hwKlassen(an);
             hwEtikett(an);
             if (an === hwWar) return;
             const vorher = hwWar;
@@ -15404,7 +15434,7 @@
 
             // Halloween-Modus: nur Video, Berliner Luft, Jaegermeister (siehe hwAktiv).
             hwWar = hwAktiv();
-            document.body.classList.toggle('hw-modus', hwWar);
+            hwKlassen(hwWar);
             hwEtikett(hwWar);
             if (hwWar) {
                 if (mediaStateIndex === HW_BERLINER_INDEX) { runHwAngebotState('media-view-berliner-luft', HW_JAEGER_INDEX); return; }

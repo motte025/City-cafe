@@ -17,7 +17,7 @@
     Schreiben duerfen laut Firebase-Regel nur Chef-Geraete.
 
     Halloween-Modus (31.10.2026): djremote/<raum>/werbung/einstellung/halloween
-    { modus: auto|an|aus, videos (Links), videoS, angebotS } - gleiche Firebase-Regel wie die
+    { modus: auto|an|aus, videos (Links), videoS, angebotS, videoVoll, plakatVoll } - gleiche Firebase-Regel wie die
     Werbe-Schalter. Der Screen endet damit fest am 01.11.2026 um 02:00 (hwAktiv in index.html).
 
     Zweite Schreibstelle (26.10.2026): Dart-Abend an/aus unter djremote/<raum>/dartabend
@@ -221,7 +221,7 @@
         plakate: { an: true, dauerS: 20, rahmen: false, ambi: 'wechsel', jede: 1 },
         willkommen: { an: true, dauerS: 35 },
         getraenke: { an: true, dauerS: 30 },
-        halloween: { modus: 'auto', videos: 'W1dFFpXpxKM q0Gn6s-7nFk', videoS: 180, angebotS: 45 },
+        halloween: { modus: 'auto', videos: 'W1dFFpXpxKM q0Gn6s-7nFk', videoS: 180, angebotS: 45, videoVoll: false, plakatVoll: false },
         dj: { an: true, alleS: 60, dauerS: 7, groesse: 38,
               'a_jaegermeister-5er': true, 'a_ane-aufs-aug': true, 'a_puntigamer-05': false }
     };
@@ -336,7 +336,9 @@
     var HW_REIHEN = [
         { feld: 'modus', werte: [['auto', 'Automatisch'], ['an', '🎃 Jetzt an'], ['aus', 'Aus']] },
         { feld: 'videoS', etikett: 'Video', werte: [[120, '2 min'], [180, '3 min'], [240, '4 min'], [300, '5 min']] },
-        { feld: 'angebotS', etikett: 'Angebot', werte: [[30, '30 s'], [45, '45 s'], [60, '1 min']] }
+        { feld: 'angebotS', etikett: 'Angebot', werte: [[30, '30 s'], [45, '45 s'], [60, '1 min']] },
+        { feld: 'videoVoll', etikett: 'Videos', werte: [[false, 'Normal'], [true, '⛶ Vollbild']] },
+        { feld: 'plakatVoll', etikett: 'Angebote', werte: [[false, 'Normal'], [true, '⛶ Vollbild']] }
     ];
     function hwZeichnen() {
         var box = el('hw');
