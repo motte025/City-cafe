@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-31T18:07:47Z",
+  "checked_at": "2026-10-31T18:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Blut, Bass und böse Beats - Halloween-Special  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Helloween - 80s / 90s / 2000s - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Blut, Bass und böse Beats - Halloween-Special  !release @just_jenny_official @two_crazy_girls",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Helloween - 80s / 90s / 2000s - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
