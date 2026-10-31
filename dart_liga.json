@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:04:38Z",
+  "aktualisiert": "2026-10-31T19:07:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1758,6 +1758,20 @@
                 "spieler2": "WIMMER Leon",
                 "legs1": 2,
                 "legs2": 3
+              },
+              {
+                "art": "MD",
+                "spieler1": "PETSCHAR Phillip / RUS Kerstin",
+                "spieler2": "ETTL Theresa / WIMMER Leon",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "SPANRING Andreas / STINGLER Engelbert",
+                "spieler2": "UNTERDORFER Heimo / BRUNNER Peter",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           }
