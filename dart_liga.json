@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:39:35Z",
+  "aktualisiert": "2026-10-31T18:40:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1121,12 +1121,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 9,
-          "siege": 9,
+          "spiele": 10,
+          "siege": 10,
           "niederlagen": 0,
-          "legs_plus": 24,
-          "legs_minus": 3,
-          "punkte": 24
+          "legs_plus": 27,
+          "legs_minus": 4,
+          "punkte": 27
         },
         {
           "rang": 2,
@@ -1150,6 +1150,16 @@
         },
         {
           "rang": 4,
+          "spieler": "OBERZAN Lukas",
+          "spiele": 7,
+          "siege": 6,
+          "niederlagen": 1,
+          "legs_plus": 17,
+          "legs_minus": 6,
+          "punkte": 17
+        },
+        {
+          "rang": 5,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 9,
           "siege": 6,
@@ -1159,7 +1169,7 @@
           "punkte": 17
         },
         {
-          "rang": 5,
+          "rang": 6,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
@@ -1167,16 +1177,6 @@
           "legs_plus": 17,
           "legs_minus": 14,
           "punkte": 17
-        },
-        {
-          "rang": 6,
-          "spieler": "OBERZAN Lukas",
-          "spiele": 6,
-          "siege": 6,
-          "niederlagen": 0,
-          "legs_plus": 16,
-          "legs_minus": 3,
-          "punkte": 16
         },
         {
           "rang": 7,
@@ -1661,7 +1661,7 @@
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 0,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 108971,
             "paarungen": [
               {
@@ -1675,8 +1675,8 @@
                 "art": "HE",
                 "spieler1": "OBERZAN Lukas",
                 "spieler2": "NIKOLIC Dennis",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
