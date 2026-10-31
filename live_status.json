@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-31T18:47:45Z",
+  "checked_at": "2026-10-31T19:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -19,14 +19,7 @@
       "platform": "twitch",
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
-      "title": "🎃 HALLOWEEN 2027 I PRIESTER vs MACHETENBLAST 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Blut, Bass und böse Beats - Halloween-Special  !release @just_jenny_official @two_crazy_girls",
+      "title": "🎃 HALLOWEEN 2026 I PRIESTER vs MACHETENBLAST 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -34,6 +27,13 @@
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "👻HALLOWEEN🎃SPECIAL☠️ | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Blut, Bass und böse Beats - Halloween-Special  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -48,6 +48,20 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Helloween - 80s / 90s / 2000s - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "COME AT ME BILL",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SUNSHINE LIVE HALLOWEEN SPECIAL",
       "game": "DJs"
     }
   ]
