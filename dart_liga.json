@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:19:35Z",
+  "aktualisiert": "2026-10-31T19:26:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1067,7 +1067,7 @@
           "id": 108938
         },
         "4": {
-          "heim": 4,
+          "heim": 5,
           "auswaerts": 0,
           "id": 108960
         },
@@ -1200,6 +1200,16 @@
         },
         {
           "rang": 9,
+          "spieler": "MARKTL Werner",
+          "spiele": 9,
+          "siege": 5,
+          "niederlagen": 4,
+          "legs_plus": 15,
+          "legs_minus": 14,
+          "punkte": 15
+        },
+        {
+          "rang": 10,
           "spieler": "STEINER Sandro Emmanuel",
           "spiele": 7,
           "siege": 5,
@@ -1209,7 +1219,7 @@
           "punkte": 14
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "WIMMER Leon",
           "spiele": 6,
           "siege": 5,
@@ -1219,7 +1229,7 @@
           "punkte": 14
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "ANWALD Guenther",
           "spiele": 8,
           "siege": 4,
@@ -1227,16 +1237,6 @@
           "legs_plus": 14,
           "legs_minus": 12,
           "punkte": 14
-        },
-        {
-          "rang": 12,
-          "spieler": "MARKTL Werner",
-          "spiele": 8,
-          "siege": 4,
-          "niederlagen": 4,
-          "legs_plus": 13,
-          "legs_minus": 14,
-          "punkte": 13
         },
         {
           "rang": 13,
@@ -1331,11 +1331,11 @@
         {
           "rang": 22,
           "spieler": "SONNBERGER Harald",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 2,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 9,
-          "legs_minus": 15,
+          "legs_minus": 17,
           "punkte": 9
         },
         {
@@ -1350,7 +1350,7 @@
         },
         {
           "rang": 24,
-          "spieler": "GREINIG Petra",
+          "spieler": "PINTER Michele",
           "spiele": 5,
           "siege": 1,
           "niederlagen": 4,
@@ -1360,7 +1360,7 @@
         },
         {
           "rang": 25,
-          "spieler": "PINTER Michele",
+          "spieler": "GREINIG Petra",
           "spiele": 5,
           "siege": 1,
           "niederlagen": 4,
@@ -1381,11 +1381,11 @@
         {
           "rang": 27,
           "spieler": "FRÜSTÜCK Kerstin",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 1,
-          "niederlagen": 6,
+          "niederlagen": 7,
           "legs_plus": 7,
-          "legs_minus": 16,
+          "legs_minus": 18,
           "punkte": 7
         },
         {
@@ -1420,6 +1420,16 @@
         },
         {
           "rang": 31,
+          "spieler": "GUN Conny",
+          "spiele": 2,
+          "siege": 2,
+          "niederlagen": 0,
+          "legs_plus": 5,
+          "legs_minus": 1,
+          "punkte": 5
+        },
+        {
+          "rang": 32,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 3,
           "siege": 1,
@@ -1429,7 +1439,7 @@
           "punkte": 5
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
@@ -1439,7 +1449,7 @@
           "punkte": 4
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1449,7 +1459,7 @@
           "punkte": 4
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "GREINIG Hubert",
           "spiele": 5,
           "siege": 0,
@@ -1459,23 +1469,13 @@
           "punkte": 4
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
           "niederlagen": 0,
           "legs_plus": 3,
           "legs_minus": 0,
-          "punkte": 3
-        },
-        {
-          "rang": 36,
-          "spieler": "GUN Conny",
-          "spiele": 1,
-          "siege": 1,
-          "niederlagen": 0,
-          "legs_plus": 3,
-          "legs_minus": 1,
           "punkte": 3
         },
         {
@@ -1579,7 +1579,7 @@
       ],
       "letztes_spiel": {
         "runde": 4,
-        "heim": 4,
+        "heim": 5,
         "auswaerts": 0,
         "paarungen": [
           {
@@ -1614,7 +1614,7 @@
             "art": "MD",
             "spieler1": "GUN Conny / MARKTL Werner",
             "spieler2": "SONNBERGER Harald / FRÜSTÜCK Kerstin",
-            "legs1": 0,
+            "legs1": 2,
             "legs2": 0
           },
           {
@@ -1635,7 +1635,7 @@
             "datum": "2026-10-31",
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 0,
             "id": 108960,
             "paarungen": [
@@ -1671,7 +1671,7 @@
                 "art": "MD",
                 "spieler1": "GUN Conny / MARKTL Werner",
                 "spieler2": "SONNBERGER Harald / FRÜSTÜCK Kerstin",
-                "legs1": 0,
+                "legs1": 2,
                 "legs2": 0
               },
               {
@@ -1718,6 +1718,20 @@
                 "spieler1": "GRAF Franz",
                 "spieler2": "WIESER (J) David",
                 "legs1": 3,
+                "legs2": 0
+              },
+              {
+                "art": "MD",
+                "spieler1": "STEINER Lydia / STEINER Sandro Emmanuel",
+                "spieler2": "JANESCH Christine / ANWALD Guenther",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "OBERZAN Lukas / GRAF Franz",
+                "spieler2": "WIESER (J) David / NIKOLIC Dennis",
+                "legs1": 0,
                 "legs2": 0
               }
             ]
