@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T20:51:34Z",
+  "aktualisiert": "2026-10-31T21:06:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -354,6 +354,26 @@
         },
         {
           "rang": 22,
+          "spieler": "KERNSTOCK Michael",
+          "spiele": 5,
+          "siege": 3,
+          "niederlagen": 2,
+          "legs_plus": 9,
+          "legs_minus": 10,
+          "punkte": 9
+        },
+        {
+          "rang": 23,
+          "spieler": "FRIEßNEGGER Gerhard",
+          "spiele": 5,
+          "siege": 2,
+          "niederlagen": 3,
+          "legs_plus": 8,
+          "legs_minus": 10,
+          "punkte": 8
+        },
+        {
+          "rang": 24,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 6,
           "siege": 2,
@@ -363,17 +383,7 @@
           "punkte": 8
         },
         {
-          "rang": 23,
-          "spieler": "JESENKO Julia",
-          "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
-          "legs_plus": 7,
-          "legs_minus": 5,
-          "punkte": 7
-        },
-        {
-          "rang": 24,
+          "rang": 25,
           "spieler": "SATZ Klemens",
           "spiele": 3,
           "siege": 2,
@@ -383,17 +393,17 @@
           "punkte": 7
         },
         {
-          "rang": 25,
-          "spieler": "KERNSTOCK Michael",
+          "rang": 26,
+          "spieler": "JESENKO Julia",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
           "legs_plus": 7,
-          "legs_minus": 9,
+          "legs_minus": 5,
           "punkte": 7
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "SCHNEIDER Hermann",
           "spiele": 4,
           "siege": 1,
@@ -403,7 +413,7 @@
           "punkte": 7
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "HOCHEGGER Martin",
           "spiele": 6,
           "siege": 2,
@@ -413,23 +423,13 @@
           "punkte": 7
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "LUBE Mario",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 8,
-          "punkte": 6
-        },
-        {
-          "rang": 29,
-          "spieler": "FRIEßNEGGER Gerhard",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
-          "legs_plus": 6,
-          "legs_minus": 9,
           "punkte": 6
         },
         {
@@ -494,6 +494,16 @@
         },
         {
           "rang": 36,
+          "spieler": "AMBROS Thomas",
+          "spiele": 5,
+          "siege": 0,
+          "niederlagen": 5,
+          "legs_plus": 4,
+          "legs_minus": 13,
+          "punkte": 4
+        },
+        {
+          "rang": 37,
           "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
@@ -503,23 +513,13 @@
           "punkte": 3
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "SIMONITSCH Christopher",
           "spiele": 4,
           "siege": 0,
           "niederlagen": 4,
           "legs_plus": 3,
           "legs_minus": 10,
-          "punkte": 3
-        },
-        {
-          "rang": 38,
-          "spieler": "AMBROS Thomas",
-          "spiele": 4,
-          "siege": 0,
-          "niederlagen": 4,
-          "legs_plus": 3,
-          "legs_minus": 11,
           "punkte": 3
         },
         {
@@ -574,6 +574,16 @@
         },
         {
           "rang": 44,
+          "spieler": "STÜCKLER Manuel",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 1,
+          "legs_minus": 2,
+          "punkte": 1
+        },
+        {
+          "rang": 45,
           "spieler": "APOVNIK Gabriele",
           "spiele": 5,
           "siege": 0,
@@ -583,7 +593,7 @@
           "punkte": 1
         },
         {
-          "rang": 45,
+          "rang": 46,
           "spieler": "KREUZER Hanna",
           "spiele": 1,
           "siege": 0,
@@ -593,7 +603,7 @@
           "punkte": 0
         },
         {
-          "rang": 46,
+          "rang": 47,
           "spieler": "HOBEL Walter",
           "spiele": 1,
           "siege": 0,
@@ -603,7 +613,7 @@
           "punkte": 0
         },
         {
-          "rang": 47,
+          "rang": 48,
           "spieler": "PROVNIK Gabriele",
           "spiele": 2,
           "siege": 0,
@@ -613,7 +623,7 @@
           "punkte": 0
         },
         {
-          "rang": 48,
+          "rang": 49,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
@@ -798,7 +808,7 @@
             "datum": "2026-10-31",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 0,
             "id": 109576,
             "paarungen": [
@@ -841,8 +851,8 @@
                 "art": "OD",
                 "spieler1": "KERNSTOCK Michael / FRIEßNEGGER Gerhard",
                 "spieler2": "AMBROS Thomas / STÜCKLER Manuel",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 1
               }
             ]
           },
