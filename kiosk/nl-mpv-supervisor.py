@@ -1254,7 +1254,7 @@ def ton_quelle(vid, audio_url):
 # (gemessen 28 MB 1080p in 88 s); mpv spielt es von dort. Fertig ist es nicht -> wie bisher der Strom.
 BILD_ORDNER = os.path.expanduser("~/.cache/citycafe/bild")
 BILD_LAEDT = set()
-BILD_BEHALTEN = 30              # so viele Videos bleiben liegen (~30-80 MB je Song)
+BILD_BEHALTEN = 100             # so viele Videos bleiben liegen (~50 MB je Song, zusammen ~5 GB; Betreiber 31.10.2026)
 
 
 def bild_datei(vid):

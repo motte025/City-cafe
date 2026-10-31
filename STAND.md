@@ -103,7 +103,7 @@ zurück. Erster Fehler 23.10. 21:58:54.
 - Songs aus der Suche (nicht vorgemessen, kein Ton auf der Platte) laufen genauso: Bild und Ton als HLS direkt.
 
 - **Bild von der Platte** (`bild_laden`, `bild_datei`, `bild_quelle`, `bild_aufraeumen`, Ordner
-  `~/.cache/citycafe/bild`, die letzten 30 bleiben): Auch HLS liefert YouTube zeitweise zu langsam. Am 26.10.
+  `~/.cache/citycafe/bild`, die letzten 100 bleiben – seit 31.10., vorher 30): Auch HLS liefert YouTube zeitweise zu langsam. Am 26.10.
   abends gab es 2 Hänger („stockt“, einmal zurück zum Browser-Player), und eine Überblendung wartete 8,9 s.
   Schon Minuten vorher (Liste `analyse` der Seite, die nächsten 2 Songs, `bild_vorab`) und spätestens beim
   „Naechster Song vorgeladen“ (kommt erst 40 s vor Schluss) lädt yt-dlp jetzt das Bild (dasselbe itag, `-N 4`) ganz herunter, mpv
