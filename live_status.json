@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-31T02:02:45Z",
+  "checked_at": "2026-10-31T02:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "👻ENTER THE SPIRIT REALM🎭 !patreon",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "jessu",
-      "name": "Jessu",
-      "title": "👻ENTER THE SPIRIT REALM🎭 !patreon",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
