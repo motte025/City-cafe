@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-26T23:14:34Z",
+  "aktualisiert": "2026-10-31T17:30:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -698,7 +698,113 @@
           }
         ]
       },
-      "spieltag": null,
+      "spieltag": {
+        "datum": "2026-10-31",
+        "runde": 4,
+        "spiele": [
+          {
+            "runde": 4,
+            "datum": "2026-10-31",
+            "heim": "Askö DC Sonne 2",
+            "auswaerts": "DC Cafe Seven",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109565,
+            "paarungen": []
+          },
+          {
+            "runde": 4,
+            "datum": "2026-10-31",
+            "heim": "DC Schwarzer Kater",
+            "auswaerts": "Dart Fuchs 4",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109576,
+            "paarungen": []
+          },
+          {
+            "runde": 4,
+            "datum": "2026-10-31",
+            "heim": "City-Flyers \"Chaoten\"",
+            "auswaerts": "DC Fighting Penguins „Waddling Arrows“",
+            "erg_heim": 3,
+            "erg_auswaerts": 7,
+            "id": 109587,
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "GORICNIK Cornelia",
+                "spieler2": "JAHN Corinna",
+                "legs1": 1,
+                "legs2": 3
+              },
+              {
+                "art": "HE",
+                "spieler1": "JAHN Christian",
+                "spieler2": "SCHNEIDER Thomas",
+                "legs1": 0,
+                "legs2": 3
+              },
+              {
+                "art": "OE",
+                "spieler1": "GORICNIK Michael",
+                "spieler2": "JAMMER Fabian",
+                "legs1": 0,
+                "legs2": 3
+              },
+              {
+                "art": "OE",
+                "spieler1": "JAHN Andreas",
+                "spieler2": "SCHNEIDER Hermann",
+                "legs1": 3,
+                "legs2": 1
+              },
+              {
+                "art": "MD",
+                "spieler1": "JAHN Christian / GORICNIK Cornelia",
+                "spieler2": "SCHNEIDER Thomas / JESENKO Julia",
+                "legs1": 2,
+                "legs2": 1
+              },
+              {
+                "art": "OD",
+                "spieler1": "GORICNIK Michael / JAHN Andreas",
+                "spieler2": "SCHERWITZEL Manuel / JAMMER Fabian",
+                "legs1": 1,
+                "legs2": 2
+              },
+              {
+                "art": "HE",
+                "spieler1": "JAHN Christian",
+                "spieler2": "SCHNEIDER Thomas",
+                "legs1": 0,
+                "legs2": 3
+              },
+              {
+                "art": "DE",
+                "spieler1": "KOGLER Sabine",
+                "spieler2": "JESENKO Julia",
+                "legs1": 1,
+                "legs2": 3
+              },
+              {
+                "art": "OE",
+                "spieler1": "JAHN Herbert",
+                "spieler2": "JAHN Corinna",
+                "legs1": 3,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "JAHN Andreas",
+                "spieler2": "JAMMER Fabian",
+                "legs1": 1,
+                "legs2": 3
+              }
+            ]
+          }
+        ]
+      },
       "spielplan": [
         {
           "runde": 1,
@@ -1470,7 +1576,42 @@
           }
         ]
       },
-      "spieltag": null,
+      "spieltag": {
+        "datum": "2026-10-31",
+        "runde": 4,
+        "spiele": [
+          {
+            "runde": 4,
+            "datum": "2026-10-31",
+            "heim": "DC Garzern",
+            "auswaerts": "City-Flyers \"Fraggles\"",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108960,
+            "paarungen": []
+          },
+          {
+            "runde": 4,
+            "datum": "2026-10-31",
+            "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+            "auswaerts": "DSZKärnten \"2er\"",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108971,
+            "paarungen": []
+          },
+          {
+            "runde": 4,
+            "datum": "2026-10-31",
+            "heim": "DC O3tz 1.0",
+            "auswaerts": "DC Drautal Dart Vipers",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 108982,
+            "paarungen": []
+          }
+        ]
+      },
       "spielplan": [
         {
           "runde": 1,
