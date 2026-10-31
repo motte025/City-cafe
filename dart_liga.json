@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:08:34Z",
+  "aktualisiert": "2026-10-31T18:10:42Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1038,7 +1038,7 @@
           "id": 108938
         },
         "4": {
-          "heim": 0,
+          "heim": 1,
           "auswaerts": 0,
           "id": 108960
         },
@@ -1301,6 +1301,16 @@
         },
         {
           "rang": 22,
+          "spieler": "FRÜSTÜCK Kerstin",
+          "spiele": 7,
+          "siege": 1,
+          "niederlagen": 6,
+          "legs_plus": 7,
+          "legs_minus": 16,
+          "punkte": 7
+        },
+        {
+          "rang": 23,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1310,7 +1320,7 @@
           "punkte": 6
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1320,7 +1330,7 @@
           "punkte": 6
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 5,
           "siege": 2,
@@ -1330,7 +1340,7 @@
           "punkte": 6
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "PINTER Michele",
           "spiele": 4,
           "siege": 1,
@@ -1340,7 +1350,7 @@
           "punkte": 6
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "GREINIG Petra",
           "spiele": 4,
           "siege": 1,
@@ -1350,7 +1360,7 @@
           "punkte": 6
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "ETTL Theresa",
           "spiele": 5,
           "siege": 2,
@@ -1360,27 +1370,7 @@
           "punkte": 6
         },
         {
-          "rang": 28,
-          "spieler": "FRÜSTÜCK Kerstin",
-          "spiele": 6,
-          "siege": 1,
-          "niederlagen": 5,
-          "legs_plus": 6,
-          "legs_minus": 13,
-          "punkte": 6
-        },
-        {
           "rang": 29,
-          "spieler": "GRAF Franz",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 5,
-          "legs_minus": 0,
-          "punkte": 5
-        },
-        {
-          "rang": 30,
           "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
@@ -1390,8 +1380,18 @@
           "punkte": 5
         },
         {
+          "rang": 30,
+          "spieler": "GRAF Franz",
+          "spiele": 2,
+          "siege": 2,
+          "niederlagen": 0,
+          "legs_plus": 5,
+          "legs_minus": 0,
+          "punkte": 5
+        },
+        {
           "rang": 31,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1401,7 +1401,7 @@
         },
         {
           "rang": 32,
-          "spieler": "OSTRY Samantha-Lee",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1431,6 +1431,16 @@
         },
         {
           "rang": 35,
+          "spieler": "GUN Conny",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 3,
+          "legs_minus": 1,
+          "punkte": 3
+        },
+        {
+          "rang": 36,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 4,
           "siege": 0,
@@ -1440,7 +1450,7 @@
           "punkte": 3
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "STEINER Lydia",
           "spiele": 5,
           "siege": 1,
@@ -1450,7 +1460,7 @@
           "punkte": 3
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "SCHMID Thomas",
           "spiele": 1,
           "siege": 1,
@@ -1460,7 +1470,7 @@
           "punkte": 2
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 2,
           "siege": 0,
@@ -1470,7 +1480,7 @@
           "punkte": 2
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "RUS Kerstin",
           "spiele": 2,
           "siege": 0,
@@ -1480,7 +1490,7 @@
           "punkte": 2
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "POSCHINGER Franz",
           "spiele": 3,
           "siege": 0,
@@ -1490,7 +1500,7 @@
           "punkte": 2
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "KRUSCHITZ Harald",
           "spiele": 3,
           "siege": 0,
@@ -1500,7 +1510,7 @@
           "punkte": 1
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1510,7 +1520,7 @@
           "punkte": 0
         },
         {
-          "rang": 43,
+          "rang": 44,
           "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
@@ -1529,79 +1539,37 @@
         "SONNBERGER Harald"
       ],
       "letztes_spiel": {
-        "runde": 3,
-        "heim": 3,
-        "auswaerts": 7,
+        "runde": 4,
+        "heim": 1,
+        "auswaerts": 0,
         "paarungen": [
           {
             "art": "DE",
-            "spieler1": "FRÜSTÜCK Kerstin",
-            "spieler2": "STÜCKLER Heidemarie",
+            "spieler1": "GUN Conny",
+            "spieler2": "FRÜSTÜCK Kerstin",
             "legs1": 3,
+            "legs2": 1
+          },
+          {
+            "art": "HE",
+            "spieler1": "GRAFSCHAFTER Bastian",
+            "spieler2": "SONNBERGER Harald",
+            "legs1": 0,
             "legs2": 0
           },
           {
-            "art": "HE",
-            "spieler1": "KRENN Klaus",
-            "spieler2": "GÖSCHL Mario",
-            "legs1": 2,
-            "legs2": 3
-          },
-          {
             "art": "OE",
-            "spieler1": "SONNBERGER Harald",
-            "spieler2": "LANG Melanie",
-            "legs1": 3,
-            "legs2": 1
-          },
-          {
-            "art": "OE",
-            "spieler1": "PINTER Michele",
-            "spieler2": "SCHMALNAUER Daniel",
+            "spieler1": "MARKTL (J) Maximilian",
+            "spieler2": "PINTER Michele",
             "legs1": 0,
-            "legs2": 3
-          },
-          {
-            "art": "MD",
-            "spieler1": "POSCHINGER Franz / FRÜSTÜCK Kerstin",
-            "spieler2": "STÜCKLER Heidemarie / GÖSCHL Mario",
-            "legs1": 0,
-            "legs2": 2
-          },
-          {
-            "art": "OD",
-            "spieler1": "SONNBERGER Harald / KRENN Klaus",
-            "spieler2": "LANG Melanie / SCHMALNAUER Daniel",
-            "legs1": 1,
-            "legs2": 2
-          },
-          {
-            "art": "HE",
-            "spieler1": "SONNBERGER Harald",
-            "spieler2": "GÖSCHL Mario",
-            "legs1": 1,
-            "legs2": 3
-          },
-          {
-            "art": "DE",
-            "spieler1": "PINTER Michele",
-            "spieler2": "STÜCKLER Heidemarie",
-            "legs1": 3,
-            "legs2": 1
+            "legs2": 0
           },
           {
             "art": "OE",
-            "spieler1": "FRÜSTÜCK Kerstin",
-            "spieler2": "LANG Melanie",
-            "legs1": 1,
-            "legs2": 3
-          },
-          {
-            "art": "OE",
-            "spieler1": "KRENN Klaus",
-            "spieler2": "SCHMALNAUER Daniel",
+            "spieler1": "FRADL Ingemar",
+            "spieler2": "POSCHINGER Franz",
             "legs1": 0,
-            "legs2": 3
+            "legs2": 0
           }
         ]
       },
@@ -1614,7 +1582,7 @@
             "datum": "2026-10-31",
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 0,
             "id": 108960,
             "paarungen": [
@@ -1622,8 +1590,8 @@
                 "art": "DE",
                 "spieler1": "GUN Conny",
                 "spieler2": "FRÜSTÜCK Kerstin",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "HE",
