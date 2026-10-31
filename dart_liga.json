@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:33:35Z",
+  "aktualisiert": "2026-10-31T21:40:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -204,6 +204,16 @@
         },
         {
           "rang": 7,
+          "spieler": "FELLNER Johann",
+          "spiele": 10,
+          "siege": 5,
+          "niederlagen": 5,
+          "legs_plus": 19,
+          "legs_minus": 18,
+          "punkte": 19
+        },
+        {
+          "rang": 8,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 7,
           "siege": 6,
@@ -213,7 +223,7 @@
           "punkte": 17
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "REINISCH Jessica",
           "spiele": 9,
           "siege": 6,
@@ -223,7 +233,7 @@
           "punkte": 17
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "BERGLER Benjamin",
           "spiele": 9,
           "siege": 5,
@@ -233,23 +243,13 @@
           "punkte": 17
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "JAHN Corinna",
           "spiele": 7,
           "siege": 4,
           "niederlagen": 3,
           "legs_plus": 16,
           "legs_minus": 11,
-          "punkte": 16
-        },
-        {
-          "rang": 11,
-          "spieler": "FELLNER Johann",
-          "spiele": 9,
-          "siege": 4,
-          "niederlagen": 5,
-          "legs_plus": 16,
-          "legs_minus": 16,
           "punkte": 16
         },
         {
@@ -344,6 +344,16 @@
         },
         {
           "rang": 21,
+          "spieler": "FRIEßNEGGER Gerhard",
+          "spiele": 6,
+          "siege": 2,
+          "niederlagen": 4,
+          "legs_plus": 10,
+          "legs_minus": 13,
+          "punkte": 10
+        },
+        {
+          "rang": 22,
           "spieler": "KERNSTOCK Michael",
           "spiele": 5,
           "siege": 3,
@@ -353,7 +363,7 @@
           "punkte": 9
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "BRUNNER Jürgen",
           "spiele": 5,
           "siege": 2,
@@ -361,16 +371,6 @@
           "legs_plus": 9,
           "legs_minus": 10,
           "punkte": 9
-        },
-        {
-          "rang": 23,
-          "spieler": "FRIEßNEGGER Gerhard",
-          "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
-          "legs_plus": 8,
-          "legs_minus": 10,
-          "punkte": 8
         },
         {
           "rang": 24,
@@ -809,7 +809,7 @@
             "heim": "DC Schwarzer Kater",
             "auswaerts": "Dart Fuchs 4",
             "erg_heim": 5,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109576,
             "paarungen": [
               {
@@ -858,8 +858,8 @@
                 "art": "HE",
                 "spieler1": "FRIEßNEGGER Gerhard",
                 "spieler2": "FELLNER Johann",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "DE",
