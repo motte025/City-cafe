@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T20:27:34Z",
+  "aktualisiert": "2026-10-31T20:29:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1124,7 +1124,7 @@
         },
         "4": {
           "heim": 6,
-          "auswaerts": 0,
+          "auswaerts": 1,
           "id": 108960
         },
         "5": {
@@ -1177,12 +1177,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 10,
-          "siege": 10,
+          "spiele": 11,
+          "siege": 11,
           "niederlagen": 0,
-          "legs_plus": 27,
+          "legs_plus": 29,
           "legs_minus": 4,
-          "punkte": 27
+          "punkte": 29
         },
         {
           "rang": 2,
@@ -1216,16 +1216,26 @@
         },
         {
           "rang": 5,
-          "spieler": "OBERZAN Lukas",
-          "spiele": 7,
+          "spieler": "WIESER (J) David",
+          "spiele": 8,
           "siege": 6,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 17,
           "legs_minus": 6,
           "punkte": 17
         },
         {
           "rang": 6,
+          "spieler": "OBERZAN Lukas",
+          "spiele": 8,
+          "siege": 6,
+          "niederlagen": 2,
+          "legs_plus": 17,
+          "legs_minus": 8,
+          "punkte": 17
+        },
+        {
+          "rang": 7,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 9,
           "siege": 6,
@@ -1235,7 +1245,7 @@
           "punkte": 17
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
@@ -1243,16 +1253,6 @@
           "legs_plus": 17,
           "legs_minus": 14,
           "punkte": 17
-        },
-        {
-          "rang": 8,
-          "spieler": "STEINER Sandro Emmanuel",
-          "spiele": 8,
-          "siege": 6,
-          "niederlagen": 2,
-          "legs_plus": 16,
-          "legs_minus": 7,
-          "punkte": 16
         },
         {
           "rang": 9,
@@ -1266,13 +1266,13 @@
         },
         {
           "rang": 10,
-          "spieler": "WIESER (J) David",
-          "spiele": 7,
-          "siege": 5,
+          "spieler": "STEINER Sandro Emmanuel",
+          "spiele": 8,
+          "siege": 6,
           "niederlagen": 2,
-          "legs_plus": 15,
-          "legs_minus": 6,
-          "punkte": 15
+          "legs_plus": 16,
+          "legs_minus": 7,
+          "punkte": 16
         },
         {
           "rang": 11,
@@ -1336,6 +1336,16 @@
         },
         {
           "rang": 17,
+          "spieler": "SONNBERGER Harald",
+          "spiele": 9,
+          "siege": 3,
+          "niederlagen": 6,
+          "legs_plus": 12,
+          "legs_minus": 19,
+          "punkte": 12
+        },
+        {
+          "rang": 18,
           "spieler": "SPANRING Andreas",
           "spiele": 5,
           "siege": 4,
@@ -1345,7 +1355,7 @@
           "punkte": 11
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "ETTL Theresa",
           "spiele": 7,
           "siege": 4,
@@ -1355,7 +1365,7 @@
           "punkte": 11
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1365,7 +1375,7 @@
           "punkte": 10
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 7,
           "siege": 3,
@@ -1375,7 +1385,7 @@
           "punkte": 9
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "LANG Melanie",
           "spiele": 7,
           "siege": 3,
@@ -1385,7 +1395,7 @@
           "punkte": 9
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "PINTER Michele",
           "spiele": 6,
           "siege": 1,
@@ -1395,23 +1405,13 @@
           "punkte": 9
         },
         {
-          "rang": 23,
-          "spieler": "SONNBERGER Harald",
-          "spiele": 8,
-          "siege": 2,
-          "niederlagen": 6,
-          "legs_plus": 9,
-          "legs_minus": 17,
-          "punkte": 9
-        },
-        {
           "rang": 24,
           "spieler": "GRAF Franz",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 3,
-          "niederlagen": 0,
+          "niederlagen": 1,
           "legs_plus": 8,
-          "legs_minus": 0,
+          "legs_minus": 2,
           "punkte": 8
         },
         {
@@ -1426,6 +1426,16 @@
         },
         {
           "rang": 26,
+          "spieler": "MARKTL (J) Maximilian",
+          "spiele": 4,
+          "siege": 1,
+          "niederlagen": 3,
+          "legs_plus": 7,
+          "legs_minus": 9,
+          "punkte": 7
+        },
+        {
+          "rang": 27,
           "spieler": "KRENN Klaus",
           "spiele": 5,
           "siege": 1,
@@ -1435,7 +1445,7 @@
           "punkte": 7
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 8,
           "siege": 1,
@@ -1445,7 +1455,7 @@
           "punkte": 7
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1455,7 +1465,7 @@
           "punkte": 6
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 5,
           "siege": 2,
@@ -1465,7 +1475,7 @@
           "punkte": 6
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
@@ -1475,23 +1485,13 @@
           "punkte": 5
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "GUN Conny",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
           "legs_plus": 5,
           "legs_minus": 1,
-          "punkte": 5
-        },
-        {
-          "rang": 32,
-          "spieler": "MARKTL (J) Maximilian",
-          "spiele": 3,
-          "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 5,
-          "legs_minus": 6,
           "punkte": 5
         },
         {
@@ -1506,7 +1506,7 @@
         },
         {
           "rang": 34,
-          "spieler": "OSTRY Samantha-Lee",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1516,7 +1516,7 @@
         },
         {
           "rang": 35,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1606,7 +1606,7 @@
         },
         {
           "rang": 44,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1616,7 +1616,7 @@
         },
         {
           "rang": 45,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1636,7 +1636,7 @@
       "letztes_spiel": {
         "runde": 4,
         "heim": 6,
-        "auswaerts": 0,
+        "auswaerts": 1,
         "paarungen": [
           {
             "art": "DE",
@@ -1684,8 +1684,8 @@
             "art": "HE",
             "spieler1": "MARKTL (J) Maximilian",
             "spieler2": "SONNBERGER Harald",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 2,
+            "legs2": 3
           },
           {
             "art": "DE",
@@ -1720,7 +1720,7 @@
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
             "erg_heim": 6,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 108960,
             "paarungen": [
               {
@@ -1769,8 +1769,8 @@
                 "art": "HE",
                 "spieler1": "MARKTL (J) Maximilian",
                 "spieler2": "SONNBERGER Harald",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "DE",
@@ -1801,7 +1801,7 @@
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 2,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 108971,
             "paarungen": [
               {
@@ -1844,7 +1844,7 @@
                 "spieler1": "OBERZAN Lukas / GRAF Franz",
                 "spieler2": "WIESER (J) David / NIKOLIC Dennis",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               }
             ]
           },
