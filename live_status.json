@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-31T18:32:45Z",
+  "checked_at": "2026-10-31T18:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴 HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎃 HALLOWEEN 2027 I PRIESTER vs MACHETENBLAST 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -41,13 +48,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Helloween - 80s / 90s / 2000s - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎃 HALLOWEEN 2027 I PRIESTER vs MACHETENBLAST 🎃 Aktion: !Grab 🎃 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
