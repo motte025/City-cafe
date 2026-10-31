@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T19:11:46Z",
+  "aktualisiert": "2026-10-31T19:19:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1191,11 +1191,11 @@
         {
           "rang": 8,
           "spieler": "WIESER (J) David",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 5,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 15,
-          "legs_minus": 3,
+          "legs_minus": 6,
           "punkte": 15
         },
         {
@@ -1340,6 +1340,16 @@
         },
         {
           "rang": 23,
+          "spieler": "GRAF Franz",
+          "spiele": 3,
+          "siege": 3,
+          "niederlagen": 0,
+          "legs_plus": 8,
+          "legs_minus": 0,
+          "punkte": 8
+        },
+        {
+          "rang": 24,
           "spieler": "GREINIG Petra",
           "spiele": 5,
           "siege": 1,
@@ -1349,7 +1359,7 @@
           "punkte": 8
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "PINTER Michele",
           "spiele": 5,
           "siege": 1,
@@ -1359,7 +1369,7 @@
           "punkte": 8
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "KRENN Klaus",
           "spiele": 5,
           "siege": 1,
@@ -1369,7 +1379,7 @@
           "punkte": 7
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 7,
           "siege": 1,
@@ -1379,7 +1389,7 @@
           "punkte": 7
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1389,7 +1399,7 @@
           "punkte": 6
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 5,
           "siege": 2,
@@ -1399,18 +1409,8 @@
           "punkte": 6
         },
         {
-          "rang": 29,
-          "spieler": "STEINER Manuel",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 5,
-          "legs_minus": 0,
-          "punkte": 5
-        },
-        {
           "rang": 30,
-          "spieler": "GRAF Franz",
+          "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
@@ -1550,7 +1550,7 @@
         },
         {
           "rang": 44,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1560,7 +1560,7 @@
         },
         {
           "rang": 45,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1688,7 +1688,7 @@
             "datum": "2026-10-31",
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "DSZKärnten \"2er\"",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 3,
             "id": 108971,
             "paarungen": [
@@ -1717,7 +1717,7 @@
                 "art": "OE",
                 "spieler1": "GRAF Franz",
                 "spieler2": "WIESER (J) David",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
