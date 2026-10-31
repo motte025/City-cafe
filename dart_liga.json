@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:25:37Z",
+  "aktualisiert": "2026-10-31T18:29:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1029,7 +1029,7 @@
         },
         {
           "rang": 6,
-          "team": "DC O3tz 1.0",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1038,7 +1038,7 @@
         },
         {
           "rang": 7,
-          "team": "City-Flyers \"Fraggles\"",
+          "team": "DC O3tz 1.0",
           "spiele": 3,
           "siege": 1,
           "unentschieden": 0,
@@ -1290,6 +1290,16 @@
         },
         {
           "rang": 18,
+          "spieler": "ETTL Theresa",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 9,
+          "legs_minus": 13,
+          "punkte": 9
+        },
+        {
+          "rang": 19,
           "spieler": "LANG Melanie",
           "spiele": 7,
           "siege": 3,
@@ -1299,7 +1309,7 @@
           "punkte": 9
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "SONNBERGER Harald",
           "spiele": 7,
           "siege": 2,
@@ -1309,7 +1319,7 @@
           "punkte": 9
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 6,
           "siege": 2,
@@ -1319,7 +1329,17 @@
           "punkte": 8
         },
         {
-          "rang": 21,
+          "rang": 22,
+          "spieler": "GREINIG Petra",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 8,
+          "legs_minus": 13,
+          "punkte": 8
+        },
+        {
+          "rang": 23,
           "spieler": "KRENN Klaus",
           "spiele": 5,
           "siege": 1,
@@ -1329,7 +1349,7 @@
           "punkte": 7
         },
         {
-          "rang": 22,
+          "rang": 24,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 7,
           "siege": 1,
@@ -1339,7 +1359,7 @@
           "punkte": 7
         },
         {
-          "rang": 23,
+          "rang": 25,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1349,7 +1369,7 @@
           "punkte": 6
         },
         {
-          "rang": 24,
+          "rang": 26,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1359,7 +1379,7 @@
           "punkte": 6
         },
         {
-          "rang": 25,
+          "rang": 27,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 5,
           "siege": 2,
@@ -1369,33 +1389,13 @@
           "punkte": 6
         },
         {
-          "rang": 26,
+          "rang": 28,
           "spieler": "PINTER Michele",
           "spiele": 4,
           "siege": 1,
           "niederlagen": 3,
           "legs_plus": 6,
           "legs_minus": 10,
-          "punkte": 6
-        },
-        {
-          "rang": 27,
-          "spieler": "GREINIG Petra",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
-          "legs_plus": 6,
-          "legs_minus": 10,
-          "punkte": 6
-        },
-        {
-          "rang": 28,
-          "spieler": "ETTL Theresa",
-          "spiele": 5,
-          "siege": 2,
-          "niederlagen": 3,
-          "legs_plus": 6,
-          "legs_minus": 11,
           "punkte": 6
         },
         {
@@ -1420,7 +1420,7 @@
         },
         {
           "rang": 31,
-          "spieler": "OSTRY Samantha-Lee",
+          "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1430,7 +1430,7 @@
         },
         {
           "rang": 32,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1690,15 +1690,15 @@
             "heim": "DC O3tz 1.0",
             "auswaerts": "DC Drautal Dart Vipers",
             "erg_heim": 0,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 108982,
             "paarungen": [
               {
                 "art": "DE",
                 "spieler1": "GREINIG Petra",
                 "spieler2": "ETTL Theresa",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "HE",
