@@ -1,6 +1,20 @@
 {
-  "checked_at": "2026-10-31T15:02:50Z",
+  "checked_at": "2026-10-31T15:22:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "👻🕯️ HAPPY HALLOWEEN 🕯️👻 | Mixed Styles mit @bruebie @e_one uvm. | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "tschessy",
@@ -17,23 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "👻🕯️ HAPPY HALLOWEEN 🕯️👻 | Mixed Styles mit @bruebie @e_one uvm. | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
