@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:42:35Z",
+  "aktualisiert": "2026-10-31T22:02:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1089,11 +1089,11 @@
         {
           "rang": 1,
           "team": "DSZKärnten \"2er\"",
-          "spiele": 4,
-          "siege": 3,
+          "spiele": 5,
+          "siege": 4,
           "unentschieden": 1,
           "niederlagen": 0,
-          "punkte": 7
+          "punkte": 9
         },
         {
           "rang": 2,
@@ -1125,10 +1125,10 @@
         {
           "rang": 5,
           "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 2,
           "unentschieden": 1,
-          "niederlagen": 0,
+          "niederlagen": 1,
           "punkte": 5
         },
         {
@@ -1314,20 +1314,20 @@
         },
         {
           "rang": 10,
-          "spieler": "GRAFSCHAFTER Bastian",
+          "spieler": "SCHMALNAUER Daniel",
           "spiele": 9,
-          "siege": 5,
-          "niederlagen": 4,
+          "siege": 6,
+          "niederlagen": 3,
           "legs_plus": 17,
           "legs_minus": 13,
           "punkte": 17
         },
         {
           "rang": 11,
-          "spieler": "SCHMALNAUER Daniel",
+          "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 9,
-          "siege": 6,
-          "niederlagen": 3,
+          "siege": 5,
+          "niederlagen": 4,
           "legs_plus": 17,
           "legs_minus": 13,
           "punkte": 17
@@ -1355,11 +1355,11 @@
         {
           "rang": 14,
           "spieler": "ANWALD Guenther",
-          "spiele": 9,
+          "spiele": 10,
           "siege": 4,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 15,
-          "legs_minus": 14,
+          "legs_minus": 17,
           "punkte": 15
         },
         {
@@ -1414,6 +1414,16 @@
         },
         {
           "rang": 20,
+          "spieler": "GRAF Franz",
+          "spiele": 5,
+          "siege": 4,
+          "niederlagen": 1,
+          "legs_plus": 11,
+          "legs_minus": 2,
+          "punkte": 11
+        },
+        {
+          "rang": 21,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1423,7 +1433,7 @@
           "punkte": 10
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "GREINIG Petra",
           "spiele": 6,
           "siege": 1,
@@ -1433,7 +1443,7 @@
           "punkte": 10
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 7,
           "siege": 3,
@@ -1443,7 +1453,7 @@
           "punkte": 9
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "LANG Melanie",
           "spiele": 7,
           "siege": 3,
@@ -1453,7 +1463,7 @@
           "punkte": 9
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "PINTER Michele",
           "spiele": 7,
           "siege": 1,
@@ -1463,23 +1473,13 @@
           "punkte": 9
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "GUN Conny",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
           "legs_plus": 8,
           "legs_minus": 1,
-          "punkte": 8
-        },
-        {
-          "rang": 26,
-          "spieler": "GRAF Franz",
-          "spiele": 4,
-          "siege": 3,
-          "niederlagen": 1,
-          "legs_plus": 8,
-          "legs_minus": 2,
           "punkte": 8
         },
         {
@@ -1848,7 +1848,7 @@
             "datum": "2026-10-31",
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "DSZKärnten \"2er\"",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 7,
             "id": 108971,
             "paarungen": [
@@ -1919,7 +1919,7 @@
                 "art": "OE",
                 "spieler1": "GRAF Franz",
                 "spieler2": "ANWALD Guenther",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
