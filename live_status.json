@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-10-31T01:22:45Z",
+  "checked_at": "2026-10-31T01:37:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ A VERY GOOFY HALLOWEEN WEEKEND 🔥 !mods !mercy !tip",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "dirkneuenfels",
@@ -14,13 +21,6 @@
       "name": "AmazonMusic",
       "title": "Amazon Music Live: Doja Cat",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ A VERY GOOFY HALLOWEEN WEEKEND 🔥 !mods !mercy !tip",
-      "game": "DJs"
     },
     {
       "platform": "twitch",
