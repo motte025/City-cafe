@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T21:06:35Z",
+  "aktualisiert": "2026-10-31T21:07:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -853,6 +853,34 @@
                 "spieler2": "AMBROS Thomas / STÜCKLER Manuel",
                 "legs1": 2,
                 "legs2": 1
+              },
+              {
+                "art": "HE",
+                "spieler1": "FRIEßNEGGER Gerhard",
+                "spieler2": "FELLNER Johann",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "FRIEßNEGGER Sarah",
+                "spieler2": "APOVNIK Gabriele",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "KERNSTOCK Michael",
+                "spieler2": "STÜCKLER Manuel",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "HOPFGARTNER Joachim",
+                "spieler2": "AMBROS Thomas",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           },
@@ -1143,7 +1171,7 @@
           "id": 108938
         },
         "4": {
-          "heim": 7,
+          "heim": 8,
           "auswaerts": 1,
           "id": 108960
         },
@@ -1276,6 +1304,16 @@
         },
         {
           "rang": 9,
+          "spieler": "GRAFSCHAFTER Bastian",
+          "spiele": 9,
+          "siege": 5,
+          "niederlagen": 4,
+          "legs_plus": 17,
+          "legs_minus": 13,
+          "punkte": 17
+        },
+        {
+          "rang": 10,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
@@ -1285,7 +1323,7 @@
           "punkte": 17
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "WIMMER Leon",
           "spiele": 7,
           "siege": 6,
@@ -1295,7 +1333,7 @@
           "punkte": 16
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "ANWALD Guenther",
           "spiele": 9,
           "siege": 4,
@@ -1305,7 +1343,7 @@
           "punkte": 15
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "MARKTL Werner",
           "spiele": 9,
           "siege": 5,
@@ -1315,7 +1353,7 @@
           "punkte": 15
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "FRADL Ingemar",
           "spiele": 11,
           "siege": 5,
@@ -1323,16 +1361,6 @@
           "legs_plus": 15,
           "legs_minus": 20,
           "punkte": 15
-        },
-        {
-          "rang": 14,
-          "spieler": "GRAFSCHAFTER Bastian",
-          "spiele": 8,
-          "siege": 4,
-          "niederlagen": 4,
-          "legs_plus": 14,
-          "legs_minus": 13,
-          "punkte": 14
         },
         {
           "rang": 15,
@@ -1577,11 +1605,11 @@
         {
           "rang": 39,
           "spieler": "POSCHINGER Franz",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 0,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 3,
-          "legs_minus": 12,
+          "legs_minus": 15,
           "punkte": 3
         },
         {
@@ -1655,7 +1683,7 @@
       ],
       "letztes_spiel": {
         "runde": 4,
-        "heim": 7,
+        "heim": 8,
         "auswaerts": 1,
         "paarungen": [
           {
@@ -1718,7 +1746,7 @@
             "art": "OE",
             "spieler1": "GRAFSCHAFTER Bastian",
             "spieler2": "POSCHINGER Franz",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -1739,7 +1767,7 @@
             "datum": "2026-10-31",
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 7,
+            "erg_heim": 8,
             "erg_auswaerts": 1,
             "id": 108960,
             "paarungen": [
@@ -1803,7 +1831,7 @@
                 "art": "OE",
                 "spieler1": "GRAFSCHAFTER Bastian",
                 "spieler2": "POSCHINGER Franz",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
