@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T17:30:38Z",
+  "aktualisiert": "2026-10-31T17:48:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1588,7 +1588,36 @@
             "erg_heim": 0,
             "erg_auswaerts": 0,
             "id": 108960,
-            "paarungen": []
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "GUN Conny",
+                "spieler2": "FRÜSTÜCK Kerstin",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "GRAFSCHAFTER Bastian",
+                "spieler2": "SONNBERGER Harald",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "MARKTL (J) Maximilian",
+                "spieler2": "PINTER Michele",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "FRADL Ingemar",
+                "spieler2": "POSCHINGER Franz",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
           },
           {
             "runde": 4,
