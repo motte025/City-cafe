@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T20:46:38Z",
+  "aktualisiert": "2026-10-31T20:47:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -195,12 +195,12 @@
         {
           "rang": 6,
           "spieler": "ELEZOSKI Serif",
-          "spiele": 7,
-          "siege": 5,
+          "spiele": 8,
+          "siege": 6,
           "niederlagen": 2,
-          "legs_plus": 17,
+          "legs_plus": 20,
           "legs_minus": 6,
-          "punkte": 17
+          "punkte": 20
         },
         {
           "rang": 7,
@@ -594,6 +594,16 @@
         },
         {
           "rang": 46,
+          "spieler": "HOBEL Walter",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 0,
+          "legs_minus": 3,
+          "punkte": 0
+        },
+        {
+          "rang": 47,
           "spieler": "PROVNIK Gabriele",
           "spiele": 2,
           "siege": 0,
@@ -603,7 +613,7 @@
           "punkte": 0
         },
         {
-          "rang": 47,
+          "rang": 48,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 2,
           "siege": 0,
@@ -707,7 +717,7 @@
             "datum": "2026-10-31",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 2,
             "id": 109565,
             "paarungen": [
