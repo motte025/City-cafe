@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-10-31T13:52:45Z",
+  "checked_at": "2026-10-31T14:07:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Halloween <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "ICH MUTIERE ZUR ZOMBIE - SCHÜLERIN | Pädagogisch wertlos, aber bissig! 🧟 | !holy",
       "game": "DJs"
     },
     {
