@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:40:34Z",
+  "aktualisiert": "2026-10-31T18:49:33Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -154,6 +154,16 @@
         },
         {
           "rang": 2,
+          "spieler": "DOUJAK Siegfried",
+          "spiele": 9,
+          "siege": 9,
+          "niederlagen": 0,
+          "legs_plus": 24,
+          "legs_minus": 3,
+          "punkte": 24
+        },
+        {
+          "rang": 3,
           "spieler": "JAMMER Fabian",
           "spiele": 11,
           "siege": 8,
@@ -163,7 +173,7 @@
           "punkte": 24
         },
         {
-          "rang": 3,
+          "rang": 4,
           "spieler": "RAINER Gerald",
           "spiele": 9,
           "siege": 8,
@@ -173,7 +183,7 @@
           "punkte": 22
         },
         {
-          "rang": 4,
+          "rang": 5,
           "spieler": "URANK Romeo",
           "spiele": 9,
           "siege": 7,
@@ -181,16 +191,6 @@
           "legs_plus": 22,
           "legs_minus": 11,
           "punkte": 22
-        },
-        {
-          "rang": 5,
-          "spieler": "DOUJAK Siegfried",
-          "spiele": 8,
-          "siege": 8,
-          "niederlagen": 0,
-          "legs_plus": 21,
-          "legs_minus": 3,
-          "punkte": 21
         },
         {
           "rang": 6,
@@ -474,17 +474,17 @@
         },
         {
           "rang": 34,
-          "spieler": "LUBE Mario",
-          "spiele": 2,
+          "spieler": "KERNSTOCK Michael",
+          "spiele": 3,
           "siege": 1,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 4,
-          "legs_minus": 5,
+          "legs_minus": 8,
           "punkte": 4
         },
         {
           "rang": 35,
-          "spieler": "KERNSTOCK Michael",
+          "spieler": "LUBE Mario",
           "spiele": 3,
           "siege": 1,
           "niederlagen": 2,
@@ -707,7 +707,7 @@
             "datum": "2026-10-31",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 1,
             "id": 109565,
             "paarungen": [
@@ -722,7 +722,7 @@
                 "art": "HE",
                 "spieler1": "DOUJAK Siegfried",
                 "spieler2": "LUBE Mario",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
@@ -1067,7 +1067,7 @@
           "id": 108938
         },
         "4": {
-          "heim": 2,
+          "heim": 3,
           "auswaerts": 0,
           "id": 108960
         },
@@ -1340,6 +1340,16 @@
         },
         {
           "rang": 23,
+          "spieler": "PINTER Michele",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 8,
+          "legs_minus": 13,
+          "punkte": 8
+        },
+        {
+          "rang": 24,
           "spieler": "KRENN Klaus",
           "spiele": 5,
           "siege": 1,
@@ -1349,7 +1359,7 @@
           "punkte": 7
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 7,
           "siege": 1,
@@ -1359,7 +1369,7 @@
           "punkte": 7
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1369,7 +1379,7 @@
           "punkte": 6
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "SPANRING Andreas",
           "spiele": 3,
           "siege": 2,
@@ -1379,23 +1389,13 @@
           "punkte": 6
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 5,
           "siege": 2,
           "niederlagen": 3,
           "legs_plus": 6,
           "legs_minus": 9,
-          "punkte": 6
-        },
-        {
-          "rang": 28,
-          "spieler": "PINTER Michele",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
-          "legs_plus": 6,
-          "legs_minus": 10,
           "punkte": 6
         },
         {
@@ -1420,6 +1420,16 @@
         },
         {
           "rang": 31,
+          "spieler": "MARKTL (J) Maximilian",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 5,
+          "legs_minus": 6,
+          "punkte": 5
+        },
+        {
+          "rang": 32,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 2,
           "siege": 1,
@@ -1429,7 +1439,7 @@
           "punkte": 4
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1439,7 +1449,7 @@
           "punkte": 4
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "GREINIG Hubert",
           "spiele": 5,
           "siege": 0,
@@ -1449,7 +1459,7 @@
           "punkte": 4
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
@@ -1459,7 +1469,7 @@
           "punkte": 3
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "GUN Conny",
           "spiele": 1,
           "siege": 1,
@@ -1469,7 +1479,7 @@
           "punkte": 3
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 4,
           "siege": 0,
@@ -1479,7 +1489,7 @@
           "punkte": 3
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "STEINER Lydia",
           "spiele": 6,
           "siege": 1,
@@ -1489,7 +1499,7 @@
           "punkte": 3
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "SCHMID Thomas",
           "spiele": 1,
           "siege": 1,
@@ -1499,23 +1509,13 @@
           "punkte": 2
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "PETSCHAR Phillip",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
           "legs_plus": 2,
           "legs_minus": 3,
-          "punkte": 2
-        },
-        {
-          "rang": 40,
-          "spieler": "MARKTL (J) Maximilian",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 2,
-          "legs_minus": 4,
           "punkte": 2
         },
         {
@@ -1579,7 +1579,7 @@
       ],
       "letztes_spiel": {
         "runde": 4,
-        "heim": 2,
+        "heim": 3,
         "auswaerts": 0,
         "paarungen": [
           {
@@ -1600,8 +1600,8 @@
             "art": "OE",
             "spieler1": "MARKTL (J) Maximilian",
             "spieler2": "PINTER Michele",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 3,
+            "legs2": 2
           },
           {
             "art": "OE",
@@ -1621,7 +1621,7 @@
             "datum": "2026-10-31",
             "heim": "DC Garzern",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 0,
             "id": 108960,
             "paarungen": [
@@ -1643,8 +1643,8 @@
                 "art": "OE",
                 "spieler1": "MARKTL (J) Maximilian",
                 "spieler2": "PINTER Michele",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               },
               {
                 "art": "OE",
