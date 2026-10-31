@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T22:03:37Z",
+  "aktualisiert": "2026-10-31T22:42:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -344,6 +344,16 @@
         },
         {
           "rang": 21,
+          "spieler": "KERNSTOCK Michael",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 11,
+          "legs_minus": 13,
+          "punkte": 11
+        },
+        {
+          "rang": 22,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 6,
           "siege": 2,
@@ -351,16 +361,6 @@
           "legs_plus": 10,
           "legs_minus": 13,
           "punkte": 10
-        },
-        {
-          "rang": 22,
-          "spieler": "KERNSTOCK Michael",
-          "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
-          "legs_plus": 9,
-          "legs_minus": 10,
-          "punkte": 9
         },
         {
           "rang": 23,
@@ -484,7 +484,7 @@
         },
         {
           "rang": 35,
-          "spieler": "KREUZER Silvia",
+          "spieler": "STÜCKLER Manuel",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -494,6 +494,16 @@
         },
         {
           "rang": 36,
+          "spieler": "KREUZER Silvia",
+          "spiele": 2,
+          "siege": 1,
+          "niederlagen": 1,
+          "legs_plus": 4,
+          "legs_minus": 4,
+          "punkte": 4
+        },
+        {
+          "rang": 37,
           "spieler": "AMBROS Thomas",
           "spiele": 5,
           "siege": 0,
@@ -503,7 +513,7 @@
           "punkte": 4
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
@@ -513,7 +523,7 @@
           "punkte": 3
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "SIMONITSCH Christopher",
           "spiele": 4,
           "siege": 0,
@@ -523,7 +533,7 @@
           "punkte": 3
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "JAHN Herbert",
           "spiele": 6,
           "siege": 1,
@@ -533,7 +543,7 @@
           "punkte": 3
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "JAHN Christian",
           "spiele": 6,
           "siege": 1,
@@ -543,7 +553,7 @@
           "punkte": 3
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "SCHERWITZEL Manuel",
           "spiele": 3,
           "siege": 1,
@@ -553,7 +563,7 @@
           "punkte": 2
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "BERCHTOLD Alex",
           "spiele": 3,
           "siege": 0,
@@ -563,7 +573,7 @@
           "punkte": 2
         },
         {
-          "rang": 43,
+          "rang": 44,
           "spieler": "GORICNIK Michael",
           "spiele": 6,
           "siege": 0,
@@ -571,16 +581,6 @@
           "legs_plus": 2,
           "legs_minus": 16,
           "punkte": 2
-        },
-        {
-          "rang": 44,
-          "spieler": "STÜCKLER Manuel",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 1,
-          "legs_minus": 2,
-          "punkte": 1
         },
         {
           "rang": 45,
@@ -809,7 +809,7 @@
             "heim": "DC Schwarzer Kater",
             "auswaerts": "Dart Fuchs 4",
             "erg_heim": 6,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109576,
             "paarungen": [
               {
@@ -872,8 +872,8 @@
                 "art": "OE",
                 "spieler1": "KERNSTOCK Michael",
                 "spieler2": "STÜCKLER Manuel",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
