@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-10-31T18:24:34Z",
+  "aktualisiert": "2026-10-31T18:25:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -244,6 +244,16 @@
         },
         {
           "rang": 11,
+          "spieler": "FRIEßNEGGER Manuela",
+          "spiele": 7,
+          "siege": 4,
+          "niederlagen": 3,
+          "legs_plus": 14,
+          "legs_minus": 9,
+          "punkte": 14
+        },
+        {
+          "rang": 12,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 6,
           "siege": 4,
@@ -253,7 +263,7 @@
           "punkte": 13
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "FELLNER Johann",
           "spiele": 7,
           "siege": 4,
@@ -263,7 +273,7 @@
           "punkte": 13
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "KOLLER Elias",
           "spiele": 9,
           "siege": 4,
@@ -273,7 +283,7 @@
           "punkte": 13
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 5,
           "siege": 4,
@@ -283,7 +293,7 @@
           "punkte": 12
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 6,
           "siege": 3,
@@ -291,16 +301,6 @@
           "legs_plus": 12,
           "legs_minus": 11,
           "punkte": 12
-        },
-        {
-          "rang": 16,
-          "spieler": "FRIEßNEGGER Manuela",
-          "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 11,
-          "legs_minus": 9,
-          "punkte": 11
         },
         {
           "rang": 17,
@@ -605,11 +605,11 @@
         {
           "rang": 47,
           "spieler": "APOVNIK Gabriele",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 0,
-          "legs_minus": 8,
+          "legs_minus": 11,
           "punkte": 0
         }
       ],
@@ -746,7 +746,7 @@
             "datum": "2026-10-31",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 0,
             "id": 109576,
             "paarungen": [
@@ -754,7 +754,7 @@
                 "art": "DE",
                 "spieler1": "FRIEßNEGGER Manuela",
                 "spieler2": "APOVNIK Gabriele",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
@@ -1131,12 +1131,12 @@
         {
           "rang": 2,
           "spieler": "JANESCH Christine",
-          "spiele": 9,
-          "siege": 7,
+          "spiele": 10,
+          "siege": 8,
           "niederlagen": 2,
-          "legs_plus": 20,
+          "legs_plus": 23,
           "legs_minus": 10,
-          "punkte": 20
+          "punkte": 23
         },
         {
           "rang": 3,
@@ -1481,11 +1481,11 @@
         {
           "rang": 37,
           "spieler": "STEINER Lydia",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 1,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 3,
-          "legs_minus": 13,
+          "legs_minus": 16,
           "punkte": 3
         },
         {
@@ -1651,7 +1651,7 @@
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 0,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 108971,
             "paarungen": [
               {
@@ -1659,7 +1659,7 @@
                 "spieler1": "STEINER Lydia",
                 "spieler2": "JANESCH Christine",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "HE",
