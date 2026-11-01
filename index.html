@@ -2692,70 +2692,6 @@
             transform: translateX(-50%);
             animation: hypeTextSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
-
-        /* ---------- Halloween-Modus (31.10.2026, 18:00-02:00, am Chef-Handy schaltbar) ----------
-           body.hw-modus: oben statt Bundesliga das Halloween-Band, Rahmen in Kuerbis-Orange,
-           rechts nur Fotos, unten Halloween-Meldungen. Gesteuert von hwAktiv() im Skript. */
-        .hw-top { display: none; }
-        body.hw-modus #bl-top-label, body.hw-modus .bl-top-ticker-wrap, body.hw-modus #bl-top-datum { display: none !important; }
-        body.hw-modus .hw-top {
-            display: flex; align-items: center; width: 100%; height: 100px; position: relative;
-            background: linear-gradient(90deg, rgba(40, 8, 60, 0.92) 0%, rgba(20, 6, 30, 0.88) 50%, rgba(40, 8, 60, 0.92) 100%);
-        }
-        .hw-top-kuerbis {
-            height: 100px; padding: 0 30px; flex-shrink: 0; display: flex; align-items: center; gap: 12px;
-            background: linear-gradient(135deg, #ff7a00 0%, #c2410c 55%, #7b2cbf 100%);
-            color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px; letter-spacing: 1.2px;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); white-space: nowrap; box-shadow: 5px 0 15px rgba(0, 0, 0, 0.35); z-index: 2;
-        }
-        .hw-top-mitte { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; z-index: 2; }
-        .hw-top-titel {
-            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 31px; letter-spacing: 2px; color: #ffb347; white-space: nowrap;
-            text-shadow: 0 0 14px rgba(255, 122, 0, 0.85), 0 0 34px rgba(255, 80, 0, 0.45), 0 3px 6px rgba(0, 0, 0, 0.7);
-            animation: hwFlackern 6s infinite;
-        }
-        .hw-top-unter { margin-top: 7px; white-space: nowrap; font-size: 16px; font-weight: 800; letter-spacing: 2px; color: #e9d5ff; text-transform: uppercase;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7); }
-        .hw-top-zeit {
-            height: 100px; padding: 0 30px; flex-shrink: 0; display: flex; align-items: center;
-            background: linear-gradient(135deg, #7b2cbf 0%, #c2410c 45%, #ff7a00 100%);
-            color: #fff; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px; letter-spacing: 1px;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); white-space: nowrap; box-shadow: -5px 0 15px rgba(0, 0, 0, 0.35); z-index: 2;
-        }
-        .hw-fledermaus { position: absolute; font-size: 26px; opacity: 0.75; z-index: 1; animation: hwFlattern 9s ease-in-out infinite; }
-        .hw-fledermaus.f2 { animation-duration: 12s; animation-delay: -4s; font-size: 20px; }
-        .hw-fledermaus.f3 { animation-duration: 10s; animation-delay: -7s; font-size: 22px; }
-        @keyframes hwFlattern {
-            0% { transform: translate(0, 0) rotate(-8deg); } 25% { transform: translate(60px, -14px) rotate(6deg); }
-            50% { transform: translate(120px, 8px) rotate(-6deg); } 75% { transform: translate(50px, 16px) rotate(8deg); }
-            100% { transform: translate(0, 0) rotate(-8deg); }
-        }
-        @keyframes hwFlackern {
-            0%, 100% { opacity: 1; } 41% { opacity: 1; } 42% { opacity: 0.55; } 43% { opacity: 1; } 44% { opacity: 0.7; } 45% { opacity: 1; }
-        }
-        body.hw-modus .card, body.hw-modus .top-custom-widget {
-            border-color: rgba(255, 122, 0, 0.55) !important;
-            box-shadow: 0 0 22px rgba(255, 122, 0, 0.22), 0 10px 30px rgba(0, 0, 0, 0.35) !important;
-        }
-        body.hw-modus .ticker-label-left { background: linear-gradient(135deg, #ff7a00 0%, #7b2cbf 100%) !important; color: #fff !important; }
-        body.hw-modus #view-event-gallery .gallery-event-badge { background: #ff7a00 !important; color: #1a0526 !important; }
-        /* Hintergrund (Tropfenglas) in Halloween-Lila statt Blau */
-        /* Halloween-Video im Vollbild (Chef-Handy): die Videoflaeche deckt den ganzen Screen,
-           mpv folgt ihr (der Supervisor misst #nl-player-frame). */
-        /* transform: none, sonst waere die Ansicht der Bezugsrahmen fuer position: fixed;
-           so ist es #dashboard-scaler (1920 x 1080, wie der Screen). */
-        body.hw-video-voll #media-view-nightlife { transform: none !important; }
-        /* Waehrend das Video im Vollbild laeuft, liegt nichts darueber (fuer den Fall, dass
-           statt mpv das YouTube-Bild im Browser spielt). */
-        body.hw-video-voll:has(#media-view-nightlife.active) .sidebar,
-        body.hw-video-voll:has(#media-view-nightlife.active) #card-ticker,
-        body.hw-video-voll:has(#media-view-nightlife.active) #card-top-custom,
-        body.hw-video-voll:has(#media-view-nightlife.active) #build-tag { visibility: hidden; }
-        body.hw-video-voll #nl-player-frame {
-            position: fixed !important; left: 0 !important; top: 0 !important; width: 1920px !important; height: 1080px !important;
-            transform: none !important; z-index: 60; border-radius: 0 !important; margin: 0 !important;
-        }
-        body.hw-modus .fixed-bg-bricks { filter: hue-rotate(75deg) saturate(1.25) brightness(0.6); }
     </style>
 </head>
 <body>
@@ -2774,18 +2710,6 @@
                     <div class="bl-top-ticker-move" id="bl-top-ticker"></div>
                 </div>
                 <div class="bl-top-datum" id="bl-top-datum"></div>
-                <!-- Halloween-Modus: ersetzt die Bundesliga-Leiste (body.hw-modus) -->
-                <div class="hw-top" id="hw-top">
-                    <div class="hw-top-kuerbis">🎃 HALLOWEEN</div>
-                    <div class="hw-top-mitte">
-                        <div class="hw-top-titel">HALLOWEEN IM CITY CAFE</div>
-                        <div class="hw-top-unter">Live-Musik · Kostüme willkommen · bis 2 Uhr früh</div>
-                    </div>
-                    <div class="hw-top-zeit">31.10. · AB 18 UHR</div>
-                    <span class="hw-fledermaus" style="left: 300px; top: 8px;">🦇</span>
-                    <span class="hw-fledermaus f2" style="left: 1150px; top: 60px;">🦇</span>
-                    <span class="hw-fledermaus f3" style="left: 820px; top: 4px;">🦇</span>
-                </div>
                 <!-- YouTube-Musik: "Als Naechstes" ueber der Bundesliga-Leiste
                      (nur solange Musik laeuft, body.ytm-an). -->
                 <div class="ytm-leiste" id="ytm-leiste"></div>
@@ -3016,16 +2940,6 @@
                 <div class="media-inner-view" id="media-view-dart-film">
                     <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #4a1230 0%, #2a0a1c 100%); border-radius: 22px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                         <video id="dart-film-video" data-src="city_flyers_film.mp4" style="width: 100%; height: 100%; object-fit: contain;" playsinline preload="none"></video>
-                    </div>
-                </div>
-
-                <!-- Halloween 2026 (Event 31.10.): ein 60-s-Video ohne Ton in jedem
-                     Durchlauf. Wie der Dartfilm ohne src - die Quelle wird erst im
-                     Slot gesetzt und danach wieder abgegeben; nach dem 31.10. kommt
-                     der Slot gar nicht mehr vor. -->
-                <div class="media-inner-view" id="media-view-halloween">
-                    <div style="width: 1280px; height: 815px; position: relative; background: #000; border-radius: 22px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                        <video id="halloween-video" style="width: 100%; height: 100%; object-fit: contain;" muted playsinline preload="none"></video>
                     </div>
                 </div>
 
@@ -3817,8 +3731,7 @@
             const container = document.getElementById('ticker-dynamic-content');
             if (!container || dynamicPartyMessages.length === 0) return;
 
-            const quelle = (typeof hwAktiv === 'function' && hwAktiv()) ? HW_TICKER : dynamicPartyMessages;
-            const auswahl = shuffleArray(quelle).slice(0, TICKER_ITEMS_PRO_DURCHLAUF);
+            const auswahl = shuffleArray(dynamicPartyMessages).slice(0, TICKER_ITEMS_PRO_DURCHLAUF);
             let htmlString = "";
 
             auswahl.forEach((item, i) => {
@@ -6041,47 +5954,6 @@
             el.load();   // erst load() ohne src gibt Puffer und Decoder frei
         }
 
-        // Halloween 2026: bis einschliesslich 31.10. der Horror-Trailer (60 s, ohne
-        // Ton) in jedem Durchlauf. ?halloweenan=1 zeigt den Slot zum Ansehen auch
-        // ausserhalb des Zeitfensters.
-        const HALLOWEEN_VIDEO = 'halloween_horror.mp4';
-        const HALLOWEEN_LAENGE_MS = 60000;
-        function halloweenAktiv() {
-            if (/(?:^|[?&])halloweenan=1(?:&|$)/.test(location.search)) return true;
-            return new Date() < new Date(2026, 10, 1);   // lokal: bis 31.10. 23:59
-        }
-        function halloweenFreigeben() {
-            const el = document.getElementById('halloween-video');
-            if (!el || !el.getAttribute('src')) return;
-            try { el.pause(); } catch (e) {}
-            el.removeAttribute('src');
-            el.preload = 'none';
-            el.load();
-        }
-        function runHalloweenState(nextStateIndex) {
-            if (!halloweenAktiv()) { mediaStateIndex = nextStateIndex; runMasterSequence(); return; }
-            const el = document.getElementById('halloween-video');
-            let weitergeschaltet = false;
-            const advance = () => {
-                if (weitergeschaltet) return;
-                weitergeschaltet = true;
-                el.onended = null;
-                el.onerror = null;
-                mediaStateIndex = nextStateIndex;
-                runMasterSequence();
-            };
-            el.onended = advance;
-            el.onerror = advance;
-            later(advance, HALLOWEEN_LAENGE_MS + 8000);
-
-            el.muted = true;
-            el.setAttribute('src', HALLOWEEN_VIDEO);
-            el.load();
-            document.getElementById('media-view-halloween').classList.add('active');
-            const playPromise = el.play();
-            if (playPromise && playPromise.catch) playPromise.catch(() => {});
-        }
-
         // Ein Bild, das nicht laedt, meldet sich ueber onerror - nur so laesst
         // sich vorher entscheiden, ob der Slot ueberhaupt etwas zu zeigen hat.
         // Ein <img> mit totem src im DOM stehen zu lassen reicht nicht: der
@@ -7231,7 +7103,6 @@
                     anzahl: 1
                 };
             }
-            if (hwAktiv()) return hwNaechsterEintrag();
             const videos = nlBrauchbareVideos();
             if (!videos.length) return null;
             const nachSchluessel = new Map(videos.map(v => [nlSchluessel(v), v]));
@@ -9721,8 +9592,7 @@
 
         function runNightlifeState(nextStateIndex) {
             // Widget abgeschaltet - weiter wie bei "kein Video eingerichtet".
-            const halloween = hwAktiv();
-            if (!NL_SLOT_AN && !halloween) {
+            if (!NL_SLOT_AN) {
                 mediaStateIndex = nextStateIndex;
                 runMasterSequence();
                 return;
@@ -9739,8 +9609,7 @@
             // das gewuenschte Video kommen.
             const fernWunsch = nlFernAktiv();
             const vorgeladen = !fernWunsch &&
-                !!(nlGeladen && nlGeladen.video && !nlDefekt[nlGeladen.schluessel]) &&
-                (!halloween || !!nlGeladen.video._halloween);
+                !!(nlGeladen && nlGeladen.video && !nlDefekt[nlGeladen.schluessel]);
             const eintrag = vorgeladen
                 ? { video: nlGeladen.video, schluessel: nlGeladen.schluessel,
                     datei: nlGeladen.datei, start: nlGeladen.start }
@@ -9772,14 +9641,9 @@
             const nlOrtLand = video.ort
                 ? (video.land ? `${video.ort}, ${video.land}` : video.ort)
                 : ((video._eigen || nlWunschTitel) && video.titel ? video.titel : null);
-            const nlBadge = document.querySelector('#media-view-nightlife .nl-badge');
-            if (nlBadge) nlBadge.textContent = video._halloween ? '🔴 Live' : 'Nightlife';
-            document.getElementById('nl-stadt').textContent = video._halloween
-                ? '🎃 Halloween im City Cafe'
-                : nlSymbol + ' ' + (nlOrtLand || nlStandard);
-            document.getElementById('nl-untertitel').textContent = video._halloween
-                ? '🦇 ' + video.titel + ' · Live'
-                : nlWunschTitel
+            document.getElementById('nl-stadt').textContent =
+                nlSymbol + ' ' + (nlOrtLand || nlStandard);
+            document.getElementById('nl-untertitel').textContent = nlWunschTitel
                 ? 'Per Fernbedienung gestartet'
                 : video.titel || (istTag ? 'Unterwegs am Traumziel' : 'Unterwegs in der Nacht');
 
@@ -9845,7 +9709,6 @@
             const bisStopp = fernWunsch && nlFern.bisWann === -1;
             const standzeit = bisStopp ? 60000
                 : fernWunsch ? Math.max(5000, nlFern.bisWann - Date.now())
-                : video._halloween ? hwSek('videoS', 30, 1800) * 1000
                 : NL_CONFIG.sekundenProVideo * 1000;
             const standzeitUm = () => {
                 if (bisStopp && nlFern && nlFern.bisWann === -1 && nlAktiv) {
@@ -10148,9 +10011,7 @@
             folie: { an: true, dauerS: 60, rahmen: false, ambi: 'wechsel', jede: 1 },     // randlos (Wunsch 19.10.2026)
             plakate: { an: true, dauerS: 20, rahmen: false, ambi: 'wechsel', jede: 1 },   // Bilder unveraendert, randlos (Wunsch 16.10.2026)
             willkommen: { an: true, dauerS: 35 },
-            getraenke: { an: true, dauerS: 30 },
-            // Halloween-Modus (31.10.2026): modus 'auto' = 18:00-02:00, 'an' = sofort bis 02:00, 'aus'
-            halloween: { modus: 'auto', videos: 'W1dFFpXpxKM q0Gn6s-7nFk', videoS: 180, angebotS: 45, videoVoll: false, plakatVoll: false }
+            getraenke: { an: true, dauerS: 30 }
         };
         let werbungEinst = {};
         function werbungWert(teil, feld) {
@@ -10183,121 +10044,6 @@
                 musikWerbungSig = '';           // sofort neu bewerten
             }, () => {});
         }
-
-        // ---------- Halloween-Modus (31.10.2026) ----------
-        // Am Chef-Handy (Uebersicht) unter werbung/einstellung/halloween: modus auto/an/aus,
-        // die Video-Links, Video- und Angebotsdauer. Solange er laeuft, gibt es nur:
-        // Halloween-Video (Nightlife-Slot, mpv) -> Berliner Luft -> Jaegermeister -> naechstes Video.
-        // Oben das Halloween-Band statt Bundesliga, rechts nur die Drive-Fotos, unten
-        // Halloween-Meldungen. Endet fest am 01.11.2026 um 02:00; ?halloweenmodus=1 zeigt ihn zum Ansehen.
-        const HW_START = new Date(2026, 9, 31, 18, 0).getTime();
-        const HW_ENDE = new Date(2026, 10, 1, 2, 0).getTime();
-        const HW_VORSCHAU = /[?&]halloweenmodus=1/.test(location.search);
-        const HW_BERLINER_INDEX = 31.1;
-        const HW_JAEGER_INDEX = 31.2;
-        const HW_JAEGER_BILD = 'jaegermeister_aktion_tv.jpg';   // 5x Jaegermeister 14 EUR
-        const HW_TITEL = {
-            'W1dFFpXpxKM': 'Haunted Pirate Harbor',
-            'q0Gn6s-7nFk': 'Witches’ Halloween Night'
-        };
-        const HW_TICKER = [
-            '🎃 Halloween im City Cafe – heute bis 2 Uhr früh',
-            '🎸 Live-Musik heute Abend',
-            '🧛 Kostüme willkommen!',
-            '🍸 Ane aufs Aug – Berliner Luft um nur 3 €',
-            '🦌 5× Jägermeister um nur 14 €',
-            '🦇 Happy Halloween, Klagenfurt!',
-            '👻 Schaurig schöner Abend im City Cafe'
-        ];
-        let hwVideoNr = 0, hwWar = null;
-        function hwAktiv() {
-            try {
-                if (HW_VORSCHAU) return true;
-                const jetzt = Date.now();
-                if (jetzt >= HW_ENDE) return false;
-                const modus = werbungWert('halloween', 'modus');
-                if (modus === 'aus') return false;
-                if (modus === 'an') return true;
-                return jetzt >= HW_START;
-            } catch (e) { return false; }
-        }
-        // Links oder IDs, getrennt durch Leerzeichen, Komma oder Zeilen.
-        function hwVideos() {
-            const roh = String(werbungWert('halloween', 'videos') || '');
-            const ids = [];
-            roh.split(/[\s,;]+/).forEach(teil => {
-                const m = teil.match(/(?:v=|youtu\.be\/|\/live\/|\/shorts\/|\/embed\/)([A-Za-z0-9_-]{11})/) ||
-                          teil.match(/^([A-Za-z0-9_-]{11})$/);
-                if (m && !ids.includes(m[1])) ids.push(m[1]);
-            });
-            return ids;
-        }
-        function hwSek(feld, min, max) {
-            const s = Number(werbungWert('halloween', feld));
-            return Math.min(max, Math.max(min, isFinite(s) && s > 0 ? s : WERBUNG_VORGABE.halloween[feld]));
-        }
-        function hwNaechsterEintrag() {
-            const alle = hwVideos();
-            if (!alle.length) return null;
-            const gute = alle.filter(id => !nlDefekt[id]);
-            const liste = gute.length ? gute : alle;
-            const id = liste[hwVideoNr++ % liste.length];
-            return {
-                video: { videoId: id, titel: HW_TITEL[id] || 'Halloween Live', _halloween: true },
-                schluessel: id, datei: false, start: 0, anzahl: liste.length
-            };
-        }
-        // Angebot (Berliner Luft / Jaegermeister) fuer die eingestellte Zeit.
-        function runHwAngebotState(ansicht, naechster) {
-            const jaeger = ansicht === 'media-view-jaeger';
-            if (werbungWert('halloween', 'plakatVoll') === true) {
-                // Vollbild: dieselbe Buehne wie die Plakate, randlos
-                const bild = document.getElementById('plakat-bild');
-                bild.onerror = null;
-                bild.src = jaeger ? HW_JAEGER_BILD : 'berliner_luft_3_euro.jpg';
-                bild.alt = jaeger ? '5x Jägermeister um 14 Euro' : 'Ane aufs Aug – Berliner Luft um 3 Euro';
-                buehneEinstellen('plakat-fullscreen', 'plakate');
-                document.getElementById('plakat-fullscreen').classList.add('rahmen-aus', 'active');
-            } else {
-                if (jaeger) document.getElementById('jaegerImage').src = HW_JAEGER_BILD;
-                document.getElementById(ansicht).classList.add('active');
-            }
-            later(() => {
-                mediaStateIndex = naechster;
-                runMasterSequence();
-            }, hwSek('angebotS', 10, 300) * 1000);
-        }
-        // Seite an den Modus anpassen; beim Umschalten sofort neu aufbauen.
-        function hwEtikett(an) {
-            const lab = document.getElementById('ticker-label-left');
-            if (!lab || document.body.classList.contains('ytm-an')) return;
-            const soll = an ? '🎃 HALLOWEEN' : '☕ CITY CAFE';
-            if (lab.textContent !== soll) lab.textContent = soll;
-        }
-        function hwKlassen(an) {
-            document.body.classList.toggle('hw-modus', an);
-            document.body.classList.toggle('hw-video-voll', an && werbungWert('halloween', 'videoVoll') === true);
-        }
-        function hwPruefen() {
-            const an = hwAktiv();
-            hwKlassen(an);
-            hwEtikett(an);
-            if (an === hwWar) return;
-            const vorher = hwWar;
-            hwWar = an;
-            if (vorher === null) return;          // erster Aufruf beim Laden
-            try { generateDynamicPartyTicker(); } catch (e) {}
-            try { activeSidebarWidgetIndex = 0; rotateSidebarWidgets(); } catch (e) {}
-            if (an) {
-                nlGeladen = null;
-                mediaStateIndex = NL_SLOT_INDEX;
-            } else if (mediaStateIndex === HW_BERLINER_INDEX || mediaStateIndex === HW_JAEGER_INDEX ||
-                       mediaStateIndex === NL_SLOT_INDEX) {
-                mediaStateIndex = QR_SLOT_INDEX;
-            }
-            try { runMasterSequence(); } catch (e) {}
-        }
-        setInterval(hwPruefen, 5000);
 
         // ---------- Hausprogramm "Demnaechst im City Cafe" (15.10.2026) ----------
         // Eigene Veranstaltungen aus werbung.json, bis zu drei Karten, direkt nach
@@ -10375,8 +10121,6 @@
         // je Zyklus eines, reihum, direkt nach der grossen Folie. Gleiche Buehne
         // (Rahmen, Ambilight); an/aus, Dauer, Rahmen, Licht, wie oft: Chef-Handy.
         const PLAKAT_SLOT_INDEX = 0.6;
-        const HALLOWEEN_PLAKAT_SLOT_INDEX = 0.65; // Bild in jeder Runde fuer 60 Sekunden
-        const HALLOWEEN_SLOT_INDEX = 0.7;   // hinter den Plakaten, vor dem Mittagsteller
         let plakatNr = 0;
         function runPlakatState() {
             if (werbungWert('plakate', 'an') === false) return false;
@@ -10395,29 +10139,6 @@
             bild.alt = pl.titel || '';
             buehneEinstellen('plakat-fullscreen', 'plakate');
             document.getElementById('plakat-fullscreen').classList.add('active');
-            return true;
-        }
-
-        // Halloween-Party-Plakat: immer genau 1 Minute pro Dashboard-Durchlauf,
-        // eigenstaendig von der wechselnden Plakatliste in werbung.json.
-        // Wie der bestehende Halloween-Trailer nur bis einschl. 31.10.2026.
-        const HALLOWEEN_PLAKAT_DATEI = 'halloween_party_2026_fhd.webp';
-        const HALLOWEEN_PLAKAT_DAUER_MS = 60000;
-        function runHalloweenPlakatState() {
-            if (!halloweenAktiv()) return false;
-            const bild = document.getElementById('plakat-bild');
-            bild.onerror = () => {
-                bild.onerror = null;
-                if (document.getElementById('plakat-fullscreen').classList.contains('active')) {
-                    cancelSequenceTimers();
-                    runMasterSequence();
-                }
-            };
-            bild.src = HALLOWEEN_PLAKAT_DATEI;
-            bild.alt = 'Halloween Party mit 2ND FLOOR DUO am 31.10., Live-Musik ab 18:00 Uhr';
-            // Fuer dieses FHD-Motiv den ganzen 16:9-Bildschirm ohne Rand nutzen.
-            buehneEinstellen('plakat-fullscreen', 'plakate');
-            document.getElementById('plakat-fullscreen').classList.add('rahmen-aus', 'active');
             return true;
         }
 
@@ -15419,14 +15140,12 @@
             // freigegeben (siehe dartFilmFreigeben) - ausser er ist als
             // Naechstes dran und puffert gerade vor.
             if (mediaStateIndex !== DART_FILM_INDEX) dartFilmFreigeben();
-            if (mediaStateIndex !== HALLOWEEN_SLOT_INDEX) halloweenFreigeben();
 
             // Roulette vom Handy geweckt: kommt vor Anheizer und Dart-Abend.
             // Danach geht es dort weiter, wo die Rotation sonst waere.
             // Anheizer-Vollbild (Dart-Countdown) bei jedem Wechsel abbauen -
-            // runDartAnheizerState setzt es wieder, solange er dran ist. Frueher
-            // geschah das erst hinter dem Halloween-Zweig: am 31.10.2026 blieb der
-            // Countdown im Halloween-Modus eingefroren stehen, trotz Dart-Schalter "Aus".
+            // runDartAnheizerState setzt es wieder, solange er dran ist. Sonst blieb er
+            // eingefroren stehen, wenn ein anderer Modus begann (31.10.2026).
             const anheizer = document.getElementById('dart-anheizer');
             if (anheizer) anheizer.classList.remove('aktiv');
             if (mediaStateIndex === DART_ANHEIZER_INDEX && !dartAnheizerAktiv()) mediaStateIndex = QR_SLOT_INDEX;
@@ -15437,19 +15156,6 @@
                 return;
             }
             rouletteVorrang = false;
-
-            // Halloween-Modus: nur Video, Berliner Luft, Jaegermeister (siehe hwAktiv).
-            hwWar = hwAktiv();
-            hwKlassen(hwWar);
-            hwEtikett(hwWar);
-            if (hwWar) {
-                if (mediaStateIndex === HW_BERLINER_INDEX) { runHwAngebotState('media-view-berliner-luft', HW_JAEGER_INDEX); return; }
-                if (mediaStateIndex === HW_JAEGER_INDEX) { runHwAngebotState('media-view-jaeger', NL_SLOT_INDEX); return; }
-                mediaStateIndex = NL_SLOT_INDEX;
-                runNightlifeState(HW_BERLINER_INDEX);
-                return;
-            }
-            if (mediaStateIndex === HW_BERLINER_INDEX || mediaStateIndex === HW_JAEGER_INDEX) mediaStateIndex = QR_SLOT_INDEX;
 
             // Anheizer (17:00-18:30 an Heimspieltagen): Vollbild, sonst nichts.
             if (dartAnheizerAktiv()) {
@@ -15561,20 +15267,9 @@
 
             } else if (mediaStateIndex === PLAKAT_SLOT_INDEX) {
                 // Plakate (werbung.json); ohne Plakat sofort weiter.
-                mediaStateIndex = HALLOWEEN_PLAKAT_SLOT_INDEX;
+                mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
                 if (runPlakatState()) globalMasterTimer = later(runMasterSequence, werbungDauerMs('plakate'));
                 else runMasterSequence();
-
-            } else if (mediaStateIndex === HALLOWEEN_PLAKAT_SLOT_INDEX) {
-                // Halloween-Plakat in jeder Runde: 60 s, danach Horror-Trailer.
-                mediaStateIndex = HALLOWEEN_SLOT_INDEX;
-                if (runHalloweenPlakatState()) {
-                    globalMasterTimer = later(runMasterSequence, HALLOWEEN_PLAKAT_DAUER_MS);
-                } else runMasterSequence();
-
-            } else if (mediaStateIndex === HALLOWEEN_SLOT_INDEX) {
-                // Nur bis zum 31.10.2026; danach springt der Slot sofort weiter.
-                runHalloweenState(MITTAGSTELLER_SLOT_INDEX);
 
             } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {
                 const restzeit = mittagstellerRestzeitMs();
@@ -16170,13 +15865,11 @@
             if (sidebarTimerId) clearTimeout(sidebarTimerId);
 
             galleryView.classList.remove('active'); newsView.classList.remove('active'); musicView.classList.remove('active');
-            // Halloween-Modus: rechts nur die Fotos aus dem Drive-Ordner.
-            if (hwAktiv()) activeSidebarWidgetIndex = 0;
 
             if (activeSidebarWidgetIndex === 0) {
                 await loadDriveFolderImages(); 
                 preparePlaylist(); 
-                if ((!imagePlaylist || imagePlaylist.length === 0) && !hwAktiv()) { activeSidebarWidgetIndex = 1; rotateSidebarWidgets(); return; }
+                if (!imagePlaylist || imagePlaylist.length === 0) { activeSidebarWidgetIndex = 1; rotateSidebarWidgets(); return; }
                 galleryView.classList.add('active');
                 showNextPlaylistImage(); 
                 galleryTimer = setInterval(showNextPlaylistImage, BILD_WECHSEL_SEKUNDEN * 1000);

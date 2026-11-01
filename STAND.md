@@ -43,19 +43,17 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
-## 31.10.2026: Halloween-Modus (heute 18:00 – 01.11. 02:00)
+## 31.10.2026: Halloween-Modus (wieder entfernt am 01.11.2026)
 
-- Am Chef-Handy (Übersicht, ganz oben „🎃 Halloween-Modus“): Automatisch (ab 18:00) / Jetzt an / Aus, Video 2–5 min
-  (Vorgabe 3), Angebot 30/45/60 s (Vorgabe 45), Videos/Angebote je Normal oder Vollbild (`videoVoll`, `plakatVoll`;
-  Video: `body.hw-video-voll` legt #nl-player-frame über 1920×1080, mpv folgt), bis zu 3 YouTube-Links. Gespeichert unter
-  `djremote/<raum>/werbung/einstellung/halloween` (bestehende Werbe-Regel, keine neue Firebase-Regel).
-- Am Screen (`hwAktiv`, `hwPruefen`, `runHwAngebotState` in `index.html`): nur Halloween-Video (Nightlife-Slot mit mpv, Start 0)
-  → Berliner Luft → 5× Jägermeister (`jaegermeister_aktion_tv.jpg`) → nächstes Video. Oben Halloween-Band statt Bundesliga,
-  rechts nur Drive-Fotos, unten Halloween-Meldungen, Hintergrund lila. Endet fest am 01.11.2026 02:00.
-  `?halloweenmodus=1` zeigt ihn zum Ansehen.
-- Videos: W1dFFpXpxKM (Haunted Pirate Harbor), q0Gn6s-7nFk (Witches’ Halloween Night), beide 24/7-Livestreams; auf W1
-  getestet: HLS 1080p, Bild nach 2 s. Der dritte Link fehlte noch.
-- **Nach dem Event entfernen** (zusammen mit dem alten Halloween-Slot vom 19.10.).
+- Lief am 31.10. ab 17:05 (Chef-Handy: Halloween-Livevideos, Berliner Luft, 5× Jägermeister, Vollbild-Schalter).
+- 23:06: Livestream-Video fiel auf den Browser-Player zurück – die von W1 um 17:05 aufgelöste HLS-Adresse war nach
+  ~6 h abgelaufen (HTTP 403). Fix im Supervisor: aufgelöste Adressen nach 3 h und nach einem Fehlschlag neu holen
+  (`CACHE_HOECHSTENS`, Commit 5a6262ba) – bleibt drin, gilt auch für Nightlife-Livestreams.
+- 01.11.: Halloween-Modus komplett entfernt (index.html, Chef-Zentrale), ebenso der alte Halloween-Slot vom 19.10.
+  (Horror-Trailer `halloween_horror.mp4`, Party-Plakat `halloween_party_2026_fhd.webp`). Die Plakate laufen wieder
+  direkt vor dem Mittagsteller. Der Dart-Countdown-Fix (79189f4e) bleibt.
+- Noch übrig (nicht Teil des TV-Modus): Roulette-Standardtext „Demnächst im City-Cafe: Halloween Party“
+  (`roulette-src`, braucht Neubau), Termin `halloween-2026-10-31` in werbung.json (vergangen).
 
 ## 27./28.10.2026: Überblendungen am 27.10. ausgefallen – Ursache ein Prüfbefehl (Windows-Sitzung)
 
@@ -839,7 +837,7 @@ Ausführlich in **`dj-studio/UEBERGABE.md`**. **Für die Sitzung am Windows-PC (
   Sicherung `/opt/citycafe/nl-mpv-supervisor.py.vor-suche-2026-10-19`; Neustart per PID mit der
   Umgebung des alten Prozesses (`/proc/<pid>/environ`), läuft fehlerfrei.
 
-## 19.10.2026: Halloween-Slot im Medien-Widget (zeitlich begrenzt)
+## 19.10.2026: Halloween-Slot im Medien-Widget (am 01.11.2026 entfernt)
 
 - Event **31.10.2026 ab 18:00**, Live-Musik, Kostüme willkommen. Ein 60-s-Video **ohne Ton**
   (1920×1080, 30 fps, H.264, ~29 MB): `halloween_horror.mp4`, in **jedem Zyklus**, Slot
