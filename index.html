@@ -49,7 +49,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@700;900&family=Caveat:wght@700&family=Pirata+One&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -2383,6 +2383,107 @@
             font-size: 15px; font-weight: 900; padding: 8px 16px; border-radius: 11px; white-space: nowrap;
         }
 
+        /* ---------- Krampuslauf (.nl-stage.krampus, 02.11.2026) ----------
+           Schwarz mit Glut statt Neon-Lila: Gruppenname in Frakturschrift, darunter
+           Lauf und Jahr, rechts die naechste Gruppe und der Zaehler. Ueber dem
+           Video selbst liegt nichts (mpv-Fenster). */
+        .nl-stage.krampus {
+            background:
+                radial-gradient(ellipse 900px 380px at 50% 112%, rgba(255, 92, 20, 0.30) 0%, rgba(0,0,0,0) 70%),
+                linear-gradient(175deg, #1a0606 0%, #0b0505 48%, #050303 100%);
+            box-shadow: inset 0 0 0 2px rgba(255, 98, 30, 0.42), 0 0 46px rgba(255, 60, 10, 0.28);
+        }
+        .nl-stage.krampus::before {
+            top: -200px; right: -60px; width: 820px; height: 420px;
+            background: radial-gradient(ellipse at center, rgba(190, 20, 20, 0.30) 0%, rgba(0,0,0,0) 70%);
+        }
+        .nl-stage.krampus::after {
+            bottom: -260px; left: 140px; width: 1000px; height: 440px;
+            background: radial-gradient(ellipse at center, rgba(255, 140, 40, 0.20) 0%, rgba(0,0,0,0) 70%);
+        }
+        .nl-stage.krampus .nl-header h2 {
+            font-family: 'Pirata One', 'UnifrakturCook', serif; font-weight: 400;
+            font-size: 46px; line-height: 1; letter-spacing: 1px; text-transform: none;
+            color: #ffb35c; max-width: 760px;
+            background: linear-gradient(180deg, #ffe2a8 0%, #ff9d3a 55%, #e2421a 100%);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 14px rgba(255, 90, 20, 0.55));
+        }
+        .nl-stage.krampus .nl-header p { color: #c79a74; letter-spacing: 2.4px; }
+        .nl-kr-gleich { display: none; }
+        .nl-stage.krampus .nl-kr-gleich:not(:empty) {
+            display: block; max-width: 330px; text-align: right;
+            font-size: 15px; font-weight: 700; color: #e9cdb2; line-height: 1.25;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .nl-kr-gleich b {
+            display: block; font-size: 11px; font-weight: 800; letter-spacing: 2px;
+            text-transform: uppercase; color: #ff7a3d;
+        }
+        .nl-stage.krampus .nl-counter {
+            font-family: 'Pirata One', serif; font-weight: 400; font-size: 24px; letter-spacing: 0.5px;
+            color: #ffd9a8; background: rgba(40, 6, 4, 0.85);
+            border: 1px solid rgba(255, 98, 30, 0.6); box-shadow: 0 0 16px rgba(255, 60, 10, 0.25);
+            padding: 4px 16px;
+        }
+        .nl-stage.krampus .nl-badge {
+            color: #ffe2c4; background: linear-gradient(180deg, #a3160d 0%, #5c0905 100%);
+            border: 1px solid rgba(255, 130, 60, 0.7); box-shadow: 0 0 20px rgba(220, 40, 10, 0.45);
+        }
+        .nl-stage.krampus .nl-player {
+            border: 2px solid rgba(255, 110, 40, 0.55);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.8), 0 0 38px rgba(255, 70, 10, 0.35), 0 18px 44px rgba(0,0,0,0.7);
+        }
+        .nl-stage.krampus .nl-player-hint { background: radial-gradient(ellipse at 50% 120%, #4a0d05 0%, #120404 60%, #050202 100%); }
+        .nl-stage.krampus .nl-hint-titel {
+            font-family: 'Pirata One', serif; font-weight: 400; font-size: 64px; letter-spacing: 1px;
+            text-transform: none; color: #ffa04a; text-shadow: 0 0 24px rgba(255, 80, 20, 0.6);
+        }
+        .nl-stage.krampus .nl-hint-text { color: rgba(255, 214, 170, 0.5); }
+
+        /* Zweite Gruppe jedes Auftritts im Vollbild (body.krampus-voll): oben eine
+           Leiste mit dem Gruppennamen, darunter das Video 1728 x 972 (16:9), mpv
+           folgt der Flaeche (der Supervisor misst #nl-player-frame). transform: none,
+           sonst waere die Ansicht der Bezugsrahmen fuer position: fixed - so ist es
+           #dashboard-scaler (1920 x 1080 wie der Screen). */
+        .nl-kr-voll { display: none; }
+        body.krampus-voll #media-view-nightlife { transform: none !important; }
+        body.krampus-voll:has(#media-view-nightlife.active) .sidebar,
+        body.krampus-voll:has(#media-view-nightlife.active) #card-ticker,
+        body.krampus-voll:has(#media-view-nightlife.active) #card-top-custom,
+        body.krampus-voll:has(#media-view-nightlife.active) #build-tag { visibility: hidden; }
+        body.krampus-voll .nl-kr-voll {
+            display: flex; position: fixed; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 59;
+            flex-direction: column; box-sizing: border-box;
+            background:
+                radial-gradient(ellipse 1400px 300px at 50% 108%, rgba(255, 92, 20, 0.35) 0%, rgba(0,0,0,0) 70%),
+                radial-gradient(ellipse 900px 260px at 80% -10%, rgba(190, 20, 20, 0.35) 0%, rgba(0,0,0,0) 70%),
+                linear-gradient(180deg, #1a0606 0%, #0b0505 50%, #050303 100%);
+        }
+        .nl-kr-leiste {
+            height: 108px; padding: 0 96px; box-sizing: border-box;
+            display: flex; align-items: center; justify-content: space-between; gap: 30px;
+        }
+        .nl-kr-name {
+            font-family: 'Pirata One', 'UnifrakturCook', serif; font-size: 66px; line-height: 1;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 1150px;
+            background: linear-gradient(180deg, #ffe2a8 0%, #ff9d3a 55%, #e2421a 100%);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 16px rgba(255, 90, 20, 0.6));
+        }
+        .nl-kr-rechts { display: flex; align-items: center; gap: 16px; white-space: nowrap; }
+        .nl-kr-lauf {
+            font-size: 18px; font-weight: 800; letter-spacing: 2.4px; text-transform: uppercase; color: #c79a74;
+        }
+        body.krampus-voll .nl-stage.krampus .nl-player { z-index: 61; overflow: visible; }
+        body.krampus-voll #nl-player-frame {
+            position: fixed !important; left: 96px !important; top: 108px !important;
+            width: 1920px !important; height: 1080px !important;
+            transform: scale(0.9) !important; transform-origin: top left !important;
+            z-index: 60; border-radius: 0 !important; margin: 0 !important;
+            outline: 3px solid rgba(255, 110, 40, 0.6);
+        }
+
         /* ================= YouTube-Musik (YOUTUBE-MUSIK-SETUP.md 6) =================
            Alles nur sichtbar, solange Musik laeuft (body.ytm-an). Ueber dem Video
            (nl-player) liegt KEIN HTML - mpv ist ein eigenes Fenster darueber. */
@@ -3078,6 +3179,7 @@
                                 <p id="nl-untertitel">Unterwegs in der Nacht</p>
                             </div>
                             <div class="nl-header-right">
+                                <div class="nl-kr-gleich" id="nl-kr-gleich"></div>
                                 <div class="nl-counter" id="nl-counter" style="display: none;">1/3</div>
                                 <div class="ytm-zeit" id="ytm-zeit">0:00 / 0:00</div>
                                 <div class="ytm-aufl" id="ytm-aufl"></div>
@@ -3089,6 +3191,17 @@
                              dann stehen. Beim Einblenden ist er dadurch schon warm -
                              kein iframe-Aufbau, kein Player-Start, kein Puffern.
                              Das leere <div> ersetzt die YouTube-API durch ihr iframe. -->
+                        <!-- Vollbild der zweiten Krampusgruppe: Kopfleiste + Hintergrund -->
+                        <div class="nl-kr-voll" id="nl-kr-voll">
+                            <div class="nl-kr-leiste">
+                                <div class="nl-kr-name" id="nl-kr-name"></div>
+                                <div class="nl-kr-rechts">
+                                    <div class="nl-kr-lauf" id="nl-kr-lauf"></div>
+                                    <div class="nl-counter" id="nl-kr-zaehler"></div>
+                                    <div class="nl-badge">👹 Krampuslauf</div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="nl-player" id="nl-player">
                             <div id="nl-player-frame"></div>
                             <div class="nl-player-hint" id="nl-player-hint">
@@ -7202,7 +7315,8 @@
                 datei: false,
                 start: gruppen[0].ab,
                 anzahl: videos.length,
-                krampus: { gruppen: gruppen, ende: ende, erste: g + 1, gesamt: video.gruppen.length }
+                krampus: { gruppen: gruppen, ende: ende, erste: g + 1, gesamt: video.gruppen.length,
+                           danach: danach ? danach.name : '' }
             };
         }
 
@@ -7219,16 +7333,34 @@
                 }
                 let i = 0;
                 while (i + 1 < kr.gruppen.length && stelle >= kr.gruppen[i + 1].ab) i++;
-                document.getElementById('nl-stadt').textContent = '👹 ' + kr.gruppen[i].name;
+                document.getElementById('nl-stadt').textContent = kr.gruppen[i].name;
                 document.getElementById('nl-untertitel').textContent = video.titel;
                 const zaehler = document.getElementById('nl-counter');
-                zaehler.textContent = 'Gruppe ' + (kr.erste + i) + ' von ' + kr.gesamt;
+                zaehler.textContent = 'Gruppe ' + (kr.erste + i) + ' / ' + kr.gesamt;
                 zaehler.style.display = '';
+                // Rechts: wer als Naechstes kommt - in diesem Auftritt die zweite
+                // Gruppe, danach die, mit der es beim naechsten Mal weitergeht.
+                const gleich = document.getElementById('nl-kr-gleich');
+                const naechste = i + 1 < kr.gruppen.length ? kr.gruppen[i + 1].name : kr.danach;
+                // Die zweite Gruppe laeuft im Vollbild, mit eigener Kopfleiste.
+                const voll = i >= 1;
+                document.body.classList.toggle('krampus-voll', voll);
+                if (voll) {
+                    document.getElementById('nl-kr-name').textContent = kr.gruppen[i].name;
+                    document.getElementById('nl-kr-lauf').textContent = video.titel;
+                    document.getElementById('nl-kr-zaehler').textContent = zaehler.textContent;
+                }
+                gleich.innerHTML = '';
+                if (naechste) {
+                    const b = document.createElement('b');
+                    b.textContent = i + 1 < kr.gruppen.length ? 'Gleich' : 'Beim nächsten Mal';
+                    gleich.append(b, naechste);
+                }
             };
             clearInterval(nlKrampusTimer);
             setzen();
             nlKrampusTimer = setInterval(() => {
-                if (!nlAktiv) { clearInterval(nlKrampusTimer); return; }
+                if (!nlAktiv) { clearInterval(nlKrampusTimer); document.body.classList.remove('krampus-voll'); return; }
                 setzen();
             }, 1000);
         }
@@ -7620,6 +7752,7 @@
         function nlStopPlayer() {
             clearTimeout(nlVorladeTimer);
             clearInterval(nlKrampusTimer);
+            document.body.classList.remove('krampus-voll');
             if (!nlAktiv) return;
             nlAktiv = false;
 
@@ -9806,9 +9939,12 @@
             // ("2/5") waere hier irrefuehrend, deshalb bleibt der Zaehler weg.
             document.getElementById('nl-counter').style.display = 'none';
             const kr = !fernWunsch && eintrag.krampus;
+            document.querySelector('#media-view-nightlife .nl-stage').classList.toggle('krampus', !!kr);
+            document.getElementById('nl-kr-gleich').innerHTML = '';
             const badge = document.querySelector('#media-view-nightlife .nl-badge');
-            if (badge) badge.textContent = kr ? 'Krampuslauf' : 'Nightlife';
+            if (badge) badge.textContent = kr ? '👹 Krampuslauf' : 'Nightlife';
             clearInterval(nlKrampusTimer);
+            document.body.classList.remove('krampus-voll');
             if (kr) nlKrampusBeschriften(video, kr, start);
 
             document.getElementById('media-view-nightlife').classList.add('active');
@@ -9816,7 +9952,7 @@
             // Der Player bleibt zugedeckt, bis feststeht, dass wirklich das
             // Video laeuft und keine Werbung. Die Tafel nennt die Stadt, damit
             // sie wie Teil der Gestaltung aussieht und nicht wie ein Fehler.
-            nlHinweisAn(kr ? '👹 ' + video.titel : nlSymbol + ' ' + (nlOrtLand || nlStandard),
+            nlHinweisAn(kr ? video.titel : nlSymbol + ' ' + (nlOrtLand || nlStandard),
                         eintrag.datei ? 'Video wird geladen …' : 'gleich geht es weiter …');
             nlWerbungSeit = 0;
             nlAnsichtUmschalten(eintrag.datei);

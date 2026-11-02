@@ -84,6 +84,11 @@ und wieder in der Rotation.
   (Start = Kapitel, Standzeit bis zur naechsten Gruppe +3 s), Videos im Wechsel, Stand in localStorage `cityCafeKrampus`.
   Ueberschrift = Gruppe im Bild (Position aus `nlMpvStand`), darunter „Krampuslauf <Ort> <Jahr>“, rechts „Gruppe x von N“,
   Badge „Krampuslauf“. Tagsueber kein Slot (ausser per Handy hinzugefuegte Videos). `?krampus=1` zeigt es jederzeit.
+- Design (abends 02.11.): schwarz/Glut, Gruppenname in Pirata One, rechts „Gleich: <naechste Gruppe>“. Die zweite Gruppe
+  jedes Auftritts im Vollbild (body.krampus-voll: Kopfleiste 108 px, Video 1728x972, mpv folgt #nl-player-frame).
+- Beide Videos liegen auf W1 unter ~citycafe/.cache/citycafe/fest/<videoId>.mkv (1080p60 VP9 SDR + Ton, einmal per yt-dlp
+  geladen); der Supervisor spielt Nightlife-Videos von dort (fest_datei), sonst wie bisher aus dem Strom. Fuer 2026 dort neu laden.
+- Fernbedienung (yt-fernbedienung.html): Krampuslaeufe oben in der Dauerliste.
 - 2026: neue Videos in `nightlife.json` eintragen (videoId, ort, jahr, ende, gruppen aus den Kapiteln).
 
 ## 31.10.2026: Halloween-Modus (wieder entfernt am 01.11.2026)

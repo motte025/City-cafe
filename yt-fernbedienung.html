@@ -1587,6 +1587,12 @@
         .then(function (r) { return r.json(); })
         .then(function (d) {
             var liste = [];
+            // Krampuslaeufe (02.11.2026) stehen vorne: laufen von 16:00 bis 07:00.
+            ((d.krampus || {}).videos || []).forEach(function (v) {
+                if (v.videoId) liste.push({ videoId: v.videoId, titel: v.titel || v.videoId,
+                    kanal: '👹 ' + ((v.gruppen || []).length || '') + ' Gruppen', tageszeit: '16–7 Uhr' });
+                if (v.videoId && v.ende) laengen[v.videoId] = laengen[v.videoId] || v.ende;
+            });
             [['Tag', (d.tag || {}).videos], ['Nacht', (d.nacht || {}).videos]].forEach(function (teil) {
                 (teil[1] || []).forEach(function (v) {
                     if (v.videoId) liste.push({ videoId: v.videoId, titel: v.titel || v.videoId, kanal: [v.ort, v.land].filter(Boolean).join(', '), tageszeit: teil[0] });

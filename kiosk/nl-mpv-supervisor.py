@@ -1326,6 +1326,20 @@ def bild_laden(vid, video_url):
     threading.Thread(target=lauf, daemon=True).start()
 
 
+# Feste Videos (02.11.2026): die langen Krampuslauf-Videos des Nightlife-Slots liegen ganz auf der
+# Platte (~/.cache/citycafe/fest/<videoId>.mkv, einmal mit yt-dlp geladen: 1080p SDR mit Ton) - der
+# Strom stockte bei Nightlife-Clips zeitweise. Liegt eine fertige Datei da, spielt mpv sie.
+FEST_ORDNER = os.path.expanduser("~/.cache/citycafe/fest")
+
+
+def fest_datei(vid):
+    for endung in (".mkv", ".mp4", ".webm"):
+        p = os.path.join(FEST_ORDNER, vid + endung)
+        if os.path.isfile(p) and os.path.getsize(p) > 10_000_000:
+            return p
+    return None
+
+
 def bild_quelle(vid, video_url):
     """Fuer mpv (Musik): das geladene Bild, sonst der Strom (HLS direkt, sonst ueber den Zwischenhaendler)."""
     datei = bild_datei(vid)
@@ -4498,14 +4512,15 @@ def main():
                 if musik and seiten_blur_args(schluessel):
                     args += seiten_blur_args(schluessel)   # 4:3/Hochformat: Seiten fuellen
                     blur_an = "yt:" + schluessel
-                if audio_url:
+                fest = None if musik else fest_datei(schluessel)   # Bild und Ton von der Platte
+                if audio_url and not fest:
                     args.append(f"--audio-file={ton_quelle(schluessel, audio_url) if musik else ueber_zwischenhaendler(audio_url)}")
                 if musik:
                     args.append("--cache-pause=no")     # Bild stockt -> Musik laeuft weiter
-                args.append(bild_quelle(schluessel, video_url) if musik else ueber_zwischenhaendler(video_url))
+                args.append(fest or (bild_quelle(schluessel, video_url) if musik else ueber_zwischenhaendler(video_url)))
                 mpv = subprocess.Popen(args, env=env, preexec_fn=mpv_dies_with_us)
                 log(f"Auftritt: {schluessel} ab {start}s"
-                    + (" (Musik)" if musik else "")
+                    + (" (Musik)" if musik else "") + (" (von der Platte)" if fest else "")
                     + (f" (Wunsch {w_hoehe or 1080}p{w_fps or ''})" if (w_hoehe or w_fps) else ""))
             elif want.startswith("twitch:") and dj_ok:
                 feeder = subprocess.Popen(
