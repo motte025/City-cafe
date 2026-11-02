@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-02T00:57:45Z",
+  "checked_at": "2026-11-02T01:07:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ RECOVERY EMO-DM TUNES AND ETC GOBLIN BEHAVIOR 🔥 !mods !mercy !tip",
       "game": "DJs"
     }
   ]
