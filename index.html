@@ -7038,6 +7038,15 @@
         let nlDiagTimer = null;
         let nlDefekt = {};            // Schluessel -> true, wenn die Quelle nicht spielt
 
+        // Krampuslaeufe (nightlife.json "krampus", seit 02.11.2026): von 16:00 bis
+        // 07:00 zeigt der Slot nur diese Videos - je Auftritt zwei Gruppen (die
+        // Kapitel des YouTube-Videos), danach geht die Rotation weiter. Die Videos
+        // kommen im Wechsel, in jedem geht es Gruppe fuer Gruppe weiter (Stand in
+        // localStorage). Oben steht die Gruppe, die gerade im Bild ist.
+        // ?krampus=1 zeigt die Krampuslaeufe zu jeder Uhrzeit.
+        let nlKrampus = null;         // "krampus" aus nightlife.json
+        let nlKrampusTimer = null;    // schaltet die Beschriftung zur naechsten Gruppe
+
         // Ein Eintrag ist entweder ein YouTube-Video (videoId) oder eine selbst
         // gehostete Datei (datei). Der Schluessel identifiziert ihn in allen
         // Merklisten.
@@ -7106,6 +7115,8 @@
                 if (!res.ok) return;
                 const rohDaten = await res.json();
                 if (!rohDaten) return;
+                const kr = rohDaten.krampus;
+                nlKrampus = kr && Array.isArray(kr.videos) && kr.videos.length ? kr : null;
                 const markiert = (teil, art) => (teil && Array.isArray(teil.videos) ? teil.videos : [])
                     .map(v => ({ ...v, _art: art }));
                 const nacht = rohDaten.nacht || {};
@@ -7158,6 +7169,70 @@
             return Math.floor(Math.random() * spielraum);
         }
 
+        function nlKrampusAktiv() {
+            if (!nlKrampus || SPARSTUFE >= 3) return false;
+            if (/(?:^|[?&])krampus=1(?:&|$)/.test(location.search)) return true;
+            const h = new Date().getHours();
+            const von = Number(nlKrampus.vonStunde), bis = Number(nlKrampus.bisStunde);
+            return von > bis ? (h >= von || h < bis) : (h >= von && h < bis);
+        }
+
+        // Naechster Auftritt: Video im Wechsel, darin die naechsten Gruppen. Das
+        // Ende ist der Beginn der Gruppe danach (beim letzten Paar das Videoende).
+        function nlKrampusEintrag() {
+            const videos = nlKrampus.videos.filter(v => v && v.videoId && Array.isArray(v.gruppen)
+                && v.gruppen.length && !nlDefekt[v.videoId]);
+            if (!videos.length) return null;
+            let stand = {};
+            try { stand = JSON.parse(localStorage.getItem('cityCafeKrampus') || 'null') || {}; } catch (e) {}
+            const nr = (Number(stand.nr) || 0) % videos.length;
+            const video = videos[nr];
+            const pos = stand.pos && typeof stand.pos === 'object' ? stand.pos : {};
+            let g = Number(pos[video.videoId]) || 0;
+            if (g >= video.gruppen.length) g = 0;
+            const anzahl = Math.max(1, Number(nlKrampus.gruppenProAuftritt) || 2);
+            const gruppen = video.gruppen.slice(g, g + anzahl);
+            const danach = video.gruppen[g + anzahl];
+            const ende = danach ? danach.ab : (Number(video.ende) || gruppen[gruppen.length - 1].ab + 180);
+            pos[video.videoId] = danach ? g + anzahl : 0;
+            try { localStorage.setItem('cityCafeKrampus', JSON.stringify({ nr: nr + 1, pos: pos })); } catch (e) {}
+            return {
+                video: video,
+                schluessel: video.videoId,
+                datei: false,
+                start: gruppen[0].ab,
+                anzahl: videos.length,
+                krampus: { gruppen: gruppen, ende: ende, erste: g + 1, gesamt: video.gruppen.length }
+            };
+        }
+
+        // Oben steht die Gruppe, die gerade im Bild ist. Die Stelle im Video meldet
+        // der Supervisor (mpv), sonst das Embed; ohne beides zaehlt die Uhr mit.
+        function nlKrampusBeschriften(video, kr, start) {
+            const seit = Date.now();
+            const setzen = () => {
+                let stelle = start + (Date.now() - seit) / 1000;
+                const ms = window.nlMpvStand;
+                if (ms && ms.videoId === video.videoId && typeof ms.pos === 'number') stelle = ms.pos;
+                else if (!nlExtern() && nlPlayerBereit) {
+                    try { const t = nlPlayer.getCurrentTime(); if (t > 0) stelle = t; } catch (e) {}
+                }
+                let i = 0;
+                while (i + 1 < kr.gruppen.length && stelle >= kr.gruppen[i + 1].ab) i++;
+                document.getElementById('nl-stadt').textContent = '👹 ' + kr.gruppen[i].name;
+                document.getElementById('nl-untertitel').textContent = video.titel;
+                const zaehler = document.getElementById('nl-counter');
+                zaehler.textContent = 'Gruppe ' + (kr.erste + i) + ' von ' + kr.gesamt;
+                zaehler.style.display = '';
+            };
+            clearInterval(nlKrampusTimer);
+            setzen();
+            nlKrampusTimer = setInterval(() => {
+                if (!nlAktiv) { clearInterval(nlKrampusTimer); return; }
+                setzen();
+            }, 1000);
+        }
+
         // Was als naechstes drankommt - nach dem Kartenstapel-Prinzip: jedes Video
         // des aktuellen Pools kommt einmal dran, bevor sich eines wiederholt; die
         // Reihenfolge wird jede Runde neu gemischt. Vorher war es ein Zufallszug
@@ -7178,6 +7253,7 @@
                     anzahl: 1
                 };
             }
+            if (nlKrampusAktiv()) return nlKrampusEintrag();
             const videos = nlBrauchbareVideos();
             if (!videos.length) return null;
             const nachSchluessel = new Map(videos.map(v => [nlSchluessel(v), v]));
@@ -7511,7 +7587,8 @@
             }
 
             if (!nlPlayerBereit) return;
-            nlGeladen = { schluessel: eintrag.schluessel, start: eintrag.start, datei: false, video: eintrag.video };
+            nlGeladen = { schluessel: eintrag.schluessel, start: eintrag.start, datei: false, video: eintrag.video,
+                          krampus: eintrag.krampus };
             // Kiosk mit Supervisor: mpv spielt das Video, das Embed wird nur im
             // Notfall gebraucht. Dann nur bereitlegen (cue) statt anspielen -
             // sonst dekodiert Chromium das Video ein zweites Mal und haelt
@@ -7542,6 +7619,7 @@
         // werden nur angehalten und laden danach gleich das naechste Video vor.
         function nlStopPlayer() {
             clearTimeout(nlVorladeTimer);
+            clearInterval(nlKrampusTimer);
             if (!nlAktiv) return;
             nlAktiv = false;
 
@@ -9683,11 +9761,13 @@
             // Bei einem Wunsch vom Handy zaehlt der Puffer nicht - es soll genau
             // das gewuenschte Video kommen.
             const fernWunsch = nlFernAktiv();
+            // Krampuslauf oder nicht muss zur Uhrzeit passen (16:00/07:00).
             const vorgeladen = !fernWunsch &&
-                !!(nlGeladen && nlGeladen.video && !nlDefekt[nlGeladen.schluessel]);
+                !!(nlGeladen && nlGeladen.video && !nlDefekt[nlGeladen.schluessel]) &&
+                !!nlGeladen.krampus === nlKrampusAktiv();
             const eintrag = vorgeladen
                 ? { video: nlGeladen.video, schluessel: nlGeladen.schluessel,
-                    datei: nlGeladen.datei, start: nlGeladen.start }
+                    datei: nlGeladen.datei, start: nlGeladen.start, krampus: nlGeladen.krampus }
                 : nlNaechsterEintrag();
             const spielbar = eintrag && (eintrag.datei ? !!nlVideoElement() : nlPlayerBereit);
             if (!spielbar) {
@@ -9725,13 +9805,18 @@
             // Zufallsauswahl statt fester Reihenfolge - eine Positionsanzeige
             // ("2/5") waere hier irrefuehrend, deshalb bleibt der Zaehler weg.
             document.getElementById('nl-counter').style.display = 'none';
+            const kr = !fernWunsch && eintrag.krampus;
+            const badge = document.querySelector('#media-view-nightlife .nl-badge');
+            if (badge) badge.textContent = kr ? 'Krampuslauf' : 'Nightlife';
+            clearInterval(nlKrampusTimer);
+            if (kr) nlKrampusBeschriften(video, kr, start);
 
             document.getElementById('media-view-nightlife').classList.add('active');
 
             // Der Player bleibt zugedeckt, bis feststeht, dass wirklich das
             // Video laeuft und keine Werbung. Die Tafel nennt die Stadt, damit
             // sie wie Teil der Gestaltung aussieht und nicht wie ein Fehler.
-            nlHinweisAn(nlSymbol + ' ' + (nlOrtLand || nlStandard),
+            nlHinweisAn(kr ? '👹 ' + video.titel : nlSymbol + ' ' + (nlOrtLand || nlStandard),
                         eintrag.datei ? 'Video wird geladen …' : 'gleich geht es weiter …');
             nlWerbungSeit = 0;
             nlAnsichtUmschalten(eintrag.datei);
@@ -9771,7 +9856,8 @@
                     nlQualitaetSetzen();
                 } catch (e) {}
             }
-            nlGeladen = { schluessel: eintrag.schluessel, start: start, datei: eintrag.datei, video: video };
+            nlGeladen = { schluessel: eintrag.schluessel, start: start, datei: eintrag.datei, video: video,
+                          krampus: eintrag.krampus };
 
             mediaStateIndex = nextStateIndex;
             // Wunsch vom Handy laeuft so lange wie dort gewaehlt, sonst gilt die
@@ -9784,6 +9870,7 @@
             const bisStopp = fernWunsch && nlFern.bisWann === -1;
             const standzeit = bisStopp ? 60000
                 : fernWunsch ? Math.max(5000, nlFern.bisWann - Date.now())
+                : kr ? (kr.ende - start + 3) * 1000      // beide Gruppen ganz, +3 s Anlauf
                 : NL_CONFIG.sekundenProVideo * 1000;
             const standzeitUm = () => {
                 if (bisStopp && nlFern && nlFern.bisWann === -1 && nlAktiv) {

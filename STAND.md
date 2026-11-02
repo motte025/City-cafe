@@ -75,6 +75,17 @@ und wieder in der Rotation.
 - Bluetooth am 02.11.: Beide B03 Pro seit dem Hochfahren 8:31 **gesperrt** (Knopf „Trennen“/„📱 Handy an die Anlage“),
   W1-Ton lief über HDMI. Absichtlich nicht angefasst – zurück nur per „🖥️ Screen an die Anlage“.
 
+## 02.11.2026: Nightlife-Slot zeigt nur noch Krampuslaeufe (16:00–07:00)
+
+- Alle Urlaubs- und Nightlife-Videos aus `nightlife.json` entfernt (`tag`/`nacht` leer). Neu `krampus`:
+  Krampuslauf Ebenthal 2025 (-1yvC9JY_DY, 36 Gruppen) und Klagenfurt 2025 (g_KUi4yZwPA, 37 Gruppen),
+  Gruppen = YouTube-Kapitel (Name + Startsekunde), `ende` = Videolaenge.
+- `index.html` (`nlKrampusAktiv`, `nlKrampusEintrag`, `nlKrampusBeschriften`): 16:00–07:00 je Auftritt 2 Gruppen
+  (Start = Kapitel, Standzeit bis zur naechsten Gruppe +3 s), Videos im Wechsel, Stand in localStorage `cityCafeKrampus`.
+  Ueberschrift = Gruppe im Bild (Position aus `nlMpvStand`), darunter „Krampuslauf <Ort> <Jahr>“, rechts „Gruppe x von N“,
+  Badge „Krampuslauf“. Tagsueber kein Slot (ausser per Handy hinzugefuegte Videos). `?krampus=1` zeigt es jederzeit.
+- 2026: neue Videos in `nightlife.json` eintragen (videoId, ort, jahr, ende, gruppen aus den Kapiteln).
+
 ## 31.10.2026: Halloween-Modus (wieder entfernt am 01.11.2026)
 
 - Lief am 31.10. ab 17:05 (Chef-Handy: Halloween-Livevideos, Berliner Luft, 5× Jägermeister, Vollbild-Schalter).
