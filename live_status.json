@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-02T17:07:46Z",
+  "checked_at": "2026-11-02T17:12:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Montagsquicky <3 (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "l4uchm3ld3r",
-      "name": "L4uchm3ld3r",
-      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
       "game": "DJs"
     },
     {
@@ -31,9 +24,23 @@
     },
     {
       "platform": "twitch",
+      "channel": "l4uchm3ld3r",
+      "name": "L4uchm3ld3r",
+      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wir feiern Camboys Geburtstag!  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
