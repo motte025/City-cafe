@@ -89,6 +89,13 @@ und wieder in der Rotation.
 - Beide Videos liegen auf W1 unter ~citycafe/.cache/citycafe/fest/<videoId>.mkv (1080p60 VP9 SDR + Ton, einmal per yt-dlp
   geladen); der Supervisor spielt Nightlife-Videos von dort (fest_datei), sonst wie bisher aus dem Strom. Fuer 2026 dort neu laden.
 - Fernbedienung (yt-fernbedienung.html): Krampuslaeufe oben in der Dauerliste.
+- Abends nachgebessert (am TV per grim-Foto geprueft, Betreiber: "Bild schaut jetzt besser aus"): Rahmen per box-shadow statt border,
+  damit #nl-player-frame (mpv) genau 1200x675 ist (vorher ragte mpv 2-4 px ueber den Rand); Vollbild 1632x918 bei 144/112 mit Rand
+  rundherum, Lauf/Jahr unten im Rahmen, Kopf ohne Schild (lange Namen bis 663 px passen in voller Groesse).
+- Qualitaet: YouTube liefert die Laeufe nur in ~3 (Ebenthal) bzw. ~6 Mbit/s (Klagenfurt); die HLS-Fassung 617 mit "9 Mbit/s" war
+  neu geladen gleich gross. Unschaerfe liegt an der Aufnahme (Handy, Nacht, Rauch).
+- Rechte Spalte: nur Google-Drive-Fotos (werbung/einstellung/rechts/modus 'fotos'), am Chef-Handy auf 'alle' umschaltbar.
+- Fotos vom TV: sudo -u citycafe env XDG_RUNTIME_DIR=/run/user/1001 WAYLAND_DISPLAY=wayland-1 grim -t jpeg /tmp/tv.jpg
 - Supervisor laedt jedes Nightlife-Video (auch Wuensche vom Handy, bis 3 h Laenge) beim ersten Auftritt aus dem Strom
   im Hintergrund nach fest/ (`fest_laden`, 6 MB/s, eins zur Zeit); fest/ hoechstens 25 GB, zuletzt gespielte bleiben.
   Grund: "mpv steht ... zurueck zum Browser-Player" fast taeglich 3-4x, immer Nightlife aus dem HLS-Strom.
