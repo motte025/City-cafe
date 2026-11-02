@@ -45,7 +45,7 @@ und wieder in der Rotation.
 
 ## 02.11.2026: Kärnten-Quiz „Kennst di aus?“ live im Café
 
-- Neuer Slot im Dashboard nach dem Roulette (`RAETSEL_SLOT_INDEX = 9.75`), nur Raum `city-cafe`, täglich 8:30–19:00.
+- Neuer Slot im Dashboard nach dem Roulette (`RAETSEL_SLOT_INDEX = 9.75`), nur Raum `city-cafe`, täglich 8:30–20:00 (bis 02.11. 19:00).
   Startphase am 02.11. bis 14:00 durchgehend (`RAETSEL_DAUER_BIS`), danach eine Runde (10 Fragen, ca. 8 min) pro Durchlauf.
   Abschalten: `RAETSEL_AN = false` oder `?raetsel=0`. Meldet die Seite nicht binnen 20 s „bereit“, wird der Slot übersprungen;
   mitten in einer Runde lädt das Dashboard nicht neu.

@@ -6849,7 +6849,7 @@
 
 /* ---------- Kaernten-Quiz "Kennst di aus?" (seit 02.11.2026) ----------
          *
-         * Fester Slot nach dem Roulette, nur im Cafe (Raum city-cafe), nur von 8:30 bis 19:00.
+         * Fester Slot nach dem Roulette, nur im Cafe (Raum city-cafe), nur von 8:30 bis 20:00.
          * Die Quizseite kommt vom W1 selbst (http://127.0.0.1:8766, Dienst citycafe-raetsel);
          * Chromium darf sie per Richtlinie /etc/chromium/policies/managed/citycafe-raetsel.json
          * einbetten. Meldet die Seite nicht binnen 20 s "bereit", wird der Slot uebersprungen.
@@ -6861,7 +6861,7 @@
         const RAETSEL_AN = true;
         const RAETSEL_URL = 'http://127.0.0.1:8766/index.html?kiosk=1';
         const RAETSEL_RAEUME = ['city-cafe'];
-        const RAETSEL_VON_MIN = 8 * 60 + 30, RAETSEL_BIS_MIN = 19 * 60;            // taeglich 8:30-19:00
+        const RAETSEL_VON_MIN = 8 * 60 + 30, RAETSEL_BIS_MIN = 20 * 60;            // taeglich 8:30-20:00
         const RAETSEL_DAUER_BIS = new Date('2026-11-02T14:00:00+01:00').getTime();   // Startphase ca. 3 h
         const RAETSEL_RUNDE_MAX_MS = 15 * 60000;
         let raetselBereitTs = 0, raetselFertigTs = 0;
@@ -6908,7 +6908,7 @@
                     if (raetselDauerphase()) { rundeSeit = Date.now(); }          // Startphase: naechste Runde
                     else { runMasterSequence(); return; }
                 }
-                if (!raetselAn()) { runMasterSequence(); return; }                 // 19:00 erreicht
+                if (!raetselAn()) { runMasterSequence(); return; }                 // 20:00 erreicht
                 globalMasterTimer = later(pruefen, 5000);
             };
             globalMasterTimer = later(pruefen, 5000);
