@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-02T20:47:45Z",
+  "checked_at": "2026-11-02T21:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINLY CLASSICS - Trance, Techno, HandsUp & Dance | !tip ✨",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     },
     {
@@ -20,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
