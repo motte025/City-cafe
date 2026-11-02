@@ -43,6 +43,23 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 02.11.2026: Kärnten-Quiz „Kennst di aus?“ live im Café
+
+- Neuer Slot im Dashboard nach dem Roulette (`RAETSEL_SLOT_INDEX = 9.75`), nur Raum `city-cafe`, täglich 8:30–19:00.
+  Startphase am 02.11. bis 14:00 durchgehend (`RAETSEL_DAUER_BIS`), danach eine Runde (10 Fragen, ca. 8 min) pro Durchlauf.
+  Abschalten: `RAETSEL_AN = false` oder `?raetsel=0`. Meldet die Seite nicht binnen 20 s „bereit“, wird der Slot übersprungen;
+  mitten in einer Runde lädt das Dashboard nicht neu.
+- Die Quizseite liegt **nur auf dem W1**: `/home/sabrina/raetsel-test`, ausgeliefert vom Dienst `citycafe-raetsel`
+  (python http.server, nur 127.0.0.1:8766). Dort auch der Google-Schlüssel (`schluessel.js`, `mapskey`) und die Medienfotos
+  (`medien/`) – beides nie ins Repo. Quellstand der Quizseite: Branch `raetsel-prototyp`, Ordner `raetsel-test/`.
+  Nach Änderungen: `tr -d '\r' < datei | ssh w1 "cat > ~/raetsel-test/datei"`.
+- Chromium darf die W1-Seite einbetten per Richtlinie `/etc/chromium/policies/managed/citycafe-raetsel.json`
+  (`LocalNetworkAccessAllowedForUrls` für motte025.github.io). Ohne sie fragt Chromium 156 nach „lokales Netzwerk“.
+- Google Maps JavaScript API (Street View, Karte, Luftbild), Testguthaben bis 1.2.2027 (ohne „Upgrade“ keine Kosten).
+  Monatszähler im Kiosk-Profil (localStorage) stoppt Street View bei 4.500 und Karten bei 9.000.
+- Gedächtnis gegen Wiederholungen: gezeigte Fragen 90 Tage im localStorage des Kiosks.
+- 02.11. 10:52 Kiosk-Browser per PID neu gestartet (wegen der Richtlinie), am TV mit Bildschirmfoto geprüft: Quiz läuft, Karte lädt.
+
 ## 31.10.2026: Halloween-Modus (wieder entfernt am 01.11.2026)
 
 - Lief am 31.10. ab 17:05 (Chef-Handy: Halloween-Livevideos, Berliner Luft, 5× Jägermeister, Vollbild-Schalter).
