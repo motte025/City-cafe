@@ -613,6 +613,9 @@
         }
         #roulette-fullscreen.active { display: block; }
         #roulette-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
+        #raetsel-fullscreen { display: none; position: absolute; inset: 0; z-index: 600; background: #070a1f; }
+        #raetsel-fullscreen.active { display: block; }
+        #raetsel-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
         #mittagsteller-fullscreen img {
             width: 100%; height: 100%; object-fit: contain; display: block;
         }
@@ -3368,6 +3371,11 @@
              die Dauer des Slots geladen - ein WebGL-Rad im Hintergrund muss
              niemand mitrechnen. -->
         <div id="roulette-fullscreen"></div>
+
+        <!-- Kaernten-Quiz "Kennst di aus?" im Vollbild (siehe runRaetselState). Die Seite liegt
+             NUR auf dem W1 (lokaler Webserver 127.0.0.1:8766, Dienst citycafe-raetsel) - dort
+             auch der Google-Schluessel und die Medienfotos, nichts davon im Repo. -->
+        <div id="raetsel-fullscreen"></div>
 
         <!-- Champions-League-Tabelle im Vollbild: eigenes Element direkt unter
              #dashboard-scaler (nicht unter .media-zone), damit sie per z-index
@@ -6838,6 +6846,73 @@
             return !!(halter && halter.classList.contains('active'));
         }
         window.rouletteAmScreen = rouletteAmScreen;
+
+/* ---------- Kaernten-Quiz "Kennst di aus?" (seit 02.11.2026) ----------
+         *
+         * Fester Slot nach dem Roulette, nur im Cafe (Raum city-cafe), nur von 8:30 bis 19:00.
+         * Die Quizseite kommt vom W1 selbst (http://127.0.0.1:8766, Dienst citycafe-raetsel);
+         * Chromium darf sie per Richtlinie /etc/chromium/policies/managed/citycafe-raetsel.json
+         * einbetten. Meldet die Seite nicht binnen 20 s "bereit", wird der Slot uebersprungen.
+         * Eine Runde (10 Fragen, ca. 8 min) laeuft bis zu ihrem Ende ("raetsel-fertig").
+         * Startphase: bis RAETSEL_DAUER_BIS laeuft das Quiz durchgehend (Runde an Runde).
+         * Abschalten: RAETSEL_AN = false oder ?raetsel=0.
+         */
+        const RAETSEL_SLOT_INDEX = 9.75;
+        const RAETSEL_AN = true;
+        const RAETSEL_URL = 'http://127.0.0.1:8766/index.html?kiosk=1';
+        const RAETSEL_RAEUME = ['city-cafe'];
+        const RAETSEL_VON_MIN = 8 * 60 + 30, RAETSEL_BIS_MIN = 19 * 60;            // taeglich 8:30-19:00
+        const RAETSEL_DAUER_BIS = new Date('2026-11-02T14:00:00+01:00').getTime();   // Startphase ca. 3 h
+        const RAETSEL_RUNDE_MAX_MS = 15 * 60000;
+        let raetselBereitTs = 0, raetselFertigTs = 0;
+        window.addEventListener('message', e => {
+            const d = e && e.data;
+            if (!d || typeof d !== 'object' || String(e.origin) !== 'http://127.0.0.1:8766') return;
+            if (d.typ === 'raetsel-bereit') raetselBereitTs = Date.now();
+            if (d.typ === 'raetsel-fertig') raetselFertigTs = Date.now();
+        });
+        function raetselAn() {
+            try {
+                if (!RAETSEL_AN || !RAETSEL_RAEUME.includes(NL_FERN_RAUM)) return false;
+                if (/(?:^|[?&])raetsel=0(?:&|$)/.test(location.search)) return false;
+                const j = new Date(), min = j.getHours() * 60 + j.getMinutes();
+                return min >= RAETSEL_VON_MIN && min < RAETSEL_BIS_MIN;
+            } catch (e) { return false; }
+        }
+        function raetselDauerphase() { return raetselAn() && Date.now() < RAETSEL_DAUER_BIS; }
+        function raetselStop() {
+            const halter = document.getElementById('raetsel-fullscreen');
+            if (!halter) return;
+            halter.classList.remove('active');
+            if (halter.firstChild) halter.innerHTML = '';
+        }
+        function runRaetselState(nextStateIndex) {
+            const halter = document.getElementById('raetsel-fullscreen');
+            if (!raetselAn() || !halter) { mediaStateIndex = nextStateIndex; runMasterSequence(); return; }
+            halter.innerHTML = '';
+            halter.classList.add('active');
+            const start = Date.now();
+            raetselBereitTs = 0;
+            const rahmen = document.createElement('iframe');
+            rahmen.setAttribute('title', 'Kennst di aus? - Kaernten-Quiz');
+            rahmen.src = RAETSEL_URL + '&v=' + start;
+            halter.appendChild(rahmen);
+            videoRuheModus(true);
+            mediaStateIndex = nextStateIndex;
+            let rundeSeit = start;
+            const pruefen = () => {
+                // Seite nicht erreichbar (Dienst aus, Richtlinie fehlt): sofort weiter
+                if (!raetselBereitTs && Date.now() - start > 20000) { raetselStop(); runMasterSequence(); return; }
+                const rundeFertig = raetselFertigTs > rundeSeit || Date.now() - rundeSeit > RAETSEL_RUNDE_MAX_MS;
+                if (rundeFertig) {
+                    if (raetselDauerphase()) { rundeSeit = Date.now(); }          // Startphase: naechste Runde
+                    else { runMasterSequence(); return; }
+                }
+                if (!raetselAn()) { runMasterSequence(); return; }                 // 19:00 erreicht
+                globalMasterTimer = later(pruefen, 5000);
+            };
+            globalMasterTimer = later(pruefen, 5000);
+        }
 
         function rouletteStop() {
             const halter = document.getElementById('roulette-fullscreen');
@@ -14630,6 +14705,7 @@
             if (window.ktSpielLaeuft && window.ktSpielLaeuft()) return false;
             if (typeof nlFernAktiv === 'function' && nlFernAktiv()) return false;
             if (mediaStateIndex === ROULETTE_SLOT_INDEX) return false;   // Roulette startet gleich
+            if (mediaStateIndex === 10 && document.querySelector('#raetsel-fullscreen.active')) return false;   // Quizrunde laeuft
             if (typeof djFernAktiv === 'function' && djFernAktiv()) return false;
             updateWartet = false;
             // Unmittelbar vorher nachsehen, ob GitHub Pages antwortet. Ohne Netz
@@ -15131,6 +15207,7 @@
             // bei jedem Ansichtswechsel wirklich aus dem DOM.
             djStopPlayer();
             if (mediaStateIndex !== ROULETTE_SLOT_INDEX) rouletteStop();
+            if (mediaStateIndex !== RAETSEL_SLOT_INDEX) raetselStop();
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
             if (mediaStateIndex !== QR_SLOT_INDEX) qrCountdownStoppen();
             // Native <video>-Elemente spielen im Hintergrund weiter, auch wenn ihre
@@ -15353,10 +15430,13 @@
             } else if (mediaStateIndex === 9) {
                 // Roulette in der Rotation (05.10.2026 kurz nur per Handy, seit 07.10.2026
                 // wieder drin). Abschalten: ROULETTE_IN_ROTATION = false.
-                runMusicSlidesState(ROULETTE_IN_ROTATION ? ROULETTE_SLOT_INDEX : 10);
+                runMusicSlidesState(ROULETTE_IN_ROTATION ? ROULETTE_SLOT_INDEX : RAETSEL_SLOT_INDEX);
 
             } else if (mediaStateIndex === ROULETTE_SLOT_INDEX) {
-                runRouletteState(10); // -> Trinkspiel V1 (Foto)
+                runRouletteState(RAETSEL_SLOT_INDEX); // -> Kaernten-Quiz
+
+            } else if (mediaStateIndex === RAETSEL_SLOT_INDEX) {
+                runRaetselState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
                 runPhotoTrinkspielV1(QR_SLOT_INDEX); // -> Zyklusanfang
@@ -15379,9 +15459,10 @@
             // braucht. Schaltet den Slot gleich mit ein, damit eine Adresse
             // genuegt, und wirkt ausschliesslich ueber die URL.
             const djSofort = DJ_SLOT_AN && /(?:^|[?&])djnow=1(?:&|$)/.test(location.search);
-            mediaStateIndex = djSofort ? DJ_SLOT_INDEX : QR_SLOT_INDEX;
+            const raetselSofort = !djSofort && raetselDauerphase();
+            mediaStateIndex = djSofort ? DJ_SLOT_INDEX : (raetselSofort ? RAETSEL_SLOT_INDEX : QR_SLOT_INDEX);
             globalMasterTimer = later(runMasterSequence,
-                djSofort ? 1500 : ((dartAbendAktiv() || dartAnheizerAktiv()) ? 3000 : (KT.testFirstInCycle ? 6000 : 35000)));
+                djSofort ? 1500 : raetselSofort ? 4000 : ((dartAbendAktiv() || dartAnheizerAktiv()) ? 3000 : (KT.testFirstInCycle ? 6000 : 35000)));
         }
 
         function weatherCodeToIcon(code) {
