@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-02T11:42:45Z",
+  "checked_at": "2026-11-02T11:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥PP 2nd MONTH UNLOCKED🔥TECH VIBES!🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥PP 2nd MONTH UNLOCKED🔥TECH VIBES!🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
