@@ -1326,10 +1326,17 @@ def bild_laden(vid, video_url):
     threading.Thread(target=lauf, daemon=True).start()
 
 
-# Feste Videos (02.11.2026): die langen Krampuslauf-Videos des Nightlife-Slots liegen ganz auf der
-# Platte (~/.cache/citycafe/fest/<videoId>.mkv, einmal mit yt-dlp geladen: 1080p SDR mit Ton) - der
-# Strom stockte bei Nightlife-Clips zeitweise. Liegt eine fertige Datei da, spielt mpv sie.
+# Feste Videos (02.11.2026): Nightlife-Videos (Krampuslaeufe, Wuensche vom Handy) liegen ganz auf der
+# Platte (~/.cache/citycafe/fest/<videoId>.mkv: 1080p SDR mit Ton) - aus dem Strom blieb mpv fast
+# taeglich am Anfang stehen (HLS-Stuecke zu langsam) und der Supervisor fiel aufs Embed zurueck.
+# Liegt eine fertige Datei da, spielt mpv sie; sonst laedt fest_laden() sie beim ersten Auftritt
+# im Hintergrund (gedrosselt, eins zur Zeit). Zuletzt gespielte bleiben, bis FEST_HOECHSTENS_GB voll ist.
 FEST_ORDNER = os.path.expanduser("~/.cache/citycafe/fest")
+FEST_LAEDT = set()
+FEST_HOECHSTENS_GB = 25
+FEST_MAX_SEK = 3 * 3600          # laengere Videos (Stundenschleifen) nicht laden
+FEST_FORMAT = ("bestvideo[height<=1080][dynamic_range=?SDR][protocol=https]+bestaudio[protocol=https]/"
+               "bestvideo[height<=1080][dynamic_range=?SDR]+bestaudio")
 
 
 def fest_datei(vid):
@@ -1338,6 +1345,58 @@ def fest_datei(vid):
         if os.path.isfile(p) and os.path.getsize(p) > 10_000_000:
             return p
     return None
+
+
+def fest_aufraeumen():
+    try:
+        dateien = sorted((p for p in glob.glob(os.path.join(FEST_ORDNER, "*"))
+                          if p.endswith((".mkv", ".mp4", ".webm"))), key=os.path.getmtime, reverse=True)
+        summe = 0
+        for p in dateien:                  # neueste zuerst; was nicht mehr passt, faellt raus
+            summe += os.path.getsize(p)
+            if summe > FEST_HOECHSTENS_GB * 1e9:
+                os.remove(p)
+                log(f"Feste Videos: {os.path.basename(p)} entfernt (Platz)")
+        for rest in glob.glob(os.path.join(FEST_ORDNER, "*.part")) + glob.glob(os.path.join(FEST_ORDNER, "*.ytdl")):
+            if time.time() - os.path.getmtime(rest) > 6 * 3600:
+                os.remove(rest)
+    except OSError:
+        pass
+
+
+def fest_laden(vid, laenge):
+    """Nightlife-Video im Hintergrund ganz auf die Platte holen (eins zur Zeit, gedrosselt)."""
+    if FEST_LAEDT or fest_datei(vid) or (laenge and laenge > FEST_MAX_SEK) or not ton_platz_frei():
+        return
+    FEST_LAEDT.add(vid)
+
+    def lauf():
+        t0 = time.time()
+        try:
+            os.makedirs(FEST_ORDNER, exist_ok=True)
+            for programm in ytdlp_programme():
+                try:
+                    r = subprocess.run(
+                        ["nice", "-n", "10", programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser",
+                         COOKIES_FROM, "-f", FEST_FORMAT, "--merge-output-format", "mkv", "-N", "2",
+                         "--limit-rate", "6M", "--no-progress", "-q", "--no-warnings", "--no-playlist",
+                         "-o", os.path.join(FEST_ORDNER, "%(id)s.%(ext)s"), "--", vid],
+                        capture_output=True, text=True, timeout=3 * 3600)
+                except (subprocess.TimeoutExpired, OSError) as e:
+                    log(f"Festes Video {vid}: nicht geladen ({type(e).__name__})")
+                    continue
+                datei = fest_datei(vid)
+                if datei:
+                    log(f"Festes Video {vid}: auf der Platte ({os.path.getsize(datei) / 1e6:.0f} MB, {time.time() - t0:.0f} s)")
+                    break
+                log(f"Festes Video {vid}: nicht geladen (Code {r.returncode}: {(r.stderr or r.stdout).strip()[-160:]})")
+            fest_aufraeumen()
+        except OSError:
+            pass
+        finally:
+            FEST_LAEDT.discard(vid)
+
+    threading.Thread(target=lauf, daemon=True).start()
 
 
 def bild_quelle(vid, video_url):
@@ -4513,6 +4572,13 @@ def main():
                     args += seiten_blur_args(schluessel)   # 4:3/Hochformat: Seiten fuellen
                     blur_an = "yt:" + schluessel
                 fest = None if musik else fest_datei(schluessel)   # Bild und Ton von der Platte
+                if fest:
+                    try:
+                        os.utime(fest)          # zuletzt gespielt -> bleibt beim Aufraeumen
+                    except OSError:
+                        pass
+                elif not musik:
+                    fest_laden(schluessel, laenge)   # beim naechsten Auftritt von der Platte
                 if audio_url and not fest:
                     args.append(f"--audio-file={ton_quelle(schluessel, audio_url) if musik else ueber_zwischenhaendler(audio_url)}")
                 if musik:

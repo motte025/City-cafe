@@ -89,6 +89,9 @@ und wieder in der Rotation.
 - Beide Videos liegen auf W1 unter ~citycafe/.cache/citycafe/fest/<videoId>.mkv (1080p60 VP9 SDR + Ton, einmal per yt-dlp
   geladen); der Supervisor spielt Nightlife-Videos von dort (fest_datei), sonst wie bisher aus dem Strom. Fuer 2026 dort neu laden.
 - Fernbedienung (yt-fernbedienung.html): Krampuslaeufe oben in der Dauerliste.
+- Supervisor laedt jedes Nightlife-Video (auch Wuensche vom Handy, bis 3 h Laenge) beim ersten Auftritt aus dem Strom
+  im Hintergrund nach fest/ (`fest_laden`, 6 MB/s, eins zur Zeit); fest/ hoechstens 25 GB, zuletzt gespielte bleiben.
+  Grund: "mpv steht ... zurueck zum Browser-Player" fast taeglich 3-4x, immer Nightlife aus dem HLS-Strom.
 - 2026: neue Videos in `nightlife.json` eintragen (videoId, ort, jahr, ende, gruppen aus den Kapiteln).
 
 ## 31.10.2026: Halloween-Modus (wieder entfernt am 01.11.2026)
