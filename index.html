@@ -2409,7 +2409,10 @@
             -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 14px rgba(255, 90, 20, 0.55));
         }
-        .nl-stage.krampus .nl-header p { color: #c79a74; letter-spacing: 2.4px; }
+        /* Kopf 16 px hoeher als sonst (76 statt 62): Platz fuer die groessere Zeile mit
+           Lauf und Jahr - 76 + 14 + 675 passt in die 767 px der Buehne. */
+        .nl-stage.krampus .nl-header { height: 76px; }
+        .nl-stage.krampus .nl-header p { color: #d9ad86; font-size: 22px; letter-spacing: 2.6px; margin-top: 6px; }
         .nl-kr-gleich { display: none; }
         .nl-stage.krampus .nl-kr-gleich:not(:empty) {
             display: block; max-width: 330px; text-align: right;
@@ -2476,7 +2479,7 @@
         }
         .nl-kr-rechts { display: flex; align-items: center; gap: 16px; white-space: nowrap; }
         .nl-kr-lauf {
-            font-size: 18px; font-weight: 800; letter-spacing: 2.4px; text-transform: uppercase; color: #c79a74;
+            font-size: 27px; font-weight: 800; letter-spacing: 2.8px; text-transform: uppercase; color: #d9ad86;
         }
         body.krampus-voll .nl-stage.krampus .nl-player { z-index: 61; overflow: visible; border-color: transparent; box-shadow: none; background: transparent; }
         body.krampus-voll #nl-player-frame {
