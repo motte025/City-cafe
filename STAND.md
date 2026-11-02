@@ -8,7 +8,9 @@ Stand beschreiben, nicht den von vorgestern.
 **Windows-Sitzung (mit `ssh w1`): zuerst `UEBERGABE-WINDOWS.md` lesen** – was am 21.10. passiert ist
 und was am W1 zu tun ist.
 
-Letzte Durchsicht: 28. Oktober 2026 (DJ-Modus: Videos als HLS und vorab auf der Platte, seit 27.10. 08:31
+Letzte Durchsicht: 2. November 2026 (Kärnten-Quiz „Kennst di aus?“ live 8:30–20:00, Roulette 12 Runden,
+Durchlauf gemessen – alles im Abschnitt „02.11.2026“).
+Davor, 28. Oktober 2026 (DJ-Modus: Videos als HLS und vorab auf der Platte, seit 27.10. 08:31
 live; am 27.10. fielen ab 08:40 alle Überblendungen aus – Ursache war ein Prüfbefehl der Windows-Sitzung,
 seit dem Neustart 28.10. 08:30 behoben – alles im Abschnitt „27./28.10.2026“ und „26.10.2026“).
 Davor, 23. Oktober 2026 mittags (DJ-Skin **Thunderstorm** mit Wolken und Blitzen nach der
@@ -59,6 +61,19 @@ und wieder in der Rotation.
   Monatszähler im Kiosk-Profil (localStorage) stoppt Street View bei 4.500 und Karten bei 9.000.
 - Gedächtnis gegen Wiederholungen: gezeigte Fragen 90 Tage im localStorage des Kiosks.
 - 02.11. 10:52 Kiosk-Browser per PID neu gestartet (wegen der Richtlinie), am TV mit Bildschirmfoto geprüft: Quiz läuft, Karte lädt.
+- Quiz-Ende von 19:00 auf **20:00** verlängert (`RAETSEL_BIS_MIN = 20 * 60`, Commit 5b155496, live seit 02.11. 18:19).
+- **Durchlauf gemessen** (02.11., aus `GET /index.html` im Journal von `citycafe-raetsel` und den „Auftritt“-Zeilen in
+  `/home/citycafe/nl-mpv-supervisor.log`): Quizstarts 14:39, 15:20, 16:02, 16:42, 17:23, 18:04 → **~41 min** von Start zu Start.
+  Ein Durchlauf (17:23–18:04): Quiz ~9 min · Trinkspiel/QR/Dart ~4 · Nightlife-Video 4 · Willkommen/Hausprogramm/Plakate ~4 ·
+  DJ live 3 · Getränke/Events/Bundesliga/CL/Musik-Slides/Roulette ~17 (davon Roulette errechnet ~10–11 min: 30 Runden à
+  4 s Pause + 12 s Kugel). Ohne Quiz also ~32 min; schon am 01.11. kam das Nightlife-Video nur alle ~33 min.
+- **Roulette auf 12 Runden pro Zyklus** (vorher 30), damit der Durchlauf kürzer wird und das Quiz öfter kommt:
+  `roulette-src/src/cycle.ts` + `display.ts` (`DEFAULT_ROUNDS`, Anzeige „12 Runden übrig“) und direkt im gebauten
+  `roulette-vorschau-spiel/assets/display-BKhPibAe.js` (`total=12`, `const C=12`, ohne Neubau, Dateiname bleibt).
+  Erwartet: Roulette steht nur noch die Mindestzeit `ROULETTE_SLOT_MS` (4 min) → Durchlauf ~25 min, mit Quiz ~34 min.
+  Ein laufendes Spiel am Tisch (Fernbedienung) hält den Slot weiter bis Spielende. Nachmessung am TV steht noch aus.
+- Bluetooth am 02.11.: Beide B03 Pro seit dem Hochfahren 8:31 **gesperrt** (Knopf „Trennen“/„📱 Handy an die Anlage“),
+  W1-Ton lief über HDMI. Absichtlich nicht angefasst – zurück nur per „🖥️ Screen an die Anlage“.
 
 ## 31.10.2026: Halloween-Modus (wieder entfernt am 01.11.2026)
 
