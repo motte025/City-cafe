@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-02T15:12:46Z",
+  "checked_at": "2026-11-02T15:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ VINLY CLASSICS - Trance, Techno, HandsUp & Dance | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Montagsquicky <3 (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
