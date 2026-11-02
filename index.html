@@ -2404,7 +2404,7 @@
         .nl-stage.krampus .nl-header h2 {
             font-family: 'Pirata One', 'UnifrakturCook', serif; font-weight: 400;
             font-size: 46px; line-height: 1; letter-spacing: 1px; text-transform: none;
-            color: #ffb35c; max-width: 760px;
+            color: #ffb35c; max-width: 720px;
             background: linear-gradient(180deg, #ffe2a8 0%, #ff9d3a 55%, #e2421a 100%);
             -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 14px rgba(255, 90, 20, 0.55));
@@ -2412,6 +2412,12 @@
         /* Kopf 16 px hoeher als sonst (76 statt 62): Platz fuer die groessere Zeile mit
            Lauf und Jahr - 76 + 14 + 675 passt in die 767 px der Buehne. */
         .nl-stage.krampus .nl-header { height: 76px; }
+        /* Lange Gruppennamen (bis ~660 px, Kinderkrampusgruppe Locomotive to Hell) in voller
+           Groesse: das Schild faellt hier weg (Lauf und Jahr stehen darunter), rechts bleiben
+           hoechstens 330 + 14 + 130 px. */
+        .nl-stage.krampus .nl-header .nl-badge { display: none; }
+        .nl-stage.krampus .nl-header > div:first-child { min-width: 0; }
+        .nl-stage.krampus .nl-header-right { flex-shrink: 0; }
         .nl-stage.krampus .nl-header p { color: #d9ad86; font-size: 22px; letter-spacing: 2.6px; margin-top: 6px; }
         .nl-kr-gleich { display: none; }
         .nl-stage.krampus .nl-kr-gleich:not(:empty) {
@@ -2472,13 +2478,16 @@
         }
         .nl-kr-name {
             font-family: 'Pirata One', 'UnifrakturCook', serif; font-size: 66px; line-height: 1;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 1150px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 1220px;
             background: linear-gradient(180deg, #ffe2a8 0%, #ff9d3a 55%, #e2421a 100%);
             -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 16px rgba(255, 90, 20, 0.6));
         }
         .nl-kr-rechts { display: flex; align-items: center; gap: 16px; white-space: nowrap; }
+        /* Lauf und Jahr unten im Rahmen unter dem Video (1030-1080), damit der Name
+           oben die ganze Breite hat. */
         .nl-kr-lauf {
+            position: fixed; left: 144px; top: 1030px; height: 50px; line-height: 50px;
             font-size: 27px; font-weight: 800; letter-spacing: 2.8px; text-transform: uppercase; color: #d9ad86;
         }
         body.krampus-voll .nl-stage.krampus .nl-player { z-index: 61; overflow: visible; border-color: transparent; box-shadow: none; background: transparent; }
