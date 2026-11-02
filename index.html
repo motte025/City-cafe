@@ -2430,9 +2430,11 @@
             color: #ffe2c4; background: linear-gradient(180deg, #a3160d 0%, #5c0905 100%);
             border: 1px solid rgba(255, 130, 60, 0.7); box-shadow: 0 0 20px rgba(220, 40, 10, 0.45);
         }
+        /* Rahmen aussen herum (box-shadow statt border): das Video (mpv misst
+           #nl-player-frame) passt so genau in die 1200 x 675 hinein. */
         .nl-stage.krampus .nl-player {
-            border: 2px solid rgba(255, 110, 40, 0.55);
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.8), 0 0 38px rgba(255, 70, 10, 0.35), 0 18px 44px rgba(0,0,0,0.7);
+            border: 0;
+            box-shadow: 0 0 0 2px rgba(255, 110, 40, 0.6), 0 0 0 3px rgba(0,0,0,0.8), 0 0 38px rgba(255, 70, 10, 0.35), 0 18px 44px rgba(0,0,0,0.7);
         }
         .nl-stage.krampus .nl-player-hint { background: radial-gradient(ellipse at 50% 120%, #4a0d05 0%, #120404 60%, #050202 100%); }
         .nl-stage.krampus .nl-hint-titel {
@@ -2442,7 +2444,7 @@
         .nl-stage.krampus .nl-hint-text { color: rgba(255, 214, 170, 0.5); }
 
         /* Zweite Gruppe jedes Auftritts im Vollbild (body.krampus-voll): oben eine
-           Leiste mit dem Gruppennamen, darunter das Video 1728 x 972 (16:9), mpv
+           Leiste mit dem Gruppennamen, darunter das Video 1632 x 918 (16:9) mit Rand, mpv
            folgt der Flaeche (der Supervisor misst #nl-player-frame). transform: none,
            sonst waere die Ansicht der Bezugsrahmen fuer position: fixed - so ist es
            #dashboard-scaler (1920 x 1080 wie der Screen). */
@@ -2452,6 +2454,7 @@
         body.krampus-voll:has(#media-view-nightlife.active) #card-ticker,
         body.krampus-voll:has(#media-view-nightlife.active) #card-top-custom,
         body.krampus-voll:has(#media-view-nightlife.active) #build-tag { visibility: hidden; }
+        body.krampus-voll:has(#media-view-nightlife.active) #card-media::after { display: none; }   /* Schimmer-Rand (z 20) laege sonst ueber dem Video */
         body.krampus-voll .nl-kr-voll {
             display: flex; position: fixed; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 59;
             flex-direction: column; box-sizing: border-box;
@@ -2461,7 +2464,7 @@
                 linear-gradient(180deg, #1a0606 0%, #0b0505 50%, #050303 100%);
         }
         .nl-kr-leiste {
-            height: 108px; padding: 0 96px; box-sizing: border-box;
+            height: 108px; padding: 0 144px; box-sizing: border-box;
             display: flex; align-items: center; justify-content: space-between; gap: 30px;
         }
         .nl-kr-name {
@@ -2477,9 +2480,9 @@
         }
         body.krampus-voll .nl-stage.krampus .nl-player { z-index: 61; overflow: visible; border-color: transparent; box-shadow: none; background: transparent; }
         body.krampus-voll #nl-player-frame {
-            position: fixed !important; left: 96px !important; top: 108px !important;
-            width: 1920px !important; height: 1080px !important;
-            transform: scale(0.9) !important; transform-origin: top left !important;
+            position: fixed !important; left: 144px !important; top: 112px !important;
+            width: 1920px !important; height: 1080px !important;   /* x 0,85 = 1632 x 918, unten 50 px Rand */
+            transform: scale(0.85) !important; transform-origin: top left !important;
             z-index: 60; border-radius: 0 !important; margin: 0 !important;
             outline: 3px solid rgba(255, 110, 40, 0.6);
         }
