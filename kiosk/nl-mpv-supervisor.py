@@ -1335,10 +1335,11 @@ FEST_ORDNER = os.path.expanduser("~/.cache/citycafe/fest")
 FEST_LAEDT = set()
 FEST_HOECHSTENS_GB = 25
 FEST_MAX_SEK = 3 * 3600          # laengere Videos (Stundenschleifen) nicht laden
-# Hoechste Bitrate in 1080p SDR (-S tbr): die https-Fassungen haben oft nur ein Drittel davon
-# (Krampuslauf Ebenthal: 303 mit 3 Mbit/s statt 617 mit 9 Mbit/s - am TV sichtbar unscharf).
-FEST_FORMAT = "bestvideo[height<=1080][dynamic_range=?SDR]+bestaudio/best[height<=1080]"
-FEST_SORTIERUNG = "res,fps,tbr"
+# 1080p SDR, bevorzugt als https-Datei (schneller als HLS-Stuecke). Die hoehere "tbr" der
+# HLS-Fassung (617: 9 Mbit/s) ist nur eine Angabe: neu geladen war Ebenthal gleich gross
+# (3,17 Mbit/s) wie 303 - gemessen 02.11.2026.
+FEST_FORMAT = ("bestvideo[height<=1080][dynamic_range=?SDR][protocol=https]+bestaudio[protocol=https]/"
+               "bestvideo[height<=1080][dynamic_range=?SDR]+bestaudio/best[height<=1080]")
 
 
 def fest_datei(vid):
@@ -1380,7 +1381,7 @@ def fest_laden(vid, laenge):
                 try:
                     r = subprocess.run(
                         ["nice", "-n", "10", programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser",
-                         COOKIES_FROM, "-f", FEST_FORMAT, "-S", FEST_SORTIERUNG, "--merge-output-format", "mkv", "-N", "2",
+                         COOKIES_FROM, "-f", FEST_FORMAT, "--merge-output-format", "mkv", "-N", "2",
                          "--limit-rate", "6M", "--no-progress", "-q", "--no-warnings", "--no-playlist",
                          "-o", os.path.join(FEST_ORDNER, "%(id)s.%(ext)s"), "--", vid],
                         capture_output=True, text=True, timeout=3 * 3600)

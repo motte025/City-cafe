@@ -203,6 +203,7 @@
         plakate: { an: true, dauerS: 20, rahmen: false, ambi: 'wechsel', jede: 1 },
         willkommen: { an: true, dauerS: 35 },
         getraenke: { an: true, dauerS: 30 },
+        rechts: { modus: 'fotos' },
         dj: { an: true, alleS: 60, dauerS: 7, groesse: 38,
               'a_jaegermeister-5er': true, 'a_ane-aufs-aug': true, 'a_puntigamer-05': false }
     };
@@ -246,6 +247,10 @@
             { feld: 'a_jaegermeister-5er', etikett: '5 × Jägermeister', nurWenn: ['an', true], werte: [[false, 'Aus'], [true, 'An']] },
             { feld: 'a_ane-aufs-aug', etikett: 'Ane aufs Aug', nurWenn: ['an', true], werte: [[false, 'Aus'], [true, 'An']] },
             { feld: 'a_puntigamer-05', etikett: 'Puntigamer', nurWenn: ['an', true], werte: [[false, 'Aus'], [true, 'An']] }
+          ] },
+        { teil: 'rechts', titel: '📸 Rechte Spalte am Screen', unter: 'Google-Drive-Fotos – oder im Wechsel mit News und Café-Info',
+          reihen: [
+            { feld: 'modus', werte: [['fotos', 'Nur Fotos'], ['alle', 'Fotos, News & Info']] }
           ] },
         { teil: 'getraenke', titel: '🍺 Getränkeplakat', unter: 'Jägermeister & Puntigamer',
           reihen: [

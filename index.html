@@ -10324,7 +10324,10 @@
             folie: { an: true, dauerS: 60, rahmen: false, ambi: 'wechsel', jede: 1 },     // randlos (Wunsch 19.10.2026)
             plakate: { an: true, dauerS: 20, rahmen: false, ambi: 'wechsel', jede: 1 },   // Bilder unveraendert, randlos (Wunsch 16.10.2026)
             willkommen: { an: true, dauerS: 35 },
-            getraenke: { an: true, dauerS: 30 }
+            getraenke: { an: true, dauerS: 30 },
+            // Rechte Spalte: nur Google-Drive-Fotos (Wunsch 02.11.2026), am Chef-Handy
+            // umschaltbar auf den alten Wechsel Fotos / News / Cafe-Info ('alle').
+            rechts: { modus: 'fotos' }
         };
         let werbungEinst = {};
         function werbungWert(teil, feld) {
@@ -10353,8 +10356,11 @@
         }
         function werbungEinstellungHoeren(verb) {
             verb.db.ref('djremote/' + NL_FERN_RAUM + '/werbung/einstellung').on('value', snap => {
+                const rechtsVorher = werbungWert('rechts', 'modus');
                 werbungEinst = snap.val() || {};
                 musikWerbungSig = '';           // sofort neu bewerten
+                // Rechte Spalte umgestellt: gleich wechseln, nicht erst nach der Runde
+                if (werbungWert('rechts', 'modus') !== rechtsVorher && typeof rotateSidebarWidgets === 'function') rotateSidebarWidgets();
             }, () => {});
         }
 
@@ -16173,7 +16179,8 @@
             else { gImg1.src = data.src; gImg2.classList.remove('active'); gImg1.classList.add('active'); isGalleryImg1Active = true; }
         }
 
-        async function rotateSidebarWidgets() {
+        // ohneFotos: Ordner leer - einmal auf News ausweichen, statt sofort wieder Fotos zu versuchen.
+        async function rotateSidebarWidgets(ohneFotos) {
             const galleryView = document.getElementById('view-event-gallery'), 
                   newsView = document.getElementById('view-news-klagenfurt'), 
                   musicView = document.getElementById('view-music-tips');
@@ -16184,15 +16191,18 @@
             if (sidebarTimerId) clearTimeout(sidebarTimerId);
 
             galleryView.classList.remove('active'); newsView.classList.remove('active'); musicView.classList.remove('active');
+            // Nur Fotos (Vorgabe): immer wieder die Galerie, News und Cafe-Info fallen weg.
+            const nurFotos = werbungWert('rechts', 'modus') !== 'alle';
+            if (nurFotos && !ohneFotos) activeSidebarWidgetIndex = 0;
 
             if (activeSidebarWidgetIndex === 0) {
                 await loadDriveFolderImages(); 
                 preparePlaylist(); 
-                if (!imagePlaylist || imagePlaylist.length === 0) { activeSidebarWidgetIndex = 1; rotateSidebarWidgets(); return; }
+                if (!imagePlaylist || imagePlaylist.length === 0) { activeSidebarWidgetIndex = 1; rotateSidebarWidgets(true); return; }
                 galleryView.classList.add('active');
                 showNextPlaylistImage(); 
                 galleryTimer = setInterval(showNextPlaylistImage, BILD_WECHSEL_SEKUNDEN * 1000);
-                activeSidebarWidgetIndex = 1; 
+                activeSidebarWidgetIndex = nurFotos ? 0 : 1;
                 sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), Math.max(30000, imagePlaylist.length * BILD_WECHSEL_SEKUNDEN * 1000)); 
             } else if (activeSidebarWidgetIndex === 1) {
                 newsView.classList.add('active'); 
