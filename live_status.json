@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-02T15:32:47Z",
+  "checked_at": "2026-11-02T15:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Montagsquicky <3 (Harderstyles) !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
