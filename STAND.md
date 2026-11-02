@@ -1407,7 +1407,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
   angezeigt), Rundenzahl 3–30 wählbar
   (bei 301/501 auch ohne Limit). Beginner wird ausgelost, Sieger 3 Minuten mit Feuerwerk,
   Konfetti und Treppchen gefeiert, danach normaler Zyklus. Standardzyklus
-  jetzt 30 Runden, Tempo 4 s Pause / 12 s Kugel (nur Quelle + Vorschau); ist ein
+  jetzt 12 Runden (seit 02.11.2026, vorher 30), Tempo 4 s Pause / 12 s Kugel (nur Quelle + Vorschau); ist ein
   Zyklus durch, beginnt nach 1 Minute von selbst der nächste (seit 07.10.2026). Nur per Fernbedienung
   aktivierbar, Punktetafel links am TV (nach Punkten sortiert; Wurf-Nummer vor jedem
   Namen, ▸ = kommt als Nächstes, seit 07.10.2026). Reihenfolge: Beginner wird ausgelost
