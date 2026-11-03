@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-03T18:17:47Z",
+  "checked_at": "2026-11-03T18:32:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "2000s vs. 2010s - All In One - Live aus Studio 2",
@@ -34,13 +41,6 @@
       "channel": "wittie_bln",
       "name": "Wittie_BLN",
       "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
