@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-03T18:32:48Z",
+  "checked_at": "2026-11-03T18:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,13 +17,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !holy | #werbung",
@@ -31,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "2000s vs. 2010s - All In One - Live aus Studio 2",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  After Work Stream on Tuesday from the Cherry Corner 🍒✨💞💋🌈",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "2000s vs. 2010s - All In One - Live aus Studio 2",
       "game": "DJs"
     },
     {
