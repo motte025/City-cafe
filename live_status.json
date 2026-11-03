@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-03T17:02:46Z",
+  "checked_at": "2026-11-03T17:22:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 Mute Marathon Tag 110 😈 | Dance Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Back 2 the 90s - Mit @Chris_Nitro - Whatsapp ins Studio: 030- 20 19 16 16",
       "game": "DJs"
     },
     {
@@ -34,13 +41,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Back 2 the 90s - Mit @Chris_Nitro - Whatsapp ins Studio: 030- 20 19 16 16",
       "game": "DJs"
     }
   ]
