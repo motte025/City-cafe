@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-03T16:02:45Z",
+  "checked_at": "2026-11-03T16:17:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "😈 Mute Marathon Tag 110 😈 | Dance Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "colaway",
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "😈 Mute Marathon Tag 110 😈 | Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
