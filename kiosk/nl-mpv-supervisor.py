@@ -946,9 +946,19 @@ def mpv_window_rect(app_id=None):
     return None
 
 
-def resolve(video_id, fmt=FORMAT, sortierung=None):
+# YouTube-Bremse (03.11.2026): "rate limit" kam 315x an einem Abend - das Spur-Vormessen fragte denselben
+# Song alle 1-2 s neu an und hielt die Bremse so am Laufen; der Player fiel auf den Browser zurueck. Nach
+# einer Bremse 15 min lang nur noch das Noetigste (laufender und naechster Song), alles Vorab wartet.
+YT_BREMSE_PAUSE = 15 * 60
+YT_GEBREMST = {"bis": 0.0}
+
+
+def resolve(video_id, fmt=FORMAT, sortierung=None, vorab=False):
     """-> (video_url, audio_url|None, laenge_sek|None) oder None.
-    Mit sortierung (Musik) wird die tatsaechlich gewaehlte Qualitaet geloggt."""
+    Mit sortierung (Musik) wird die tatsaechlich gewaehlte Qualitaet geloggt.
+    vorab=True: Messen/Vorladen - waehrend einer YouTube-Bremse gar nicht erst fragen."""
+    if vorab and time.time() < YT_GEBREMST["bis"]:
+        return None
     for programm in ytdlp_programme():
         try:
             out = subprocess.run(
@@ -984,6 +994,11 @@ def resolve(video_id, fmt=FORMAT, sortierung=None):
                     META[video_id] = meta.split("\t")
             return urls[0], (urls[1] if len(urls) > 1 else None), laenge
         log(f"{os.path.basename(programm)} ohne URL fuer {video_id}: {out.stderr.strip()[-200:]}")
+        if re.search(r"rate.limit|try again later", out.stderr, re.I):
+            if time.time() >= YT_GEBREMST["bis"]:
+                log(f"YouTube bremst - {YT_BREMSE_PAUSE // 60} min kein Vormessen/Vorladen")
+            YT_GEBREMST["bis"] = time.time() + YT_BREMSE_PAUSE
+            break
     return None
 
 
@@ -2409,7 +2424,7 @@ def studio_abgleich(vid, audio_url, laenge, song):
     lang, kurz = int(40 / ABGLEICH_HOP), int(20 / ABGLEICH_HOP)
     bestes = None
     for kand in kandidaten[:2]:
-        ref = resolve(kand["videoId"], "bestaudio")
+        ref = resolve(kand["videoId"], "bestaudio", vorab=True)
         if not ref:
             continue
         rf = pegel_messen(["-t", "50", "-i", ref[0]], ABGLEICH_HOP)
@@ -3486,6 +3501,7 @@ def main():
     cache = {}            # videoId -> (video_url, audio_url)
     cache_zeit = {}       # Schluessel -> wann aufgeloest (CACHE_HOECHSTENS)
     failed = {}           # videoId -> Zeitpunkt des letzten yt-dlp-Fehlschlags
+    spur_fehl = {}        # dasselbe fuers Spur-Vormessen (darf den Player nicht sperren)
     mpv_bad = {}          # Schluessel -> Zeitpunkt, an dem mpv damit scheiterte
     started = last_pos = last_progress = None
     embed_paused = False  # YouTube-Embed erst anhalten, wenn mpv wirklich laeuft
@@ -3753,7 +3769,7 @@ def main():
                      and time.time() - failed.get(str(v), 0) >= RETRY_FAILED_AFTER]
             if offen:
                 def analyse_lauf(vid=offen[0]):
-                    urls = resolve(vid, "bestaudio", "abr")
+                    urls = resolve(vid, "bestaudio", "abr", vorab=True)
                     if urls:
                         ton_laden(vid, urls[0])        # Ton schon Minuten vorher auf die Platte
                         quelle, ordner = mess_ton(vid, urls[0])
@@ -3777,7 +3793,7 @@ def main():
                     TON_LAEDT.add(t_vid)          # Platz halten, bis resolve fertig ist
 
                     def ton_vorab_lauf(vid=t_vid):
-                        urls = resolve(vid, "bestaudio", "abr")
+                        urls = resolve(vid, "bestaudio", "abr", vorab=True)
                         TON_LAEDT.discard(vid)
                         if urls:
                             ton_laden(vid, urls[0])
@@ -3794,7 +3810,7 @@ def main():
                     BILD_LAEDT.add(b_vid)         # Platz halten, bis resolve fertig ist
 
                     def bild_vorab_lauf(vid=b_vid):
-                        urls = resolve(vid, *musik_format(w_hoehe, w_fps))
+                        urls = resolve(vid, *musik_format(w_hoehe, w_fps), vorab=True)
                         BILD_LAEDT.discard(vid)
                         if urls:
                             bild_laden(vid, urls[0])
@@ -3820,12 +3836,15 @@ def main():
                     for s_vid in ([laufend] + [str(v) for v in (state.get("analyse") or [])[:2]]
                                   + [str(v) for v in (state.get("djSchlange") or [])[:12]]):   # auch die Karten
                         if re.fullmatch(r"[A-Za-z0-9_-]{11}", s_vid) and s_vid not in SPUREN \
-                                and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER:
+                                and time.time() - failed.get(s_vid, 0) >= RETRY_FAILED_AFTER \
+                                and time.time() - spur_fehl.get(s_vid, 0) >= RETRY_FAILED_AFTER:
                             def spur_vorab(vid=s_vid):
                                 if spur_von_platte(vid):        # schon gemessen: kein yt-dlp noetig
                                     if not (takt_moeglich() and not os.path.exists(takt_datei(vid))):
                                         return                  # ... ausser die Takt-Datei fehlt
-                                urls = resolve(vid, "bestaudio", "abr")
+                                urls = resolve(vid, "bestaudio", "abr", vorab=True)
+                                if not urls:
+                                    spur_fehl[vid] = time.time()   # sonst gleich wieder (alle 1-2 s)
                                 if urls:
                                     quelle, ordner = mess_ton(vid, urls[0])
                                     try:
@@ -3927,7 +3946,7 @@ def main():
                      and time.time() - vormessen["fehl"].get(v, 0) >= 6 * 3600]
             if offen:
                 def vormess_lauf(vid=offen[0], rest=len(offen), gesamt=len(vormessen["liste"])):
-                    urls = resolve(vid, "bestaudio", "abr")
+                    urls = resolve(vid, "bestaudio", "abr", vorab=True)
                     if not urls:
                         vormessen["fehl"][vid] = time.time()
                         vormessen["fehler_folge"] += 1
