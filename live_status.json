@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-03T22:22:45Z",
+  "checked_at": "2026-11-03T22:37:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "techno on my moind - RIP Juan Atkins !juanatkins !techno !bewbs !merch !plus !alt !design",
       "game": "DJs"
     }
   ]
