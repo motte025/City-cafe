@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-04T15:37:45Z",
+  "checked_at": "2026-11-04T15:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Bergfest mit Musik und danach Pre-Event WoW Streamergilde ab 21 Uhr! | WoW Forever HYPE | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
