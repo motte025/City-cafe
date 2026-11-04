@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-04T08:07:48Z",
+  "checked_at": "2026-11-04T08:27:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "BPM Beats per Morning mit Katha",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ IN GERMANY WE SAY \"BERGFEST\" ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "BPM Beats per Morning mit Katha",
       "game": "DJs"
     },
     {
