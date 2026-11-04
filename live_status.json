@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-04T15:32:46Z",
+  "checked_at": "2026-11-04T15:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,13 +27,6 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "DJs after work mit @dj_falk & @felixkroecher",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
