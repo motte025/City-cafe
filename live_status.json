@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-04T07:52:45Z",
+  "checked_at": "2026-11-04T08:07:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ IN GERMANY WE SAY \"BERGFEST\" ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ IN GERMANY WE SAY \"BERGFEST\" ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
