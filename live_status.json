@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-04T21:22:46Z",
+  "checked_at": "2026-11-04T21:32:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Mitte der Woche... Bergfest! Lasst uns feiern!  !release @just_jenny_official @two_crazy_girls",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
