@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-04T18:57:46Z",
+  "checked_at": "2026-11-04T19:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ RAVE - Trance, Neo Rave, Hard Dance, Hyper Techno & Mainstage Music | !tip ✨",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Bergfest mit Musik und danach Pre-Event WoW Streamergilde ab 21 Uhr! | WoW Forever HYPE | !holy",
       "game": "DJs"
     },
     {
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Studio Session mit @resilution & CLAXY",
       "game": "DJs"
     }
   ]
