@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-04T17:02:46Z",
+  "checked_at": "2026-11-04T17:07:52Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,23 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "DJs after work mit @dj_falk & @felixkroecher",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Mitte der Woche... Bergfest! Lasst uns feiern!  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Face2Face with Melé",
       "game": "DJs"
     }
   ]
