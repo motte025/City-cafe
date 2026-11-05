@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-05T15:52:45Z",
+  "checked_at": "2026-11-05T16:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "good morning beautiful souls !bewbs !merch !plus !alt !design !wishlist",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "good morning beautiful souls !bewbs !merch !plus !alt !design !wishlist",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
@@ -35,6 +35,13 @@
       "name": "JenniferLeeDj",
       "title": "🔊 JOIN THE !RAVE NOW🔥PP 14/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "The Anjunadeep Edition #618 with pølaroit",
+      "game": "Music"
     }
   ]
 }
