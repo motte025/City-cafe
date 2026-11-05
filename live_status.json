@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-05T15:27:47Z",
+  "checked_at": "2026-11-05T15:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "good morning beautiful souls !bewbs !merch !plus !alt !design !wishlist",
       "game": "DJs"
     }
   ]
