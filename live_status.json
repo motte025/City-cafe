@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-05T17:27:45Z",
+  "checked_at": "2026-11-05T17:37:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wunderschöner Donnerstag <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "🔴 HARDSTYLE ON LITTLE FRIYAY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "⭐️ MUTE MARATHON TAG 111 ⭐️ | Harder Styles mit @bruebie | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -34,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "⭐️ MUTE MARATHON TAG 111 ⭐️ | Harder Styles mit @bruebie | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
