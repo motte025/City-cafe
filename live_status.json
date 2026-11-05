@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-05T02:32:47Z",
+  "checked_at": "2026-11-05T02:42:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "down the rabbit hole🐇 !patreon",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
