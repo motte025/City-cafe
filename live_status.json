@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-05T16:52:48Z",
+  "checked_at": "2026-11-05T17:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -35,13 +35,6 @@
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
       "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "The Anjunadeep Edition #618 with pølaroit",
-      "game": "Music"
     }
   ]
 }
