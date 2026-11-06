@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T17:07:46Z",
+  "checked_at": "2026-11-06T17:23:20Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Auf ins Wochenende! Wir reißen ab!  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
@@ -33,7 +40,7 @@
       "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
-      "title": "✨ Back to the 90s - Charts, Euro Dance, Rock, RnB, HipHop & HappyHardcore | !tip ✨",
+      "title": "✨ Back to the 90s - Charts, Euro Dance & HappyHardcore | !tip ✨",
       "game": "DJs"
     },
     {
@@ -41,13 +48,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Auf ins Wochenende! Wir reißen ab!  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
