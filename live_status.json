@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T16:07:48Z",
+  "checked_at": "2026-11-06T16:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,13 +31,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥THE BEST MUSIC OF YOUR LIFE🔥!spin PP 16/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ Back to the 90s - Charts, Euro Dance, Rock, RnB, HipHop & HappyHardcore | !tip ✨",
@@ -45,9 +38,23 @@
     },
     {
       "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥THE BEST MUSIC OF YOUR LIFE🔥!spin PP 16/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "⭐️ MUTE MARATHON TAG 112 ⭐️ | Harder Styles mit @bruebie | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
