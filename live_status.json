@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T15:17:49Z",
+  "checked_at": "2026-11-06T15:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 ROCK ON  FRIYAY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥THE BEST MUSIC OF YOUR LIFE🔥!spin PP 16/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
@@ -41,13 +48,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 ROCK ON  FRIYAY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     }
   ]
