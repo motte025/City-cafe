@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T17:52:46Z",
+  "checked_at": "2026-11-06T18:02:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -62,6 +62,13 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "MIX MISSION | SALTYSIS",
       "game": "DJs"
     }
   ]
