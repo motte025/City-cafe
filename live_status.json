@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-06T11:27:51Z",
+  "checked_at": "2026-11-06T11:47:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ MUTE INTO THE WEEKEND ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥THE BEST MUSIC OF YOUR LIFE🔥!spin PP 16/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
@@ -17,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥THE BEST MUSIC OF YOUR LIFE🔥!spin PP 16/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Kurzer 120 Minuten Freitagsquicky! (harderstyles)!prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     }
   ]
