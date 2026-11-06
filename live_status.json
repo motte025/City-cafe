@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-06T19:02:48Z",
+  "checked_at": "2026-11-06T19:22:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sintica",
@@ -20,6 +13,13 @@
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🔥 CHEERIO FREITAG 🍻 STREAMÜBERNAHME von @mindblast 🚨 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -52,23 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "ALLE FARBEN | SUNSHINE LIVE x BOOTSHAUS",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
       "game": "DJs"
     },
     {
@@ -77,6 +63,20 @@
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #702 with SQU4RE",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
+      "game": "DJs"
     }
   ]
 }
