@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T17:23:20Z",
+  "checked_at": "2026-11-06T17:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -48,6 +48,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🔥 CHEERIO FREITAG 🍻 STREAMÜBERNAHME feat. MINDBLAST 🚨 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
