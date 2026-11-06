@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-06T13:57:46Z",
+  "checked_at": "2026-11-06T14:12:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wunderschöner Freitag <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Freitagsbass | von zart bis hart | !holy",
       "game": "DJs"
     },
     {
@@ -20,13 +27,6 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥THE BEST MUSIC OF YOUR LIFE🔥!spin PP 16/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Freitagsbass | von zart bis hart | !holy",
       "game": "DJs"
     },
     {
