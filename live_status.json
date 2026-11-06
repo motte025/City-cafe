@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T13:42:45Z",
+  "checked_at": "2026-11-06T13:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Freitagsbass | von zart bis hart | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
@@ -34,13 +41,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Freitagsbass | von zart bis hart | !holy",
       "game": "DJs"
     }
   ]
