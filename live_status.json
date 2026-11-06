@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T18:02:48Z",
+  "checked_at": "2026-11-06T18:17:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -52,6 +52,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "MIX MISSION | SALTYSIS",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -59,16 +66,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "MIX MISSION | SALTYSIS",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
