@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T18:17:48Z",
+  "checked_at": "2026-11-06T18:37:54Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🔥 CHEERIO FREITAG 🍻 STREAMÜBERNAHME von @mindblast 🚨 !YR2V !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Freitagsbass | von zart bis hart | !holy",
       "game": "DJs"
     },
     {
@@ -38,16 +31,23 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
-      "title": "✨ Back to the 90s - Charts, Euro Dance & HappyHardcore | !tip ✨",
+      "title": "✨ Back to the 90s - HappyHardcore & Techno | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -62,13 +62,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
