@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-06T18:37:54Z",
+  "checked_at": "2026-11-06T19:02:48Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "sintica",
@@ -31,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Flüssiger Freitag! | !bier | !zug | !holy | #werbung",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -45,23 +52,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
-      "title": "MIX MISSION | SALTYSIS",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "title": "ALLE FARBEN | SUNSHINE LIVE x BOOTSHAUS",
       "game": "DJs"
     },
     {
@@ -70,6 +70,13 @@
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #702 with SQU4RE",
+      "game": "Music"
     }
   ]
 }
