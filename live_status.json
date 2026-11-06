@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T14:12:46Z",
+  "checked_at": "2026-11-06T14:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -19,14 +19,7 @@
       "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
-      "title": "Kurzer 120 Minuten Freitagsquicky! (harderstyles)!prep !Pchm !Pc !Spotify !Socials  #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥THE BEST MUSIC OF YOUR LIFE🔥!spin PP 16/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "title": "Kurzer 180 Minuten Freitagsquicky! (harderstyles)!prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
@@ -34,6 +27,13 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥THE BEST MUSIC OF YOUR LIFE🔥!spin PP 16/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
