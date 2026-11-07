@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:40:37Z",
+  "aktualisiert": "2026-11-07T21:43:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1177,7 +1177,7 @@
         },
         "5": {
           "heim": 1,
-          "auswaerts": 5,
+          "auswaerts": 6,
           "id": 109015
         },
         "6": {
@@ -1254,6 +1254,16 @@
         },
         {
           "rang": 4,
+          "spieler": "OBERZAN Lukas",
+          "spiele": 12,
+          "siege": 9,
+          "niederlagen": 3,
+          "legs_plus": 25,
+          "legs_minus": 13,
+          "punkte": 25
+        },
+        {
+          "rang": 5,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 12,
           "siege": 7,
@@ -1261,16 +1271,6 @@
           "legs_plus": 24,
           "legs_minus": 16,
           "punkte": 24
-        },
-        {
-          "rang": 5,
-          "spieler": "OBERZAN Lukas",
-          "spiele": 11,
-          "siege": 8,
-          "niederlagen": 3,
-          "legs_plus": 22,
-          "legs_minus": 12,
-          "punkte": 22
         },
         {
           "rang": 6,
@@ -1584,6 +1584,16 @@
         },
         {
           "rang": 37,
+          "spieler": "POSCHINGER Franz",
+          "spiele": 8,
+          "siege": 0,
+          "niederlagen": 8,
+          "legs_plus": 5,
+          "legs_minus": 20,
+          "punkte": 5
+        },
+        {
+          "rang": 38,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1593,23 +1603,13 @@
           "punkte": 4
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "GREINIG Hubert",
           "spiele": 6,
           "siege": 0,
           "niederlagen": 6,
           "legs_plus": 4,
           "legs_minus": 16,
-          "punkte": 4
-        },
-        {
-          "rang": 39,
-          "spieler": "POSCHINGER Franz",
-          "spiele": 7,
-          "siege": 0,
-          "niederlagen": 7,
-          "legs_plus": 4,
-          "legs_minus": 17,
           "punkte": 4
         },
         {
@@ -1704,7 +1704,7 @@
       "letztes_spiel": {
         "runde": 5,
         "heim": 1,
-        "auswaerts": 5,
+        "auswaerts": 6,
         "paarungen": [
           {
             "art": "DE",
@@ -1752,8 +1752,8 @@
             "art": "HE",
             "spieler1": "POSCHINGER Franz",
             "spieler2": "OBERZAN Lukas",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 3
           },
           {
             "art": "DE",
@@ -1869,7 +1869,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "erg_heim": 1,
-            "erg_auswaerts": 5,
+            "erg_auswaerts": 6,
             "id": 109015,
             "paarungen": [
               {
@@ -1918,8 +1918,8 @@
                 "art": "HE",
                 "spieler1": "POSCHINGER Franz",
                 "spieler2": "OBERZAN Lukas",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "DE",
