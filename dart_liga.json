@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:45:40Z",
+  "aktualisiert": "2026-11-07T20:50:39Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -204,6 +204,16 @@
         },
         {
           "rang": 7,
+          "spieler": "BERGLER Benjamin",
+          "spiele": 12,
+          "siege": 6,
+          "niederlagen": 6,
+          "legs_plus": 21,
+          "legs_minus": 22,
+          "punkte": 21
+        },
+        {
+          "rang": 8,
           "spieler": "REINISCH Jessica",
           "spiele": 12,
           "siege": 7,
@@ -213,23 +223,13 @@
           "punkte": 21
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "ELEZOSKI Serif",
           "spiele": 8,
           "siege": 6,
           "niederlagen": 2,
           "legs_plus": 20,
           "legs_minus": 6,
-          "punkte": 20
-        },
-        {
-          "rang": 9,
-          "spieler": "BERGLER Benjamin",
-          "spiele": 11,
-          "siege": 6,
-          "niederlagen": 5,
-          "legs_plus": 20,
-          "legs_minus": 19,
           "punkte": 20
         },
         {
@@ -294,7 +294,7 @@
         },
         {
           "rang": 16,
-          "spieler": "FRIEßNEGGER Sarah",
+          "spieler": "ASPRIAN Johann",
           "spiele": 8,
           "siege": 5,
           "niederlagen": 3,
@@ -304,6 +304,16 @@
         },
         {
           "rang": 17,
+          "spieler": "FRIEßNEGGER Sarah",
+          "spiele": 8,
+          "siege": 5,
+          "niederlagen": 3,
+          "legs_plus": 17,
+          "legs_minus": 12,
+          "punkte": 17
+        },
+        {
+          "rang": 18,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 12,
           "siege": 4,
@@ -313,7 +323,7 @@
           "punkte": 17
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "KERNSTOCK Michael",
           "spiele": 8,
           "siege": 5,
@@ -323,7 +333,7 @@
           "punkte": 16
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 8,
           "siege": 4,
@@ -333,7 +343,7 @@
           "punkte": 15
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "KOLLER Elias",
           "spiele": 11,
           "siege": 5,
@@ -341,16 +351,6 @@
           "legs_plus": 15,
           "legs_minus": 20,
           "punkte": 15
-        },
-        {
-          "rang": 21,
-          "spieler": "ASPRIAN Johann",
-          "spiele": 7,
-          "siege": 4,
-          "niederlagen": 3,
-          "legs_plus": 14,
-          "legs_minus": 11,
-          "punkte": 14
         },
         {
           "rang": 22,
@@ -728,7 +728,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "PBC DC Skorpions Reichenfels",
             "erg_heim": 1,
-            "erg_auswaerts": 5,
+            "erg_auswaerts": 6,
             "id": 109620,
             "paarungen": [
               {
@@ -777,8 +777,8 @@
                 "art": "HE",
                 "spieler1": "BERGLER Benjamin",
                 "spieler2": "ASPRIAN Johann",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "DE",
