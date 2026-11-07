@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-07T19:07:46Z",
+  "checked_at": "2026-11-07T19:27:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "bruebie",
@@ -24,6 +31,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 2. BIRD Hardstyle/Hardtechno🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
@@ -38,16 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 2. BIRD Hardstyle/Hardtechno🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Schlager & Party - Das legendäre Original! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     },
     {
@@ -55,13 +62,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmikemorino",
-      "name": "DJMikeMorino",
-      "title": "Schlager & Party - Das legendäre Original! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
