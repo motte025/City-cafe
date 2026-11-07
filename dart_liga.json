@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T18:55:38Z",
+  "aktualisiert": "2026-11-07T18:56:39Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -184,6 +184,16 @@
         },
         {
           "rang": 5,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 9,
+          "siege": 8,
+          "niederlagen": 1,
+          "legs_plus": 23,
+          "legs_minus": 12,
+          "punkte": 23
+        },
+        {
+          "rang": 6,
           "spieler": "URANK Romeo",
           "spiele": 9,
           "siege": 7,
@@ -193,23 +203,13 @@
           "punkte": 22
         },
         {
-          "rang": 6,
+          "rang": 7,
           "spieler": "ELEZOSKI Serif",
           "spiele": 8,
           "siege": 6,
           "niederlagen": 2,
           "legs_plus": 20,
           "legs_minus": 6,
-          "punkte": 20
-        },
-        {
-          "rang": 7,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 8,
-          "siege": 7,
-          "niederlagen": 1,
-          "legs_plus": 20,
-          "legs_minus": 11,
           "punkte": 20
         },
         {
@@ -375,12 +375,12 @@
         {
           "rang": 24,
           "spieler": "BRUNNER Jürgen",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 2,
-          "niederlagen": 4,
-          "legs_plus": 9,
-          "legs_minus": 13,
-          "punkte": 9
+          "niederlagen": 5,
+          "legs_plus": 10,
+          "legs_minus": 16,
+          "punkte": 10
         },
         {
           "rang": 25,
@@ -763,7 +763,7 @@
             "datum": "2026-11-07",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 0,
             "id": 109642,
             "paarungen": [
