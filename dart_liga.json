@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T18:47:37Z",
+  "aktualisiert": "2026-11-07T18:48:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1057,12 +1057,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 12,
-          "siege": 12,
+          "spiele": 13,
+          "siege": 13,
           "niederlagen": 0,
-          "legs_plus": 32,
-          "legs_minus": 4,
-          "punkte": 32
+          "legs_plus": 35,
+          "legs_minus": 5,
+          "punkte": 35
         },
         {
           "rang": 2,
@@ -1177,12 +1177,12 @@
         {
           "rang": 13,
           "spieler": "STINGLER Engelbert",
-          "spiele": 9,
+          "spiele": 10,
           "siege": 5,
-          "niederlagen": 4,
-          "legs_plus": 16,
-          "legs_minus": 16,
-          "punkte": 16
+          "niederlagen": 5,
+          "legs_plus": 17,
+          "legs_minus": 19,
+          "punkte": 17
         },
         {
           "rang": 14,
@@ -1577,7 +1577,7 @@
             "datum": "2026-11-07",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC O3tz 1.0",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 0,
             "id": 109004,
             "paarungen": [
@@ -1592,8 +1592,8 @@
                 "art": "HE",
                 "spieler1": "NIKOLIC Dennis",
                 "spieler2": "STINGLER Engelbert",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "OE",
