@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T22:01:43Z",
+  "aktualisiert": "2026-11-07T22:20:39Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1177,7 +1177,7 @@
         },
         "5": {
           "heim": 1,
-          "auswaerts": 6,
+          "auswaerts": 7,
           "id": 109015
         },
         "6": {
@@ -1514,6 +1514,16 @@
         },
         {
           "rang": 30,
+          "spieler": "FRÜSTÜCK Kerstin",
+          "spiele": 12,
+          "siege": 1,
+          "niederlagen": 11,
+          "legs_plus": 10,
+          "legs_minus": 29,
+          "punkte": 10
+        },
+        {
+          "rang": 31,
           "spieler": "GUN Conny",
           "spiele": 3,
           "siege": 3,
@@ -1523,17 +1533,17 @@
           "punkte": 8
         },
         {
-          "rang": 31,
-          "spieler": "FRÜSTÜCK Kerstin",
-          "spiele": 11,
-          "siege": 1,
-          "niederlagen": 10,
+          "rang": 32,
+          "spieler": "STEINER Lydia",
+          "spiele": 8,
+          "siege": 3,
+          "niederlagen": 5,
           "legs_plus": 8,
-          "legs_minus": 26,
+          "legs_minus": 19,
           "punkte": 8
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "DANIEL Johanna",
           "spiele": 3,
           "siege": 2,
@@ -1543,7 +1553,7 @@
           "punkte": 7
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1553,7 +1563,7 @@
           "punkte": 6
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
@@ -1563,23 +1573,13 @@
           "punkte": 5
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "RUS Kerstin",
           "spiele": 6,
           "siege": 1,
           "niederlagen": 5,
           "legs_plus": 5,
           "legs_minus": 13,
-          "punkte": 5
-        },
-        {
-          "rang": 36,
-          "spieler": "STEINER Lydia",
-          "spiele": 7,
-          "siege": 2,
-          "niederlagen": 5,
-          "legs_plus": 5,
-          "legs_minus": 17,
           "punkte": 5
         },
         {
@@ -1704,7 +1704,7 @@
       "letztes_spiel": {
         "runde": 5,
         "heim": 1,
-        "auswaerts": 6,
+        "auswaerts": 7,
         "paarungen": [
           {
             "art": "DE",
@@ -1759,8 +1759,8 @@
             "art": "DE",
             "spieler1": "FRÜSTÜCK Kerstin",
             "spieler2": "STEINER Lydia",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 2,
+            "legs2": 3
           },
           {
             "art": "OE",
@@ -1869,7 +1869,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "erg_heim": 1,
-            "erg_auswaerts": 6,
+            "erg_auswaerts": 7,
             "id": 109015,
             "paarungen": [
               {
@@ -1925,8 +1925,8 @@
                 "art": "DE",
                 "spieler1": "FRÜSTÜCK Kerstin",
                 "spieler2": "STEINER Lydia",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
