@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:02:42Z",
+  "aktualisiert": "2026-11-07T19:03:45Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -673,6 +673,20 @@
             "spieler2": "JAHN Andreas",
             "legs1": 0,
             "legs2": 3
+          },
+          {
+            "art": "MD",
+            "spieler1": "PROVNIK Gabriele / SATZ Klemens",
+            "spieler2": "KOGLER Sabine / JAHN Christian",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OD",
+            "spieler1": "BRANDSTÄTTER Manuel / KOLLER Elias",
+            "spieler2": "JAHN Herbert / JAHN Andreas",
+            "legs1": 0,
+            "legs2": 0
           }
         ]
       },
@@ -755,6 +769,20 @@
                 "spieler2": "JAHN Andreas",
                 "legs1": 0,
                 "legs2": 3
+              },
+              {
+                "art": "MD",
+                "spieler1": "PROVNIK Gabriele / SATZ Klemens",
+                "spieler2": "KOGLER Sabine / JAHN Christian",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "BRANDSTÄTTER Manuel / KOLLER Elias",
+                "spieler2": "JAHN Herbert / JAHN Andreas",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           },
