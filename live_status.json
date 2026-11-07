@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-07T12:17:45Z",
+  "checked_at": "2026-11-07T12:22:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Classics mit @dj_falk",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
