@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-07T21:27:45Z",
+  "checked_at": "2026-11-07T21:42:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 Ganz normaler Samstag? | !bier | !zug | !holy | #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Rituals of Bass 2.0 - w/ @Sintica @MrBassmeister @Linni @Mindblast @Crest_Dj @E_One @Paeaet - 12 Stunden Musik ! !prep !Socials  #Werbung",
       "game": "DJs"
     },
     {
@@ -24,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 2. BIRD Hardstyle/Hardtechno🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Rituals of Bass 2.0 - w/ @Sintica @MrBassmeister @Linni @Mindblast @Crest_Dj @E_One @Paeaet - 12 Stunden Musik ! !prep !Socials  #Werbung",
       "game": "DJs"
     },
     {
