@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:22:37Z",
+  "aktualisiert": "2026-11-07T20:23:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -174,6 +174,16 @@
         },
         {
           "rang": 4,
+          "spieler": "URANK Romeo",
+          "spiele": 10,
+          "siege": 8,
+          "niederlagen": 2,
+          "legs_plus": 24,
+          "legs_minus": 11,
+          "punkte": 24
+        },
+        {
+          "rang": 5,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 10,
           "siege": 8,
@@ -183,24 +193,14 @@
           "punkte": 24
         },
         {
-          "rang": 5,
-          "spieler": "JAMMER Fabian",
-          "spiele": 12,
-          "siege": 8,
-          "niederlagen": 4,
-          "legs_plus": 24,
-          "legs_minus": 21,
-          "punkte": 24
-        },
-        {
           "rang": 6,
-          "spieler": "URANK Romeo",
-          "spiele": 9,
-          "siege": 7,
-          "niederlagen": 2,
-          "legs_plus": 22,
-          "legs_minus": 11,
-          "punkte": 22
+          "spieler": "JAMMER Fabian",
+          "spiele": 13,
+          "siege": 8,
+          "niederlagen": 5,
+          "legs_plus": 24,
+          "legs_minus": 23,
+          "punkte": 24
         },
         {
           "rang": 7,
@@ -224,6 +224,16 @@
         },
         {
           "rang": 9,
+          "spieler": "REGENFELDNER Rene",
+          "spiele": 8,
+          "siege": 7,
+          "niederlagen": 1,
+          "legs_plus": 19,
+          "legs_minus": 6,
+          "punkte": 19
+        },
+        {
+          "rang": 10,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
@@ -233,7 +243,7 @@
           "punkte": 19
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "REINISCH Jessica",
           "spiele": 11,
           "siege": 7,
@@ -243,7 +253,7 @@
           "punkte": 19
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 9,
           "siege": 5,
@@ -253,7 +263,7 @@
           "punkte": 18
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "JAHN Corinna",
           "spiele": 9,
           "siege": 4,
@@ -263,7 +273,7 @@
           "punkte": 18
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "JAHN Andreas",
           "spiele": 10,
           "siege": 5,
@@ -271,16 +281,6 @@
           "legs_plus": 18,
           "legs_minus": 18,
           "punkte": 18
-        },
-        {
-          "rang": 14,
-          "spieler": "REGENFELDNER Rene",
-          "spiele": 7,
-          "siege": 6,
-          "niederlagen": 1,
-          "legs_plus": 17,
-          "legs_minus": 6,
-          "punkte": 17
         },
         {
           "rang": 15,
@@ -315,11 +315,11 @@
         {
           "rang": 18,
           "spieler": "SCHNEIDER Thomas",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 4,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 15,
-          "legs_minus": 9,
+          "legs_minus": 11,
           "punkte": 15
         },
         {
@@ -700,7 +700,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "PBC DC Skorpions Reichenfels",
             "erg_heim": 1,
-            "erg_auswaerts": 4,
+            "erg_auswaerts": 5,
             "id": 109620,
             "paarungen": [
               {
@@ -743,7 +743,7 @@
                 "spieler1": "JAMMER Fabian / SCHNEIDER Thomas",
                 "spieler2": "URANK Romeo / REGENFELDNER Rene",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               }
             ]
           },
