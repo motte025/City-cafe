@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T18:17:45Z",
+  "checked_at": "2026-11-07T18:32:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,6 +31,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ganz normaler Samstag? | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "roice",
       "name": "roice",
       "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
@@ -55,13 +62,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ganz normaler Samstag? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
