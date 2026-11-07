@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-07T06:02:45Z",
+  "checked_at": "2026-11-07T06:17:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "❤️‍🔥 Its FREAKin FERal FriYAY In Vegas BBY❤️‍🔥 !tip !twitchcon !patreon !youtube",
       "game": "DJs"
     }
   ]
