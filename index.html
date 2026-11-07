@@ -7003,9 +7003,59 @@
             try {
                 if (!RAETSEL_AN || !RAETSEL_RAEUME.includes(NL_FERN_RAUM)) return false;
                 if (/(?:^|[?&])raetsel=0(?:&|$)/.test(location.search)) return false;
+                if (livemusikAktiv()) return true;                                  // Livemusik-Abend: Quiz auch nach 20:00
                 const j = new Date(), min = j.getHours() * 60 + j.getMinutes();
                 return min >= RAETSEL_VON_MIN && min < RAETSEL_BIS_MIN;
             } catch (e) { return false; }
+        }
+
+        /* ---------- Livemusik-Abend 07.11.2026 (Wunsch Betreiber) ----------
+         * Livemusik im Cafe: von 15:00 bis 02:00 laeuft am Screen NUR das Quiz (mit Kreidetafel)
+         * und die Plakate aus werbung.json ("plakate": Jaegermeister-Aktion, Spirituosen) im Wechsel:
+         * Quiz -> Plakat 1 -> Plakat 2 -> Quiz ... Kein Musik-, Nightlife-, Dart- oder Sonstiges-Slot.
+         * Was das Personal am Handy startet (Musik, DJ, Roulette), geht weiter vor.
+         * Abschalten: ?livemusik=0. Nach 02:00 wieder die normale Rotation.
+         */
+        const LIVEMUSIK_VON = new Date('2026-11-07T15:00:00+01:00').getTime();
+        const LIVEMUSIK_BIS = new Date('2026-11-08T02:00:00+01:00').getTime();
+        let livemusikSchrittNr = 0;
+        function livemusikAktiv() {
+            try {
+                if (NL_FERN_RAUM !== 'city-cafe') return false;
+                if (/(?:^|[?&])livemusik=0(?:&|$)/.test(location.search)) return false;
+                const n = Date.now();
+                return n >= LIVEMUSIK_VON && n < LIVEMUSIK_BIS;
+            } catch (e) { return false; }
+        }
+        // true, wenn etwas gestartet wurde; false = normal weiter (nichts zu zeigen)
+        function runLivemusikState() {
+            const plakate = ((hausprogrammDaten && hausprogrammDaten.plakate) || [])
+                .filter(pl => pl && pl.aktiv !== false && pl.datei);
+            const folge = ['quiz'].concat(plakate.map((pl, i) => i));
+            for (let versuch = 0; versuch < folge.length; versuch++) {
+                const s = folge[livemusikSchrittNr++ % folge.length];
+                if (s === 'quiz') {
+                    if (!raetselAn() || !document.getElementById('raetsel-fullscreen')) continue;
+                    mediaStateIndex = RAETSEL_SLOT_INDEX;
+                    runRaetselState(10);
+                    return true;
+                }
+                const pl = plakate[s];
+                const bild = document.getElementById('plakat-bild');
+                bild.onerror = () => {            // Datei fehlt: gleich weiter statt schwarzer Flaeche
+                    bild.onerror = null;
+                    if (document.getElementById('plakat-fullscreen').classList.contains('active')) {
+                        cancelSequenceTimers(); runMasterSequence();
+                    }
+                };
+                bild.src = pl.datei;
+                bild.alt = pl.titel || '';
+                buehneEinstellen('plakat-fullscreen', 'plakate');
+                document.getElementById('plakat-fullscreen').classList.add('active');
+                globalMasterTimer = later(runMasterSequence, Math.max(20000, werbungDauerMs('plakate')));
+                return true;
+            }
+            return false;
         }
         function raetselDauerphase() { return raetselAn() && Date.now() < RAETSEL_DAUER_BIS; }
         function raetselStop() {
@@ -15498,6 +15548,10 @@
             if (mediaStateIndex === DART_ABEND_CAM_INDEX) { runDartAbendCamState(); return; }
             if (mediaStateIndex === DART_ABEND_SPIEL_INDEX) { runDartAbendSpielState(); return; }
             if (mediaStateIndex === DART_ABEND_GRUPPE_INDEX) { runDartAbendGruppeState(); return; }
+
+            // Livemusik-Abend (07.11.2026 15:00-02:00): nur Quiz und Plakate im Wechsel
+            // (Wuensche vom Handy - Nightlife-Video, DJ - gehen vor)
+            if (livemusikAktiv() && !nlFernAktiv() && !djFernAktiv() && runLivemusikState()) return;
 
             // Das QR-Widget eroeffnet den Zyklus: alles zum Mitmachen zuerst,
             // eine Minute lang mit Countdown.
