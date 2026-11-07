@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:43:36Z",
+  "aktualisiert": "2026-11-07T19:49:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1050,7 +1050,7 @@
           "id": 108960
         },
         "5": {
-          "heim": 0,
+          "heim": 1,
           "auswaerts": 3,
           "id": 109015
         },
@@ -1278,6 +1278,16 @@
         },
         {
           "rang": 19,
+          "spieler": "GRAF Franz",
+          "spiele": 6,
+          "siege": 4,
+          "niederlagen": 2,
+          "legs_plus": 12,
+          "legs_minus": 5,
+          "punkte": 12
+        },
+        {
+          "rang": 20,
           "spieler": "SPANRING Andreas",
           "spiele": 6,
           "siege": 4,
@@ -1287,7 +1297,7 @@
           "punkte": 12
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "LANG Melanie",
           "spiele": 8,
           "siege": 4,
@@ -1295,16 +1305,6 @@
           "legs_plus": 12,
           "legs_minus": 15,
           "punkte": 12
-        },
-        {
-          "rang": 21,
-          "spieler": "GRAF Franz",
-          "spiele": 5,
-          "siege": 4,
-          "niederlagen": 1,
-          "legs_plus": 11,
-          "legs_minus": 2,
-          "punkte": 11
         },
         {
           "rang": 22,
@@ -1328,6 +1328,16 @@
         },
         {
           "rang": 24,
+          "spieler": "KRENN Klaus",
+          "spiele": 6,
+          "siege": 2,
+          "niederlagen": 4,
+          "legs_plus": 10,
+          "legs_minus": 12,
+          "punkte": 10
+        },
+        {
+          "rang": 25,
           "spieler": "GREINIG Petra",
           "spiele": 6,
           "siege": 1,
@@ -1337,7 +1347,7 @@
           "punkte": 10
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "PINTER Michele",
           "spiele": 8,
           "siege": 1,
@@ -1347,7 +1357,7 @@
           "punkte": 10
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 9,
           "siege": 3,
@@ -1357,7 +1367,7 @@
           "punkte": 9
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "GUN Conny",
           "spiele": 3,
           "siege": 3,
@@ -1367,7 +1377,7 @@
           "punkte": 8
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 5,
           "siege": 1,
@@ -1377,7 +1387,7 @@
           "punkte": 8
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 10,
           "siege": 1,
@@ -1387,23 +1397,13 @@
           "punkte": 8
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 3,
           "siege": 2,
           "niederlagen": 1,
           "legs_plus": 7,
           "legs_minus": 3,
-          "punkte": 7
-        },
-        {
-          "rang": 31,
-          "spieler": "KRENN Klaus",
-          "spiele": 5,
-          "siege": 1,
-          "niederlagen": 4,
-          "legs_plus": 7,
-          "legs_minus": 11,
           "punkte": 7
         },
         {
@@ -1577,7 +1577,7 @@
       ],
       "letztes_spiel": {
         "runde": 5,
-        "heim": 0,
+        "heim": 1,
         "auswaerts": 3,
         "paarungen": [
           {
@@ -1605,8 +1605,8 @@
             "art": "OE",
             "spieler1": "KRENN Klaus",
             "spieler2": "GRAF Franz",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 3,
+            "legs2": 1
           }
         ]
       },
@@ -1672,7 +1672,7 @@
             "datum": "2026-11-07",
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 3,
             "id": 109015,
             "paarungen": [
@@ -1701,8 +1701,8 @@
                 "art": "OE",
                 "spieler1": "KRENN Klaus",
                 "spieler2": "GRAF Franz",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               }
             ]
           },
