@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T18:46:38Z",
+  "aktualisiert": "2026-11-07T18:47:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1326,6 +1326,16 @@
         },
         {
           "rang": 28,
+          "spieler": "REIF Daniel-Stefan",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 3,
+          "punkte": 7
+        },
+        {
+          "rang": 29,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 4,
           "siege": 1,
@@ -1335,7 +1345,7 @@
           "punkte": 7
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "KRENN Klaus",
           "spiele": 5,
           "siege": 1,
@@ -1345,7 +1355,7 @@
           "punkte": 7
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 9,
           "siege": 1,
@@ -1355,7 +1365,7 @@
           "punkte": 7
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1365,7 +1375,7 @@
           "punkte": 6
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
@@ -1375,7 +1385,7 @@
           "punkte": 5
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "STEINER Lydia",
           "spiele": 7,
           "siege": 2,
@@ -1385,18 +1395,8 @@
           "punkte": 5
         },
         {
-          "rang": 34,
-          "spieler": "OSTRY Samantha-Lee",
-          "spiele": 2,
-          "siege": 1,
-          "niederlagen": 1,
-          "legs_plus": 4,
-          "legs_minus": 3,
-          "punkte": 4
-        },
-        {
           "rang": 35,
-          "spieler": "REIF Daniel-Stefan",
+          "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
@@ -1496,7 +1496,7 @@
         },
         {
           "rang": 45,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "OBERLERCHNER Melanie",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1506,6 +1506,16 @@
         },
         {
           "rang": 46,
+          "spieler": "LEUTSCHACHER Martin",
+          "spiele": 1,
+          "siege": 0,
+          "niederlagen": 1,
+          "legs_plus": 0,
+          "legs_minus": 3,
+          "punkte": 0
+        },
+        {
+          "rang": 47,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1646,7 +1656,7 @@
             "heim": "ESV DC Inferno",
             "auswaerts": "DC Garzern",
             "erg_heim": 0,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 109026,
             "paarungen": [
               {
@@ -1668,7 +1678,7 @@
                 "spieler1": "OBERLERCHNER Melanie",
                 "spieler2": "REIF Daniel-Stefan",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "OE",
