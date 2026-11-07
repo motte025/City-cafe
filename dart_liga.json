@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:16:38Z",
+  "aktualisiert": "2026-11-07T19:17:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1728,6 +1728,20 @@
                 "spieler2": "MARKTL (J) Maximilian",
                 "legs1": 3,
                 "legs2": 1
+              },
+              {
+                "art": "MD",
+                "spieler1": "STÜCKLER Heidemarie / GÖSCHL Mario",
+                "spieler2": "DANIEL Johanna / GRAFSCHAFTER Bastian",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "LANG Melanie / SCHMID Thomas",
+                "spieler2": "REIF Daniel-Stefan / MARKTL Werner",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           }
