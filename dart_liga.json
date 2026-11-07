@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:42:47Z",
+  "aktualisiert": "2026-11-07T20:43:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1703,7 +1703,7 @@
             "datum": "2026-11-07",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC O3tz 1.0",
-            "erg_heim": 5,
+            "erg_heim": 6,
             "erg_auswaerts": 1,
             "id": 109004,
             "paarungen": [
@@ -1753,7 +1753,7 @@
                 "art": "HE",
                 "spieler1": "NIKOLIC Dennis",
                 "spieler2": "KRUSCHITZ Harald",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
