@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:24:36Z",
+  "aktualisiert": "2026-11-07T20:33:43Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1121,7 +1121,7 @@
         },
         "5": {
           "heim": 1,
-          "auswaerts": 3,
+          "auswaerts": 4,
           "id": 109015
         },
         "6": {
@@ -1318,6 +1318,16 @@
         },
         {
           "rang": 16,
+          "spieler": "GRAF Franz",
+          "spiele": 7,
+          "siege": 5,
+          "niederlagen": 2,
+          "legs_plus": 14,
+          "legs_minus": 6,
+          "punkte": 14
+        },
+        {
+          "rang": 17,
           "spieler": "ETTL Theresa",
           "spiele": 8,
           "siege": 5,
@@ -1327,7 +1337,7 @@
           "punkte": 14
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 9,
           "siege": 3,
@@ -1337,7 +1347,7 @@
           "punkte": 14
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "SONNBERGER Harald",
           "spiele": 10,
           "siege": 3,
@@ -1347,7 +1357,17 @@
           "punkte": 14
         },
         {
-          "rang": 19,
+          "rang": 20,
+          "spieler": "PAULITSCH Brigitte",
+          "spiele": 8,
+          "siege": 4,
+          "niederlagen": 4,
+          "legs_plus": 13,
+          "legs_minus": 14,
+          "punkte": 13
+        },
+        {
+          "rang": 21,
           "spieler": "LANG Melanie",
           "spiele": 9,
           "siege": 4,
@@ -1357,17 +1377,7 @@
           "punkte": 13
         },
         {
-          "rang": 20,
-          "spieler": "GRAF Franz",
-          "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
-          "legs_plus": 12,
-          "legs_minus": 5,
-          "punkte": 12
-        },
-        {
-          "rang": 21,
+          "rang": 22,
           "spieler": "SPANRING Andreas",
           "spiele": 6,
           "siege": 4,
@@ -1377,17 +1387,17 @@
           "punkte": 12
         },
         {
-          "rang": 22,
-          "spieler": "PAULITSCH Brigitte",
-          "spiele": 7,
-          "siege": 3,
-          "niederlagen": 4,
+          "rang": 23,
+          "spieler": "PINTER Michele",
+          "spiele": 9,
+          "siege": 1,
+          "niederlagen": 8,
           "legs_plus": 11,
-          "legs_minus": 13,
+          "legs_minus": 23,
           "punkte": 11
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 6,
           "siege": 3,
@@ -1397,7 +1407,7 @@
           "punkte": 10
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "KRENN Klaus",
           "spiele": 6,
           "siege": 2,
@@ -1407,23 +1417,13 @@
           "punkte": 10
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "GREINIG Petra",
           "spiele": 6,
           "siege": 1,
           "niederlagen": 5,
           "legs_plus": 10,
           "legs_minus": 16,
-          "punkte": 10
-        },
-        {
-          "rang": 26,
-          "spieler": "PINTER Michele",
-          "spiele": 8,
-          "siege": 1,
-          "niederlagen": 7,
-          "legs_plus": 10,
-          "legs_minus": 21,
           "punkte": 10
         },
         {
@@ -1488,7 +1488,7 @@
         },
         {
           "rang": 33,
-          "spieler": "DANIEL Johanna",
+          "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
@@ -1498,7 +1498,7 @@
         },
         {
           "rang": 34,
-          "spieler": "STEINER Manuel",
+          "spieler": "DANIEL Johanna",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
@@ -1548,6 +1548,16 @@
         },
         {
           "rang": 39,
+          "spieler": "POSCHINGER Franz",
+          "spiele": 7,
+          "siege": 0,
+          "niederlagen": 7,
+          "legs_plus": 4,
+          "legs_minus": 17,
+          "punkte": 4
+        },
+        {
+          "rang": 40,
           "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
@@ -1557,7 +1567,7 @@
           "punkte": 3
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "SCHMID Thomas",
           "spiele": 2,
           "siege": 1,
@@ -1567,23 +1577,13 @@
           "punkte": 3
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 4,
           "siege": 0,
           "niederlagen": 4,
           "legs_plus": 3,
           "legs_minus": 11,
-          "punkte": 3
-        },
-        {
-          "rang": 42,
-          "spieler": "POSCHINGER Franz",
-          "spiele": 6,
-          "siege": 0,
-          "niederlagen": 6,
-          "legs_plus": 3,
-          "legs_minus": 15,
           "punkte": 3
         },
         {
@@ -1648,7 +1648,7 @@
       "letztes_spiel": {
         "runde": 5,
         "heim": 1,
-        "auswaerts": 3,
+        "auswaerts": 4,
         "paarungen": [
           {
             "art": "DE",
@@ -1682,8 +1682,8 @@
             "art": "MD",
             "spieler1": "POSCHINGER Franz / PINTER Michele",
             "spieler2": "PAULITSCH Brigitte / GRAF Franz",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 2
           },
           {
             "art": "OD",
@@ -1785,7 +1785,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "erg_heim": 1,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 109015,
             "paarungen": [
               {
@@ -1820,8 +1820,8 @@
                 "art": "MD",
                 "spieler1": "POSCHINGER Franz / PINTER Michele",
                 "spieler2": "PAULITSCH Brigitte / GRAF Franz",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 2
               },
               {
                 "art": "OD",
