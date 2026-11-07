@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T18:48:40Z",
+  "aktualisiert": "2026-11-07T18:49:54Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -214,6 +214,16 @@
         },
         {
           "rang": 8,
+          "spieler": "BERGLER Benjamin",
+          "spiele": 10,
+          "siege": 6,
+          "niederlagen": 4,
+          "legs_plus": 20,
+          "legs_minus": 17,
+          "punkte": 20
+        },
+        {
+          "rang": 9,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
@@ -223,7 +233,7 @@
           "punkte": 19
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "JAHN Corinna",
           "spiele": 8,
           "siege": 4,
@@ -233,23 +243,13 @@
           "punkte": 18
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 8,
           "siege": 5,
           "niederlagen": 3,
           "legs_plus": 17,
           "legs_minus": 9,
-          "punkte": 17
-        },
-        {
-          "rang": 11,
-          "spieler": "BERGLER Benjamin",
-          "spiele": 9,
-          "siege": 5,
-          "niederlagen": 4,
-          "legs_plus": 17,
-          "legs_minus": 17,
           "punkte": 17
         },
         {
@@ -374,9 +374,9 @@
         },
         {
           "rang": 24,
-          "spieler": "BÄCKER Josephine",
-          "spiele": 5,
-          "siege": 1,
+          "spieler": "BRUNNER Jürgen",
+          "spiele": 6,
+          "siege": 2,
           "niederlagen": 4,
           "legs_plus": 9,
           "legs_minus": 13,
@@ -384,9 +384,9 @@
         },
         {
           "rang": 25,
-          "spieler": "BRUNNER Jürgen",
-          "spiele": 6,
-          "siege": 2,
+          "spieler": "BÄCKER Josephine",
+          "spiele": 5,
+          "siege": 1,
           "niederlagen": 4,
           "legs_plus": 9,
           "legs_minus": 13,
@@ -435,11 +435,11 @@
         {
           "rang": 30,
           "spieler": "HOCHEGGER Martin",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 2,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 7,
-          "legs_minus": 11,
+          "legs_minus": 14,
           "punkte": 7
         },
         {
@@ -685,7 +685,7 @@
             "datum": "2026-11-07",
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "PBC DC Skorpions Reichenfels",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 1,
             "id": 109620,
             "paarungen": [
@@ -700,7 +700,7 @@
                 "art": "HE",
                 "spieler1": "BERGLER Benjamin",
                 "spieler2": "HOCHEGGER Martin",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
