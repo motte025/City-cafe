@@ -8,7 +8,10 @@ Stand beschreiben, nicht den von vorgestern.
 **Windows-Sitzung (mit `ssh w1`): zuerst `UEBERGABE-WINDOWS.md` lesen** – was am 21.10. passiert ist
 und was am W1 zu tun ist.
 
-Letzte Durchsicht: 2. November 2026 (Kärnten-Quiz „Kennst di aus?“ live 8:30–20:00, Roulette 12 Runden,
+Letzte Durchsicht: 7. November 2026 (Quiz: Kreidetafel mit Werbung und Flachwitz vor jeder Runde, Lindwurm mit
+Sprechblasen, neue Hintergründe und Bühnenbilder, größere Schrift, Sport-Fragen gesichtet; W1-Prüfung 06.–07.11. ohne
+Störung – alles im Abschnitt „05.–07.11.2026“).
+Davor, 2. November 2026 (Kärnten-Quiz „Kennst di aus?“ live 8:30–20:00, Roulette 12 Runden,
 Durchlauf gemessen – alles im Abschnitt „02.11.2026“).
 Davor, 28. Oktober 2026 (DJ-Modus: Videos als HLS und vorab auf der Platte, seit 27.10. 08:31
 live; am 27.10. fielen ab 08:40 alle Überblendungen aus – Ursache war ein Prüfbefehl der Windows-Sitzung,
@@ -44,6 +47,48 @@ Davor, 5.–7. Oktober: DJ-Übergänge per Studio-Abgleich, offizielle Videos
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
+
+## 05.–07.11.2026: Quiz mit Kreidetafel, Lindwurm, neuen Bildern; W1-Prüfung (Windows-Sitzung)
+
+Alles an der Quizseite liegt wie bisher **nur auf dem W1** (`/home/sabrina/raetsel-test`) und lokal auf dem PC im Branch
+`raetsel-prototyp` (Ordner `raetsel-test/`, **nicht pushen** – das Repo ist öffentlich, die Antworten wären lesbar).
+Am Dashboard (`index.html` auf `main`) wurde nichts geändert. Weil das Dashboard die Quizseite bei jedem Slot neu lädt
+(`&v=<zeit>`), wirkt jede Datei auf dem W1 ab dem nächsten Quiz-Durchgang – kein Neuladen des Kiosks nötig.
+
+- **Kreidetafel vor jeder Runde** (`tafel.js`, Overlay `#tafel` im Vollbild): aktive Werbung → „Gleich geht’s los – Kennst
+  di aus?“ → Flachwitz → 10 Fragen. Dauer ~1:50 min.
+  - **Neue Termine nur in `werbung.js` eintragen**: `{ bis: 'JJJJ-MM-TT', zeilen: [Datum/Uhrzeit, Titel, Text, Ort],
+    deko: [...], foto: 'medien/….jpg' }`. `bis` = Veranstaltungstag; danach verschwindet die Tafel von selbst. Ab 21 Tagen
+    vorher kommt „Noch N Tage!“ eingekreist, am Tag selbst „HEUTE!“ mit Kreide-Rahmen. Fotos nur in `medien/` (gitignored).
+    Stand 07.11.: FPÖ Krampuskränzchen 14.11. ab 17 Uhr (Almrebell, mit Foto), Schlucker Party 20.11. ab 18 Uhr.
+  - `flachwitze.js`: 200 Witze, der Reihe nach (Zähler `tafelWitz` im localStorage des Kiosks).
+  - Wechselt von selbst: 6 Tafel-Hintergründe (`grafik/tafel/tafel-1` = Industrial, Wunsch Betreiber, plus `tafel-6…10`;
+    tafel-2/-3 seit 05.11. nicht mehr verwendet), 5 Schriftpaare (alle OFL), 3 Hände mit Tattoo, 9 Unterstriche unter dem
+    Titel (Welle, Linie, doppelt, Kringel, Schwung, gestrichelt, Pfeil, Bogen, Schlinge – `unterstrich()`).
+  - Standbild zum Prüfen: `index.html?kiosk=1&zeige=tafel:SEK`; Vorschau-Video: `werkzeug/tafel/film.js`.
+- **Lindwurm** (22 Posen `grafik/wurm-*.webp`, Auswahl in `wurmFuer()`): Uhr in den letzten Sekunden, Lupe beim Hinweis,
+  Fernglas/Karte/Kamera bei Street View/Karte/Foto, Jubel/Daumen/Oje bei der Auflösung, Saison-Posen (Krampus, Advent …).
+  Sprechblase mit Kärntner Sprüchen bei jeder 2. Textfrage, bei Auflösung und Ende (`?blase=0` schaltet ab).
+  Bei Textfragen links unten (245 px), ganz im Bild und frei von Antwort C.
+- **Schrift so groß wie möglich**: `textEinpassen()` sucht je Ansicht die größte Schrift (2 oder 1 Spalte), misst erneut nach
+  Fonts/Bildern. Prüfung aller Fragen: `node werkzeug/ueberlauf.js` → zuletzt 0 Ansichten mit Überlauf.
+- **Unscharfe Bilder** (Street View, Pixel-Fotos) werden langsam scharf und sind 5 s vor Ende klar.
+- **Hintergründe**: Textfragen `grafik/hg-01…10` (abends, dunkel) und `hg-11…20` (tagsüber, hell); Foto-/Street-View-/
+  Kartenfragen `grafik/buehne-01…06-tag|abend` plus das alte Bühnenbild. Hell 08:00–16:29, dunkel ab 16:30.
+- **Fragen**: Promis neu (92, nur lebende, ab Jahrgang 1950, nach Bekanntheit); Street-View-Orte nur bekannte Plätze und
+  Sehenswürdigkeiten (87, von Hand gesichtet); Luftbild-Zoom nach Seegröße (Keutschacher See zeigte vorher den Wörthersee);
+  Sport-Paket von 157 auf **40** (28 Street View mit erkennbarer Anlage, 12 mit freien Wikimedia-Commons-Fotos samt
+  Fotograf und Lizenz). Google-/Maps-Fotos werden nicht gespeichert (Nutzungsbedingungen).
+- **Am TV geprüft** (05.11. 11:29, Bildschirmfoto): Kreidetafel und Quiz laufen im Vollbild über dem ganzen Dashboard,
+  neue Unterstriche und Bühnenbilder waren schon drin. Quiz startet etwa **alle 31–32 min** (06.11.: 21 Durchgänge).
+- **Bildschirmfoto vom TV, ohne etwas zu verändern**:
+  `ssh w1 'sudo -n -u citycafe env XDG_RUNTIME_DIR=/run/user/1001 WAYLAND_DISPLAY=wayland-1 grim -t jpeg -s 0.5 -' > tv.jpg`
+- **W1-Prüfung 06.11. 00:00 bis 07.11. 13:30**: keine Abstürze (keine Coredumps), Kiosk-Browser läuft seit 06.11. 08:30,
+  Kabelnetz ohne Unterbrechung, Quizserver ohne 404, Platte 56 GB frei. 07.11. kein Neustart, weil das Update nichts Neues
+  fand (Skript startet nur bei Änderungen neu). `shadow.service` meldet täglich um 0:00 einen kleinen Unterschied in
+  `/etc/gshadow` – für den Betrieb unwichtig. Bluetooth: 06.11. **18:59:32 „Bluetooth trennen“** per Handy (Supervisor-Log),
+  seitdem Ton über HDMI; zurück nur per „🖥️ Screen an die Anlage“ (bewusst nicht von der Sitzung angefasst).
+- **Offen**: Frage „Badehaus Werzer“ (Luftbild, falsche Antworten ersetzen oder streichen – Betreiber entscheidet).
 
 ## 02.11.2026: Kärnten-Quiz „Kennst di aus?“ live im Café
 
