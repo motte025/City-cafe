@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:55:40Z",
+  "aktualisiert": "2026-11-07T21:03:44Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1177,7 +1177,7 @@
         },
         "5": {
           "heim": 1,
-          "auswaerts": 4,
+          "auswaerts": 5,
           "id": 109015
         },
         "6": {
@@ -1235,12 +1235,12 @@
         {
           "rang": 2,
           "spieler": "JANESCH Christine",
-          "spiele": 14,
-          "siege": 10,
+          "spiele": 15,
+          "siege": 11,
           "niederlagen": 4,
-          "legs_plus": 30,
+          "legs_plus": 33,
           "legs_minus": 17,
-          "punkte": 30
+          "punkte": 33
         },
         {
           "rang": 3,
@@ -1264,6 +1264,26 @@
         },
         {
           "rang": 5,
+          "spieler": "STEINER Sandro Emmanuel",
+          "spiele": 11,
+          "siege": 8,
+          "niederlagen": 3,
+          "legs_plus": 22,
+          "legs_minus": 12,
+          "punkte": 22
+        },
+        {
+          "rang": 6,
+          "spieler": "OBERZAN Lukas",
+          "spiele": 11,
+          "siege": 8,
+          "niederlagen": 3,
+          "legs_plus": 22,
+          "legs_minus": 12,
+          "punkte": 22
+        },
+        {
+          "rang": 7,
           "spieler": "GÖSCHL Mario",
           "spiele": 12,
           "siege": 8,
@@ -1271,26 +1291,6 @@
           "legs_plus": 22,
           "legs_minus": 18,
           "punkte": 22
-        },
-        {
-          "rang": 6,
-          "spieler": "STEINER Sandro Emmanuel",
-          "spiele": 10,
-          "siege": 7,
-          "niederlagen": 3,
-          "legs_plus": 20,
-          "legs_minus": 12,
-          "punkte": 20
-        },
-        {
-          "rang": 7,
-          "spieler": "OBERZAN Lukas",
-          "spiele": 10,
-          "siege": 7,
-          "niederlagen": 3,
-          "legs_plus": 20,
-          "legs_minus": 12,
-          "punkte": 20
         },
         {
           "rang": 8,
@@ -1405,11 +1405,11 @@
         {
           "rang": 19,
           "spieler": "SONNBERGER Harald",
-          "spiele": 10,
+          "spiele": 11,
           "siege": 3,
-          "niederlagen": 7,
+          "niederlagen": 8,
           "legs_plus": 14,
-          "legs_minus": 22,
+          "legs_minus": 24,
           "punkte": 14
         },
         {
@@ -1454,20 +1454,20 @@
         },
         {
           "rang": 24,
-          "spieler": "WILTSCHNIG Gernot",
+          "spieler": "KRENN Klaus",
           "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
+          "siege": 2,
+          "niederlagen": 4,
           "legs_plus": 10,
           "legs_minus": 12,
           "punkte": 10
         },
         {
           "rang": 25,
-          "spieler": "KRENN Klaus",
+          "spieler": "WILTSCHNIG Gernot",
           "spiele": 6,
-          "siege": 2,
-          "niederlagen": 4,
+          "siege": 3,
+          "niederlagen": 3,
           "legs_plus": 10,
           "legs_minus": 12,
           "punkte": 10
@@ -1525,11 +1525,11 @@
         {
           "rang": 31,
           "spieler": "FRÜSTÜCK Kerstin",
-          "spiele": 10,
+          "spiele": 11,
           "siege": 1,
-          "niederlagen": 9,
+          "niederlagen": 10,
           "legs_plus": 8,
-          "legs_minus": 24,
+          "legs_minus": 26,
           "punkte": 8
         },
         {
@@ -1544,7 +1544,7 @@
         },
         {
           "rang": 33,
-          "spieler": "STEINER Manuel",
+          "spieler": "DANIEL Johanna",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
@@ -1554,7 +1554,7 @@
         },
         {
           "rang": 34,
-          "spieler": "DANIEL Johanna",
+          "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
@@ -1565,11 +1565,11 @@
         {
           "rang": 35,
           "spieler": "RUS Kerstin",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 1,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 5,
-          "legs_minus": 10,
+          "legs_minus": 13,
           "punkte": 5
         },
         {
@@ -1664,7 +1664,7 @@
         },
         {
           "rang": 45,
-          "spieler": "OBERLERCHNER Melanie",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1674,7 +1674,7 @@
         },
         {
           "rang": 46,
-          "spieler": "WHYMAN Christian",
+          "spieler": "OBERLERCHNER Melanie",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1704,7 +1704,7 @@
       "letztes_spiel": {
         "runde": 5,
         "heim": 1,
-        "auswaerts": 4,
+        "auswaerts": 5,
         "paarungen": [
           {
             "art": "DE",
@@ -1746,7 +1746,7 @@
             "spieler1": "SONNBERGER Harald / FRÜSTÜCK Kerstin",
             "spieler2": "OBERZAN Lukas / STEINER Sandro Emmanuel",
             "legs1": 0,
-            "legs2": 0
+            "legs2": 2
           }
         ]
       },
@@ -1759,7 +1759,7 @@
             "datum": "2026-11-07",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC O3tz 1.0",
-            "erg_heim": 6,
+            "erg_heim": 7,
             "erg_auswaerts": 1,
             "id": 109004,
             "paarungen": [
@@ -1816,7 +1816,7 @@
                 "art": "DE",
                 "spieler1": "JANESCH Christine",
                 "spieler2": "RUS Kerstin",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
@@ -1841,7 +1841,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "erg_heim": 1,
-            "erg_auswaerts": 4,
+            "erg_auswaerts": 5,
             "id": 109015,
             "paarungen": [
               {
@@ -1884,7 +1884,7 @@
                 "spieler1": "SONNBERGER Harald / FRÜSTÜCK Kerstin",
                 "spieler2": "OBERZAN Lukas / STEINER Sandro Emmanuel",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               }
             ]
           },
