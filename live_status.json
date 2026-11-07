@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-07T07:22:46Z",
+  "checked_at": "2026-11-07T07:42:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "⭐️ MUTE MARATHON TAG 113 ⭐️ | 120 Min Quicky Funky House | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "chazz",
@@ -13,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "⭐️ MUTE MARATHON TAG 113 ⭐️ | 120 Min Quicky Funky House | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
