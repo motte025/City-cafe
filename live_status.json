@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T08:02:47Z",
+  "checked_at": "2026-11-07T08:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Studio Session mit @resilution & CLAXY",
       "game": "DJs"
     }
   ]
