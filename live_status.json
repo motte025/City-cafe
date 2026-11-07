@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T16:22:45Z",
+  "checked_at": "2026-11-07T16:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Rituals of Bass 2.0 - w/ @Sintica @MrBassmeister @Linni @Mindblast @Crest_Dj @E_One @Paeaet - 12 Stunden Musik ! !prep !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "l4uchm3ld3r",
+      "name": "L4uchm3ld3r",
+      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
       "game": "DJs"
     },
     {
@@ -41,13 +48,6 @@
       "channel": "roice",
       "name": "roice",
       "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "l4uchm3ld3r",
-      "name": "L4uchm3ld3r",
-      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
       "game": "DJs"
     }
   ]
