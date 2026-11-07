@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:03:45Z",
+  "aktualisiert": "2026-11-07T19:05:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1105,12 +1105,12 @@
         {
           "rang": 3,
           "spieler": "WIESER (J) David",
-          "spiele": 9,
-          "siege": 7,
+          "spiele": 10,
+          "siege": 8,
           "niederlagen": 2,
-          "legs_plus": 20,
+          "legs_plus": 23,
           "legs_minus": 7,
-          "punkte": 20
+          "punkte": 23
         },
         {
           "rang": 4,
@@ -1515,11 +1515,11 @@
         {
           "rang": 44,
           "spieler": "KRUSCHITZ Harald",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 1,
-          "legs_minus": 8,
+          "legs_minus": 11,
           "punkte": 1
         },
         {
@@ -1605,7 +1605,7 @@
             "datum": "2026-11-07",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC O3tz 1.0",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 0,
             "id": 109004,
             "paarungen": [
@@ -1627,7 +1627,7 @@
                 "art": "OE",
                 "spieler1": "WIESER (J) David",
                 "spieler2": "KRUSCHITZ Harald",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
