@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-07T17:22:45Z",
+  "checked_at": "2026-11-07T17:37:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Bass und Melodie am Samstag | !holy",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "bruebie",
@@ -31,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
+      "channel": "roice",
+      "name": "roice",
+      "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
       "game": "DJs"
     },
     {
