@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:04:40Z",
+  "aktualisiert": "2026-11-07T20:05:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -185,11 +185,11 @@
         {
           "rang": 5,
           "spieler": "JAMMER Fabian",
-          "spiele": 11,
+          "spiele": 12,
           "siege": 8,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 24,
-          "legs_minus": 18,
+          "legs_minus": 21,
           "punkte": 24
         },
         {
@@ -244,9 +244,9 @@
         },
         {
           "rang": 11,
-          "spieler": "FRIEßNEGGER Gerhard",
-          "spiele": 9,
-          "siege": 5,
+          "spieler": "JAHN Corinna",
+          "spiele": 8,
+          "siege": 4,
           "niederlagen": 4,
           "legs_plus": 18,
           "legs_minus": 14,
@@ -254,9 +254,9 @@
         },
         {
           "rang": 12,
-          "spieler": "JAHN Corinna",
-          "spiele": 8,
-          "siege": 4,
+          "spieler": "FRIEßNEGGER Gerhard",
+          "spiele": 9,
+          "siege": 5,
           "niederlagen": 4,
           "legs_plus": 18,
           "legs_minus": 14,
@@ -274,6 +274,16 @@
         },
         {
           "rang": 14,
+          "spieler": "REGENFELDNER Rene",
+          "spiele": 7,
+          "siege": 6,
+          "niederlagen": 1,
+          "legs_plus": 17,
+          "legs_minus": 6,
+          "punkte": 17
+        },
+        {
+          "rang": 15,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 8,
           "siege": 5,
@@ -283,7 +293,7 @@
           "punkte": 17
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "KERNSTOCK Michael",
           "spiele": 8,
           "siege": 5,
@@ -293,7 +303,7 @@
           "punkte": 16
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 11,
           "siege": 4,
@@ -303,7 +313,7 @@
           "punkte": 16
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 7,
           "siege": 4,
@@ -311,16 +321,6 @@
           "legs_plus": 15,
           "legs_minus": 9,
           "punkte": 15
-        },
-        {
-          "rang": 18,
-          "spieler": "REGENFELDNER Rene",
-          "spiele": 6,
-          "siege": 5,
-          "niederlagen": 1,
-          "legs_plus": 14,
-          "legs_minus": 6,
-          "punkte": 14
         },
         {
           "rang": 19,
@@ -700,7 +700,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "PBC DC Skorpions Reichenfels",
             "erg_heim": 1,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 109620,
             "paarungen": [
               {
@@ -729,7 +729,7 @@
                 "spieler1": "JAMMER Fabian",
                 "spieler2": "REGENFELDNER Rene",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               }
             ]
           },
@@ -835,6 +835,34 @@
                 "spieler1": "KERNSTOCK Michael / FRIEßNEGGER Gerhard",
                 "spieler2": "HOBEL Walter / BRUNNER Jürgen",
                 "legs1": 2,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "HOPFGARTNER Joachim",
+                "spieler2": "SIMONITSCH Erhard",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "FRIEßNEGGER Sarah",
+                "spieler2": "REINISCH Jessica",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "KERNSTOCK Michael",
+                "spieler2": "HOBEL Walter",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "FRIEßNEGGER Gerhard",
+                "spieler2": "BRUNNER Jürgen",
+                "legs1": 0,
                 "legs2": 0
               }
             ]
