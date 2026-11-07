@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-07T00:37:45Z",
+  "checked_at": "2026-11-07T00:47:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "FUNK AROUND AND FIND OUT !patreon",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ FRI-YAY TUNES 🔥 !mods !mercy !tip",
       "game": "DJs"
     },
     {
