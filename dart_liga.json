@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T17:50:38Z",
+  "aktualisiert": "2026-11-07T17:53:50Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -96,7 +96,7 @@
           "id": 109587
         },
         "5": {
-          "heim": 0,
+          "heim": 1,
           "auswaerts": 0,
           "id": 109631
         },
@@ -364,6 +364,16 @@
         },
         {
           "rang": 23,
+          "spieler": "BÄCKER Josephine",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 9,
+          "legs_minus": 13,
+          "punkte": 9
+        },
+        {
+          "rang": 24,
           "spieler": "BRUNNER Jürgen",
           "spiele": 6,
           "siege": 2,
@@ -373,7 +383,7 @@
           "punkte": 9
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 6,
           "siege": 2,
@@ -383,7 +393,7 @@
           "punkte": 8
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "SATZ Klemens",
           "spiele": 3,
           "siege": 2,
@@ -393,7 +403,7 @@
           "punkte": 7
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "JESENKO Julia",
           "spiele": 4,
           "siege": 2,
@@ -403,7 +413,7 @@
           "punkte": 7
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "SCHNEIDER Hermann",
           "spiele": 4,
           "siege": 1,
@@ -413,7 +423,7 @@
           "punkte": 7
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "HOCHEGGER Martin",
           "spiele": 6,
           "siege": 2,
@@ -423,23 +433,13 @@
           "punkte": 7
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "LUBE Mario",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
           "legs_plus": 6,
           "legs_minus": 8,
-          "punkte": 6
-        },
-        {
-          "rang": 30,
-          "spieler": "BÄCKER Josephine",
-          "spiele": 4,
-          "siege": 0,
-          "niederlagen": 4,
-          "legs_plus": 6,
-          "legs_minus": 12,
           "punkte": 6
         },
         {
@@ -454,6 +454,16 @@
         },
         {
           "rang": 32,
+          "spieler": "KOGLER Sabine",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 6,
+          "legs_minus": 13,
+          "punkte": 6
+        },
+        {
+          "rang": 33,
           "spieler": "STÜCKLER Manuel",
           "spiele": 3,
           "siege": 1,
@@ -463,23 +473,13 @@
           "punkte": 5
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "POLZER Hannah",
           "spiele": 4,
           "siege": 2,
           "niederlagen": 2,
           "legs_plus": 5,
           "legs_minus": 8,
-          "punkte": 5
-        },
-        {
-          "rang": 34,
-          "spieler": "KOGLER Sabine",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
-          "legs_plus": 5,
-          "legs_minus": 10,
           "punkte": 5
         },
         {
@@ -642,79 +642,37 @@
         "KOGLER Sabine"
       ],
       "letztes_spiel": {
-        "runde": 4,
-        "heim": 3,
-        "auswaerts": 7,
+        "runde": 5,
+        "heim": 1,
+        "auswaerts": 0,
         "paarungen": [
           {
             "art": "DE",
-            "spieler1": "GORICNIK Cornelia",
-            "spieler2": "JAHN Corinna",
-            "legs1": 1,
-            "legs2": 3
-          },
-          {
-            "art": "HE",
-            "spieler1": "JAHN Christian",
-            "spieler2": "SCHNEIDER Thomas",
-            "legs1": 0,
-            "legs2": 3
-          },
-          {
-            "art": "OE",
-            "spieler1": "GORICNIK Michael",
-            "spieler2": "JAMMER Fabian",
-            "legs1": 0,
-            "legs2": 3
-          },
-          {
-            "art": "OE",
-            "spieler1": "JAHN Andreas",
-            "spieler2": "SCHNEIDER Hermann",
+            "spieler1": "BÄCKER Josephine",
+            "spieler2": "KOGLER Sabine",
             "legs1": 3,
             "legs2": 1
           },
           {
-            "art": "MD",
-            "spieler1": "JAHN Christian / GORICNIK Cornelia",
-            "spieler2": "SCHNEIDER Thomas / JESENKO Julia",
-            "legs1": 2,
-            "legs2": 1
-          },
-          {
-            "art": "OD",
-            "spieler1": "GORICNIK Michael / JAHN Andreas",
-            "spieler2": "SCHERWITZEL Manuel / JAMMER Fabian",
-            "legs1": 1,
-            "legs2": 2
-          },
-          {
             "art": "HE",
-            "spieler1": "JAHN Christian",
-            "spieler2": "SCHNEIDER Thomas",
+            "spieler1": "SATZ Klemens",
+            "spieler2": "GORICNIK Michael",
             "legs1": 0,
-            "legs2": 3
-          },
-          {
-            "art": "DE",
-            "spieler1": "KOGLER Sabine",
-            "spieler2": "JESENKO Julia",
-            "legs1": 1,
-            "legs2": 3
-          },
-          {
-            "art": "OE",
-            "spieler1": "JAHN Herbert",
-            "spieler2": "JAHN Corinna",
-            "legs1": 3,
             "legs2": 0
           },
           {
             "art": "OE",
-            "spieler1": "JAHN Andreas",
-            "spieler2": "JAMMER Fabian",
-            "legs1": 1,
-            "legs2": 3
+            "spieler1": "BRANDSTÄTTER Manuel",
+            "spieler2": "JAHN Christian",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OE",
+            "spieler1": "KOLLER Elias",
+            "spieler2": "JAHN Andreas",
+            "legs1": 0,
+            "legs2": 0
           }
         ]
       },
@@ -737,7 +695,7 @@
             "datum": "2026-11-07",
             "heim": "Dart Fuchs 4",
             "auswaerts": "City-Flyers \"Chaoten\"",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 0,
             "id": 109631,
             "paarungen": [
@@ -745,8 +703,8 @@
                 "art": "DE",
                 "spieler1": "BÄCKER Josephine",
                 "spieler2": "KOGLER Sabine",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "HE",
@@ -1615,7 +1573,36 @@
             "erg_heim": 0,
             "erg_auswaerts": 0,
             "id": 109004,
-            "paarungen": []
+            "paarungen": [
+              {
+                "art": "DE",
+                "spieler1": "JANESCH Christine",
+                "spieler2": "RUS Kerstin",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "NIKOLIC Dennis",
+                "spieler2": "STINGLER Engelbert",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "WIESER (J) David",
+                "spieler2": "KRUSCHITZ Harald",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "ANWALD Guenther",
+                "spieler2": "LEUTSCHACHER Martin",
+                "legs1": 0,
+                "legs2": 0
+              }
+            ]
           },
           {
             "runde": 5,
