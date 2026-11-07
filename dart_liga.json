@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:17:40Z",
+  "aktualisiert": "2026-11-07T19:36:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1128,7 +1128,7 @@
         },
         {
           "rang": 4,
-          "spieler": "OBERZAN Lukas",
+          "spieler": "STEINER Sandro Emmanuel",
           "spiele": 10,
           "siege": 7,
           "niederlagen": 3,
@@ -1138,7 +1138,7 @@
         },
         {
           "rang": 5,
-          "spieler": "STEINER Sandro Emmanuel",
+          "spieler": "OBERZAN Lukas",
           "spiele": 10,
           "siege": 7,
           "niederlagen": 3,
@@ -1198,6 +1198,16 @@
         },
         {
           "rang": 11,
+          "spieler": "ANWALD Guenther",
+          "spiele": 11,
+          "siege": 5,
+          "niederlagen": 6,
+          "legs_plus": 18,
+          "legs_minus": 17,
+          "punkte": 18
+        },
+        {
+          "rang": 12,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 9,
           "siege": 6,
@@ -1207,7 +1217,7 @@
           "punkte": 17
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
@@ -1217,7 +1227,7 @@
           "punkte": 17
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "STINGLER Engelbert",
           "spiele": 10,
           "siege": 5,
@@ -1225,16 +1235,6 @@
           "legs_plus": 17,
           "legs_minus": 19,
           "punkte": 17
-        },
-        {
-          "rang": 14,
-          "spieler": "ANWALD Guenther",
-          "spiele": 10,
-          "siege": 4,
-          "niederlagen": 6,
-          "legs_plus": 15,
-          "legs_minus": 17,
-          "punkte": 15
         },
         {
           "rang": 15,
@@ -1458,7 +1458,7 @@
         },
         {
           "rang": 37,
-          "spieler": "DANIEL Johanna",
+          "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
           "niederlagen": 0,
@@ -1468,7 +1468,7 @@
         },
         {
           "rang": 38,
-          "spieler": "HUDMAST Manuel",
+          "spieler": "DANIEL Johanna",
           "spiele": 1,
           "siege": 1,
           "niederlagen": 0,
@@ -1559,11 +1559,11 @@
         {
           "rang": 47,
           "spieler": "LEUTSCHACHER Martin",
-          "spiele": 1,
+          "spiele": 2,
           "siege": 0,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 0,
-          "legs_minus": 3,
+          "legs_minus": 6,
           "punkte": 0
         }
       ],
@@ -1619,7 +1619,7 @@
             "datum": "2026-11-07",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC O3tz 1.0",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 0,
             "id": 109004,
             "paarungen": [
@@ -1648,7 +1648,7 @@
                 "art": "OE",
                 "spieler1": "ANWALD Guenther",
                 "spieler2": "LEUTSCHACHER Martin",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
