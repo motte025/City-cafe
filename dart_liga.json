@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T18:57:35Z",
+  "aktualisiert": "2026-11-07T19:00:48Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -284,6 +284,26 @@
         },
         {
           "rang": 15,
+          "spieler": "KERNSTOCK Michael",
+          "spiele": 7,
+          "siege": 4,
+          "niederlagen": 3,
+          "legs_plus": 14,
+          "legs_minus": 14,
+          "punkte": 14
+        },
+        {
+          "rang": 16,
+          "spieler": "SIMONITSCH Erhard",
+          "spiele": 10,
+          "siege": 3,
+          "niederlagen": 7,
+          "legs_plus": 14,
+          "legs_minus": 22,
+          "punkte": 14
+        },
+        {
+          "rang": 17,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 6,
           "siege": 4,
@@ -293,7 +313,7 @@
           "punkte": 13
         },
         {
-          "rang": 16,
+          "rang": 18,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 6,
           "siege": 4,
@@ -303,7 +323,7 @@
           "punkte": 13
         },
         {
-          "rang": 17,
+          "rang": 19,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 7,
           "siege": 3,
@@ -313,7 +333,7 @@
           "punkte": 13
         },
         {
-          "rang": 18,
+          "rang": 20,
           "spieler": "KOLLER Elias",
           "spiele": 9,
           "siege": 4,
@@ -323,17 +343,7 @@
           "punkte": 13
         },
         {
-          "rang": 19,
-          "spieler": "SIMONITSCH Erhard",
-          "spiele": 9,
-          "siege": 3,
-          "niederlagen": 6,
-          "legs_plus": 13,
-          "legs_minus": 19,
-          "punkte": 13
-        },
-        {
-          "rang": 20,
+          "rang": 21,
           "spieler": "SCHECK Guenther",
           "spiele": 5,
           "siege": 5,
@@ -343,23 +353,13 @@
           "punkte": 11
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "ASPRIAN Johann",
           "spiele": 6,
           "siege": 3,
           "niederlagen": 3,
           "legs_plus": 11,
           "legs_minus": 9,
-          "punkte": 11
-        },
-        {
-          "rang": 22,
-          "spieler": "KERNSTOCK Michael",
-          "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 11,
-          "legs_minus": 13,
           "punkte": 11
         },
         {
@@ -763,7 +763,7 @@
             "datum": "2026-11-07",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 0,
             "id": 109642,
             "paarungen": [
@@ -785,8 +785,8 @@
                 "art": "OE",
                 "spieler1": "KERNSTOCK Michael",
                 "spieler2": "SIMONITSCH Erhard",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "OE",
