@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:59:35Z",
+  "aktualisiert": "2026-11-07T22:00:47Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1089,11 +1089,11 @@
         {
           "rang": 1,
           "team": "DSZKärnten \"2er\"",
-          "spiele": 5,
-          "siege": 4,
+          "spiele": 6,
+          "siege": 5,
           "unentschieden": 1,
           "niederlagen": 0,
-          "punkte": 9
+          "punkte": 11
         },
         {
           "rang": 2,
@@ -1133,7 +1133,7 @@
         },
         {
           "rang": 6,
-          "team": "DC O3tz 1.0",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 4,
           "siege": 1,
           "unentschieden": 0,
@@ -1142,11 +1142,11 @@
         },
         {
           "rang": 7,
-          "team": "City-Flyers \"Fraggles\"",
-          "spiele": 4,
+          "team": "DC O3tz 1.0",
+          "spiele": 5,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "punkte": 2
         },
         {
@@ -1294,6 +1294,16 @@
         },
         {
           "rang": 8,
+          "spieler": "ANWALD Guenther",
+          "spiele": 12,
+          "siege": 6,
+          "niederlagen": 6,
+          "legs_plus": 21,
+          "legs_minus": 17,
+          "punkte": 21
+        },
+        {
+          "rang": 9,
           "spieler": "STINGLER Engelbert",
           "spiele": 12,
           "siege": 6,
@@ -1303,7 +1313,7 @@
           "punkte": 21
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "MARKTL Werner",
           "spiele": 11,
           "siege": 7,
@@ -1313,7 +1323,7 @@
           "punkte": 20
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "BRUNNER Peter",
           "spiele": 12,
           "siege": 6,
@@ -1323,7 +1333,7 @@
           "punkte": 20
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "WIMMER Leon",
           "spiele": 8,
           "siege": 7,
@@ -1331,16 +1341,6 @@
           "legs_plus": 19,
           "legs_minus": 8,
           "punkte": 19
-        },
-        {
-          "rang": 12,
-          "spieler": "ANWALD Guenther",
-          "spiele": 11,
-          "siege": 5,
-          "niederlagen": 6,
-          "legs_plus": 18,
-          "legs_minus": 17,
-          "punkte": 18
         },
         {
           "rang": 13,
@@ -1685,11 +1685,11 @@
         {
           "rang": 47,
           "spieler": "LEUTSCHACHER Martin",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 0,
-          "legs_minus": 8,
+          "legs_minus": 11,
           "punkte": 0
         }
       ],
@@ -1787,7 +1787,7 @@
             "datum": "2026-11-07",
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC O3tz 1.0",
-            "erg_heim": 8,
+            "erg_heim": 9,
             "erg_auswaerts": 1,
             "id": 109004,
             "paarungen": [
@@ -1858,7 +1858,7 @@
                 "art": "OE",
                 "spieler1": "ANWALD Guenther",
                 "spieler2": "LEUTSCHACHER Martin",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
