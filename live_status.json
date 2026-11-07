@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T23:02:50Z",
+  "checked_at": "2026-11-07T23:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "wittie_bln",
-      "name": "Wittie_BLN",
-      "title": "🍒✨💋🌈  Spontaneous stream by @alexvaganza on Saturday night from the Cherry Corner 🍒✨💞💋🌈 | TY Raiders: @jostonmusic",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
@@ -38,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "SCHRANZ IS BACK MIT FELIX KRÖCHER",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "SCHRANZ IS BACK MIT FELIX KRÖCHER",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
