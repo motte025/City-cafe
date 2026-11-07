@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:23:36Z",
+  "aktualisiert": "2026-11-07T20:24:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -744,6 +744,34 @@
                 "spieler2": "URANK Romeo / REGENFELDNER Rene",
                 "legs1": 0,
                 "legs2": 2
+              },
+              {
+                "art": "HE",
+                "spieler1": "BERGLER Benjamin",
+                "spieler2": "ASPRIAN Johann",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "JAHN Corinna",
+                "spieler2": "KREUZER Silvia",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "SCHNEIDER Thomas",
+                "spieler2": "REGENFELDNER Rene",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "JAMMER Fabian",
+                "spieler2": "URANK Romeo",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           },
