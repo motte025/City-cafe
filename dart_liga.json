@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:02:41Z",
+  "aktualisiert": "2026-11-07T20:04:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1109,11 +1109,11 @@
         {
           "rang": 2,
           "spieler": "JANESCH Christine",
-          "spiele": 13,
+          "spiele": 14,
           "siege": 10,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 30,
-          "legs_minus": 15,
+          "legs_minus": 17,
           "punkte": 30
         },
         {
@@ -1138,7 +1138,7 @@
         },
         {
           "rang": 5,
-          "spieler": "STEINER Sandro Emmanuel",
+          "spieler": "OBERZAN Lukas",
           "spiele": 10,
           "siege": 7,
           "niederlagen": 3,
@@ -1148,7 +1148,7 @@
         },
         {
           "rang": 6,
-          "spieler": "OBERZAN Lukas",
+          "spieler": "STEINER Sandro Emmanuel",
           "spiele": 10,
           "siege": 7,
           "niederlagen": 3,
@@ -1188,6 +1188,16 @@
         },
         {
           "rang": 10,
+          "spieler": "STINGLER Engelbert",
+          "spiele": 11,
+          "siege": 6,
+          "niederlagen": 5,
+          "legs_plus": 19,
+          "legs_minus": 19,
+          "punkte": 19
+        },
+        {
+          "rang": 11,
           "spieler": "MARKTL Werner",
           "spiele": 10,
           "siege": 6,
@@ -1197,7 +1207,7 @@
           "punkte": 18
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "ANWALD Guenther",
           "spiele": 11,
           "siege": 5,
@@ -1207,7 +1217,7 @@
           "punkte": 18
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 9,
           "siege": 6,
@@ -1217,23 +1227,13 @@
           "punkte": 17
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
           "niederlagen": 4,
           "legs_plus": 17,
           "legs_minus": 14,
-          "punkte": 17
-        },
-        {
-          "rang": 14,
-          "spieler": "STINGLER Engelbert",
-          "spiele": 10,
-          "siege": 5,
-          "niederlagen": 5,
-          "legs_plus": 17,
-          "legs_minus": 19,
           "punkte": 17
         },
         {
@@ -1319,11 +1319,11 @@
         {
           "rang": 23,
           "spieler": "WILTSCHNIG Gernot",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 3,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 10,
-          "legs_minus": 10,
+          "legs_minus": 12,
           "punkte": 10
         },
         {
@@ -1418,16 +1418,6 @@
         },
         {
           "rang": 33,
-          "spieler": "DANIEL Johanna",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 5,
-          "legs_minus": 0,
-          "punkte": 5
-        },
-        {
-          "rang": 34,
           "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
@@ -1437,7 +1427,27 @@
           "punkte": 5
         },
         {
+          "rang": 34,
+          "spieler": "DANIEL Johanna",
+          "spiele": 2,
+          "siege": 2,
+          "niederlagen": 0,
+          "legs_plus": 5,
+          "legs_minus": 0,
+          "punkte": 5
+        },
+        {
           "rang": 35,
+          "spieler": "RUS Kerstin",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 5,
+          "legs_minus": 10,
+          "punkte": 5
+        },
+        {
+          "rang": 36,
           "spieler": "STEINER Lydia",
           "spiele": 7,
           "siege": 2,
@@ -1447,7 +1457,7 @@
           "punkte": 5
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1457,7 +1467,7 @@
           "punkte": 4
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "GREINIG Hubert",
           "spiele": 6,
           "siege": 0,
@@ -1467,23 +1477,13 @@
           "punkte": 4
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
           "niederlagen": 0,
           "legs_plus": 3,
           "legs_minus": 0,
-          "punkte": 3
-        },
-        {
-          "rang": 39,
-          "spieler": "RUS Kerstin",
-          "spiele": 4,
-          "siege": 0,
-          "niederlagen": 4,
-          "legs_plus": 3,
-          "legs_minus": 10,
           "punkte": 3
         },
         {
@@ -1634,7 +1634,7 @@
             "heim": "DSZKärnten \"2er\"",
             "auswaerts": "DC O3tz 1.0",
             "erg_heim": 4,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109004,
             "paarungen": [
               {
@@ -1670,7 +1670,7 @@
                 "spieler1": "JANESCH Christine / WILTSCHNIG Gernot",
                 "spieler2": "STINGLER Engelbert / RUS Kerstin",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               },
               {
                 "art": "OD",
