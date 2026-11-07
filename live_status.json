@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T16:37:45Z",
+  "checked_at": "2026-11-07T16:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
