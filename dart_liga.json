@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:06:39Z",
+  "aktualisiert": "2026-11-07T19:12:39Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -274,6 +274,16 @@
         },
         {
           "rang": 14,
+          "spieler": "FRIEßNEGGER Gerhard",
+          "spiele": 8,
+          "siege": 4,
+          "niederlagen": 4,
+          "legs_plus": 16,
+          "legs_minus": 14,
+          "punkte": 16
+        },
+        {
+          "rang": 15,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -283,7 +293,7 @@
           "punkte": 14
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "KERNSTOCK Michael",
           "spiele": 7,
           "siege": 4,
@@ -293,7 +303,7 @@
           "punkte": 14
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 10,
           "siege": 3,
@@ -303,7 +313,7 @@
           "punkte": 14
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 6,
           "siege": 4,
@@ -313,23 +323,13 @@
           "punkte": 13
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 6,
           "siege": 4,
           "niederlagen": 2,
           "legs_plus": 13,
           "legs_minus": 8,
-          "punkte": 13
-        },
-        {
-          "rang": 19,
-          "spieler": "FRIEßNEGGER Gerhard",
-          "spiele": 7,
-          "siege": 3,
-          "niederlagen": 4,
-          "legs_plus": 13,
-          "legs_minus": 14,
           "punkte": 13
         },
         {
@@ -614,22 +614,22 @@
         },
         {
           "rang": 48,
-          "spieler": "HOBEL Walter",
-          "spiele": 1,
-          "siege": 0,
-          "niederlagen": 1,
-          "legs_plus": 0,
-          "legs_minus": 3,
-          "punkte": 0
-        },
-        {
-          "rang": 49,
           "spieler": "PROVNIK Gabriele",
           "spiele": 2,
           "siege": 0,
           "niederlagen": 2,
           "legs_plus": 0,
           "legs_minus": 4,
+          "punkte": 0
+        },
+        {
+          "rang": 49,
+          "spieler": "HOBEL Walter",
+          "spiele": 2,
+          "siege": 0,
+          "niederlagen": 2,
+          "legs_plus": 0,
+          "legs_minus": 6,
           "punkte": 0
         }
       ],
@@ -791,7 +791,7 @@
             "datum": "2026-11-07",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 0,
             "id": 109642,
             "paarungen": [
@@ -820,7 +820,7 @@
                 "art": "OE",
                 "spieler1": "FRIEßNEGGER Gerhard",
                 "spieler2": "HOBEL Walter",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
