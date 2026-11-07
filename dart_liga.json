@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:50:37Z",
+  "aktualisiert": "2026-11-07T19:54:39Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1607,6 +1607,20 @@
             "spieler2": "GRAF Franz",
             "legs1": 3,
             "legs2": 1
+          },
+          {
+            "art": "MD",
+            "spieler1": "POSCHINGER Franz / PINTER Michele",
+            "spieler2": "PAULITSCH Brigitte / GRAF Franz",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OD",
+            "spieler1": "SONNBERGER Harald / FRÜSTÜCK Kerstin",
+            "spieler2": "OBERZAN Lukas / STEINER Sandro Emmanuel",
+            "legs1": 0,
+            "legs2": 0
           }
         ]
       },
@@ -1703,6 +1717,20 @@
                 "spieler2": "GRAF Franz",
                 "legs1": 3,
                 "legs2": 1
+              },
+              {
+                "art": "MD",
+                "spieler1": "POSCHINGER Franz / PINTER Michele",
+                "spieler2": "PAULITSCH Brigitte / GRAF Franz",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "SONNBERGER Harald / FRÜSTÜCK Kerstin",
+                "spieler2": "OBERZAN Lukas / STEINER Sandro Emmanuel",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           },
