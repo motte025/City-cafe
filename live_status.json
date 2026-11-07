@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T18:02:45Z",
+  "checked_at": "2026-11-07T18:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
+      "channel": "roice",
+      "name": "roice",
+      "title": "PJ DJ PARTY - 1st stream anniversary 🤍 4 years on tweetch !bewbs !merch !plus !alt !design !wishlist",
       "game": "DJs"
     },
     {
@@ -48,6 +48,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Partygarage in Flammen! Wir reißen ab!  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
