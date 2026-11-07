@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:36:37Z",
+  "aktualisiert": "2026-11-07T21:40:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1364,6 +1364,16 @@
         },
         {
           "rang": 15,
+          "spieler": "LANG Melanie",
+          "spiele": 10,
+          "siege": 4,
+          "niederlagen": 6,
+          "legs_plus": 15,
+          "legs_minus": 20,
+          "punkte": 15
+        },
+        {
+          "rang": 16,
           "spieler": "FRADL Ingemar",
           "spiele": 11,
           "siege": 5,
@@ -1373,7 +1383,7 @@
           "punkte": 15
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "GRAF Franz",
           "spiele": 7,
           "siege": 5,
@@ -1383,7 +1393,7 @@
           "punkte": 14
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "ETTL Theresa",
           "spiele": 8,
           "siege": 5,
@@ -1393,7 +1403,7 @@
           "punkte": 14
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 9,
           "siege": 3,
@@ -1403,7 +1413,7 @@
           "punkte": 14
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "SONNBERGER Harald",
           "spiele": 11,
           "siege": 3,
@@ -1413,7 +1423,7 @@
           "punkte": 14
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 8,
           "siege": 4,
@@ -1423,17 +1433,17 @@
           "punkte": 13
         },
         {
-          "rang": 21,
-          "spieler": "LANG Melanie",
-          "spiele": 9,
+          "rang": 22,
+          "spieler": "REIF Daniel-Stefan",
+          "spiele": 5,
           "siege": 4,
-          "niederlagen": 5,
-          "legs_plus": 13,
-          "legs_minus": 17,
-          "punkte": 13
+          "niederlagen": 1,
+          "legs_plus": 12,
+          "legs_minus": 6,
+          "punkte": 12
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "SPANRING Andreas",
           "spiele": 6,
           "siege": 4,
@@ -1443,7 +1453,7 @@
           "punkte": 12
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 10,
           "siege": 4,
@@ -1453,7 +1463,7 @@
           "punkte": 12
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "PINTER Michele",
           "spiele": 9,
           "siege": 1,
@@ -1463,7 +1473,7 @@
           "punkte": 11
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "KRENN Klaus",
           "spiele": 6,
           "siege": 2,
@@ -1473,7 +1483,7 @@
           "punkte": 10
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 6,
           "siege": 3,
@@ -1483,7 +1493,7 @@
           "punkte": 10
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "GREINIG Petra",
           "spiele": 6,
           "siege": 1,
@@ -1491,16 +1501,6 @@
           "legs_plus": 10,
           "legs_minus": 16,
           "punkte": 10
-        },
-        {
-          "rang": 28,
-          "spieler": "REIF Daniel-Stefan",
-          "spiele": 4,
-          "siege": 3,
-          "niederlagen": 1,
-          "legs_plus": 9,
-          "legs_minus": 4,
-          "punkte": 9
         },
         {
           "rang": 29,
@@ -1950,7 +1950,7 @@
             "heim": "ESV DC Inferno",
             "auswaerts": "DC Garzern",
             "erg_heim": 3,
-            "erg_auswaerts": 5,
+            "erg_auswaerts": 6,
             "id": 109026,
             "paarungen": [
               {
@@ -2013,8 +2013,8 @@
                 "art": "OE",
                 "spieler1": "LANG Melanie",
                 "spieler2": "REIF Daniel-Stefan",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
