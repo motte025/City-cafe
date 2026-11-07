@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T10:47:50Z",
+  "checked_at": "2026-11-07T11:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Rituals of Bass 2.0 - w/ @Sintica @MrBassmeister @Linni @Mindblast @Crest_Dj @E_One @Paeaet - 12 Stunden Musik ! !prep !Socials  #Werbung",
       "game": "DJs"
     }
   ]
