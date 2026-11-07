@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T18:32:47Z",
+  "checked_at": "2026-11-07T18:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ganz normaler Samstag? | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
@@ -27,13 +34,6 @@
       "channel": "l4uchm3ld3r",
       "name": "L4uchm3ld3r",
       "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ganz normaler Samstag? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -62,6 +62,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 2. BIRD Hardstyle/Hardtechno🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     }
   ]
