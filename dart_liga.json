@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:33:43Z",
+  "aktualisiert": "2026-11-07T20:42:47Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -96,7 +96,7 @@
           "id": 109587
         },
         "5": {
-          "heim": 3,
+          "heim": 4,
           "auswaerts": 2,
           "id": 109631
         },
@@ -174,22 +174,22 @@
         },
         {
           "rang": 4,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 11,
+          "siege": 9,
+          "niederlagen": 2,
+          "legs_plus": 27,
+          "legs_minus": 15,
+          "punkte": 27
+        },
+        {
+          "rang": 5,
           "spieler": "URANK Romeo",
           "spiele": 10,
           "siege": 8,
           "niederlagen": 2,
           "legs_plus": 24,
           "legs_minus": 11,
-          "punkte": 24
-        },
-        {
-          "rang": 5,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 10,
-          "siege": 8,
-          "niederlagen": 2,
-          "legs_plus": 24,
-          "legs_minus": 14,
           "punkte": 24
         },
         {
@@ -204,6 +204,16 @@
         },
         {
           "rang": 7,
+          "spieler": "REINISCH Jessica",
+          "spiele": 12,
+          "siege": 7,
+          "niederlagen": 5,
+          "legs_plus": 21,
+          "legs_minus": 22,
+          "punkte": 21
+        },
+        {
+          "rang": 8,
           "spieler": "ELEZOSKI Serif",
           "spiele": 8,
           "siege": 6,
@@ -213,7 +223,7 @@
           "punkte": 20
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "BERGLER Benjamin",
           "spiele": 11,
           "siege": 6,
@@ -223,7 +233,7 @@
           "punkte": 20
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "REGENFELDNER Rene",
           "spiele": 8,
           "siege": 7,
@@ -233,7 +243,7 @@
           "punkte": 19
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
@@ -243,17 +253,17 @@
           "punkte": 19
         },
         {
-          "rang": 11,
-          "spieler": "REINISCH Jessica",
+          "rang": 12,
+          "spieler": "JAHN Andreas",
           "spiele": 11,
-          "siege": 7,
-          "niederlagen": 4,
+          "siege": 5,
+          "niederlagen": 6,
           "legs_plus": 19,
-          "legs_minus": 19,
+          "legs_minus": 20,
           "punkte": 19
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 9,
           "siege": 5,
@@ -263,23 +273,13 @@
           "punkte": 18
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "JAHN Corinna",
           "spiele": 9,
           "siege": 4,
           "niederlagen": 5,
           "legs_plus": 18,
           "legs_minus": 16,
-          "punkte": 18
-        },
-        {
-          "rang": 14,
-          "spieler": "JAHN Andreas",
-          "spiele": 10,
-          "siege": 5,
-          "niederlagen": 5,
-          "legs_plus": 18,
-          "legs_minus": 18,
           "punkte": 18
         },
         {
@@ -294,6 +294,26 @@
         },
         {
           "rang": 16,
+          "spieler": "FRIEßNEGGER Sarah",
+          "spiele": 8,
+          "siege": 5,
+          "niederlagen": 3,
+          "legs_plus": 17,
+          "legs_minus": 12,
+          "punkte": 17
+        },
+        {
+          "rang": 17,
+          "spieler": "SIMONITSCH Erhard",
+          "spiele": 12,
+          "siege": 4,
+          "niederlagen": 8,
+          "legs_plus": 17,
+          "legs_minus": 26,
+          "punkte": 17
+        },
+        {
+          "rang": 18,
           "spieler": "KERNSTOCK Michael",
           "spiele": 8,
           "siege": 5,
@@ -303,17 +323,7 @@
           "punkte": 16
         },
         {
-          "rang": 17,
-          "spieler": "SIMONITSCH Erhard",
-          "spiele": 11,
-          "siege": 4,
-          "niederlagen": 7,
-          "legs_plus": 16,
-          "legs_minus": 23,
-          "punkte": 16
-        },
-        {
-          "rang": 18,
+          "rang": 19,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 8,
           "siege": 4,
@@ -323,17 +333,17 @@
           "punkte": 15
         },
         {
-          "rang": 19,
-          "spieler": "FRIEßNEGGER Sarah",
-          "spiele": 7,
-          "siege": 4,
-          "niederlagen": 3,
-          "legs_plus": 14,
-          "legs_minus": 10,
-          "punkte": 14
+          "rang": 20,
+          "spieler": "KOLLER Elias",
+          "spiele": 11,
+          "siege": 5,
+          "niederlagen": 6,
+          "legs_plus": 15,
+          "legs_minus": 20,
+          "punkte": 15
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "ASPRIAN Johann",
           "spiele": 7,
           "siege": 4,
@@ -341,16 +351,6 @@
           "legs_plus": 14,
           "legs_minus": 11,
           "punkte": 14
-        },
-        {
-          "rang": 21,
-          "spieler": "KOLLER Elias",
-          "spiele": 10,
-          "siege": 4,
-          "niederlagen": 6,
-          "legs_plus": 13,
-          "legs_minus": 19,
-          "punkte": 13
         },
         {
           "rang": 22,
@@ -484,6 +484,16 @@
         },
         {
           "rang": 35,
+          "spieler": "BRANDSTÄTTER Manuel",
+          "spiele": 4,
+          "siege": 2,
+          "niederlagen": 2,
+          "legs_plus": 5,
+          "legs_minus": 7,
+          "punkte": 5
+        },
+        {
+          "rang": 36,
           "spieler": "STÜCKLER Manuel",
           "spiele": 3,
           "siege": 1,
@@ -493,7 +503,7 @@
           "punkte": 5
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "POLZER Hannah",
           "spiele": 4,
           "siege": 2,
@@ -503,7 +513,7 @@
           "punkte": 5
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "AMBROS Thomas",
           "spiele": 6,
           "siege": 0,
@@ -513,7 +523,7 @@
           "punkte": 5
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "SCHADER Andreas",
           "spiele": 2,
           "siege": 1,
@@ -523,17 +533,17 @@
           "punkte": 4
         },
         {
-          "rang": 39,
-          "spieler": "BRANDSTÄTTER Manuel",
-          "spiele": 3,
+          "rang": 40,
+          "spieler": "JAHN Herbert",
+          "spiele": 7,
           "siege": 1,
-          "niederlagen": 2,
-          "legs_plus": 3,
-          "legs_minus": 6,
-          "punkte": 3
+          "niederlagen": 6,
+          "legs_plus": 4,
+          "legs_minus": 15,
+          "punkte": 4
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
@@ -543,23 +553,13 @@
           "punkte": 3
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "SIMONITSCH Christopher",
           "spiele": 4,
           "siege": 0,
           "niederlagen": 4,
           "legs_plus": 3,
           "legs_minus": 10,
-          "punkte": 3
-        },
-        {
-          "rang": 42,
-          "spieler": "JAHN Herbert",
-          "spiele": 6,
-          "siege": 1,
-          "niederlagen": 5,
-          "legs_plus": 3,
-          "legs_minus": 13,
           "punkte": 3
         },
         {
@@ -643,7 +643,7 @@
       ],
       "letztes_spiel": {
         "runde": 5,
-        "heim": 3,
+        "heim": 4,
         "auswaerts": 2,
         "paarungen": [
           {
@@ -685,8 +685,8 @@
             "art": "OD",
             "spieler1": "BRANDSTÄTTER Manuel / KOLLER Elias",
             "spieler2": "JAHN Herbert / JAHN Andreas",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 2,
+            "legs2": 1
           }
         ]
       },
@@ -780,7 +780,7 @@
             "datum": "2026-11-07",
             "heim": "Dart Fuchs 4",
             "auswaerts": "City-Flyers \"Chaoten\"",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 2,
             "id": 109631,
             "paarungen": [
@@ -823,8 +823,8 @@
                 "art": "OD",
                 "spieler1": "BRANDSTÄTTER Manuel / KOLLER Elias",
                 "spieler2": "JAHN Herbert / JAHN Andreas",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 1
               }
             ]
           },
@@ -833,7 +833,7 @@
             "datum": "2026-11-07",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 5,
+            "erg_heim": 7,
             "erg_auswaerts": 1,
             "id": 109642,
             "paarungen": [
@@ -883,15 +883,15 @@
                 "art": "HE",
                 "spieler1": "HOPFGARTNER Joachim",
                 "spieler2": "SIMONITSCH Erhard",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "DE",
                 "spieler1": "FRIEßNEGGER Sarah",
                 "spieler2": "REINISCH Jessica",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               },
               {
                 "art": "OE",
