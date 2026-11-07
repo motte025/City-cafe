@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:35:41Z",
+  "aktualisiert": "2026-11-07T21:36:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -204,6 +204,16 @@
         },
         {
           "rang": 7,
+          "spieler": "REGENFELDNER Rene",
+          "spiele": 9,
+          "siege": 8,
+          "niederlagen": 1,
+          "legs_plus": 22,
+          "legs_minus": 7,
+          "punkte": 22
+        },
+        {
+          "rang": 8,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 10,
           "siege": 6,
@@ -213,7 +223,7 @@
           "punkte": 21
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "JAHN Corinna",
           "spiele": 10,
           "siege": 5,
@@ -223,7 +233,7 @@
           "punkte": 21
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "BERGLER Benjamin",
           "spiele": 12,
           "siege": 6,
@@ -233,7 +243,7 @@
           "punkte": 21
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "REINISCH Jessica",
           "spiele": 12,
           "siege": 7,
@@ -243,7 +253,7 @@
           "punkte": 21
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "ELEZOSKI Serif",
           "spiele": 8,
           "siege": 6,
@@ -251,16 +261,6 @@
           "legs_plus": 20,
           "legs_minus": 6,
           "punkte": 20
-        },
-        {
-          "rang": 12,
-          "spieler": "REGENFELDNER Rene",
-          "spiele": 8,
-          "siege": 7,
-          "niederlagen": 1,
-          "legs_plus": 19,
-          "legs_minus": 6,
-          "punkte": 19
         },
         {
           "rang": 13,
@@ -345,12 +345,12 @@
         {
           "rang": 21,
           "spieler": "SCHNEIDER Thomas",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 4,
-          "niederlagen": 4,
-          "legs_plus": 15,
-          "legs_minus": 11,
-          "punkte": 15
+          "niederlagen": 5,
+          "legs_plus": 16,
+          "legs_minus": 14,
+          "punkte": 16
         },
         {
           "rang": 22,
@@ -728,7 +728,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "PBC DC Skorpions Reichenfels",
             "erg_heim": 2,
-            "erg_auswaerts": 6,
+            "erg_auswaerts": 7,
             "id": 109620,
             "paarungen": [
               {
@@ -791,8 +791,8 @@
                 "art": "OE",
                 "spieler1": "SCHNEIDER Thomas",
                 "spieler2": "REGENFELDNER Rene",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
