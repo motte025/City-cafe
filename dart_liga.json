@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:09:47Z",
+  "aktualisiert": "2026-11-07T21:11:45Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -889,7 +889,7 @@
             "datum": "2026-11-07",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 8,
+            "erg_heim": 9,
             "erg_auswaerts": 1,
             "id": 109642,
             "paarungen": [
@@ -960,8 +960,8 @@
                 "art": "OE",
                 "spieler1": "FRIEßNEGGER Gerhard",
                 "spieler2": "BRUNNER Jürgen",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               }
             ]
           }
@@ -1444,6 +1444,16 @@
         },
         {
           "rang": 23,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 10,
+          "siege": 4,
+          "niederlagen": 6,
+          "legs_plus": 12,
+          "legs_minus": 19,
+          "punkte": 12
+        },
+        {
+          "rang": 24,
           "spieler": "PINTER Michele",
           "spiele": 9,
           "siege": 1,
@@ -1453,7 +1463,7 @@
           "punkte": 11
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 6,
           "siege": 3,
@@ -1463,7 +1473,7 @@
           "punkte": 10
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "KRENN Klaus",
           "spiele": 6,
           "siege": 2,
@@ -1473,7 +1483,7 @@
           "punkte": 10
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "GREINIG Petra",
           "spiele": 6,
           "siege": 1,
@@ -1483,23 +1493,13 @@
           "punkte": 10
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 4,
           "siege": 3,
           "niederlagen": 1,
           "legs_plus": 9,
           "legs_minus": 4,
-          "punkte": 9
-        },
-        {
-          "rang": 28,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 9,
-          "siege": 3,
-          "niederlagen": 6,
-          "legs_plus": 9,
-          "legs_minus": 17,
           "punkte": 9
         },
         {
@@ -1534,6 +1534,16 @@
         },
         {
           "rang": 32,
+          "spieler": "DANIEL Johanna",
+          "spiele": 3,
+          "siege": 2,
+          "niederlagen": 1,
+          "legs_plus": 7,
+          "legs_minus": 3,
+          "punkte": 7
+        },
+        {
+          "rang": 33,
           "spieler": "BRUNNER Katharina",
           "spiele": 4,
           "siege": 2,
@@ -1543,18 +1553,8 @@
           "punkte": 6
         },
         {
-          "rang": 33,
-          "spieler": "STEINER Manuel",
-          "spiele": 2,
-          "siege": 2,
-          "niederlagen": 0,
-          "legs_plus": 5,
-          "legs_minus": 0,
-          "punkte": 5
-        },
-        {
           "rang": 34,
-          "spieler": "DANIEL Johanna",
+          "spieler": "STEINER Manuel",
           "spiele": 2,
           "siege": 2,
           "niederlagen": 0,
@@ -1949,7 +1949,7 @@
             "datum": "2026-11-07",
             "heim": "ESV DC Inferno",
             "auswaerts": "DC Garzern",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 5,
             "id": 109026,
             "paarungen": [
@@ -2006,8 +2006,8 @@
                 "art": "DE",
                 "spieler1": "STÜCKLER Heidemarie",
                 "spieler2": "DANIEL Johanna",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               },
               {
                 "art": "OE",
