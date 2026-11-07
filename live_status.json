@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T15:32:45Z",
+  "checked_at": "2026-11-07T15:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
       "game": "DJs"
     }
   ]
