@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:20:40Z",
+  "aktualisiert": "2026-11-07T21:26:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -96,7 +96,7 @@
           "id": 109587
         },
         "5": {
-          "heim": 5,
+          "heim": 6,
           "auswaerts": 2,
           "id": 109631
         },
@@ -294,6 +294,16 @@
         },
         {
           "rang": 16,
+          "spieler": "KOLLER Elias",
+          "spiele": 12,
+          "siege": 6,
+          "niederlagen": 6,
+          "legs_plus": 18,
+          "legs_minus": 20,
+          "punkte": 18
+        },
+        {
+          "rang": 17,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 8,
           "siege": 5,
@@ -303,7 +313,7 @@
           "punkte": 17
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 8,
           "siege": 5,
@@ -313,7 +323,7 @@
           "punkte": 17
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "ASPRIAN Johann",
           "spiele": 8,
           "siege": 5,
@@ -323,7 +333,7 @@
           "punkte": 17
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 12,
           "siege": 4,
@@ -333,23 +343,13 @@
           "punkte": 17
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 8,
           "siege": 4,
           "niederlagen": 4,
           "legs_plus": 15,
           "legs_minus": 11,
-          "punkte": 15
-        },
-        {
-          "rang": 21,
-          "spieler": "KOLLER Elias",
-          "spiele": 11,
-          "siege": 5,
-          "niederlagen": 6,
-          "legs_plus": 15,
-          "legs_minus": 20,
           "punkte": 15
         },
         {
@@ -425,11 +425,11 @@
         {
           "rang": 29,
           "spieler": "KOGLER Sabine",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 2,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 8,
-          "legs_minus": 14,
+          "legs_minus": 17,
           "punkte": 8
         },
         {
@@ -643,7 +643,7 @@
       ],
       "letztes_spiel": {
         "runde": 5,
-        "heim": 5,
+        "heim": 6,
         "auswaerts": 2,
         "paarungen": [
           {
@@ -699,7 +699,7 @@
             "art": "DE",
             "spieler1": "KOLLER Elias",
             "spieler2": "KOGLER Sabine",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -808,7 +808,7 @@
             "datum": "2026-11-07",
             "heim": "Dart Fuchs 4",
             "auswaerts": "City-Flyers \"Chaoten\"",
-            "erg_heim": 5,
+            "erg_heim": 6,
             "erg_auswaerts": 2,
             "id": 109631,
             "paarungen": [
@@ -865,7 +865,7 @@
                 "art": "DE",
                 "spieler1": "KOLLER Elias",
                 "spieler2": "KOGLER Sabine",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
