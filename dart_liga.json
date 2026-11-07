@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:05:40Z",
+  "aktualisiert": "2026-11-07T19:06:39Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -820,6 +820,20 @@
                 "art": "OE",
                 "spieler1": "FRIEßNEGGER Gerhard",
                 "spieler2": "HOBEL Walter",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "MD",
+                "spieler1": "HOPFGARTNER Joachim / FRIEßNEGGER Sarah",
+                "spieler2": "SIMONITSCH Erhard / REINISCH Jessica",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "KERNSTOCK Michael / FRIEßNEGGER Gerhard",
+                "spieler2": "HOBEL Walter / BRUNNER Jürgen",
                 "legs1": 0,
                 "legs2": 0
               }
