@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T02:57:45Z",
+  "checked_at": "2026-11-07T03:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "nyybeats",
       "name": "NyyBeats",
       "title": "🔥♡ FRI-YAY TUNES 🔥 !mods !mercy !tip",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
