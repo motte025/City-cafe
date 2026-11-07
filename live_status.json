@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T15:42:45Z",
+  "checked_at": "2026-11-07T15:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "lionastone",
+      "name": "LionaStone",
+      "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
