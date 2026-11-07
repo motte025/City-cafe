@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:12:39Z",
+  "aktualisiert": "2026-11-07T19:13:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1051,7 +1051,7 @@
         },
         "5": {
           "heim": 0,
-          "auswaerts": 2,
+          "auswaerts": 3,
           "id": 109015
         },
         "6": {
@@ -1138,6 +1138,16 @@
         },
         {
           "rang": 5,
+          "spieler": "OBERZAN Lukas",
+          "spiele": 10,
+          "siege": 7,
+          "niederlagen": 3,
+          "legs_plus": 20,
+          "legs_minus": 12,
+          "punkte": 20
+        },
+        {
+          "rang": 6,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 10,
           "siege": 6,
@@ -1147,7 +1157,7 @@
           "punkte": 20
         },
         {
-          "rang": 6,
+          "rang": 7,
           "spieler": "BRUNNER Peter",
           "spiele": 12,
           "siege": 6,
@@ -1157,7 +1167,7 @@
           "punkte": 20
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "WIMMER Leon",
           "spiele": 8,
           "siege": 7,
@@ -1167,7 +1177,7 @@
           "punkte": 19
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "GÖSCHL Mario",
           "spiele": 10,
           "siege": 7,
@@ -1177,7 +1187,7 @@
           "punkte": 19
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "MARKTL Werner",
           "spiele": 10,
           "siege": 6,
@@ -1185,16 +1195,6 @@
           "legs_plus": 18,
           "legs_minus": 14,
           "punkte": 18
-        },
-        {
-          "rang": 10,
-          "spieler": "OBERZAN Lukas",
-          "spiele": 9,
-          "siege": 6,
-          "niederlagen": 3,
-          "legs_plus": 17,
-          "legs_minus": 11,
-          "punkte": 17
         },
         {
           "rang": 11,
@@ -1288,6 +1288,16 @@
         },
         {
           "rang": 20,
+          "spieler": "LANG Melanie",
+          "spiele": 8,
+          "siege": 4,
+          "niederlagen": 4,
+          "legs_plus": 12,
+          "legs_minus": 15,
+          "punkte": 12
+        },
+        {
+          "rang": 21,
           "spieler": "GRAF Franz",
           "spiele": 5,
           "siege": 4,
@@ -1297,7 +1307,7 @@
           "punkte": 11
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 7,
           "siege": 3,
@@ -1307,7 +1317,7 @@
           "punkte": 11
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 5,
           "siege": 3,
@@ -1317,7 +1327,7 @@
           "punkte": 10
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "GREINIG Petra",
           "spiele": 6,
           "siege": 1,
@@ -1327,7 +1337,7 @@
           "punkte": 10
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "PINTER Michele",
           "spiele": 8,
           "siege": 1,
@@ -1335,16 +1345,6 @@
           "legs_plus": 10,
           "legs_minus": 21,
           "punkte": 10
-        },
-        {
-          "rang": 25,
-          "spieler": "LANG Melanie",
-          "spiele": 7,
-          "siege": 3,
-          "niederlagen": 4,
-          "legs_plus": 9,
-          "legs_minus": 14,
-          "punkte": 9
         },
         {
           "rang": 26,
@@ -1368,6 +1368,26 @@
         },
         {
           "rang": 28,
+          "spieler": "MARKTL (J) Maximilian",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 8,
+          "legs_minus": 12,
+          "punkte": 8
+        },
+        {
+          "rang": 29,
+          "spieler": "FRÜSTÜCK Kerstin",
+          "spiele": 10,
+          "siege": 1,
+          "niederlagen": 9,
+          "legs_plus": 8,
+          "legs_minus": 24,
+          "punkte": 8
+        },
+        {
+          "rang": 30,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 3,
           "siege": 2,
@@ -1377,33 +1397,13 @@
           "punkte": 7
         },
         {
-          "rang": 29,
-          "spieler": "MARKTL (J) Maximilian",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
-          "legs_plus": 7,
-          "legs_minus": 9,
-          "punkte": 7
-        },
-        {
-          "rang": 30,
+          "rang": 31,
           "spieler": "KRENN Klaus",
           "spiele": 5,
           "siege": 1,
           "niederlagen": 4,
           "legs_plus": 7,
           "legs_minus": 11,
-          "punkte": 7
-        },
-        {
-          "rang": 31,
-          "spieler": "FRÜSTÜCK Kerstin",
-          "spiele": 9,
-          "siege": 1,
-          "niederlagen": 8,
-          "legs_plus": 7,
-          "legs_minus": 21,
           "punkte": 7
         },
         {
@@ -1538,7 +1538,7 @@
         },
         {
           "rang": 45,
-          "spieler": "OBERLERCHNER Melanie",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1548,7 +1548,7 @@
         },
         {
           "rang": 46,
-          "spieler": "LEUTSCHACHER Martin",
+          "spieler": "OBERLERCHNER Melanie",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1558,7 +1558,7 @@
         },
         {
           "rang": 47,
-          "spieler": "WHYMAN Christian",
+          "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1578,7 +1578,7 @@
       "letztes_spiel": {
         "runde": 5,
         "heim": 0,
-        "auswaerts": 2,
+        "auswaerts": 3,
         "paarungen": [
           {
             "art": "DE",
@@ -1598,8 +1598,8 @@
             "art": "OE",
             "spieler1": "FRÜSTÜCK Kerstin",
             "spieler2": "OBERZAN Lukas",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 3
           },
           {
             "art": "OE",
@@ -1659,7 +1659,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "erg_heim": 0,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 109015,
             "paarungen": [
               {
@@ -1680,8 +1680,8 @@
                 "art": "OE",
                 "spieler1": "FRÜSTÜCK Kerstin",
                 "spieler2": "OBERZAN Lukas",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
@@ -1697,7 +1697,7 @@
             "datum": "2026-11-07",
             "heim": "ESV DC Inferno",
             "auswaerts": "DC Garzern",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 3,
             "id": 109026,
             "paarungen": [
@@ -1726,8 +1726,8 @@
                 "art": "OE",
                 "spieler1": "LANG Melanie",
                 "spieler2": "MARKTL (J) Maximilian",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               }
             ]
           }
