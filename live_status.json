@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T12:02:45Z",
+  "checked_at": "2026-11-07T12:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,13 +17,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "🔴 EARLY BIRD Hardstyle/Hardtechno🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "Rituals of Bass 2.0 - w/ @Sintica @MrBassmeister @Linni @Mindblast @Crest_Dj @E_One @Paeaet - 12 Stunden Musik ! !prep !Socials  #Werbung",
@@ -34,6 +27,13 @@
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wunderschöner Samstag <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "🔴 EARLY BIRD Hardstyle/Hardtechno🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
