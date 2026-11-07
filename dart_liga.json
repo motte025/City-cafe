@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T18:05:39Z",
+  "aktualisiert": "2026-11-07T18:16:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -96,7 +96,7 @@
           "id": 109587
         },
         "5": {
-          "heim": 1,
+          "heim": 2,
           "auswaerts": 0,
           "id": 109631
         },
@@ -364,6 +364,16 @@
         },
         {
           "rang": 23,
+          "spieler": "SATZ Klemens",
+          "spiele": 4,
+          "siege": 3,
+          "niederlagen": 1,
+          "legs_plus": 10,
+          "legs_minus": 5,
+          "punkte": 10
+        },
+        {
+          "rang": 24,
           "spieler": "BÄCKER Josephine",
           "spiele": 5,
           "siege": 1,
@@ -373,7 +383,7 @@
           "punkte": 9
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "BRUNNER Jürgen",
           "spiele": 6,
           "siege": 2,
@@ -383,7 +393,7 @@
           "punkte": 9
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "HOCHEGGER Andrea",
           "spiele": 6,
           "siege": 2,
@@ -391,16 +401,6 @@
           "legs_plus": 8,
           "legs_minus": 11,
           "punkte": 8
-        },
-        {
-          "rang": 26,
-          "spieler": "SATZ Klemens",
-          "spiele": 3,
-          "siege": 2,
-          "niederlagen": 1,
-          "legs_plus": 7,
-          "legs_minus": 5,
-          "punkte": 7
         },
         {
           "rang": 27,
@@ -575,11 +575,11 @@
         {
           "rang": 44,
           "spieler": "GORICNIK Michael",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 0,
-          "niederlagen": 6,
+          "niederlagen": 7,
           "legs_plus": 2,
-          "legs_minus": 16,
+          "legs_minus": 19,
           "punkte": 2
         },
         {
@@ -643,7 +643,7 @@
       ],
       "letztes_spiel": {
         "runde": 5,
-        "heim": 1,
+        "heim": 2,
         "auswaerts": 0,
         "paarungen": [
           {
@@ -657,7 +657,7 @@
             "art": "HE",
             "spieler1": "SATZ Klemens",
             "spieler2": "GORICNIK Michael",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -724,7 +724,7 @@
             "datum": "2026-11-07",
             "heim": "Dart Fuchs 4",
             "auswaerts": "City-Flyers \"Chaoten\"",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 0,
             "id": 109631,
             "paarungen": [
@@ -739,7 +739,7 @@
                 "art": "HE",
                 "spieler1": "SATZ Klemens",
                 "spieler2": "GORICNIK Michael",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
