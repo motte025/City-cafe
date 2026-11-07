@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T11:02:46Z",
+  "checked_at": "2026-11-07T11:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Rituals of Bass 2.0 - w/ @Sintica @MrBassmeister @Linni @Mindblast @Crest_Dj @E_One @Paeaet - 12 Stunden Musik ! !prep !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Rituals of Bass 2.0 - w/ @Sintica @MrBassmeister @Linni @Mindblast @Crest_Dj @E_One @Paeaet - 12 Stunden Musik ! !prep !Socials  #Werbung",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
