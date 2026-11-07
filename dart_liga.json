@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:43:37Z",
+  "aktualisiert": "2026-11-07T21:58:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -97,7 +97,7 @@
         },
         "5": {
           "heim": 6,
-          "auswaerts": 2,
+          "auswaerts": 3,
           "id": 109631
         },
         "6": {
@@ -214,6 +214,16 @@
         },
         {
           "rang": 8,
+          "spieler": "JAHN Andreas",
+          "spiele": 12,
+          "siege": 6,
+          "niederlagen": 6,
+          "legs_plus": 22,
+          "legs_minus": 21,
+          "punkte": 22
+        },
+        {
+          "rang": 9,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 10,
           "siege": 6,
@@ -223,7 +233,7 @@
           "punkte": 21
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "JAHN Corinna",
           "spiele": 10,
           "siege": 5,
@@ -233,7 +243,7 @@
           "punkte": 21
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "BERGLER Benjamin",
           "spiele": 12,
           "siege": 6,
@@ -243,7 +253,7 @@
           "punkte": 21
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "REINISCH Jessica",
           "spiele": 12,
           "siege": 7,
@@ -253,7 +263,7 @@
           "punkte": 21
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "ELEZOSKI Serif",
           "spiele": 8,
           "siege": 6,
@@ -263,7 +273,7 @@
           "punkte": 20
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "KERNSTOCK Michael",
           "spiele": 9,
           "siege": 6,
@@ -273,23 +283,13 @@
           "punkte": 19
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
           "niederlagen": 5,
           "legs_plus": 19,
           "legs_minus": 18,
-          "punkte": 19
-        },
-        {
-          "rang": 15,
-          "spieler": "JAHN Andreas",
-          "spiele": 11,
-          "siege": 5,
-          "niederlagen": 6,
-          "legs_plus": 19,
-          "legs_minus": 20,
           "punkte": 19
         },
         {
@@ -464,6 +464,16 @@
         },
         {
           "rang": 33,
+          "spieler": "BRANDSTÄTTER Manuel",
+          "spiele": 5,
+          "siege": 2,
+          "niederlagen": 3,
+          "legs_plus": 6,
+          "legs_minus": 10,
+          "punkte": 6
+        },
+        {
+          "rang": 34,
           "spieler": "GORICNIK Cornelia",
           "spiele": 5,
           "siege": 1,
@@ -473,7 +483,7 @@
           "punkte": 6
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "JAHN Christian",
           "spiele": 8,
           "siege": 2,
@@ -481,16 +491,6 @@
           "legs_plus": 6,
           "legs_minus": 19,
           "punkte": 6
-        },
-        {
-          "rang": 35,
-          "spieler": "BRANDSTÄTTER Manuel",
-          "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
-          "legs_plus": 5,
-          "legs_minus": 7,
-          "punkte": 5
         },
         {
           "rang": 36,
@@ -644,7 +644,7 @@
       "letztes_spiel": {
         "runde": 5,
         "heim": 6,
-        "auswaerts": 2,
+        "auswaerts": 3,
         "paarungen": [
           {
             "art": "DE",
@@ -706,8 +706,8 @@
             "art": "OE",
             "spieler1": "BRANDSTÄTTER Manuel",
             "spieler2": "JAHN Andreas",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 3
           },
           {
             "art": "OE",
@@ -809,7 +809,7 @@
             "heim": "Dart Fuchs 4",
             "auswaerts": "City-Flyers \"Chaoten\"",
             "erg_heim": 6,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 109631,
             "paarungen": [
               {
@@ -872,8 +872,8 @@
                 "art": "OE",
                 "spieler1": "BRANDSTÄTTER Manuel",
                 "spieler2": "JAHN Andreas",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
