@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:15:43Z",
+  "aktualisiert": "2026-11-07T19:16:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -284,6 +284,16 @@
         },
         {
           "rang": 15,
+          "spieler": "SCHNEIDER Thomas",
+          "spiele": 7,
+          "siege": 4,
+          "niederlagen": 3,
+          "legs_plus": 15,
+          "legs_minus": 9,
+          "punkte": 15
+        },
+        {
+          "rang": 16,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -293,7 +303,17 @@
           "punkte": 14
         },
         {
-          "rang": 16,
+          "rang": 17,
+          "spieler": "ASPRIAN Johann",
+          "spiele": 7,
+          "siege": 4,
+          "niederlagen": 3,
+          "legs_plus": 14,
+          "legs_minus": 11,
+          "punkte": 14
+        },
+        {
+          "rang": 18,
           "spieler": "KERNSTOCK Michael",
           "spiele": 7,
           "siege": 4,
@@ -303,7 +323,7 @@
           "punkte": 14
         },
         {
-          "rang": 17,
+          "rang": 19,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 10,
           "siege": 3,
@@ -313,17 +333,7 @@
           "punkte": 14
         },
         {
-          "rang": 18,
-          "spieler": "SCHNEIDER Thomas",
-          "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
-          "legs_plus": 13,
-          "legs_minus": 6,
-          "punkte": 13
-        },
-        {
-          "rang": 19,
+          "rang": 20,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 6,
           "siege": 4,
@@ -333,7 +343,7 @@
           "punkte": 13
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "KOLLER Elias",
           "spiele": 10,
           "siege": 4,
@@ -343,23 +353,13 @@
           "punkte": 13
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "SCHECK Guenther",
           "spiele": 5,
           "siege": 5,
           "niederlagen": 0,
           "legs_plus": 11,
           "legs_minus": 2,
-          "punkte": 11
-        },
-        {
-          "rang": 22,
-          "spieler": "ASPRIAN Johann",
-          "spiele": 6,
-          "siege": 3,
-          "niederlagen": 3,
-          "legs_plus": 11,
-          "legs_minus": 9,
           "punkte": 11
         },
         {
@@ -700,7 +700,7 @@
             "heim": "DC Fighting Penguins „Waddling Arrows“",
             "auswaerts": "PBC DC Skorpions Reichenfels",
             "erg_heim": 1,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109620,
             "paarungen": [
               {
@@ -721,8 +721,8 @@
                 "art": "OE",
                 "spieler1": "SCHNEIDER Thomas",
                 "spieler2": "ASPRIAN Johann",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
