@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T18:16:37Z",
+  "aktualisiert": "2026-11-07T18:18:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1276,22 +1276,22 @@
         },
         {
           "rang": 23,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 7,
-          "siege": 3,
-          "niederlagen": 4,
-          "legs_plus": 9,
-          "legs_minus": 12,
-          "punkte": 9
-        },
-        {
-          "rang": 24,
           "spieler": "LANG Melanie",
           "spiele": 7,
           "siege": 3,
           "niederlagen": 4,
           "legs_plus": 9,
           "legs_minus": 14,
+          "punkte": 9
+        },
+        {
+          "rang": 24,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 8,
+          "siege": 3,
+          "niederlagen": 5,
+          "legs_plus": 9,
+          "legs_minus": 15,
           "punkte": 9
         },
         {
@@ -1426,6 +1426,16 @@
         },
         {
           "rang": 38,
+          "spieler": "DANIEL Johanna",
+          "spiele": 1,
+          "siege": 1,
+          "niederlagen": 0,
+          "legs_plus": 3,
+          "legs_minus": 0,
+          "punkte": 3
+        },
+        {
+          "rang": 39,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 4,
           "siege": 0,
@@ -1435,7 +1445,7 @@
           "punkte": 3
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "POSCHINGER Franz",
           "spiele": 6,
           "siege": 0,
@@ -1445,7 +1455,7 @@
           "punkte": 3
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "SCHMID Thomas",
           "spiele": 1,
           "siege": 1,
@@ -1455,7 +1465,7 @@
           "punkte": 2
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "PETSCHAR Phillip",
           "spiele": 2,
           "siege": 0,
@@ -1465,7 +1475,7 @@
           "punkte": 2
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "RUS Kerstin",
           "spiele": 3,
           "siege": 0,
@@ -1475,7 +1485,7 @@
           "punkte": 2
         },
         {
-          "rang": 43,
+          "rang": 44,
           "spieler": "KRUSCHITZ Harald",
           "spiele": 3,
           "siege": 0,
@@ -1485,7 +1495,7 @@
           "punkte": 1
         },
         {
-          "rang": 44,
+          "rang": 45,
           "spieler": "LEUTSCHACHER Martin",
           "spiele": 1,
           "siege": 0,
@@ -1495,7 +1505,7 @@
           "punkte": 0
         },
         {
-          "rang": 45,
+          "rang": 46,
           "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
@@ -1678,7 +1688,7 @@
             "heim": "ESV DC Inferno",
             "auswaerts": "DC Garzern",
             "erg_heim": 0,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109026,
             "paarungen": [
               {
@@ -1686,7 +1696,7 @@
                 "spieler1": "STÜCKLER Heidemarie",
                 "spieler2": "DANIEL Johanna",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "HE",
