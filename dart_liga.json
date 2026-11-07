@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:54:39Z",
+  "aktualisiert": "2026-11-07T20:02:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -244,6 +244,16 @@
         },
         {
           "rang": 11,
+          "spieler": "FRIEßNEGGER Gerhard",
+          "spiele": 9,
+          "siege": 5,
+          "niederlagen": 4,
+          "legs_plus": 18,
+          "legs_minus": 14,
+          "punkte": 18
+        },
+        {
+          "rang": 12,
           "spieler": "JAHN Corinna",
           "spiele": 8,
           "siege": 4,
@@ -253,7 +263,7 @@
           "punkte": 18
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "JAHN Andreas",
           "spiele": 10,
           "siege": 5,
@@ -263,7 +273,7 @@
           "punkte": 18
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 8,
           "siege": 5,
@@ -273,17 +283,17 @@
           "punkte": 17
         },
         {
-          "rang": 14,
-          "spieler": "FRIEßNEGGER Gerhard",
+          "rang": 15,
+          "spieler": "KERNSTOCK Michael",
           "spiele": 8,
-          "siege": 4,
-          "niederlagen": 4,
+          "siege": 5,
+          "niederlagen": 3,
           "legs_plus": 16,
           "legs_minus": 14,
           "punkte": 16
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 11,
           "siege": 4,
@@ -293,7 +303,7 @@
           "punkte": 16
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 7,
           "siege": 4,
@@ -303,7 +313,7 @@
           "punkte": 15
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -313,7 +323,7 @@
           "punkte": 14
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 7,
           "siege": 4,
@@ -323,23 +333,13 @@
           "punkte": 14
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "ASPRIAN Johann",
           "spiele": 7,
           "siege": 4,
           "niederlagen": 3,
           "legs_plus": 14,
           "legs_minus": 11,
-          "punkte": 14
-        },
-        {
-          "rang": 20,
-          "spieler": "KERNSTOCK Michael",
-          "spiele": 7,
-          "siege": 4,
-          "niederlagen": 3,
-          "legs_plus": 14,
-          "legs_minus": 14,
           "punkte": 14
         },
         {
@@ -375,11 +375,11 @@
         {
           "rang": 24,
           "spieler": "BRUNNER Jürgen",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 2,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 10,
-          "legs_minus": 16,
+          "legs_minus": 18,
           "punkte": 10
         },
         {
@@ -625,11 +625,11 @@
         {
           "rang": 49,
           "spieler": "HOBEL Walter",
-          "spiele": 2,
+          "spiele": 3,
           "siege": 0,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 0,
-          "legs_minus": 6,
+          "legs_minus": 8,
           "punkte": 0
         }
       ],
@@ -791,7 +791,7 @@
             "datum": "2026-11-07",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 1,
             "id": 109642,
             "paarungen": [
@@ -834,7 +834,7 @@
                 "art": "OD",
                 "spieler1": "KERNSTOCK Michael / FRIEßNEGGER Gerhard",
                 "spieler2": "HOBEL Walter / BRUNNER Jürgen",
-                "legs1": 0,
+                "legs1": 2,
                 "legs2": 0
               }
             ]
