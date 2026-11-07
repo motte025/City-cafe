@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:11:45Z",
+  "aktualisiert": "2026-11-07T21:12:56Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -17,7 +17,7 @@
         },
         {
           "rang": 2,
-          "team": "DC Fighting Penguins „Waddling Arrows“",
+          "team": "DC Schwarzer Kater",
           "spiele": 5,
           "siege": 4,
           "unentschieden": 0,
@@ -26,12 +26,12 @@
         },
         {
           "rang": 3,
-          "team": "DC Schwarzer Kater",
-          "spiele": 4,
-          "siege": 3,
+          "team": "DC Fighting Penguins „Waddling Arrows“",
+          "spiele": 5,
+          "siege": 4,
           "unentschieden": 0,
           "niederlagen": 1,
-          "punkte": 6
+          "punkte": 8
         },
         {
           "rang": 4,
@@ -54,10 +54,10 @@
         {
           "rang": 6,
           "team": "DC Cafe Seven",
-          "spiele": 4,
+          "spiele": 5,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "punkte": 2
         },
         {
@@ -204,6 +204,16 @@
         },
         {
           "rang": 7,
+          "spieler": "FRIEßNEGGER Gerhard",
+          "spiele": 10,
+          "siege": 6,
+          "niederlagen": 4,
+          "legs_plus": 21,
+          "legs_minus": 15,
+          "punkte": 21
+        },
+        {
+          "rang": 8,
           "spieler": "BERGLER Benjamin",
           "spiele": 12,
           "siege": 6,
@@ -213,7 +223,7 @@
           "punkte": 21
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "REINISCH Jessica",
           "spiele": 12,
           "siege": 7,
@@ -223,7 +233,7 @@
           "punkte": 21
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "ELEZOSKI Serif",
           "spiele": 8,
           "siege": 6,
@@ -233,7 +243,7 @@
           "punkte": 20
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "REGENFELDNER Rene",
           "spiele": 8,
           "siege": 7,
@@ -243,7 +253,7 @@
           "punkte": 19
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "KERNSTOCK Michael",
           "spiele": 9,
           "siege": 6,
@@ -253,7 +263,7 @@
           "punkte": 19
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
@@ -263,7 +273,7 @@
           "punkte": 19
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "JAHN Andreas",
           "spiele": 11,
           "siege": 5,
@@ -271,16 +281,6 @@
           "legs_plus": 19,
           "legs_minus": 20,
           "punkte": 19
-        },
-        {
-          "rang": 14,
-          "spieler": "FRIEßNEGGER Gerhard",
-          "spiele": 9,
-          "siege": 5,
-          "niederlagen": 4,
-          "legs_plus": 18,
-          "legs_minus": 14,
-          "punkte": 18
         },
         {
           "rang": 15,
@@ -385,12 +385,12 @@
         {
           "rang": 25,
           "spieler": "BRUNNER Jürgen",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 2,
-          "niederlagen": 6,
-          "legs_plus": 10,
-          "legs_minus": 18,
-          "punkte": 10
+          "niederlagen": 7,
+          "legs_plus": 11,
+          "legs_minus": 21,
+          "punkte": 11
         },
         {
           "rang": 26,
@@ -484,9 +484,9 @@
         },
         {
           "rang": 35,
-          "spieler": "BRANDSTÄTTER Manuel",
-          "spiele": 4,
-          "siege": 2,
+          "spieler": "STÜCKLER Manuel",
+          "spiele": 3,
+          "siege": 1,
           "niederlagen": 2,
           "legs_plus": 5,
           "legs_minus": 7,
@@ -494,9 +494,9 @@
         },
         {
           "rang": 36,
-          "spieler": "STÜCKLER Manuel",
-          "spiele": 3,
-          "siege": 1,
+          "spieler": "BRANDSTÄTTER Manuel",
+          "spiele": 4,
+          "siege": 2,
           "niederlagen": 2,
           "legs_plus": 5,
           "legs_minus": 7,
