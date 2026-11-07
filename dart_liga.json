@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T22:46:44Z",
+  "aktualisiert": "2026-11-07T22:53:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -45,11 +45,11 @@
         {
           "rang": 5,
           "team": "Dart Fuchs 4",
-          "spiele": 5,
-          "siege": 2,
+          "spiele": 6,
+          "siege": 3,
           "unentschieden": 0,
           "niederlagen": 3,
-          "punkte": 4
+          "punkte": 6
         },
         {
           "rang": 6,
@@ -63,10 +63,10 @@
         {
           "rang": 7,
           "team": "City-Flyers \"Chaoten\"",
-          "spiele": 4,
+          "spiele": 5,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "punkte": 2
         },
         {
@@ -97,7 +97,7 @@
         },
         "5": {
           "heim": 6,
-          "auswaerts": 3,
+          "auswaerts": 4,
           "id": 109631
         },
         "6": {
@@ -354,6 +354,16 @@
         },
         {
           "rang": 22,
+          "spieler": "SATZ Klemens",
+          "spiele": 6,
+          "siege": 3,
+          "niederlagen": 3,
+          "legs_plus": 13,
+          "legs_minus": 10,
+          "punkte": 13
+        },
+        {
+          "rang": 23,
           "spieler": "BÄCKER Josephine",
           "spiele": 6,
           "siege": 2,
@@ -363,23 +373,13 @@
           "punkte": 12
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "SCHECK Guenther",
           "spiele": 5,
           "siege": 5,
           "niederlagen": 0,
           "legs_plus": 11,
           "legs_minus": 2,
-          "punkte": 11
-        },
-        {
-          "rang": 24,
-          "spieler": "SATZ Klemens",
-          "spiele": 5,
-          "siege": 3,
-          "niederlagen": 2,
-          "legs_plus": 11,
-          "legs_minus": 7,
           "punkte": 11
         },
         {
@@ -454,6 +454,16 @@
         },
         {
           "rang": 32,
+          "spieler": "JAHN Herbert",
+          "spiele": 8,
+          "siege": 2,
+          "niederlagen": 6,
+          "legs_plus": 7,
+          "legs_minus": 17,
+          "punkte": 7
+        },
+        {
+          "rang": 33,
           "spieler": "LUBE Mario",
           "spiele": 4,
           "siege": 2,
@@ -463,7 +473,7 @@
           "punkte": 6
         },
         {
-          "rang": 33,
+          "rang": 34,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 5,
           "siege": 2,
@@ -473,7 +483,7 @@
           "punkte": 6
         },
         {
-          "rang": 34,
+          "rang": 35,
           "spieler": "GORICNIK Cornelia",
           "spiele": 5,
           "siege": 1,
@@ -483,7 +493,7 @@
           "punkte": 6
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "JAHN Christian",
           "spiele": 8,
           "siege": 2,
@@ -493,7 +503,7 @@
           "punkte": 6
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "STÜCKLER Manuel",
           "spiele": 3,
           "siege": 1,
@@ -503,7 +513,7 @@
           "punkte": 5
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "POLZER Hannah",
           "spiele": 4,
           "siege": 2,
@@ -513,7 +523,7 @@
           "punkte": 5
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "AMBROS Thomas",
           "spiele": 6,
           "siege": 0,
@@ -523,23 +533,13 @@
           "punkte": 5
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "SCHADER Andreas",
           "spiele": 2,
           "siege": 1,
           "niederlagen": 1,
           "legs_plus": 4,
           "legs_minus": 2,
-          "punkte": 4
-        },
-        {
-          "rang": 40,
-          "spieler": "JAHN Herbert",
-          "spiele": 7,
-          "siege": 1,
-          "niederlagen": 6,
-          "legs_plus": 4,
-          "legs_minus": 15,
           "punkte": 4
         },
         {
@@ -644,7 +644,7 @@
       "letztes_spiel": {
         "runde": 5,
         "heim": 6,
-        "auswaerts": 3,
+        "auswaerts": 4,
         "paarungen": [
           {
             "art": "DE",
@@ -713,8 +713,8 @@
             "art": "OE",
             "spieler1": "SATZ Klemens",
             "spieler2": "JAHN Herbert",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 2,
+            "legs2": 3
           }
         ]
       },
@@ -809,7 +809,7 @@
             "heim": "Dart Fuchs 4",
             "auswaerts": "City-Flyers \"Chaoten\"",
             "erg_heim": 6,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 109631,
             "paarungen": [
               {
@@ -879,8 +879,8 @@
                 "art": "OE",
                 "spieler1": "SATZ Klemens",
                 "spieler2": "JAHN Herbert",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               }
             ]
           },
