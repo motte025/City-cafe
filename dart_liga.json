@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T20:43:38Z",
+  "aktualisiert": "2026-11-07T20:44:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1169,12 +1169,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 14,
-          "siege": 14,
+          "spiele": 15,
+          "siege": 15,
           "niederlagen": 0,
-          "legs_plus": 37,
+          "legs_plus": 40,
           "legs_minus": 5,
-          "punkte": 37
+          "punkte": 40
         },
         {
           "rang": 2,
@@ -1599,11 +1599,11 @@
         {
           "rang": 44,
           "spieler": "KRUSCHITZ Harald",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 0,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 1,
-          "legs_minus": 13,
+          "legs_minus": 16,
           "punkte": 1
         },
         {
