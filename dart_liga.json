@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T19:39:44Z",
+  "aktualisiert": "2026-11-07T19:40:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -174,6 +174,16 @@
         },
         {
           "rang": 4,
+          "spieler": "HOPFGARTNER Joachim",
+          "spiele": 10,
+          "siege": 8,
+          "niederlagen": 2,
+          "legs_plus": 24,
+          "legs_minus": 14,
+          "punkte": 24
+        },
+        {
+          "rang": 5,
           "spieler": "JAMMER Fabian",
           "spiele": 11,
           "siege": 8,
@@ -181,16 +191,6 @@
           "legs_plus": 24,
           "legs_minus": 18,
           "punkte": 24
-        },
-        {
-          "rang": 5,
-          "spieler": "HOPFGARTNER Joachim",
-          "spiele": 9,
-          "siege": 8,
-          "niederlagen": 1,
-          "legs_plus": 23,
-          "legs_minus": 12,
-          "punkte": 23
         },
         {
           "rang": 6,
@@ -234,6 +234,16 @@
         },
         {
           "rang": 10,
+          "spieler": "REINISCH Jessica",
+          "spiele": 11,
+          "siege": 7,
+          "niederlagen": 4,
+          "legs_plus": 19,
+          "legs_minus": 19,
+          "punkte": 19
+        },
+        {
+          "rang": 11,
           "spieler": "JAHN Corinna",
           "spiele": 8,
           "siege": 4,
@@ -243,7 +253,7 @@
           "punkte": 18
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "JAHN Andreas",
           "spiele": 10,
           "siege": 5,
@@ -253,23 +263,13 @@
           "punkte": 18
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 8,
           "siege": 5,
           "niederlagen": 3,
           "legs_plus": 17,
           "legs_minus": 9,
-          "punkte": 17
-        },
-        {
-          "rang": 13,
-          "spieler": "REINISCH Jessica",
-          "spiele": 10,
-          "siege": 6,
-          "niederlagen": 4,
-          "legs_plus": 17,
-          "legs_minus": 18,
           "punkte": 17
         },
         {
@@ -284,6 +284,16 @@
         },
         {
           "rang": 15,
+          "spieler": "SIMONITSCH Erhard",
+          "spiele": 11,
+          "siege": 4,
+          "niederlagen": 7,
+          "legs_plus": 16,
+          "legs_minus": 23,
+          "punkte": 16
+        },
+        {
+          "rang": 16,
           "spieler": "SCHNEIDER Thomas",
           "spiele": 7,
           "siege": 4,
@@ -293,7 +303,7 @@
           "punkte": 15
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
@@ -303,7 +313,17 @@
           "punkte": 14
         },
         {
-          "rang": 17,
+          "rang": 18,
+          "spieler": "FRIEßNEGGER Sarah",
+          "spiele": 7,
+          "siege": 4,
+          "niederlagen": 3,
+          "legs_plus": 14,
+          "legs_minus": 10,
+          "punkte": 14
+        },
+        {
+          "rang": 19,
           "spieler": "ASPRIAN Johann",
           "spiele": 7,
           "siege": 4,
@@ -313,7 +333,7 @@
           "punkte": 14
         },
         {
-          "rang": 18,
+          "rang": 20,
           "spieler": "KERNSTOCK Michael",
           "spiele": 7,
           "siege": 4,
@@ -321,26 +341,6 @@
           "legs_plus": 14,
           "legs_minus": 14,
           "punkte": 14
-        },
-        {
-          "rang": 19,
-          "spieler": "SIMONITSCH Erhard",
-          "spiele": 10,
-          "siege": 3,
-          "niederlagen": 7,
-          "legs_plus": 14,
-          "legs_minus": 22,
-          "punkte": 14
-        },
-        {
-          "rang": 20,
-          "spieler": "FRIEßNEGGER Sarah",
-          "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
-          "legs_plus": 13,
-          "legs_minus": 8,
-          "punkte": 13
         },
         {
           "rang": 21,
@@ -792,7 +792,7 @@
             "heim": "DC Schwarzer Kater",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 4,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109642,
             "paarungen": [
               {
@@ -827,8 +827,8 @@
                 "art": "MD",
                 "spieler1": "HOPFGARTNER Joachim / FRIEßNEGGER Sarah",
                 "spieler2": "SIMONITSCH Erhard / REINISCH Jessica",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 2
               },
               {
                 "art": "OD",
