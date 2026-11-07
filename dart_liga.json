@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T22:20:39Z",
+  "aktualisiert": "2026-11-07T22:46:44Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1176,7 +1176,7 @@
           "id": 108960
         },
         "5": {
-          "heim": 1,
+          "heim": 2,
           "auswaerts": 7,
           "id": 109015
         },
@@ -1275,12 +1275,12 @@
         {
           "rang": 6,
           "spieler": "STEINER Sandro Emmanuel",
-          "spiele": 11,
+          "spiele": 12,
           "siege": 8,
-          "niederlagen": 3,
-          "legs_plus": 22,
-          "legs_minus": 12,
-          "punkte": 22
+          "niederlagen": 4,
+          "legs_plus": 23,
+          "legs_minus": 15,
+          "punkte": 23
         },
         {
           "rang": 7,
@@ -1424,6 +1424,16 @@
         },
         {
           "rang": 21,
+          "spieler": "KRENN Klaus",
+          "spiele": 7,
+          "siege": 3,
+          "niederlagen": 4,
+          "legs_plus": 13,
+          "legs_minus": 13,
+          "punkte": 13
+        },
+        {
+          "rang": 22,
           "spieler": "PAULITSCH Brigitte",
           "spiele": 8,
           "siege": 4,
@@ -1433,7 +1443,7 @@
           "punkte": 13
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 5,
           "siege": 4,
@@ -1443,7 +1453,7 @@
           "punkte": 12
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "SPANRING Andreas",
           "spiele": 6,
           "siege": 4,
@@ -1453,7 +1463,7 @@
           "punkte": 12
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 10,
           "siege": 4,
@@ -1463,7 +1473,7 @@
           "punkte": 12
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 6,
           "siege": 2,
@@ -1473,7 +1483,7 @@
           "punkte": 11
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "PINTER Michele",
           "spiele": 9,
           "siege": 1,
@@ -1481,16 +1491,6 @@
           "legs_plus": 11,
           "legs_minus": 23,
           "punkte": 11
-        },
-        {
-          "rang": 27,
-          "spieler": "KRENN Klaus",
-          "spiele": 6,
-          "siege": 2,
-          "niederlagen": 4,
-          "legs_plus": 10,
-          "legs_minus": 12,
-          "punkte": 10
         },
         {
           "rang": 28,
@@ -1703,7 +1703,7 @@
       ],
       "letztes_spiel": {
         "runde": 5,
-        "heim": 1,
+        "heim": 2,
         "auswaerts": 7,
         "paarungen": [
           {
@@ -1766,8 +1766,8 @@
             "art": "OE",
             "spieler1": "KRENN Klaus",
             "spieler2": "STEINER Sandro Emmanuel",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 3,
+            "legs2": 1
           },
           {
             "art": "OE",
@@ -1868,7 +1868,7 @@
             "datum": "2026-11-07",
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 7,
             "id": 109015,
             "paarungen": [
@@ -1932,8 +1932,8 @@
                 "art": "OE",
                 "spieler1": "KRENN Klaus",
                 "spieler2": "STEINER Sandro Emmanuel",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "OE",
