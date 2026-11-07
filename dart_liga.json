@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T22:53:35Z",
+  "aktualisiert": "2026-11-07T23:16:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1106,7 +1106,7 @@
         },
         {
           "rang": 3,
-          "team": "ESV DC Inferno",
+          "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
           "spiele": 5,
           "siege": 3,
           "unentschieden": 1,
@@ -1115,6 +1115,15 @@
         },
         {
           "rang": 4,
+          "team": "ESV DC Inferno",
+          "spiele": 5,
+          "siege": 3,
+          "unentschieden": 1,
+          "niederlagen": 1,
+          "punkte": 7
+        },
+        {
+          "rang": 5,
           "team": "DC Drautal Dart Vipers",
           "spiele": 5,
           "siege": 2,
@@ -1123,26 +1132,17 @@
           "punkte": 6
         },
         {
-          "rang": 5,
-          "team": "UDC Platzlwirt - ZIELSICHER DANEBEN",
-          "spiele": 4,
-          "siege": 2,
-          "unentschieden": 1,
-          "niederlagen": 1,
-          "punkte": 5
-        },
-        {
           "rang": 6,
-          "team": "City-Flyers \"Fraggles\"",
-          "spiele": 4,
+          "team": "DC O3tz 1.0",
+          "spiele": 5,
           "siege": 1,
           "unentschieden": 0,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "punkte": 2
         },
         {
           "rang": 7,
-          "team": "DC O3tz 1.0",
+          "team": "City-Flyers \"Fraggles\"",
           "spiele": 5,
           "siege": 1,
           "unentschieden": 0,
@@ -1177,7 +1177,7 @@
         },
         "5": {
           "heim": 2,
-          "auswaerts": 7,
+          "auswaerts": 8,
           "id": 109015
         },
         "6": {
@@ -1344,6 +1344,16 @@
         },
         {
           "rang": 13,
+          "spieler": "GRAF Franz",
+          "spiele": 8,
+          "siege": 6,
+          "niederlagen": 2,
+          "legs_plus": 17,
+          "legs_minus": 6,
+          "punkte": 17
+        },
+        {
+          "rang": 14,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 9,
           "siege": 6,
@@ -1353,7 +1363,7 @@
           "punkte": 17
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
@@ -1361,16 +1371,6 @@
           "legs_plus": 17,
           "legs_minus": 14,
           "punkte": 17
-        },
-        {
-          "rang": 15,
-          "spieler": "LANG Melanie",
-          "spiele": 10,
-          "siege": 4,
-          "niederlagen": 6,
-          "legs_plus": 15,
-          "legs_minus": 20,
-          "punkte": 15
         },
         {
           "rang": 16,
@@ -1384,13 +1384,13 @@
         },
         {
           "rang": 17,
-          "spieler": "GRAF Franz",
-          "spiele": 7,
-          "siege": 5,
-          "niederlagen": 2,
-          "legs_plus": 14,
-          "legs_minus": 6,
-          "punkte": 14
+          "spieler": "LANG Melanie",
+          "spiele": 10,
+          "siege": 4,
+          "niederlagen": 6,
+          "legs_plus": 15,
+          "legs_minus": 20,
+          "punkte": 15
         },
         {
           "rang": 18,
@@ -1415,11 +1415,11 @@
         {
           "rang": 20,
           "spieler": "SONNBERGER Harald",
-          "spiele": 11,
+          "spiele": 12,
           "siege": 3,
-          "niederlagen": 8,
+          "niederlagen": 9,
           "legs_plus": 14,
-          "legs_minus": 24,
+          "legs_minus": 27,
           "punkte": 14
         },
         {
@@ -1704,7 +1704,7 @@
       "letztes_spiel": {
         "runde": 5,
         "heim": 2,
-        "auswaerts": 7,
+        "auswaerts": 8,
         "paarungen": [
           {
             "art": "DE",
@@ -1774,7 +1774,7 @@
             "spieler1": "SONNBERGER Harald",
             "spieler2": "GRAF Franz",
             "legs1": 0,
-            "legs2": 0
+            "legs2": 3
           }
         ]
       },
@@ -1869,7 +1869,7 @@
             "heim": "City-Flyers \"Fraggles\"",
             "auswaerts": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "erg_heim": 2,
-            "erg_auswaerts": 7,
+            "erg_auswaerts": 8,
             "id": 109015,
             "paarungen": [
               {
@@ -1940,7 +1940,7 @@
                 "spieler1": "SONNBERGER Harald",
                 "spieler2": "GRAF Franz",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               }
             ]
           },
