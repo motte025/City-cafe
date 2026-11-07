@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T18:28:48Z",
+  "aktualisiert": "2026-11-07T18:29:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -224,12 +224,12 @@
         },
         {
           "rang": 9,
-          "spieler": "REINISCH Jessica",
-          "spiele": 9,
-          "siege": 6,
+          "spieler": "FRIEßNEGGER Manuela",
+          "spiele": 8,
+          "siege": 5,
           "niederlagen": 3,
           "legs_plus": 17,
-          "legs_minus": 15,
+          "legs_minus": 9,
           "punkte": 17
         },
         {
@@ -244,6 +244,16 @@
         },
         {
           "rang": 11,
+          "spieler": "REINISCH Jessica",
+          "spiele": 10,
+          "siege": 6,
+          "niederlagen": 4,
+          "legs_plus": 17,
+          "legs_minus": 18,
+          "punkte": 17
+        },
+        {
+          "rang": 12,
           "spieler": "JAHN Corinna",
           "spiele": 7,
           "siege": 4,
@@ -253,7 +263,7 @@
           "punkte": 16
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "JAHN Andreas",
           "spiele": 9,
           "siege": 4,
@@ -263,23 +273,13 @@
           "punkte": 15
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "REGENFELDNER Rene",
           "spiele": 6,
           "siege": 5,
           "niederlagen": 1,
           "legs_plus": 14,
           "legs_minus": 6,
-          "punkte": 14
-        },
-        {
-          "rang": 14,
-          "spieler": "FRIEßNEGGER Manuela",
-          "spiele": 7,
-          "siege": 4,
-          "niederlagen": 3,
-          "legs_plus": 14,
-          "legs_minus": 9,
           "punkte": 14
         },
         {
@@ -763,7 +763,7 @@
             "datum": "2026-11-07",
             "heim": "DC Schwarzer Kater",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 0,
             "id": 109642,
             "paarungen": [
@@ -771,7 +771,7 @@
                 "art": "DE",
                 "spieler1": "FRIEßNEGGER Manuela",
                 "spieler2": "REINISCH Jessica",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
