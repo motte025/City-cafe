@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-07T21:04:44Z",
+  "aktualisiert": "2026-11-07T21:09:47Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -96,7 +96,7 @@
           "id": 109587
         },
         "5": {
-          "heim": 4,
+          "heim": 5,
           "auswaerts": 2,
           "id": 109631
         },
@@ -354,6 +354,16 @@
         },
         {
           "rang": 22,
+          "spieler": "BÄCKER Josephine",
+          "spiele": 6,
+          "siege": 2,
+          "niederlagen": 4,
+          "legs_plus": 12,
+          "legs_minus": 13,
+          "punkte": 12
+        },
+        {
+          "rang": 23,
           "spieler": "SCHECK Guenther",
           "spiele": 5,
           "siege": 5,
@@ -363,7 +373,7 @@
           "punkte": 11
         },
         {
-          "rang": 23,
+          "rang": 24,
           "spieler": "SATZ Klemens",
           "spiele": 5,
           "siege": 3,
@@ -373,7 +383,7 @@
           "punkte": 11
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "BRUNNER Jürgen",
           "spiele": 8,
           "siege": 2,
@@ -383,23 +393,13 @@
           "punkte": 10
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "KREUZER Silvia",
           "spiele": 4,
           "siege": 3,
           "niederlagen": 1,
           "legs_plus": 9,
           "legs_minus": 6,
-          "punkte": 9
-        },
-        {
-          "rang": 26,
-          "spieler": "BÄCKER Josephine",
-          "spiele": 5,
-          "siege": 1,
-          "niederlagen": 4,
-          "legs_plus": 9,
-          "legs_minus": 13,
           "punkte": 9
         },
         {
@@ -585,11 +585,11 @@
         {
           "rang": 45,
           "spieler": "GORICNIK Michael",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 0,
-          "niederlagen": 7,
+          "niederlagen": 8,
           "legs_plus": 2,
-          "legs_minus": 19,
+          "legs_minus": 22,
           "punkte": 2
         },
         {
@@ -643,7 +643,7 @@
       ],
       "letztes_spiel": {
         "runde": 5,
-        "heim": 4,
+        "heim": 5,
         "auswaerts": 2,
         "paarungen": [
           {
@@ -692,7 +692,7 @@
             "art": "HE",
             "spieler1": "BÄCKER Josephine",
             "spieler2": "GORICNIK Michael",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -808,7 +808,7 @@
             "datum": "2026-11-07",
             "heim": "Dart Fuchs 4",
             "auswaerts": "City-Flyers \"Chaoten\"",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 2,
             "id": 109631,
             "paarungen": [
@@ -858,7 +858,7 @@
                 "art": "HE",
                 "spieler1": "BÄCKER Josephine",
                 "spieler2": "GORICNIK Michael",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
