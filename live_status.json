@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T20:12:46Z",
+  "checked_at": "2026-11-07T20:27:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
+      "channel": "l4uchm3ld3r",
+      "name": "L4uchm3ld3r",
+      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "l4uchm3ld3r",
-      "name": "L4uchm3ld3r",
-      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !tip ✨",
       "game": "DJs"
     },
     {
