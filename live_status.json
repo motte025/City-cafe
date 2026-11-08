@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-08T07:42:46Z",
+  "checked_at": "2026-11-08T08:02:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🐅🐆 SATURDAY NIGHT SHENNANIGANS BEFORE ON ROUTE TO TWITCHCON 🐅🐆 !tip !twitchcon !patreon !youtube",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "lionastone",
       "name": "LionaStone",
       "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🐅🐆 SATURDAY NIGHT SHENNANIGANS BEFORE ON ROUTE TO TWITCHCON 🐅🐆 !tip !twitchcon !patreon !youtube",
       "game": "DJs"
     },
     {
