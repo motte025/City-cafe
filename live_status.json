@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T08:47:46Z",
+  "checked_at": "2026-11-08T09:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,23 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "lionastone",
-      "name": "LionaStone",
-      "title": "MISSION: ESCAPE THE WORLD CHAOS!!!  dopamine boost",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "l4uchm3ld3r",
       "name": "L4uchm3ld3r",
       "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "🐅🐆 SATURDAY NIGHT SHENNANIGANS BEFORE ON ROUTE TO TWITCHCON 🐅🐆 !tip !twitchcon !patreon !youtube",
       "game": "DJs"
     },
     {
