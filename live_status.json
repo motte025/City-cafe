@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T13:02:45Z",
+  "checked_at": "2026-11-08T13:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Rolands Birthday-Party / 90s Day Special / Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Rolands Birthday-Party / 90s Day Special / Live aus Studio 2",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
