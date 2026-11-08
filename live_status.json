@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T11:52:45Z",
+  "checked_at": "2026-11-08T12:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wunderschöner Sonntag <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
