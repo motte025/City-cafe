@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-08T05:27:46Z",
+  "checked_at": "2026-11-08T05:32:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🐅🐆 SATURDAY NIGHT SHENNANIGANS BEFORE ON ROUTE TO TWITCHCON 🐅🐆 !tip !twitchcon !patreon !youtube",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "musikinfection",
