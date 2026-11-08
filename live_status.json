@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T17:52:46Z",
+  "checked_at": "2026-11-08T18:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "DANCE Classics Sunday - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
