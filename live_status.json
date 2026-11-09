@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-09T18:37:46Z",
+  "checked_at": "2026-11-09T18:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - FORGOTTEN TRACKS - Trance, Techno, Dance & HandsUp | !tip ✨",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ruhiger Montag? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ruhiger Montag? | !bier | !zug | !holy | #werbung",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - FORGOTTEN TRACKS - Trance, Techno, Dance & HandsUp | !tip ✨",
       "game": "DJs"
     },
     {
