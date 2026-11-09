@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-09T15:12:47Z",
+  "checked_at": "2026-11-09T15:32:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ VINYL CLASSICS - FORGOTTEN TRACKS - Trance, Techno, Dance & HandsUp | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
