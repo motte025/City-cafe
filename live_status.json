@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-09T00:37:46Z",
+  "checked_at": "2026-11-09T00:52:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ SUNDAY FUNDAY WITH A LITTLE BIT OF EVIL🔥 !mods !mercy !tip",
       "game": "DJs"
     }
   ]
