@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-10T21:57:53Z",
+  "checked_at": "2026-11-10T22:07:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "roice",
