@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-10T16:52:45Z",
+  "checked_at": "2026-11-10T17:02:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wilder Dienstag <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "😈 Mute Marathon Tag  114 😈 | Dance Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wilder Dienstag <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -38,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Back 2 the 90s mit @Chris_Nitro und Super Solli - Whatsapp ins Studio: 030- 20 19 16 16",
       "game": "DJs"
     }
   ]
