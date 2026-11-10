@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-10T21:12:47Z",
+  "checked_at": "2026-11-10T21:32:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "SHORT STREAM BC IM GOING TO THE CON | 🤍 Nov 30th we celebrate my BDAY - save the date 🤍 !shorts !bewbs !merch !plus !alt !design !wishlist",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "SHORT STREAM BC IM GOING TO THE CON | 🤍 Nov 30th we celebrate my BDAY - save the date 🤍 !shorts !bewbs !merch !plus !alt !design !wishlist",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
