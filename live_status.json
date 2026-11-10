@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-10T15:12:48Z",
+  "checked_at": "2026-11-10T15:32:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "HAPPY TUNESDAY 🔴 Hardstyle/Hardtechno🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -27,13 +34,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "HAPPY TUNESDAY 🔴 Hardstyle/Hardtechno🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     }
   ]
