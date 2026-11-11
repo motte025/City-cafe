@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-11T09:52:45Z",
+  "checked_at": "2026-11-11T10:02:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉Alaaf & Helau - Die Jecken sind los 🎉 LIVE aus dem Partykiosk in Köln 🎉 w/ @handofblood | Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
