@@ -1,4 +1,19 @@
 {
+  "sonder": [
+    {
+      "hinweis": "Sondervideo (12.11.2026, Wunsch Betreiber): heute 9-18 Uhr etwa alle 2 Stunden einmal ganz, danach faellt es von selbst raus (datum). Vorrang vor Krampuslauf.",
+      "videoId": "9DlkgXaT8Q0",
+      "datum": "2026-11-12",
+      "von": "09:00",
+      "bis": "18:00",
+      "abstandMinuten": 115,
+      "sekunden": 540,
+      "symbol": "🏒",
+      "ort": "Kärntner Derby: VSV – KAC 0:3",
+      "titel": "Aufzeichnung vom 11. November · Villacher Stadthalle · Sporteurope.TV",
+      "badge": "🏒 Eishockey"
+    }
+  ],
   "krampus": {
     "hinweis": "Krampuslaeufe 16:00-07:00. Je Auftritt zwei Gruppen (Kapitel aus YouTube), die Videos im Wechsel. Fuer 2026 einfach videoId, jahr, ende und gruppen tauschen.",
     "vonStunde": 16,

@@ -7295,6 +7295,7 @@
                 if (!rohDaten) return;
                 const kr = rohDaten.krampus;
                 nlKrampus = kr && Array.isArray(kr.videos) && kr.videos.length ? kr : null;
+                nlSonder = Array.isArray(rohDaten.sonder) ? rohDaten.sonder.filter(v => v && v.videoId) : [];
                 const markiert = (teil, art) => (teil && Array.isArray(teil.videos) ? teil.videos : [])
                     .map(v => ({ ...v, _art: art }));
                 const nacht = rohDaten.nacht || {};
@@ -7353,6 +7354,35 @@
             const h = new Date().getHours();
             const von = Number(nlKrampus.vonStunde), bis = Number(nlKrampus.bisStunde);
             return von > bis ? (h >= von || h < bis) : (h >= von && h < bis);
+        }
+
+        // Sondervideos (nightlife.json "sonder", 12.11.2026): ein bestimmtes Video an einem Tag
+        // (datum) zwischen von und bis, alle abstandMinuten einmal ganz (sekunden) - z. B. die
+        // KAC-VSV-Aufzeichnung 9-18 Uhr etwa alle 2 Stunden. Vorrang vor Krampuslauf und Tag/Nacht,
+        // nicht vor einem Wunsch vom Handy. Nach "bis" bzw. am naechsten Tag faellt es von selbst raus.
+        let nlSonder = [];
+        function nlSonderStand() {
+            try { return JSON.parse(localStorage.getItem('cityCafeSonder') || 'null') || {}; } catch (e) { return {}; }
+        }
+        function nlSonderFaellig() {
+            if (!nlSonder.length || SPARSTUFE >= 3) return null;
+            const jetzt = new Date();
+            const tag = jetzt.getFullYear() + '-' + String(jetzt.getMonth() + 1).padStart(2, '0') + '-' + String(jetzt.getDate()).padStart(2, '0');
+            const minute = jetzt.getHours() * 60 + jetzt.getMinutes();
+            const inMin = (t, d) => { const m = String(t || d).split(':').map(Number); return (m[0] || 0) * 60 + (m[1] || 0); };
+            const stand = nlSonderStand();
+            for (const v of nlSonder) {
+                if (nlDefekt[v.videoId] || (v.datum && v.datum !== tag)) continue;
+                if (minute < inMin(v.von, '0:00') || minute >= inMin(v.bis, '24:00')) continue;
+                if (Date.now() - (Number(stand[v.videoId]) || 0) < (Number(v.abstandMinuten) || 120) * 60000) continue;
+                return v;
+            }
+            return null;
+        }
+        function nlSonderGezeigt(v) {
+            const stand = nlSonderStand();
+            stand[v.videoId] = Date.now();
+            try { localStorage.setItem('cityCafeSonder', JSON.stringify(stand)); } catch (e) {}
         }
 
         // Naechster Auftritt: Video im Wechsel, darin die naechsten Gruppen. Das
@@ -7450,6 +7480,8 @@
                     anzahl: 1
                 };
             }
+            const sonder = nlSonderFaellig();
+            if (sonder) return { video: sonder, schluessel: sonder.videoId, datei: false, start: Number(sonder.ab) || 0, anzahl: 1, sonder: true };
             if (nlKrampusAktiv()) return nlKrampusEintrag();
             const videos = nlBrauchbareVideos();
             if (!videos.length) return null;
@@ -9960,7 +9992,7 @@
             // das gewuenschte Video kommen.
             const fernWunsch = nlFernAktiv();
             // Krampuslauf oder nicht muss zur Uhrzeit passen (16:00/07:00).
-            const vorgeladen = !fernWunsch &&
+            const vorgeladen = !fernWunsch && !nlSonderFaellig() &&
                 !!(nlGeladen && nlGeladen.video && !nlDefekt[nlGeladen.schluessel]) &&
                 !!nlGeladen.krampus === nlKrampusAktiv();
             const eintrag = vorgeladen
@@ -9976,6 +10008,7 @@
 
             const video = eintrag.video;
             const start = eintrag.start;
+            if (eintrag.sonder) nlSonderGezeigt(video);
             nlAktiv = true;
             nlLaeuft = { schluessel: eintrag.schluessel, datei: eintrag.datei };
 
@@ -9984,7 +10017,7 @@
             // oben, darunter klein wer es gestartet hat - wie beim DJ-Stream.
             // Vorher stand dort gross "Urlaubsziele" und der Titel nur klein.
             const nlWunschTitel = fernWunsch && !video.ort && video.titel;
-            const nlSymbol = nlWunschTitel ? '🎵' : istTag ? '🌍' : '🌃';
+            const nlSymbol = eintrag.sonder ? (video.symbol || '⭐') : nlWunschTitel ? '🎵' : istTag ? '🌍' : '🌃';
             const nlStandard = istTag ? 'Urlaubsziele' : 'Nightlife';
             // Statt der generischen Ueberschrift "Urlaubsziele" steht hier der
             // tatsaechliche Urlaubsort samt Land aus nightlife.json (Tag und
@@ -10007,7 +10040,7 @@
             document.querySelector('#media-view-nightlife .nl-stage').classList.toggle('krampus', !!kr);
             document.getElementById('nl-kr-gleich').innerHTML = '';
             const badge = document.querySelector('#media-view-nightlife .nl-badge');
-            if (badge) badge.textContent = kr ? '👹 Krampuslauf' : 'Nightlife';
+            if (badge) badge.textContent = kr ? '👹 Krampuslauf' : eintrag.sonder ? (video.badge || 'Aufzeichnung') : 'Nightlife';
             clearInterval(nlKrampusTimer);
             document.body.classList.remove('krampus-voll');
             if (kr) nlKrampusBeschriften(video, kr, start);
@@ -10071,6 +10104,7 @@
             const bisStopp = fernWunsch && nlFern.bisWann === -1;
             const standzeit = bisStopp ? 60000
                 : fernWunsch ? Math.max(5000, nlFern.bisWann - Date.now())
+                : eintrag.sonder ? ((Number(video.sekunden) || NL_CONFIG.sekundenProVideo) - start + 3) * 1000   // Sondervideo ganz
                 : kr ? (kr.ende - start + 3) * 1000      // beide Gruppen ganz, +3 s Anlauf
                 : NL_CONFIG.sekundenProVideo * 1000;
             const standzeitUm = () => {
