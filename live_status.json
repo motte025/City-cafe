@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-11T08:12:46Z",
+  "checked_at": "2026-11-11T08:32:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Live November 11",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ HAPPY \"BERGFEST\" RAVE ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Live November 11",
       "game": "DJs"
     },
     {
