@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-11T12:52:46Z",
+  "checked_at": "2026-11-11T13:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Brettwoch  <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Bergfest mit Bass | !holy",
       "game": "DJs"
     },
     {
@@ -31,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Bergfest mit Bass | !holy",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion",
       "game": "DJs"
     }
   ]
