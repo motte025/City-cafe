@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-11T18:37:45Z",
+  "checked_at": "2026-11-11T18:52:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "MAUS IN DA HAUS",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wer hat Bock auf geile Beats und gute Laune?  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -24,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "TECHNO WEDNESDAY🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wer hat Bock auf geile Beats und gute Laune?  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -34,6 +27,13 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "RAVE ALAAF! Das Karnevalsspecial",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "TECHNO WEDNESDAY🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
