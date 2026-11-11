@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-11T10:07:45Z",
+  "checked_at": "2026-11-11T10:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "RAVE ALAAF! Das Karnevalsspecial",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "RAVE ALAAF! Das Karnevalsspecial",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
