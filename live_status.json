@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-11T17:07:50Z",
+  "checked_at": "2026-11-11T17:27:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Wer hat Bock auf geile Beats und gute Laune?  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ TRANCE NATION - Uplifting, Vocal, Tech, PSY & Acid Trance | !tip ✨",
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Wer hat Bock auf geile Beats und gute Laune?  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
