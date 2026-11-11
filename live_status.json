@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-11T12:27:51Z",
+  "checked_at": "2026-11-11T12:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Brettwoch  <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
