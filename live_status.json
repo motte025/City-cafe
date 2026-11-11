@@ -1,11 +1,25 @@
 {
-  "checked_at": "2026-11-11T18:02:46Z",
+  "checked_at": "2026-11-11T18:17:47Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "MAUS IN DA HAUS",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Wer hat Bock auf geile Beats und gute Laune?  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "RAVE ALAAF! Das Karnevalsspecial",
       "game": "DJs"
     },
     {
@@ -17,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "RAVE ALAAF! Das Karnevalsspecial",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ganz normaler MITTWOCH? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -34,20 +48,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ganz normaler MITTWOCH? | !bier | !zug | !holy | #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "MAUS IN DA HAUS",
       "game": "DJs"
     }
   ]
