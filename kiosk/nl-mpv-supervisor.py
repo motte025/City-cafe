@@ -1009,6 +1009,9 @@ def resolve(video_id, fmt=FORMAT, sortierung=None, vorab=False):
 # kurz das Bild, die Musik laeuft weiter.
 TON_ORDNER = os.path.expanduser("~/.cache/citycafe/ton")
 TON_LAEDT = set()
+TON_SPERRE = threading.Lock()    # schuetzt TON_LAEDT (siehe ton_reservieren)
+TON_GEPRUEFT = {}                # (Pfad, mtime, Groesse, inode) -> lesbar? (siehe ton_pruefen)
+TON_KAPUTT_ORDNER = os.path.expanduser("~/.cache/citycafe/ton-kaputt")
 # Ton aller Playlist-Songs behalten (23.10.2026, Betreiber "ja, Ton behalten"): ~6 MB je Song, ~7 GB fuer
 # alle Playlists. Gespielt wird dann immer von der Platte, gemessen ohne zweiten Download. Weg kommt,
 # was in keiner Playlist mehr steht und aelter als 7 Tage ist (die letzten 40 bleiben immer).
@@ -1025,6 +1028,12 @@ def ton_platz_frei():
 
 
 def ton_aufraeumen():
+    for alt in glob.glob(os.path.join(TON_KAPUTT_ORDNER, "*")):    # beiseitegelegte nach 14 Tagen weg
+        try:
+            if time.time() - os.path.getmtime(alt) > 14 * 86400:
+                os.remove(alt)
+        except OSError:
+            pass
     if not TON_PLAYLIST_IDS and ton_platz_frei():
         return                          # Playlists noch nicht bekannt (gleich nach dem Start): nichts loeschen
     try:
@@ -1043,15 +1052,65 @@ def ton_aufraeumen():
             pass
 
 
+def ton_reservieren(vid):
+    """Download-Platz fuer einen Song belegen -> True. Nie zwei yt-dlp fuer denselben Song in den
+    Ton-Ordner: am 11.11.2026 lagen 40 kaputte Ton-Dateien dort (Anfang fehlte / ohne moov), alle seit
+    08.11., alle Mix-Songs - ton_laden() (Vorab) und mess_ton() (Messen) luden denselben Song zugleich
+    in dieselbe .part-Datei. mpv spielte so einen Song ohne Ton (das Bild hat keine eigene Tonspur)."""
+    with TON_SPERRE:
+        if vid in TON_LAEDT:
+            return False
+        TON_LAEDT.add(vid)
+        return True
+
+
+def ton_pruefen(p):
+    """Laesst sich die Datei lesen (ffprobe findet eine Laenge)? Ergebnis je Datei-Stand gemerkt."""
+    try:
+        st = os.stat(p)
+    except OSError:
+        return False
+    schluessel = (p, st.st_mtime_ns, st.st_size, st.st_ino)
+    if schluessel not in TON_GEPRUEFT:
+        try:
+            r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
+                                "file:" + p], capture_output=True, text=True, timeout=20)
+            ok = float(r.stdout.strip() or 0) > 1
+        except (OSError, subprocess.TimeoutExpired, ValueError):
+            return True                 # Pruefung selbst gescheitert: Datei nicht verwerfen
+        if len(TON_GEPRUEFT) > 5000:
+            TON_GEPRUEFT.clear()
+        TON_GEPRUEFT[schluessel] = ok
+    return TON_GEPRUEFT[schluessel]
+
+
 def ton_datei(vid):
-    """Fertig geladener Ton eines Songs oder None."""
-    for p in glob.glob(os.path.join(TON_ORDNER, vid + ".*")):
-        # nur die fertige Datei: nicht .part (Download) und nicht .temp.* (yt-dlp korrigiert den
-        # Container danach noch in eine Zwischendatei)
+    """Fertig geladener, lesbarer Ton eines Songs oder None."""
+    pfade = glob.glob(os.path.join(TON_ORDNER, vid + ".*"))
+    for p in pfade:
+        # yt-dlp laedt noch (.part) oder korrigiert den Container (.temp.*): noch nicht fertig.
+        # Liegengebliebene Reste (aelter als 10 min) zaehlen nicht.
+        name = os.path.basename(p)
+        if name.endswith((".part", ".ytdl")) or ".temp." in name or ".part-" in name:
+            try:
+                if time.time() - os.path.getmtime(p) < 600:
+                    return None
+            except OSError:
+                pass
+    for p in pfade:
         name = os.path.basename(p)
         if (not name.endswith((".part", ".ytdl", ".tmp")) and ".temp." not in name and ".part-" not in name
                 and os.path.getsize(p) > 100_000):
-            return p
+            if ton_pruefen(p):
+                return p
+            # Kaputt: beiseitelegen (nicht loeschen) - dann spielt mpv den Ton aus dem Strom, und
+            # Vorab/Vormessen laden ihn neu.
+            try:
+                os.makedirs(TON_KAPUTT_ORDNER, exist_ok=True)
+                os.replace(p, os.path.join(TON_KAPUTT_ORDNER, name))
+                log(f"Ton {vid}: Datei kaputt ({name}) - beiseitegelegt, Ton kommt aus dem Strom")
+            except OSError:
+                pass
     return None
 
 
@@ -1060,7 +1119,8 @@ def ton_laden(vid, audio_url):
     if not audio_url or vid in TON_LAEDT or ton_datei(vid):
         return
     m = re.search(r"[?&]itag=(\d+)", audio_url)
-    TON_LAEDT.add(vid)
+    if not ton_reservieren(vid):
+        return
 
     def lauf():
         t0 = time.time()
@@ -1238,6 +1298,28 @@ def mess_ton(vid, audio_url):
         return datei, None
     # dauerhaft in den Ton-Ordner (Betreiber 23.10.: Ton behalten), sonst nur in einen Zwischenordner
     dauerhaft = ton_platz_frei()
+    if dauerhaft:
+        # Laedt gerade jemand anders (ton_laden) denselben Song? Dann darauf warten statt zugleich
+        # in dieselbe Datei zu laden (11.11.2026). Dauert es zu lange: in einen Zwischenordner.
+        bis = time.time() + 240
+        while not ton_reservieren(vid):
+            if time.time() > bis:
+                dauerhaft = False
+                break
+            time.sleep(1)
+        if dauerhaft:
+            try:
+                datei = ton_datei(vid)
+                if datei:
+                    return datei, None
+                return _mess_ton_laden(vid, audio_url, True)
+            finally:
+                with TON_SPERRE:
+                    TON_LAEDT.discard(vid)
+    return _mess_ton_laden(vid, audio_url, False)
+
+
+def _mess_ton_laden(vid, audio_url, dauerhaft):
     itag = re.search(r"[?&]itag=(\d+)", audio_url or "")     # dasselbe Format wie beim Abspielen
     ordner = TON_ORDNER if dauerhaft else tempfile.mkdtemp(prefix="citycafe-messen-")
     os.makedirs(ordner, exist_ok=True)
@@ -2110,7 +2192,18 @@ def ueberblenden(xf, target, page_id, vol):
 
     def t_ende():
         """Uhrzeit, zu der der alte Song sein Musikende erreicht (aus seiner Position)."""
+        if xf.get("t_ende_fest"):
+            return xf["t_ende"]
         pos = mpv_eigenschaft("time-pos")
+        # Steht der alte am Dateiende (keep-open), ist sein Ende erreicht. Ohne gemessenes Musikende ist
+        # xf["ende"] die volle Laenge, mpv bleibt aber ein Bild davor stehen (241,56 s bei 241,6 s) - das
+        # Ende rueckte dann immer weiter, jede solche Blende endete erst nach 24 s per Notbremse
+        # (8x am 11.11.2026). Gemessen auf dem W1: am Dateiende eof-reached = true.
+        if isinstance(pos, (int, float)) and pos >= xf["ende"] - 1.0 \
+                and mpv_eigenschaft("eof-reached") is True:
+            xf["t_ende"] = min(xf.get("t_ende") or time.time(), time.time())
+            xf["t_ende_fest"] = True
+            return xf["t_ende"]
         if isinstance(pos, (int, float)) and (pos < xf["ende"] or not xf.get("t_ende")):
             xf["t_ende"] = time.time() + max(0.0, xf["ende"] - pos)   # danach steht der Zeitpunkt fest
         return xf.get("t_ende") or time.time()
