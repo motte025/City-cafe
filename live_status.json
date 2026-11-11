@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-11T18:17:47Z",
+  "checked_at": "2026-11-11T18:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "RAVE ALAAF! Das Karnevalsspecial",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ganz normaler MITTWOCH? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -31,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ganz normaler MITTWOCH? | !bier | !zug | !holy | #werbung",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "RAVE ALAAF! Das Karnevalsspecial",
       "game": "DJs"
     },
     {
@@ -48,6 +48,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
