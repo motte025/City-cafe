@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-11T14:17:45Z",
+  "checked_at": "2026-11-11T14:32:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Brettwoch  <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Bergfest mit Bass | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Brettwoch  <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
