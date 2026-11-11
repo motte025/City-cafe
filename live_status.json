@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-11T19:57:47Z",
+  "checked_at": "2026-11-11T20:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,13 +34,6 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "RAVE ALAAF! Das Karnevalsspecial",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ TRANCE NATION - Uplifting, Vocal, Tech, PSY & Acid Trance | !tip ✨",
       "game": "DJs"
     },
     {
