@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T02:32:48Z",
+  "checked_at": "2026-11-12T02:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "LIVE FROM SAN DIEGO!! WHO IS GOING TO TWITCHCON????  !tip !twitchcon !patreon !youtube",
       "game": "DJs"
     }
   ]
