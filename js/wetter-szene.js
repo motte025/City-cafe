@@ -155,8 +155,8 @@
     }
     // Schnee: drei Tiefen; hinten viele kleine, die in unterschiedlicher Hoehe verschwinden
     if (L.schnee) {
-      const EBENEN = klein ? [[45, 3, 6, 0.8, 7, 10], [14, 6, 10, 0.85, 4.5, 7]]
-        : [[220, 4, 8, 0.8, 13, 19], [70, 10, 20, 0.88, 8, 12], [14, 30, 55, 0.85, 4.5, 7]];
+      const EBENEN = klein ? [[80, 3, 6, 0.8, 7, 10], [18, 6, 10, 0.85, 4.5, 7]]
+        : [[360, 4, 8, 0.8, 13, 19], [85, 10, 20, 0.88, 8, 12], [16, 30, 55, 0.85, 4.5, 7]];  // W1: volle Vorschau-Dichte nur 43 fps
       EBENEN.forEach(([n, gmin, gmax, deck, dmin, dmax], e) => {
         for (let i = 0; i < n; i++) {
           const groesse = zufall(gmin, gmax), nr = 1 + Math.floor(Math.random() * 20), dauer = zufall(dmin, dmax);
