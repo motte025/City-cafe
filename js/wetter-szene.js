@@ -13,7 +13,7 @@
   const LAGEN = {
     gewitter: { baender: 'gewitter', decke: 'dunkel', lage: [[-0.06, 0.42], [-0.04, 0.48], [0.0, 0.52]], dach: [-0.2, 0.36], regen: 1, regenAb: [0.18, 0.4] },
     regen:    { bild: 'regen-tag', baender: 'graue', lage: [[-0.04, 0.32], [-0.02, 0.38], [0.0, 0.42]], regen: 0.8, regenAb: [0.2, 0.34] },
-    bewoelkt: { baender: 'graue', decke: 'grau', lage: [[-0.06, 0.4], [-0.04, 0.46], [0.0, 0.5]], woelkchen: 2, toenung: 'grau' },
+    bewoelkt: { bild: 'bewoelkt-tag', baender: 'graue', decke: null, lage: [[-0.06, 0.4], [-0.04, 0.46], [0.0, 0.5]], woelkchen: 2, toenung: 'grau' },
     sonnig:   { bild: 'sonnig', woelkchen: 4, toenung: 'weiss' },
     abendrot: { bild: 'abendrot', woelkchen: 3, toenung: 'abend' },
     nebel:    { bild: 'nebel', baender: 'graue', ebenen: [0, 1], lage: [[0.2, 0.36], [0.4, 0.4], [0.5, 0.4]], woelkchen: 2, toenung: 'nebel' },
@@ -42,6 +42,8 @@
   /* Nachtbilder: Wolkenbaender dunkel, Nebel nur ein Hauch, oben weich ausgeblendet (keine Kante) */
   .wsz-nachtbild.wsz-regen .wsz-band { filter: saturate(.4) brightness(.5); opacity: 1; } .wsz-nachtbild.wsz-regen .wsz-band.wsz-t0 { filter: saturate(.4) brightness(.55) blur(2px); }
   .wsz-nachtbild.wsz-bewoelkt .wsz-band { filter: saturate(.5) brightness(.45); opacity: .5; } .wsz-nachtbild.wsz-bewoelkt .wsz-band.wsz-t0 { filter: saturate(.5) brightness(.5) blur(2px); }
+  /* Bewoelkt tagsueber: eigenes Bild (12.11.2026), Wolken etwas durchsichtiger */
+  .wsz-bewoelkt:not(.wsz-nachtbild) .wsz-band.wsz-band { opacity: .7; }
   .wsz-nachtbild.wsz-nebel .wsz-band { filter: brightness(1.1) saturate(0) blur(14px); opacity: .12; }
   .wsz-nachtbild.wsz-regen .wsz-band, .wsz-nachtbild.wsz-bewoelkt .wsz-band { -webkit-mask-image: linear-gradient(transparent 0%, #000 22%, #000 38%, rgba(0,0,0,.6) 62%, transparent 92%); mask-image: linear-gradient(transparent 0%, #000 22%, #000 38%, rgba(0,0,0,.6) 62%, transparent 92%); }
   .wsz-nachtbild .wsz-band.wsz-dach { -webkit-mask-image: linear-gradient(#000 35%, rgba(0,0,0,.6) 62%, transparent 92%); mask-image: linear-gradient(#000 35%, rgba(0,0,0,.6) 62%, transparent 92%); transform: scaleX(-1); }
