@@ -3948,7 +3948,8 @@
         const NIGHT_START_HOUR = 19; // ab 19:00 -> plakat_nacht.webp
 
         const WEATHER_WIDGET_START_HOUR = 8;  // ab 08:00 -> Wetter-Übersicht läuft mit
-        const WEATHER_WIDGET_END_HOUR = 18;   // ab 18:00 -> Wetter-Übersicht pausiert
+        const WEATHER_WIDGET_END_HOUR = 20;   // ab 20:00 -> Wetter-Übersicht pausiert (seit 12.11.2026, vorher 18)
+        const WETTER_SEKUNDEN = 40;           // so lange steht die grosse Wetter-Übersicht (seit 12.11.2026, vorher 25)
         function isWeatherWidgetHour() {
             const h = new Date().getHours();
             return h >= WEATHER_WIDGET_START_HOUR && h < WEATHER_WIDGET_END_HOUR;
@@ -5565,12 +5566,12 @@
         // Nach V1 (Foto) kommt als nächstes V2: Jäger/Puntigamer(30s)+Berliner Luft(60s)+Tag/Nacht-Plakat(35s)+
         // Calamari-Event(35s)+Musik(90s)+Getränke(20s) = 270s
         // Nach V2 (Karten) kommt als nächstes V1: Getränke(20s)+Musik(90s)+
-        // Veranstaltungen(36s)+Musik-Slides(30s) = 176s, +25s Wetter-Übersicht, aber nur wenn die
-        // zwischen 8-18 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
+        // Veranstaltungen(36s)+Musik-Slides(30s) = 176s, +40s Wetter-Übersicht, aber nur wenn die
+        // zwischen 8-20 Uhr auch tatsächlich mitläuft (siehe isWeatherWidgetHour)
         const GAP_AFTER_V1_TO_V2 = 210 + BERLINER_LUFT_SECONDS;
         const GAP_AFTER_V2_TO_V1_BASE = 176;
         function getGapAfterV2ToV1() {
-            return GAP_AFTER_V2_TO_V1_BASE + (isWeatherWidgetHour() ? 25 : 0);
+            return GAP_AFTER_V2_TO_V1_BASE + (isWeatherWidgetHour() ? WETTER_SEKUNDEN : 0);
         }
         let nextTrinkspielInterval = null;
 
@@ -15760,7 +15761,7 @@
                     runWeatherOverviewState(9); // -> Musik-Slides
                 } else {
                     mediaStateIndex = 9;
-                    runMasterSequence(); // Wetter pausiert (18-8 Uhr) -> direkt zu Musik-Slides
+                    runMasterSequence(); // Wetter pausiert (20-8 Uhr) -> direkt zu Musik-Slides
                 }
 
             } else if (mediaStateIndex === 9) {
@@ -15964,7 +15965,7 @@
                 setTimeout(() => {
                     if (szene && szene === woSzene && !document.getElementById('media-view-weather-overview').classList.contains('active')) { szene.stop(); woSzene = null; }
                 }, 2500);
-            }, 25000);
+            }, WETTER_SEKUNDEN * 1000);
         }
 
 
