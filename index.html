@@ -3591,7 +3591,7 @@
         })();
     </script>
     <script src="js/gewitter.js"></script>
-    <script src="js/wetter-szene.js?v=2026-11-12b"></script>
+    <script src="js/wetter-szene.js?v=2026-11-12c"></script>
     <script src="hosn-obe-engine.js"></script>
     <script src="yt-warteschlange.js?v=2026-10-09-mischen"></script>
     <script src="hosn-obe-sound.js"></script>
@@ -15874,7 +15874,8 @@
         function wetterCodeTest(code) {
             const w = new URLSearchParams(location.search).get('wetter');
             if (!w) return code;
-            const namen = { gewitter: 95, regen: 63, schnee: 73, nebel: 45, bewoelkt: 3, sonnig: 0, abendrot: 0, nacht: 0 };
+            const namen = { gewitter: 95, regen: 63, schnee: 73, nebel: 45, bewoelkt: 3, sonnig: 0, abendrot: 0, nacht: 0,
+                'regen-nacht': 63, 'schnee-nacht': 73, 'nebel-nacht': 45, 'bewoelkt-nacht': 3 };
             return w in namen ? namen[w] : (isFinite(Number(w)) ? Number(w) : code);
         }
 

@@ -6,7 +6,7 @@
    mit mix-blend-mode: lighten, sonst entstehen schwarze Raender.
 
    wetterSzene(container, lage, klein, { nachts }) -> { stop() }
-   wetterLage(code, istTag, sonnenuntergangIso)   -> 'gewitter' | 'regen' | ... (Testen: ?wetter=<lage>)
+   wetterLage(code, istTag, sonnenuntergangIso)   -> 'gewitter' | 'regen' | ... (Testen: ?wetter=<lage>, nachts: ?wetter=regen-nacht)
    wetterSymbol(code, istTag, px)                 -> <img> mit Meteocons-Symbol */
 (function () {
   const BASIS = 'wetter/';
@@ -20,6 +20,13 @@
     schnee:   { bild: 'schnee', schnee: 1, woelkchen: 3, toenung: 'schnee' },
     nacht:    { bild: 'nacht-klar', sterne: 1, woelkchen: 3, toenung: 'nacht' }
   };
+  // Nachts: eigene ChatGPT-Bilder (12.11.2026), Wolken tiefer, schneller, oben eine zusaetzliche Reihe
+  const NACHT = {
+    regen:    { bild: 'regen-nacht', tempo: 0.65, dach: [-0.14, 0.34], lage: [[0.05, 0.34], [0.08, 0.38], [0.11, 0.42]], regenAb: [0.32, 0.46] },
+    bewoelkt: { bild: 'bewoelkt-nacht', tempo: 0.65, dach: [-0.14, 0.36], lage: [[0.04, 0.4], [0.07, 0.44], [0.1, 0.48]], decke: null, toenung: 'nacht' },
+    nebel:    { bild: 'nebel-nacht', woelkchen: 0 },
+    schnee:   { bild: 'schnee-nacht', woelkchen: 0 }
+  };
   // Seitenverhaeltnis der freigestellten Wolkenbaender (Breite / Hoehe)
   const BAND_FORM = { 'gewitter-wolken-hinten': 1672 / 627, 'gewitter-wolken-mitte': 1672 / 611, 'gewitter-wolken-vorne': 1672 / 611, 'graue-wolken-hinten': 1672 / 456, 'graue-wolken-mitte': 1672 / 541, 'graue-wolken-vorne': 1672 / 549 };
 
@@ -32,6 +39,12 @@
   .wsz-bewoelkt .wsz-himmel { background: linear-gradient(180deg, #6a8299 0%, #3d5168 55%, #1d2a3a 100%); }
   .wsz-bild { position: absolute; inset: -4%; background-size: cover; background-position: center; animation: wsz-fahrt 60s ease-in-out infinite alternate; }
   .wsz-nachts .wsz-bild { filter: brightness(.45) saturate(.7); }
+  /* Nachtbilder: Wolkenbaender dunkel, Nebel nur ein Hauch, oben weich ausgeblendet (keine Kante) */
+  .wsz-nachtbild.wsz-regen .wsz-band { filter: saturate(.4) brightness(.5); opacity: 1; } .wsz-nachtbild.wsz-regen .wsz-band.wsz-t0 { filter: saturate(.4) brightness(.55) blur(2px); }
+  .wsz-nachtbild.wsz-bewoelkt .wsz-band { filter: saturate(.5) brightness(.45); opacity: .5; } .wsz-nachtbild.wsz-bewoelkt .wsz-band.wsz-t0 { filter: saturate(.5) brightness(.5) blur(2px); }
+  .wsz-nachtbild.wsz-nebel .wsz-band { filter: brightness(1.1) saturate(0) blur(14px); opacity: .12; }
+  .wsz-nachtbild.wsz-regen .wsz-band, .wsz-nachtbild.wsz-bewoelkt .wsz-band { -webkit-mask-image: linear-gradient(transparent 0%, #000 22%, #000 38%, rgba(0,0,0,.6) 62%, transparent 92%); mask-image: linear-gradient(transparent 0%, #000 22%, #000 38%, rgba(0,0,0,.6) 62%, transparent 92%); }
+  .wsz-nachtbild .wsz-band.wsz-dach { -webkit-mask-image: linear-gradient(#000 35%, rgba(0,0,0,.6) 62%, transparent 92%); mask-image: linear-gradient(#000 35%, rgba(0,0,0,.6) 62%, transparent 92%); transform: scaleX(-1); }
   .wsz-nachts.wsz-bewoelkt .wsz-himmel { background: linear-gradient(180deg, #2a3646 0%, #18222f 55%, #0b1119 100%); }
   @keyframes wsz-fahrt { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.08) translate(-1.5%, -1%); } }
   .wsz-klein .wsz-bild { background-position: center 35%; }
@@ -91,6 +104,7 @@
   @keyframes wsz-funkeln { from { opacity: .2 } to { opacity: .6 } }
   .wsz-schleier { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.15) 55%, rgba(0,0,0,0) 100%), linear-gradient(0deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 45%); }
   .wsz-sonnig .wsz-schleier, .wsz-schnee .wsz-schleier, .wsz-nebel .wsz-schleier { background: linear-gradient(90deg, rgba(0,10,25,.55) 0%, rgba(0,10,25,.2) 55%, rgba(0,0,0,0) 100%), linear-gradient(0deg, rgba(0,10,25,.55) 0%, rgba(0,0,0,0) 50%); }
+  .wsz-nachtbild .wsz-schleier { background: linear-gradient(90deg, rgba(0,0,0,.4) 0%, rgba(0,0,0,.1) 55%, rgba(0,0,0,0) 100%), linear-gradient(0deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,0) 45%); }
   .wsz-klein .wsz-schleier { background: linear-gradient(90deg, rgba(0,0,0,.6), rgba(0,0,0,.2)); }
   .wsz-symbol { display: inline-block; vertical-align: middle; filter: drop-shadow(0 3px 8px rgba(0,0,0,.45)); }
   `;
@@ -104,14 +118,18 @@
 
   function wetterSzene(container, lage, klein, opt) {
     cssEinbauen();
-    const L = LAGEN[lage] || LAGEN.sonnig;
+    const L0 = LAGEN[lage] || LAGEN.sonnig;
     // Test (?wetter=<lage>): Szene so zeigen, wie sie tagsueber aussieht
-    const nachts = !!(opt && opt.nachts) && !new URLSearchParams(location.search).get('wetter');
+    // Test (?wetter=<lage> oder <lage>-nacht): Tag- bzw. Nachtversion zeigen
+    const test = new URLSearchParams(location.search).get('wetter');
+    const nachts = test ? /-nacht$/.test(test) : !!(opt && opt.nachts);
+    const nachtbild = nachts && NACHT[lage];
+    const L = nachtbild ? Object.assign({}, L0, NACHT[lage]) : L0;
     const timer = [];
     let aus = false;
     const spaeter = (f, ms) => { timer.push(setTimeout(() => { if (!aus) f(); }, ms)); };
     const el = document.createElement('div');
-    el.className = 'wsz wsz-' + lage + (klein ? ' wsz-klein' : '') + (nachts && lage !== 'nacht' ? ' wsz-nachts' : '');
+    el.className = 'wsz wsz-' + lage + (klein ? ' wsz-klein' : '') + (nachtbild ? ' wsz-nachtbild' : nachts && lage !== 'nacht' ? ' wsz-nachts' : '');
     container.appendChild(el);
     const W = container.clientWidth || (klein ? 520 : 1280), H = container.clientHeight || (klein ? 110 : 815);
 
@@ -125,13 +143,13 @@
       const name = L.baender + '-wolken-' + tiefe;
       const [oben, hoehe] = klein ? [[-0.55, 1.5], [-0.5, 1.6], [-0.4, 1.6]][t] : L.lage[t];
       const hp = hoehe * H, kachel = Math.round(hp * BAND_FORM[name]);
-      const dauer = (klein ? [140, 90, 55] : [260, 160, 95])[t] * zufall(0.65, 1.45) * (lage === 'nebel' ? 1.6 : 1);
+      const dauer = (klein ? [140, 90, 55] : [260, 160, 95])[t] * zufall(0.65, 1.45) * (lage === 'nebel' ? 1.6 : 1) * (L.tempo || 1);
       h += `<div class="wsz-band wsz-t${t}" style="top:${Math.round(oben * H)}px;height:${Math.round(hp)}px;background-image:url('${BASIS}${name}.webp');background-size:${kachel}px 100%;--kachel:${kachel}px;z-index:${2 + t * 2};animation-duration:${dauer.toFixed(0)}s;animation-delay:${-zufall(0, dauer).toFixed(1)}s"></div>`;
     });
-    // Gewitter: zusaetzliche Wolkenreihe ganz oben (gespiegelt, Gegenrichtung)
+    // Gewitter, Regen/Bewoelkt nachts: zusaetzliche Wolkenreihe ganz oben (gespiegelt, Gegenrichtung)
     if (L.dach) {
       const name = L.baender + '-wolken-mitte', [oben, hoehe] = klein ? [-0.9, 1.4] : L.dach;
-      const hp = hoehe * H, kachel = Math.round(hp * BAND_FORM[name] * 1.15), dauer = (klein ? 110 : 200) * zufall(0.7, 1.3);
+      const hp = hoehe * H, kachel = Math.round(hp * BAND_FORM[name] * 1.15), dauer = (klein ? 110 : 200) * zufall(0.7, 1.3) * (L.tempo || 1);
       h += `<div class="wsz-band wsz-t1 wsz-dach" style="top:${Math.round(oben * H)}px;height:${Math.round(hp)}px;background-image:url('${BASIS}${name}.webp');background-size:${kachel}px 100%;--kachel:${kachel}px;z-index:3;animation-duration:${dauer.toFixed(0)}s;animation-delay:${-zufall(0, dauer).toFixed(1)}s;animation-direction:reverse"></div>`;
     }
     if (lage === 'gewitter') h += '<img class="wsz-blitz" alt=""><div class="wsz-hell"></div><div class="wsz-quelle"></div>';
@@ -243,7 +261,7 @@
   // Stunde vor Sonnenuntergang Abendrot. Test: ?wetter=gewitter|regen|bewoelkt|sonnig|abendrot|nebel|schnee|nacht
   function wetterLage(code, istTag, sonnenuntergangIso) {
     const test = new URLSearchParams(location.search).get('wetter');
-    if (test && LAGEN[test]) return test;
+    if (test && LAGEN[test.replace(/-nacht$/, '')]) return test.replace(/-nacht$/, '');
     if (code >= 95) return 'gewitter';
     if ((code >= 71 && code <= 77) || code === 85 || code === 86) return 'schnee';
     if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'regen';
