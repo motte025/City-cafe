@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T13:27:45Z",
+  "checked_at": "2026-11-12T13:32:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wunderschöner Donnerstag  <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
