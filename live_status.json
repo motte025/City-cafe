@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T01:37:46Z",
+  "checked_at": "2026-11-12T01:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "LAST STREAM BEFORE TWITCHCON ⭐ !patreon",
       "game": "DJs"
     }
   ]
