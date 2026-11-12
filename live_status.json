@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T16:52:48Z",
+  "checked_at": "2026-11-12T17:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🖤 TECH HOUSE VIBES 🔥PP 36/100 3rd month!  🎶!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "The Ante Perry Radio Show w/ Juliet Sikora @ SUNSHINE LIVE, Nov26",
       "game": "DJs"
     },
     {
@@ -34,20 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "The Anjunadeep Edition #619 with Tim Green",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "The Ante Perry Radio Show w/ Juliet Sikora @ SUNSHINE LIVE, Nov26",
       "game": "DJs"
     },
     {
