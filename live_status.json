@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T15:52:45Z",
+  "checked_at": "2026-11-12T16:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,6 +31,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Happy Thursday ! 💫 !charity",
@@ -38,10 +45,10 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "The Anjunadeep Edition #619 with Tim Green",
+      "game": "Music"
     }
   ]
 }
