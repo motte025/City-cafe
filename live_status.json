@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T18:27:45Z",
+  "checked_at": "2026-11-12T18:42:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,13 +20,6 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "The Ante Perry Radio Show w/ Juliet Sikora @ SUNSHINE LIVE, Nov26",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
