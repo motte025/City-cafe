@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-12T16:12:49Z",
+  "checked_at": "2026-11-12T16:32:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wunderschöner Donnerstag  <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 115 🎉 Der Tag nach dem Techno Mittwoch! | Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -24,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
@@ -38,13 +45,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #619 with Tim Green",
@@ -52,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 115 🎉 Der Tag nach dem Techno Mittwoch! | Harder Styles | !insta !holy !SF #Werbung",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
