@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-12T01:42:45Z",
+  "checked_at": "2026-11-12T01:57:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "nyybeats",
       "name": "NyyBeats",
-      "title": "🔥♡ LAST STREAM BEFORE I AM GONE FOREVER!!! (Twitch Con Shows) 🔥 !mods !mercy !tip",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "title": "🔥♡ LAST STREAM BEFORE I AM GONE FOREVER!!! (LIE!! JUST Twitch Con Shows) 🔥 !mods !mercy !tip",
       "game": "DJs"
     },
     {
@@ -20,6 +13,13 @@
       "channel": "jessu",
       "name": "Jessu",
       "title": "LAST STREAM BEFORE TWITCHCON ⭐ !patreon",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
