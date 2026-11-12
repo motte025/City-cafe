@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-12T02:42:46Z",
+  "checked_at": "2026-11-12T02:57:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ LAST STREAM BEFORE I AM GONE FOREVER!!! (LIE!! JUST Twitch Con Shows) 🔥 !mods !mercy !tip",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "jessu",
@@ -17,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ LAST STREAM BEFORE I AM GONE FOREVER!!! (LIE!! JUST Twitch Con Shows) 🔥 !mods !mercy !tip",
       "game": "DJs"
     },
     {
@@ -27,6 +20,13 @@
       "channel": "chazz",
       "name": "CHAZZ",
       "title": "LIVE FROM SAN DIEGO!! WHO IS GOING TO TWITCHCON????  !tip !twitchcon !patreon !youtube",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
