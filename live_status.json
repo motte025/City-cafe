@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T16:37:48Z",
+  "checked_at": "2026-11-12T16:52:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #619 with Tim Green",
@@ -55,6 +48,13 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "The Ante Perry Radio Show w/ Juliet Sikora @ SUNSHINE LIVE, Nov26",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
