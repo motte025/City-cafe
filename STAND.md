@@ -8,7 +8,10 @@ Stand beschreiben, nicht den von vorgestern.
 **Windows-Sitzung (mit `ssh w1`): zuerst `UEBERGABE-WINDOWS.md` lesen** – was am 21.10. passiert ist
 und was am W1 zu tun ist.
 
-Letzte Durchsicht: 7. November 2026 (Quiz: Kreidetafel mit Werbung und Flachwitz vor jeder Runde, Lindwurm mit
+Letzte Durchsicht: 12. November 2026 (Wetter-Grafik neu mit Nachtbildern, Fußball- und Veranstaltungen-
+Hintergrund, Schnaps-Maschine nach dem Quiz, Quiz-Statistik und 12er-Runde, Notbremse der Musik behoben – alles im
+Abschnitt „11.–12.11.2026“; TV muss für Veranstaltungen und Schnaps-Maschine noch neu geladen werden).
+Davor, 7. November 2026 (Quiz: Kreidetafel mit Werbung und Flachwitz vor jeder Runde, Lindwurm mit
 Sprechblasen, neue Hintergründe und Bühnenbilder, größere Schrift, Sport-Fragen gesichtet; W1-Prüfung 06.–07.11. ohne
 Störung – alles im Abschnitt „05.–07.11.2026“).
 Davor, 2. November 2026 (Kärnten-Quiz „Kennst di aus?“ live 8:30–20:00, Roulette 12 Runden,
@@ -47,6 +50,63 @@ Davor, 5.–7. Oktober: DJ-Übergänge per Studio-Abgleich, offizielle Videos
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
+
+## 11.–12.11.2026: Wetter-Grafik, Hintergründe, Schnaps-Maschine, Quiz-Statistik, Notbremse behoben (Windows-Sitzung)
+
+Alles Dashboard-Seitige ist auf `main` (letzter eigener Stand `6825c8ae`). Die Quizseite liegt wie bisher nur auf dem W1
+und lokal im Branch `raetsel-prototyp` (seit 12.11. dort als Commit `9733c8d2` gesichert, **nicht gepusht**).
+
+**TV noch nicht neu geladen** (Stand 12.11. vormittags): Veranstaltungen-Hintergrund (`8ec3a887`) und Schnaps-Maschine
+(`6825c8ae`) sind auf GitHub Pages, erscheinen am TV aber erst nach einem Neuladen der Seite (nur mit Freigabe des
+Betreibers). Danach die Bildrate der Schnaps-Maschine am W1 messen.
+
+### Musik / Supervisor (11.11.)
+- **Notbremse behoben** (`9b4741f1`): kaputte Ton-Dateien werden erkannt und in Quarantäne gelegt, nie doppelt geladen;
+  die Blende endet am Dateiende (eof). Supervisor über sway neu gestartet – `swaymsg exec` teilt am `;`, deshalb nur ein
+  einzelner Befehl.
+- Stand Musik 11.11.: 715 Playlist-Songs gemessen, 712 mit Ton auf der Platte.
+
+### Nightlife: Sondervideos (`f85f6a19`)
+- `nightlife.json` → `"sonder"`: Video mit Datum, Zeitfenster, Abstand und Länge. 12.11.: KAC–VSV-Aufzeichnung
+  (`9DlkgXaT8Q0`) 9–18 Uhr etwa alle 2 h. Danach fällt der Eintrag von selbst weg.
+
+### Wetter (`7aa2ba8f` … `9bb213bd`)
+- **Neue animierte Wetter-Szene** `js/wetter-szene.js`, Bilder unter `wetter/` (ChatGPT-Hintergründe, Wolkenbänder in drei
+  Tiefen, Foto-Blitze aus dem DJ-Studio, Regen mit Aufklatschern, Schnee in drei Tiefen, Meteocons-Symbole, MIT).
+  Große Übersicht und kleines Widget. Test: `?wetter=gewitter|regen|bewoelkt|sonnig|abendrot|nebel|schnee|nacht`
+  und `?wetter=regen-nacht` usw.
+- Eigene **Nachtbilder** für Regen, Nebel, Schnee, Bewölkt; **Bewölkt** hat auch tagsüber ein eigenes Bild.
+- Wetter-Übersicht im Zyklus jetzt **40 s** (`WETTER_SEKUNDEN`) und **8–20 Uhr** (vorher 25 s, bis 18 Uhr).
+- „Nächste Stunden“ beginnt bei der Ortszeit-Stunde (vorher UTC, eine Stunde zu früh).
+- Wolken auf Schwarz nur mit **Deckkraft = Helligkeit** freistellen; vordere Gewitter-Schichten mit `mix-blend-mode: lighten`,
+  sonst schwarze Ränder.
+- Am W1 gemessen: Gewitter 59, Regen 60, Schnee 55 Bilder/s (Schnee bewusst nicht ganz so dicht wie in der Vorschau).
+- Vorschau zum Weiterarbeiten: `Desktop\Wetter-Grafik\Live-Vorschau\Wetter-Vorschau.html` (erst dort ändern).
+
+### Hintergründe (`dafad161`, `8ec3a887`)
+- **Fußball** (Bundesliga-/CL-Spieltag, Tabellen, CL-Vollbildtabelle): Flutlichtstadion `hintergruende/fussball.webp`,
+  nur leicht abgedunkelt.
+- **Veranstaltungen**: festliche ChatGPT-Grafik `hintergruende/veranstaltungen.webp` mit wiegenden Lichterketten,
+  Glitzern und Lichtpunkten aus Code (`eventsSzeneBauen()`).
+- Dart und Musik bleiben vorerst wie gehabt (Entwürfe in `Desktop\Dashboard-Hintergruende`).
+
+### Schnaps-Maschine (`6825c8ae`, neu)
+- Werbe-Slotmaschine (kein Glücksspiel) **nach dem Quiz im Vollbild**, Seite `schnaps/index.html`, eingebunden über
+  `runSchnapsState` (`SCHNAPS_SLOT_INDEX` 9.9, dann Trinkspiel V1). Video-Slot mit 5 Walzen, **8 Drehs** (~20 s je Dreh);
+  die Seite meldet `{typ:'schnaps-fertig'}`, Notausgang nach ~3,2 min. Abschalten: `SCHNAPS_AN = false` oder `?schnaps=0`.
+- 12 Getränke von der Spirituosenkarte (2 cl), jedes einmal pro Walze. Gewinn = gleiche Getränke in der Mittelreihe von
+  links, Preis = Kartenpreis × Anzahl; immer mindestens ein Paar (Paar, 2 Paare, Drilling, 3+2, 4, volle Reihe).
+  Jägermeister in voller Reihe = Angebot **5 × 14 €**. Konfetti nur bei voller Reihe.
+- Bilder: ChatGPT auf Magenta, per Entmischung freigestellt; Hand mit Münze wie bei der Kreidetafel, Hebel seitlich in drei
+  Stellungen. Vorschau mit allen Automaten: `Desktop\Schnaps-Slot\Live-Vorschau\Schnaps-Slot.html`.
+
+### Quiz (nur W1 / `raetsel-prototyp`)
+- **Statistik** (`raetsel-server.py`, `statistik.html`, Protokoll nur auf dem W1, `raetsel-test/protokoll/` gitignored):
+  welche Fragen wie oft gezeigt wurden.
+- Runde jetzt **12 Fragen, davon 6 aus Klagenfurt**; neue Klagenfurt-Fragen aus 5min, MeinBezirk, Mein Klagenfurt und
+  Wikipedia (höchstens ein Monat alt, vom Betreiber freigegeben), 3 Fragen zum Derby KAC–VSV mit 5min-Fotos (Fotos nur in
+  `medien/` auf dem W1).
+- **1000 Flachwitze**, Lindwurm-Witze (`drache.js`), Zwischenszenen (`zwischen.js`).
 
 ## 05.–07.11.2026: Quiz mit Kreidetafel, Lindwurm, neuen Bildern; W1-Prüfung (Windows-Sitzung)
 
