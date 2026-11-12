@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-12T16:02:45Z",
+  "checked_at": "2026-11-12T16:12:49Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
@@ -45,10 +38,24 @@
     },
     {
       "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
       "title": "The Anjunadeep Edition #619 with Tim Green",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 115 🎉 Der Tag nach dem Techno Mittwoch! | Harder Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
     }
   ]
 }
