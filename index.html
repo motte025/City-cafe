@@ -988,13 +988,32 @@
         .ucl-fs-legend-swatch { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
         .ucl-fs-legend-note { margin-left: auto; font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: none; letter-spacing: 0.5px; }
 
+        /* Veranstaltungen: festliche Grafik (hintergruende/veranstaltungen.webp, ChatGPT) mit wiegenden
+           Lichterketten, Glitzern und aufsteigenden Lichtpunkten. Nur transform/opacity (W1). */
+        #media-view-events > div { background: #0b0a2a !important; }
+        #media-view-events > div > *:not(.evs) { position: relative; z-index: 2; }
+        .evs { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+        .evs-bild { position: absolute; inset: -3%; background: url('hintergruende/veranstaltungen.webp') center / cover; transform-origin: 50% 30%; animation: evsFahrt 40s ease-in-out infinite alternate; }
+        @keyframes evsFahrt { from { transform: scale(1); } to { transform: scale(1.07); } }
+        .evs-lesbar { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,9,30,.05) 0%, rgba(7,9,30,.45) 30%, rgba(7,9,30,.45) 75%, rgba(7,9,30,.15) 100%); }
+        .evs-kette { position: absolute; left: -40px; width: 1360px; height: 260px; transform-origin: 50% 0; animation: evsWiegen var(--d) ease-in-out infinite alternate; }
+        @keyframes evsWiegen { from { transform: rotate(-.6deg) translateY(0); } to { transform: rotate(.6deg) translateY(6px); } }
+        .evs-kette path { fill: none; stroke: rgba(255,230,180,.18); stroke-width: 1.5; }
+        .evs-kette circle { animation: evsGlimmen var(--d) ease-in-out infinite alternate; }
+        @keyframes evsGlimmen { from { opacity: .35; } to { opacity: 1; } }
+        .evs-glitzer { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: radial-gradient(closest-side, #fff, rgba(255,210,120,.6) 40%, transparent); animation: evsGlitzer var(--d) ease-in-out infinite; opacity: 0; mix-blend-mode: screen; }
+        @keyframes evsGlitzer { 0%, 70%, 100% { opacity: 0; transform: scale(.4); } 80% { opacity: 1; transform: scale(1.4); } }
+        .evs-bokeh { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--bf), .55), rgba(var(--bf), .15) 60%, transparent); animation: evsSteigen var(--d) linear infinite; opacity: 0; }
+        @keyframes evsSteigen { 0% { transform: translateY(0) scale(.8); opacity: 0; } 15% { opacity: var(--o); } 85% { opacity: var(--o); } 100% { transform: translateY(-380px) scale(1.1); opacity: 0; } }
+        .evs-korn { position: absolute; inset: 0; opacity: .06; mix-blend-mode: overlay; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+        #media-view-events .event-row { background: rgba(10, 12, 40, .5); border-color: rgba(160, 175, 255, .22); text-shadow: 0 1px 4px rgba(0,0,0,.7); }
         .event-row {
             display: flex; align-items: center; gap: 24px;
             background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 16px; padding: 23px 32px;
             transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s ease;
         }
-        .event-row.event-row-active {
+        #media-view-events .event-row.event-row-active, .event-row.event-row-active {
             background: rgba(0, 242, 254, 0.16); border-color: rgba(0, 242, 254, 0.65);
             box-shadow: 0 0 30px rgba(0, 242, 254, 0.3); transform: scale(1.015);
         }
@@ -3006,6 +3025,8 @@
 
                 <div class="media-inner-view" id="media-view-events">
                     <div style="width: 1280px; height: 815px; position: relative; background: linear-gradient(160deg, #2a7a94 0%, #1c5270 100%); border-radius: 22px; overflow: hidden; padding: 32px 40px; box-sizing: border-box;">
+                        <!-- Hintergrund-Szene (12.11.2026): ChatGPT-Grafik + Lichterketten aus Code, siehe eventsSzeneBauen() -->
+                        <div class="evs" id="events-szene"></div>
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 22px;">
                             <div>
                                 <h2 style="font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; margin: 0;">📅 Veranstaltungen in Kärnten</h2>
@@ -5942,6 +5963,30 @@
                     </div>
                 </div>`).join('');
         }
+
+        // Veranstaltungen-Hintergrund: Lichterketten, Glitzern, Lichtpunkte (einmal aufgebaut)
+        function eventsSzeneBauen() {
+            const el = document.getElementById('events-szene');
+            if (!el || el.childElementCount) return;
+            const z = (a, b) => a + Math.random() * (b - a), W = 1280, H = 815;
+            let h = '<div class="evs-bild"></div><div class="evs-lesbar"></div>';
+            const farben = ['#ffd27a', '#ffb347', '#ff9a8a', '#fff1c4', '#9ff0d0'];
+            [[-30, 150, 17, 7.5, .9], [40, 110, 23, 5, .55]].forEach(([t, durch, d, r, op], k) => {
+                const KW = 1360, n = 26; let punkte = '';
+                for (let i = 0; i <= n; i++) {
+                    const u = i / n, x = KW * u, y = 20 + durch * 4 * u * (1 - u), f = farben[(i + k) % farben.length];
+                    punkte += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="${f}" style="--d:${z(1.2, 3.2).toFixed(2)}s;animation-delay:${-z(0, 3).toFixed(2)}s;filter:drop-shadow(0 0 ${r * 1.8}px ${f})"/>`;
+                }
+                h += `<svg class="evs-kette" viewBox="0 0 1360 260" style="top:${t}px;--d:${d}s;opacity:${op}"><path d="M 0 20 Q ${KW / 2} ${20 + durch * 2} ${KW} 20"/>${punkte}</svg>`;
+            });
+            for (let i = 0; i < 14; i++) h += `<div class="evs-glitzer" style="left:${z(10, W - 10).toFixed(0)}px;top:${z(5, 130).toFixed(0)}px;--d:${z(3, 7).toFixed(1)}s;animation-delay:${-z(0, 7).toFixed(1)}s"></div>`;
+            for (let i = 0; i < 12; i++) {
+                const g = z(30, 90), bf = ['255,194,61', '255,138,61', '255,154,138'][i % 3];
+                h += `<div class="evs-bokeh" style="width:${g.toFixed(0)}px;height:${g.toFixed(0)}px;left:${z(0, W).toFixed(0)}px;top:${z(H * .55, H).toFixed(0)}px;--bf:${bf};--o:${z(.2, .5).toFixed(2)};--d:${z(14, 26).toFixed(1)}s;animation-delay:${-z(0, 26).toFixed(1)}s"></div>`;
+            }
+            el.innerHTML = h + '<div class="evs-korn"></div>';
+        }
+        eventsSzeneBauen();
 
         function runEventsState(nextStateIndex) {
             EVENT_PAGES = aktuelleEventSeiten();
