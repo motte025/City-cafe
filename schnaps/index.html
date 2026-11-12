@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schnaps-Maschine</title>
+<!-- Im Dashboard (index.html, runSchnapsState): schnaps/index.html?automat=video-hoch-5&runden=8&kiosk=1
+     Werbe-Slotmaschine City Cafe (Vorschau 12.11.2026). Kein Gluecksspiel: die Walzen landen immer auf
+     einem Angebot. Bilder: ChatGPT (Automaten, Hebel, Hand mit Muenze, Muenze, Getraenke), freigestellt.
+     Alle Schrift, Walzen, Lichter und Bewegung aus Code. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Inline&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #fff; }
+  #buehne { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; overflow: hidden; background: #000; }
+  #automat { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+
+  /* Walzen */
+  .walze { position: absolute; overflow: hidden; border-radius: 6px; z-index: 3;
+    background: radial-gradient(120% 70% at 50% 50%, #2a2236 0%, #120d1c 60%, #07050c 100%); }
+  .band { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+  .band.dreht { filter: blur(3px) brightness(1.1); }
+  .feld { position: relative; display: flex; align-items: center; justify-content: center; }
+  .feld img { max-width: 86%; max-height: 84%; filter: drop-shadow(0 6px 10px rgba(0,0,0,.6)); transition: filter .3s; }
+  /* Zylinder-Schattierung + Glas */
+  .walze::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.25) 22%, rgba(0,0,0,0) 38%, rgba(0,0,0,0) 62%, rgba(0,0,0,.25) 78%, rgba(0,0,0,.85) 100%),
+                linear-gradient(100deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,.06) 100%); }
+  body.gewinn .feld:not(.gewinn) img { filter: brightness(.75) saturate(.85); }
+  /* Gewinn ruhig: Getraenke leuchten, ohne zu pulsieren */
+  .feld.gewinn img { animation: none; transform: scale(1.08); filter: drop-shadow(0 0 16px rgba(255,220,120,.95)) brightness(1.15); }
+  @keyframes gewinnPuls { from { transform: scale(1); filter: drop-shadow(0 0 6px rgba(255,210,90,.6)) brightness(1.05); } to { transform: scale(1.1); filter: drop-shadow(0 0 22px rgba(255,220,120,1)) brightness(1.25); } }
+  /* Gewinnreihe: dauerhaft zart markiert */
+  .reihe { position: absolute; z-index: 4; pointer-events: none; border-top: 2px solid rgba(255,214,120,.38); border-bottom: 2px solid rgba(255,214,120,.38);
+    background: linear-gradient(90deg, rgba(255,214,120,.0), rgba(255,214,120,.07) 15%, rgba(255,214,120,.07) 85%, rgba(255,214,120,.0)); box-shadow: 0 0 14px rgba(255,200,90,.18); }
+  .reihe::before, .reihe::after { content: ''; position: absolute; top: 50%; margin-top: -13px; border: 13px solid transparent; filter: drop-shadow(0 0 6px rgba(255,200,90,.8)); }
+  .reihe::before { left: -30px; border-left: 18px solid #ffd36b; border-right-width: 0; }
+  .reihe::after { right: -30px; border-right: 18px solid #ffd36b; border-left-width: 0; }
+  .linie { position: absolute; height: 4px; z-index: 4; border-radius: 4px; opacity: 0; pointer-events: none;
+    background: linear-gradient(90deg, transparent, #ffe08a 8%, #fff6d6 50%, #ffe08a 92%, transparent); box-shadow: 0 0 18px 4px rgba(255,200,80,.85); }
+  .linie.an { opacity: 1; }
+  @keyframes linieBlink { 0% { opacity: 1; } 100% { opacity: .35; } }
+
+  /* Lauflichter rund ums Walzenfenster */
+  .lampe { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; z-index: 5; pointer-events: none;
+    background: radial-gradient(circle, #fff8e0 0%, #ffd36b 35%, rgba(255,170,40,.0) 72%); animation: lauf 1.2s linear infinite; opacity: .25; }
+  @keyframes lauf { 0%, 60%, 100% { opacity: .2; transform: scale(.8); } 10% { opacity: 1; transform: scale(1.25); } }
+
+  /* Beschriftung der Knoepfe: wie von hinten beleuchtet */
+  .beschrift { position: absolute; z-index: 6; transform: translate(-50%, -58%); pointer-events: none; text-align: center; line-height: 1.05; white-space: nowrap;
+    font-family: 'Bungee', sans-serif; color: #fffdf4; letter-spacing: 1px; text-shadow: 0 0 4px rgba(var(--g), 1), 0 0 12px rgba(var(--g), .9), 0 1px 1px rgba(0,0,0,.6); }
+  /* Knopf-Leuchten */
+  .knopf { position: absolute; border-radius: 50%; z-index: 5; pointer-events: none; mix-blend-mode: screen; opacity: 0;
+    background: radial-gradient(closest-side, rgba(255,255,255,.55), rgba(var(--f), .55) 35%, rgba(var(--f), 0) 75%); animation: knopf 3.2s ease-in-out infinite; }
+  @keyframes knopf { 0%, 100% { opacity: .35; } 50% { opacity: .75; } }
+  body.zieht .knopf { animation: knopfAlle .3s ease-out 2; }
+  @keyframes knopfAlle { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
+
+  /* Schrift: Titel oben und Gewinnzeile */
+  .titel { position: absolute; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
+  .titel b { font-family: 'Bungee Inline', 'Bungee', sans-serif; font-weight: 400; line-height: 1; letter-spacing: 2px; }
+  .titel i { font-style: normal; font-family: 'Bungee', sans-serif; letter-spacing: 6px; margin-top: 8px; }
+  .titel.neon b { color: #ffe9a8; text-shadow: 0 0 6px #ffcf5a, 0 0 18px #ff9a1f, 0 0 40px #ff3fb4; animation: flackern 5s infinite; }
+  .titel.neon i { color: #ff8be0; text-shadow: 0 0 8px #ff3fb4, 0 0 20px #ff3fb4; }
+  @keyframes flackern { 0%, 18%, 22%, 62%, 64%, 100% { opacity: 1; } 20%, 63% { opacity: .55; } }
+  .titel.gravur b { color: #4a2a05; text-shadow: 0 1px 0 rgba(255,240,190,.8), 0 -1px 0 rgba(90,50,0,.6); }
+  .titel.gravur i { color: #6b3d08; text-shadow: 0 1px 0 rgba(255,240,190,.7); }
+  .anzeige { position: absolute; z-index: 5; display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none; border-radius: 6px; }
+  .anzeige span { font-family: 'Bungee', sans-serif; white-space: nowrap; color: #ffe39a; text-shadow: 0 0 8px rgba(255,190,60,.9), 0 0 24px rgba(255,120,30,.6); letter-spacing: 2px; }
+  .anzeige span.leise { color: #c9b8ff; text-shadow: 0 0 10px rgba(160,120,255,.8); animation: atmen 1.6s ease-in-out infinite alternate; }
+  @keyframes atmen { from { opacity: .55; } to { opacity: 1; } }
+  .anzeige span.gewinn { animation: none; }
+  .anzeige span.gewinn em { font-style: normal; color: #fff; text-shadow: 0 0 10px #fff, 0 0 26px #ff3fb4, 0 0 50px #ff3fb4; }
+  @keyframes gewinnText { 0% { opacity: 1; transform: scale(1.03); } 100% { opacity: .55; transform: scale(1); } }
+
+  /* grosses Gewinn-Banner ueber dem Automaten */
+  #banner { position: absolute; left: 0; right: 0; top: 800px; z-index: 20; display: flex; justify-content: center; pointer-events: none; opacity: 0; transform: scale(.4); }
+  #banner { transform: none; }
+  #banner.an { animation: bannerRein .5s ease-out .8s forwards, bannerWeg .6s ease-in 9.2s forwards; }
+  @keyframes bannerRein { to { opacity: 1; } }
+  @keyframes bannerWeg { to { opacity: 0; } }
+  #banner div { padding: 26px 70px; border-radius: 26px; text-align: center;
+    background: linear-gradient(180deg, rgba(40,6,30,.92), rgba(10,4,20,.92)); border: 4px solid #ffd36b;
+    box-shadow: 0 0 0 3px rgba(255,90,200,.7), 0 0 60px 10px rgba(255,180,60,.55), inset 0 0 40px rgba(255,180,60,.25); }
+  #banner small { display: block; font-family: 'Bungee', sans-serif; font-size: 26px; letter-spacing: 8px; color: #ff8be0; text-shadow: 0 0 14px #ff3fb4; }
+  #banner b { display: block; font-family: 'Bungee', sans-serif; font-weight: 400; font-size: 70px; line-height: 1.05; color: #fff3c4;
+    text-shadow: 0 0 10px #ffd36b, 0 0 30px #ff9a1f, 0 4px 0 #8a4b00; }
+  #banner b em { font-style: normal; color: #7dffcf; text-shadow: 0 0 12px #3ee8a5, 0 0 30px #3ee8a5, 0 4px 0 #0b5b3e; }
+  .strahl { position: absolute; left: 50%; top: 50%; width: 2400px; height: 2400px; margin: -1200px 0 0 -1200px; z-index: 19; pointer-events: none; opacity: 0;
+    background: repeating-conic-gradient(rgba(255,210,100,.16) 0 7deg, transparent 7deg 18deg); mix-blend-mode: screen; }
+  body.gewinn .strahl { opacity: 1; animation: drehen 14s linear infinite; }
+  @keyframes drehen { to { transform: rotate(360deg); } }
+
+  /* Hebel, Hand, Muenzen */
+  /* Hebel seitlich (ChatGPT, 3 Stellungen): Zylinder ragt aus der Gehaeuseseite, gezogen wird nach vorne */
+  #hebelbox { position: absolute; z-index: 6; width: 518px; height: 920px; pointer-events: none; filter: drop-shadow(-6px 12px 14px rgba(0,0,0,.55)); }
+  /* Bolzen gekuerzt: nur im Streifen des Drehzylinders (y 445-540) die linken 150 px ausblenden, Kugel bleibt ganz */
+  #hebelbox img { position: absolute; left: 0; top: 0; width: 518px; height: 920px; opacity: 0; transition: opacity .05s linear; -webkit-mask-image: linear-gradient(#000 445px, transparent 445px, transparent 540px, #000 540px), linear-gradient(90deg, transparent 150px, #000 158px); mask-image: linear-gradient(#000 445px, transparent 445px, transparent 540px, #000 540px), linear-gradient(90deg, transparent 150px, #000 158px); }
+  #hebelbox img.an { opacity: 1; }
+  #hand { position: absolute; z-index: 15; transform: translate(700px, 700px) rotate(8deg); transition: transform 1.1s cubic-bezier(.2,.8,.25,1); pointer-events: none; filter: drop-shadow(-10px 20px 30px rgba(0,0,0,.6)); }
+  #hand.ohne-muenze { -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), transparent calc(var(--mr) - 2px), #000 var(--mr)); mask-image: radial-gradient(circle at var(--mx) var(--my), transparent calc(var(--mr) - 2px), #000 var(--mr)); }
+  .muenze { position: absolute; z-index: 14; pointer-events: none; }
+  .muenze.rein { animation: rein .55s ease-in forwards; }
+  @keyframes rein { 0% { transform: translateY(0) scaleX(1); opacity: 1; } 100% { transform: translateY(46px) scaleX(.3); opacity: 0; } }
+  .blitz { position: absolute; z-index: 13; width: 260px; height: 260px; margin: -130px 0 0 -130px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; opacity: 0;
+    background: radial-gradient(closest-side, #fff, rgba(255,210,90,.7) 30%, transparent); }
+  .blitz.an { animation: blitz .7s ease-out; }
+  @keyframes blitz { 0% { opacity: 0; transform: scale(.3); } 15% { opacity: 1; } 100% { opacity: 0; transform: scale(1.4); } }
+  /* Feier-Funken aus der Flachwitz-Animation (grafik/witz/witz-funken.webp) */
+  .funken { position: absolute; left: -200px; top: -150px; width: 2320px; height: 1380px; z-index: 18; pointer-events: none; background: url(witz-funken.webp) center/contain no-repeat; opacity: 0; }
+  .funken.gespiegelt { transform: scaleX(-1); }
+  .funken.an { animation: feierFunken 2.6s ease-out forwards; }
+  .funken.gespiegelt.an { animation-name: feierFunken2; }
+  @keyframes feierFunken { 0% { opacity: 0; transform: scale(.5) rotate(-6deg); } 15% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15) rotate(4deg) translateY(80px); } }
+  @keyframes feierFunken2 { 0% { opacity: 0; transform: scaleX(-1) scale(.5) rotate(6deg); } 15% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; transform: scaleX(-1) scale(1.15) rotate(-4deg) translateY(80px); } }
+  .regen { position: absolute; z-index: 18; pointer-events: none; top: -120px; animation: fallen var(--d) linear forwards; }
+  @keyframes fallen { 0% { transform: translate(0, 0) rotateY(0deg); } 100% { transform: translate(var(--x), 1300px) rotateY(var(--r)); } }
+
+  /* Bedienung der Vorschau */
+  #knoepfe { position: fixed; left: 12px; bottom: 12px; display: flex; gap: 8px; z-index: 100; opacity: .25; transition: opacity .3s; }
+  #knoepfe:hover { opacity: 1; }
+  html.kiosk #knoepfe { display: none; }
+  html.kiosk body { cursor: none; }
+  #knoepfe button { font: 700 15px 'Plus Jakarta Sans', sans-serif; color: #fff; background: rgba(8,14,30,.85); border: 1px solid rgba(255,255,255,.3); border-radius: 9px; padding: 7px 13px; cursor: pointer; }
+  #knoepfe button.an { background: #b3127a; border-color: #ff8be0; }
+</style>
+</head>
+<body>
+<div id="buehne">
+  <img id="automat" alt="">
+  <div id="walzen"></div>
+  <div id="lichter"></div>
+  <div class="titel" id="titel"><b>SCHNAPS-MASCHINE</b><i>CITY CAFE KLAGENFURT</i></div>
+  <div class="anzeige" id="anzeige"><span class="leise">MÜNZE REIN – HEBEL ZIEHEN!</span></div>
+  <div class="reihe" id="reihe"></div>
+  <div class="linie" id="linie"></div>
+  <div id="hebelbox"><img id="hebel1" class="an" src="hebel-seite-oben.webp" alt=""><img id="hebel2" src="hebel-seite-halb.webp" alt=""><img id="hebel3" src="hebel-seite-unten.webp" alt=""></div>
+  <div class="blitz" id="blitz"></div>
+  <img id="hand" src="hand-muenze.webp" alt="">
+  <div id="banner"><div><small id="bannerKlein">JACKPOT</small><b id="bannerText"></b></div></div>
+</div>
+<div id="knoepfe"></div>
+<script>
+// ---------------- Daten ----------------
+const SYMBOLE = [
+  { id: 'jaeger', name: 'Jägermeister', bild: 'symbol-01-jaegermeister.webp', preis: 3.20, angebot: { anzahl: 5, preis: 14 } },
+  { id: 'aug', name: 'Ane aufs Aug', bild: 'symbol-02-berliner-luft.webp', preis: 3.00 },
+  { id: 'aperol', name: 'Aperol', bild: 'symbol-03-aperol.webp', preis: 3.70 },
+  { id: 'tequila', name: 'Tequila', bild: 'symbol-04-tequila.webp', preis: 3.40 },
+  { id: 'gin', name: 'Gin', bild: 'symbol-05-gin.webp', preis: 3.90 },
+  { id: 'jacky', name: 'Jacky', bild: 'symbol-06-jacky.webp', preis: 4.10 },
+  { id: 'captain', name: 'Captain Morgan', bild: 'symbol-07-captain-morgan.webp', preis: 4.10 },
+  { id: 'bull', name: 'Wodka Bull', bild: 'symbol-08-wodka-bull.webp', preis: 4.10 },
+  { id: 'marille', name: 'Marille', bild: 'symbol-09-marille.webp', preis: 3.20 },
+  { id: 'gummi', name: 'Gummibärli', bild: 'symbol-10-gummibaerli.webp', preis: 4.10 },
+  { id: 'averna', name: 'Averna', bild: 'symbol-11-averna.webp', preis: 3.90 },
+  { id: 'frangelico', name: 'Frangelico', bild: 'symbol-12-frangelico.webp', preis: 3.40 }
+];
+// Reihenfolge der Gewinne: Jaegermeister jedes dritte Mal
+// Neutral: jedes Getraenk gleich oft (nie zweimal hintereinander); volle Reihe: Jaegermeister 60 %, sonst 15 %
+const VOLL_CHANCE = { jaeger: 0.5 };   // Anteil Jaegermeister an den vollen Reihen
+let letztes = null;
+
+// Masse im 1920x1080-Bild (aus den ChatGPT-Automaten vermessen)
+const PREMIUM = {
+  titel: [420, 70, 1080, 140], klasse: 'neon', titelGr: [74, 24],
+  anzeige: [446, 676, 1028, 54], anzeigeGr: 38,
+  fenster: [450, 293, 1026, 329], stege: 8,
+  hebel: [1628, 566], muenzschlitz: [1420, 772],
+  knoepfe: [[473, 808, 70, '255,60,60'], [575, 808, 70, '255,150,40'], [1068, 808, 70, '60,255,120'], [1165, 808, 70, '60,150,255'],
+    [405, 912, 130, '255,50,50'], [533, 912, 130, '255,140,40'], [660, 912, 130, '255,180,60'], [788, 912, 130, '255,220,60'],
+    [916, 912, 130, '60,230,90'], [1045, 912, 130, '40,220,190'], [1172, 912, 130, '50,140,255'], [1300, 912, 130, '60,90,255'], [1490, 905, 210, '255,210,90']]
+};
+const VIDEO = {
+  titel: [661, 50, 588, 92], klasse: 'gravur', titelGr: [46, 15],
+  anzeige: [430, 700, 1060, 84], anzeigeGr: 46,
+  fenster: [384, 169, 1152, 490], stege: 10,
+  hebel: [1652, 470], muenzschlitz: [1728, 934],
+  knoepfe: [[105, 936, 90, '60,220,120'], [182, 936, 90, '255,60,80'], [320, 922, 110, '255,210,90'], [320, 960, 110, '255,210,90'], [470, 940, 130, '255,40,60'],
+    [610, 940, 130, '40,200,100'], [960, 936, 230, '255,210,90'], [1200, 936, 70, '255,210,90'], [1272, 936, 70, '255,210,90'], [1345, 936, 70, '60,220,120'], [1420, 936, 70, '255,60,80']]
+};
+// Hohe Automaten (Runde 3): 3 Getraenke pro Walze sichtbar
+// Beschriftete, beleuchtete Knoepfe (hohe Automaten)
+const SCHRIFT_P = [[405, 912, 'INFO', 19, '255,90,90'], [533, 912, 'EINSATZ<br>1', 16, '255,170,80'], [660, 912, 'EINSATZ<br>2', 16, '255,200,100'], [788, 912, 'EINSATZ<br>3', 16, '255,230,110'],
+  [916, 912, 'MAX', 22, '90,255,140'], [1045, 912, 'AUTO', 20, '80,240,220'], [1172, 912, 'HALTEN', 17, '100,170,255'], [1300, 912, 'KASSE', 18, '110,130,255'], [1500, 892, 'START', 34, '255,220,120']];
+const SCHRIFT_V = [[358, 900, 'EINSATZ', 17, '255,220,120'], [358, 972, 'MAX', 22, '255,220,120'], [528, 938, 'STOP', 28, '255,90,110'], [700, 938, 'AUTO', 28, '90,255,150'], [961, 926, 'START', 46, '255,230,140'],
+  [100, 938, 'INFO', 16, '90,255,150'], [213, 938, 'HILFE', 15, '255,90,110']];
+const PREMIUM_H4 = { titel: [560, 48, 800, 62], klasse: 'neon', titelGr: [40, 0], anzeige: [552, 716, 810, 38], anzeigeGr: 28,
+  fenster: [580, 167, 763, 503], hebel: [1500, 566], muenzschlitz: [1372, 790], schrift: SCHRIFT_P, knoepfe: [[473, 808, 70, '255,60,60'], [575, 808, 70, '255,150,40'], [1068, 808, 70, '60,255,120'], [1165, 808, 70, '60,150,255'],
+    [405, 912, 130, '255,50,50'], [533, 912, 130, '255,140,40'], [660, 912, 130, '255,180,60'], [788, 912, 130, '255,220,60'],
+    [916, 912, 130, '60,230,90'], [1045, 912, 130, '40,220,190'], [1172, 912, 130, '50,140,255'], [1300, 912, 130, '60,90,255'], [1490, 905, 210, '255,210,90']] };
+const PREMIUM_H5 = { titel: [420, 62, 1080, 62], klasse: 'neon', titelGr: [44, 0], anzeige: [440, 706, 1040, 38], anzeigeGr: 28,
+  fenster: [550, 187, 820, 476], hebel: [1630, 566], muenzschlitz: [1415, 780], schrift: SCHRIFT_P, knoepfe: [[473, 808, 70, '255,60,60'], [575, 808, 70, '255,150,40'], [1068, 808, 70, '60,255,120'], [1165, 808, 70, '60,150,255'],
+    [405, 912, 130, '255,50,50'], [533, 912, 130, '255,140,40'], [660, 912, 130, '255,180,60'], [788, 912, 130, '255,220,60'],
+    [916, 912, 130, '60,230,90'], [1045, 912, 130, '40,220,190'], [1172, 912, 130, '50,140,255'], [1300, 912, 130, '60,90,255'], [1490, 905, 210, '255,210,90']] };
+const KNOEPFE_VH = [[100, 938, 100, '60,220,120'], [213, 938, 100, '255,60,80'], [358, 900, 120, '255,210,90'], [358, 972, 120, '255,210,90'], [528, 938, 150, '255,40,60'], [700, 938, 150, '40,200,100'],
+  [960, 935, 260, '255,210,90'], [1190, 935, 80, '255,210,90'], [1295, 935, 80, '255,210,90'], [1398, 935, 80, '60,220,120'], [1502, 935, 80, '255,60,80']];
+const VIDEO_H4 = Object.assign({}, VIDEO, { titel: [715, 50, 490, 46], titelGr: [30, 0], anzeige: [570, 772, 770, 38], anzeigeGr: 28, fenster: [528, 117, 862, 639], hebel: [1545, 470], schrift: SCHRIFT_V, knoepfe: KNOEPFE_VH });
+const VIDEO_H5 = Object.assign({}, VIDEO, { titel: [661, 36, 597, 48], titelGr: [32, 0], anzeige: [420, 783, 1090, 38], anzeigeGr: 28, fenster: [376, 110, 1168, 648], hebel: [1650, 470], schrift: SCHRIFT_V, knoepfe: KNOEPFE_VH });
+const AUTOMATEN = {
+  'premium-hoch-4': { bild: 'automat-premium-hoch-4.webp', m: PREMIUM_H4, reihen: 3, walzen: [[580, 167, 186, 503], [775, 167, 182, 503], [965, 167, 182, 503], [1155, 167, 188, 503]] },
+  'premium-hoch-5': { bild: 'automat-premium-hoch-5.webp', m: PREMIUM_H5, reihen: 3, walzen: [[550, 187, 160, 476], [716, 187, 158, 476], [880, 187, 160, 476], [1046, 187, 159, 476], [1211, 187, 159, 476]] },
+  'video-hoch-4': { bild: 'automat-videoslot-hoch-4.webp', m: VIDEO_H4, reihen: 3, walzen: [[528, 117, 212, 639], [755, 117, 198, 639], [968, 117, 198, 639], [1181, 117, 209, 639]] },
+  'video-hoch-5': { bild: 'automat-videoslot-hoch-5.webp', m: VIDEO_H5, reihen: 3, walzen: [[376, 110, 227, 648], [617, 110, 219, 648], [849, 110, 225, 648], [1087, 110, 219, 648], [1319, 110, 225, 647]] },
+  'premium-4': { bild: 'automat-premium.webp', m: PREMIUM, walzen: [[450, 293, 258, 329], [718, 293, 238, 329], [966, 293, 238, 329], [1214, 293, 262, 329]] },
+  'premium-5': { bild: 'automat-premium-5.webp', m: PREMIUM, walzen: null },
+  'video-4': { bild: 'automat-videoslot.webp', m: VIDEO, walzen: [[384, 169, 281, 489], [680, 169, 274, 489], [969, 169, 271, 490], [1255, 169, 281, 489]] },
+  'video-5': { bild: 'automat-videoslot-5.webp', m: VIDEO, walzen: [[384, 169, 221, 489], [618, 169, 218, 489], [850, 169, 220, 490], [1083, 169, 218, 490], [1314, 169, 222, 489]] }
+};
+// Premium 5: Fenster gleichmaessig in 5 teilen (Stege dazwischen)
+{ const [x, y, w, h] = PREMIUM.fenster, s = PREMIUM.stege, bw = (w - 4 * s) / 5; AUTOMATEN['premium-5'].walzen = [0, 1, 2, 3, 4].map(i => [Math.round(x + i * (bw + s)), y, Math.round(bw), h]); }
+
+const zufall = (a, b) => a + Math.random() * (b - a);
+const euro = n => n.toFixed(2).replace('.', ',') + ' €';
+const $ = id => document.getElementById(id);
+let wahl = 'video-hoch-5', runde = 0, timer = [], walzen = [];
+const spaeter = (f, ms) => timer.push(setTimeout(f, ms));
+
+// Gewinn: n gleiche in der Mittelreihe (von links). Jaegermeister ueber alle Walzen = Angebot 5 x 14 EUR,
+// sonst Kartenpreis x n (Karte spirituosen_tv.jpg, 2 cl).
+function gewinnText(s, n) {
+  const angebot = s.angebot && n === walzen.length;
+  const anz = angebot ? s.angebot.anzahl : n, preis = angebot ? s.angebot.preis : s.preis * n;
+  return { anz, preis, angebot, text: `${anz} × ${s.name.toUpperCase()}` };
+}
+const mischen = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+const ring = (W, i) => W.ordnung[((i % W.ordnung.length) + W.ordnung.length) % W.ordnung.length];
+
+// ---------------- Aufbau ----------------
+function aufbauen() {
+  timer.forEach(clearTimeout); timer = [];
+  document.body.className = '';
+  const A = AUTOMATEN[wahl], M = A.m;
+  $('automat').src = A.bild;
+  // Walzen
+  const wz = $('walzen'); wz.innerHTML = ''; walzen = [];
+  A.walzen.forEach(([x, y, w, h], i) => {
+    const el = document.createElement('div'); el.className = 'walze'; Object.assign(el.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
+    const band = document.createElement('div'); band.className = 'band'; el.appendChild(band); wz.appendChild(el);
+    const fh = Math.round(h / (A.reihen || 1.45));
+    const W = { el, band, h, fh, ordnung: mischen(SYMBOLE), pos: Math.floor(Math.random() * SYMBOLE.length) };
+    zeichnen(W); walzen.push(W);
+  });
+  // Gewinnreihe zart markieren (Hoehe einer Zelle, mittig im Fenster)
+  { const w0 = walzen[0], wl = walzen[walzen.length - 1], r = $('reihe'), x0 = parseFloat(w0.el.style.left), x1 = parseFloat(wl.el.style.left) + parseFloat(wl.el.style.width), y0 = parseFloat(w0.el.style.top) + (w0.h - w0.fh) / 2;
+    Object.assign(r.style, { left: (x0 - 6) + 'px', width: (x1 - x0 + 12) + 'px', top: Math.round(y0) + 'px', height: w0.fh + 'px' }); }
+  // Gewinnlinie mittig durchs Fenster
+  const [fx, fy, fw, fh2] = M.fenster;
+  Object.assign($('linie').style, { left: (fx - 20) + 'px', width: (fw + 40) + 'px', top: Math.round(fy + fh2 / 2 - 2) + 'px' });
+  // Lauflichter entlang des Fensterrahmens
+  const li = $('lichter'); li.innerHTML = '';
+  const rand = 22, rx = fx - rand, ry = fy - rand, rw = fw + 2 * rand, rh = fh2 + 2 * rand, umfang = 2 * (rw + rh), n = Math.round(umfang / 34);
+  for (let k = 0; k < n; k++) {
+    let d = k / n * umfang, px, py;
+    if (d < rw) { px = rx + d; py = ry; } else if ((d -= rw) < rh) { px = rx + rw; py = ry + d; } else if ((d -= rh) < rw) { px = rx + rw - d; py = ry + rh; } else { d -= rw; px = rx; py = ry + rh - d; }
+    const l = document.createElement('div'); l.className = 'lampe'; Object.assign(l.style, { left: px + 'px', top: py + 'px', animationDelay: (-(n - k) / n * 1.2).toFixed(2) + 's' }); li.appendChild(l);
+  }
+  M.knoepfe.forEach(([x, y, g, f], k) => {
+    const kn = document.createElement('div'); kn.className = 'knopf'; Object.assign(kn.style, { left: (x - g / 2) + 'px', top: (y - g / 2) + 'px', width: g + 'px', height: g + 'px', animationDelay: (k * .18).toFixed(2) + 's' });
+    kn.style.setProperty('--f', f); li.appendChild(kn);
+  });
+  (M.schrift || []).forEach(([x, y, t, gr, f]) => {
+    const d = document.createElement('div'); d.className = 'beschrift'; d.innerHTML = t; d.style.setProperty('--g', f);
+    Object.assign(d.style, { left: x + 'px', top: y + 'px', fontSize: gr + 'px' }); li.appendChild(d);
+  });
+  // Titel + Anzeige
+  const t = $('titel'); t.className = 'titel ' + M.klasse;
+  Object.assign(t.style, { left: M.titel[0] + 'px', top: M.titel[1] + 'px', width: M.titel[2] + 'px', height: M.titel[3] + 'px' });
+  t.querySelector('b').style.fontSize = M.titelGr[0] + 'px'; t.querySelector('i').style.fontSize = M.titelGr[1] + 'px'; t.querySelector('i').style.display = M.titelGr[1] ? '' : 'none';
+  const an = $('anzeige'); Object.assign(an.style, { left: M.anzeige[0] + 'px', top: M.anzeige[1] + 'px', width: M.anzeige[2] + 'px', height: M.anzeige[3] + 'px' });
+  an.dataset.gr = M.anzeigeGr; anzeige('MÜNZE REIN – HEBEL ZIEHEN!', 'leise');
+  // Hebel
+  // Hebel: Anfang des Drehzylinders (linker Bildrand, y 492 von 920) sitzt am Seitensockel des Automaten
+  Object.assign($('hebelbox').style, { left: Math.round(M.hebel[0] - 125) + 'px', top: Math.round(M.hebel[1] - 492) + 'px' }); hebelStellung(1);
+  // Hand: Muenze im Bild bei (50, 94) von 801x1100 -> Hand 720 px hoch
+  const HH = 1100, sk = HH / 1100, mx = 50 * sk, my = 94 * sk;
+  const hd = $('hand'); hd.style.height = HH + 'px'; hd.style.left = (M.muenzschlitz[0] - mx) + 'px'; hd.style.top = (M.muenzschlitz[1] - my) + 'px';
+  hd.style.setProperty('--mx', (50 * sk / (801 * sk) * 100).toFixed(1) + '%'); hd.style.setProperty('--my', (94 * sk / HH * 100).toFixed(1) + '%'); hd.style.setProperty('--mr', Math.round(46 * sk) + 'px');
+  hd.className = ''; hd.style.transform = '';
+  $('blitz').style.left = M.muenzschlitz[0] + 'px'; $('blitz').style.top = M.muenzschlitz[1] + 'px';
+  document.querySelectorAll('#knoepfe button').forEach(b => b.classList.toggle('an', b.dataset.w === wahl));
+  spaeter(spielen, 800);
+}
+const zufallSym = () => SYMBOLE[Math.floor(Math.random() * SYMBOLE.length)];
+function zellen(liste, fh) { return liste.map(s => `<div class="feld" style="height:${fh}px"><img src="${s.bild}" alt=""></div>`).join(''); }
+function zeichnen(W) { W.band.innerHTML = zellen([ring(W, W.pos - 1), ring(W, W.pos), ring(W, W.pos + 1)], W.fh); W.band.style.transition = 'none'; W.band.style.transform = `translateY(${Math.round((W.h - W.fh) / 2 - W.fh)}px)`; }
+function anzeige(text, art) {
+  const an = $('anzeige'), gr = +an.dataset.gr || 40;
+  an.innerHTML = `<span class="${art || ''}" style="font-size:${gr}px">${text}</span>`;
+  const sp = an.querySelector('span'), max = an.clientWidth - 30;
+  if (sp.scrollWidth > max) sp.style.fontSize = Math.floor(gr * max / sp.scrollWidth) + 'px';
+}
+
+// ---------------- Ablauf ----------------
+// Dashboard: nach N Runden fertig melden (der letzte Gewinn bleibt vorher ganz stehen)
+const PARAM = new URLSearchParams(location.search), RUNDEN_MAX = +PARAM.get('runden') || 0;
+if (PARAM.get('kiosk') === '1') document.documentElement.classList.add('kiosk');
+function fertigMelden() { try { parent.postMessage({ typ: 'schnaps-fertig' }, '*'); } catch (e) {} }
+function spielen() {
+  if (RUNDEN_MAX && runde >= RUNDEN_MAX) { fertigMelden(); return; }
+  document.body.className = '';
+  walzen.forEach(W => W.band.querySelectorAll('.feld').forEach(f => f.classList.remove('gewinn')));
+  document.querySelectorAll('.linie.stueck').forEach(x => x.remove()); $('banner').classList.remove('an');
+  // Ergebnis-Art auswuerfeln (Anteile je Walzenzahl), dann die Reihe von links aufbauen.
+  // Nach den Gewinn-Gruppen kommen Nieten: jede weitere Walze anders als ihre linke Nachbarin.
+  const N = walzen.length, zufallAus = a => a[Math.floor(Math.random() * a.length)];
+  const ARTEN = N === 5
+    ? [['paar', 30], ['zweiPaare', 20], ['drilling', 20], ['drillingPaar', 8], ['vier', 12], ['voll', 10]]
+    : [['paar', 35], ['zweiPaare', 20], ['drilling', 25], ['voll', 20]];
+  let w = Math.random() * ARTEN.reduce((x, y) => x + y[1], 0), art = ARTEN[0][0];
+  for (const [n, g] of ARTEN) { if ((w -= g) < 0) { art = n; break; } }
+  const frei = () => SYMBOLE.filter(x => x !== letztes);
+  const A = art === 'voll' && Math.random() < VOLL_CHANCE.jaeger ? SYMBOLE.find(x => x.id === 'jaeger') : zufallAus(frei());
+  const B = zufallAus(SYMBOLE.filter(x => x !== A));
+  const plan = { paar: [[A, 2]], zweiPaare: [[A, 2], [B, 2]], drilling: [[A, 3]], drillingPaar: [[A, 3], [B, 2]], vier: [[A, 4]], voll: [[A, N]] }[art];
+  let gruppen; letztes = A; runde++;
+  const reihe = []; plan.forEach(([sym, n]) => { for (let k = 0; k < n; k++) reihe.push(sym); });
+  while (reihe.length < N) reihe.push(zufallAus(SYMBOLE.filter(x => x !== reihe[reihe.length - 1])));   // Nieten
+  const mitten = walzen.map((W, i) => W.ordnung.indexOf(reihe[i]));
+  // tatsaechliche Mittelreihe auswerten (Laeufe gleicher Getraenke von links nach rechts)
+  gruppen = auswerten(walzen.map((W, i) => W.ordnung[mitten[i]]));
+  const hd = $('hand'), M = AUTOMATEN[wahl].m;
+  anzeige('MÜNZE REIN – HEBEL ZIEHEN!', 'leise');
+  // 1) Hand bringt die Muenze
+  hd.className = ''; hd.style.transition = 'none'; hd.style.transform = 'translate(900px, 900px) rotate(8deg)'; void hd.offsetWidth;
+  hd.style.transition = 'transform 1.1s cubic-bezier(.2,.8,.25,1)';
+  spaeter(() => { hd.style.transform = 'translate(0, -6px) rotate(0deg)'; }, 300);
+  spaeter(() => { hd.style.transition = 'transform .25s ease-in'; hd.style.transform = 'translate(-4px, 14px) rotate(-1deg)'; }, 1450);
+  spaeter(() => {
+    // Muenze faellt in den Schlitz
+    hd.classList.add('ohne-muenze');
+    const m = document.createElement('img'); m.className = 'muenze rein'; m.src = 'muenze.webp';
+    const g = Math.round(92 * 1100 / 1100); Object.assign(m.style, { width: g + 'px', left: (M.muenzschlitz[0] - g / 2) + 'px', top: (M.muenzschlitz[1] - g / 2 + 8) + 'px' });
+    $('buehne').appendChild(m); setTimeout(() => m.remove(), 700);
+    const b = $('blitz'); b.classList.remove('an'); void b.offsetWidth; b.classList.add('an');
+    anzeige('★ 1 CREDIT ★', '');
+  }, 1700);
+  spaeter(() => { hd.style.transition = 'transform .9s cubic-bezier(.5,0,.8,.4)'; hd.style.transform = 'translate(950px, 950px) rotate(10deg)'; }, 2000);
+  // 2) Hebel
+  spaeter(() => { hebelZiehen(); document.body.classList.add('zieht'); anzeige('VIEL GLÜCK!', ''); }, 2700);
+  // 3) Walzen drehen, eine nach der anderen stoppen
+  const START = 3050;
+  walzen.forEach((W, i) => spaeter(() => drehen(W, mitten[i], 3700 + i * 480), START));
+  const ende = START + 3700 + (walzen.length - 1) * 480 + 250;
+  spaeter(() => gewinnen(gruppen), ende);
+  spaeter(spielen, ende + 11000);
+}
+
+// Hebel: Bildfolge oben -> halb -> unten -> halb -> oben
+function hebelStellung(n) { [1, 2, 3].forEach(k => $('hebel' + k).classList.toggle('an', k === n)); }
+function hebelZiehen() {
+  [[0, 2], [110, 3], [700, 2], [820, 1]].forEach(([t, n]) => setTimeout(() => hebelStellung(n), t));
+}
+
+// Walze dreht nach unten: neue Getraenke kommen von oben (Index sinkt). Jedes Getraenk steht nur einmal auf der Walze.
+function drehen(W, zielIndex, dauer) {
+  const L = W.ordnung.length, runden = 2 + Math.floor(dauer / 900);
+  const k = ((W.pos - zielIndex) % L + L) % L + runden * L;          // Schritte bis zum Ziel
+  const liste = []; for (let j = 0; j <= k + 2; j++) liste.push(ring(W, zielIndex - 1 + j));
+  W.band.innerHTML = zellen(liste, W.fh);
+  const mitte = (W.h - W.fh) / 2, von = mitte - (k + 1) * W.fh, bis = mitte - 1 * W.fh;
+  W.band.style.transition = 'none'; W.band.style.transform = `translateY(${Math.round(von)}px)`; void W.band.offsetWidth;
+  W.band.classList.add('dreht');
+  W.band.style.transition = `transform ${dauer}ms cubic-bezier(.18,.55,.22,1.04)`;
+  W.band.style.transform = `translateY(${Math.round(bis)}px)`;
+  setTimeout(() => W.band.classList.remove('dreht'), dauer * .72);
+  setTimeout(() => { W.pos = zielIndex; zeichnen(W); }, dauer + 30);
+}
+
+function feiern(nach, spiegeln) {
+  spaeter(() => {
+    const f = document.createElement('div'); f.className = 'funken' + (spiegeln ? ' gespiegelt' : '');
+    $('buehne').appendChild(f); requestAnimationFrame(() => f.classList.add('an')); setTimeout(() => f.remove(), 2800);
+  }, nach);
+}
+
+function auswerten(reihe) {
+  const laeufe = []; let a = 0;
+  for (let i = 1; i <= reihe.length; i++) if (i === reihe.length || reihe[i] !== reihe[a]) { laeufe.push({ sym: reihe[a], n: i - a, start: a }); a = i; }
+  const treffer = laeufe.filter(l => l.n >= 2);
+  return (treffer.some(l => l.n >= 3) || treffer.length >= 2) ? treffer : treffer.slice(0, 1);
+}
+
+function gewinnen(gruppen) {
+  const N = walzen.length, gs = gruppen.map(gr => gewinnText(gr.sym, gr.n)), drin = new Set(); gruppen.forEach(gr => { for (let k = 0; k < gr.n; k++) drin.add(gr.start + k); });
+  document.body.classList.add('gewinn');
+  walzen.forEach((W, i) => { if (!drin.has(i)) return; const f = W.band.querySelectorAll('.feld')[1]; if (f) f.classList.add('gewinn'); });
+  // Gewinnlinie nur ueber die getroffenen Walzen
+  // je Gewinn-Gruppe ein eigenes Linienstueck; zwischen zwei Gruppen eine Luecke
+  document.querySelectorAll('.linie.stueck').forEach(x => x.remove());
+  { gruppen.forEach((gr, k) => { const start = gr.start;
+      const a = walzen[start].el, e = walzen[start + gr.n - 1].el, l = $('linie').cloneNode(); l.removeAttribute('id'); l.classList.add('stueck');
+      const links = a.offsetLeft - (k === 0 ? 12 : -10), rechts = e.offsetLeft + e.offsetWidth + (k === gruppen.length - 1 ? 12 : -10);
+      l.style.left = links + 'px'; l.style.width = (rechts - links) + 'px'; $('buehne').appendChild(l); requestAnimationFrame(() => l.classList.add('an'));
+    }); }
+  anzeige(gs.map(g => `${g.text} &nbsp;·&nbsp; <em>${euro(g.preis)}</em>`).join(' &nbsp;+&nbsp; '), 'gewinn');
+  $('bannerKlein').textContent = gs[0].angebot ? '★ JACKPOT · ANGEBOT ★' : '★ GEWINN ★';
+  $('bannerText').innerHTML = gs.length > 1 ? gs.map(g => `${g.text} · <em>${euro(g.preis)}</em>`).join('<br>') : `${gs[0].text}<br><em>${euro(gs[0].preis)}</em>`;
+  const b = $('banner'); b.classList.remove('an'); void b.offsetWidth; b.classList.add('an');
+  // Feier wie beim Flachwitz (Sterne, Konfetti, Luftschlangen) - nur bei kompletter Reihe, zweimal
+  if (gruppen[0].n === N) { feiern(0); feiern(1300, true); }
+  spaeter(() => { document.body.classList.remove('gewinn'); document.querySelectorAll('.linie.stueck').forEach(x => x.remove()); }, 9800);
+}
+
+// ---------------- Bedienung ----------------
+$('knoepfe').innerHTML = [['premium-hoch-4', 'Premium hoch · 4'], ['premium-hoch-5', 'Premium hoch · 5'], ['video-hoch-4', 'Video hoch · 4'], ['video-hoch-5', 'Video hoch · 5'], ['premium-4', 'Premium · 4 Walzen'], ['premium-5', 'Premium · 5 Walzen'], ['video-4', 'Video-Slot · 4 Walzen'], ['video-5', 'Video-Slot · 5 Walzen']]
+  .map(([k, t]) => `<button data-w="${k}">${t}</button>`).join('');
+document.querySelectorAll('#knoepfe button').forEach(b => b.onclick = () => { wahl = b.dataset.w; try { history.replaceState(null, '', '?automat=' + wahl); } catch (e) {} aufbauen(); });
+const q = new URLSearchParams(location.search).get('automat'); if (AUTOMATEN[q]) wahl = q;
+function skalieren() { const s = Math.min(innerWidth / 1920, innerHeight / 1080); const b = $('buehne'); b.style.transform = `scale(${s})`; b.style.left = ((innerWidth - 1920 * s) / 2) + 'px'; b.style.top = ((innerHeight - 1080 * s) / 2) + 'px'; }
+addEventListener('resize', skalieren); skalieren();
+document.fonts.ready.then(aufbauen);
+</script>
+</body>
+</html>

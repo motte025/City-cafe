@@ -613,6 +613,10 @@
         }
         #roulette-fullscreen.active { display: block; }
         #roulette-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
+        /* Schnaps-Maschine (Werbe-Slot, seit 12.11.2026) im Vollbild nach dem Quiz, Seite schnaps/ */
+        #schnaps-fullscreen { display: none; position: absolute; inset: 0; z-index: 600; background: #120a06; }
+        #schnaps-fullscreen.active { display: block; }
+        #schnaps-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
         #raetsel-fullscreen { display: none; position: absolute; inset: 0; z-index: 600; background: #070a1f; }
         #raetsel-fullscreen.active { display: block; }
         #raetsel-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
@@ -3529,6 +3533,9 @@
              die Dauer des Slots geladen - ein WebGL-Rad im Hintergrund muss
              niemand mitrechnen. -->
         <div id="roulette-fullscreen"></div>
+
+        <!-- Schnaps-Maschine (Werbe-Slotmaschine, Video-Slot mit 5 Walzen) nach dem Quiz, siehe runSchnapsState -->
+        <div id="schnaps-fullscreen"></div>
 
         <!-- Kaernten-Quiz "Kennst di aus?" im Vollbild (siehe runRaetselState). Die Seite liegt
              NUR auf dem W1 (lokaler Webserver 127.0.0.1:8766, Dienst citycafe-raetsel) - dort
@@ -7120,6 +7127,44 @@
             halter.classList.remove('active');
             if (halter.firstChild) halter.innerHTML = '';
         }
+        /* ---------- Schnaps-Maschine (Wunsch Betreiber 12.11.2026) ----------
+         * Nach dem Quiz im Vollbild: Werbe-Slotmaschine mit den Schnaepsen der Karte, 8 Drehs,
+         * dann weiter im Zyklus. Die Seite meldet sich mit {typ:'schnaps-fertig'}; Notausgang nach SCHNAPS_MAX_MS.
+         * Abschalten: SCHNAPS_AN = false oder ?schnaps=0.
+         */
+        const SCHNAPS_SLOT_INDEX = 9.9;
+        const SCHNAPS_AN = true;
+        const SCHNAPS_RUNDEN = 8;
+        const SCHNAPS_MAX_MS = (SCHNAPS_RUNDEN * 20 + 30) * 1000;
+        let schnapsFertigTs = 0;
+        window.addEventListener('message', e => { const d = e && e.data; if (d && typeof d === 'object' && d.typ === 'schnaps-fertig') schnapsFertigTs = Date.now(); });
+        function schnapsAn() { return SCHNAPS_AN && !/(?:^|[?&])schnaps=0(?:&|$)/.test(location.search); }
+        function schnapsStop() {
+            const halter = document.getElementById('schnaps-fullscreen');
+            if (!halter) return;
+            halter.classList.remove('active');
+            if (halter.firstChild) halter.innerHTML = '';
+        }
+        function runSchnapsState(nextStateIndex) {
+            const halter = document.getElementById('schnaps-fullscreen');
+            if (!schnapsAn() || !halter) { mediaStateIndex = nextStateIndex; runMasterSequence(); return; }
+            halter.innerHTML = '';
+            halter.classList.add('active');
+            const start = Date.now();
+            schnapsFertigTs = 0;
+            const rahmen = document.createElement('iframe');
+            rahmen.setAttribute('title', 'Schnaps-Maschine');
+            rahmen.src = 'schnaps/index.html?automat=video-hoch-5&kiosk=1&runden=' + SCHNAPS_RUNDEN + '&v=2026-11-12';
+            halter.appendChild(rahmen);
+            videoRuheModus(true);
+            mediaStateIndex = nextStateIndex;
+            const pruefen = () => {
+                if (schnapsFertigTs > start || Date.now() - start > SCHNAPS_MAX_MS) { runMasterSequence(); return; }
+                globalMasterTimer = later(pruefen, 2000);
+            };
+            globalMasterTimer = later(pruefen, 5000);
+        }
+
         function runRaetselState(nextStateIndex) {
             const halter = document.getElementById('raetsel-fullscreen');
             if (!raetselAn() || !halter) { mediaStateIndex = nextStateIndex; runMasterSequence(); return; }
@@ -15592,6 +15637,7 @@
             djStopPlayer();
             if (mediaStateIndex !== ROULETTE_SLOT_INDEX) rouletteStop();
             if (mediaStateIndex !== RAETSEL_SLOT_INDEX) raetselStop();
+            if (mediaStateIndex !== SCHNAPS_SLOT_INDEX) schnapsStop();
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
             if (mediaStateIndex !== QR_SLOT_INDEX) qrCountdownStoppen();
             // Native <video>-Elemente spielen im Hintergrund weiter, auch wenn ihre
@@ -15824,7 +15870,10 @@
                 runRouletteState(RAETSEL_SLOT_INDEX); // -> Kaernten-Quiz
 
             } else if (mediaStateIndex === RAETSEL_SLOT_INDEX) {
-                runRaetselState(10); // -> Trinkspiel V1 (Foto)
+                runRaetselState(SCHNAPS_SLOT_INDEX); // -> Schnaps-Maschine
+
+            } else if (mediaStateIndex === SCHNAPS_SLOT_INDEX) {
+                runSchnapsState(10); // -> Trinkspiel V1 (Foto)
 
             } else {
                 runPhotoTrinkspielV1(QR_SLOT_INDEX); // -> Zyklusanfang
