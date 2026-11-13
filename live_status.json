@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T14:52:45Z",
+  "checked_at": "2026-11-13T15:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Freaky Friday (Harderstyles)  w/ @Mindblast  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freaky Friday (Harderstyles)  w/ @Mindblast  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
