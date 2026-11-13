@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T20:57:46Z",
+  "checked_at": "2026-11-13T21:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,16 +45,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "Above & Beyond Group Therapy #703 with Because of Art",
-      "game": "Music"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Special Squad mit @ericssl",
       "game": "DJs"
     }
   ]
