@@ -7135,7 +7135,7 @@
         const SCHNAPS_SLOT_INDEX = 9.9;
         const SCHNAPS_AN = true;
         const SCHNAPS_RUNDEN = 8;
-        const SCHNAPS_MAX_MS = (SCHNAPS_RUNDEN * 20 + 30) * 1000;
+        const SCHNAPS_MAX_MS = (SCHNAPS_RUNDEN * 30 + 30) * 1000;   // Extra-Dreh + Jackpot verlaengern Runden (8 Runden gemessen 184-207 s)
         let schnapsFertigTs = 0;
         window.addEventListener('message', e => { const d = e && e.data; if (d && typeof d === 'object' && d.typ === 'schnaps-fertig') schnapsFertigTs = Date.now(); });
         function schnapsAn() { return SCHNAPS_AN && !/(?:^|[?&])schnaps=0(?:&|$)/.test(location.search); }
