@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T16:32:46Z",
+  "checked_at": "2026-11-13T16:47:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "LETS ROCK 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "LETS ROCK 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -48,13 +48,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
