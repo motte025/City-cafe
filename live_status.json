@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-13T16:17:46Z",
+  "checked_at": "2026-11-13T16:32:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Wunderschöner Freitag  <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "🎉MUTE MARATHON TAG 116 🎉 WOCHENENDE! | Harder Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Wunderschöner Freitag  <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -27,13 +27,6 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "LETS ROCK 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Freaky Friday (Harderstyles)  w/ @Mindblast  !prep !Pchm !Pc !Spotify !Socials  #Werbung",
       "game": "DJs"
     },
     {
