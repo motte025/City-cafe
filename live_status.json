@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T20:52:45Z",
+  "checked_at": "2026-11-13T20:57:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,13 +27,6 @@
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Mit Vollgas ins Wochenende! Wer ist am Start?  !release @just_jenny_official @two_crazy_girls",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Special Squad mit @ericssl",
       "game": "DJs"
     },
     {
