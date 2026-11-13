@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-13T14:02:46Z",
+  "checked_at": "2026-11-13T14:07:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Wunderschöner Freitag  <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥 REMEMBER PARTY 🔥 PARTNER PLUS 38/100 - 3RD MONTH! 🚀 HIT SUB ⭐!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
@@ -31,9 +24,23 @@
     },
     {
       "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥 REMEMBER PARTY 🔥 PARTNER PLUS 38/100 - 3RD MONTH! 🚀 HIT SUB ⭐!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ 90s EURO DANCE SPECIAL | !tip ✨",
       "game": "DJs"
     }
   ]
