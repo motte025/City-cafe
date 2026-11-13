@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T21:02:45Z",
+  "checked_at": "2026-11-13T21:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,6 +31,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Special Squad mit @ericssl",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "LETS ROCK 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
@@ -48,13 +55,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Special Squad mit @ericssl",
       "game": "DJs"
     }
   ]
