@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T18:02:47Z",
+  "checked_at": "2026-11-13T18:17:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🎸ROCK METAL STREAM🎸| !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -45,9 +45,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🎸ROCK METAL STREAM🎸| !bier | !zug | !holy | #werbung",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
