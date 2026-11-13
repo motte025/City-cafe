@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T19:17:46Z",
+  "checked_at": "2026-11-13T19:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,17 +38,17 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "anjuna",
       "name": "Anjuna",
       "title": "Above & Beyond Group Therapy #703 with Because of Art",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
     }
   ]
 }
