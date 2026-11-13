@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-13T10:52:45Z",
+  "checked_at": "2026-11-13T10:57:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥 REMEMBER PARTY 🔥 PARTNER PLUS 38/100 - 3RD MONTH! 🚀 HIT SUB ⭐!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
