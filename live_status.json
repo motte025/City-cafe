@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-14T22:47:45Z",
+  "checked_at": "2026-11-14T23:02:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Camp Flog Gnaw ft. Don Toliver, Leon Thomas, J.I.D + more sponsored by !Lenovo and !Wendy's",
+      "game": "Music"
+    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
@@ -45,10 +52,10 @@
     },
     {
       "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Camp Flog Gnaw ft. Don Toliver, Leon Thomas, J.I.D + more sponsored by !Lenovo and !Wendy's",
-      "game": "Music"
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Schranz is Back mit Felix Kröcher",
+      "game": "DJs"
     }
   ]
 }
