@@ -1,6 +1,20 @@
 {
-  "checked_at": "2026-11-14T08:07:45Z",
+  "checked_at": "2026-11-14T08:22:46Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Classics mit @ericssl",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "lionastone",
@@ -13,20 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Classics mit @ericssl",
       "game": "DJs"
     }
   ]
