@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-14T19:02:45Z",
+  "checked_at": "2026-11-14T19:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Spontaner Dj STREAM LETS GO   !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     }
   ]
