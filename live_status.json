@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-14T23:02:45Z",
+  "checked_at": "2026-11-14T23:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,13 +31,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Spontaner Quicky (Harderstyles)  !prep !Pchm !Socials  #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Back to the 90s - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
@@ -45,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Schranz is Back mit Felix Kröcher",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Schranz is Back mit Felix Kröcher",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
