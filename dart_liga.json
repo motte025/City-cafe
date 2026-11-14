@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-11T00:05:33Z",
+  "aktualisiert": "2026-11-14T12:09:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1126,9 +1126,9 @@
         },
         {
           "rang": 16,
-          "spieler": "FRADL Ingemar",
-          "spiele": 11,
-          "siege": 5,
+          "spieler": "LANG Melanie",
+          "spiele": 10,
+          "siege": 4,
           "niederlagen": 6,
           "legs_plus": 15,
           "legs_minus": 20,
@@ -1136,9 +1136,9 @@
         },
         {
           "rang": 17,
-          "spieler": "LANG Melanie",
-          "spiele": 10,
-          "siege": 4,
+          "spieler": "FRADL Ingemar",
+          "spiele": 11,
+          "siege": 5,
           "niederlagen": 6,
           "legs_plus": 15,
           "legs_minus": 20,
@@ -1416,7 +1416,7 @@
         },
         {
           "rang": 45,
-          "spieler": "WHYMAN Christian",
+          "spieler": "OBERLERCHNER Melanie",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1426,7 +1426,7 @@
         },
         {
           "rang": 46,
-          "spieler": "OBERLERCHNER Melanie",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
