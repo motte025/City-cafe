@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-14T20:17:45Z",
+  "checked_at": "2026-11-14T20:32:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎵 Saturday Night Fever - DNF IS BACK 🎵 !YR2V !Wolt !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "RAIDERS",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🎵 Saturday Night Fever - DNF IS BACK 🎵 !YR2V !Wolt !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
