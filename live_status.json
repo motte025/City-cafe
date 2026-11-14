@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-14T19:17:46Z",
+  "checked_at": "2026-11-14T19:37:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "Spontaner Quicky (Harderstyles)  !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "Spontaner Dj STREAM LETS GO   !prep !Pchm !Socials  #Werbung",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
