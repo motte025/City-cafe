@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-11-15T22:47:45Z",
+  "checked_at": "2026-11-15T23:02:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "amazonmusic",
       "name": "AmazonMusic",
       "title": "Camp Flog Gnaw ft. Future, Isaiah Rashad, Latin Mafia + more sponsored by !Lenovo and !Wendy's",
       "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
     }
   ]
 }
