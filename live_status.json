@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-15T10:37:46Z",
+  "checked_at": "2026-11-15T10:57:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "amazonmusic",
@@ -13,13 +20,6 @@
       "channel": "sintica",
       "name": "Sintica",
       "title": "🎉MUTE MARATHON TAG 117 🎉| Mixed Styles später Klemmbausteine | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
       "game": "DJs"
     },
     {
