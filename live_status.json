@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-11-15T10:57:45Z",
+  "checked_at": "2026-11-15T11:12:46Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 117 🎉| Mixed Styles später Klemmbausteine | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -17,16 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 117 🎉| Mixed Styles später Klemmbausteine | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "l4uchm3ld3r",
-      "name": "L4uchm3ld3r",
-      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
+      "channel": "juliaonair",
+      "name": "JULIAONAIR",
+      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
       "game": "DJs"
     },
     {
@@ -34,6 +27,13 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "l4uchm3ld3r",
+      "name": "L4uchm3ld3r",
+      "title": "Moinzeen! Just-Mixing! Come in and enjoy! @l4uchsw0rld Zweitkanal für gaming, just chatting etc.",
       "game": "DJs"
     },
     {
