@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-15T01:47:45Z",
+  "checked_at": "2026-11-15T01:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,13 +7,6 @@
       "name": "AmazonMusic",
       "title": "Camp Flog Gnaw ft. Don Toliver, Leon Thomas, J.I.D + more sponsored by !Lenovo and !Wendy's",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "RAIDERS",
-      "game": "DJs"
     },
     {
       "platform": "twitch",
