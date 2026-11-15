@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-15T02:52:45Z",
+  "checked_at": "2026-11-15T03:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -7,13 +7,6 @@
       "name": "AmazonMusic",
       "title": "Camp Flog Gnaw ft. Don Toliver, Leon Thomas, J.I.D + more sponsored by !Lenovo and !Wendy's",
       "game": "Music"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🎵 Saturday Night Fever - DNF IS BACK 🎵 !YR2V !Wolt !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
     },
     {
       "platform": "twitch",
