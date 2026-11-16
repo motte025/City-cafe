@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-16T07:47:45Z",
+  "checked_at": "2026-11-16T07:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "Audisoul Presents: TwitchCon After Party 2026 • San Diego, CA",
       "game": "DJs"
     }
   ]
