@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-16T16:07:45Z",
+  "checked_at": "2026-11-16T16:22:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno und so | !holy",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "🎉MUTE MARATHON TAG 118🎉| Hardtechno/Schranz Special | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno und so | !holy",
       "game": "DJs"
     },
     {
