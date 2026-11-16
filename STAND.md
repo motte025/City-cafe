@@ -59,8 +59,16 @@ und wieder in der Rotation.
   „Brauchtumsgruppe Feiabachl“). Klagenfurt bleibt 2025, bis es das 2026er-Video gibt.
 - W1: yt-dlp bekommt von YouTube „Sign in to confirm you're not a bot“ – die Cookies aus chromium-kiosk sind
   abgelaufen. Betrifft das Vorausladen nach fest/ (neues Ebenthal-Video) und alles, was yt-dlp braucht.
-- In Arbeit (nur Desktop-Vorschau `Desktop\Wetter-Grafik\Live-Vorschau`): lebende Objekte in der Wetter-Szene
-  (`wetter-objekte.js`), Vollbild mit ESRGAN-Hintergründen (`hd/`).
+- **Wetter-Übersicht im Vollbild** (`WETTER_VOLLBILD = true` in index.html; false = alte Karte): `#wo-card` wird beim
+  Start in die Ebene `#wo-vollbild` direkt unter #dashboard-scaler verschoben (wie die CL-Tabelle, z-index 500, deckt
+  Starter-QR ab), Inhalt per `zoom: 1.3`. runMasterSequence nimmt die Ebene weg und hält Szene + Objekte nach 1 s an.
+- **Hochgerechnete Hintergründe** `wetter/hd/bg-*.webp` (ESRGAN 2x aus den PNG-Originalen, 2508x1412), nur im Vollbild.
+- **Lebende Objekte** `js/wetter-objekte.js` (Vorschau: Desktop\Wetter-Grafik\Live-Vorschau): Vögel, Fledermäuse, Heli,
+  Jets mit Kondensstreifen, Bannerflieger „CITY CAFÉ“/„CAFÉ PLAUSCHERL“ (einmal pro Anzeige, auch nachts), ~30 Boote/
+  Schiffe, Schwimmer; echte Maße (Kamera 4 m über dem See), Fahrspuren gegen Kollisionen, max. 6 Boote, nie 2 gleiche.
+  Vorgeschnittene Sprites `wetter/objekte/` (200 WebP, 1,3 MB, `objekte.json`). Nur in der grossen Übersicht, nicht im
+  Widget, nicht beim Gewitter. Abschalten per `?objekte=0`.
+- W1 gemessen (unsichtbar, 1920x1080, mit Objekten): sonnig 60, regen 60, nacht 60, schnee 58 fps, 0 Ruckler.
 
 ## 11.–12.11.2026: Wetter-Grafik, Hintergründe, Schnaps-Maschine, Quiz-Statistik, Notbremse behoben (Windows-Sitzung)
 

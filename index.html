@@ -1380,6 +1380,17 @@
 
         /* Wetter-Szene (js/wetter-szene.js): Inhalt steht ohne Kaesten auf dem Bild, daher Schatten */
         #wo-card { text-shadow: 0 1px 4px rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.6); }
+        /* Wetter-Übersicht im Vollbild (16.11.2026, WETTER_VOLLBILD): eigene Ebene direkt unter
+           #dashboard-scaler wie die CL-Tabelle; #wo-card wird beim Start hineinverschoben.
+           visibility statt display, damit die Szene beim Aufbau die echte Groesse misst.
+           Inhalt per zoom 1,3x (alle Schriften/Symbole gleichmaessig), Starter-QR ist verdeckt. */
+        .wo-vollbild { position: absolute; inset: 0; z-index: 500; opacity: 0; visibility: hidden; pointer-events: none;
+            transition: opacity .7s ease-in-out, visibility 0s linear .7s; }
+        .wo-vollbild.active { opacity: 1; visibility: visible; transition: opacity .7s ease-in-out, visibility 0s; }
+        .wo-vollbild:not(.active), .wo-vollbild:not(.active) * { animation-play-state: paused !important; }
+        .wo-vollbild #wo-card { width: 1920px !important; height: 1080px !important; border-radius: 0 !important; padding: 40px 70px !important; }
+        .wo-vollbild #wo-card > div:not(#wo-effects) { zoom: 1.3; }
+        .wo-vollbild #wo-daily-row { padding-left: 26px !important; }
         .wo-chip { display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .wo-chip-label { font-size: 14px; color: rgba(255,255,255,0.78); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .wo-chip-value { font-size: 27px; color: #ffffff; font-weight: 900; }
@@ -3547,6 +3558,8 @@
              wirklich den kompletten 1920x1080-Bildschirm abdeckt statt vom
              overflow:hidden der Medienbuehne beschnitten zu werden. Sidebar/Uhr/
              Ticker laufen darunter unveraendert weiter, sie werden nur ueberdeckt. -->
+        <!-- Wetter-Übersicht im Vollbild (WETTER_VOLLBILD): #wo-card wird beim Start hierher verschoben. -->
+        <div class="wo-vollbild" id="wo-vollbild"></div>
         <div class="ucl-fullscreen-table" id="ucl-fullscreen-table">
             <div class="ucl-fs-header">
                 <div>
@@ -3625,7 +3638,8 @@
         })();
     </script>
     <script src="js/gewitter.js"></script>
-    <script src="js/wetter-szene.js?v=2026-11-16a"></script>
+    <script src="js/wetter-objekte.js?v=2026-11-16a"></script>
+    <script src="js/wetter-szene.js?v=2026-11-16b"></script>
     <script src="hosn-obe-engine.js"></script>
     <script src="yt-warteschlange.js?v=2026-10-09-mischen"></script>
     <script src="hosn-obe-sound.js"></script>
@@ -3984,6 +3998,13 @@
         const WEATHER_WIDGET_START_HOUR = 8;  // ab 08:00 -> Wetter-Übersicht läuft mit
         const WEATHER_WIDGET_END_HOUR = 20;   // ab 20:00 -> Wetter-Übersicht pausiert (seit 12.11.2026, vorher 18)
         const WETTER_SEKUNDEN = 90;           // so lange steht die grosse Wetter-Übersicht (seit 16.11.2026; vorher 40, davor 25)
+        // Grosse Wetter-Übersicht als Vollbild-Ebene (16.11.2026) mit hochgerechneten Hintergründen und
+        // lebenden Objekten; false = wie bisher als Karte in der Medienbühne.
+        const WETTER_VOLLBILD = true;
+        if (WETTER_VOLLBILD) {
+            const woKarte = document.getElementById('wo-card'), woVoll = document.getElementById('wo-vollbild');
+            if (woKarte && woVoll) woVoll.appendChild(woKarte);
+        }
         function isWeatherWidgetHour() {
             const h = new Date().getHours();
             return h >= WEATHER_WIDGET_START_HOUR && h < WEATHER_WIDGET_END_HOUR;
@@ -15627,6 +15648,16 @@
             // loescht ein Wunsch vom Handy (cancelSequenceTimers), und die
             // Tabelle blieb ueber dem Nightlife-Slot und dem mpv-Fenster stehen.
             document.getElementById('ucl-fullscreen-table').classList.remove('active');
+            // Wetter-Vollbild haengt ebenfalls ausserhalb von .media-inner-view (WETTER_VOLLBILD).
+            // Nach der Ueberblendung Szene samt Objekten anhalten - auch wenn die Anzeige vorzeitig
+            // endet (Wunsch vom Handy), sonst liefe die Objekt-Leinwand unsichtbar weiter.
+            const woVollEl = document.getElementById('wo-vollbild');
+            if (woVollEl.classList.contains('active')) {
+                woVollEl.classList.remove('active');
+                setTimeout(() => {
+                    if (woSzene && !woVollEl.classList.contains('active')) { woSzene.stop(); woSzene = null; }
+                }, 1000);
+            }
             // YouTube-Musik: Leiste, Seitenleiste, Ticker und Vollbild-Ebene nur,
             // solange Musik laeuft - sonst alles wie vorher (YOUTUBE-MUSIK-SETUP.md 2.4).
             if (typeof ytmEbenenAbbauen === 'function') ytmEbenenAbbauen();
@@ -15989,7 +16020,7 @@
             effects.innerHTML = '';
             card.style.background = '#0a1426';
             if (window.wetterSzene) {
-                woSzene = wetterSzene(effects, wetterLage(code, istTag, sonnenuntergang), false, { nachts: istTag === 0 });
+                woSzene = wetterSzene(effects, wetterLage(code, istTag, sonnenuntergang), false, { nachts: istTag === 0, hd: WETTER_VOLLBILD });
             }
         }
         function woSymbol(code, istTag, px) {
@@ -15998,6 +16029,7 @@
 
         async function runWeatherOverviewState(nextStateIndex) {
             document.getElementById('media-view-weather-overview').classList.add('active');
+            if (WETTER_VOLLBILD) document.getElementById('wo-vollbild').classList.add('active');
             try {
                 const url = 'https://api.open-meteo.com/v1/forecast?latitude=46.6249&longitude=14.3053'
                     + '&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,uv_index,is_day'

@@ -136,7 +136,9 @@
     const W = container.clientWidth || (klein ? 520 : 1280), H = container.clientHeight || (klein ? 110 : 815);
 
     let h = '<div class="wsz-himmel"></div>';
-    if (L.bild) h += `<div class="wsz-bild" style="background-image:url('${BASIS}bg-${L.bild}.webp')"></div>`;
+    // Vollbild (opt.hd): mit ESRGAN hochgerechnete Hintergründe aus wetter/hd/ (2508x1412, 16.11.2026)
+    const hd = !klein && opt && opt.hd ? 'hd/' : '';
+    if (L.bild) h += `<div class="wsz-bild" style="background-image:url('${BASIS}${hd}bg-${L.bild}.webp')"></div>`;
     if (L.sterne && !klein) h += '<div class="wsz-sterne"></div>';
     if (L.decke) h += `<div class="wsz-decke wsz-${L.decke}"></div>`;
     // Wolkenbaender: hinten (langsam, dunstig) - Mitte - vorne (schnell); endlos, Tempo je Aufbau leicht anders
@@ -258,9 +260,21 @@
       if (!klein) spaeter(kleine, 1100); // zwei unabhaengige Herde
     }
 
+    // Lebende Objekte (js/wetter-objekte.js, 16.11.2026): Vögel, Boote, Flieger, Bannerflieger … nur in der
+    // grossen Übersicht und nur auf Bildern mit Landschaft (Gewitter hat keine). Abschalten: ?objekte=0
+    let objekte = null;
+    const bildEl = el.querySelector('.wsz-bild');
+    if (!klein && bildEl && window.wetterObjekte && new URLSearchParams(location.search).get('objekte') !== '0') {
+      const WETTER = { sonnig: 'sonnig', abendrot: 'abendrot', bewoelkt: 'bewoelkt', regen: 'regen', nebel: 'nebel', schnee: 'schnee', nacht: 'sonnig' };
+      objekte = window.wetterObjekte(bildEl, { quellen: BASIS + 'objekte/objekte.json', bilder: BASIS + hd, bild: 'bg-' + L.bild + '.webp',
+        wetter: WETTER[lage] || 'sonnig', nacht: nachts || lage === 'nacht', dichte: 8, banner: true, pos: [0.5, 0.5] })
+        .then(a => { if (aus && a) { a.stop(); return null; } return a; })
+        .catch(e => { if (window.nlFehlerMelden) window.nlFehlerMelden('wetter-objekte', String(e && e.message || e)); return null; });
+    }
+
     return {
       lage,
-      stop() { aus = true; timer.forEach(clearTimeout); el.remove(); }
+      stop() { aus = true; timer.forEach(clearTimeout); if (objekte) objekte.then(a => a && a.stop()).catch(() => {}); el.remove(); }
     };
   }
 
