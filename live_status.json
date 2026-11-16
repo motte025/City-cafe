@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-16T18:02:45Z",
+  "checked_at": "2026-11-16T18:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ganz normaler Montag?| !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
