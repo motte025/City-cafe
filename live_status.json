@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-16T16:02:46Z",
+  "checked_at": "2026-11-16T16:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥ENTER THE VIBE🔥 PARTNER PLUS 43/100 - 3RD MONTH! 🚀 HIT SUB ⭐!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 118🎉| Hardtechno/Schranz Special | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -20,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 118🎉| Hardtechno/Schranz Special | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
