@@ -1,19 +1,19 @@
 {
-  "checked_at": "2026-11-16T08:52:45Z",
+  "checked_at": "2026-11-16T09:07:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "amazonmusic",
-      "name": "AmazonMusic",
-      "title": "Camp Flog Gnaw ft. Future, Isaiah Rashad, Latin Mafia + more sponsored by !Lenovo and !Wendy's",
-      "game": "Music"
-    },
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "Audisoul Presents: TwitchCon After Party 2026 • San Diego, CA",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "amazonmusic",
+      "name": "AmazonMusic",
+      "title": "Camp Flog Gnaw ft. Future, Isaiah Rashad, Latin Mafia + more sponsored by !Lenovo and !Wendy's",
+      "game": "Music"
     },
     {
       "platform": "twitch",
