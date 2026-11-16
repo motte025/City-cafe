@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-16T10:57:48Z",
+  "checked_at": "2026-11-16T11:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥ENTER THE VIBE🔥 PARTNER PLUS 43/100 - 3RD MONTH! 🚀 HIT SUB ⭐!huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
