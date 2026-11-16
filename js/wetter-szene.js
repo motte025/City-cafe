@@ -190,10 +190,15 @@
 
     // Aufklatscher: unten viele, weiter oben auf zufaelligen Reihen kleiner; jeder anders
     if (L.regen && !klein) {
-      const reihen = Array.from({ length: 5 + Math.floor(Math.random() * 3) }, () => zufall(0.42, 0.8));
+      // nur auf dem See (16.11.2026): Uferlinie des Bilds (y im 1672x941-Bild) auf die Karte umrechnen
+      // (.wsz-bild: inset -4 %, cover), plus Abstand wegen der Bildfahrt. Gewitter ohne Landschaft: nur ganz unten.
+      const UFER = { 'regen-tag': 497, 'regen-nacht': 612 };
+      let u = L.bild ? 0.42 : 0.84;
+      if (L.bild && UFER[L.bild]) { const wb = W * 1.08, hb = H * 1.08, sk = Math.max(wb / 1672, hb / 941); u = Math.max(u, (-0.04 * H + (hb - 941 * sk) / 2 + UFER[L.bild] * sk) / H + 0.035); }
+      const reihen = Array.from({ length: 5 + Math.floor(Math.random() * 3) }, () => zufall(u, Math.max(u + 0.08, 0.8)));
       const spritz = () => {
-        const y = Math.random() < 0.6 ? zufall(0.78, 1.0) : reihen[Math.floor(Math.random() * reihen.length)] + zufall(-0.025, 0.025);
-        const tiefe = Math.max(0, (y - 0.42) / 0.58);
+        const y = Math.max(u, Math.random() < 0.6 ? zufall(Math.max(u, 0.78), 1.0) : reihen[Math.floor(Math.random() * reihen.length)] + zufall(-0.025, 0.025));
+        const tiefe = Math.max(0, (y - u) / (1 - u));
         const s = document.createElement('img'); s.className = 'wsz-teil wsz-spritzer'; s.alt = ''; s.style.zIndex = 8;
         s.src = BASIS + 'teilchen/spritzer' + (1 + Math.floor(Math.random() * 10)) + '.png';
         const breite = Math.round(zufall(10, 22) + tiefe * zufall(18, 46));

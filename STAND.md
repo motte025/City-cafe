@@ -76,7 +76,7 @@ Betreibers). Danach die Bildrate der Schnaps-Maschine am W1 messen.
   Große Übersicht und kleines Widget. Test: `?wetter=gewitter|regen|bewoelkt|sonnig|abendrot|nebel|schnee|nacht`
   und `?wetter=regen-nacht` usw.
 - Eigene **Nachtbilder** für Regen, Nebel, Schnee, Bewölkt; **Bewölkt** hat auch tagsüber ein eigenes Bild.
-- Wetter-Übersicht im Zyklus jetzt **40 s** (`WETTER_SEKUNDEN`) und **8–20 Uhr** (vorher 25 s, bis 18 Uhr).
+- Wetter-Übersicht im Zyklus jetzt **90 s** (`WETTER_SEKUNDEN`, seit 16.11.; vorher 40 s, davor 25 s) und **8–20 Uhr** (vorher bis 18 Uhr).
 - „Nächste Stunden“ beginnt bei der Ortszeit-Stunde (vorher UTC, eine Stunde zu früh).
 - Wolken auf Schwarz nur mit **Deckkraft = Helligkeit** freistellen; vordere Gewitter-Schichten mit `mix-blend-mode: lighten`,
   sonst schwarze Ränder.

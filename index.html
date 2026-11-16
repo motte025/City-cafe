@@ -3625,7 +3625,7 @@
         })();
     </script>
     <script src="js/gewitter.js"></script>
-    <script src="js/wetter-szene.js?v=2026-11-12d"></script>
+    <script src="js/wetter-szene.js?v=2026-11-16a"></script>
     <script src="hosn-obe-engine.js"></script>
     <script src="yt-warteschlange.js?v=2026-10-09-mischen"></script>
     <script src="hosn-obe-sound.js"></script>
@@ -3983,7 +3983,7 @@
 
         const WEATHER_WIDGET_START_HOUR = 8;  // ab 08:00 -> Wetter-Übersicht läuft mit
         const WEATHER_WIDGET_END_HOUR = 20;   // ab 20:00 -> Wetter-Übersicht pausiert (seit 12.11.2026, vorher 18)
-        const WETTER_SEKUNDEN = 40;           // so lange steht die grosse Wetter-Übersicht (seit 12.11.2026, vorher 25)
+        const WETTER_SEKUNDEN = 90;           // so lange steht die grosse Wetter-Übersicht (seit 16.11.2026; vorher 40, davor 25)
         function isWeatherWidgetHour() {
             const h = new Date().getHours();
             return h >= WEATHER_WIDGET_START_HOUR && h < WEATHER_WIDGET_END_HOUR;
