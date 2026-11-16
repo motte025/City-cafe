@@ -51,6 +51,17 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 16.11.2026: Wetter 90 s, Aufklatscher nur am See, Krampuslauf Ebenthal 2026 (Windows-Sitzung)
+
+- Wetter-Übersicht 90 s (`WETTER_SEKUNDEN`), Regen-Aufklatscher nur unterhalb der Uferlinie (Commit 15921cfa).
+- `nightlife.json`: Krampuslauf Ebenthal 2025 (-1yvC9JY_DY) durch **Ebenthal 2026** ersetzt
+  (Esh7P9BJW9w, 4305 s, 30 Gruppen aus den YouTube-Kapiteln; „Lords of Darknes“ → „Darkness“, „BG Feiabachl“ →
+  „Brauchtumsgruppe Feiabachl“). Klagenfurt bleibt 2025, bis es das 2026er-Video gibt.
+- W1: yt-dlp bekommt von YouTube „Sign in to confirm you're not a bot“ – die Cookies aus chromium-kiosk sind
+  abgelaufen. Betrifft das Vorausladen nach fest/ (neues Ebenthal-Video) und alles, was yt-dlp braucht.
+- In Arbeit (nur Desktop-Vorschau `Desktop\Wetter-Grafik\Live-Vorschau`): lebende Objekte in der Wetter-Szene
+  (`wetter-objekte.js`), Vollbild mit ESRGAN-Hintergründen (`hd/`).
+
 ## 11.–12.11.2026: Wetter-Grafik, Hintergründe, Schnaps-Maschine, Quiz-Statistik, Notbremse behoben (Windows-Sitzung)
 
 Alles Dashboard-Seitige ist auf `main` (letzter eigener Stand `6825c8ae`). Die Quizseite liegt wie bisher nur auf dem W1
