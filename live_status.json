@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-17T22:27:46Z",
+  "checked_at": "2026-11-17T22:32:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "TwitchCon was amazing | 🤍 Nov 30th we celebrate my BDAY - save the date 🤍 !bewbs !merch !PLUS !alt !design !wishlist",
       "game": "DJs"
     }
   ]
