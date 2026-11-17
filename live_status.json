@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-17T17:32:45Z",
+  "checked_at": "2026-11-17T17:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Beatport Live Amsterdam at Zwart Goud, ADE 2026 with Mastering Black, Nastia, ANNĒ",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Beatport Live Amsterdam at Zwart Goud, ADE 2026 with Mastering Black, Nastia, ANNĒ",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
