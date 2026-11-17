@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-17T14:32:48Z",
+  "checked_at": "2026-11-17T14:52:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔊 TECH HOUSE LIVE | JOIN IN!🔥PARTNER PLUS 43/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "2000s vs. 2010s - All In One - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔊 TECH HOUSE LIVE | JOIN IN!🔥PARTNER PLUS 43/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
