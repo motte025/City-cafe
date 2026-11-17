@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-17T21:57:46Z",
+  "checked_at": "2026-11-17T22:02:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Community Show mit @ericssl und @technoliebenundlebentv",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "colaway",
