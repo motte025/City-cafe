@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-17T17:17:46Z",
+  "checked_at": "2026-11-17T17:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Back 2 the 90s - Mit @Chris_Nitro und Super Solli - Eure Whatsapp ins Studio: 030- 20 19 16 16",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Back 2 the 90s - Mit @Chris_Nitro und Super Solli - Eure Whatsapp ins Studio: 030- 20 19 16 16",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "HARDSTYLE / HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
@@ -38,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Beatport Live Amsterdam at Zwart Goud, ADE 2026 with Mastering Black, Nastia, ANNĒ",
       "game": "DJs"
     }
   ]
