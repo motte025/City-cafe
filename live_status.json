@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-18T00:42:47Z",
+  "checked_at": "2026-11-18T00:57:48Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "nyybeats",
+      "name": "NyyBeats",
+      "title": "🔥♡ HONEY I'M HOMEEEEEEE (and more evil) 🔥 !mods !mercy !tip",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "roice",
@@ -13,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ HONEY I'M HOMEEEEEEE (and more evil) 🔥 !mods !mercy !tip",
       "game": "DJs"
     }
   ]
