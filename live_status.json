@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-18T16:47:53Z",
+  "checked_at": "2026-11-18T17:02:49Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !goals | !tip ✨",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "bruebie",
@@ -17,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Ascendance pres. Broken Wednesday vol. 1 💫 !charity",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !goals | !tip ✨",
       "game": "DJs"
     },
     {
