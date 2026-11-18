@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-18T12:47:46Z",
+  "checked_at": "2026-11-18T13:07:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "BERGFEST HARDTECHNO 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Brettwoch <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -24,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Brettwoch <3 - !dc !peepo !linktree !shop",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
