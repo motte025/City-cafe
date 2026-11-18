@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-18T08:22:56Z",
+  "checked_at": "2026-11-18T08:42:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Live November 18",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ RAVE, BASS & GTA ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Live November 18",
       "game": "DJs"
     },
     {
