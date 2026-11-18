@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-18T19:22:47Z",
+  "checked_at": "2026-11-18T19:37:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Beatport Live Amsterdam at Zwart Goud, ADE 2026 with Kassian, LOVEFOXY, Bradley Zero",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | GIZMO",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "STUDIO SESSION | GIZMO",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Beatport Live Amsterdam at Zwart Goud, ADE 2026 with Kassian, LOVEFOXY, Bradley Zero",
       "game": "DJs"
     },
     {
