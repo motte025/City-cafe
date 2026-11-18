@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-18T17:27:46Z",
+  "checked_at": "2026-11-18T17:47:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !goals | !tip ✨",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "anastasia_rose_official",
@@ -17,9 +10,23 @@
     },
     {
       "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !goals | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Beatport Live Amsterdam at Zwart Goud, ADE 2026 with Kassian, LOVEFOXY, Bradley Zero",
       "game": "DJs"
     }
   ]
