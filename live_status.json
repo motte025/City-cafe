@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-18T18:52:46Z",
+  "checked_at": "2026-11-18T19:02:57Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | GIZMO",
       "game": "DJs"
     }
   ]
