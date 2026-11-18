@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-18T18:02:46Z",
+  "checked_at": "2026-11-18T18:07:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ VINYL CLASSICS - Trance, Techno, Dance & HandsUp | !goals | !tip ✨",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "WALK THE PLANK",
       "game": "DJs"
     },
     {
@@ -27,13 +27,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "WALK THE PLANK",
       "game": "DJs"
     },
     {
