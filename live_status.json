@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-18T19:02:57Z",
+  "checked_at": "2026-11-18T19:22:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,6 +31,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "STUDIO SESSION | GIZMO",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -41,13 +48,6 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "STUDIO SESSION | GIZMO",
       "game": "DJs"
     }
   ]
