@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-19T15:12:50Z",
+  "checked_at": "2026-11-19T15:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "HARDSTYLE ONLY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "DER ULTIMATIVE STREAM MARATHON!  | GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
@@ -34,13 +41,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "HARDSTYLE ONLY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
