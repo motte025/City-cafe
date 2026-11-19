@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-19T13:42:45Z",
+  "checked_at": "2026-11-19T13:52:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔊 TECH HOUSE LIVE | JOIN IN!🔥PP 53/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
@@ -17,9 +10,23 @@
     },
     {
       "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔊 TECH HOUSE LIVE | JOIN IN!🔥PP 53/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "DER ULTIMATIVE STREAM MARATHON!  | GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     }
   ]
