@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-11-19T21:57:49Z",
+  "checked_at": "2026-11-19T22:02:46Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "HARDSTYLE ONLY 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
@@ -13,13 +13,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Music for your GTA6 Game! - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
