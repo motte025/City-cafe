@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-19T18:17:45Z",
+  "checked_at": "2026-11-19T18:27:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,13 +17,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "Such is life | Nov 30th we celebrate my BDAY - save the date !bewbs !merch !PLUS !alt !design !wishlist",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "COLLECTIVE CHEMISTRY // DISKO RIOTS",
@@ -31,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "Such is life | Nov 30th we celebrate my BDAY - save the date !bewbs !merch !PLUS !alt !design !wishlist",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Grand Theft Audio 💫 !charity",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
