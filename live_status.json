@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-19T10:57:45Z",
+  "checked_at": "2026-11-19T11:12:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔊 TECH HOUSE LIVE | JOIN IN!🔥PP 53/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
