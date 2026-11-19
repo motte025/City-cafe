@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-19T13:52:46Z",
+  "checked_at": "2026-11-19T14:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "DER ULTIMATIVE STREAM MARATHON!  | GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno und so | !holy",
       "game": "DJs"
     }
   ]
