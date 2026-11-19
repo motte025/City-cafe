@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-19T15:47:46Z",
+  "checked_at": "2026-11-19T16:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔊 TECH HOUSE LIVE | JOIN IN!🔥PP 53/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "DER ULTIMATIVE STREAM MARATHON!  | GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "DER ULTIMATIVE STREAM MARATHON!  | GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔊 TECH HOUSE LIVE | JOIN IN!🔥PP 53/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
@@ -48,6 +48,20 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "The Anjunadeep Edition #620 with Rromarin",
+      "game": "Music"
+    },
+    {
+      "platform": "twitch",
+      "channel": "roice",
+      "name": "roice",
+      "title": "Such is life | Nov 30th we celebrate my BDAY - save the date !bewbs !merch !PLUS !alt !design !wishlist",
       "game": "DJs"
     }
   ]
