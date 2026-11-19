@@ -27,6 +27,23 @@
     nebel:    { bild: 'nebel-nacht', woelkchen: 0 },
     schnee:   { bild: 'schnee-nacht', woelkchen: 0 }
   };
+  // Winter (19.11.2026): verschneite Wörthersee-Bilder nur, wenn in Klagenfurt mind. 3 cm Schnee liegt
+  // (Open-Meteo snow_depth). Schneefall ohne Schneedecke: Flocken vor dem normalen bewölkten Bild.
+  // Test: ?schneehoehe=5 (cm), ?monat=12 (Schlitten, Winterobjekte)
+  const WINTER = {
+    bewoelkt: { bild: 'winter-tag', baender: null, decke: null, woelkchen: 2, toenung: 'schnee' },
+    sonnig:   { bild: 'winter-sonnig', woelkchen: 2 },
+    abendrot: { bild: 'winter-abendrot', woelkchen: 2 },
+    schnee:   { bild: 'winter-tag', dicht: 1 }
+  };
+  const WINTER_NACHT = {
+    nacht:    { bild: 'winter-nacht', sterne: 0, woelkchen: 2 },
+    bewoelkt: { bild: 'winter-nacht', baender: null, decke: null, woelkchen: 2, toenung: 'nacht' },
+    schnee:   { bild: 'winter-nacht', woelkchen: 0 }
+  };
+  const SCHNEE_OHNE_DECKE = { bild: 'bewoelkt-tag' }, SCHNEE_OHNE_DECKE_NACHT = { bild: 'bewoelkt-nacht' };
+  const testParam = n => new URLSearchParams(location.search).get(n);
+  const monat = () => +(testParam('monat') || (new Date().getMonth() + 1));
   // Seitenverhaeltnis der freigestellten Wolkenbaender (Breite / Hoehe)
   const BAND_FORM = { 'gewitter-wolken-hinten': 1672 / 627, 'gewitter-wolken-mitte': 1672 / 611, 'gewitter-wolken-vorne': 1672 / 611, 'graue-wolken-hinten': 1672 / 456, 'graue-wolken-mitte': 1672 / 541, 'graue-wolken-vorne': 1672 / 549 };
 
@@ -126,7 +143,13 @@
     const test = new URLSearchParams(location.search).get('wetter');
     const nachts = test ? /-nacht$/.test(test) : !!(opt && opt.nachts);
     const nachtbild = nachts && NACHT[lage];
-    const L = nachtbild ? Object.assign({}, L0, NACHT[lage]) : L0;
+    let L = nachtbild ? Object.assign({}, L0, NACHT[lage]) : L0;
+    const cm = testParam('schneehoehe') != null ? +testParam('schneehoehe')
+      : ((opt && opt.schneehoehe != null ? opt.schneehoehe : window.wetterSchneehoehe) || 0) * 100;
+    const schneedecke = cm >= 3;
+    const winterBild = schneedecke && (nachts ? WINTER_NACHT : WINTER)[lage];
+    if (winterBild) L = Object.assign({}, L, winterBild);
+    else if (lage === 'schnee') L = Object.assign({}, L, nachts ? SCHNEE_OHNE_DECKE_NACHT : SCHNEE_OHNE_DECKE);
     const timer = [];
     let aus = false;
     const spaeter = (f, ms) => { timer.push(setTimeout(() => { if (!aus) f(); }, ms)); };
@@ -182,8 +205,8 @@
       EBENEN.forEach(([n, gmin, gmax, deck, dmin, dmax], e) => {
         for (let i = 0; i < n; i++) {
           const groesse = zufall(gmin, gmax), nr = 1 + Math.floor(Math.random() * 20), dauer = zufall(dmin, dmax);
-          const fern = e === 0, deckk = (deck * zufall(0.75, 1)).toFixed(2), ende = fern ? zufall(0.35, 0.95) * H : H + 30;
-          h += `<img class="wsz-teil wsz-flocke${fern ? ' wsz-fern' : ''}" src="${BASIS}teilchen/flocke${nr}.png" alt="" style="z-index:${7 + e};--deck:${deckk};left:${zufall(-8, 100).toFixed(1)}%;width:${Math.round(groesse)}px;${fern ? '' : `opacity:${deckk};`}--start:-${Math.round(groesse + 20)}px;--ende:${Math.round(ende)}px;--pendel:${Math.round(zufall(10, 40) + e * 12)}px;--wind:${Math.round(H * zufall(0.08, 0.18) * (1 + e * 0.5))}px;--dreh:${Math.round(zufall(180, 540))}deg;animation-duration:${(fern ? dauer * (ende / H) : dauer).toFixed(1)}s;animation-delay:${-zufall(0, dauer).toFixed(1)}s">`;
+          const fern = e === 0, deckk = Math.min(1, deck * zufall(0.75, 1) * (L.dicht ? 1.6 : 1)).toFixed(2), ende = fern ? zufall(0.35, 0.95) * H : H + 30;
+          h += `<img class="wsz-teil wsz-flocke${fern ? ' wsz-fern' : ''}" src="${BASIS}teilchen/flocke${L.dicht ? '-dicht' : ''}${nr}.png" alt="" style="z-index:${7 + e};--deck:${deckk};left:${zufall(-8, 100).toFixed(1)}%;width:${Math.round(groesse)}px;${fern ? '' : `opacity:${deckk};`}--start:-${Math.round(groesse + 20)}px;--ende:${Math.round(ende)}px;--pendel:${Math.round(zufall(10, 40) + e * 12)}px;--wind:${Math.round(H * zufall(0.08, 0.18) * (1 + e * 0.5))}px;--dreh:${Math.round(zufall(180, 540))}deg;animation-duration:${(fern ? dauer * (ende / H) : dauer).toFixed(1)}s;animation-delay:${-zufall(0, dauer).toFixed(1)}s">`;
         }
       });
     }
@@ -267,7 +290,9 @@
     if (!klein && bildEl && window.wetterObjekte && new URLSearchParams(location.search).get('objekte') !== '0') {
       const WETTER = { sonnig: 'sonnig', abendrot: 'abendrot', bewoelkt: 'bewoelkt', regen: 'regen', nebel: 'nebel', schnee: 'schnee', nacht: 'sonnig' };
       objekte = window.wetterObjekte(bildEl, { quellen: BASIS + 'objekte/objekte.json', bilder: BASIS + hd, bild: 'bg-' + L.bild + '.webp',
-        wetter: WETTER[lage] || 'sonnig', nacht: nachts || lage === 'nacht', dichte: 8, banner: true, pos: [0.5, 0.5] })
+        wetter: WETTER[lage] || 'sonnig', nacht: nachts || lage === 'nacht', dichte: 8, banner: true, pos: [0.5, 0.5],
+        // November–März: keine Tretboote/Schwimmer/Segler; im Dezember fliegt einmal pro Anzeige der Lindwurm-Schlitten
+        winter: monat() >= 11 || monat() <= 3 || schneedecke, schlitten: monat() === 12 })
         .then(a => { if (aus && a) { a.stop(); return null; } return a; })
         .catch(e => { if (window.nlFehlerMelden) window.nlFehlerMelden('wetter-objekte', String(e && e.message || e)); return null; });
     }

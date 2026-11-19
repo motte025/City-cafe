@@ -23,6 +23,10 @@
     'bg-bewoelkt-nacht.webp':  { hz: 612, wasser: VOLL(612), dunst: 5000 },
     'bg-regen-nacht.webp':     { hz: 612, wasser: VOLL(612), dunst: 2000 },
     'bg-nebel-nacht.webp':     { hz: null, wasser: null, dunst: 260 },
+    'bg-winter-tag.webp':      { hz: 376, wasser: [[0, 376], [1250, 380], [1160, 520], [1050, 590], [990, 610], [950, 680], [600, 712], [300, 735], [0, 760]], dunst: 5000, licht: [.84, .87, .93] },
+    'bg-winter-nacht.webp':    { hz: 378, wasser: [[0, 376], [1250, 380], [1160, 520], [1050, 590], [990, 610], [950, 680], [600, 712], [300, 735], [0, 760]], dunst: 8000 },
+    'bg-winter-sonnig.webp':   { hz: 376, wasser: [[0, 376], [1250, 380], [1160, 520], [1050, 590], [990, 610], [950, 680], [600, 712], [300, 735], [0, 760]], dunst: 9000 },
+    'bg-winter-abendrot.webp': { hz: 378, wasser: [[0, 376], [1250, 380], [1160, 520], [1050, 590], [990, 610], [950, 680], [600, 712], [300, 735], [0, 760]], dunst: 6000, licht: [1, .72, .62] },
     'bg-schnee-nacht.webp':    { hz: 615, wasser: [[0, 615], [1545, 615], [1460, 700], [1340, 745], [1100, 810], [720, 860], [300, 890], [0, 900]], dunst: 2500 }
   };
 
@@ -84,6 +88,9 @@
     linieN:   { datei: 'Beleuchtetes Linienboot bei Nacht-2.png', n: 1, lampen: true, flagge: true },
     sport:    { datei: 'Modernes Sportboot mit drei Passagieren-2.png', n: 1 },
     sportN:   { datei: 'Weißes Sportboot bei Nacht mit Bugwelle-4.png', n: 1, lampen: true },
+    // Dezember: Weihnachts-Lindwurm im Schlitten (4 Galopp-Phasen nebeneinander, aus dem 4-Reihen-Bogen geschnitten)
+    schlitten:  { datei: 'Lindwurm-Schlitten-Tag-Streifen.png', n: 4, anker: 'zelle', spaltenGleich: true },
+    schlittenN: { datei: 'Lindwurm-Schlitten-Nacht-Streifen.png', n: 4, anker: 'zelle', spaltenGleich: true },
     jetski:   { datei: 'Jetski-Fahrer mit hoher Gischt-1.png', n: 1 }
   };
 
@@ -104,6 +111,7 @@
     { id: 'jet', name: 'Passagierjet (Anflug)', bogen: 'flieger', phasen: [0, 1], phasenN: [1, 2], ort: 'luft', m: 40, mN: 38, d: [1200, 3500], hoch: [500, 2500], v: [70, 85], schwarm: [1, 1], tag: 1, nacht: 1, gewicht: 1, lichter: 'jet' },
     { id: 'reisejet', name: 'Jet mit Kondensstreifen', bogen: 'flieger', phasen: [0, 1], phasenN: [1, 2], ort: 'luft', m: 40, mN: 38, d: [4500, 8000], himmel: [.06, .55], v: [220, 250], schwarm: [1, 1], tag: 1, nacht: 1, nichtBei: ['regen', 'nebel', 'schnee'], gewicht: 1.2, lichter: 'jet', kondens: true },
     { id: 'banner', name: 'Flieger mit Werbebanner', bogen: 'flieger', phasen: [2, 3], ort: 'luft', m: 9.5, d: [150, 300], himmel: [.3, .62], v: [33, 40], schwarm: [1, 1], tag: 1, nacht: 1, lichter: 'klein', nichtBei: ['regen', 'schnee', 'nebel'], gewicht: 0, banner: ['CITY CAFÉ', 'CAFÉ PLAUSCHERL'] },
+    { id: 'schlitten', name: 'Lindwurm-Schlitten', bogen: 'schlitten', bogenN: 'schlittenN', ort: 'luft', m: 32, d: [110, 220], himmel: [.3, .55], v: [14, 19], schlag: 2.4, gleit: 0, schwarm: [1, 1], tag: 1, nacht: 1, gewicht: 0, schlitten: true },
     { id: 'cessna', name: 'Kleinflugzeug', bogen: 'flieger', phasen: [2, 3], ort: 'luft', m: 9.5, d: [200, 1000], hoch: [250, 1200], v: [45, 55], schwarm: [1, 1], tag: 1, nichtBei: ['regen', 'schnee', 'nebel'], gewicht: 1 },
     { id: 'segelflieger', name: 'Segelflieger', bogen: 'flieger', phasen: [3, 4], ort: 'luft', m: 7.5, d: [200, 1000], hoch: [300, 1500], v: [25, 35], schwarm: [1, 1], tag: 1, nichtBei: ['regen', 'schnee', 'nebel', 'bewoelkt'], gewicht: 1 },
     { id: 'ballon', name: 'Heißluftballon', bogen: 'bogen', zeile: 0, ort: 'luft', m: 17, d: [250, 1200], hoch: [80, 900], v: [1.5, 4], schwarm: [1, 1], tag: 1, nichtBei: ['regen', 'schnee', 'nebel'], gewicht: .6, schweben: true },
@@ -112,7 +120,7 @@
     { id: 'schmetterling', name: 'Schmetterling', bogen: 'bogen', zeile: 6, ort: 'nah', m: .1, d: [1.5, 4], v: [.35, .6], bild: 9, schwarm: [1, 1], tag: 1, nichtBei: ['regen', 'schnee', 'nebel'], gewicht: .6, zickzack: true },
     { id: 'blatt', name: 'Herbstlaub', bogen: 'bogen', zeile: 8, ort: 'nah', m: .13, d: [2, 9], v: [.6, 1.4], bild: 3, schwarm: [2, 6], tag: 1, nacht: 1, nichtBei: ['schnee'], gewicht: .8, fallen: true },
     { id: 'pusteblume', name: 'Pusteblume', bogen: 'bogen', zeile: 9, ort: 'nah', m: .05, d: [1.5, 6], v: [.12, .25], bild: 1.5, schwarm: [2, 5], tag: 1, nichtBei: ['regen', 'schnee', 'nebel'], gewicht: .6, schweben: true },
-    { id: 'schwan', breite: 1.2, name: 'Schwäne', bogen: 'bogen', zeile: 2, ort: 'wasser', m: 1.5, wl: .9, d: [25, 200], v: [.4, .7], bild: 1.6, schwarm: [1, 3], tag: 1, gewicht: 1.5, tauch: .35, spiegel: true, kiel: [3, .04, .45], ringe: 2.2 },
+    { id: 'schwan', breite: 1.2, name: 'Schwäne', bogen: 'bogen', zeile: 2, ort: 'wasser', m: 1.5, wl: .9, d: [50, 220], v: [.4, .7], bild: 1.6, schwarm: [1, 3], tag: 1, gewicht: 1.5, tauch: .35, spiegel: true, kiel: [3, .04, .45], ringe: 2.2 },
     { id: 'taucher', breite: 0.6, name: 'Haubentaucher', bogen: 'bogen', zeile: 3, ort: 'wasser', m: .55, wl: .88, d: [25, 120], v: [.4, .7], bild: 2, schwarm: [1, 2], tag: 1, gewicht: 1, tauch: .35, spiegel: true, kiel: [2.5, .03, .4], ringe: 1.8 },
     { id: 'dampfer', breite: 8, name: 'Dampfer', bogen: 'dampfer', bogenN: 'dampferN', ort: 'wasser', m: 46, wl: .9, d: [180, 900], v: [3.5, 4.5], schwarm: [1, 1], tag: 1, nacht: 1, gewicht: .7, gross: true, spiegel: true, kiel: [14, .35, .5] },
     { id: 'schiff', breite: 7, name: 'Ausflugsschiff', bogen: 'schiff', bogenN: 'schiffN', ort: 'wasser', m: 37, wl: .91, d: [180, 900], v: [4, 5.5], schwarm: [1, 1], tag: 1, nacht: 1, gewicht: .7, gross: true, spiegel: true, kiel: [14, .3, .5] },
@@ -458,7 +466,11 @@
       }
       return drin;
     }
+    // Winter (Schnee-/Winterbilder): nur was es im Winter am Wörthersee gibt – keine Tretboote, Schwimmer, Segler, Insekten, Sommervögel
+    const WINTER = new Set(['moewe', 'kraehe', 'ente', 'reiher', 'eule', 'heli', 'jet', 'reisejet', 'banner', 'schlitten', 'cessna', 'ballon',
+      'schwan', 'taucher', 'dampfer', 'schiff', 'linie', 'rettung', 'polizei', 'fischer']);
     function erlaubt(art) {
+      if (opt.winter && !WINTER.has(art.id)) return false;
       if (nacht ? !art.nacht : !art.tag) return false;
       if (art.nichtBei && art.nichtBei.includes(wetter)) return false;
       if (art.ort === 'wasser' && !szene.wasser) return false;
@@ -720,6 +732,7 @@
       fpsZeit += dt; fpsN++; if (fpsZeit > 1) { fps = fpsN / fpsZeit; fpsZeit = 0; fpsN = 0; }
       zufallsEreignis(dt);
       if (bannerUhr > 0 && (bannerUhr -= dt) <= 0 && erlaubt(bannerArt)) erzeugen(bannerArt, false);
+      if (schlittenUhr > 0 && (schlittenUhr -= dt) <= 0 && erlaubt(schlittenArt)) erzeugen(schlittenArt, false);
       g.clearRect(0, 0, W, H);
       if (wasserZeigen && szene.wasser) { g.fillStyle = 'rgba(0,160,255,.25)'; g.beginPath(); szene.wasser.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.fill(); }
       // nah vorne in der Liste: die Schleife läuft rückwärts (wegen Entfernen), zeichnet also fern zuerst, nah zuletzt (oben)
@@ -781,7 +794,11 @@
         let alpha = 1;
         if (a.ort === 'wasser') {
           // Ufer prüfen nur im Bild (ausserhalb ist kein Polygon – dort kommen die Boote ja erst herein)
-          if (!imWasser(Math.min(W - 1, Math.max(1, o.x + o.richtung * o.px * .45)), o.y)) { alpha = 0; if (o.einblenden === undefined || o.einblenden > .9) { objekte.splice(i, 1); continue; } }
+          // Am Ufer (Bug verlässt das Wasser): nicht schlagartig weg, sondern weiterfahren und in 1,5 s ausblenden (wie hinter Bäumen/Landzunge)
+          if (!imWasser(Math.min(W - 1, Math.max(1, o.x + o.richtung * o.px * .45)), o.y)) {
+            if (o.einblenden !== undefined && o.einblenden < .9) alpha = 0;
+            else { o.aus = (o.aus ?? 1) - dt / 1.5; if (o.aus <= 0) { objekte.splice(i, 1); continue; } alpha = o.aus; }
+          }
           if (o.einblenden !== undefined) { o.einblenden = Math.min(1, o.einblenden + dt * .5); alpha = Math.min(alpha, o.einblenden); }
         }
         const x = Math.round(o.x * 2) / 2, yy = Math.round(y * 2) / 2;
@@ -812,6 +829,8 @@
     for (const id of opt.start || []) { const art = ARTEN.find(a => a.id === id); if (art && erlaubt(art)) erzeugen(art, true); }
     let bannerUhr = opt.banner ? zufall(6, 22) : -1;                 // einmal pro Anzeige, früh genug zum Lesen
     const bannerArt = ARTEN.find(a => a.banner);
+    let schlittenUhr = opt.schlitten ? zufall(3, 12) : -1;            // Dezember: einmal pro Anzeige
+    const schlittenArt = ARTEN.find(a => a.schlitten);
     raf = requestAnimationFrame(takt);
 
     return {
