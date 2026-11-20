@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T13:27:48Z",
+  "checked_at": "2026-11-20T13:37:51Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ BACK TO THE 90s | !goals | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "DER ULTIMATIVE STREAM MARATHON!  | LIVE BIS SONNTAG -> GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     },
     {
