@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-20T00:47:45Z",
+  "checked_at": "2026-11-20T01:02:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "DER ULTIMATIVE STREAM MARATHON!  | LIVE BIS SONNTAG -> GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "musikinfection",
