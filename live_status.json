@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-20T16:22:46Z",
+  "checked_at": "2026-11-20T16:37:48Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, Hardstyle und so | !holy",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Friday  <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -45,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "✨ KEEP THE CLASSICS ALIVE!🔥PP 55/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "deejayfamily",
-      "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "✨ KEEP THE CLASSICS ALIVE!🔥PP 55/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
