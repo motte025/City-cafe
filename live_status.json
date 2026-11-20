@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T18:17:45Z",
+  "checked_at": "2026-11-20T18:32:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, Hardstyle und so | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 80s 90s FRIDAY | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -31,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 80s 90s FRIDAY | !bier | !zug | !holy | #werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "ONLY FOR THE ROCKERS 🔴 NEW !RELEASE  01.11.26 🔴 ☆ !naturtreu 🔴",
@@ -52,6 +52,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "MIX MISSION TV | FREDERIC.",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -59,9 +66,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "MIX MISSION TV | FREDERIC.",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !EMP !Wolt !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
