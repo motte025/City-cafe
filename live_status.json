@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-20T04:02:47Z",
+  "checked_at": "2026-11-20T04:22:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Adrian Mills, Joanna Kuchta | Beatport Live | Los Angeles",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "bruebie",
@@ -13,13 +20,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Adrian Mills, Joanna Kuchta | Beatport Live | Los Angeles",
       "game": "DJs"
     }
   ]
