@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-20T12:47:46Z",
+  "checked_at": "2026-11-20T13:07:48Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "✨ KEEP THE CLASSICS ALIVE!🔥PP 55/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
@@ -17,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "✨ KEEP THE CLASSICS ALIVE!🔥PP 55/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
@@ -27,6 +20,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "✨ BACK TO THE 90s | !goals | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
