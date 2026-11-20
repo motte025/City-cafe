@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-20T07:42:48Z",
+  "checked_at": "2026-11-20T08:02:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "DER ULTIMATIVE STREAM MARATHON!  | LIVE BIS SONNTAG -> GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sunshineliveradio",
@@ -17,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "DER ULTIMATIVE STREAM MARATHON!  | LIVE BIS SONNTAG -> GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Grand Theft Audio Pt 2 💫 !charity",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
