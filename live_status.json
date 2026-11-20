@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T11:02:45Z",
+  "checked_at": "2026-11-20T11:17:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "Grand Theft Audio - melodic & progressivs  💫 !charity",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "✨ KEEP THE CLASSICS ALIVE!🔥PP 55/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "✨ KEEP THE CLASSICS ALIVE!🔥PP 55/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "Grand Theft Audio - melodic & progressivs  💫 !charity",
       "game": "DJs"
     }
   ]
