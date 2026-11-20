@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T18:32:46Z",
+  "checked_at": "2026-11-20T18:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "ailenax",
       "name": "Ailenax",
       "title": "🔴🟠🟡🟢🔵 80s 90s FRIDAY | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !EMP !Wolt !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
@@ -52,23 +59,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "MIX MISSION TV | FREDERIC.",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "⭐ WEEKEND STARTER - Mixed Music (🇩🇪 / 🇺🇸) ⭐ !EMP !Wolt !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
