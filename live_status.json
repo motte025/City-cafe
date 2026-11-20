@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T05:32:45Z",
+  "checked_at": "2026-11-20T05:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Live November 20",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Live November 20",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
