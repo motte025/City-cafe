@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T19:47:47Z",
+  "checked_at": "2026-11-20T20:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -62,6 +62,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "THAT'S WHAT I LIKE",
       "game": "DJs"
     }
   ]
