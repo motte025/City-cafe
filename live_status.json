@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T15:52:45Z",
+  "checked_at": "2026-11-20T16:02:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "✨ BACK TO THE 90s | !goals | !tip ✨",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "DER ULTIMATIVE STREAM MARATHON!  | LIVE BIS SONNTAG -> GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "DER ULTIMATIVE STREAM MARATHON!  | LIVE BIS SONNTAG -> GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "✨ BACK TO THE 90s | !goals | !tip ✨",
       "game": "DJs"
     },
     {
@@ -48,6 +48,20 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 120🎉| HARDER STYLES | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
