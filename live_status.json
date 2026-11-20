@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-20T14:17:45Z",
+  "checked_at": "2026-11-20T14:32:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Friday  <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, Hardstyle und so | !holy",
       "game": "DJs"
     },
     {
@@ -17,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "✨ KEEP THE CLASSICS ALIVE!🔥PP 55/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "DER ULTIMATIVE STREAM MARATHON!  | LIVE BIS SONNTAG -> GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "✨ KEEP THE CLASSICS ALIVE!🔥PP 55/100 - 3RD MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, Hardstyle und so | !holy",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
