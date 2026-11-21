@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:26:35Z",
+  "aktualisiert": "2026-11-21T19:27:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -102,7 +102,7 @@
         },
         "6": {
           "heim": 1,
-          "auswaerts": 0,
+          "auswaerts": 1,
           "id": 109664
         },
         "7": {
@@ -175,11 +175,11 @@
         {
           "rang": 4,
           "spieler": "HOPFGARTNER Joachim",
-          "spiele": 11,
+          "spiele": 12,
           "siege": 9,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 27,
-          "legs_minus": 15,
+          "legs_minus": 18,
           "punkte": 27
         },
         {
@@ -214,6 +214,16 @@
         },
         {
           "rang": 8,
+          "spieler": "ELEZOSKI Serif",
+          "spiele": 9,
+          "siege": 7,
+          "niederlagen": 2,
+          "legs_plus": 23,
+          "legs_minus": 6,
+          "punkte": 23
+        },
+        {
+          "rang": 9,
           "spieler": "REINISCH Jessica",
           "spiele": 13,
           "siege": 7,
@@ -223,7 +233,7 @@
           "punkte": 23
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "JAHN Andreas",
           "spiele": 12,
           "siege": 6,
@@ -233,7 +243,7 @@
           "punkte": 22
         },
         {
-          "rang": 10,
+          "rang": 11,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 10,
           "siege": 6,
@@ -243,7 +253,7 @@
           "punkte": 21
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "JAHN Corinna",
           "spiele": 10,
           "siege": 5,
@@ -253,7 +263,7 @@
           "punkte": 21
         },
         {
-          "rang": 12,
+          "rang": 13,
           "spieler": "BERGLER Benjamin",
           "spiele": 12,
           "siege": 6,
@@ -261,16 +271,6 @@
           "legs_plus": 21,
           "legs_minus": 22,
           "punkte": 21
-        },
-        {
-          "rang": 13,
-          "spieler": "ELEZOSKI Serif",
-          "spiele": 8,
-          "siege": 6,
-          "niederlagen": 2,
-          "legs_plus": 20,
-          "legs_minus": 6,
-          "punkte": 20
         },
         {
           "rang": 14,
@@ -294,6 +294,16 @@
         },
         {
           "rang": 16,
+          "spieler": "SIMONITSCH Erhard",
+          "spiele": 13,
+          "siege": 5,
+          "niederlagen": 8,
+          "legs_plus": 20,
+          "legs_minus": 27,
+          "punkte": 20
+        },
+        {
+          "rang": 17,
           "spieler": "KERNSTOCK Michael",
           "spiele": 10,
           "siege": 6,
@@ -303,7 +313,7 @@
           "punkte": 19
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
@@ -313,7 +323,7 @@
           "punkte": 19
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "KOLLER Elias",
           "spiele": 12,
           "siege": 6,
@@ -323,23 +333,13 @@
           "punkte": 18
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "FRIEßNEGGER Sarah",
           "spiele": 8,
           "siege": 5,
           "niederlagen": 3,
           "legs_plus": 17,
           "legs_minus": 12,
-          "punkte": 17
-        },
-        {
-          "rang": 20,
-          "spieler": "SIMONITSCH Erhard",
-          "spiele": 12,
-          "siege": 4,
-          "niederlagen": 8,
-          "legs_plus": 17,
-          "legs_minus": 26,
           "punkte": 17
         },
         {
@@ -474,6 +474,16 @@
         },
         {
           "rang": 34,
+          "spieler": "JAHN Christian",
+          "spiele": 9,
+          "siege": 2,
+          "niederlagen": 7,
+          "legs_plus": 7,
+          "legs_minus": 22,
+          "punkte": 7
+        },
+        {
+          "rang": 35,
           "spieler": "LUBE Mario",
           "spiele": 4,
           "siege": 2,
@@ -483,23 +493,13 @@
           "punkte": 6
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 6,
           "siege": 2,
           "niederlagen": 4,
           "legs_plus": 6,
           "legs_minus": 13,
-          "punkte": 6
-        },
-        {
-          "rang": 36,
-          "spieler": "JAHN Christian",
-          "spiele": 8,
-          "siege": 2,
-          "niederlagen": 6,
-          "legs_plus": 6,
-          "legs_minus": 19,
           "punkte": 6
         },
         {
@@ -644,7 +644,7 @@
       "letztes_spiel": {
         "runde": 6,
         "heim": 1,
-        "auswaerts": 0,
+        "auswaerts": 1,
         "paarungen": [
           {
             "art": "DE",
@@ -657,8 +657,8 @@
             "art": "HE",
             "spieler1": "JAHN Christian",
             "spieler2": "SIMONITSCH Erhard",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 1,
+            "legs2": 3
           },
           {
             "art": "OE",
@@ -685,7 +685,7 @@
             "datum": "2026-11-21",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Schwarzer Kater",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 1,
             "id": 109653,
             "paarungen": [
@@ -714,7 +714,7 @@
                 "art": "OE",
                 "spieler1": "ELEZOSKI Serif",
                 "spieler2": "HOPFGARTNER Joachim",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
@@ -725,7 +725,7 @@
             "heim": "City-Flyers \"Chaoten\"",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 1,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109664,
             "paarungen": [
               {
@@ -1176,16 +1176,26 @@
         },
         {
           "rang": 13,
-          "spieler": "GRAF Franz",
-          "spiele": 8,
-          "siege": 6,
-          "niederlagen": 2,
-          "legs_plus": 17,
-          "legs_minus": 6,
-          "punkte": 17
+          "spieler": "LANG Melanie",
+          "spiele": 11,
+          "siege": 5,
+          "niederlagen": 6,
+          "legs_plus": 18,
+          "legs_minus": 20,
+          "punkte": 18
         },
         {
           "rang": 14,
+          "spieler": "GRAF Franz",
+          "spiele": 9,
+          "siege": 6,
+          "niederlagen": 3,
+          "legs_plus": 17,
+          "legs_minus": 9,
+          "punkte": 17
+        },
+        {
+          "rang": 15,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
@@ -1195,7 +1205,7 @@
           "punkte": 17
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "SCHMALNAUER Daniel",
           "spiele": 10,
           "siege": 6,
@@ -1205,7 +1215,7 @@
           "punkte": 17
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "SPANRING Andreas",
           "spiele": 7,
           "siege": 5,
@@ -1215,20 +1225,10 @@
           "punkte": 15
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "FRADL Ingemar",
           "spiele": 11,
           "siege": 5,
-          "niederlagen": 6,
-          "legs_plus": 15,
-          "legs_minus": 20,
-          "punkte": 15
-        },
-        {
-          "rang": 18,
-          "spieler": "LANG Melanie",
-          "spiele": 10,
-          "siege": 4,
           "niederlagen": 6,
           "legs_plus": 15,
           "legs_minus": 20,
@@ -1578,7 +1578,7 @@
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 3,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109048,
             "paarungen": [
               {
@@ -1607,7 +1607,7 @@
                 "spieler1": "GRAF Franz",
                 "spieler2": "LANG Melanie",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               }
             ]
           },
