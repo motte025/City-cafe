@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T18:57:35Z",
+  "aktualisiert": "2026-11-21T19:00:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1057,12 +1057,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 15,
-          "siege": 15,
+          "spiele": 16,
+          "siege": 16,
           "niederlagen": 0,
-          "legs_plus": 40,
+          "legs_plus": 43,
           "legs_minus": 5,
-          "punkte": 40
+          "punkte": 43
         },
         {
           "rang": 2,
@@ -1237,11 +1237,11 @@
         {
           "rang": 19,
           "spieler": "UNTERDORFER Heimo",
-          "spiele": 9,
+          "spiele": 10,
           "siege": 3,
-          "niederlagen": 6,
+          "niederlagen": 7,
           "legs_plus": 14,
-          "legs_minus": 19,
+          "legs_minus": 22,
           "punkte": 14
         },
         {
@@ -1656,7 +1656,7 @@
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 1,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109070,
             "paarungen": [
               {
@@ -1678,7 +1678,7 @@
                 "spieler1": "UNTERDORFER Heimo",
                 "spieler2": "NIKOLIC Dennis",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "OE",
