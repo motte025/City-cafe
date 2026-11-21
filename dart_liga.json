@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T20:31:38Z",
+  "aktualisiert": "2026-11-21T20:39:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1151,12 +1151,12 @@
         {
           "rang": 2,
           "spieler": "JANESCH Christine",
-          "spiele": 17,
-          "siege": 13,
+          "spiele": 18,
+          "siege": 14,
           "niederlagen": 4,
-          "legs_plus": 38,
-          "legs_minus": 17,
-          "punkte": 38
+          "legs_plus": 41,
+          "legs_minus": 19,
+          "punkte": 41
         },
         {
           "rang": 3,
@@ -1470,6 +1470,16 @@
         },
         {
           "rang": 34,
+          "spieler": "BRUNNER Katharina",
+          "spiele": 7,
+          "siege": 2,
+          "niederlagen": 5,
+          "legs_plus": 8,
+          "legs_minus": 12,
+          "punkte": 8
+        },
+        {
+          "rang": 35,
           "spieler": "DANIEL Johanna",
           "spiele": 3,
           "siege": 2,
@@ -1479,7 +1489,7 @@
           "punkte": 7
         },
         {
-          "rang": 35,
+          "rang": 36,
           "spieler": "POSCHINGER Franz",
           "spiele": 10,
           "siege": 1,
@@ -1487,16 +1497,6 @@
           "legs_plus": 7,
           "legs_minus": 23,
           "punkte": 7
-        },
-        {
-          "rang": 36,
-          "spieler": "BRUNNER Katharina",
-          "spiele": 6,
-          "siege": 2,
-          "niederlagen": 4,
-          "legs_plus": 6,
-          "legs_minus": 9,
-          "punkte": 6
         },
         {
           "rang": 37,
@@ -1782,7 +1782,7 @@
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 2,
-            "erg_auswaerts": 5,
+            "erg_auswaerts": 6,
             "id": 109070,
             "paarungen": [
               {
@@ -1838,8 +1838,8 @@
                 "art": "DE",
                 "spieler1": "BRUNNER Katharina",
                 "spieler2": "JANESCH Christine",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "OE",
