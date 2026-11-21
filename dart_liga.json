@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:20:36Z",
+  "aktualisiert": "2026-11-21T19:23:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -194,6 +194,16 @@
         },
         {
           "rang": 6,
+          "spieler": "REGENFELDNER Rene",
+          "spiele": 10,
+          "siege": 9,
+          "niederlagen": 1,
+          "legs_plus": 25,
+          "legs_minus": 7,
+          "punkte": 25
+        },
+        {
+          "rang": 7,
           "spieler": "URANK Romeo",
           "spiele": 11,
           "siege": 8,
@@ -203,7 +213,7 @@
           "punkte": 25
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "REINISCH Jessica",
           "spiele": 13,
           "siege": 7,
@@ -211,16 +221,6 @@
           "legs_plus": 23,
           "legs_minus": 25,
           "punkte": 23
-        },
-        {
-          "rang": 8,
-          "spieler": "REGENFELDNER Rene",
-          "spiele": 9,
-          "siege": 8,
-          "niederlagen": 1,
-          "legs_plus": 22,
-          "legs_minus": 7,
-          "punkte": 22
         },
         {
           "rang": 9,
@@ -485,11 +485,11 @@
         {
           "rang": 35,
           "spieler": "BRANDSTÄTTER Manuel",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 2,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 6,
-          "legs_minus": 10,
+          "legs_minus": 13,
           "punkte": 6
         },
         {
@@ -763,7 +763,7 @@
             "datum": "2026-11-21",
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 0,
             "id": 109675,
             "paarungen": [
@@ -785,7 +785,7 @@
                 "art": "OE",
                 "spieler1": "REGENFELDNER Rene",
                 "spieler2": "BRANDSTÄTTER Manuel",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
