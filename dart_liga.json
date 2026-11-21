@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:48:41Z",
+  "aktualisiert": "2026-11-21T19:50:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -374,6 +374,16 @@
         },
         {
           "rang": 24,
+          "spieler": "HOCHEGGER Martin",
+          "spiele": 9,
+          "siege": 4,
+          "niederlagen": 5,
+          "legs_plus": 12,
+          "legs_minus": 15,
+          "punkte": 12
+        },
+        {
+          "rang": 25,
           "spieler": "SCHECK Guenther",
           "spiele": 5,
           "siege": 5,
@@ -383,7 +393,7 @@
           "punkte": 11
         },
         {
-          "rang": 25,
+          "rang": 26,
           "spieler": "KREUZER Silvia",
           "spiele": 5,
           "siege": 3,
@@ -393,7 +403,7 @@
           "punkte": 11
         },
         {
-          "rang": 26,
+          "rang": 27,
           "spieler": "BRUNNER Jürgen",
           "spiele": 9,
           "siege": 2,
@@ -401,16 +411,6 @@
           "legs_plus": 11,
           "legs_minus": 21,
           "punkte": 11
-        },
-        {
-          "rang": 27,
-          "spieler": "HOCHEGGER Martin",
-          "spiele": 8,
-          "siege": 3,
-          "niederlagen": 5,
-          "legs_plus": 9,
-          "legs_minus": 14,
-          "punkte": 9
         },
         {
           "rang": 28,
@@ -504,6 +504,16 @@
         },
         {
           "rang": 37,
+          "spieler": "AMBROS Thomas",
+          "spiele": 7,
+          "siege": 0,
+          "niederlagen": 7,
+          "legs_plus": 6,
+          "legs_minus": 19,
+          "punkte": 6
+        },
+        {
+          "rang": 38,
           "spieler": "STÜCKLER Manuel",
           "spiele": 3,
           "siege": 1,
@@ -513,7 +523,7 @@
           "punkte": 5
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "POLZER Hannah",
           "spiele": 4,
           "siege": 2,
@@ -523,23 +533,13 @@
           "punkte": 5
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "BERCHTOLD Alex",
           "spiele": 4,
           "siege": 1,
           "niederlagen": 3,
           "legs_plus": 5,
           "legs_minus": 8,
-          "punkte": 5
-        },
-        {
-          "rang": 40,
-          "spieler": "AMBROS Thomas",
-          "spiele": 6,
-          "siege": 0,
-          "niederlagen": 6,
-          "legs_plus": 5,
-          "legs_minus": 16,
           "punkte": 5
         },
         {
@@ -777,7 +777,7 @@
             "datum": "2026-11-21",
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 0,
             "id": 109675,
             "paarungen": [
@@ -806,8 +806,8 @@
                 "art": "OE",
                 "spieler1": "HOCHEGGER Martin",
                 "spieler2": "AMBROS Thomas",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               }
             ]
           }
