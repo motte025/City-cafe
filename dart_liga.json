@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:55:35Z",
+  "aktualisiert": "2026-11-21T19:56:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -144,6 +144,26 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "RAINER Gerald",
+          "spiele": 14,
+          "siege": 12,
+          "niederlagen": 2,
+          "legs_plus": 33,
+          "legs_minus": 9,
+          "punkte": 33
+        },
+        {
+          "rang": 2,
+          "spieler": "KLEINHAPPEL Ernestine",
+          "spiele": 14,
+          "siege": 11,
+          "niederlagen": 3,
+          "legs_plus": 33,
+          "legs_minus": 15,
+          "punkte": 33
+        },
+        {
+          "rang": 3,
           "spieler": "DOUJAK Siegfried",
           "spiele": 12,
           "siege": 12,
@@ -153,33 +173,13 @@
           "punkte": 32
         },
         {
-          "rang": 2,
-          "spieler": "RAINER Gerald",
-          "spiele": 13,
-          "siege": 11,
-          "niederlagen": 2,
-          "legs_plus": 31,
-          "legs_minus": 9,
-          "punkte": 31
-        },
-        {
-          "rang": 3,
-          "spieler": "KLEINHAPPEL Ernestine",
-          "spiele": 13,
-          "siege": 10,
-          "niederlagen": 3,
-          "legs_plus": 31,
-          "legs_minus": 15,
-          "punkte": 31
-        },
-        {
           "rang": 4,
           "spieler": "HOPFGARTNER Joachim",
-          "spiele": 12,
+          "spiele": 13,
           "siege": 9,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 27,
-          "legs_minus": 18,
+          "legs_minus": 20,
           "punkte": 27
         },
         {
@@ -335,11 +335,11 @@
         {
           "rang": 20,
           "spieler": "FRIEßNEGGER Sarah",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 5,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 17,
-          "legs_minus": 12,
+          "legs_minus": 14,
           "punkte": 17
         },
         {
