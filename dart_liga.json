@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T21:45:34Z",
+  "aktualisiert": "2026-11-21T21:51:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1394,6 +1394,16 @@
         },
         {
           "rang": 18,
+          "spieler": "STÜCKLER Heidemarie",
+          "spiele": 13,
+          "siege": 6,
+          "niederlagen": 7,
+          "legs_plus": 17,
+          "legs_minus": 23,
+          "punkte": 17
+        },
+        {
+          "rang": 19,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 12,
           "siege": 4,
@@ -1403,7 +1413,7 @@
           "punkte": 17
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "SPANRING Andreas",
           "spiele": 8,
           "siege": 5,
@@ -1413,7 +1423,7 @@
           "punkte": 16
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "KRENN Klaus",
           "spiele": 9,
           "siege": 4,
@@ -1423,7 +1433,7 @@
           "punkte": 15
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "FRADL Ingemar",
           "spiele": 11,
           "siege": 5,
@@ -1433,7 +1443,7 @@
           "punkte": 15
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "ETTL Theresa",
           "spiele": 8,
           "siege": 5,
@@ -1443,17 +1453,17 @@
           "punkte": 14
         },
         {
-          "rang": 23,
-          "spieler": "STÜCKLER Heidemarie",
-          "spiele": 12,
-          "siege": 5,
-          "niederlagen": 7,
+          "rang": 24,
+          "spieler": "PAULITSCH Brigitte",
+          "spiele": 10,
+          "siege": 4,
+          "niederlagen": 6,
           "legs_plus": 14,
-          "legs_minus": 22,
+          "legs_minus": 19,
           "punkte": 14
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "PINTER Michele",
           "spiele": 10,
           "siege": 2,
@@ -1461,16 +1471,6 @@
           "legs_plus": 14,
           "legs_minus": 25,
           "punkte": 14
-        },
-        {
-          "rang": 25,
-          "spieler": "PAULITSCH Brigitte",
-          "spiele": 9,
-          "siege": 4,
-          "niederlagen": 5,
-          "legs_plus": 13,
-          "legs_minus": 16,
-          "punkte": 13
         },
         {
           "rang": 26,
@@ -1788,7 +1788,7 @@
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 3,
-            "erg_auswaerts": 4,
+            "erg_auswaerts": 5,
             "id": 109048,
             "paarungen": [
               {
@@ -1844,8 +1844,8 @@
                 "art": "DE",
                 "spieler1": "PAULITSCH Brigitte",
                 "spieler2": "STÜCKLER Heidemarie",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
