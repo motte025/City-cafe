@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T21:10:36Z",
+  "aktualisiert": "2026-11-21T21:13:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1033,11 +1033,11 @@
         {
           "rang": 1,
           "team": "DSZKärnten \"2er\"",
-          "spiele": 6,
-          "siege": 5,
+          "spiele": 7,
+          "siege": 6,
           "unentschieden": 1,
           "niederlagen": 0,
-          "punkte": 11
+          "punkte": 13
         },
         {
           "rang": 2,
@@ -1069,10 +1069,10 @@
         {
           "rang": 5,
           "team": "DC Drautal Dart Vipers",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 2,
           "unentschieden": 2,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "punkte": 6
         },
         {
@@ -1219,11 +1219,11 @@
         {
           "rang": 6,
           "spieler": "ANWALD Guenther",
-          "spiele": 14,
+          "spiele": 15,
           "siege": 7,
-          "niederlagen": 7,
+          "niederlagen": 8,
           "legs_plus": 25,
-          "legs_minus": 20,
+          "legs_minus": 23,
           "punkte": 25
         },
         {
@@ -1338,6 +1338,16 @@
         },
         {
           "rang": 18,
+          "spieler": "UNTERDORFER Heimo",
+          "spiele": 12,
+          "siege": 4,
+          "niederlagen": 8,
+          "legs_plus": 17,
+          "legs_minus": 24,
+          "punkte": 17
+        },
+        {
+          "rang": 19,
           "spieler": "SPANRING Andreas",
           "spiele": 8,
           "siege": 5,
@@ -1347,7 +1357,7 @@
           "punkte": 16
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "KRENN Klaus",
           "spiele": 9,
           "siege": 4,
@@ -1357,7 +1367,7 @@
           "punkte": 15
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "FRADL Ingemar",
           "spiele": 11,
           "siege": 5,
@@ -1367,7 +1377,7 @@
           "punkte": 15
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "ETTL Theresa",
           "spiele": 8,
           "siege": 5,
@@ -1377,23 +1387,13 @@
           "punkte": 14
         },
         {
-          "rang": 22,
+          "rang": 23,
           "spieler": "STÜCKLER Heidemarie",
           "spiele": 12,
           "siege": 5,
           "niederlagen": 7,
           "legs_plus": 14,
           "legs_minus": 22,
-          "punkte": 14
-        },
-        {
-          "rang": 23,
-          "spieler": "UNTERDORFER Heimo",
-          "spiele": 11,
-          "siege": 3,
-          "niederlagen": 8,
-          "legs_plus": 14,
-          "legs_minus": 24,
           "punkte": 14
         },
         {
@@ -1893,7 +1893,7 @@
             "datum": "2026-11-21",
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "DSZKärnten \"2er\"",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 7,
             "id": 109070,
             "paarungen": [
@@ -1964,7 +1964,7 @@
                 "art": "OE",
                 "spieler1": "UNTERDORFER Heimo",
                 "spieler2": "ANWALD Guenther",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
