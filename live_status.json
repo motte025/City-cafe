@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-21T02:02:45Z",
+  "checked_at": "2026-11-21T02:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "🌴GRAND THEFT AUDIO🌴JESSU FM",
       "game": "DJs"
     }
   ]
