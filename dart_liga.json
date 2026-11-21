@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T18:48:39Z",
+  "aktualisiert": "2026-11-21T18:51:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1055,7 +1055,7 @@
           "id": 109015
         },
         "6": {
-          "heim": 0,
+          "heim": 1,
           "auswaerts": 1,
           "id": 109059
         },
@@ -1448,6 +1448,16 @@
         },
         {
           "rang": 36,
+          "spieler": "PETSCHAR Phillip",
+          "spiele": 3,
+          "siege": 1,
+          "niederlagen": 2,
+          "legs_plus": 5,
+          "legs_minus": 5,
+          "punkte": 5
+        },
+        {
+          "rang": 37,
           "spieler": "RUS Kerstin",
           "spiele": 6,
           "siege": 1,
@@ -1457,17 +1467,17 @@
           "punkte": 5
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "POSCHINGER Franz",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 0,
-          "niederlagen": 8,
+          "niederlagen": 9,
           "legs_plus": 5,
-          "legs_minus": 20,
+          "legs_minus": 23,
           "punkte": 5
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "OSTRY Samantha-Lee",
           "spiele": 2,
           "siege": 1,
@@ -1477,7 +1487,7 @@
           "punkte": 4
         },
         {
-          "rang": 39,
+          "rang": 40,
           "spieler": "GREINIG Hubert",
           "spiele": 6,
           "siege": 0,
@@ -1487,7 +1497,7 @@
           "punkte": 4
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "HUDMAST Manuel",
           "spiele": 1,
           "siege": 1,
@@ -1497,7 +1507,7 @@
           "punkte": 3
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "SCHMID Thomas",
           "spiele": 3,
           "siege": 1,
@@ -1507,7 +1517,7 @@
           "punkte": 3
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "KÜHWEIDER Thomas",
           "spiele": 4,
           "siege": 0,
@@ -1515,16 +1525,6 @@
           "legs_plus": 3,
           "legs_minus": 11,
           "punkte": 3
-        },
-        {
-          "rang": 43,
-          "spieler": "PETSCHAR Phillip",
-          "spiele": 2,
-          "siege": 0,
-          "niederlagen": 2,
-          "legs_plus": 2,
-          "legs_minus": 5,
-          "punkte": 2
         },
         {
           "rang": 44,
@@ -1577,7 +1577,7 @@
       ],
       "letztes_spiel": {
         "runde": 6,
-        "heim": 0,
+        "heim": 1,
         "auswaerts": 1,
         "paarungen": [
           {
@@ -1591,7 +1591,7 @@
             "art": "HE",
             "spieler1": "PETSCHAR Phillip",
             "spieler2": "POSCHINGER Franz",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -1658,7 +1658,7 @@
             "datum": "2026-11-21",
             "heim": "DC O3tz 1.0",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 1,
             "id": 109059,
             "paarungen": [
@@ -1673,7 +1673,7 @@
                 "art": "HE",
                 "spieler1": "PETSCHAR Phillip",
                 "spieler2": "POSCHINGER Franz",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
