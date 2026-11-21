@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T21:20:34Z",
+  "aktualisiert": "2026-11-21T21:24:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -101,7 +101,7 @@
           "id": 109631
         },
         "6": {
-          "heim": 2,
+          "heim": 3,
           "auswaerts": 3,
           "id": 109664
         },
@@ -194,6 +194,16 @@
         },
         {
           "rang": 6,
+          "spieler": "JAHN Andreas",
+          "spiele": 14,
+          "siege": 8,
+          "niederlagen": 6,
+          "legs_plus": 27,
+          "legs_minus": 22,
+          "punkte": 27
+        },
+        {
+          "rang": 7,
           "spieler": "JAMMER Fabian",
           "spiele": 14,
           "siege": 9,
@@ -203,7 +213,7 @@
           "punkte": 27
         },
         {
-          "rang": 7,
+          "rang": 8,
           "spieler": "ELEZOSKI Serif",
           "spiele": 10,
           "siege": 8,
@@ -213,23 +223,13 @@
           "punkte": 26
         },
         {
-          "rang": 8,
+          "rang": 9,
           "spieler": "URANK Romeo",
           "spiele": 11,
           "siege": 8,
           "niederlagen": 3,
           "legs_plus": 25,
           "legs_minus": 14,
-          "punkte": 25
-        },
-        {
-          "rang": 9,
-          "spieler": "JAHN Andreas",
-          "spiele": 13,
-          "siege": 7,
-          "niederlagen": 6,
-          "legs_plus": 25,
-          "legs_minus": 21,
           "punkte": 25
         },
         {
@@ -434,6 +434,16 @@
         },
         {
           "rang": 30,
+          "spieler": "JAHN Herbert",
+          "spiele": 10,
+          "siege": 3,
+          "niederlagen": 7,
+          "legs_plus": 9,
+          "legs_minus": 21,
+          "punkte": 9
+        },
+        {
+          "rang": 31,
           "spieler": "KOGLER Sabine",
           "spiele": 7,
           "siege": 2,
@@ -443,7 +453,7 @@
           "punkte": 8
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "JESENKO Julia",
           "spiele": 4,
           "siege": 2,
@@ -453,23 +463,13 @@
           "punkte": 7
         },
         {
-          "rang": 32,
+          "rang": 33,
           "spieler": "SCHNEIDER Hermann",
           "spiele": 4,
           "siege": 1,
           "niederlagen": 3,
           "legs_plus": 7,
           "legs_minus": 9,
-          "punkte": 7
-        },
-        {
-          "rang": 33,
-          "spieler": "JAHN Herbert",
-          "spiele": 9,
-          "siege": 2,
-          "niederlagen": 7,
-          "legs_plus": 7,
-          "legs_minus": 20,
           "punkte": 7
         },
         {
@@ -494,6 +494,16 @@
         },
         {
           "rang": 36,
+          "spieler": "BERCHTOLD Alex",
+          "spiele": 5,
+          "siege": 1,
+          "niederlagen": 4,
+          "legs_plus": 6,
+          "legs_minus": 10,
+          "punkte": 6
+        },
+        {
+          "rang": 37,
           "spieler": "BRANDSTÄTTER Manuel",
           "spiele": 7,
           "siege": 2,
@@ -503,7 +513,7 @@
           "punkte": 6
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "AMBROS Thomas",
           "spiele": 8,
           "siege": 0,
@@ -513,23 +523,13 @@
           "punkte": 6
         },
         {
-          "rang": 38,
+          "rang": 39,
           "spieler": "STÜCKLER Manuel",
           "spiele": 3,
           "siege": 1,
           "niederlagen": 2,
           "legs_plus": 5,
           "legs_minus": 7,
-          "punkte": 5
-        },
-        {
-          "rang": 39,
-          "spieler": "BERCHTOLD Alex",
-          "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
-          "legs_plus": 5,
-          "legs_minus": 8,
           "punkte": 5
         },
         {
@@ -625,12 +625,12 @@
         {
           "rang": 49,
           "spieler": "HOBEL Walter",
-          "spiele": 4,
+          "spiele": 5,
           "siege": 0,
-          "niederlagen": 4,
-          "legs_plus": 0,
-          "legs_minus": 11,
-          "punkte": 0
+          "niederlagen": 5,
+          "legs_plus": 1,
+          "legs_minus": 13,
+          "punkte": 1
         }
       ],
       "kader": [
@@ -643,7 +643,7 @@
       ],
       "letztes_spiel": {
         "runde": 6,
-        "heim": 2,
+        "heim": 3,
         "auswaerts": 3,
         "paarungen": [
           {
@@ -685,8 +685,8 @@
             "art": "OD",
             "spieler1": "JAHN Herbert / JAHN Andreas",
             "spieler2": "BERCHTOLD Alex / HOBEL Walter",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 2,
+            "legs2": 1
           }
         ]
       },
@@ -780,7 +780,7 @@
             "datum": "2026-11-21",
             "heim": "City-Flyers \"Chaoten\"",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 2,
+            "erg_heim": 3,
             "erg_auswaerts": 3,
             "id": 109664,
             "paarungen": [
@@ -823,8 +823,8 @@
                 "art": "OD",
                 "spieler1": "JAHN Herbert / JAHN Andreas",
                 "spieler2": "BERCHTOLD Alex / HOBEL Walter",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 1
               }
             ]
           },
