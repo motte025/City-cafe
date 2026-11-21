@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T20:17:42Z",
+  "aktualisiert": "2026-11-21T20:24:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1098,7 +1098,7 @@
         },
         "6": {
           "heim": 2,
-          "auswaerts": 2,
+          "auswaerts": 3,
           "id": 109059
         },
         "7": {
@@ -1401,15 +1401,25 @@
         {
           "rang": 27,
           "spieler": "GREINIG Petra",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 1,
-          "niederlagen": 6,
+          "niederlagen": 7,
           "legs_plus": 12,
-          "legs_minus": 19,
+          "legs_minus": 21,
           "punkte": 12
         },
         {
           "rang": 28,
+          "spieler": "FRÜSTÜCK Kerstin",
+          "spiele": 13,
+          "siege": 2,
+          "niederlagen": 11,
+          "legs_plus": 12,
+          "legs_minus": 29,
+          "punkte": 12
+        },
+        {
+          "rang": 29,
           "spieler": "MARKTL (J) Maximilian",
           "spiele": 6,
           "siege": 2,
@@ -1419,7 +1429,7 @@
           "punkte": 11
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "STEINER Lydia",
           "spiele": 9,
           "siege": 4,
@@ -1429,23 +1439,13 @@
           "punkte": 11
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 6,
           "siege": 3,
           "niederlagen": 3,
           "legs_plus": 10,
           "legs_minus": 12,
-          "punkte": 10
-        },
-        {
-          "rang": 31,
-          "spieler": "FRÜSTÜCK Kerstin",
-          "spiele": 12,
-          "siege": 1,
-          "niederlagen": 11,
-          "legs_plus": 10,
-          "legs_minus": 29,
           "punkte": 10
         },
         {
@@ -1480,6 +1480,16 @@
         },
         {
           "rang": 35,
+          "spieler": "POSCHINGER Franz",
+          "spiele": 10,
+          "siege": 1,
+          "niederlagen": 9,
+          "legs_plus": 7,
+          "legs_minus": 23,
+          "punkte": 7
+        },
+        {
+          "rang": 36,
           "spieler": "BRUNNER Katharina",
           "spiele": 6,
           "siege": 2,
@@ -1489,33 +1499,23 @@
           "punkte": 6
         },
         {
-          "rang": 36,
+          "rang": 37,
           "spieler": "PETSCHAR Phillip",
-          "spiele": 3,
+          "spiele": 4,
           "siege": 1,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 5,
-          "legs_minus": 5,
+          "legs_minus": 7,
           "punkte": 5
         },
         {
-          "rang": 37,
+          "rang": 38,
           "spieler": "RUS Kerstin",
           "spiele": 6,
           "siege": 1,
           "niederlagen": 5,
           "legs_plus": 5,
           "legs_minus": 13,
-          "punkte": 5
-        },
-        {
-          "rang": 38,
-          "spieler": "POSCHINGER Franz",
-          "spiele": 9,
-          "siege": 0,
-          "niederlagen": 9,
-          "legs_plus": 5,
-          "legs_minus": 23,
           "punkte": 5
         },
         {
@@ -1620,7 +1620,7 @@
       "letztes_spiel": {
         "runde": 6,
         "heim": 2,
-        "auswaerts": 2,
+        "auswaerts": 3,
         "paarungen": [
           {
             "art": "DE",
@@ -1655,7 +1655,7 @@
             "spieler1": "PETSCHAR Phillip / GREINIG Petra",
             "spieler2": "POSCHINGER Franz / FRÜSTÜCK Kerstin",
             "legs1": 0,
-            "legs2": 0
+            "legs2": 2
           },
           {
             "art": "OD",
@@ -1729,7 +1729,7 @@
             "heim": "DC O3tz 1.0",
             "auswaerts": "City-Flyers \"Fraggles\"",
             "erg_heim": 2,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 109059,
             "paarungen": [
               {
@@ -1765,7 +1765,7 @@
                 "spieler1": "PETSCHAR Phillip / GREINIG Petra",
                 "spieler2": "POSCHINGER Franz / FRÜSTÜCK Kerstin",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               },
               {
                 "art": "OD",
