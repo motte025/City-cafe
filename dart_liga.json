@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:09:37Z",
+  "aktualisiert": "2026-11-21T19:10:03Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -284,16 +284,6 @@
         },
         {
           "rang": 15,
-          "spieler": "ASPRIAN Johann",
-          "spiele": 9,
-          "siege": 6,
-          "niederlagen": 3,
-          "legs_plus": 20,
-          "legs_minus": 14,
-          "punkte": 20
-        },
-        {
-          "rang": 16,
           "spieler": "KERNSTOCK Michael",
           "spiele": 10,
           "siege": 6,
@@ -303,7 +293,7 @@
           "punkte": 19
         },
         {
-          "rang": 17,
+          "rang": 16,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
@@ -313,7 +303,7 @@
           "punkte": 19
         },
         {
-          "rang": 18,
+          "rang": 17,
           "spieler": "KOLLER Elias",
           "spiele": 12,
           "siege": 6,
@@ -321,6 +311,16 @@
           "legs_plus": 18,
           "legs_minus": 20,
           "punkte": 18
+        },
+        {
+          "rang": 18,
+          "spieler": "ASPRIAN Johann",
+          "spiele": 8,
+          "siege": 5,
+          "niederlagen": 3,
+          "legs_plus": 17,
+          "legs_minus": 12,
+          "punkte": 17
         },
         {
           "rang": 19,
@@ -355,12 +355,12 @@
         {
           "rang": 22,
           "spieler": "SATZ Klemens",
-          "spiele": 7,
+          "spiele": 6,
           "siege": 3,
-          "niederlagen": 4,
-          "legs_plus": 15,
-          "legs_minus": 13,
-          "punkte": 15
+          "niederlagen": 3,
+          "legs_plus": 13,
+          "legs_minus": 10,
+          "punkte": 13
         },
         {
           "rang": 23,
