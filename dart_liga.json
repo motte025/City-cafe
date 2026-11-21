@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:36:39Z",
+  "aktualisiert": "2026-11-21T19:43:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -102,7 +102,7 @@
         },
         "6": {
           "heim": 1,
-          "auswaerts": 1,
+          "auswaerts": 2,
           "id": 109664
         },
         "7": {
@@ -465,11 +465,11 @@
         {
           "rang": 33,
           "spieler": "JAHN Herbert",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 2,
-          "niederlagen": 6,
+          "niederlagen": 7,
           "legs_plus": 7,
-          "legs_minus": 17,
+          "legs_minus": 20,
           "punkte": 7
         },
         {
@@ -524,6 +524,16 @@
         },
         {
           "rang": 39,
+          "spieler": "BERCHTOLD Alex",
+          "spiele": 4,
+          "siege": 1,
+          "niederlagen": 3,
+          "legs_plus": 5,
+          "legs_minus": 8,
+          "punkte": 5
+        },
+        {
+          "rang": 40,
           "spieler": "AMBROS Thomas",
           "spiele": 6,
           "siege": 0,
@@ -533,7 +543,7 @@
           "punkte": 5
         },
         {
-          "rang": 40,
+          "rang": 41,
           "spieler": "SCHADER Andreas",
           "spiele": 3,
           "siege": 1,
@@ -543,7 +553,7 @@
           "punkte": 4
         },
         {
-          "rang": 41,
+          "rang": 42,
           "spieler": "KREUZER Hanna",
           "spiele": 2,
           "siege": 1,
@@ -553,7 +563,7 @@
           "punkte": 3
         },
         {
-          "rang": 42,
+          "rang": 43,
           "spieler": "ROSSMANN Christoph",
           "spiele": 3,
           "siege": 0,
@@ -563,7 +573,7 @@
           "punkte": 3
         },
         {
-          "rang": 43,
+          "rang": 44,
           "spieler": "SIMONITSCH Christopher",
           "spiele": 4,
           "siege": 0,
@@ -573,23 +583,13 @@
           "punkte": 3
         },
         {
-          "rang": 44,
+          "rang": 45,
           "spieler": "SCHERWITZEL Manuel",
           "spiele": 3,
           "siege": 1,
           "niederlagen": 2,
           "legs_plus": 2,
           "legs_minus": 6,
-          "punkte": 2
-        },
-        {
-          "rang": 45,
-          "spieler": "BERCHTOLD Alex",
-          "spiele": 3,
-          "siege": 0,
-          "niederlagen": 3,
-          "legs_plus": 2,
-          "legs_minus": 8,
           "punkte": 2
         },
         {
@@ -644,7 +644,7 @@
       "letztes_spiel": {
         "runde": 6,
         "heim": 1,
-        "auswaerts": 1,
+        "auswaerts": 2,
         "paarungen": [
           {
             "art": "DE",
@@ -665,7 +665,7 @@
             "spieler1": "JAHN Herbert",
             "spieler2": "BERCHTOLD Alex",
             "legs1": 0,
-            "legs2": 0
+            "legs2": 3
           },
           {
             "art": "OE",
@@ -739,7 +739,7 @@
             "heim": "City-Flyers \"Chaoten\"",
             "auswaerts": "DC Cafe Seven",
             "erg_heim": 1,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109664,
             "paarungen": [
               {
@@ -761,7 +761,7 @@
                 "spieler1": "JAHN Herbert",
                 "spieler2": "BERCHTOLD Alex",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "OE",
