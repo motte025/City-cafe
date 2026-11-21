@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T18:20:37Z",
+  "aktualisiert": "2026-11-21T18:31:39Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1339,11 +1339,11 @@
         {
           "rang": 25,
           "spieler": "STÜCKLER Heidemarie",
-          "spiele": 10,
+          "spiele": 11,
           "siege": 4,
-          "niederlagen": 6,
+          "niederlagen": 7,
           "legs_plus": 12,
-          "legs_minus": 19,
+          "legs_minus": 22,
           "punkte": 12
         },
         {
@@ -1358,6 +1358,16 @@
         },
         {
           "rang": 27,
+          "spieler": "STEINER Lydia",
+          "spiele": 9,
+          "siege": 4,
+          "niederlagen": 5,
+          "legs_plus": 11,
+          "legs_minus": 19,
+          "punkte": 11
+        },
+        {
+          "rang": 28,
           "spieler": "PINTER Michele",
           "spiele": 9,
           "siege": 1,
@@ -1367,7 +1377,7 @@
           "punkte": 11
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "WILTSCHNIG Gernot",
           "spiele": 6,
           "siege": 3,
@@ -1377,7 +1387,7 @@
           "punkte": 10
         },
         {
-          "rang": 29,
+          "rang": 30,
           "spieler": "GREINIG Petra",
           "spiele": 6,
           "siege": 1,
@@ -1387,7 +1397,7 @@
           "punkte": 10
         },
         {
-          "rang": 30,
+          "rang": 31,
           "spieler": "FRÜSTÜCK Kerstin",
           "spiele": 12,
           "siege": 1,
@@ -1397,23 +1407,13 @@
           "punkte": 10
         },
         {
-          "rang": 31,
+          "rang": 32,
           "spieler": "GUN Conny",
           "spiele": 3,
           "siege": 3,
           "niederlagen": 0,
           "legs_plus": 8,
           "legs_minus": 1,
-          "punkte": 8
-        },
-        {
-          "rang": 32,
-          "spieler": "STEINER Lydia",
-          "spiele": 8,
-          "siege": 3,
-          "niederlagen": 5,
-          "legs_plus": 8,
-          "legs_minus": 19,
           "punkte": 8
         },
         {
@@ -1538,7 +1538,7 @@
         },
         {
           "rang": 45,
-          "spieler": "WHYMAN Christian",
+          "spieler": "OBERLERCHNER Melanie",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1548,7 +1548,7 @@
         },
         {
           "rang": 46,
-          "spieler": "OBERLERCHNER Melanie",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1661,7 +1661,7 @@
             "datum": "2026-11-21",
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "ESV DC Inferno",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 0,
             "id": 109048,
             "paarungen": [
@@ -1669,7 +1669,7 @@
                 "art": "DE",
                 "spieler1": "STEINER Lydia",
                 "spieler2": "STÜCKLER Heidemarie",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
