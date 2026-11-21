@@ -1,18 +1,25 @@
 {
-  "checked_at": "2026-11-21T08:02:47Z",
+  "checked_at": "2026-11-21T08:12:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ YOUR FAV WEEKEND STARTER ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Community Show mit @ericssl und @technoliebenundlebentv",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
