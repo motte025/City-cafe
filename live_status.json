@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-21T21:57:45Z",
+  "checked_at": "2026-11-21T22:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "WANTED: 160 BPM 💀🔫 🔴 NEW !RELEASE  🔴 ☆ !naturtreu 🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
@@ -27,13 +27,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
