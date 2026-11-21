@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T20:50:40Z",
+  "aktualisiert": "2026-11-21T20:53:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1171,12 +1171,12 @@
         {
           "rang": 4,
           "spieler": "OBERZAN Lukas",
-          "spiele": 13,
+          "spiele": 14,
           "siege": 10,
-          "niederlagen": 3,
-          "legs_plus": 28,
-          "legs_minus": 13,
-          "punkte": 28
+          "niederlagen": 4,
+          "legs_plus": 29,
+          "legs_minus": 15,
+          "punkte": 29
         },
         {
           "rang": 5,
@@ -1250,6 +1250,16 @@
         },
         {
           "rang": 12,
+          "spieler": "LANG Melanie",
+          "spiele": 12,
+          "siege": 6,
+          "niederlagen": 6,
+          "legs_plus": 20,
+          "legs_minus": 21,
+          "punkte": 20
+        },
+        {
+          "rang": 13,
           "spieler": "WIMMER Leon",
           "spiele": 8,
           "siege": 7,
@@ -1259,43 +1269,33 @@
           "punkte": 19
         },
         {
-          "rang": 13,
-          "spieler": "LANG Melanie",
-          "spiele": 11,
-          "siege": 5,
-          "niederlagen": 6,
-          "legs_plus": 18,
-          "legs_minus": 20,
-          "punkte": 18
-        },
-        {
           "rang": 14,
-          "spieler": "GRAF Franz",
-          "spiele": 9,
-          "siege": 6,
-          "niederlagen": 3,
-          "legs_plus": 17,
-          "legs_minus": 9,
-          "punkte": 17
+          "spieler": "SCHMALNAUER Daniel",
+          "spiele": 11,
+          "siege": 7,
+          "niederlagen": 4,
+          "legs_plus": 19,
+          "legs_minus": 17,
+          "punkte": 19
         },
         {
           "rang": 15,
+          "spieler": "GRAF Franz",
+          "spiele": 10,
+          "siege": 6,
+          "niederlagen": 4,
+          "legs_plus": 18,
+          "legs_minus": 11,
+          "punkte": 18
+        },
+        {
+          "rang": 16,
           "spieler": "DANIEL Utta",
           "spiele": 9,
           "siege": 5,
           "niederlagen": 4,
           "legs_plus": 17,
           "legs_minus": 14,
-          "punkte": 17
-        },
-        {
-          "rang": 16,
-          "spieler": "SCHMALNAUER Daniel",
-          "spiele": 10,
-          "siege": 6,
-          "niederlagen": 4,
-          "legs_plus": 17,
-          "legs_minus": 16,
           "punkte": 17
         },
         {
@@ -1676,7 +1676,7 @@
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "ESV DC Inferno",
             "erg_heim": 3,
-            "erg_auswaerts": 2,
+            "erg_auswaerts": 3,
             "id": 109048,
             "paarungen": [
               {
@@ -1718,8 +1718,8 @@
                 "art": "OD",
                 "spieler1": "OBERZAN Lukas / GRAF Franz",
                 "spieler2": "LANG Melanie / SCHMALNAUER Daniel",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 2
               }
             ]
           },
