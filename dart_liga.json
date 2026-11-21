@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:56:35Z",
+  "aktualisiert": "2026-11-21T19:57:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -808,6 +808,20 @@
                 "spieler2": "AMBROS Thomas",
                 "legs1": 3,
                 "legs2": 1
+              },
+              {
+                "art": "MD",
+                "spieler1": "HOCHEGGER Andrea / HOCHEGGER Martin",
+                "spieler2": "APOVNIK Gabriele / FELLNER Johann",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OD",
+                "spieler1": "REGENFELDNER Rene / ASPRIAN Johann",
+                "spieler2": "AMBROS Thomas / BRANDSTÄTTER Manuel",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           }
