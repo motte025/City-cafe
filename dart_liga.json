@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T21:03:41Z",
+  "aktualisiert": "2026-11-21T21:06:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -174,6 +174,16 @@
         },
         {
           "rang": 4,
+          "spieler": "REGENFELDNER Rene",
+          "spiele": 11,
+          "siege": 10,
+          "niederlagen": 1,
+          "legs_plus": 27,
+          "legs_minus": 7,
+          "punkte": 27
+        },
+        {
+          "rang": 5,
           "spieler": "HOPFGARTNER Joachim",
           "spiele": 13,
           "siege": 9,
@@ -183,7 +193,7 @@
           "punkte": 27
         },
         {
-          "rang": 5,
+          "rang": 6,
           "spieler": "JAMMER Fabian",
           "spiele": 14,
           "siege": 9,
@@ -191,16 +201,6 @@
           "legs_plus": 27,
           "legs_minus": 24,
           "punkte": 27
-        },
-        {
-          "rang": 6,
-          "spieler": "REGENFELDNER Rene",
-          "spiele": 10,
-          "siege": 9,
-          "niederlagen": 1,
-          "legs_plus": 25,
-          "legs_minus": 7,
-          "punkte": 25
         },
         {
           "rang": 7,
@@ -254,6 +254,16 @@
         },
         {
           "rang": 12,
+          "spieler": "ASPRIAN Johann",
+          "spiele": 10,
+          "siege": 7,
+          "niederlagen": 3,
+          "legs_plus": 22,
+          "legs_minus": 14,
+          "punkte": 22
+        },
+        {
+          "rang": 13,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 14,
           "siege": 6,
@@ -263,7 +273,7 @@
           "punkte": 22
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 10,
           "siege": 6,
@@ -273,7 +283,7 @@
           "punkte": 21
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "JAHN Corinna",
           "spiele": 10,
           "siege": 5,
@@ -283,7 +293,7 @@
           "punkte": 21
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "FELLNER Johann",
           "spiele": 11,
           "siege": 6,
@@ -293,7 +303,7 @@
           "punkte": 21
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "BERGLER Benjamin",
           "spiele": 12,
           "siege": 6,
@@ -301,16 +311,6 @@
           "legs_plus": 21,
           "legs_minus": 22,
           "punkte": 21
-        },
-        {
-          "rang": 17,
-          "spieler": "ASPRIAN Johann",
-          "spiele": 9,
-          "siege": 6,
-          "niederlagen": 3,
-          "legs_plus": 20,
-          "legs_minus": 14,
-          "punkte": 20
         },
         {
           "rang": 18,
@@ -495,21 +495,21 @@
         {
           "rang": 36,
           "spieler": "BRANDSTÄTTER Manuel",
-          "spiele": 6,
+          "spiele": 7,
           "siege": 2,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 6,
-          "legs_minus": 13,
+          "legs_minus": 15,
           "punkte": 6
         },
         {
           "rang": 37,
           "spieler": "AMBROS Thomas",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 0,
-          "niederlagen": 7,
+          "niederlagen": 8,
           "legs_plus": 6,
-          "legs_minus": 19,
+          "legs_minus": 21,
           "punkte": 6
         },
         {
@@ -833,7 +833,7 @@
             "datum": "2026-11-21",
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 1,
             "id": 109675,
             "paarungen": [
@@ -876,7 +876,7 @@
                 "art": "OD",
                 "spieler1": "REGENFELDNER Rene / ASPRIAN Johann",
                 "spieler2": "AMBROS Thomas / BRANDSTÄTTER Manuel",
-                "legs1": 0,
+                "legs1": 2,
                 "legs2": 0
               }
             ]
@@ -1580,7 +1580,7 @@
         },
         {
           "rang": 45,
-          "spieler": "OBERLERCHNER Melanie",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1590,7 +1590,7 @@
         },
         {
           "rang": 46,
-          "spieler": "WHYMAN Christian",
+          "spieler": "OBERLERCHNER Melanie",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
