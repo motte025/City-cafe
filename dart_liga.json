@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T20:16:38Z",
+  "aktualisiert": "2026-11-21T20:17:42Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -743,6 +743,34 @@
                 "spieler1": "SCHECK Guenther / DOUJAK Siegfried",
                 "spieler2": "KERNSTOCK Michael / FRIEßNEGGER Manuela",
                 "legs1": 2,
+                "legs2": 0
+              },
+              {
+                "art": "HE",
+                "spieler1": "DOUJAK Siegfried",
+                "spieler2": "KERNSTOCK Michael",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "KLEINHAPPEL Ernestine",
+                "spieler2": "FRIEßNEGGER Manuela",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "ELEZOSKI Serif",
+                "spieler2": "HOPFGARTNER Joachim",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "RAINER Gerald",
+                "spieler2": "FRIEßNEGGER Sarah",
+                "legs1": 0,
                 "legs2": 0
               }
             ]
