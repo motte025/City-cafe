@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:46:37Z",
+  "aktualisiert": "2026-11-21T19:48:41Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1028,7 +1028,7 @@
         },
         "6": {
           "heim": 2,
-          "auswaerts": 1,
+          "auswaerts": 2,
           "id": 109059
         },
         "7": {
@@ -1150,6 +1150,16 @@
         },
         {
           "rang": 9,
+          "spieler": "STINGLER Engelbert",
+          "spiele": 13,
+          "siege": 6,
+          "niederlagen": 7,
+          "legs_plus": 23,
+          "legs_minus": 25,
+          "punkte": 23
+        },
+        {
+          "rang": 10,
           "spieler": "GÖSCHL Mario",
           "spiele": 13,
           "siege": 8,
@@ -1157,16 +1167,6 @@
           "legs_plus": 22,
           "legs_minus": 21,
           "punkte": 22
-        },
-        {
-          "rang": 10,
-          "spieler": "STINGLER Engelbert",
-          "spiele": 12,
-          "siege": 6,
-          "niederlagen": 6,
-          "legs_plus": 21,
-          "legs_minus": 22,
-          "punkte": 21
         },
         {
           "rang": 11,
@@ -1230,6 +1230,16 @@
         },
         {
           "rang": 17,
+          "spieler": "SONNBERGER Harald",
+          "spiele": 13,
+          "siege": 4,
+          "niederlagen": 9,
+          "legs_plus": 17,
+          "legs_minus": 29,
+          "punkte": 17
+        },
+        {
+          "rang": 18,
           "spieler": "SPANRING Andreas",
           "spiele": 7,
           "siege": 5,
@@ -1239,7 +1249,7 @@
           "punkte": 15
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "FRADL Ingemar",
           "spiele": 11,
           "siege": 5,
@@ -1249,7 +1259,7 @@
           "punkte": 15
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "ETTL Theresa",
           "spiele": 8,
           "siege": 5,
@@ -1259,7 +1269,7 @@
           "punkte": 14
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 10,
           "siege": 3,
@@ -1269,23 +1279,13 @@
           "punkte": 14
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "PINTER Michele",
           "spiele": 10,
           "siege": 2,
           "niederlagen": 8,
           "legs_plus": 14,
           "legs_minus": 25,
-          "punkte": 14
-        },
-        {
-          "rang": 22,
-          "spieler": "SONNBERGER Harald",
-          "spiele": 12,
-          "siege": 3,
-          "niederlagen": 9,
-          "legs_plus": 14,
-          "legs_minus": 27,
           "punkte": 14
         },
         {
@@ -1550,7 +1550,7 @@
       "letztes_spiel": {
         "runde": 6,
         "heim": 2,
-        "auswaerts": 1,
+        "auswaerts": 2,
         "paarungen": [
           {
             "art": "DE",
@@ -1577,8 +1577,8 @@
             "art": "OE",
             "spieler1": "STINGLER Engelbert",
             "spieler2": "SONNBERGER Harald",
-            "legs1": 0,
-            "legs2": 0
+            "legs1": 2,
+            "legs2": 3
           }
         ]
       },
@@ -1645,7 +1645,7 @@
             "heim": "DC O3tz 1.0",
             "auswaerts": "City-Flyers \"Fraggles\"",
             "erg_heim": 2,
-            "erg_auswaerts": 1,
+            "erg_auswaerts": 2,
             "id": 109059,
             "paarungen": [
               {
@@ -1673,8 +1673,8 @@
                 "art": "OE",
                 "spieler1": "STINGLER Engelbert",
                 "spieler2": "SONNBERGER Harald",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               }
             ]
           },
