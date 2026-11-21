@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T22:20:38Z",
+  "aktualisiert": "2026-11-21T22:26:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1255,12 +1255,12 @@
         {
           "rang": 4,
           "spieler": "OBERZAN Lukas",
-          "spiele": 14,
-          "siege": 10,
+          "spiele": 15,
+          "siege": 11,
           "niederlagen": 4,
-          "legs_plus": 29,
-          "legs_minus": 15,
-          "punkte": 29
+          "legs_plus": 32,
+          "legs_minus": 17,
+          "punkte": 32
         },
         {
           "rang": 5,
@@ -1324,22 +1324,22 @@
         },
         {
           "rang": 11,
+          "spieler": "LANG Melanie",
+          "spiele": 13,
+          "siege": 6,
+          "niederlagen": 7,
+          "legs_plus": 22,
+          "legs_minus": 24,
+          "punkte": 22
+        },
+        {
+          "rang": 12,
           "spieler": "MARKTL Werner",
           "spiele": 11,
           "siege": 7,
           "niederlagen": 4,
           "legs_plus": 20,
           "legs_minus": 15,
-          "punkte": 20
-        },
-        {
-          "rang": 12,
-          "spieler": "LANG Melanie",
-          "spiele": 12,
-          "siege": 6,
-          "niederlagen": 6,
-          "legs_plus": 20,
-          "legs_minus": 21,
           "punkte": 20
         },
         {
@@ -1787,7 +1787,7 @@
             "datum": "2026-11-21",
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "ESV DC Inferno",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 5,
             "id": 109048,
             "paarungen": [
@@ -1851,8 +1851,8 @@
                 "art": "OE",
                 "spieler1": "OBERZAN Lukas",
                 "spieler2": "LANG Melanie",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 2
               },
               {
                 "art": "OE",
