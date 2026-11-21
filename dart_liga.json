@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:10:45Z",
+  "aktualisiert": "2026-11-21T19:14:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1013,7 +1013,7 @@
           "id": 109015
         },
         "6": {
-          "heim": 1,
+          "heim": 2,
           "auswaerts": 1,
           "id": 109059
         },
@@ -1206,6 +1206,16 @@
         },
         {
           "rang": 16,
+          "spieler": "SPANRING Andreas",
+          "spiele": 7,
+          "siege": 5,
+          "niederlagen": 2,
+          "legs_plus": 15,
+          "legs_minus": 12,
+          "punkte": 15
+        },
+        {
+          "rang": 17,
           "spieler": "FRADL Ingemar",
           "spiele": 11,
           "siege": 5,
@@ -1215,7 +1225,7 @@
           "punkte": 15
         },
         {
-          "rang": 17,
+          "rang": 18,
           "spieler": "LANG Melanie",
           "spiele": 10,
           "siege": 4,
@@ -1225,7 +1235,7 @@
           "punkte": 15
         },
         {
-          "rang": 18,
+          "rang": 19,
           "spieler": "ETTL Theresa",
           "spiele": 8,
           "siege": 5,
@@ -1235,7 +1245,7 @@
           "punkte": 14
         },
         {
-          "rang": 19,
+          "rang": 20,
           "spieler": "UNTERDORFER Heimo",
           "spiele": 10,
           "siege": 3,
@@ -1245,7 +1255,7 @@
           "punkte": 14
         },
         {
-          "rang": 20,
+          "rang": 21,
           "spieler": "PINTER Michele",
           "spiele": 10,
           "siege": 2,
@@ -1255,7 +1265,7 @@
           "punkte": 14
         },
         {
-          "rang": 21,
+          "rang": 22,
           "spieler": "SONNBERGER Harald",
           "spiele": 12,
           "siege": 3,
@@ -1263,16 +1273,6 @@
           "legs_plus": 14,
           "legs_minus": 27,
           "punkte": 14
-        },
-        {
-          "rang": 22,
-          "spieler": "KRENN Klaus",
-          "spiele": 7,
-          "siege": 3,
-          "niederlagen": 4,
-          "legs_plus": 13,
-          "legs_minus": 13,
-          "punkte": 13
         },
         {
           "rang": 23,
@@ -1286,22 +1286,22 @@
         },
         {
           "rang": 24,
+          "spieler": "KRENN Klaus",
+          "spiele": 8,
+          "siege": 3,
+          "niederlagen": 5,
+          "legs_plus": 13,
+          "legs_minus": 16,
+          "punkte": 13
+        },
+        {
+          "rang": 25,
           "spieler": "REIF Daniel-Stefan",
           "spiele": 5,
           "siege": 4,
           "niederlagen": 1,
           "legs_plus": 12,
           "legs_minus": 6,
-          "punkte": 12
-        },
-        {
-          "rang": 25,
-          "spieler": "SPANRING Andreas",
-          "spiele": 6,
-          "siege": 4,
-          "niederlagen": 2,
-          "legs_plus": 12,
-          "legs_minus": 12,
           "punkte": 12
         },
         {
@@ -1535,7 +1535,7 @@
       ],
       "letztes_spiel": {
         "runde": 6,
-        "heim": 1,
+        "heim": 2,
         "auswaerts": 1,
         "paarungen": [
           {
@@ -1556,7 +1556,7 @@
             "art": "OE",
             "spieler1": "SPANRING Andreas",
             "spieler2": "KRENN Klaus",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           },
           {
@@ -1616,7 +1616,7 @@
             "datum": "2026-11-21",
             "heim": "DC O3tz 1.0",
             "auswaerts": "City-Flyers \"Fraggles\"",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 1,
             "id": 109059,
             "paarungen": [
@@ -1638,7 +1638,7 @@
                 "art": "OE",
                 "spieler1": "SPANRING Andreas",
                 "spieler2": "KRENN Klaus",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
