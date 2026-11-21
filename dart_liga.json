@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T21:31:34Z",
+  "aktualisiert": "2026-11-21T21:32:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -355,31 +355,31 @@
         {
           "rang": 22,
           "spieler": "SATZ Klemens",
-          "spiele": 7,
+          "spiele": 8,
           "siege": 3,
-          "niederlagen": 4,
-          "legs_plus": 15,
-          "legs_minus": 13,
-          "punkte": 15
+          "niederlagen": 5,
+          "legs_plus": 16,
+          "legs_minus": 16,
+          "punkte": 16
         },
         {
           "rang": 23,
+          "spieler": "HOCHEGGER Martin",
+          "spiele": 11,
+          "siege": 5,
+          "niederlagen": 6,
+          "legs_plus": 16,
+          "legs_minus": 18,
+          "punkte": 16
+        },
+        {
+          "rang": 24,
           "spieler": "SCHECK Guenther",
           "spiele": 6,
           "siege": 6,
           "niederlagen": 0,
           "legs_plus": 13,
           "legs_minus": 2,
-          "punkte": 13
-        },
-        {
-          "rang": 24,
-          "spieler": "HOCHEGGER Martin",
-          "spiele": 10,
-          "siege": 4,
-          "niederlagen": 6,
-          "legs_plus": 13,
-          "legs_minus": 17,
           "punkte": 13
         },
         {
@@ -889,7 +889,7 @@
             "datum": "2026-11-21",
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 5,
+            "erg_heim": 6,
             "erg_auswaerts": 1,
             "id": 109675,
             "paarungen": [
@@ -939,8 +939,8 @@
                 "art": "HE",
                 "spieler1": "HOCHEGGER Martin",
                 "spieler2": "SATZ Klemens",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "DE",
