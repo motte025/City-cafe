@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-21T18:47:47Z",
+  "checked_at": "2026-11-21T19:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Schlager & Party - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ganz normaler Samstag? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
