@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-21T14:27:46Z",
+  "checked_at": "2026-11-21T14:32:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Saturday <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, ACID, Schranz und so | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Saturday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -27,6 +27,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
