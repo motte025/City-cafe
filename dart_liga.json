@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T20:49:36Z",
+  "aktualisiert": "2026-11-21T20:50:40Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1161,12 +1161,12 @@
         {
           "rang": 3,
           "spieler": "WIESER (J) David",
-          "spiele": 14,
-          "siege": 11,
+          "spiele": 15,
+          "siege": 12,
           "niederlagen": 3,
-          "legs_plus": 31,
+          "legs_plus": 34,
           "legs_minus": 12,
-          "punkte": 31
+          "punkte": 34
         },
         {
           "rang": 4,
@@ -1561,11 +1561,11 @@
         {
           "rang": 43,
           "spieler": "KÜHWEIDER Thomas",
-          "spiele": 5,
+          "spiele": 6,
           "siege": 0,
-          "niederlagen": 5,
+          "niederlagen": 6,
           "legs_plus": 3,
-          "legs_minus": 13,
+          "legs_minus": 16,
           "punkte": 3
         },
         {
@@ -1782,7 +1782,7 @@
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 2,
-            "erg_auswaerts": 6,
+            "erg_auswaerts": 7,
             "id": 109070,
             "paarungen": [
               {
@@ -1846,7 +1846,7 @@
                 "spieler1": "KÜHWEIDER Thomas",
                 "spieler2": "WIESER (J) David",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "OE",
