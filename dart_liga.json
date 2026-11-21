@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-14T12:09:34Z",
+  "aktualisiert": "2026-11-21T17:30:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -718,7 +718,42 @@
           }
         ]
       },
-      "spieltag": null,
+      "spieltag": {
+        "datum": "2026-11-21",
+        "runde": 6,
+        "spiele": [
+          {
+            "runde": 6,
+            "datum": "2026-11-21",
+            "heim": "Askö DC Sonne 2",
+            "auswaerts": "DC Schwarzer Kater",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109653,
+            "paarungen": []
+          },
+          {
+            "runde": 6,
+            "datum": "2026-11-21",
+            "heim": "City-Flyers \"Chaoten\"",
+            "auswaerts": "DC Cafe Seven",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109664,
+            "paarungen": []
+          },
+          {
+            "runde": 6,
+            "datum": "2026-11-21",
+            "heim": "PBC DC Skorpions Reichenfels",
+            "auswaerts": "Dart Fuchs 4",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109675,
+            "paarungen": []
+          }
+        ]
+      },
       "spielplan": [
         {
           "runde": 1,
@@ -1530,7 +1565,42 @@
           }
         ]
       },
-      "spieltag": null,
+      "spieltag": {
+        "datum": "2026-11-21",
+        "runde": 6,
+        "spiele": [
+          {
+            "runde": 6,
+            "datum": "2026-11-21",
+            "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
+            "auswaerts": "ESV DC Inferno",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109048,
+            "paarungen": []
+          },
+          {
+            "runde": 6,
+            "datum": "2026-11-21",
+            "heim": "DC O3tz 1.0",
+            "auswaerts": "City-Flyers \"Fraggles\"",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109059,
+            "paarungen": []
+          },
+          {
+            "runde": 6,
+            "datum": "2026-11-21",
+            "heim": "DC Drautal Dart Vipers",
+            "auswaerts": "DSZKärnten \"2er\"",
+            "erg_heim": 0,
+            "erg_auswaerts": 0,
+            "id": 109070,
+            "paarungen": []
+          }
+        ]
+      },
       "spielplan": [
         {
           "runde": 1,
