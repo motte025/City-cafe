@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-21T02:17:45Z",
+  "checked_at": "2026-11-21T02:32:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "jessu",
+      "name": "Jessu",
+      "title": "🌴GRAND THEFT AUDIO🌴JESSU FM",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "DER ULTIMATIVE STREAM MARATHON!  | LIVE BIS SONNTAG -> GAMING, DJ, JUST CHATTING & VIEL MEHR! w/ @Paeaet !prep !Pchm !Socials  #Werbung",
@@ -27,13 +34,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "jessu",
-      "name": "Jessu",
-      "title": "🌴GRAND THEFT AUDIO🌴JESSU FM",
       "game": "DJs"
     }
   ]
