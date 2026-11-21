@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T18:37:35Z",
+  "aktualisiert": "2026-11-21T18:46:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1128,6 +1128,16 @@
         },
         {
           "rang": 4,
+          "spieler": "STEINER Sandro Emmanuel",
+          "spiele": 13,
+          "siege": 9,
+          "niederlagen": 4,
+          "legs_plus": 26,
+          "legs_minus": 15,
+          "punkte": 26
+        },
+        {
+          "rang": 5,
           "spieler": "OBERZAN Lukas",
           "spiele": 12,
           "siege": 9,
@@ -1137,7 +1147,7 @@
           "punkte": 25
         },
         {
-          "rang": 5,
+          "rang": 6,
           "spieler": "GRAFSCHAFTER Bastian",
           "spiele": 12,
           "siege": 7,
@@ -1147,23 +1157,13 @@
           "punkte": 24
         },
         {
-          "rang": 6,
-          "spieler": "STEINER Sandro Emmanuel",
-          "spiele": 12,
-          "siege": 8,
-          "niederlagen": 4,
-          "legs_plus": 23,
-          "legs_minus": 15,
-          "punkte": 23
-        },
-        {
           "rang": 7,
           "spieler": "GÖSCHL Mario",
-          "spiele": 12,
+          "spiele": 13,
           "siege": 8,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 22,
-          "legs_minus": 18,
+          "legs_minus": 21,
           "punkte": 22
         },
         {
@@ -1619,7 +1619,7 @@
             "datum": "2026-11-21",
             "heim": "UDC Platzlwirt - ZIELSICHER DANEBEN",
             "auswaerts": "ESV DC Inferno",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 0,
             "id": 109048,
             "paarungen": [
@@ -1634,7 +1634,7 @@
                 "art": "HE",
                 "spieler1": "STEINER Sandro Emmanuel",
                 "spieler2": "GÖSCHL Mario",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
