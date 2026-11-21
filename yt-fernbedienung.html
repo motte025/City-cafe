@@ -1350,7 +1350,23 @@
             d.querySelector('[data-a=anhaengen]').addEventListener('click', function () { musik('playlist', { nr: p.nr, art: 'anhaengen' }); melden('➕ ' + p.name + ' angehängt', ''); });
             var wegK = d.querySelector('[data-a=weg]');
             if (wegK) wegK.addEventListener('click', function () {
-                if (wegK.dataset.sicher !== '1') { wegK.dataset.sicher = '1'; wegK.textContent = '🗑️ Wirklich löschen? Nochmal tippen'; return; }
+                // Rueckfrage wie bei "Original wiederherstellen": nur 6 s scharf, dann wieder normal
+                if (wegK.dataset.sicher !== '1') {
+                    wegK.dataset.sicher = '1';
+                    wegK.textContent = '⚠️ Playlist wirklich löschen? Nochmal tippen';
+                    wegK.style.background = '#b4232a';
+                    wegK.style.color = '#fff';
+                    clearTimeout(wegK._zurueck);
+                    wegK._zurueck = setTimeout(function () {
+                        wegK.dataset.sicher = '';
+                        wegK.textContent = '🗑️ Playlist löschen';
+                        wegK.style.background = '';
+                        wegK.style.color = '';
+                    }, 6000);
+                    return;
+                }
+                clearTimeout(wegK._zurueck);
+                wegK.dataset.sicher = '';
                 var ref = verb.db.ref(YT_REMOTE_NET.listenPfad() + '/' + p.nr);
                 // Eigene ganz weg; feste (aus dem Repo) nur ausblenden - unten wiederherstellbar.
                 (p.eigen ? ref.remove() : ref.set({ nr: p.nr, name: p.name || '', geloescht: true, ts: firebase.database.ServerValue.TIMESTAMP }))
