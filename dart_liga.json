@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T22:11:37Z",
+  "aktualisiert": "2026-11-21T22:20:38Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -234,6 +234,16 @@
         },
         {
           "rang": 10,
+          "spieler": "ASPRIAN Johann",
+          "spiele": 11,
+          "siege": 8,
+          "niederlagen": 3,
+          "legs_plus": 25,
+          "legs_minus": 15,
+          "punkte": 25
+        },
+        {
+          "rang": 11,
           "spieler": "REINISCH Jessica",
           "spiele": 14,
           "siege": 8,
@@ -243,7 +253,7 @@
           "punkte": 25
         },
         {
-          "rang": 11,
+          "rang": 12,
           "spieler": "FRIEßNEGGER Manuela",
           "spiele": 11,
           "siege": 7,
@@ -253,17 +263,17 @@
           "punkte": 23
         },
         {
-          "rang": 12,
-          "spieler": "ASPRIAN Johann",
-          "spiele": 10,
-          "siege": 7,
-          "niederlagen": 3,
+          "rang": 13,
+          "spieler": "FELLNER Johann",
+          "spiele": 12,
+          "siege": 6,
+          "niederlagen": 6,
           "legs_plus": 22,
-          "legs_minus": 14,
+          "legs_minus": 22,
           "punkte": 22
         },
         {
-          "rang": 13,
+          "rang": 14,
           "spieler": "SIMONITSCH Erhard",
           "spiele": 14,
           "siege": 6,
@@ -273,7 +283,7 @@
           "punkte": 22
         },
         {
-          "rang": 14,
+          "rang": 15,
           "spieler": "FRIEßNEGGER Gerhard",
           "spiele": 10,
           "siege": 6,
@@ -283,23 +293,13 @@
           "punkte": 21
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "JAHN Corinna",
           "spiele": 10,
           "siege": 5,
           "niederlagen": 5,
           "legs_plus": 21,
           "legs_minus": 18,
-          "punkte": 21
-        },
-        {
-          "rang": 16,
-          "spieler": "FELLNER Johann",
-          "spiele": 11,
-          "siege": 6,
-          "niederlagen": 5,
-          "legs_plus": 21,
-          "legs_minus": 19,
           "punkte": 21
         },
         {
@@ -889,7 +889,7 @@
             "datum": "2026-11-21",
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 7,
+            "erg_heim": 8,
             "erg_auswaerts": 1,
             "id": 109675,
             "paarungen": [
@@ -953,8 +953,8 @@
                 "art": "OE",
                 "spieler1": "ASPRIAN Johann",
                 "spieler2": "FELLNER Johann",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 3,
+                "legs2": 1
               },
               {
                 "art": "OE",
