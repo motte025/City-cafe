@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-21T11:47:46Z",
+  "checked_at": "2026-11-21T12:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -27,6 +27,13 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "Grand Theft Melodies  💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Saturday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     }
   ]
