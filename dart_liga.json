@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T21:51:35Z",
+  "aktualisiert": "2026-11-21T21:55:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -394,6 +394,16 @@
         },
         {
           "rang": 26,
+          "spieler": "HOCHEGGER Andrea",
+          "spiele": 8,
+          "siege": 3,
+          "niederlagen": 5,
+          "legs_plus": 12,
+          "legs_minus": 13,
+          "punkte": 12
+        },
+        {
+          "rang": 27,
           "spieler": "KREUZER Silvia",
           "spiele": 5,
           "siege": 3,
@@ -403,7 +413,7 @@
           "punkte": 11
         },
         {
-          "rang": 27,
+          "rang": 28,
           "spieler": "BRUNNER Jürgen",
           "spiele": 9,
           "siege": 2,
@@ -413,7 +423,7 @@
           "punkte": 11
         },
         {
-          "rang": 28,
+          "rang": 29,
           "spieler": "GORICNIK Cornelia",
           "spiele": 7,
           "siege": 2,
@@ -421,16 +431,6 @@
           "legs_plus": 10,
           "legs_minus": 16,
           "punkte": 10
-        },
-        {
-          "rang": 29,
-          "spieler": "HOCHEGGER Andrea",
-          "spiele": 7,
-          "siege": 2,
-          "niederlagen": 5,
-          "legs_plus": 9,
-          "legs_minus": 13,
-          "punkte": 9
         },
         {
           "rang": 30,
@@ -555,11 +555,11 @@
         {
           "rang": 42,
           "spieler": "APOVNIK Gabriele",
-          "spiele": 8,
+          "spiele": 9,
           "siege": 1,
-          "niederlagen": 7,
+          "niederlagen": 8,
           "legs_plus": 4,
-          "legs_minus": 20,
+          "legs_minus": 23,
           "punkte": 4
         },
         {
@@ -889,7 +889,7 @@
             "datum": "2026-11-21",
             "heim": "PBC DC Skorpions Reichenfels",
             "auswaerts": "Dart Fuchs 4",
-            "erg_heim": 6,
+            "erg_heim": 7,
             "erg_auswaerts": 1,
             "id": 109675,
             "paarungen": [
@@ -946,7 +946,7 @@
                 "art": "DE",
                 "spieler1": "HOCHEGGER Andrea",
                 "spieler2": "APOVNIK Gabriele",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
