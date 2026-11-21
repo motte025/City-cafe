@@ -1358,7 +1358,28 @@
                     .catch(function (err) { melden(/permission/i.test(err.message) ? 'Nur mit Chef-Anmeldung möglich.' : err.message, 'nein'); });
             });
             var orig = d.querySelector('[data-a=original]');
-            if (orig) orig.addEventListener('click', function () { musik('listeOriginal', { nr: p.nr }); melden('↺ ' + p.name + ': Original kommt zurück', ''); });
+            // Rueckfrage (21.11.2026): versehentlich getippt, war Mix 2 mit allen Aenderungen weg.
+            // Erst der zweite Tipp innerhalb von 6 s stellt das Original wieder her.
+            if (orig) orig.addEventListener('click', function () {
+                if (orig.dataset.sicher !== '1') {
+                    orig.dataset.sicher = '1';
+                    orig.textContent = '⚠️ Alle Änderungen gehen verloren! Nochmal tippen';
+                    orig.style.background = '#b4232a';
+                    orig.style.color = '#fff';
+                    clearTimeout(orig._zurueck);
+                    orig._zurueck = setTimeout(function () {
+                        orig.dataset.sicher = '';
+                        orig.textContent = '↺ Original wiederherstellen';
+                        orig.style.background = '';
+                        orig.style.color = '';
+                    }, 6000);
+                    return;
+                }
+                clearTimeout(orig._zurueck);
+                orig.dataset.sicher = '';
+                musik('listeOriginal', { nr: p.nr });
+                melden('↺ ' + p.name + ': Original kommt zurück', '');
+            });
             var liste = d.querySelector('.liste');
             var gerendert = false;
             function zeigen() {
