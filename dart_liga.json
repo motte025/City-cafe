@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:57:36Z",
+  "aktualisiert": "2026-11-21T20:00:46Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -101,7 +101,7 @@
           "id": 109631
         },
         "6": {
-          "heim": 1,
+          "heim": 2,
           "auswaerts": 2,
           "id": 109664
         },
@@ -214,6 +214,16 @@
         },
         {
           "rang": 8,
+          "spieler": "JAHN Andreas",
+          "spiele": 13,
+          "siege": 7,
+          "niederlagen": 6,
+          "legs_plus": 25,
+          "legs_minus": 21,
+          "punkte": 25
+        },
+        {
+          "rang": 9,
           "spieler": "ELEZOSKI Serif",
           "spiele": 9,
           "siege": 7,
@@ -223,7 +233,7 @@
           "punkte": 23
         },
         {
-          "rang": 9,
+          "rang": 10,
           "spieler": "REINISCH Jessica",
           "spiele": 13,
           "siege": 7,
@@ -231,16 +241,6 @@
           "legs_plus": 23,
           "legs_minus": 25,
           "punkte": 23
-        },
-        {
-          "rang": 10,
-          "spieler": "JAHN Andreas",
-          "spiele": 12,
-          "siege": 6,
-          "niederlagen": 6,
-          "legs_plus": 22,
-          "legs_minus": 21,
-          "punkte": 22
         },
         {
           "rang": 11,
@@ -575,11 +575,11 @@
         {
           "rang": 44,
           "spieler": "SIMONITSCH Christopher",
-          "spiele": 4,
+          "spiele": 5,
           "siege": 0,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 3,
-          "legs_minus": 10,
+          "legs_minus": 13,
           "punkte": 3
         },
         {
@@ -643,7 +643,7 @@
       ],
       "letztes_spiel": {
         "runde": 6,
-        "heim": 1,
+        "heim": 2,
         "auswaerts": 2,
         "paarungen": [
           {
@@ -671,7 +671,7 @@
             "art": "OE",
             "spieler1": "JAHN Andreas",
             "spieler2": "SIMONITSCH Christopher",
-            "legs1": 0,
+            "legs1": 3,
             "legs2": 0
           }
         ]
@@ -738,7 +738,7 @@
             "datum": "2026-11-21",
             "heim": "City-Flyers \"Chaoten\"",
             "auswaerts": "DC Cafe Seven",
-            "erg_heim": 1,
+            "erg_heim": 2,
             "erg_auswaerts": 2,
             "id": 109664,
             "paarungen": [
@@ -767,7 +767,7 @@
                 "art": "OE",
                 "spieler1": "JAHN Andreas",
                 "spieler2": "SIMONITSCH Christopher",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
@@ -1085,12 +1085,12 @@
         {
           "rang": 1,
           "spieler": "NIKOLIC Dennis",
-          "spiele": 16,
-          "siege": 16,
+          "spiele": 17,
+          "siege": 17,
           "niederlagen": 0,
-          "legs_plus": 43,
+          "legs_plus": 45,
           "legs_minus": 5,
-          "punkte": 43
+          "punkte": 45
         },
         {
           "rang": 2,
@@ -1105,12 +1105,12 @@
         {
           "rang": 3,
           "spieler": "WIESER (J) David",
-          "spiele": 13,
-          "siege": 10,
+          "spiele": 14,
+          "siege": 11,
           "niederlagen": 3,
-          "legs_plus": 29,
+          "legs_plus": 31,
           "legs_minus": 12,
-          "punkte": 29
+          "punkte": 31
         },
         {
           "rang": 4,
@@ -1285,11 +1285,11 @@
         {
           "rang": 21,
           "spieler": "UNTERDORFER Heimo",
-          "spiele": 10,
+          "spiele": 11,
           "siege": 3,
-          "niederlagen": 7,
+          "niederlagen": 8,
           "legs_plus": 14,
-          "legs_minus": 22,
+          "legs_minus": 24,
           "punkte": 14
         },
         {
@@ -1505,11 +1505,11 @@
         {
           "rang": 43,
           "spieler": "KÜHWEIDER Thomas",
-          "spiele": 4,
+          "spiele": 5,
           "siege": 0,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 3,
-          "legs_minus": 11,
+          "legs_minus": 13,
           "punkte": 3
         },
         {
@@ -1726,7 +1726,7 @@
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 2,
-            "erg_auswaerts": 3,
+            "erg_auswaerts": 4,
             "id": 109070,
             "paarungen": [
               {
@@ -1769,7 +1769,7 @@
                 "spieler1": "KÜHWEIDER Thomas / UNTERDORFER Heimo",
                 "spieler2": "WIESER (J) David / NIKOLIC Dennis",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 2
               }
             ]
           }
