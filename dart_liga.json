@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:52:36Z",
+  "aktualisiert": "2026-11-21T19:55:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -685,7 +685,7 @@
             "datum": "2026-11-21",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Schwarzer Kater",
-            "erg_heim": 3,
+            "erg_heim": 4,
             "erg_auswaerts": 1,
             "id": 109653,
             "paarungen": [
@@ -721,7 +721,7 @@
                 "art": "MD",
                 "spieler1": "KLEINHAPPEL Ernestine / RAINER Gerald",
                 "spieler2": "HOPFGARTNER Joachim / FRIEßNEGGER Sarah",
-                "legs1": 0,
+                "legs1": 2,
                 "legs2": 0
               },
               {
