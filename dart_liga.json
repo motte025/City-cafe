@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T18:51:41Z",
+  "aktualisiert": "2026-11-21T18:53:42Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -144,6 +144,16 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "DOUJAK Siegfried",
+          "spiele": 12,
+          "siege": 12,
+          "niederlagen": 0,
+          "legs_plus": 32,
+          "legs_minus": 4,
+          "punkte": 32
+        },
+        {
+          "rang": 2,
           "spieler": "KLEINHAPPEL Ernestine",
           "spiele": 13,
           "siege": 10,
@@ -151,16 +161,6 @@
           "legs_plus": 31,
           "legs_minus": 15,
           "punkte": 31
-        },
-        {
-          "rang": 2,
-          "spieler": "DOUJAK Siegfried",
-          "spiele": 11,
-          "siege": 11,
-          "niederlagen": 0,
-          "legs_plus": 29,
-          "legs_minus": 4,
-          "punkte": 29
         },
         {
           "rang": 3,
@@ -535,11 +535,11 @@
         {
           "rang": 40,
           "spieler": "SCHADER Andreas",
-          "spiele": 2,
+          "spiele": 3,
           "siege": 1,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "legs_plus": 4,
-          "legs_minus": 2,
+          "legs_minus": 5,
           "punkte": 4
         },
         {
@@ -727,7 +727,7 @@
             "datum": "2026-11-21",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Schwarzer Kater",
-            "erg_heim": 0,
+            "erg_heim": 1,
             "erg_auswaerts": 1,
             "id": 109653,
             "paarungen": [
@@ -742,7 +742,7 @@
                 "art": "HE",
                 "spieler1": "DOUJAK Siegfried",
                 "spieler2": "SCHADER Andreas",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               },
               {
