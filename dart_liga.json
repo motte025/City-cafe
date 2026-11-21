@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T21:08:35Z",
+  "aktualisiert": "2026-11-21T21:10:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1691,6 +1691,34 @@
             "spieler2": "SONNBERGER Harald / KRENN Klaus",
             "legs1": 1,
             "legs2": 2
+          },
+          {
+            "art": "HE",
+            "spieler1": "KRUSCHITZ Harald",
+            "spieler2": "SONNBERGER Harald",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "DE",
+            "spieler1": "GREINIG Petra",
+            "spieler2": "PINTER Michele",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OE",
+            "spieler1": "STINGLER Engelbert",
+            "spieler2": "FRÜSTÜCK Kerstin",
+            "legs1": 0,
+            "legs2": 0
+          },
+          {
+            "art": "OE",
+            "spieler1": "SPANRING Andreas",
+            "spieler2": "KRENN Klaus",
+            "legs1": 0,
+            "legs2": 0
           }
         ]
       },
@@ -1829,6 +1857,34 @@
                 "spieler2": "SONNBERGER Harald / KRENN Klaus",
                 "legs1": 1,
                 "legs2": 2
+              },
+              {
+                "art": "HE",
+                "spieler1": "KRUSCHITZ Harald",
+                "spieler2": "SONNBERGER Harald",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "DE",
+                "spieler1": "GREINIG Petra",
+                "spieler2": "PINTER Michele",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "STINGLER Engelbert",
+                "spieler2": "FRÜSTÜCK Kerstin",
+                "legs1": 0,
+                "legs2": 0
+              },
+              {
+                "art": "OE",
+                "spieler1": "SPANRING Andreas",
+                "spieler2": "KRENN Klaus",
+                "legs1": 0,
+                "legs2": 0
               }
             ]
           },
