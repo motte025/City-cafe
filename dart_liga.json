@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T19:23:35Z",
+  "aktualisiert": "2026-11-21T19:26:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -739,8 +739,8 @@
                 "art": "HE",
                 "spieler1": "JAHN Christian",
                 "spieler2": "SIMONITSCH Erhard",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 1,
+                "legs2": 3
               },
               {
                 "art": "OE",
