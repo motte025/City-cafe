@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T20:07:36Z",
+  "aktualisiert": "2026-11-21T20:12:36Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -144,6 +144,16 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "DOUJAK Siegfried",
+          "spiele": 13,
+          "siege": 13,
+          "niederlagen": 0,
+          "legs_plus": 34,
+          "legs_minus": 4,
+          "punkte": 34
+        },
+        {
+          "rang": 2,
           "spieler": "RAINER Gerald",
           "spiele": 14,
           "siege": 12,
@@ -153,7 +163,7 @@
           "punkte": 33
         },
         {
-          "rang": 2,
+          "rang": 3,
           "spieler": "KLEINHAPPEL Ernestine",
           "spiele": 14,
           "siege": 11,
@@ -161,16 +171,6 @@
           "legs_plus": 33,
           "legs_minus": 15,
           "punkte": 33
-        },
-        {
-          "rang": 3,
-          "spieler": "DOUJAK Siegfried",
-          "spiele": 12,
-          "siege": 12,
-          "niederlagen": 0,
-          "legs_plus": 32,
-          "legs_minus": 4,
-          "punkte": 32
         },
         {
           "rang": 4,
@@ -275,11 +275,11 @@
         {
           "rang": 14,
           "spieler": "FRIEßNEGGER Manuela",
-          "spiele": 9,
+          "spiele": 10,
           "siege": 6,
-          "niederlagen": 3,
+          "niederlagen": 4,
           "legs_plus": 20,
-          "legs_minus": 11,
+          "legs_minus": 13,
           "punkte": 20
         },
         {
@@ -304,22 +304,22 @@
         },
         {
           "rang": 17,
-          "spieler": "KERNSTOCK Michael",
-          "spiele": 10,
-          "siege": 6,
-          "niederlagen": 4,
-          "legs_plus": 19,
-          "legs_minus": 17,
-          "punkte": 19
-        },
-        {
-          "rang": 18,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
           "niederlagen": 5,
           "legs_plus": 19,
           "legs_minus": 18,
+          "punkte": 19
+        },
+        {
+          "rang": 18,
+          "spieler": "KERNSTOCK Michael",
+          "spiele": 11,
+          "siege": 6,
+          "niederlagen": 5,
+          "legs_plus": 19,
+          "legs_minus": 19,
           "punkte": 19
         },
         {
@@ -364,6 +364,16 @@
         },
         {
           "rang": 23,
+          "spieler": "SCHECK Guenther",
+          "spiele": 6,
+          "siege": 6,
+          "niederlagen": 0,
+          "legs_plus": 13,
+          "legs_minus": 2,
+          "punkte": 13
+        },
+        {
+          "rang": 24,
           "spieler": "BÄCKER Josephine",
           "spiele": 6,
           "siege": 2,
@@ -373,7 +383,7 @@
           "punkte": 12
         },
         {
-          "rang": 24,
+          "rang": 25,
           "spieler": "HOCHEGGER Martin",
           "spiele": 9,
           "siege": 4,
@@ -381,16 +391,6 @@
           "legs_plus": 12,
           "legs_minus": 15,
           "punkte": 12
-        },
-        {
-          "rang": 25,
-          "spieler": "SCHECK Guenther",
-          "spiele": 5,
-          "siege": 5,
-          "niederlagen": 0,
-          "legs_plus": 11,
-          "legs_minus": 2,
-          "punkte": 11
         },
         {
           "rang": 26,
@@ -524,20 +524,20 @@
         },
         {
           "rang": 39,
-          "spieler": "POLZER Hannah",
+          "spieler": "BERCHTOLD Alex",
           "spiele": 4,
-          "siege": 2,
-          "niederlagen": 2,
+          "siege": 1,
+          "niederlagen": 3,
           "legs_plus": 5,
           "legs_minus": 8,
           "punkte": 5
         },
         {
           "rang": 40,
-          "spieler": "BERCHTOLD Alex",
+          "spieler": "POLZER Hannah",
           "spiele": 4,
-          "siege": 1,
-          "niederlagen": 3,
+          "siege": 2,
+          "niederlagen": 2,
           "legs_plus": 5,
           "legs_minus": 8,
           "punkte": 5
@@ -699,7 +699,7 @@
             "datum": "2026-11-21",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Schwarzer Kater",
-            "erg_heim": 4,
+            "erg_heim": 5,
             "erg_auswaerts": 1,
             "id": 109653,
             "paarungen": [
@@ -742,7 +742,7 @@
                 "art": "OD",
                 "spieler1": "SCHECK Guenther / DOUJAK Siegfried",
                 "spieler2": "KERNSTOCK Michael / FRIEßNEGGER Manuela",
-                "legs1": 0,
+                "legs1": 2,
                 "legs2": 0
               }
             ]
