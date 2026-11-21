@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-21T12:02:45Z",
+  "checked_at": "2026-11-21T12:07:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Classics mit @ericssl",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "juliaonair",
@@ -24,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "Grand Theft Melodies  💫 !charity",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Saturday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Saturday <3 - !dc !peepo !linktree !shop",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "Grand Theft Melodies  💫 !charity",
       "game": "DJs"
     }
   ]
