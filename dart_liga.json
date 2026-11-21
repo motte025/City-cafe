@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T21:32:36Z",
+  "aktualisiert": "2026-11-21T21:45:34Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -9,15 +9,15 @@
         {
           "rang": 1,
           "team": "Askö DC Sonne 2",
-          "spiele": 5,
-          "siege": 5,
+          "spiele": 6,
+          "siege": 6,
           "unentschieden": 0,
           "niederlagen": 0,
-          "punkte": 10
+          "punkte": 12
         },
         {
           "rang": 2,
-          "team": "DC Schwarzer Kater",
+          "team": "PBC DC Skorpions Reichenfels",
           "spiele": 5,
           "siege": 4,
           "unentschieden": 0,
@@ -26,11 +26,11 @@
         },
         {
           "rang": 3,
-          "team": "PBC DC Skorpions Reichenfels",
-          "spiele": 5,
+          "team": "DC Schwarzer Kater",
+          "spiele": 6,
           "siege": 4,
           "unentschieden": 0,
-          "niederlagen": 1,
+          "niederlagen": 2,
           "punkte": 8
         },
         {
@@ -155,12 +155,12 @@
         {
           "rang": 2,
           "spieler": "RAINER Gerald",
-          "spiele": 14,
-          "siege": 12,
+          "spiele": 15,
+          "siege": 13,
           "niederlagen": 2,
-          "legs_plus": 33,
+          "legs_plus": 36,
           "legs_minus": 9,
-          "punkte": 33
+          "punkte": 36
         },
         {
           "rang": 3,
@@ -335,11 +335,11 @@
         {
           "rang": 20,
           "spieler": "FRIEßNEGGER Sarah",
-          "spiele": 9,
+          "spiele": 10,
           "siege": 5,
-          "niederlagen": 4,
+          "niederlagen": 5,
           "legs_plus": 17,
-          "legs_minus": 14,
+          "legs_minus": 17,
           "punkte": 17
         },
         {
@@ -727,7 +727,7 @@
             "datum": "2026-11-21",
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Schwarzer Kater",
-            "erg_heim": 7,
+            "erg_heim": 8,
             "erg_auswaerts": 2,
             "id": 109653,
             "paarungen": [
@@ -798,7 +798,7 @@
                 "art": "OE",
                 "spieler1": "RAINER Gerald",
                 "spieler2": "FRIEßNEGGER Sarah",
-                "legs1": 0,
+                "legs1": 3,
                 "legs2": 0
               }
             ]
