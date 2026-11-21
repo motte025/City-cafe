@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T18:07:39Z",
+  "aktualisiert": "2026-11-21T18:20:37Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -1109,12 +1109,12 @@
         {
           "rang": 2,
           "spieler": "JANESCH Christine",
-          "spiele": 15,
-          "siege": 11,
+          "spiele": 16,
+          "siege": 12,
           "niederlagen": 4,
-          "legs_plus": 33,
+          "legs_plus": 36,
           "legs_minus": 17,
-          "punkte": 33
+          "punkte": 36
         },
         {
           "rang": 3,
@@ -1248,9 +1248,9 @@
         },
         {
           "rang": 16,
-          "spieler": "LANG Melanie",
-          "spiele": 10,
-          "siege": 4,
+          "spieler": "FRADL Ingemar",
+          "spiele": 11,
+          "siege": 5,
           "niederlagen": 6,
           "legs_plus": 15,
           "legs_minus": 20,
@@ -1258,9 +1258,9 @@
         },
         {
           "rang": 17,
-          "spieler": "FRADL Ingemar",
-          "spiele": 11,
-          "siege": 5,
+          "spieler": "LANG Melanie",
+          "spiele": 10,
+          "siege": 4,
           "niederlagen": 6,
           "legs_plus": 15,
           "legs_minus": 20,
@@ -1429,11 +1429,11 @@
         {
           "rang": 34,
           "spieler": "BRUNNER Katharina",
-          "spiele": 4,
+          "spiele": 5,
           "siege": 2,
-          "niederlagen": 2,
+          "niederlagen": 3,
           "legs_plus": 6,
-          "legs_minus": 4,
+          "legs_minus": 7,
           "punkte": 6
         },
         {
@@ -1538,7 +1538,7 @@
         },
         {
           "rang": 45,
-          "spieler": "OBERLERCHNER Melanie",
+          "spieler": "WHYMAN Christian",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1548,7 +1548,7 @@
         },
         {
           "rang": 46,
-          "spieler": "WHYMAN Christian",
+          "spieler": "OBERLERCHNER Melanie",
           "spiele": 1,
           "siege": 0,
           "niederlagen": 1,
@@ -1740,7 +1740,7 @@
             "heim": "DC Drautal Dart Vipers",
             "auswaerts": "DSZKärnten \"2er\"",
             "erg_heim": 0,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109070,
             "paarungen": [
               {
@@ -1748,7 +1748,7 @@
                 "spieler1": "BRUNNER Katharina",
                 "spieler2": "JANESCH Christine",
                 "legs1": 0,
-                "legs2": 0
+                "legs2": 3
               },
               {
                 "art": "HE",
