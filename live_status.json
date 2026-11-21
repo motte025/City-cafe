@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-21T16:07:45Z",
+  "checked_at": "2026-11-21T16:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "roice",
+      "name": "roice",
+      "title": "DJ wears PJs | Nov 30th we celebrate my BDAY - save the date !bewbs !schedule !merch !PLUS !alt !design !wishlist",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "roice",
-      "name": "roice",
-      "title": "DJ wears PJs | Nov 30th we celebrate my BDAY - save the date !bewbs !schedule !merch !PLUS !alt !design !wishlist",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
