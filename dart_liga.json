@@ -1,5 +1,5 @@
 {
-  "aktualisiert": "2026-11-21T18:33:37Z",
+  "aktualisiert": "2026-11-21T18:37:35Z",
   "quelle": "https://kedsv.my-darts-tournament.at/mdt/",
   "teams": {
     "chaoten": {
@@ -144,22 +144,22 @@
       "einzelwertung": [
         {
           "rang": 1,
+          "spieler": "KLEINHAPPEL Ernestine",
+          "spiele": 13,
+          "siege": 10,
+          "niederlagen": 3,
+          "legs_plus": 31,
+          "legs_minus": 15,
+          "punkte": 31
+        },
+        {
+          "rang": 2,
           "spieler": "DOUJAK Siegfried",
           "spiele": 11,
           "siege": 11,
           "niederlagen": 0,
           "legs_plus": 29,
           "legs_minus": 4,
-          "punkte": 29
-        },
-        {
-          "rang": 2,
-          "spieler": "KLEINHAPPEL Ernestine",
-          "spiele": 12,
-          "siege": 10,
-          "niederlagen": 2,
-          "legs_plus": 29,
-          "legs_minus": 12,
           "punkte": 29
         },
         {
@@ -244,20 +244,20 @@
         },
         {
           "rang": 11,
-          "spieler": "BERGLER Benjamin",
+          "spieler": "REINISCH Jessica",
           "spiele": 12,
-          "siege": 6,
-          "niederlagen": 6,
+          "siege": 7,
+          "niederlagen": 5,
           "legs_plus": 21,
           "legs_minus": 22,
           "punkte": 21
         },
         {
           "rang": 12,
-          "spieler": "REINISCH Jessica",
+          "spieler": "BERGLER Benjamin",
           "spiele": 12,
-          "siege": 7,
-          "niederlagen": 5,
+          "siege": 6,
+          "niederlagen": 6,
           "legs_plus": 21,
           "legs_minus": 22,
           "punkte": 21
@@ -274,6 +274,16 @@
         },
         {
           "rang": 14,
+          "spieler": "FRIEßNEGGER Manuela",
+          "spiele": 9,
+          "siege": 6,
+          "niederlagen": 3,
+          "legs_plus": 20,
+          "legs_minus": 11,
+          "punkte": 20
+        },
+        {
+          "rang": 15,
           "spieler": "KERNSTOCK Michael",
           "spiele": 9,
           "siege": 6,
@@ -283,7 +293,7 @@
           "punkte": 19
         },
         {
-          "rang": 15,
+          "rang": 16,
           "spieler": "FELLNER Johann",
           "spiele": 10,
           "siege": 5,
@@ -293,7 +303,7 @@
           "punkte": 19
         },
         {
-          "rang": 16,
+          "rang": 17,
           "spieler": "KOLLER Elias",
           "spiele": 12,
           "siege": 6,
@@ -303,18 +313,8 @@
           "punkte": 18
         },
         {
-          "rang": 17,
-          "spieler": "FRIEßNEGGER Manuela",
-          "spiele": 8,
-          "siege": 5,
-          "niederlagen": 3,
-          "legs_plus": 17,
-          "legs_minus": 9,
-          "punkte": 17
-        },
-        {
           "rang": 18,
-          "spieler": "FRIEßNEGGER Sarah",
+          "spieler": "ASPRIAN Johann",
           "spiele": 8,
           "siege": 5,
           "niederlagen": 3,
@@ -324,7 +324,7 @@
         },
         {
           "rang": 19,
-          "spieler": "ASPRIAN Johann",
+          "spieler": "FRIEßNEGGER Sarah",
           "spiele": 8,
           "siege": 5,
           "niederlagen": 3,
@@ -728,15 +728,15 @@
             "heim": "Askö DC Sonne 2",
             "auswaerts": "DC Schwarzer Kater",
             "erg_heim": 0,
-            "erg_auswaerts": 0,
+            "erg_auswaerts": 1,
             "id": 109653,
             "paarungen": [
               {
                 "art": "DE",
                 "spieler1": "KLEINHAPPEL Ernestine",
                 "spieler2": "FRIEßNEGGER Manuela",
-                "legs1": 0,
-                "legs2": 0
+                "legs1": 2,
+                "legs2": 3
               },
               {
                 "art": "HE",
