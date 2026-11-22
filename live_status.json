@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-22T00:37:45Z",
+  "checked_at": "2026-11-22T00:47:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "🌴🎶 CHAZZY FM POP UP 🎶🌴 Your GTA SOUNDTRACK 🍸 Con Flu Recovery !moving !tip ! !patreon !youtube",
       "game": "DJs"
     }
   ]
