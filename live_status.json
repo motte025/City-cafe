@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-22T12:17:45Z",
+  "checked_at": "2026-11-22T12:32:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "juliaonair",
       "name": "JULIAONAIR",
       "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Sunday <3 - !dc !peepo !linktree !shop @justlinaaarr",
       "game": "DJs"
     },
     {
@@ -17,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Sunday <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "miss_winter_dj",
-      "name": "Miss_Winter_dj",
-      "title": "Miss Winter ist online!",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
