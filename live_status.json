@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-11-22T15:47:45Z",
+  "checked_at": "2026-11-22T16:02:46Z",
   "live": [
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Sunday <3 - !dc !peepo !linktree !shop @justlinaaarr",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 122🎉| Mixed Styles Quicky | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -27,13 +27,6 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 122🎉| Mixed Styles Quicky | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
