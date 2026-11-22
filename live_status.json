@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-22T12:47:47Z",
+  "checked_at": "2026-11-22T13:02:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "juliaonair",
-      "name": "JULIAONAIR",
-      "title": "♥ SUNDAY IS OUR FUNDAY ♥ !socials !kofi ♥ (🇩🇪/🇬🇧)",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "linaaarr",
@@ -41,6 +34,13 @@
       "channel": "miss_winter_dj",
       "name": "Miss_Winter_dj",
       "title": "Miss Winter ist online!",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "deejayfamily",
+      "name": "DEEJAYFAMILY",
+      "title": "90s Day - Best of 1990-1999 - Live aus Studio 2",
       "game": "DJs"
     }
   ]
