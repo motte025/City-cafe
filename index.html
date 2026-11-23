@@ -16364,6 +16364,15 @@
         // Widget), laufen nur Fotos, damit kein unsichtbares Video die Box belastet.
         const RECHTS_SHORTS_ANTEIL = 0.75;
         const rechtsShorts = { player: null, bereit: false, aktuell: null, runde: [], start: 0, wache: null, fehler: 0 };
+        // Lange Fotorunde, weil noch keine Liste da war (Seite startet vor dem Supervisor):
+        // kommt die Liste, gleich umschalten statt die ganze Runde (60 Fotos x 16 s) abzuwarten.
+        let rechtsWartetAufListe = false;
+        setInterval(() => {
+            if (rechtsWartetAufListe && !rechtsShorts.aktuell && rechtsShortsListe().length && rechtsKarteSichtbar()) {
+                rechtsWartetAufListe = false;
+                rotateSidebarWidgets();
+            }
+        }, 10000);
         function rechtsShortsListe() {
             const l = Array.isArray(window.nlRechtsShorts) ? window.nlRechtsShorts : [];
             return l.filter(v => v && /^[A-Za-z0-9_-]{11}$/.test(v.videoId || '') && (Number(v.dauer) || 0) <= 120);
@@ -16473,6 +16482,7 @@
             if (musicTimer) clearInterval(musicTimer);
             if (sidebarTimerId) clearTimeout(sidebarTimerId);
             rechtsShortsStopp();
+            rechtsWartetAufListe = false;
 
             galleryView.classList.remove('active'); newsView.classList.remove('active'); musicView.classList.remove('active');
             // Nur Fotos (Vorgabe): immer wieder die Galerie, News und Cafe-Info fallen weg.
@@ -16490,6 +16500,7 @@
                 galleryTimer = setInterval(showNextPlaylistImage, BILD_WECHSEL_SEKUNDEN * 1000);
                 activeSidebarWidgetIndex = nurFotos ? 0 : 1;
                 // Gibt es Shorts (Karte war nur gerade verdeckt), bald wieder einen versuchen.
+                rechtsWartetAufListe = nurFotos && !rechtsShortsListe().length;
                 const fotoRunde = nurFotos && rechtsShortsListe().length ? 2 * BILD_WECHSEL_SEKUNDEN * 1000
                     : Math.max(30000, imagePlaylist.length * BILD_WECHSEL_SEKUNDEN * 1000);
                 sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), fotoRunde);
