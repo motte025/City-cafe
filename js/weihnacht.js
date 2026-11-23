@@ -50,19 +50,21 @@
   #wn-lindi.unten.da { transform: translateY(0); }
   #wn-lindi.zittert { animation: wn-zittern .12s linear infinite; }
   @keyframes wn-zittern { 0%,100% { translate: 0 0; } 25% { translate: -3px 1px; } 75% { translate: 3px -1px; } }
-  #wn-blase { position: absolute; right: 360px; bottom: 420px; max-width: 460px; padding: 22px 30px; z-index: 62; pointer-events: none;
-              background: #fff; color: #14321a; border-radius: 28px; font: 800 32px/1.25 'Plus Jakarta Sans', sans-serif;
-              box-shadow: 0 14px 34px rgba(0,0,0,.45); transform: scale(0); transform-origin: 100% 80%;
+  /* Blase ueber Lindis Kopf in der rechten Spalte (x > 1360): links daneben laege sie ueber der grossen Karte,
+     und dort deckt ein laufendes Video (mpv-Fenster, z. B. Krampus normal) sie zu (Betreiber 23.11.). */
+  #wn-blase { position: absolute; right: 34px; bottom: 586px; width: max-content; max-width: 470px; padding: 20px 28px; z-index: 62; pointer-events: none;
+              background: #fff; color: #14321a; border-radius: 28px; font: 800 31px/1.25 'Plus Jakarta Sans', sans-serif;
+              box-shadow: 0 14px 34px rgba(0,0,0,.45); transform: scale(0); transform-origin: 75% 100%;
               transition: transform .35s cubic-bezier(.2,1.5,.4,1); }
   #wn-blase.da { transform: scale(1); }
-  #wn-blase::after { content: ''; position: absolute; right: -26px; bottom: 30px; border: 18px solid transparent; border-left: 34px solid #fff; border-right: 0; }
+  #wn-blase::after { content: ''; position: absolute; right: 120px; bottom: -30px; border: 18px solid transparent; border-top: 34px solid #fff; border-bottom: 0; }
   /* Vollbild: Blase oben in der Leiste ueber dem Video, neben Lindis Kopf */
   #wn-blase.voll-rechts, #wn-blase.voll-links { bottom: auto; top: 12px; max-width: 820px; padding: 14px 26px; font-size: 30px; }
   #wn-blase.voll-rechts { right: 176px; transform-origin: 100% 50%; }
   #wn-blase.voll-links { right: auto; left: 176px; transform-origin: 0 50%; }
-  #wn-blase.voll-rechts::after { bottom: auto; top: 24px; }
-  #wn-blase.voll-links::after { right: auto; left: -26px; bottom: auto; top: 24px; border-left: 0; border-right: 34px solid #fff; }
-  #wn-blase.unten { right: 560px; bottom: 250px; }
+  #wn-blase.voll-rechts::after { right: -26px; bottom: auto; top: 24px; border: 18px solid transparent; border-left: 34px solid #fff; border-right: 0; }
+  #wn-blase.voll-links::after { right: auto; left: -26px; bottom: auto; top: 24px; border: 18px solid transparent; border-right: 34px solid #fff; border-left: 0; }
+  #wn-blase.unten { right: 60px; bottom: 470px; }
   #wn-wetter-smiley { height: 34px; width: 34px; vertical-align: -8px; margin-left: 8px; }
   `;
   const stil = document.createElement('style');
