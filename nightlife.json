@@ -15,7 +15,7 @@
     }
   ],
   "krampus": {
-    "hinweis": "Krampuslaeufe 16:00-07:00. Je Auftritt zwei Gruppen (Kapitel aus YouTube), die Videos im Wechsel. Seit 23.11.2026 nur Klagenfurt 2026. Fuer ein neues Jahr videoId, jahr, ende und gruppen tauschen.",
+    "hinweis": "Krampuslaeufe 16:00-07:00. Je Auftritt zwei Gruppen (Kapitel aus YouTube), die Videos im Wechsel. Seit 23.11.2026 Klagenfurt 2026 und Fischl 2026. Fuer ein neues Jahr videoId, jahr, ende und gruppen tauschen.",
     "vonStunde": 16,
     "bisStunde": 7,
     "gruppenProAuftritt": 2,
@@ -63,6 +63,33 @@
           { "ab": 4644, "name": "Poggersdorfer Moorteufel" },
           { "ab": 4758, "name": "RuatnSchnolza Klagenfurt" },
           { "ab": 4837, "name": "Dead Devil's Klagenfurt" }
+        ]
+      },
+      {
+        "videoId": "yCu8sstFKRw",
+        "ort": "Fischl",
+        "jahr": 2026,
+        "titel": "Krampuslauf Fischl 2026",
+        "ende": 1956,
+        "gruppen": [
+          { "ab": 14, "name": "Kärntner Nordbergteufel" },
+          { "ab": 101, "name": "Burg Ruinenteufel" },
+          { "ab": 174, "name": "SKT Shetan" },
+          { "ab": 304, "name": "Legion des Abgrunds" },
+          { "ab": 400, "name": "Kärntner Draubartl" },
+          { "ab": 513, "name": "Krampusgruppe Schwarze Engel" },
+          { "ab": 672, "name": "Glanfurter Moorbartl" },
+          { "ab": 801, "name": "Krampusgruppe Feldkirchen" },
+          { "ab": 940, "name": "Teufelsgarde" },
+          { "ab": 1031, "name": "RuatnSchnolza Klagenfurt" },
+          { "ab": 1182, "name": "Brauchtums Buabn" },
+          { "ab": 1292, "name": "Klagenfurter Bergteifl" },
+          { "ab": 1373, "name": "PG Dead Devils Klagenfurt" },
+          { "ab": 1521, "name": "Noricum Teifl" },
+          { "ab": 1620, "name": "Krastowitzer Höllenbruat" },
+          { "ab": 1705, "name": "KG Köttmannsdorf Hollenburg" },
+          { "ab": 1818, "name": "Schwarze Höllenteifl" },
+          { "ab": 1909, "name": "Hunnenbrunner Bergteufel" }
         ]
       }
     ]
