@@ -11263,6 +11263,9 @@
         function djFernQrZeichnen() {
             const bild = document.getElementById('dj-fern-qr-img');
             if (!bild) return;
+            // Fehlt dj-fernbedienung-config.js (Netz beim Start noch nicht da, 23.11.2026), brach hier
+            // das ganze Hauptskript ab: News, Galerie und Shorts rechts liefen dann nicht.
+            if (!window.DJ_REMOTE_CONFIG) return;
             const ziel = (DJ_REMOTE_CONFIG.mobileUrl || '');
             if (!ziel) return;
             // Als URL erzeugen: keine Binaer-/SVG-Datei im Aenderungssatz,
