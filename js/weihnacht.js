@@ -8,6 +8,7 @@
  *   - 3D-Emojis/Smileys statt der normalen Emojis (Text des Dashboards, Laufband, Sprechblase),
  *     3D-Wettersymbole, Wetter-Smiley neben "Klagenfurt"
  *   - Laufband mit Advent-Spruechen
+ *   - Jubel-Smileys bei Fussball-Toren und Dart-Ergebnissen, 3D-Smileys bei Hos'n Obe
  * ?weihnacht=1 erzwingt, ?weihnacht=0 schaltet ab. Bilder: weihnacht/ (webp).
  * window.weihnacht.lindi() startet Lindi sofort (Test).
  */
@@ -66,6 +67,14 @@
   #wn-blase.voll-links::after { right: auto; left: -26px; bottom: auto; top: 24px; border: 18px solid transparent; border-right: 34px solid #fff; border-left: 0; }
   #wn-blase.unten { right: 40px; bottom: 400px; }
   #wn-wetter-smiley { height: 34px; width: 34px; vertical-align: -8px; margin-left: 8px; }
+  /* Jubel-Smileys (Betreiber 23.11.): Fussball-Tore, Dart-Ergebnisse */
+  .wn-jubel { height: 1.7em; width: auto; vertical-align: -0.45em; margin-left: .35em; display: inline-block;
+              animation: wn-hupf 1.1s ease-in-out infinite; transform-origin: 50% 100%; }
+  .sd-legs .wn-jubel { height: 1.25em; vertical-align: -0.3em; margin-left: .2em; animation-duration: 1.6s; }
+  .ytm-pille.tor img.wn-e { height: 2.2em; vertical-align: middle; animation: wn-hupf .8s ease-in-out infinite; }
+  .fb-scorers-line img.wn-e { height: 1.35em; vertical-align: -0.32em; }
+  @keyframes wn-hupf { 0%,100% { transform: translateY(0) scale(1); } 40% { transform: translateY(-14%) scale(1.08) rotate(-6deg); }
+                       70% { transform: translateY(0) scale(.97) rotate(4deg); } }
   `;
   const stil = document.createElement('style');
   stil.id = 'wn-stil'; stil.textContent = css;
@@ -291,6 +300,39 @@
     if (!img.src.endsWith(s + '.webp')) img.src = bild(s);
   }
 
+  // ---------- Jubel-Smileys: Fussball, Dart, Hos'n Obe ----------
+  // Hos'n Obe: statt der flachen SVG-Smileys die 3D-Smileys (cool = Rundenstarter, weinend = zahlt).
+  function hosnObeSmileys() {
+    const E = window.HosnObeEngine;
+    if (!E || E.wn) return;
+    const alt = E.smileyImage, NEU = { cool: 's-cool', crying: 's-weinen' };
+    E.smileyImage = function (kind, basePath) { return NEU[kind] ? bild(NEU[kind]) : alt.call(this, kind, basePath); };
+    E.wn = true;
+  }
+  function jubelSetzen(el, name) {
+    if (!el) return;
+    let img = el.querySelector(':scope > img.wn-jubel');
+    if (!name) { if (img) img.remove(); return; }
+    if (!img) { img = document.createElement('img'); img.className = 'wn-jubel'; img.alt = ''; img.draggable = false; el.appendChild(img); }
+    if (!img.src.endsWith(name + '.webp')) img.src = bild(name);
+  }
+  function jubel() {
+    // Fussball: jedes Tor (Torschuetzen-Zeile, TOR!-Einblendung waehrend der Musik) mit Jubel-Smiley
+    document.querySelectorAll('.fb-scorers-line img.wn-e, .ytm-pille.tor img.wn-e').forEach(i => {
+      if (!i.src.endsWith('s-tor.webp')) i.src = bild('s-tor');
+    });
+    // Dart: Badge Endstand / Live-Stand aus Sicht der City Flyers
+    ['dart-spiel-endstand', 'dart-cam-badge'].forEach(id => {
+      const b = document.getElementById(id);
+      if (!b) return;
+      const c = b.classList;
+      jubelSetzen(b, c.contains('is-sieg') ? 's-party' : c.contains('is-nied') ? (/verloren/.test(b.textContent) ? 's-weinen' : '')   // "Endstand" fremder Spiele: kein Smiley
+        : c.contains('is-fuehrt') ? 's-sternenaugen' : (c.contains('is-live') && /\d+:\d+/.test(b.textContent)) ? 's-naegelkauen' : '');
+    });
+    // gewonnene Paarungen: kleiner Klatsch-Smiley hinter den Legs
+    document.querySelectorAll('#dart-spiel-liste .sd-legs').forEach(l => jubelSetzen(l, l.classList.contains('is-sieg') ? 's-klatschen' : ''));
+  }
+
   // ---------- Laufband ----------
   const TICKER = [
     '☕ City Cafe Klagenfurt Fischl – dein gemütlicher Treffpunkt im Advent 🎄',
@@ -357,8 +399,9 @@
     hintergrund();
     emojiTauschen(document.body);
     beobachter.observe(document.body, { childList: true, subtree: true, characterData: true });
-    dekoSetzen(); wetterSmiley();
-    setInterval(() => { dekoSetzen(); wetterEinhaengen(); }, 2000);
+    dekoSetzen(); wetterSmiley(); hosnObeSmileys(); jubel();
+    setInterval(() => { dekoSetzen(); wetterEinhaengen(); hosnObeSmileys(); }, 2000);
+    setInterval(() => { try { jubel(); } catch (e) {} }, 1000);
     setInterval(() => { hintergrund(); wetterSmiley(); laufband(); }, 60000);
     setInterval(() => {
       // Krampus-Auftritt: Lindi kommt 9 s nach Beginn der normalen Ansicht und 9 s nach dem Wechsel ins
@@ -371,6 +414,6 @@
       if (Date.now() - lindiZuletzt > 20 * 60000 && lindiAblauf()) lindiZuletzt = Date.now();
     }, 3000);
   }
-  window.weihnacht = { lindi: (seite) => lindiAblauf(true, seite), deko: dekoSetzen, hintergrund, emoji: emojiTauschen };
+  window.weihnacht = { lindi: (seite) => lindiAblauf(true, seite), deko: dekoSetzen, hintergrund, emoji: emojiTauschen, jubel };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
