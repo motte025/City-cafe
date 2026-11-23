@@ -16360,7 +16360,7 @@
         // Stumm - der Ton gehoert der Musik. Ist die Karte verdeckt (Vollbild-Slots, Musik-
         // Widget), laufen nur Fotos, damit kein unsichtbares Video die Box belastet.
         const RECHTS_SHORTS_ANTEIL = 0.75;
-        const rechtsShorts = { player: null, bereit: false, aktuell: null, idx: 0, start: 0, wache: null, fehler: 0 };
+        const rechtsShorts = { player: null, bereit: false, aktuell: null, runde: [], start: 0, wache: null, fehler: 0 };
         function rechtsShortsListe() {
             const l = Array.isArray(window.nlRechtsShorts) ? window.nlRechtsShorts : [];
             return l.filter(v => v && /^[A-Za-z0-9_-]{11}$/.test(v.videoId || '') && (Number(v.dauer) || 0) <= 120);
@@ -16411,8 +16411,10 @@
         function rechtsShortStarten() {
             const s = rechtsShorts, liste = rechtsShortsListe();
             if (!liste.length || s.fehler >= 5 || !rechtsKarteSichtbar()) { if (s.fehler >= 5) s.fehler = 0; return false; }
-            const v = liste[s.idx % liste.length];
-            s.idx = (s.idx + 1) % liste.length;
+            // Jede Runde gemischt (sonst kamen 5 Welzenegg-Clips am Stueck); jeder Short einmal pro Runde.
+            if (!s.runde || !s.runde.length) s.runde = shuffleArray(liste.map(x => x.videoId));
+            const naechsteId = s.runde.shift();
+            const v = liste.find(x => x.videoId === naechsteId) || liste[0];
             s.aktuell = v; s.start = Date.now();
             const ebene = document.getElementById('rechts-shorts');
             ebene.classList.add('laedt', 'an');
