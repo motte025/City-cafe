@@ -93,6 +93,10 @@ und wieder in der Rotation.
     dafür gibt es Kreidetafel und Neon-Reklame).
 - **Achtung:** Der Kiosk lädt nur neu, wenn sich **index.html** ändert (Prüfsumme). Eine Änderung nur an js/weihnacht.js kommt erst
   beim nächsten Neuladen an – dann index.html mit anfassen (z. B. `?v=` am Script-Tag hochzählen).
+- Nachtrag (2fecb1f8): Lindi auch beim Krampus – 9 s nach Beginn der normalen Ansicht (rechts) und 9 s nach dem Wechsel
+  ins Vollbild (`voll-links`/`voll-rechts`: schaut hinter dem Video hervor, das mpv-Fenster deckt den Rest; Blase oben in der
+  Leiste). „Von unten“ (`unten`, über dem Laufband rechts) schaltet sich selbst zu, sobald `weihnacht/lindi-unten-guckt|angst|versteckt.webp`
+  existieren (Prompts C6–C8 in PROMPTS.md). Test: `weihnacht.lindi('voll-links')` usw. Laufband 40 px, Emojis 1,3-fach.
 - Offen: Jubel-/Ärger-Smileys bei Fußball-Toren und Dart-Ergebnissen.
 
 ## 16.11.2026: Wetter 90 s, Aufklatscher nur am See, Krampuslauf Ebenthal 2026 (Windows-Sitzung)
