@@ -76,6 +76,24 @@ und wieder in der Rotation.
   `DJ_REMOTE_CONFIG is not defined` in djFernQrZeichnen brach das Hauptskript ab, danach liefen News, Galerie und Shorts
   nicht mehr. Die rechte Spalte schaltet jetzt auf Shorts, sobald die Liste vom Supervisor kommt (dd921689).
 
+## 23.11.2026: Weihnachts-Dashboard (Windows-Sitzung)
+
+- **js/weihnacht.js** (4061133d), Bilder in **weihnacht/** (ChatGPT, Prompts: Desktop , Originale in
+  , Smileys in ). Von selbst an vom 20.11. bis 06.01.,  aus,  erzwingt.
+  - 4 Hintergründe (Real-ESRGAN 4x auf W1 , dann 1920x1080), stündlich im Wechsel ( über ).
+  - Krampus-Rahmen:  (normale Ansicht),  (body.krampus-voll).
+  - Deko an Karten (, z 45): Mütze card-media, Schneehaube card-weather, Kugeln rechts an card-top-custom, schmale
+    Girlanden über card-media und card-ticker. Nur sichtbar, wenn die Karte zu sehen ist (elementFromPoint).
+  - Lindi (Lindwurm mit Mütze, 5 Posen) vom rechten Rand mit Sprechblase, 16 Sprüche vom Betreiber, alle 20 min und 9 s nach
+    Beginn jedes Krampus-Auftritts. Test: .
+  - 3D-Emojis: MutationObserver ersetzt bekannte Emojis (Liste EMOJI) im ganzen Dashboard durch ;     liefert 3D-Wettersymbole; Wetter-Smiley neben „Klagenfurt“ bei Frost/Schnee/Sonne.
+  - Laufband: 20 Advent-Sprüche + Krampuskränzchen 4.12. (City Cafe, 18 Uhr) und 5.12. (Cafe Plauscherl Feschnig, 17 Uhr) aus der
+    Kreidetafel, doppelt, mit Countdown, fallen danach heraus. Folie „Demnächst bei uns“ bewusst NICHT befüllt (Betreiber: zu viel,
+    dafür gibt es Kreidetafel und Neon-Reklame).
+- **Achtung:** Der Kiosk lädt nur neu, wenn sich **index.html** ändert (Prüfsumme). Eine Änderung nur an js/weihnacht.js kommt erst
+  beim nächsten Neuladen an – dann index.html mit anfassen (z. B.  am Script-Tag hochzählen).
+- Offen: Jubel-/Ärger-Smileys bei Fußball-Toren und Dart-Ergebnissen.
+
 ## 16.11.2026: Wetter 90 s, Aufklatscher nur am See, Krampuslauf Ebenthal 2026 (Windows-Sitzung)
 
 - Wetter-Übersicht 90 s (`WETTER_SEKUNDEN`), Regen-Aufklatscher nur unterhalb der Uferlinie (Commit 15921cfa).
