@@ -98,7 +98,10 @@ und wieder in der Rotation.
   Leiste). „Von unten“ (`unten`, 370 px, ganz in der rechten Spalte über dem Laufband) seit 115d4a98 live
   (`weihnacht/lindi-unten-guckt|angst|versteckt.webp`, Prompts C6–C8). Sprechblase steht immer über Lindis Kopf in der rechten
   Spalte (65147c8b) – links daneben deckte das Video der großen Karte sie zu. Test: `weihnacht.lindi('voll-links')` usw. Laufband 40 px, Emojis 1,3-fach.
-- Offen: Jubel-/Ärger-Smileys bei Fußball-Toren und Dart-Ergebnissen.
+- Jubel-Smileys (33ceb813, `weihnacht.jubel()` jede Sekunde): Fußball – Torschützen-Zeile und „TOR!“-Einblendung während der
+  Musik mit hüpfendem `s-tor`. Dart – Badge `dart-spiel-endstand`/`dart-cam-badge`: gewonnen `s-party`, verloren `s-weinen`,
+  führt live `s-sternenaugen`, sonst live mit Stand `s-naegelkauen`, „Endstand“ fremder Spiele ohne; gewonnene Paarungen
+  `s-klatschen`. Hos'n Obe am TV: `HosnObeEngine.smileyImage` liefert `s-cool`/`s-weinen` statt der SVGs (Handy-Seite unverändert).
 
 ## 16.11.2026: Wetter 90 s, Aufklatscher nur am See, Krampuslauf Ebenthal 2026 (Windows-Sitzung)
 
