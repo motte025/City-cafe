@@ -349,6 +349,21 @@
 
 <script src="hosn-obe-config.js"></script>
 <script src="hosn-obe-engine.js"></script>
+<script>
+/* Weihnachten (20.11.-06.01., Betreiber 23.11.2026): 3D-Smileys wie am TV (js/weihnacht.js). ?weihnacht=0/1 */
+(function () {
+    var q = new URLSearchParams(location.search).get('weihnacht');
+    var d = new Date(), m = d.getMonth() + 1, t = d.getDate();
+    var saison = (m === 11 && t >= 20) || m === 12 || (m === 1 && t <= 6);
+    var E = window.HosnObeEngine;
+    if (!E || q === '0' || (!saison && q !== '1')) return;
+    var alt = E.smileyImage, NEU = { cool: 'weihnacht/s-cool.webp', crying: 'weihnacht/s-weinen.webp' };
+    E.smileyImage = function (kind, basePath) { return NEU[kind] || alt.call(this, kind, basePath); };
+    var s = document.createElement('style');
+    s.textContent = '.kt-smiley { object-fit: contain; }';
+    document.head.appendChild(s);
+})();
+</script>
 <script src="hosn-obe-sound.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
