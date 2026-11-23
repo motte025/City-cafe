@@ -51,6 +51,28 @@ Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
 
+## 21.–23.11.2026: B03 neu gekoppelt, Mix 2 gerettet, Krampus 2026, Shorts rechts (Windows-Sitzung)
+
+- **Café-Ton (21.11.):** B03 Pro hatte nach Aus/An die Kopplung vergessen (bluetoothd „Permission denied“).
+  Auf W1 entfernt und neu gekoppelt, nachdem der Betreiber am B03 auf Koppeln gedrückt hatte; Codec danach aptX-LL.
+  `ssh w1` = Benutzer sabrina, Kiosk-Ton = citycafe. Die PipeWire-Dienste von sabrina sind per `systemctl --user mask`
+  aus, damit sie den B03 nicht abfangen.
+- **Mix 2 (21.11.):** versehentlich „Original wiederherstellen“ gedrückt. Aus der Sicherung vom 22.10. (195) plus den
+  16 Testsongs (am Ende) wiederhergestellt, insgesamt 211, mit der Warteschlange abgeglichen.
+  Sicherung des Originals: Desktop `dj gewitter/mix2-sicherung-original-21-11.json`.
+  Handy: „Original wiederherstellen“ und „Playlist löschen“ brauchen jetzt einen zweiten Tipp innerhalb von 6 s
+  (3b04a8da, 3d8377c4).
+- **Krampuslauf (23.11.):** nur noch **Klagenfurt 2026** (S0_QKDsUH24, 36 Gruppen) und **Fischl 2026**
+  (yCu8sstFKRw, 18 Gruppen), **14:00–02:00**. Beide in 1080p unter `~citycafe/.cache/citycafe/fest/`.
+  Test jederzeit: im Speicher `nlKrampus.bisStunde` hochsetzen und `mediaStateIndex = NL_SLOT_INDEX; runMasterSequence()`.
+- **Shorts rechts (23.11.):** rechte Spalte 75 % Shorts / 25 % Drive-Fotos (e8f13e9d, 200bb9e0). Quelle ist der
+  **Shorts-Reiter des Kanals „Mein Klagenfurt“** (die YouTube-Suche findet dessen Shorts nicht). Der Supervisor liest
+  ihn alle 3 h (`rechts_shorts_holen`, Cache `~/.cache/citycafe/rechts-shorts.json`): ab 01.11.2026, bis 120 s,
+  Advent/Weihnachtsmarkt, Hafenknistern (ab 26.11.), Krampusläufe; Übergabe als `window.nlRechtsShorts`.
+  Seite: Short stumm, mit Titel und Datum, danach Fotos für ein Drittel seiner Laufzeit, je Runde gemischt.
+  Ist die Karte verdeckt, laufen nur Fotos. Bei Musik mit Seite „Fotos“ am Handy wird `#ytm-seite` ausgeblendet,
+  dann zeigt die rechte Spalte dieselbe Mischung. Der Supervisor-Teil kommt mit dem Update um 08:30 auf W1.
+
 ## 16.11.2026: Wetter 90 s, Aufklatscher nur am See, Krampuslauf Ebenthal 2026 (Windows-Sitzung)
 
 - Wetter-Übersicht 90 s (`WETTER_SEKUNDEN`), Regen-Aufklatscher nur unterhalb der Uferlinie (Commit 15921cfa).
