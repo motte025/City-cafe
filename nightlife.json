@@ -15,8 +15,8 @@
     }
   ],
   "krampus": {
-    "hinweis": "Krampuslaeufe 16:00-07:00. Je Auftritt zwei Gruppen (Kapitel aus YouTube), die Videos im Wechsel. Seit 23.11.2026 Klagenfurt 2026 und Fischl 2026. Fuer ein neues Jahr videoId, jahr, ende und gruppen tauschen.",
-    "vonStunde": 16,
+    "hinweis": "Krampuslaeufe 14:00-07:00 (ab 23.11.2026, vorher 16:00). Je Auftritt zwei Gruppen (Kapitel aus YouTube), die Videos im Wechsel. Seit 23.11.2026 Klagenfurt 2026 und Fischl 2026. Fuer ein neues Jahr videoId, jahr, ende und gruppen tauschen.",
+    "vonStunde": 14,
     "bisStunde": 7,
     "gruppenProAuftritt": 2,
     "videos": [
