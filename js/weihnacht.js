@@ -32,17 +32,37 @@
   #wn-deko .wn-d { position: absolute; display: block; filter: drop-shadow(0 6px 12px rgba(0,0,0,.45)); transition: opacity .6s; }
   #wn-deko .wn-d.weg { opacity: 0; }
   .wn-e { height: 1.18em; width: auto; vertical-align: -0.22em; margin: 0 .04em; display: inline-block; }
-  #wn-lindi { position: absolute; right: -6px; bottom: -4px; height: 560px; z-index: 48; pointer-events: none;
+  /* Laufband etwas groesser (Betreiber 23.11.): Schrift 34 -> 40 px, Emojis 1,3-fach; das Band bleibt gleich hoch */
+  #card-ticker .ticker-move { font-size: 40px !important; }
+  #card-ticker .ticker-move .wn-e { height: 1.3em; vertical-align: -0.3em; }
+  /* Lindi: Grundstellung rechts unten (Dashboard und Krampus normal). Weitere Seiten per Klasse:
+     links (gespiegelt), voll-rechts/voll-links (Krampus-Vollbild: schaut hinter dem Video hervor -
+     das mpv-Fenster liegt ueber der Seite und verdeckt den Rest), unten (eigene Bilder lindi-unten-*). */
+  #wn-lindi { position: absolute; right: -6px; bottom: -4px; height: 560px; z-index: 62; pointer-events: none;
               transform: translateX(110%); transition: transform .9s cubic-bezier(.3,1.3,.5,1); filter: drop-shadow(0 10px 18px rgba(0,0,0,.5)); }
   #wn-lindi.da { transform: translateX(0); }
+  #wn-lindi.links { right: auto; left: -6px; transform: translateX(-110%) scaleX(-1); }
+  #wn-lindi.links.da { transform: scaleX(-1); }
+  #wn-lindi.voll-rechts { right: auto; bottom: auto; left: 1752px; top: 104px; height: 600px; }
+  #wn-lindi.voll-links { right: 1752px; bottom: auto; left: auto; top: 104px; height: 600px; transform: translateX(-110%) scaleX(-1); }
+  #wn-lindi.voll-links.da { transform: scaleX(-1); }
+  #wn-lindi.unten { right: 120px; height: 430px; transform: translateY(110%); }
+  #wn-lindi.unten.da { transform: translateY(0); }
   #wn-lindi.zittert { animation: wn-zittern .12s linear infinite; }
   @keyframes wn-zittern { 0%,100% { translate: 0 0; } 25% { translate: -3px 1px; } 75% { translate: 3px -1px; } }
-  #wn-blase { position: absolute; right: 360px; bottom: 420px; max-width: 460px; padding: 22px 30px; z-index: 48; pointer-events: none;
+  #wn-blase { position: absolute; right: 360px; bottom: 420px; max-width: 460px; padding: 22px 30px; z-index: 62; pointer-events: none;
               background: #fff; color: #14321a; border-radius: 28px; font: 800 32px/1.25 'Plus Jakarta Sans', sans-serif;
               box-shadow: 0 14px 34px rgba(0,0,0,.45); transform: scale(0); transform-origin: 100% 80%;
               transition: transform .35s cubic-bezier(.2,1.5,.4,1); }
   #wn-blase.da { transform: scale(1); }
   #wn-blase::after { content: ''; position: absolute; right: -26px; bottom: 30px; border: 18px solid transparent; border-left: 34px solid #fff; border-right: 0; }
+  /* Vollbild: Blase oben in der Leiste ueber dem Video, neben Lindis Kopf */
+  #wn-blase.voll-rechts, #wn-blase.voll-links { bottom: auto; top: 12px; max-width: 820px; padding: 14px 26px; font-size: 30px; }
+  #wn-blase.voll-rechts { right: 176px; transform-origin: 100% 50%; }
+  #wn-blase.voll-links { right: auto; left: 176px; transform-origin: 0 50%; }
+  #wn-blase.voll-rechts::after { bottom: auto; top: 24px; }
+  #wn-blase.voll-links::after { right: auto; left: -26px; bottom: auto; top: 24px; border-left: 0; border-right: 34px solid #fff; }
+  #wn-blase.unten { right: 560px; bottom: 250px; }
   #wn-wetter-smiley { height: 34px; width: 34px; vertical-align: -8px; margin-left: 8px; }
   `;
   const stil = document.createElement('style');
@@ -191,30 +211,56 @@
   blase.id = 'wn-blase';
   ['lindi-dreht-sich', 'lindi-angst', 'lindi-versteckt', 'lindi-erleichtert'].forEach(n => { const i = new Image(); i.src = bild(n); });
   let lindiLaeuft = false, lindiTimer = [];
-  function lindiFrei() {
-    // nur ueber dem normalen Dashboard: rechte Karte und Laufband muessen zu sehen sein
-    return sichtbar(document.getElementById('card-rotator')) && sichtbar(document.getElementById('card-ticker'))
-      && !document.body.classList.contains('krampus-voll');
+  // Bilder fuer "von unten" (lindi-unten-*.webp) gibt es erst, wenn sie im Ordner liegen - beim Start pruefen.
+  let untenDa = false;
+  { const p = new Image(); p.onload = () => { untenDa = true; }; p.src = bild('lindi-unten-guckt'); }
+  const krampusVoll = () => document.body.classList.contains('krampus-voll')
+    && !!document.querySelector('#media-view-nightlife.active');
+  const krampusNormal = () => !document.body.classList.contains('krampus-voll')
+    && !!document.querySelector('#media-view-nightlife.active .nl-stage.krampus');
+  // Wo darf Lindi gerade hin? Vollbild: links/rechts hinter dem Video; sonst rechts (und unten, wenn es die Bilder gibt).
+  function lindiSeiten() {
+    if (krampusVoll()) return ['voll-rechts', 'voll-links'];
+    const rechtsFrei = sichtbar(document.getElementById('card-rotator')) && sichtbar(document.getElementById('card-ticker'));
+    if (!rechtsFrei) return [];
+    return untenDa ? ['rechts', 'unten'] : ['rechts'];
+  }
+  function lindiFrei(seite) {
+    if (seite === 'voll-rechts' || seite === 'voll-links') return krampusVoll();
+    return lindiSeiten().includes(seite);
   }
   function sagen(text) {
     blase.classList.remove('da');
     setTimeout(() => { blase.textContent = text; emojiTauschen(blase); blase.classList.add('da'); }, 250);
   }
-  function lindiAblauf(erzwingen) {
-    if (lindiLaeuft || (!erzwingen && !lindiFrei())) return false;
+  const SEITEN_KLASSEN = ['links', 'voll-rechts', 'voll-links', 'unten'];
+  function lindiAblauf(erzwingen, wunschSeite) {
+    if (lindiLaeuft) return false;
+    const seiten = lindiSeiten();
+    const seite = wunschSeite || zufall(seiten.length ? seiten : ['rechts']);
+    if (!erzwingen && !seiten.includes(seite)) return false;
     const sk = skalierer();
     if (lindi.parentNode !== sk) { sk.appendChild(blase); sk.appendChild(lindi); }
     lindiLaeuft = true;
     lindiTimer.forEach(clearTimeout); lindiTimer = [];
+    // Seite setzen, ohne sichtbare Bewegung (erst hinter dem Rand aufstellen)
+    lindi.style.transition = 'none';
+    SEITEN_KLASSEN.forEach(k => { lindi.classList.remove(k); blase.classList.remove(k); });
+    if (seite !== 'rechts') { lindi.classList.add(seite); blase.classList.add(seite); }
+    void lindi.offsetWidth; lindi.style.transition = '';
+    const unten = seite === 'unten';
+    const pose = n => bild(unten ? ({ 'lindi-guckt': 'lindi-unten-guckt', 'lindi-dreht-sich': 'lindi-unten-guckt',
+      'lindi-angst': 'lindi-unten-angst', 'lindi-versteckt': 'lindi-unten-versteckt',
+      'lindi-erleichtert': 'lindi-unten-guckt' })[n] : n);
     const t = (ms, f) => lindiTimer.push(setTimeout(f, ms));
-    const pruefen = f => () => { if (!erzwingen && !lindiFrei()) { lindiWeg(); return; } f(); };
-    lindi.src = bild('lindi-guckt'); lindi.classList.remove('zittert');
+    const pruefen = f => () => { if (!erzwingen && !lindiFrei(seite)) { lindiWeg(); return; } f(); };
+    lindi.src = pose('lindi-guckt'); lindi.classList.remove('zittert');
     t(100, () => lindi.classList.add('da'));
     t(1300, pruefen(() => sagen(zufall(SPRUECHE.guckt))));
-    t(4800, pruefen(() => { lindi.src = bild('lindi-dreht-sich'); sagen(zufall(SPRUECHE.dreht)); }));
-    t(8300, pruefen(() => { lindi.src = bild('lindi-angst'); lindi.classList.add('zittert'); sagen(zufall(SPRUECHE.angst)); }));
-    t(11800, pruefen(() => { lindi.classList.remove('zittert'); lindi.src = bild('lindi-versteckt'); sagen(zufall(SPRUECHE.versteckt)); }));
-    t(15300, pruefen(() => { lindi.src = bild('lindi-erleichtert'); sagen(zufall(SPRUECHE.erleichtert)); }));
+    t(4800, pruefen(() => { lindi.src = pose('lindi-dreht-sich'); sagen(zufall(SPRUECHE.dreht)); }));
+    t(8300, pruefen(() => { lindi.src = pose('lindi-angst'); lindi.classList.add('zittert'); sagen(zufall(SPRUECHE.angst)); }));
+    t(11800, pruefen(() => { lindi.classList.remove('zittert'); lindi.src = pose('lindi-versteckt'); sagen(zufall(SPRUECHE.versteckt)); }));
+    t(15300, pruefen(() => { lindi.src = pose('lindi-erleichtert'); sagen(zufall(SPRUECHE.erleichtert)); }));
     t(19000, lindiWeg);
     return true;
   }
@@ -224,7 +270,7 @@
     setTimeout(() => { lindiLaeuft = false; }, 1000);
   }
   let lindiZuletzt = Date.now() - 18 * 60000;   // erster Auftritt ~2 min nach dem Laden
-  let krampusWar = false;
+  let krampusWar = '';
 
   // ---------- Wetter-Smiley ----------
   function wetterSmiley() {
@@ -313,14 +359,16 @@
     setInterval(() => { dekoSetzen(); wetterEinhaengen(); }, 2000);
     setInterval(() => { hintergrund(); wetterSmiley(); laufband(); }, 60000);
     setInterval(() => {
-      // Krampus-Auftritt beginnt -> Lindi kommt (nach dem Gruppennamen)
-      const kr = !!document.querySelector('#media-view-nightlife.active .nl-stage.krampus, .nl-stage.krampus.active')
-        && typeof nlKrampusAktiv === 'function' && nlKrampusAktiv();
-      if (kr && !krampusWar) setTimeout(() => { if (lindiAblauf()) lindiZuletzt = Date.now(); }, 9000);
+      // Krampus-Auftritt: Lindi kommt 9 s nach Beginn der normalen Ansicht und 9 s nach dem Wechsel ins
+      // Vollbild (2. Gruppe) - im Vollbild links oder rechts hinter dem Video hervor.
+      const kr = krampusVoll() ? 'voll' : krampusNormal() ? 'normal' : '';
+      if (kr && kr !== krampusWar) setTimeout(() => {
+        if ((kr === 'voll' ? krampusVoll() : krampusNormal()) && lindiAblauf()) lindiZuletzt = Date.now();
+      }, 9000);
       krampusWar = kr;
       if (Date.now() - lindiZuletzt > 20 * 60000 && lindiAblauf()) lindiZuletzt = Date.now();
-    }, 5000);
+    }, 3000);
   }
-  window.weihnacht = { lindi: () => lindiAblauf(true), deko: dekoSetzen, hintergrund, emoji: emojiTauschen };
+  window.weihnacht = { lindi: (seite) => lindiAblauf(true, seite), deko: dekoSetzen, hintergrund, emoji: emojiTauschen };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
