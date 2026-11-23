@@ -1574,6 +1574,15 @@
             100% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; filter: blur(0px); }
         }
         .gallery-event-date { font-size: 18px; font-weight: 800; color: #00f2fe; text-shadow: 0 2px 8px rgba(0,0,0,0.95), 0 0 10px rgba(0,242,254,0.4); }
+        /* Shorts in der rechten Spalte (23.11.2026): stumm, ueber den Fotos, unter dem Text.
+           Groesse und Beschnitt wie die Shorts im Musik-Widget (.ytm-shorts-rahmen). */
+        .rechts-shorts { position: absolute; inset: 0; z-index: 5; background: #000; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
+        .rechts-shorts.an { opacity: 1; }
+        body.ytm-an.ytm-rechts-mix #ytm-seite { visibility: hidden; }
+        .rechts-shorts.laedt .ytm-shorts-rahmen > div, .rechts-shorts.laedt .ytm-shorts-rahmen iframe { opacity: 0; }
+        /* Beschreibung der Shorts ist laenger als die Foto-Sprueche: normal umbrechen, hoechstens 3 Zeilen */
+        .gallery-event-title.short-text { font-size: 24px; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical; overflow: hidden; }
 
         .ticker-zone {
             padding: 0; height: 80px; 
@@ -3390,6 +3399,8 @@
                     <div class="gallery-image-container">
                         <img class="gallery-img active" id="gallery-img1" src="" alt="Foto 1">
                         <img class="gallery-img" id="gallery-img2" src="" alt="Foto 2">
+                        <div class="rechts-shorts laedt" id="rechts-shorts"><div class="ytm-shorts-hg"></div>
+                            <div class="ytm-shorts-rahmen"><div id="rechts-shorts-frame"></div></div></div>
                         <div class="gallery-text-overlay">
                             <span class="gallery-event-badge" id="gallery-current-badge">Zu Besuch</span>
                             <h3 class="gallery-event-title" id="gallery-current-title">Lade Bilder...</h3>
@@ -9734,6 +9745,9 @@
             if (seite) {
                 seite.classList.toggle('fotos', ytmSeite !== 'songs');   // Fotos und Shorts: ohne Rand, randvoll
                 seite.classList.toggle('shorts', ytmSeite === 'shorts');
+                // "Fotos" am Handy: die rechte Spalte darunter zeigt Fotos UND die Mein-Klagenfurt-Shorts
+                // (75 %, rechtsShortStarten) - die eigene Fotoschau des Widgets bleibt dann verdeckt.
+                document.body.classList.toggle('ytm-rechts-mix', ytmSeite === 'fotos');
                 if (ytmSeite !== 'shorts' && ytmShorts.player) ytmShortsAbbauen();   // vor dem Umbau, solange der Player noch im Bild steht
                 if (ytmSeite === 'fotos') {
                     // Fotoschau nur einmal aufbauen - die Bilder wechselt ytmTakt()
@@ -16339,6 +16353,110 @@
             else { gImg1.src = data.src; gImg2.classList.remove('active'); gImg1.classList.add('active'); isGalleryImg1Active = true; }
         }
 
+        // --- Shorts in der rechten Spalte (Betreiber 23.11.2026) ------------------------------
+        // 75 % Shorts, 25 % Google-Drive-Fotos: auf jeden Short folgen Fotos fuer ein Drittel
+        // seiner Laufzeit. Die Liste (Kanal "Mein Klagenfurt": Advent, Hafenknistern, Krampus,
+        // ab 01.11.2026, hoechstens 2 min) schickt der Supervisor als window.nlRechtsShorts.
+        // Stumm - der Ton gehoert der Musik. Ist die Karte verdeckt (Vollbild-Slots, Musik-
+        // Widget), laufen nur Fotos, damit kein unsichtbares Video die Box belastet.
+        const RECHTS_SHORTS_ANTEIL = 0.75;
+        const rechtsShorts = { player: null, bereit: false, aktuell: null, idx: 0, start: 0, wache: null, fehler: 0 };
+        function rechtsShortsListe() {
+            const l = Array.isArray(window.nlRechtsShorts) ? window.nlRechtsShorts : [];
+            return l.filter(v => v && /^[A-Za-z0-9_-]{11}$/.test(v.videoId || '') && (Number(v.dauer) || 0) <= 120);
+        }
+        function rechtsKarteSichtbar() {
+            const karte = document.getElementById('card-rotator');
+            if (!karte || document.hidden || SPARSTUFE >= 2) return false;
+            const r = karte.getBoundingClientRect();
+            if (r.width < 50 || r.height < 50) return false;
+            const oben = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+            return !!(oben && karte.contains(oben));
+        }
+        function rechtsShortsStopp() {
+            const s = rechtsShorts;
+            clearTimeout(s.wache); s.wache = null;
+            s.aktuell = null;
+            const ebene = document.getElementById('rechts-shorts');
+            if (ebene) { ebene.classList.remove('an'); ebene.classList.add('laedt'); }
+            try { if (s.player && s.bereit) s.player.pauseVideo(); } catch (e) {}
+            const titel = document.getElementById('gallery-current-title');
+            if (titel && titel.classList.contains('short-text')) { titel.classList.remove('short-text'); titel.innerHTML = ''; }
+        }
+        function rechtsShortsPlayer(fertig) {
+            const s = rechtsShorts;
+            if (s.player) { if (s.bereit) fertig(); else setTimeout(() => rechtsShortsPlayer(fertig), 500); return; }
+            if (!(window.YT && window.YT.Player)) { try { nlApiLaden(); } catch (e) {} setTimeout(() => rechtsShortsPlayer(fertig), 1000); return; }
+            s.player = new window.YT.Player('rechts-shorts-frame', {
+                width: '100%', height: '100%',
+                playerVars: { autoplay: 1, controls: 0, mute: 1, rel: 0, modestbranding: 1, playsinline: 1,
+                              iv_load_policy: 3, cc_load_policy: 0, disablekb: 1, fs: 0, origin: location.origin },
+                events: {
+                    onReady: () => { s.bereit = true; try { s.player.mute(); } catch (e) {} fertig(); },
+                    onStateChange: ev => {
+                        if (ev.data === 1) {
+                            s.fehler = 0;
+                            try { s.player.mute(); } catch (e) {}
+                            const id = s.aktuell && s.aktuell.videoId;
+                            setTimeout(() => {      // Pause-Symbol beim Start abwarten (wie im Musik-Widget)
+                                if (s.aktuell && s.aktuell.videoId === id) document.getElementById('rechts-shorts').classList.remove('laedt');
+                            }, 2500);
+                        } else if (ev.data === 0 && s.aktuell) rechtsShortEnde(true);
+                    },
+                    onError: () => { s.fehler++; if (s.aktuell) rechtsShortEnde(false); }
+                }
+            });
+        }
+        // Naechsten Short zeigen. false = keiner da / Karte verdeckt -> der Aufrufer zeigt Fotos.
+        function rechtsShortStarten() {
+            const s = rechtsShorts, liste = rechtsShortsListe();
+            if (!liste.length || s.fehler >= 5 || !rechtsKarteSichtbar()) { if (s.fehler >= 5) s.fehler = 0; return false; }
+            const v = liste[s.idx % liste.length];
+            s.idx = (s.idx + 1) % liste.length;
+            s.aktuell = v; s.start = Date.now();
+            const ebene = document.getElementById('rechts-shorts');
+            ebene.classList.add('laedt', 'an');
+            ebene.querySelector('.ytm-shorts-hg').style.backgroundImage = `url("https://i.ytimg.com/vi/${v.videoId}/hqdefault.jpg")`;
+            const badge = document.getElementById('gallery-current-badge'), datum = document.getElementById('gallery-current-date'),
+                  titel = document.getElementById('gallery-current-title');
+            badge.textContent = 'Mein Klagenfurt';
+            const d = String(v.datum || '');
+            datum.textContent = d.length === 8 ? `${d.slice(6, 8)}.${d.slice(4, 6)}.${d.slice(0, 4)}` : '';
+            titel.classList.add('short-text');
+            titel.textContent = String(v.titel || '').trim();
+            rechtsShortsPlayer(() => {
+                if (s.aktuell !== v) return;
+                try { s.player.loadVideoById({ videoId: v.videoId }); s.player.mute(); } catch (e) { rechtsShortEnde(false); }
+            });
+            // Wache: falls die Ende-Meldung ausbleibt (Netz, Player haengt)
+            clearTimeout(s.wache);
+            const bis = Date.now() + ((Number(v.dauer) || 60) + 12) * 1000;
+            // Alle 3 s: Zeit um oder Karte inzwischen verdeckt (Vollbild-Slot, Werbung) -> Short beenden
+            const pruefen = () => {
+                if (s.aktuell !== v) return;
+                if (Date.now() > bis || !rechtsKarteSichtbar()) { rechtsShortEnde(true); return; }
+                s.wache = setTimeout(pruefen, 3000);
+            };
+            s.wache = setTimeout(pruefen, 3000);
+            return true;
+        }
+        // Short vorbei: Fotos fuer ein Drittel seiner Laufzeit (-> 75 % Shorts), dann der naechste.
+        function rechtsShortEnde(gelaufen) {
+            const s = rechtsShorts, v = s.aktuell;
+            const lief = gelaufen && v ? Math.min(Date.now() - s.start, ((Number(v.dauer) || 60) + 12) * 1000) : 0;
+            rechtsShortsStopp();
+            if (sidebarTimerId) clearTimeout(sidebarTimerId);
+            if (galleryTimer) clearInterval(galleryTimer);
+            if (!imagePlaylist || !imagePlaylist.length || !lief) {
+                sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), lief ? 300 : 1500);
+                return;
+            }
+            showNextPlaylistImage();
+            galleryTimer = setInterval(showNextPlaylistImage, BILD_WECHSEL_SEKUNDEN * 1000);
+            const fotoMs = Math.max(BILD_WECHSEL_SEKUNDEN * 1000, lief * (1 - RECHTS_SHORTS_ANTEIL) / RECHTS_SHORTS_ANTEIL);
+            sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), fotoMs);
+        }
+
         // ohneFotos: Ordner leer - einmal auf News ausweichen, statt sofort wieder Fotos zu versuchen.
         async function rotateSidebarWidgets(ohneFotos) {
             const galleryView = document.getElementById('view-event-gallery'), 
@@ -16349,6 +16467,7 @@
             if (newsCycleTimer) clearInterval(newsCycleTimer); 
             if (musicTimer) clearInterval(musicTimer);
             if (sidebarTimerId) clearTimeout(sidebarTimerId);
+            rechtsShortsStopp();
 
             galleryView.classList.remove('active'); newsView.classList.remove('active'); musicView.classList.remove('active');
             // Nur Fotos (Vorgabe): immer wieder die Galerie, News und Cafe-Info fallen weg.
@@ -16356,14 +16475,19 @@
             if (nurFotos && !ohneFotos) activeSidebarWidgetIndex = 0;
 
             if (activeSidebarWidgetIndex === 0) {
-                await loadDriveFolderImages(); 
-                preparePlaylist(); 
+                await loadDriveFolderImages();
+                preparePlaylist();
+                // Im Foto-Modus kommen Shorts dazu (75 %): erst ein Short, danach Fotos (rechtsShortEnde).
+                if (nurFotos && rechtsShortStarten()) { galleryView.classList.add('active'); activeSidebarWidgetIndex = 0; return; }
                 if (!imagePlaylist || imagePlaylist.length === 0) { activeSidebarWidgetIndex = 1; rotateSidebarWidgets(true); return; }
                 galleryView.classList.add('active');
                 showNextPlaylistImage(); 
                 galleryTimer = setInterval(showNextPlaylistImage, BILD_WECHSEL_SEKUNDEN * 1000);
                 activeSidebarWidgetIndex = nurFotos ? 0 : 1;
-                sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), Math.max(30000, imagePlaylist.length * BILD_WECHSEL_SEKUNDEN * 1000)); 
+                // Gibt es Shorts (Karte war nur gerade verdeckt), bald wieder einen versuchen.
+                const fotoRunde = nurFotos && rechtsShortsListe().length ? 2 * BILD_WECHSEL_SEKUNDEN * 1000
+                    : Math.max(30000, imagePlaylist.length * BILD_WECHSEL_SEKUNDEN * 1000);
+                sidebarTimerId = setTimeout(() => rotateSidebarWidgets(), fotoRunde);
             } else if (activeSidebarWidgetIndex === 1) {
                 newsView.classList.add('active'); 
                 let newsSubIdx = 0; renderNewsItem(newsSubIdx);

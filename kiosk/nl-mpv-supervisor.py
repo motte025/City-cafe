@@ -1928,6 +1928,94 @@ def playlist_lesen(quelle):
     return treffer
 
 
+# Shorts fuer die rechte Spalte (Betreiber 23.11.2026): 75 % Shorts, 25 % Google-Drive-Fotos.
+# Quelle ist der Kanal "Mein Klagenfurt" - dessen Shorts findet die YouTube-Suche nicht, im
+# Shorts-Reiter des Kanals stehen sie. Genommen wird ab 01.11.2026, hoechstens 2 Minuten, nur
+# Advent/Weihnachtsmarkt, Hafenknistern und Krampuslaeufe. Alle 3 h neu gelesen; was einmal
+# geprueft ist, steht im Cache und wird nicht noch einmal abgefragt.
+RECHTS_KANAL = "https://www.youtube.com/channel/UCLWz5tb8zLcXl_5JsmXj7og/shorts"
+RECHTS_DATEI = os.path.join(PLAYLIST_CACHE, "rechts-shorts.json")
+RECHTS_ABSTAND = 3 * 3600
+RECHTS_AB_DATUM = "20261101"
+RECHTS_MAX_SEK = 120
+RECHTS_THEMA = re.compile(r"krampus|perchten|teufel|teifl|nikol|christkind|advent|weihnacht|glühwein|gluehwein|"
+                          r"hafenknistern|hafen knistern|lendhafen|punsch|christbaum|lichterwelt", re.I)
+RECHTS = {"liste": [], "zeit": 0.0, "laeuft": False}
+
+
+def rechts_shorts_laden():
+    try:
+        with open(RECHTS_DATEI) as f:
+            d = json.load(f)
+        return d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def rechts_liste(cache):
+    return sorted((v for v in cache.values() if isinstance(v, dict) and v.get("videoId") and not v.get("weg")),
+                  key=lambda v: v.get("datum", ""), reverse=True)
+
+
+def rechts_shorts_holen():
+    """Shorts-Reiter des Kanals lesen, neue IDs einzeln pruefen, Ergebnis in RECHTS["liste"]."""
+    try:
+        cache = rechts_shorts_laden()          # videoId -> Eintrag oder {"weg": true}
+        ids = []
+        for programm in ytdlp_programme():
+            try:
+                out = subprocess.run(
+                    ["nice", "-n", "10", programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser",
+                     COOKIES_FROM, "--no-warnings", "--flat-playlist", "--playlist-end", "60",
+                     "--print", "%(id)s", RECHTS_KANAL],
+                    capture_output=True, text=True, timeout=180)
+            except (subprocess.TimeoutExpired, OSError):
+                continue
+            ids = [z.strip() for z in out.stdout.splitlines() if re.fullmatch(r"[A-Za-z0-9_-]{11}", z.strip())]
+            if ids:
+                break
+        for vid in ids:
+            if vid in cache:
+                continue
+            info = None
+            for programm in ytdlp_programme():
+                try:
+                    r = subprocess.run(
+                        ["nice", "-n", "10", programm, "--js-runtimes", JS_RUNTIME, "--cookies-from-browser",
+                         COOKIES_FROM, "--no-warnings", "--skip-download", "--print",
+                         "%(.{id,upload_date,duration,title,description})j", "--", vid],
+                        capture_output=True, text=True, timeout=90)
+                    info = json.loads(r.stdout.strip().splitlines()[-1]) if r.stdout.strip() else None
+                except (subprocess.TimeoutExpired, OSError, ValueError, IndexError):
+                    info = None
+                if info:
+                    break
+            if not info:
+                continue                        # beim naechsten Mal noch einmal versuchen
+            text = f"{info.get('title') or ''} {info.get('description') or ''}"
+            dauer = info.get("duration") or 0
+            datum = str(info.get("upload_date") or "")
+            if datum >= RECHTS_AB_DATUM and 0 < dauer <= RECHTS_MAX_SEK and RECHTS_THEMA.search(text):
+                cache[vid] = {"videoId": vid, "titel": (info.get("title") or "").strip()[:160],
+                              "datum": datum, "dauer": dauer}
+            else:
+                cache[vid] = {"weg": True, "datum": datum}
+        try:
+            os.makedirs(PLAYLIST_CACHE, exist_ok=True)
+            with open(RECHTS_DATEI, "w") as f:
+                json.dump(cache, f)
+        except OSError as e:
+            log(f"Shorts rechts: Cache nicht geschrieben ({e})")
+        liste = rechts_liste(cache)
+        if [v["videoId"] for v in liste] != [v["videoId"] for v in RECHTS["liste"]]:
+            log(f"Shorts rechts: {len(liste)} Shorts von Mein Klagenfurt")
+        RECHTS["liste"] = liste
+    except Exception as e:                      # darf die Hauptschleife nie stoeren
+        log(f"Shorts rechts: {type(e).__name__}: {e}")
+    finally:
+        RECHTS["laeuft"] = False
+
+
 def aehnliche(video_id, titel):
     """Vorschlaege, die zum gerade gestarteten Video passen ("Passt dazu").
 
@@ -3660,6 +3748,8 @@ def main():
     # (Notfall-Kopie: frischt der taegliche Repo-Schritt auf, 2 min nach dem Start - nicht doppelt hier)
     seite_pruefung = 0.0  # wann zuletzt nachgesehen wurde, ob die Notfall-Kopie laeuft
     ueberw_zeit = {"tv": 0.0, "system": 0.0}
+    RECHTS["liste"] = rechts_liste(rechts_shorts_laden())   # sofort zeigen, was schon bekannt ist
+    RECHTS["zeit"] = time.time() - RECHTS_ABSTAND + 120       # erster Abruf 2 min nach dem Start
     stocken = {}          # Musik: {"t", "pos"} - Messfenster, ob in 8 s genug gespielt wurde
     cam_tempo = {"naechste": 0.0, "speed": 1.0}   # Dartcam: Tempo nach Puffer
     ton_vorab = {"naechste": 0.0}
@@ -3990,6 +4080,20 @@ def main():
         if time.time() - ueberw_zeit["system"] >= 60:
             ueberw_zeit["system"] = time.time()
             system_pruefen()
+        # Shorts rechte Spalte: alle 3 h vom Kanal holen - nur wenn gerade kein Neben-Arbeiter
+        # (Suche, Vorladen, Mix, Playlist) yt-dlp laufen hat (Speicher, siehe "neben").
+        # Die Liste geht jede Minute an die Seite (sie kann inzwischen neu geladen sein).
+        if (not RECHTS["laeuft"] and time.time() - RECHTS["zeit"] >= RECHTS_ABSTAND
+                and not (neben is not None and neben.is_alive())):
+            RECHTS["laeuft"] = True
+            RECHTS["zeit"] = time.time()
+            threading.Thread(target=rechts_shorts_holen, daemon=True).start()
+        if page_id and time.time() - ueberw_zeit.get("rechts", 0) >= 60:
+            ueberw_zeit["rechts"] = time.time()
+            try:
+                cdp_eval(page_id, f"window.nlRechtsShorts = {json.dumps(RECHTS['liste'])}; 1")
+            except (OSError, ValueError, ConnectionError):
+                pass
         # Bluetooth-Codec alle 5 min pruefen, nur ohne Musik (Umstellen unterbricht den Ton kurz)
         if not musik and time.time() - ueberw_zeit.get("codec", 0) >= 300:
             ueberw_zeit["codec"] = time.time()
