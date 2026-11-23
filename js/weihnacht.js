@@ -46,7 +46,7 @@
   #wn-lindi.voll-rechts { right: auto; bottom: auto; left: 1752px; top: 104px; height: 600px; }
   #wn-lindi.voll-links { right: 1752px; bottom: auto; left: auto; top: 104px; height: 600px; transform: translateX(-110%) scaleX(-1); }
   #wn-lindi.voll-links.da { transform: scaleX(-1); }
-  #wn-lindi.unten { right: 120px; height: 430px; transform: translateY(110%); }
+  #wn-lindi.unten { right: 16px; height: 370px; transform: translateY(110%); }   /* ganz in der rechten Spalte, nie ueber dem Video */
   #wn-lindi.unten.da { transform: translateY(0); }
   #wn-lindi.zittert { animation: wn-zittern .12s linear infinite; }
   @keyframes wn-zittern { 0%,100% { translate: 0 0; } 25% { translate: -3px 1px; } 75% { translate: 3px -1px; } }
@@ -64,7 +64,7 @@
   #wn-blase.voll-links { right: auto; left: 176px; transform-origin: 0 50%; }
   #wn-blase.voll-rechts::after { right: -26px; bottom: auto; top: 24px; border: 18px solid transparent; border-left: 34px solid #fff; border-right: 0; }
   #wn-blase.voll-links::after { right: auto; left: -26px; bottom: auto; top: 24px; border: 18px solid transparent; border-right: 34px solid #fff; border-left: 0; }
-  #wn-blase.unten { right: 60px; bottom: 470px; }
+  #wn-blase.unten { right: 40px; bottom: 400px; }
   #wn-wetter-smiley { height: 34px; width: 34px; vertical-align: -8px; margin-left: 8px; }
   `;
   const stil = document.createElement('style');
