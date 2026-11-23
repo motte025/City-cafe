@@ -71,7 +71,10 @@ und wieder in der Rotation.
   Advent/Weihnachtsmarkt, Hafenknistern (ab 26.11.), Krampusläufe; Übergabe als `window.nlRechtsShorts`.
   Seite: Short stumm, mit Titel und Datum, danach Fotos für ein Drittel seiner Laufzeit, je Runde gemischt.
   Ist die Karte verdeckt, laufen nur Fotos. Bei Musik mit Seite „Fotos“ am Handy wird `#ytm-seite` ausgeblendet,
-  dann zeigt die rechte Spalte dieselbe Mischung. Der Supervisor-Teil kommt mit dem Update um 08:30 auf W1.
+  dann zeigt die rechte Spalte dieselbe Mischung. Supervisor per Update am 23.11. um 05:28 eingespielt.
+- **Neustart-Absturz behoben (a433f323):** Nach dem Neustart fehlte dj-fernbedienung-config.js (Netz noch nicht da).
+  `DJ_REMOTE_CONFIG is not defined` in djFernQrZeichnen brach das Hauptskript ab, danach liefen News, Galerie und Shorts
+  nicht mehr. Die rechte Spalte schaltet jetzt auf Shorts, sobald die Liste vom Supervisor kommt (dd921689).
 
 ## 16.11.2026: Wetter 90 s, Aufklatscher nur am See, Krampuslauf Ebenthal 2026 (Windows-Sitzung)
 
