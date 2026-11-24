@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-24T01:37:45Z",
+  "checked_at": "2026-11-24T01:52:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "jessu",
       "name": "Jessu",
       "title": "MONDAY MEDICINE TO FIGHT OFF THIS FLU 💊 ❗patreon",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
