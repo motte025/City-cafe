@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-24T18:12:45Z",
+  "checked_at": "2026-11-24T18:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,9 +17,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Bushbaby + Sidney Charles + Mati Astroza | Beatport Live Amsterdam | ADE 2026",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
@@ -27,13 +27,6 @@
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "2000s vs. 2010s - All In One - Live aus Studio 2",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
