@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-24T16:52:46Z",
+  "checked_at": "2026-11-24T17:02:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -35,13 +35,6 @@
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
       "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "Anjunachill On Air 18: Above & Beyond",
-      "game": "Music"
     },
     {
       "platform": "twitch",
