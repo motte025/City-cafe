@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-24T21:07:45Z",
+  "checked_at": "2026-11-24T21:12:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "90s Day mit @dj_falk @chris_nitro und @ericssl",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵 Ruhiger Mittwoch? | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
