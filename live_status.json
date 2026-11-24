@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-24T14:02:45Z",
+  "checked_at": "2026-11-24T14:17:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -17,16 +17,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "Bushbaby + Sidney Charles + Mati Astroza | Beatport Live Amsterdam | ADE 2026",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Bushbaby + Sidney Charles + Mati Astroza | Beatport Live Amsterdam | ADE 2026",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
