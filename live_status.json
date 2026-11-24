@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-24T20:07:48Z",
+  "checked_at": "2026-11-24T20:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Sick in bed pt2: progressive 80s & Indie 💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmikemorino",
+      "name": "DJMikeMorino",
+      "title": "Spontaner Sonder-Quickie - Mixed Music  - Das legendäre Original - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
       "game": "DJs"
     }
   ]
