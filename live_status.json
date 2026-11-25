@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-25T20:22:46Z",
+  "checked_at": "2026-11-25T20:37:47Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 123🎉| Dance Styles | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "CHANNEL X",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 123🎉| Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Eskalation am Mittwoch! <3  !release @just_jenny_official @two_crazy_girls",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵ABER GANZ SPONTAN | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵ABER GANZ SPONTAN | !bier | !zug | !holy | #werbung",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Eskalation am Mittwoch! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
