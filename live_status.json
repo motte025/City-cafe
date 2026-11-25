@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-25T18:32:45Z",
+  "checked_at": "2026-11-25T18:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !EMP !Baum !Wolt !Winter !Shakes !Holy !Moumint !Shop !Socials",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "TECHNO BERGFEST 🔴 NEW !RELEASE  🔴 ☆ !naturtreu 🔴",
@@ -41,13 +48,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !EMP !Baum !Wolt !Winter !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
