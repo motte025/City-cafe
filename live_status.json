@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-25T19:27:45Z",
+  "checked_at": "2026-11-25T19:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,6 +38,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵ABER GANZ SPONTAN | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -48,13 +55,6 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "STUDIO SESSION | GEORGE FITZGERALD",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵ABER GANZ SPONTAN | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
