@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-25T21:37:45Z",
+  "checked_at": "2026-11-25T21:52:45Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "dirkneuenfels",
-      "name": "DirkNeuenfels",
-      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !EMP !Baum !Wolt !Winter !Shakes !Holy !Moumint !Shop !Socials",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "djmissshelton",
       "name": "DJMissShelton",
       "title": "CHANNEL X",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🔥 BERGFESTIVAL - Mixed Music (🇩🇪 / 🇺🇸) 🔥 !EMP !Baum !Wolt !Winter !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     },
     {
