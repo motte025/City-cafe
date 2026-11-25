@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-25T18:02:46Z",
+  "checked_at": "2026-11-25T18:12:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,9 +10,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, MainStage bis Hardtechno | !holy",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "CHANNEL X",
       "game": "DJs"
     },
     {
@@ -41,13 +41,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "CHANNEL X",
       "game": "DJs"
     }
   ]
