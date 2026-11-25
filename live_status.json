@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-25T20:17:45Z",
+  "checked_at": "2026-11-25T20:22:46Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "CHANNEL X",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "sintica",
       "name": "Sintica",
       "title": "🎉MUTE MARATHON TAG 123🎉| Dance Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "CHANNEL X",
       "game": "DJs"
     },
     {
@@ -41,13 +41,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "STUDIO SESSION | GEORGE FITZGERALD",
       "game": "DJs"
     }
   ]
