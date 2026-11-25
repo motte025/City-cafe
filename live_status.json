@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-25T19:17:45Z",
+  "checked_at": "2026-11-25T19:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -48,6 +48,13 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "STUDIO SESSION | GEORGE FITZGERALD",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵ABER GANZ SPONTAN | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
