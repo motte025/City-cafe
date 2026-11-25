@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-25T19:57:46Z",
+  "checked_at": "2026-11-25T20:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,9 +38,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "TECHNO BERGFEST 🔴 NEW !RELEASE  🔴 ☆ !naturtreu 🔴",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
@@ -48,13 +48,6 @@
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "STUDIO SESSION | GEORGE FITZGERALD",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
