@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-25T13:52:46Z",
+  "checked_at": "2026-11-25T14:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, MainStage bis Hardtechno | !holy",
       "game": "DJs"
     }
   ]
