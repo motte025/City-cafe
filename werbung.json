@@ -2,7 +2,7 @@
   "_hinweis": "Hausprogramm des City Cafe fuer die Folie 'Demnaechst im City Cafe' (index.html, runHausprogrammState). datum/ab/bis in Wiener Zeit. Ein Eintrag verschwindet von selbst, sobald 'bis' vorbei ist. Nur echte, vom Betreiber genannte Angaben eintragen. 'djAngebote': Schrift unter Pioneer DJ im DJ-Modus (dj-studio/js/ui/angebote.js), abwechselnd, unabhaengig von 'aktionen'.",
   "aktionenBild": "jaeger.webp",
   "plakate": [
-    { "id": "karaoke-2026-12-11", "aktiv": true, "datei": "karaoke_xmas_tv.jpg", "titel": "Karaoke X-Mas Edition – Fr 11.12.2026 ab 19:00", "dauerS": 60, "vollbild": true, "bis": "2026-12-12 04:00" },
+    { "id": "karaoke-2026-12-11", "aktiv": true, "datei": "karaoke_xmas_tv.jpg", "titel": "Karaoke X-Mas Edition – Fr 11.12.2026 ab 19:00", "dauerS": 60, "vollbild": true, "jedenZyklus": true, "bis": "2026-12-12 04:00" },
     { "id": "jaegermeister-aktion", "aktiv": true, "datei": "jaegermeister_aktion_tv.jpg", "titel": "5 × Jägermeister Aktion" },
     { "id": "spirituosen", "aktiv": true, "datei": "spirituosen_tv.jpg", "titel": "Spirituosen-Karte" }
   ],

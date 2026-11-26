@@ -10771,12 +10771,28 @@
         }
         const PLAKAT_SLOT_INDEX = 0.6;
         let plakatNr = 0;
+        // Plakate mit "jedenZyklus": true (z. B. Veranstaltung) kommen in JEDEM Durchlauf in einem
+        // eigenen Slot direkt vor der Rotation - unabhaengig von "wie oft" am Chef-Handy (nur "aus"
+        // am Handy schaltet sie ab). In der normalen Rotation tauchen sie dann nicht noch einmal auf.
+        const PLAKAT_FEST_SLOT_INDEX = 0.55;
+        let plakatFestNr = 0;
+        function runPlakatFestState() {
+            if (werbungWert('plakate', 'an') === false) return false;
+            const liste = ((hausprogrammDaten && hausprogrammDaten.plakate) || [])
+                .filter(pl => plakatGilt(pl) && pl.jedenZyklus);
+            if (!liste.length) return false;
+            plakatZeigen(liste[plakatFestNr++ % liste.length]);
+            return true;
+        }
         function runPlakatState() {
             if (werbungWert('plakate', 'an') === false) return false;
             const liste = ((hausprogrammDaten && hausprogrammDaten.plakate) || [])
-                .filter(plakatGilt);
+                .filter(pl => plakatGilt(pl) && !pl.jedenZyklus);
             if (!liste.length || !werbungDiesmal('plakate')) return false;
-            const pl = liste[plakatNr++ % liste.length];
+            plakatZeigen(liste[plakatNr++ % liste.length]);
+            return true;
+        }
+        function plakatZeigen(pl) {
             const bild = document.getElementById('plakat-bild');
             bild.onerror = () => {            // Datei fehlt: gleich weiter statt schwarzer Flaeche
                 bild.onerror = null;
@@ -10788,7 +10804,6 @@
             bild.alt = pl.titel || '';
             plakatBuehne(pl);
             document.getElementById('plakat-fullscreen').classList.add('active');
-            return true;
         }
 
         // ---------- Werbung rund um den Musik-Player (Vollbild, 15.10.2026) ----------
@@ -15931,8 +15946,14 @@
 
             } else if (mediaStateIndex === HAUSPROGRAMM_SLOT_INDEX) {
                 // Eigene Veranstaltungen (werbung.json); ohne Termine sofort weiter.
-                mediaStateIndex = PLAKAT_SLOT_INDEX;
+                mediaStateIndex = PLAKAT_FEST_SLOT_INDEX;
                 if (runHausprogrammState()) globalMasterTimer = later(runMasterSequence, werbungDauerMs('folie'));
+                else runMasterSequence();
+
+            } else if (mediaStateIndex === PLAKAT_FEST_SLOT_INDEX) {
+                // Plakat "jeden Zyklus" (werbung.json, z. B. Veranstaltung); ohne sofort weiter.
+                mediaStateIndex = PLAKAT_SLOT_INDEX;
+                if (runPlakatFestState()) globalMasterTimer = later(runMasterSequence, plakatDauerMs(plakatJetzt));
                 else runMasterSequence();
 
             } else if (mediaStateIndex === PLAKAT_SLOT_INDEX) {
