@@ -8,6 +8,7 @@ Stand beschreiben, nicht den von vorgestern.
 **Windows-Sitzung (mit `ssh w1`): zuerst `UEBERGABE-WINDOWS.md` lesen** – was am 21.10. passiert ist
 und was am W1 zu tun ist.
 
+Neu 26. November 2026: Emoji Bilderrätsel als Slot und Übergänge ohne Aufblitzen (Abschnitt „26.11.2026“).
 Letzte Durchsicht: 12. November 2026 (Wetter-Grafik neu mit Nachtbildern, Fußball- und Veranstaltungen-
 Hintergrund, Schnaps-Maschine nach dem Quiz, Quiz-Statistik und 12er-Runde, Notbremse der Musik behoben – alles im
 Abschnitt „11.–12.11.2026“; TV muss für Veranstaltungen und Schnaps-Maschine noch neu geladen werden).
@@ -50,6 +51,24 @@ Davor, 5.–7. Oktober: DJ-Übergänge per Studio-Abgleich, offizielle Videos
 Bluetooth-Wächter, Tailscale, zweiter B03 Pro gekoppelt, Roulette-Werbung
 und Musik-Empfehlung entfernt, ODROID weg, Roulette-Spielmodus im Dashboard
 und wieder in der Rotation.
+
+## 26.11.2026: Emoji Bilderrätsel als Slot, Übergänge ohne Aufblitzen (Windows-Sitzung)
+
+- **Neuer Slot „Emoji Bilderrätsel“** (`runBilderraetselState`, `BILDER_SLOT_INDEX` 7.1): in **jedem** Durchlauf nach den
+  Veranstaltungen, vor dem Fußball; 8:30–20:00 wie das Quiz, nur Raum `city-cafe`. 3 Rätsel pro Runde (ca. 3½ min),
+  Hintergrund wechselt nach jeder Frage. Seite liegt wie das Quiz **nur auf dem W1**: `~/raetsel-test/bilderraetsel/emoji.html`
+  (+ `~/raetsel-test/kreide/kreide.js`), ausgeliefert von `citycafe-raetsel` (8766). Quelle: Branch `raetsel-prototyp`,
+  `raetsel-test/bilderraetsel/`. Schwarzer Grund, die Seite blendet erst bei `bilderraetsel-bereit` ein und endet in Schwarz;
+  ohne „bereit“ binnen 20 s wird übersprungen, Notausgang nach 7 min. Abschalten: `BILDER_AN = false` oder `?bilder=0`.
+  W1-Messung (headless, GPU, `~/kreide-test/emoji-messen.py`): 60 fps, 0 Bilder über 34 ms, 31 % eines Kerns.
+- **Kreidetafel blitzte nach dem Quiz auf:** Die Quizseite beginnt nach `raetsel-fertig` sofort eine neue Runde (mit
+  Kreidetafel), das Dashboard sah nur alle 5 s nach. Jetzt `fertigSofortWeiter()` – Quiz, Schnaps-Maschine und
+  Bilderrätsel schalten bei „fertig“ sofort weiter; das Quiz bekommt im Slot `&schleife=0` (außer in der Startphase).
+- **Kein altes Bild mehr beim Slotwechsel:** `bildErstWennGeladen()` für Plakat (auch Livemusik-Abend) und
+  Dart-Mannschaftsfoto (vorher stand kurz das vorige Bild da); Musik-Slides starten sofort mit Bild 1 statt mit dem
+  letzten Bild des vorigen Durchlaufs.
+- **Achtung W1:** Real-ESRGAN (`~/skinarbeit/prog`) nicht laufen lassen, solange der Kiosk läuft – am 26.11. 06:22
+  amdgpu-Compute-Ring-Timeouts („vkQueueSubmit failed -4“), Kiosk lief weiter, Ergebnisse kaputt.
 
 ## 21.–23.11.2026: B03 neu gekoppelt, Mix 2 gerettet, Krampus 2026, Shorts rechts (Windows-Sitzung)
 

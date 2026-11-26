@@ -620,6 +620,12 @@
         #raetsel-fullscreen { display: none; position: absolute; inset: 0; z-index: 600; background: #070a1f; }
         #raetsel-fullscreen.active { display: block; }
         #raetsel-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
+        #bilderraetsel-fullscreen { display: none; position: absolute; inset: 0; z-index: 600; background: #000; }
+        #bilderraetsel-fullscreen.active { display: block; }
+        /* schwarzer Grund, Seite blendet erst ein, wenn sie "bereit" meldet (kein Aufblitzen von Dashboard/Ladeflaeche) */
+        #bilderraetsel-fullscreen iframe { opacity: 0; transition: opacity 0.6s ease; }
+        #bilderraetsel-fullscreen.sichtbar iframe { opacity: 1; }
+        #bilderraetsel-fullscreen iframe { width: 100%; height: 100%; border: 0; display: block; }
         #mittagsteller-fullscreen img {
             width: 100%; height: 100%; object-fit: contain; display: block;
         }
@@ -3564,6 +3570,10 @@
              auch der Google-Schluessel und die Medienfotos, nichts davon im Repo. -->
         <div id="raetsel-fullscreen"></div>
 
+        <!-- Emoji-Bilderraetsel im Vollbild (siehe runBilderraetselState). Liegt wie das Quiz NUR auf dem W1
+             (127.0.0.1:8766/bilderraetsel/emoji.html, Dienst citycafe-raetsel). -->
+        <div id="bilderraetsel-fullscreen"></div>
+
         <!-- Champions-League-Tabelle im Vollbild: eigenes Element direkt unter
              #dashboard-scaler (nicht unter .media-zone), damit sie per z-index
              wirklich den kompletten 1920x1080-Bildschirm abdeckt statt vom
@@ -4048,6 +4058,20 @@
         // Kein Cache-Busting mehr: die Plakate aendern sich nie, wurden aber bei JEDEM
         // Auftritt neu aus dem Netz geholt. Jetzt greift der Browser-Cache, und die
         // 1,5s-Notbremse von frueher wird gar nicht mehr gebraucht.
+        // Setzt ein <img> auf eine neue Datei und zeigt es erst, wenn sie geladen ist.
+        // Vorher bleibt es unsichtbar - sonst stand beim Slotwechsel kurz noch das
+        // VORIGE Bild da (Plakat, Mannschaftsfoto), bis das neue geladen war.
+        function bildErstWennGeladen(img, url) {
+            if (!img) return;
+            if (img.getAttribute('src') === url && img.complete && img.naturalWidth) { img.style.opacity = ''; return; }
+            img.style.opacity = '0';
+            const zeigen = () => { if (img.getAttribute('src') === url) img.style.opacity = ''; };
+            img.addEventListener('load', zeigen, { once: true });
+            img.addEventListener('error', () => { img.style.opacity = ''; }, { once: true });   // nie dauerhaft unsichtbar lassen
+            img.src = url;
+            if (img.complete && img.naturalWidth) zeigen();
+        }
+
         function showPosterImage(url) {
             const imgPreloader = new Image();
             imgPreloader.src = url;
@@ -6222,7 +6246,7 @@
             dartFotoIndex++;
             const team = DART_CLUB[foto.teamKey];
 
-            document.getElementById('dart-team-foto').src = foto.url;
+            bildErstWennGeladen(document.getElementById('dart-team-foto'), foto.url);
             document.getElementById('dart-team-titel').textContent =
                 team ? `City Flyers "${team.kurz}"` : 'City Flyers';
             document.getElementById('dart-team-untertitel').textContent = team
@@ -7092,8 +7116,17 @@
             const d = e && e.data;
             if (!d || typeof d !== 'object' || String(e.origin) !== 'http://127.0.0.1:8766') return;
             if (d.typ === 'raetsel-bereit') raetselBereitTs = Date.now();
-            if (d.typ === 'raetsel-fertig') raetselFertigTs = Date.now();
+            if (d.typ === 'raetsel-fertig') { raetselFertigTs = Date.now(); if (!raetselDauerphase()) fertigSofortWeiter('raetsel-fullscreen'); }
         });
+        // Meldet eine Vollbild-Seite (Quiz, Schnaps-Maschine, Bilderraetsel) "fertig", sofort weiterschalten.
+        // Vorher sah das Dashboard nur alle 2-5 s nach - in der Zeit begann die Quizseite schon die
+        // naechste Runde, und man sah kurz noch einmal die Kreidetafel (Betreiber 26.11.2026).
+        function fertigSofortWeiter(halterId) {
+            try {
+                if (!document.querySelector('#' + halterId + '.active')) return;   // Slot laeuft gerade nicht
+                runMasterSequence();
+            } catch (e) {}
+        }
         function raetselAn() {
             try {
                 if (!RAETSEL_AN || !RAETSEL_RAEUME.includes(NL_FERN_RAUM)) return false;
@@ -7143,7 +7176,7 @@
                         cancelSequenceTimers(); runMasterSequence();
                     }
                 };
-                bild.src = pl.datei;
+                bildErstWennGeladen(bild, pl.datei);
                 bild.alt = pl.titel || '';
                 buehneEinstellen('plakat-fullscreen', 'plakate');
                 document.getElementById('plakat-fullscreen').classList.add('active');
@@ -7169,7 +7202,7 @@
         const SCHNAPS_RUNDEN = 8;
         const SCHNAPS_MAX_MS = (SCHNAPS_RUNDEN * 30 + 30) * 1000;   // Extra-Dreh + Jackpot verlaengern Runden (8 Runden gemessen 184-207 s)
         let schnapsFertigTs = 0;
-        window.addEventListener('message', e => { const d = e && e.data; if (d && typeof d === 'object' && d.typ === 'schnaps-fertig') schnapsFertigTs = Date.now(); });
+        window.addEventListener('message', e => { const d = e && e.data; if (d && typeof d === 'object' && d.typ === 'schnaps-fertig') { schnapsFertigTs = Date.now(); fertigSofortWeiter('schnaps-fullscreen'); } });
         function schnapsAn() { return SCHNAPS_AN && !/(?:^|[?&])schnaps=0(?:&|$)/.test(location.search); }
         function schnapsStop() {
             const halter = document.getElementById('schnaps-fullscreen');
@@ -7197,6 +7230,60 @@
             globalMasterTimer = later(pruefen, 5000);
         }
 
+        /* ---------- Emoji-Bilderraetsel (Wunsch Betreiber 26.11.2026) ----------
+         * Zusaetzlich in jedem Durchlauf, nach den Veranstaltungen (vor dem Fussball), damit es nicht
+         * direkt neben Quiz und Schnaps-Maschine liegt. 3 Raetsel pro Runde (ca. 3,5 min), gleiche Zeiten
+         * wie das Quiz (8:30-20:00), nur im Cafe. Die Seite liegt nur auf dem W1 (wie das Quiz).
+         * Meldet sie nicht binnen 20 s "bereit", wird der Slot uebersprungen; Notausgang nach BILDER_MAX_MS.
+         * Abschalten: BILDER_AN = false oder ?bilder=0.
+         */
+        const BILDER_SLOT_INDEX = 7.1;
+        const BILDER_AN = true;
+        const BILDER_URL = 'http://127.0.0.1:8766/bilderraetsel/emoji.html?kiosk=1&anzahl=3';
+        const BILDER_MAX_MS = 7 * 60000;
+        let bilderBereitTs = 0, bilderFertigTs = 0;
+        window.addEventListener('message', e => {
+            const d = e && e.data;
+            if (!d || typeof d !== 'object' || String(e.origin) !== 'http://127.0.0.1:8766') return;
+            if (d.typ === 'bilderraetsel-bereit') { bilderBereitTs = Date.now(); const h = document.getElementById('bilderraetsel-fullscreen'); if (h) h.classList.add('sichtbar'); }
+            if (d.typ === 'bilderraetsel-fertig') { bilderFertigTs = Date.now(); fertigSofortWeiter('bilderraetsel-fullscreen'); }
+        });
+        function bilderAn() {
+            try {
+                if (!BILDER_AN || !RAETSEL_RAEUME.includes(NL_FERN_RAUM)) return false;
+                if (/(?:^|[?&])bilder=0(?:&|$)/.test(location.search)) return false;
+                const j = new Date(), min = j.getHours() * 60 + j.getMinutes();
+                return min >= RAETSEL_VON_MIN && min < RAETSEL_BIS_MIN;
+            } catch (e) { return false; }
+        }
+        function bilderStop() {
+            const halter = document.getElementById('bilderraetsel-fullscreen');
+            if (!halter) return;
+            halter.classList.remove('active', 'sichtbar');
+            if (halter.firstChild) halter.innerHTML = '';
+        }
+        function runBilderraetselState(nextStateIndex) {
+            const halter = document.getElementById('bilderraetsel-fullscreen');
+            if (!bilderAn() || !halter) { mediaStateIndex = nextStateIndex; runMasterSequence(); return; }
+            halter.innerHTML = '';
+            halter.classList.remove('sichtbar');
+            halter.classList.add('active');
+            const start = Date.now();
+            bilderBereitTs = 0;
+            const rahmen = document.createElement('iframe');
+            rahmen.setAttribute('title', 'Bilderraetsel');
+            rahmen.src = BILDER_URL + '&v=' + start;
+            halter.appendChild(rahmen);
+            videoRuheModus(true);
+            mediaStateIndex = nextStateIndex;
+            const pruefen = () => {
+                if (!bilderBereitTs && Date.now() - start > 20000) { bilderStop(); runMasterSequence(); return; }   // Seite nicht erreichbar
+                if (bilderFertigTs > start || Date.now() - start > BILDER_MAX_MS) { runMasterSequence(); return; }
+                globalMasterTimer = later(pruefen, 2000);
+            };
+            globalMasterTimer = later(pruefen, 5000);
+        }
+
         function runRaetselState(nextStateIndex) {
             const halter = document.getElementById('raetsel-fullscreen');
             if (!raetselAn() || !halter) { mediaStateIndex = nextStateIndex; runMasterSequence(); return; }
@@ -7206,7 +7293,7 @@
             raetselBereitTs = 0;
             const rahmen = document.createElement('iframe');
             rahmen.setAttribute('title', 'Kennst di aus? - Kaernten-Quiz');
-            rahmen.src = RAETSEL_URL + '&v=' + start;
+            rahmen.src = RAETSEL_URL + (raetselDauerphase() ? '' : '&schleife=0') + '&v=' + start;
             halter.appendChild(rahmen);
             videoRuheModus(true);
             mediaStateIndex = nextStateIndex;
@@ -7265,9 +7352,15 @@
         }
 
         function runMusicSlidesState(nextStateIndex) {
+            // Beide Ebenen sofort (ohne Ueberblendung) leeren und Bild 1 direkt zeigen - vorher stand
+            // beim Einstieg kurz noch das letzte Bild vom vorigen Durchlauf da und blendete erst dann um.
+            const s1 = document.getElementById('musicSlide1'), s2 = document.getElementById('musicSlide2');
+            [s1, s2].forEach(sl => { sl.style.transition = 'none'; sl.classList.remove('active'); });
+            s1.classList.add('active'); isMusicSlide1Active = true;
+            bildErstWennGeladen(s1, MUSIC_SLIDES_URLS[0]);
+            void s1.offsetWidth; s1.style.transition = ''; s2.style.transition = '';
             document.getElementById('media-view-musicslides').classList.add('active');
             musicSlidesIndex = 0;
-            showMusicSlide(MUSIC_SLIDES_URLS[0]);
 
             if (musicSlidesTimer) cancelTimer(musicSlidesTimer);
             musicSlidesTimer = repeat(() => {
@@ -10674,7 +10767,7 @@
                     cancelSequenceTimers(); runMasterSequence();
                 }
             };
-            bild.src = pl.datei;
+            bildErstWennGeladen(bild, pl.datei);
             bild.alt = pl.titel || '';
             buehneEinstellen('plakat-fullscreen', 'plakate');
             document.getElementById('plakat-fullscreen').classList.add('active');
@@ -15685,6 +15778,7 @@
             djStopPlayer();
             if (mediaStateIndex !== ROULETTE_SLOT_INDEX) rouletteStop();
             if (mediaStateIndex !== RAETSEL_SLOT_INDEX) raetselStop();
+            if (mediaStateIndex !== BILDER_SLOT_INDEX) bilderStop();
             if (mediaStateIndex !== SCHNAPS_SLOT_INDEX) schnapsStop();
             if (mediaStateIndex !== NL_SLOT_INDEX) nlStopPlayer();
             if (mediaStateIndex !== QR_SLOT_INDEX) qrCountdownStoppen();
@@ -15865,7 +15959,10 @@
             // OpenLigaDB-Slots weiter unten (Spieltag + Tabelle).
 
             } else if (mediaStateIndex === 7) {
-                runEventsState(7.25); // -> Bundesliga-Spieltag
+                runEventsState(BILDER_SLOT_INDEX); // -> Emoji-Bilderraetsel
+
+            } else if (mediaStateIndex === BILDER_SLOT_INDEX) {
+                runBilderraetselState(7.25); // -> Bundesliga-Spieltag
 
             } else if (mediaStateIndex === 7.25) {
                 // Alle Fußball-Slots setzen in der Sommer-/Winterpause und bei
