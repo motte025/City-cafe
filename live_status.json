@@ -1,13 +1,6 @@
 {
-  "checked_at": "2026-11-26T20:47:45Z",
+  "checked_at": "2026-11-26T21:02:49Z",
   "live": [
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "Beatport Live London | 10 Years of On Loop with Moxie, Jennifer Loveless, Burnski & Kepler and Wallace",
-      "game": "DJs"
-    },
     {
       "platform": "twitch",
       "channel": "roice",
@@ -24,6 +17,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 I guess freestyle? 💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -34,13 +34,6 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Mixed Music - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 I guess freestyle? 💫 !charity",
       "game": "DJs"
     }
   ]
