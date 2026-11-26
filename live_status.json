@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-26T04:22:46Z",
+  "checked_at": "2026-11-26T04:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "nyybeats",
-      "name": "NyyBeats",
-      "title": "🔥♡ POV WE BOTH HAVE EVIL INFLUENZA BUT I'M YOUR DJ AND EVIL 🔥 !mods !mercy !tip",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "HAAi, Julya Karma | Beatport Live | Los Angeles",
       "game": "DJs"
     }
   ]
