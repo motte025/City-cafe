@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-26T14:57:45Z",
+  "checked_at": "2026-11-26T15:12:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Runde Dance Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "tschessy",
@@ -13,13 +20,6 @@
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Thursday <3 - !dc !peepo !linktree !shop",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Rudne Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bendybusdriver",
-      "name": "BendyBusDriver",
-      "title": "💫 Melodic Thursday 💫 !charity",
+      "channel": "colaway",
+      "name": "Colaway",
+      "title": "Little FriYAY HARDSTYLE  🔴 NEW !RELEASE  🔴 ☆ !naturtreu 🔴",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "colaway",
-      "name": "Colaway",
-      "title": "Little FriYAY HARDSTYLE  🔴 NEW !RELEASE  🔴 ☆ !naturtreu 🔴",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Melodic Thursday 💫 !charity",
       "game": "DJs"
     }
   ]
