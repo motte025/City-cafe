@@ -1,18 +1,18 @@
 {
-  "checked_at": "2026-11-26T11:12:46Z",
+  "checked_at": "2026-11-26T11:32:45Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🍂HAPPY THANKSGIVING! SUPPORT TECH HOUSE🔥PP 65/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🍂HAPPY THANKSGIVING! SUPORT TECH HOUSE🔥PP 65/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     }
   ]
