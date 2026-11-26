@@ -7158,7 +7158,7 @@
         // true, wenn etwas gestartet wurde; false = normal weiter (nichts zu zeigen)
         function runLivemusikState() {
             const plakate = ((hausprogrammDaten && hausprogrammDaten.plakate) || [])
-                .filter(pl => pl && pl.aktiv !== false && pl.datei);
+                .filter(plakatGilt);
             const folge = ['quiz'].concat(plakate.map((pl, i) => i));
             for (let versuch = 0; versuch < folge.length; versuch++) {
                 const s = folge[livemusikSchrittNr++ % folge.length];
@@ -10752,12 +10752,17 @@
         // Fertige Bilder (16:9) aus werbung.json "plakate": [{ id, aktiv, datei, titel }],
         // je Zyklus eines, reihum, direkt nach der grossen Folie. Gleiche Buehne
         // (Rahmen, Ambilight); an/aus, Dauer, Rahmen, Licht, wie oft: Chef-Handy.
+        // Optional "bis": "JJJJ-MM-TT HH:MM" (Wiener Zeit) - danach faellt das Plakat von selbst
+        // heraus (z. B. Veranstaltungsplakat nach dem Abend). Ohne "bis" bleibt es wie bisher.
+        function plakatGilt(pl) {
+            return !!(pl && pl.aktiv !== false && pl.datei && (!pl.bis || String(pl.bis) > hausprogrammJetzt()));
+        }
         const PLAKAT_SLOT_INDEX = 0.6;
         let plakatNr = 0;
         function runPlakatState() {
             if (werbungWert('plakate', 'an') === false) return false;
             const liste = ((hausprogrammDaten && hausprogrammDaten.plakate) || [])
-                .filter(pl => pl && pl.aktiv !== false && pl.datei);
+                .filter(plakatGilt);
             if (!liste.length || !werbungDiesmal('plakate')) return false;
             const pl = liste[plakatNr++ % liste.length];
             const bild = document.getElementById('plakat-bild');
