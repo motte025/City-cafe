@@ -7178,9 +7178,9 @@
                 };
                 bildErstWennGeladen(bild, pl.datei);
                 bild.alt = pl.titel || '';
-                buehneEinstellen('plakat-fullscreen', 'plakate');
+                plakatBuehne(pl);
                 document.getElementById('plakat-fullscreen').classList.add('active');
-                globalMasterTimer = later(runMasterSequence, Math.max(20000, werbungDauerMs('plakate')));
+                globalMasterTimer = later(runMasterSequence, Math.max(20000, plakatDauerMs(pl)));
                 return true;
             }
             return false;
@@ -10757,6 +10757,18 @@
         function plakatGilt(pl) {
             return !!(pl && pl.aktiv !== false && pl.datei && (!pl.bis || String(pl.bis) > hausprogrammJetzt()));
         }
+        // Ein Plakat kann selbst "dauerS" (Sekunden) und "vollbild": true festlegen - das gilt
+        // dann vor der Chef-Einstellung (z. B. Veranstaltungsplakat immer 1 Minute randlos).
+        let plakatJetzt = null;
+        function plakatDauerMs(pl) {
+            const s = Number(pl && pl.dauerS);
+            return s > 0 ? Math.min(600, Math.max(5, s)) * 1000 : werbungDauerMs('plakate');
+        }
+        function plakatBuehne(pl) {
+            plakatJetzt = pl;
+            buehneEinstellen('plakat-fullscreen', 'plakate');
+            if (pl && pl.vollbild) document.getElementById('plakat-fullscreen').classList.add('rahmen-aus');
+        }
         const PLAKAT_SLOT_INDEX = 0.6;
         let plakatNr = 0;
         function runPlakatState() {
@@ -10774,7 +10786,7 @@
             };
             bildErstWennGeladen(bild, pl.datei);
             bild.alt = pl.titel || '';
-            buehneEinstellen('plakat-fullscreen', 'plakate');
+            plakatBuehne(pl);
             document.getElementById('plakat-fullscreen').classList.add('active');
             return true;
         }
@@ -15926,7 +15938,7 @@
             } else if (mediaStateIndex === PLAKAT_SLOT_INDEX) {
                 // Plakate (werbung.json); ohne Plakat sofort weiter.
                 mediaStateIndex = MITTAGSTELLER_SLOT_INDEX;
-                if (runPlakatState()) globalMasterTimer = later(runMasterSequence, werbungDauerMs('plakate'));
+                if (runPlakatState()) globalMasterTimer = later(runMasterSequence, plakatDauerMs(plakatJetzt));
                 else runMasterSequence();
 
             } else if (mediaStateIndex === MITTAGSTELLER_SLOT_INDEX) {
