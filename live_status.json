@@ -1,18 +1,11 @@
 {
-  "checked_at": "2026-11-26T06:27:45Z",
+  "checked_at": "2026-11-26T06:32:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "sunshineliveradio",
       "name": "sunshineliveradio",
       "title": "Live November 26",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "HAAi, Julya Karma | Beatport Live | Los Angeles",
       "game": "DJs"
     },
     {
