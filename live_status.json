@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-26T14:32:48Z",
+  "checked_at": "2026-11-26T14:52:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, EDM, (Hard)trance, MainStage, DnB - heute vielfältig | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Rudne Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -34,13 +41,6 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Melodic Thursday 💫 !charity",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Rudne Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
