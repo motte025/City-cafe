@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-26T14:17:45Z",
+  "checked_at": "2026-11-26T14:32:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Melodic Thursday 💫 !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Rudne Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
