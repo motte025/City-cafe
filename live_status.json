@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-26T04:27:45Z",
+  "checked_at": "2026-11-26T04:42:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "beatportofficial",
+      "name": "BeatportOfficial",
+      "title": "HAAi, Julya Karma | Beatport Live | Los Angeles",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "beatportofficial",
-      "name": "BeatportOfficial",
-      "title": "HAAi, Julya Karma | Beatport Live | Los Angeles",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
