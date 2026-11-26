@@ -1358,10 +1358,21 @@ def ton_quelle(vid, audio_url):
 # (gemessen 28 MB 1080p in 88 s); mpv spielt es von dort. Fertig ist es nicht -> wie bisher der Strom.
 BILD_ORDNER = os.path.expanduser("~/.cache/citycafe/bild")
 BILD_LAEDT = set()
-# Bis zu 1500 Videos (~45 MB je Song, ~67 GB; Betreiber 26.11.2026, vorher 500). Playlist-Videos sind geschuetzt:
+# Bis zu 2000 Videos (~45 MB je Song, ~90 GB; Betreiber 26.11.2026, vorher 500, dann 1500). Playlist-Videos sind geschuetzt:
 # beim Aufraeumen gehen nur Videos von Songs ausserhalb der Playlists (Radio-Mix, Wuensche), die aeltesten zuerst.
 # Vorher verdraengten die vielen Mix-Songs die Playlist-Videos (26.11.: nur 165 von 714 auf der Platte).
-BILD_BEHALTEN = 1500
+BILD_BEHALTEN = 2000
+# Die Videos liegen seit 26.11.2026 auf einer eigenen Partition (p6 "citycafe-medien", 150 GiB, direkt als
+# ~/.cache/citycafe/bild eingehaengt). Platz deshalb dort pruefen, nicht auf der Linux-Partition.
+BILD_MIN_FREI_GB = 5
+
+
+def bild_platz_frei():
+    try:
+        st = os.statvfs(BILD_ORDNER if os.path.isdir(BILD_ORDNER) else os.path.expanduser("~"))
+        return st.f_bavail * st.f_frsize / 1e9 >= BILD_MIN_FREI_GB
+    except OSError:
+        return False
 
 
 def bild_datei(vid):
@@ -1383,7 +1394,7 @@ def bild_aufraeumen():
     zu_viel = len(fertig) - BILD_BEHALTEN
     if TON_PLAYLIST_IDS:                # Playlists bekannt (vom Vormessen) - sonst lieber nichts loeschen
         for alt in fertig:              # aelteste zuerst
-            if zu_viel <= 0 and ton_platz_frei():
+            if zu_viel <= 0 and bild_platz_frei():
                 break
             if os.path.basename(alt).split(".")[0] in TON_PLAYLIST_IDS:
                 continue                # Playlist-Video: bleibt
@@ -1403,7 +1414,7 @@ def bild_aufraeumen():
 def bild_laden(vid, video_url):
     """Bild (dasselbe Format wie die Wiedergabe) im Hintergrund auf die Platte holen."""
     m = re.search(r"[/?&]itag[=/](\d+)", video_url or "")
-    if not m or vid in BILD_LAEDT or bild_datei(vid) or not ton_platz_frei():
+    if not m or vid in BILD_LAEDT or bild_datei(vid) or not bild_platz_frei():
         return
     BILD_LAEDT.add(vid)
 
@@ -4033,7 +4044,7 @@ def main():
         # Playlist-Videos im Hintergrund nachladen (siehe BILD_NACHLADEN). Vorrang haben immer die
         # naechsten Songs der Schlange: bei Musik nur, wenn deren Bild schon da ist und keine Blende laeuft.
         if (BILD_NACHLADEN and page_id and not BILD_LAEDT and time.time() >= bild_nach["naechste"]
-                and time.time() >= YT_GEBREMST["bis"] and ton_platz_frei()
+                and time.time() >= YT_GEBREMST["bis"] and bild_platz_frei()
                 and not (musik and (xf is not None or any(
                     re.fullmatch(r"[A-Za-z0-9_-]{11}", str(v)) and not bild_datei(str(v))
                     for v in (state.get("analyse") or [])[:2])))):
