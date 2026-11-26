@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-26T14:02:45Z",
+  "checked_at": "2026-11-26T14:17:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Thursday <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, EDM, (Hard)trance, MainStage, DnB - heute vielfältig | !holy",
       "game": "DJs"
     },
     {
@@ -27,13 +34,6 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Melodic Thursday 💫 !charity",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | Techno, EDM, (Hard)trance, MainStage, DnB - heute vielfältig | !holy",
       "game": "DJs"
     }
   ]
