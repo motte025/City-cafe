@@ -1034,19 +1034,22 @@ def ton_aufraeumen():
                 os.remove(alt)
         except OSError:
             pass
-    if not TON_PLAYLIST_IDS and ton_platz_frei():
-        return                          # Playlists noch nicht bekannt (gleich nach dem Start): nichts loeschen
+    # Ton bleibt unbegrenzt liegen (Betreiber 26.11.2026 "Audio-Spuren unendlich"). Nur wenn die Platte
+    # knapp wird (TON_MIN_FREI_GB), geht der aelteste Ton von Songs ausserhalb der Playlists weg -
+    # Playlist-Songs und die letzten 40 nie.
+    if ton_platz_frei():
+        return
     try:
         dateien = sorted(glob.glob(os.path.join(TON_ORDNER, "*")), key=os.path.getmtime)
     except OSError:
         return
     for alt in dateien[:-40]:
+        if ton_platz_frei():
+            break
         vid = os.path.basename(alt).split(".")[0]
-        if vid in TON_PLAYLIST_IDS and ton_platz_frei():
+        if vid in TON_PLAYLIST_IDS:
             continue
         try:
-            if vid not in TON_PLAYLIST_IDS and time.time() - os.path.getmtime(alt) < 7 * 86400:
-                continue
             os.remove(alt)
         except OSError:
             pass
@@ -1355,7 +1358,10 @@ def ton_quelle(vid, audio_url):
 # (gemessen 28 MB 1080p in 88 s); mpv spielt es von dort. Fertig ist es nicht -> wie bisher der Strom.
 BILD_ORDNER = os.path.expanduser("~/.cache/citycafe/bild")
 BILD_LAEDT = set()
-BILD_BEHALTEN = 500             # so viele Videos bleiben liegen (~45 MB je Song, zusammen ~22 GB; Betreiber 02.11.2026)
+# Bis zu 1500 Videos (~45 MB je Song, ~67 GB; Betreiber 26.11.2026, vorher 500). Playlist-Videos sind geschuetzt:
+# beim Aufraeumen gehen nur Videos von Songs ausserhalb der Playlists (Radio-Mix, Wuensche), die aeltesten zuerst.
+# Vorher verdraengten die vielen Mix-Songs die Playlist-Videos (26.11.: nur 165 von 714 auf der Platte).
+BILD_BEHALTEN = 1500
 
 
 def bild_datei(vid):
@@ -1374,11 +1380,18 @@ def bild_aufraeumen():
     except OSError:
         return
     fertig = [p for p in dateien if bild_datei(os.path.basename(p).split(".")[0]) == p]
-    for alt in fertig[:-BILD_BEHALTEN]:
-        try:
-            os.remove(alt)              # laeuft es gerade in mpv, liest mpv die offene Datei weiter
-        except OSError:
-            pass
+    zu_viel = len(fertig) - BILD_BEHALTEN
+    if TON_PLAYLIST_IDS:                # Playlists bekannt (vom Vormessen) - sonst lieber nichts loeschen
+        for alt in fertig:              # aelteste zuerst
+            if zu_viel <= 0 and ton_platz_frei():
+                break
+            if os.path.basename(alt).split(".")[0] in TON_PLAYLIST_IDS:
+                continue                # Playlist-Video: bleibt
+            try:
+                os.remove(alt)          # laeuft es gerade in mpv, liest mpv die offene Datei weiter
+                zu_viel -= 1
+            except OSError:
+                pass
     for rest in set(dateien) - set(fertig):   # abgebrochene Downloads
         try:
             if time.time() - os.path.getmtime(rest) > 3600:
@@ -1421,6 +1434,22 @@ def bild_laden(vid, video_url):
             BILD_LAEDT.discard(vid)
 
     threading.Thread(target=lauf, daemon=True).start()
+
+
+# Playlist-Videos nachladen (Betreiber 26.11.2026): im Hintergrund alle Playlist-Videos auf die Platte,
+# zuerst "Mix 04.10.2026 (2)", dann der Rest. Eins zur Zeit, gebremst wie das Vormessen; bei Musik nur,
+# wenn die naechsten Songs schon da sind und keine Blende laeuft. Abschalten: CITYCAFE_BILD_NACHLADEN=0.
+BILD_NACHLADEN = os.environ.get("CITYCAFE_BILD_NACHLADEN", "1") != "0"
+BILD_NACH_PAUSE = 60            # ohne Musik: Pause zwischen zwei Videos
+BILD_NACH_PAUSE_MUSIK = 240     # bei Musik
+BILD_NACH_ZUERST = "Mix 04.10.2026 (2)"
+BILD_NACH_EXPR = """JSON.stringify((() => { try { const ids = [], da = new Set();
+  const add = v => { if (v && !da.has(v)) { da.add(v); ids.push(v); } };
+  const pl = (typeof ytmPlaylists !== 'undefined' && ytmPlaylists) || [];
+  const inh = (typeof ytmListenInhalt !== 'undefined' && ytmListenInhalt) || {};
+  pl.filter(p => p.name === __ZUERST__).forEach(p => (inh[p.nr] || []).forEach(t => t && add(t.videoId)));
+  pl.forEach(p => (inh[p.nr] || []).forEach(t => t && add(t.videoId)));
+  return ids; } catch (e) { return []; } })())""".replace("__ZUERST__", json.dumps(BILD_NACH_ZUERST))
 
 
 # Feste Videos (02.11.2026): Nightlife-Videos (Krampuslaeufe, Wuensche vom Handy) liegen ganz auf der
@@ -3754,6 +3783,7 @@ def main():
     cam_tempo = {"naechste": 0.0, "speed": 1.0}   # Dartcam: Tempo nach Puffer
     ton_vorab = {"naechste": 0.0}
     bild_vorab = {"naechste": 0.0}
+    bild_nach = {"liste": [], "zeit": 0.0, "naechste": time.time() + 300, "fehl": {}, "fehler_folge": 0, "geladen": 0}
 
     def blocked(key):
         frist = CAM_RETRY_AFTER if key.startswith("cam:") else RETRY_FAILED_AFTER
@@ -3999,6 +4029,49 @@ def main():
                             bild_laden(vid, urls[0])
                     threading.Thread(target=bild_vorab_lauf, daemon=True).start()
                     break
+
+        # Playlist-Videos im Hintergrund nachladen (siehe BILD_NACHLADEN). Vorrang haben immer die
+        # naechsten Songs der Schlange: bei Musik nur, wenn deren Bild schon da ist und keine Blende laeuft.
+        if (BILD_NACHLADEN and page_id and not BILD_LAEDT and time.time() >= bild_nach["naechste"]
+                and time.time() >= YT_GEBREMST["bis"] and ton_platz_frei()
+                and not (musik and (xf is not None or any(
+                    re.fullmatch(r"[A-Za-z0-9_-]{11}", str(v)) and not bild_datei(str(v))
+                    for v in (state.get("analyse") or [])[:2])))):
+            bild_nach["naechste"] = time.time() + (BILD_NACH_PAUSE_MUSIK if musik else BILD_NACH_PAUSE)
+            if not bild_nach["liste"] or time.time() - bild_nach["zeit"] > 600:      # alle 10 min frisch
+                try:
+                    ids = json.loads(cdp_eval(page_id, BILD_NACH_EXPR) or "[]")
+                    liste = [str(v) for v in ids if re.fullmatch(r"[A-Za-z0-9_-]{11}", str(v))]
+                    if len(liste) > 100:            # erst, wenn die Playlists geladen sind
+                        bild_nach["liste"] = liste
+                        bild_nach["zeit"] = time.time()
+                except (OSError, ValueError, ConnectionError):
+                    pass
+            vorhanden = sum(1 for v in bild_nach["liste"] if bild_datei(v))
+            offen = [v for v in bild_nach["liste"]
+                     if not bild_datei(v) and time.time() - bild_nach["fehl"].get(v, 0) >= 6 * 3600]
+            if offen and vorhanden < BILD_BEHALTEN:
+                n_vid = offen[0]
+                BILD_LAEDT.add(n_vid)            # Platz halten, bis resolve fertig ist
+
+                def bild_nach_lauf(vid=n_vid, vorher=vorhanden, gesamt=len(bild_nach["liste"])):
+                    bild_nach["fehl"][vid] = time.time()   # klappt der Download nicht, erst in 6 h wieder
+                    urls = resolve(vid, *musik_format(w_hoehe, w_fps), vorab=True)
+                    BILD_LAEDT.discard(vid)
+                    if not urls:
+                        bild_nach["fehl"][vid] = time.time()
+                        bild_nach["fehler_folge"] += 1
+                        if bild_nach["fehler_folge"] >= 3:
+                            bild_nach["naechste"] = time.time() + 3600
+                            bild_nach["fehler_folge"] = 0
+                            log("Playlist-Videos: 3 Fehler in Folge - 1 h Pause")
+                        return
+                    bild_nach["fehler_folge"] = 0
+                    bild_laden(vid, urls[0])
+                    bild_nach["geladen"] += 1
+                    if bild_nach["geladen"] % 10 == 1:
+                        log(f"Playlist-Videos: {vorher + 1} von {gesamt} auf der Platte (laedt {vid})")
+                threading.Thread(target=bild_nach_lauf, daemon=True).start()
 
         # DJ-Modus: laufenden und vorgeladenen Song fuer das Studio messen und zustellen.
         if musik and state.get("flaeche") == "yt-dj-video":
