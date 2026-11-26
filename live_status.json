@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-26T13:37:46Z",
+  "checked_at": "2026-11-26T13:47:47Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🍂HAPPY THANKSGIVING! SUPPORT TECH HOUSE🔥PP 65/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "linaaarr",
+      "name": "Linaaarr",
+      "title": "Happy Thursday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -17,9 +24,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Thursday <3 - !dc !peepo !linktree !shop",
+      "channel": "bendybusdriver",
+      "name": "BendyBusDriver",
+      "title": "💫 Melodic Thursday 💫 !charity",
       "game": "DJs"
     }
   ]
