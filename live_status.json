@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-26T17:02:47Z",
+  "checked_at": "2026-11-26T17:07:47Z",
   "live": [
     {
       "platform": "twitch",
@@ -49,13 +49,6 @@
       "name": "BendyBusDriver",
       "title": "💫 Melodic Thursday 💫 !charity",
       "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anjuna",
-      "name": "Anjuna",
-      "title": "The Anjunadeep Edition #621 with Anyasa",
-      "game": "Music"
     }
   ]
 }
