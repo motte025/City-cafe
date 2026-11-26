@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-26T15:57:46Z",
+  "checked_at": "2026-11-26T16:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -56,6 +56,13 @@
       "name": "roice",
       "title": "no mic day weeeee | Nov 30th we celebrate my BDAY - SAVE THE DATE !bewbs !schedule !merch !PLUS !alt !design !wishlist",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "The Anjunadeep Edition #621 with Anyasa",
+      "game": "Music"
     }
   ]
 }
