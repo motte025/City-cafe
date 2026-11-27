@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T15:32:45Z",
+  "checked_at": "2026-11-27T15:47:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -31,16 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "HARDER FRIDAY QUICKY! !prep !Pchm !Socials  #Werbung",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "DJs after work - Club Legends mit @dj_falk",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "DJs after work - Club Legends mit @dj_falk",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "HARDER FRIDAY QUICKY! !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     },
     {
