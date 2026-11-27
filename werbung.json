@@ -2,6 +2,7 @@
   "_hinweis": "Hausprogramm des City Cafe fuer die Folie 'Demnaechst im City Cafe' (index.html, runHausprogrammState). datum/ab/bis in Wiener Zeit. Ein Eintrag verschwindet von selbst, sobald 'bis' vorbei ist. Nur echte, vom Betreiber genannte Angaben eintragen. 'djAngebote': Schrift unter Pioneer DJ im DJ-Modus (dj-studio/js/ui/angebote.js), abwechselnd, unabhaengig von 'aktionen'.",
   "aktionenBild": "jaeger.webp",
   "plakate": [
+    { "id": "krampus-2026-12", "aktiv": true, "datei": "krampus_citycafe_tv.jpg", "wechsel": [{ "datei": "krampus_citycafe_tv.jpg", "bis": "2026-12-05 04:00" }, "krampus_plauscherl_tv.jpg"], "wechselS": 15, "titel": "Krampuskränzchen – City Cafe Fr 4.12. ab 18 Uhr, Plauscherl Feschnig Sa 5.12. ab 15 Uhr", "dauerS": 90, "vollbild": true, "jedenZyklus": true, "bis": "2026-12-06 04:00" },
     { "id": "karaoke-2026-12-11", "aktiv": true, "datei": "karaoke_xmas_tv.jpg", "wechsel": ["karaoke_xmas_tv.jpg", "karaoke_xmas_geschenk_tv.jpg", "karaoke_xmas_schneekugel_tv.jpg"], "wechselS": 10, "titel": "Karaoke X-Mas Edition – Fr 11.12.2026 ab 19:00", "dauerS": 90, "vollbild": true, "jedenZyklus": true, "bis": "2026-12-12 04:00" },
     { "id": "jaegermeister-aktion", "aktiv": true, "datei": "jaegermeister_aktion_tv.jpg", "titel": "5 × Jägermeister Aktion" },
     { "id": "spirituosen", "aktiv": true, "datei": "spirituosen_tv.jpg", "titel": "Spirituosen-Karte" }

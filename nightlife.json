@@ -16,6 +16,8 @@
   ],
   "krampus": {
     "hinweis": "Krampuslaeufe 14:00-02:00 (ab 23.11.2026, vorher 16:00-07:00). Je Auftritt zwei Gruppen (Kapitel aus YouTube), die Videos im Wechsel. Seit 23.11.2026 Klagenfurt 2026 und Fischl 2026. Fuer ein neues Jahr videoId, jahr, ende und gruppen tauschen.",
+    "pauseBis": "2026-11-28 07:00",
+    "pauseHinweis": "Betreiber 27.11.2026: Krampuslaeufe fuer heute aus, ab 28.11. 07:00 wieder normal (danach beide Felder loeschen).",
     "vonStunde": 14,
     "bisStunde": 2,
     "gruppenProAuftritt": 2,
