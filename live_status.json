@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T16:02:45Z",
+  "checked_at": "2026-11-27T16:12:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -69,6 +69,13 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Runde Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
