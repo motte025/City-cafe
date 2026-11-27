@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T17:02:47Z",
+  "checked_at": "2026-11-27T17:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,13 +13,6 @@
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | von zart bis hart | !holy",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "linaaarr",
-      "name": "Linaaarr",
-      "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
       "game": "DJs"
     },
     {
@@ -38,9 +31,16 @@
     },
     {
       "platform": "twitch",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Endlich Freitag! Gute Laune und geile Beats! <3  !release @just_jenny_official @two_crazy_girls",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
-      "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
+      "title": "Retro Day - 70s Special - spontan am Geilsten! - Live aus Studio 2",
       "game": "DJs"
     },
     {
@@ -62,13 +62,6 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Endlich Freitag! Gute Laune und geile Beats! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     }
   ]
