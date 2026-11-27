@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T16:12:46Z",
+  "checked_at": "2026-11-27T16:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Runde Dance Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "deejayfamily",
       "name": "DEEJAYFAMILY",
       "title": "Retro Day - Best of 80s/70s/60s - Live aus Studio 2",
@@ -38,9 +45,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "HARDER FRIDAY QUICKY! !prep !Pchm !Socials  #Werbung",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "🌴 90s Music & more | !goals | !tip ✨",
       "game": "DJs"
     },
     {
@@ -48,13 +55,6 @@
       "channel": "jenniferleedj",
       "name": "JenniferLeeDj",
       "title": "🔥 REMEMBER PARTY !BLACK🔥PP 68/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "🌴 90s Music & more | !goals | !tip ✨",
       "game": "DJs"
     },
     {
@@ -69,13 +69,6 @@
       "channel": "popp_ccorn",
       "name": "popp_ccorn",
       "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Runde Dance Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
