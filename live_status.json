@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T14:52:45Z",
+  "checked_at": "2026-11-27T14:57:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,16 +24,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥 REMEMBER PARTY !BLACK🔥PP 68/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "bruebie",
+      "name": "Bruebie",
+      "title": "HARDER FRIDAY QUICKY! !prep !Pchm !Socials  #Werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "bruebie",
-      "name": "Bruebie",
-      "title": "HARDER FRIDAY QUICKY! !prep !Pchm !Socials  #Werbung",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥 REMEMBER PARTY !BLACK🔥PP 68/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
@@ -55,6 +55,13 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "FriYAY ROCK/METAL  🔴 NEW !RELEASE  🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "🌴 90s Music & more | !goals | !tip ✨",
       "game": "DJs"
     }
   ]
