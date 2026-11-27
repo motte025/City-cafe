@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-27T16:22:45Z",
+  "checked_at": "2026-11-27T16:37:46Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "tschessy",
       "name": "Tschessy",
       "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | von zart bis hart | !holy",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 125 🎉| Harder Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -24,9 +31,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 124🎉| Kleine Runde Dance Styles | !insta !holy !SF #Werbung",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "DJs after work - Club Legends mit @dj_falk",
       "game": "DJs"
     },
     {
@@ -38,9 +45,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "DJs after work - Club Legends mit @dj_falk",
+      "channel": "jenniferleedj",
+      "name": "JenniferLeeDj",
+      "title": "🔥 REMEMBER PARTY !BLACK🔥PP 68/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
@@ -48,13 +55,6 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "🌴 90s Music & more | !goals | !tip ✨",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥 REMEMBER PARTY !BLACK🔥PP 68/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
       "game": "DJs"
     },
     {
