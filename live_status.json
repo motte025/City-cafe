@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T20:17:45Z",
+  "checked_at": "2026-11-27T20:27:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -62,6 +62,13 @@
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "miss_winter_dj",
+      "name": "Miss_Winter_dj",
+      "title": "Miss Winter ist online!",
       "game": "DJs"
     }
   ]
