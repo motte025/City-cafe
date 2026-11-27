@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T18:52:47Z",
+  "checked_at": "2026-11-27T19:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "anastasia_rose_official",
-      "name": "Anastasia_Rose_Official",
-      "title": "Endlich Freitag! Gute Laune und geile Beats! <3  !release @just_jenny_official @two_crazy_girls",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵Festlicher Freitag! | !kugel | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵Festlicher Freitag! | !kugel | !bier | !zug | !holy | #werbung",
+      "channel": "anastasia_rose_official",
+      "name": "Anastasia_Rose_Official",
+      "title": "Endlich Freitag! Gute Laune und geile Beats! <3  !release @just_jenny_official @two_crazy_girls",
       "game": "DJs"
     },
     {
@@ -38,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "MIX MISSION TV | PRETTY PINK",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "🌴 LIVE VERSIONEN 80s & more | !goals | !tip ✨",
@@ -56,6 +49,20 @@
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
       "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Warm Up x GROOVERS w/ Lars Fester b2b Reese & MacKee",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "anjuna",
+      "name": "Anjuna",
+      "title": "Above & Beyond Group Therapy #705 with Quivver",
+      "game": "Music"
     }
   ]
 }
