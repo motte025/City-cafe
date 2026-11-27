@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T14:57:45Z",
+  "checked_at": "2026-11-27T15:02:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -62,6 +62,13 @@
       "channel": "dj_maaho",
       "name": "DJ_Maaho",
       "title": "🌴 90s Music & more | !goals | !tip ✨",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "DJs after work - Club Legends mit @dj_falk",
       "game": "DJs"
     }
   ]
