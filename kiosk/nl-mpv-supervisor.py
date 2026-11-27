@@ -128,6 +128,10 @@ RETRY_FAILED_AFTER = 600   # Sekunden, bis ein fehlgeschlagenes Video neu versuc
 CACHE_HOECHSTENS = 3 * 3600
 POLL_SECONDS = 0.5
 LOG = "/home/citycafe/nl-mpv-supervisor.log"
+# Musik-Verlauf (Betreiber 27.11.2026: "mitschreiben einbauen"): je gespieltem Song eine Zeile JSON mit
+# Zeit, videoId, Herkunft (wunsch/chef/playlist/radio), von, Titel - damit spaeter klar ist, was Gaeste
+# gewuenscht haben und was der Automix (Radio) dazugespielt hat. Eine Datei pro Monat.
+MUSIK_VERLAUF = os.path.expanduser("~/.cache/citycafe/musik-verlauf-%Y-%m.jsonl")
 MPV_SOCK = "/tmp/mpv-nl.sock"
 # Ueberblendung zwischen Musiktiteln (DJ-Art): der naechste Song startet in
 # einem zweiten mpv (eigener Socket, eigene app_id, unsichtbar), dann wird
@@ -497,7 +501,12 @@ STATE_EXPR = """JSON.stringify({
   // Dart-Abend-Modus: RTSP-Dartcam. Die Adresse kommt vom Dashboard
   // (DART_CAM_URL in index.html), damit ein Kamerawechsel keinen Eingriff
   // auf der Box braucht.
-  cam: (window.dartCamAktiv && window.dartCamUrl) ? String(window.dartCamUrl) : null
+  cam: (window.dartCamAktiv && window.dartCamUrl) ? String(window.dartCamUrl) : null,
+  // Musik-Verlauf (27.11.2026): laufender Song der Warteschlange mit Herkunft
+  // (wunsch = Gast am Handy, chef, playlist, radio = Automix) - siehe MUSIK_VERLAUF.
+  ytmJetzt: (typeof ytm !== 'undefined' && ytm && ytm.jetzt && ytm.modus !== 'aus')
+      ? { v: ytm.jetzt.videoId || '', q: ytm.jetzt.quelle || '', von: String(ytm.jetzt.von || '').slice(0, 40),
+          t: String(ytm.jetzt.titel || ytm.jetzt.songtitel || '').slice(0, 120), m: ytm.modus } : null
 })"""
 
 # Lautheitsausgleich: dynaudnorm gleicht leise und laute Stellen an und ist
@@ -3780,6 +3789,7 @@ def main():
     ton_limiter = True    # Limiter fuer sehr leise Songs (Handy)
     streamlink_da = os.path.exists(STREAMLINK)
     letzte_antwort = time.time()   # wann der Browser zuletzt geantwortet hat
+    verlauf_letzt = None           # zuletzt in den Musik-Verlauf geschriebene videoId
     letzter_neustart = 0.0
     naechste_tmp_pruefung = 0.0
     fortsetzen = {}       # nach einem Haenger: {"key", "pos"} fuer den Neustart, "versucht": {key: Zeit}
@@ -3858,6 +3868,17 @@ def main():
         if time.time() >= naechste_tmp_pruefung:
             naechste_tmp_pruefung = time.time() + TMP_PRUEFUNG_SEKUNDEN
             tmp_aufraeumen()
+
+        mj = state.get("ytmJetzt")
+        if mj and mj.get("v") and mj.get("v") != verlauf_letzt:
+            verlauf_letzt = mj.get("v")
+            try:
+                with open(time.strftime(MUSIK_VERLAUF), "a") as f:
+                    f.write(json.dumps({"zeit": time.strftime("%Y-%m-%d %H:%M:%S"), "videoId": mj.get("v"),
+                                        "quelle": mj.get("q"), "von": mj.get("von"), "titel": mj.get("t"),
+                                        "modus": mj.get("m")}, ensure_ascii=False) + "\n")
+            except OSError:
+                pass
 
         schluessel = state.get("schluessel")
         youtube = bool(schluessel) and not state.get("datei")
