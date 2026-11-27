@@ -1506,7 +1506,7 @@ auch das Roulette, im Café ist es nicht eingeblendet.
     04.10.2026" (210, moderne Schlager / internationale / deutsche
     Party-Hits 2-2-2); 6 „Mix 04.10.2026 (2)" (200, Stil der Betreiber-Liste
     05.05.2024: Latin, Dance, 80er/90er, Pop, Deutsch/Austro; am Handy
-    bearbeitet); 7 „Klausi" (144, Nachbau der Apple-Music-Playlist „City
+    bearbeitet); 7 „Klausi" (169 seit 27.11., Nachbau der Apple-Music-Playlist „City
     Café", gleiche Reihenfolge); 8 „Schlager 2024–2026" (142, nach den Schlager-Charts: DDP-Jahrescharts 2024/2025,
     Schlager-Jahres-Charts 2025, DDP Top 100 Okt. 2026 – 119 Chart-Hits plus meistgesehene,
     alle Stereoact-Remixe, höchstens 5 je Interpret, nie zweimal derselbe hintereinander;
