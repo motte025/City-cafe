@@ -1,11 +1,18 @@
 {
-  "checked_at": "2026-11-27T14:12:45Z",
+  "checked_at": "2026-11-27T14:27:45Z",
   "live": [
     {
       "platform": "twitch",
       "channel": "linaaarr",
       "name": "Linaaarr",
       "title": "Happy Friday <3 - !dc !peepo !linktree !shop",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "tschessy",
+      "name": "Tschessy",
+      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | von zart bis hart | !holy",
       "game": "DJs"
     },
     {
@@ -31,13 +38,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "bruebie",
       "name": "Bruebie",
       "title": "HARDER FRIDAY QUICKY! !prep !Pchm !Socials  #Werbung",
@@ -45,9 +45,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "tschessy",
-      "name": "Tschessy",
-      "title": "Du zockst, arbeitest, chillst - Ich sorge für die Musik | von zart bis hart | !holy",
+      "channel": "popp_ccorn",
+      "name": "popp_ccorn",
+      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
       "game": "DJs"
     }
   ]
