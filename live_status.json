@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T19:02:45Z",
+  "checked_at": "2026-11-27T19:17:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -45,16 +45,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Warm Up x GROOVERS w/ Lars Fester b2b Reese & MacKee",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Warm Up x GROOVERS w/ Lars Fester b2b Reese & MacKee",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
