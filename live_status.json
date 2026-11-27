@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T19:17:45Z",
+  "checked_at": "2026-11-27T19:32:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -38,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "🌴 LIVE VERSIONEN 80s & more | !goals | !tip ✨",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "Warm Up x GROOVERS w/ Lars Fester b2b Reese & MacKee",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "Warm Up x GROOVERS w/ Lars Fester b2b Reese & MacKee",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "🌴 LIVE VERSIONEN 80s & more | !goals | !tip ✨",
       "game": "DJs"
     },
     {
