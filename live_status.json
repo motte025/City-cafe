@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-27T17:22:45Z",
+  "checked_at": "2026-11-27T17:37:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "sunshineliveradio",
-      "name": "sunshineliveradio",
-      "title": "DJs after work - Club Legends mit @dj_falk",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "anastasia_rose_official",
       "name": "Anastasia_Rose_Official",
       "title": "Endlich Freitag! Gute Laune und geile Beats! <3  !release @just_jenny_official @two_crazy_girls",
@@ -45,16 +38,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "dj_maaho",
-      "name": "DJ_Maaho",
-      "title": "🌴 90s Music & more | !goals | !tip ✨",
+      "channel": "sunshineliveradio",
+      "name": "sunshineliveradio",
+      "title": "DJs after work - Club Legends mit @dj_falk",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "jenniferleedj",
-      "name": "JenniferLeeDj",
-      "title": "🔥 REMEMBER PARTY !BLACK🔥PP 68/100 - 3rd MONTH! !huambo !socials @jenniferleedj | Gaming & IRL @jenniferleelive",
+      "channel": "dj_maaho",
+      "name": "DJ_Maaho",
+      "title": "🌴 90s Music & more | !goals | !tip ✨",
       "game": "DJs"
     },
     {
