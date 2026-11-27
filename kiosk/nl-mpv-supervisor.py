@@ -506,7 +506,11 @@ STATE_EXPR = """JSON.stringify({
   // (wunsch = Gast am Handy, chef, playlist, radio = Automix) - siehe MUSIK_VERLAUF.
   ytmJetzt: (typeof ytm !== 'undefined' && ytm && ytm.jetzt && ytm.modus !== 'aus')
       ? { v: ytm.jetzt.videoId || '', q: ytm.jetzt.quelle || '', von: String(ytm.jetzt.von || '').slice(0, 40),
-          t: String(ytm.jetzt.titel || ytm.jetzt.songtitel || '').slice(0, 120), m: ytm.modus } : null
+          t: String(ytm.jetzt.titel || ytm.jetzt.songtitel || '').slice(0, 120), m: ytm.modus } : null,
+  // Die naechsten 3 Songs mit Herkunft [videoId, quelle] - Automix-Bilder/-Toene nur auf Zeit (AUTOMIX_*)
+  naechsteQuelle: (() => { try { return (typeof ytm !== 'undefined' && ytm && ytm.modus !== 'aus')
+      ? window.YtWarteschlange.vorschau(ytm, 3, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN }).map(e => [e.videoId || '', e.quelle || '']) : null;
+      } catch (e) { return null; } })()
 })"""
 
 # Lautheitsausgleich: dynaudnorm gleicht leise und laute Stellen an und ist
@@ -1025,6 +1029,69 @@ TON_KAPUTT_ORDNER = os.path.expanduser("~/.cache/citycafe/ton-kaputt")
 # alle Playlists. Gespielt wird dann immer von der Platte, gemessen ohne zweiten Download. Weg kommt,
 # was in keiner Playlist mehr steht und aelter als 7 Tage ist (die letzten 40 bleiben immer).
 TON_PLAYLIST_IDS = set()        # alle videoIds der Playlists (vom Vormessen, alle 10 min frisch)
+# Automix nur auf Zeit (Betreiber 27.11.2026): Bild und Ton der naechsten 3 Songs werden wie bisher vorab
+# geladen; kam ein Song aber nur aus dem Automix (Radio) und nie als Wunsch/Chef/Playlist, werden Bild und
+# Ton AUTOMIX_BEHALTEN_STUNDEN nach dem letzten Auftauchen wieder geloescht (Messwerte bleiben).
+AUTOMIX_BEHALTEN_STUNDEN = 3
+AUTOMIX_DATEI = os.path.expanduser("~/.cache/citycafe/automix-zeit.json")
+AUTOMIX = {"radio": {}, "geschuetzt": {}}   # videoId -> zuletzt gesehen (Unix-Zeit)
+
+
+def automix_laden():
+    try:
+        with open(AUTOMIX_DATEI) as f:
+            d = json.load(f)
+        AUTOMIX["radio"] = dict(d.get("radio") or {})
+        AUTOMIX["geschuetzt"] = dict(d.get("geschuetzt") or {})
+    except (OSError, ValueError):
+        pass
+
+
+def automix_merken(paare):
+    """paare: [[videoId, quelle], ...] - Radio-Titel merken, Wunsch/Chef/Playlist schuetzen."""
+    jetzt = time.time()
+    for p in paare or []:
+        try:
+            vid, quelle = str(p[0]), str(p[1])
+        except (IndexError, TypeError):
+            continue
+        if not re.fullmatch(r"[A-Za-z0-9_-]{11}", vid):
+            continue
+        if quelle == "radio" and vid not in AUTOMIX["geschuetzt"]:
+            AUTOMIX["radio"][vid] = jetzt
+        elif quelle in ("wunsch", "chef", "playlist"):
+            AUTOMIX["geschuetzt"][vid] = jetzt
+            AUTOMIX["radio"].pop(vid, None)
+
+
+def automix_aufraeumen(bleiben):
+    """Abgelaufene Automix-Songs: Bild und Ton loeschen (nie Playlist-, Wunsch- oder laufende Songs)."""
+    if not TON_PLAYLIST_IDS:            # Playlists noch unbekannt - lieber nichts loeschen
+        return
+    grenze = time.time() - AUTOMIX_BEHALTEN_STUNDEN * 3600
+    weg = 0
+    for vid, ts in list(AUTOMIX["radio"].items()):
+        if ts > grenze or vid in bleiben or vid in TON_PLAYLIST_IDS or vid in AUTOMIX["geschuetzt"]:
+            continue
+        for p in glob.glob(os.path.join(BILD_ORDNER, vid + ".*")) + glob.glob(os.path.join(TON_ORDNER, vid + ".*")):
+            try:
+                os.remove(p)
+                weg += 1
+            except OSError:
+                pass
+        del AUTOMIX["radio"][vid]
+    # Schutzliste klein halten (90 Tage)
+    for vid, ts in list(AUTOMIX["geschuetzt"].items()):
+        if ts < time.time() - 90 * 86400:
+            del AUTOMIX["geschuetzt"][vid]
+    if weg:
+        log(f"Automix: {weg} Dateien abgelaufener Automix-Songs geloescht")
+    try:
+        with open(AUTOMIX_DATEI + ".neu", "w") as f:
+            json.dump(AUTOMIX, f)
+        os.replace(AUTOMIX_DATEI + ".neu", AUTOMIX_DATEI)
+    except OSError:
+        pass
 TON_MIN_FREI_GB = 10            # darunter nichts mehr dauerhaft ablegen
 
 
@@ -3790,6 +3857,8 @@ def main():
     streamlink_da = os.path.exists(STREAMLINK)
     letzte_antwort = time.time()   # wann der Browser zuletzt geantwortet hat
     verlauf_letzt = None           # zuletzt in den Musik-Verlauf geschriebene videoId
+    automix_laden()
+    automix_pruef = time.time() + 600   # erstes Aufraeumen nach 10 min (Playlists sind dann bekannt)
     letzter_neustart = 0.0
     naechste_tmp_pruefung = 0.0
     fortsetzen = {}       # nach einem Haenger: {"key", "pos"} fuer den Neustart, "versucht": {key: Zeit}
@@ -3879,6 +3948,12 @@ def main():
                                         "modus": mj.get("m")}, ensure_ascii=False) + "\n")
             except OSError:
                 pass
+        automix_merken(([[mj.get("v"), mj.get("q")]] if mj else []) + (state.get("naechsteQuelle") or []))
+        if time.time() >= automix_pruef:
+            automix_pruef = time.time() + 600
+            automix_aufraeumen({str(state.get("schluessel") or "")}
+                               | {str(p[0]) for p in (state.get("naechsteQuelle") or []) if p}
+                               | {str(v) for v in (state.get("analyse") or [])})
 
         schluessel = state.get("schluessel")
         youtube = bool(schluessel) and not state.get("datei")
@@ -4048,7 +4123,7 @@ def main():
         # Bild von der Platte: das Bild des naechsten Songs schon Minuten vorher laden - "Naechster Song
         # vorgeladen" kommt erst 40 s vor Schluss, der Download braucht bis ~90 s. Ein Song zur Zeit.
         if musik and not BILD_LAEDT and time.time() >= bild_vorab["naechste"]:
-            for b_vid in [str(v) for v in (state.get("analyse") or [])[:2]]:
+            for b_vid in [str(v) for v in (state.get("analyse") or [])[:3]]:   # 27.11.: die naechsten 3
                 if re.fullmatch(r"[A-Za-z0-9_-]{11}", b_vid) and not bild_datei(b_vid) \
                         and time.time() - failed.get(b_vid, 0) >= RETRY_FAILED_AFTER:
                     bild_vorab["naechste"] = time.time() + 30

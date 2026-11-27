@@ -8463,9 +8463,10 @@
         // naechste Titel kommt statt der Rotation.
         //
         // Vorgaben - der Betreiber kann sie hier aendern:
-        // Musik laeuft, bis der Chef stoppt (Wunsch Betreiber) - keine Zeitgrenze
-        // mehr fuers Radio. Eine Zahl (Minuten) stellt die alte Grenze wieder her.
-        const YT_RADIO_MAX_MIN = Infinity;
+        // Radio (Automix) hoechstens 2 Stunden nach dem letzten Wunsch (Betreiber 27.11.2026: wird oft
+        // vergessen auszuschalten), danach geht es mit der Playlist zur Uhrzeit weiter - die Musik selbst
+        // laeuft weiter, bis der Chef stoppt. Infinity = Radio ohne Zeitgrenze.
+        const YT_RADIO_MAX_MIN = 120;
         const YT_VOLLBILD_STANDARD = false;   // Ansicht beim Start der Musik
         const YT_QR_AN = false;               // QR "Song wuenschen" im Video: Standard, solange der Chef am Handy nichts umgeschaltet hat
         // Der Chef schaltet den QR am Handy ein/aus (Musik-Fernbedienung, Befehl "qr"); die
@@ -8905,6 +8906,7 @@
                 (window.nlWeiterLog = window.nlWeiterLog || []).push({ t: Date.now(), s });
                 if (window.nlWeiterLog.length > 6) window.nlWeiterLog.shift();
             } catch (e) {}
+            const warAn = ytm.modus !== 'aus';   // weiter() setzt bei "rotation" modus 'aus' - vorher merken
             const r = YTW.weiter(ytm, Date.now(), { radioMaxMin: YT_RADIO_MAX_MIN });
             ytm = r.state;
             if (r.aktion === 'spielen') {
@@ -8918,7 +8920,7 @@
             }
             // Nichts mehr da (Mix noch nicht geladen oder leer): nicht in die
             // Rotation, sondern mit der Playlist zur Uhrzeit weitermachen.
-            if (ytm.modus !== 'aus' && !ytmWeiterRettung) {
+            if (warAn && !ytmWeiterRettung) {
                 ytmWeiterRettung = true;
                 setTimeout(() => { ytmWeiterRettung = false; }, 30000);
                 ytm.modus = 'playlist';
