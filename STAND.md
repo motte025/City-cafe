@@ -107,7 +107,7 @@ und wieder in der Rotation.
     Beginn jedes Krampus-Auftritts. Test: `weihnacht.lindi()`.
   - 3D-Emojis: MutationObserver ersetzt bekannte Emojis (Liste EMOJI) im ganzen Dashboard durch `img.wn-e`;
     `window.wetterSymbol` liefert 3D-Wettersymbole; Wetter-Smiley neben „Klagenfurt“ bei Frost/Schnee/Sonne.
-  - Laufband: 20 Advent-Sprüche + Krampuskränzchen 4.12. (City Cafe, 18 Uhr) und 5.12. (Cafe Plauscherl Feschnig, 17 Uhr) aus der
+  - Laufband: 20 Advent-Sprüche + Krampuskränzchen 4.12. (City Cafe, 18 Uhr) und 5.12. (Cafe Plauscherl Feschnig, 15 Uhr) aus der
     Kreidetafel, doppelt, mit Countdown, fallen danach heraus. Folie „Demnächst bei uns“ bewusst NICHT befüllt (Betreiber: zu viel,
     dafür gibt es Kreidetafel und Neon-Reklame).
 - **Achtung:** Der Kiosk lädt nur neu, wenn sich **index.html** ändert (Prüfsumme). Eine Änderung nur an js/weihnacht.js kommt erst

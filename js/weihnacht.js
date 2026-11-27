@@ -360,7 +360,7 @@
   // Bis einschliesslich "bis" im Laufband, mit Countdown; danach fallen sie von selbst heraus.
   const TERMINE = [
     { bis: '2026-12-04', text: '👹 Freitag, 4. Dezember ab 18 Uhr: Krampuskränzchen mit Live-Musik im City Cafe 🎶' },
-    { bis: '2026-12-05', text: '👹 Samstag, 5. Dezember ab 17 Uhr: Krampuskränzchen mit Live-Musik im Cafe Plauscherl, Feschnig 🎶' }
+    { bis: '2026-12-05', text: '👹 Samstag, 5. Dezember ab 15 Uhr: Krampuskränzchen mit Live-Musik im Cafe Plauscherl, Feschnig 🎶' }
   ];
   function termineHeute() {
     const h = new Date(); h.setHours(0, 0, 0, 0);
