@@ -507,6 +507,10 @@
         #plakat-fullscreen.rahmen-aus .cc-buehne { inset: 0; }
         #plakat-fullscreen .cc-buehne { background: #000; }
         #plakat-bild { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* Plakat-Wechsel (werbung.json "wechsel", 27.11.2026): zweite Ebene fuer weiche Ueberblendung */
+        #plakat-fullscreen .cc-buehne { position: absolute; }
+        #plakat-bild, #plakat-bild2 { position: absolute; inset: 0; transition: opacity 1.4s ease-in-out; }
+        #plakat-bild2 { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; }
         .hp-kopf { margin-top: 50px; text-align: center; }
         .hp-kopf .hp-klein { font-size: 30px; font-weight: 700; letter-spacing: 0.35em; color: #5ff3ff; }
         .hp-kopf .hp-gross {
@@ -3554,7 +3558,7 @@
         <!-- Plakate aus werbung.json ("plakate"), je Zyklus eines (siehe runPlakatState). -->
         <div id="plakat-fullscreen" class="cc-buehne-ebene amb-wechsel rahmen-aus">
             <div class="cc-glow"></div>
-            <div class="cc-buehne"><img id="plakat-bild" alt=""></div>
+            <div class="cc-buehne"><img id="plakat-bild" alt=""><img id="plakat-bild2" alt=""></div>
         </div>
 
         <!-- Roulette im Vollbild (siehe runRouletteState). Die Seite wird nur fuer
@@ -10794,18 +10798,49 @@
             plakatZeigen(liste[plakatNr++ % liste.length]);
             return true;
         }
+        // Plakat-Wechsel (Betreiber 27.11.2026): "wechsel": [Dateien], "wechselS": Sekunden je Bild -
+        // die Bilder kommen der Reihe nach (immer wieder von vorn, bis die Slotdauer um ist) und
+        // blenden weich ineinander (zwei Ebenen, Opacity-Uebergang). Das naechste Bild wird erst
+        // ueberblendet, wenn es fertig geladen ist - nie ein halbes oder schwarzes Bild.
+        function plakatWechselStarten(pl) {
+            const a = document.getElementById('plakat-bild'), b = document.getElementById('plakat-bild2');
+            const dateien = pl.wechsel.filter(Boolean), ms = Math.max(4, Number(pl.wechselS) || 10) * 1000;
+            let nr = 0, oben = a;   // "oben" = gerade sichtbare Ebene
+            b.style.opacity = '0'; a.style.zIndex = '2'; b.style.zIndex = '1';
+            const weiter = () => {
+                nr = (nr + 1) % dateien.length;
+                const neu = oben === a ? b : a, alt = oben;
+                const ueberblenden = () => {
+                    neu.style.zIndex = '2'; alt.style.zIndex = '1';
+                    neu.style.opacity = '1';
+                    later(() => { alt.style.opacity = '0'; }, 1500);   // erst wenn das neue ganz da ist
+                    oben = neu;
+                };
+                neu.onerror = null;
+                if (neu.getAttribute('src') === dateien[nr] && neu.complete && neu.naturalWidth) ueberblenden();
+                else { neu.onload = () => { neu.onload = null; ueberblenden(); }; neu.src = dateien[nr]; }
+                later(weiter, ms);
+            };
+            later(weiter, ms);
+            // die uebrigen schon vorab laden, damit jeder Wechsel sofort klappt
+            dateien.slice(1).forEach(d => { const i = new Image(); i.src = d; });
+        }
         function plakatZeigen(pl) {
             const bild = document.getElementById('plakat-bild');
+            const zweit = document.getElementById('plakat-bild2');
+            zweit.style.opacity = '0'; zweit.style.zIndex = '1'; bild.style.zIndex = '2'; bild.style.opacity = '';
             bild.onerror = () => {            // Datei fehlt: gleich weiter statt schwarzer Flaeche
                 bild.onerror = null;
                 if (document.getElementById('plakat-fullscreen').classList.contains('active')) {
                     cancelSequenceTimers(); runMasterSequence();
                 }
             };
-            bildErstWennGeladen(bild, pl.datei);
+            const wechsel = Array.isArray(pl.wechsel) && pl.wechsel.filter(Boolean).length > 1;
+            bildErstWennGeladen(bild, wechsel ? pl.wechsel[0] : pl.datei);
             bild.alt = pl.titel || '';
             plakatBuehne(pl);
             document.getElementById('plakat-fullscreen').classList.add('active');
+            if (wechsel) plakatWechselStarten(pl);
         }
 
         // ---------- Werbung rund um den Musik-Player (Vollbild, 15.10.2026) ----------
