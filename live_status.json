@@ -1,6 +1,13 @@
 {
-  "checked_at": "2026-11-28T16:22:45Z",
+  "checked_at": "2026-11-28T16:37:47Z",
   "live": [
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 126 🎉| Mixed Styles | !insta !holy !SF #Werbung",
+      "game": "DJs"
+    },
     {
       "platform": "twitch",
       "channel": "tschessy",
@@ -17,13 +24,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 126 🎉| Mixed Styles | !insta !holy !SF #Werbung",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "colaway",
       "name": "Colaway",
       "title": "SATURYAY - Hardstyle + Hardtechno  🔴 NEW !RELEASE  🔴 ☆ !naturtreu 🔴",
@@ -31,23 +31,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
-      "channel": "popp_ccorn",
-      "name": "popp_ccorn",
-      "title": "꧁Music is life...thats why our Hearts have beatz!!! Let´s gooo 18+ !StreamerPotion꧂",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "roice",
       "name": "roice",
       "title": "PJ DJ SHORT STREM | Nov 30th we celebrate my BDAY - SAVE THE DATE !bewbs !schedule !merch !PLUS !alt !design !wishlist",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     },
     {
