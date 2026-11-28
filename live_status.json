@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-28T16:02:48Z",
+  "checked_at": "2026-11-28T16:07:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -20,6 +20,13 @@
       "channel": "colaway",
       "name": "Colaway",
       "title": "SATURYAY - Hardstyle + Hardtechno  🔴 NEW !RELEASE  🔴 ☆ !naturtreu 🔴",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 126 🎉| Mixed Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     },
     {
@@ -45,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "sintica",
-      "name": "Sintica",
-      "title": "🎉MUTE MARATHON TAG 126 🎉| Mixed Styles | !insta !holy !SF #Werbung",
+      "channel": "roice",
+      "name": "roice",
+      "title": "PJ DJ SHORT STREM | Nov 30th we celebrate my BDAY - SAVE THE DATE !bewbs !schedule !merch !PLUS !alt !design !wishlist",
       "game": "DJs"
     }
   ]
