@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-28T15:57:45Z",
+  "checked_at": "2026-11-28T16:02:48Z",
   "live": [
     {
       "platform": "twitch",
@@ -41,6 +41,13 @@
       "channel": "bendybusdriver",
       "name": "BendyBusDriver",
       "title": "💫 Infinity Vibes Volume 25 💫  ty @statotec_DJ - next: @dreamy_bacon !charity",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "sintica",
+      "name": "Sintica",
+      "title": "🎉MUTE MARATHON TAG 126 🎉| Mixed Styles | !insta !holy !SF #Werbung",
       "game": "DJs"
     }
   ]
