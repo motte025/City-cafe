@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-28T20:02:46Z",
+  "checked_at": "2026-11-28T20:22:45Z",
   "live": [
     {
       "platform": "twitch",
@@ -13,6 +13,13 @@
       "channel": "dirkneuenfels",
       "name": "DirkNeuenfels",
       "title": "🩷 PINK PARTY - Die maximale Extase 🩷 !EMP !Baum !Wolt !Winter !Shakes !Holy !Moumint !Shop !Socials",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "djmissshelton",
+      "name": "DJMissShelton",
+      "title": "MY MY MY",
       "game": "DJs"
     },
     {
@@ -38,13 +45,6 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
-      "game": "DJs"
-    },
-    {
-      "platform": "twitch",
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Back to the 90s - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
@@ -52,9 +52,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "djmissshelton",
-      "name": "DJMissShelton",
-      "title": "MY MY MY",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
