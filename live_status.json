@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-28T18:47:45Z",
+  "checked_at": "2026-11-28T18:52:46Z",
   "live": [
     {
       "platform": "twitch",
@@ -34,6 +34,13 @@
       "channel": "djmikemorino",
       "name": "DJMikeMorino",
       "title": "Back to the 90s - !single !goal !dono !bilder !merch !bitalerts #ZusammenGehtMehr",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵CRAZY SAMSTAG?! | !kugel | !bier | !zug | !holy | #werbung",
       "game": "DJs"
     }
   ]
