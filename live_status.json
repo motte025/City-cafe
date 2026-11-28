@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-28T18:52:46Z",
+  "checked_at": "2026-11-28T19:02:49Z",
   "live": [
     {
       "platform": "twitch",
@@ -24,6 +24,13 @@
     },
     {
       "platform": "twitch",
+      "channel": "ailenax",
+      "name": "Ailenax",
+      "title": "🔴🟠🟡🟢🔵CRAZY SAMSTAG?! | !kugel | !bier | !zug | !holy | #werbung",
+      "game": "DJs"
+    },
+    {
+      "platform": "twitch",
       "channel": "musikinfection",
       "name": "MusikInfection",
       "title": "🧪 Outbreak in Progress",
@@ -38,9 +45,9 @@
     },
     {
       "platform": "twitch",
-      "channel": "ailenax",
-      "name": "Ailenax",
-      "title": "🔴🟠🟡🟢🔵CRAZY SAMSTAG?! | !kugel | !bier | !zug | !holy | #werbung",
+      "channel": "dirkneuenfels",
+      "name": "DirkNeuenfels",
+      "title": "🩷 PINK PARTY - Die maximale Extase 🩷 !EMP !Baum !Wolt !Winter !Shakes !Holy !Moumint !Shop !Socials",
       "game": "DJs"
     }
   ]
