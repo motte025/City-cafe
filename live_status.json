@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-28T06:32:47Z",
+  "checked_at": "2026-11-28T06:47:49Z",
   "live": [
     {
       "platform": "twitch",
@@ -10,16 +10,16 @@
     },
     {
       "platform": "twitch",
-      "channel": "musikinfection",
-      "name": "MusikInfection",
-      "title": "🧪 Outbreak in Progress",
+      "channel": "chazz",
+      "name": "CHAZZ",
+      "title": "❤️‍🔥✨ WEEKEND ENERGY JAMS ✨❤️‍🔥 REQUESTS OPEN !request !moving !tip !bonus !subs !patreon !youtube",
       "game": "DJs"
     },
     {
       "platform": "twitch",
-      "channel": "chazz",
-      "name": "CHAZZ",
-      "title": "❤️‍🔥✨ WEEKEND ENERGY JAMS ✨❤️‍🔥 REQUESTS OPEN !request !moving !tip !bonus !subs !patreon !youtube",
+      "channel": "musikinfection",
+      "name": "MusikInfection",
+      "title": "🧪 Outbreak in Progress",
       "game": "DJs"
     }
   ]
